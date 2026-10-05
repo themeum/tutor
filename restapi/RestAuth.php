@@ -501,6 +501,7 @@ class RestAuth {
 	 * Generate api keys
 	 *
 	 * @since 2.2.1
+	 * @since 4.2.0 Reject permissions not in available_permissions().
 	 *
 	 * @return void send wp_json response
 	 */
@@ -516,6 +517,10 @@ class RestAuth {
 
 		$permission  = Input::post( 'permission' );
 		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
+
+		if ( ! self::is_allowed_api_permission( $permission ) ) {
+			wp_send_json_error( __( 'Invalid permission.', 'tutor' ) );
+		}
 
 		$info = wp_json_encode(
 			array(
@@ -544,6 +549,7 @@ class RestAuth {
 	 * Update api permission
 	 *
 	 * @since 2.5.0
+	 * @since 4.2.0 Reject permissions not in available_permissions().
 	 *
 	 * @return void send wp_json response
 	 */
@@ -559,6 +565,10 @@ class RestAuth {
 		$meta_id     = Input::post( 'meta_id', 0, Input::TYPE_INT );
 		$permission  = Input::post( 'permission' );
 		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
+
+		if ( ! self::is_allowed_api_permission( $permission ) ) {
+			wp_send_json_error( __( 'Invalid permission.', 'tutor' ) );
+		}
 
 		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
 		$meta_value = json_decode( $info->meta_value );
@@ -1683,6 +1693,27 @@ class RestAuth {
 			),
 		);
 		return apply_filters( 'tutor_rest_api_permissions', $permissions );
+	}
+
+	/**
+	 * Whether a permission string is in the available_permissions allowlist.
+	 *
+	 * Core only offers Read; Pro may expand via tutor_rest_api_permissions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $permission Permission value from the request.
+	 *
+	 * @return bool
+	 */
+	private static function is_allowed_api_permission( $permission ): bool {
+		if ( ! is_string( $permission ) || '' === $permission ) {
+			return false;
+		}
+
+		$allowed = array_column( self::available_permissions(), 'value' );
+
+		return in_array( $permission, $allowed, true );
 	}
 
 	/**
