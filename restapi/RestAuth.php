@@ -1099,7 +1099,10 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: author card — JWT/key or open public-profile layout.
+	 * Permission: author card — same gate as public-profile.php.
+	 *
+	 * Open instructor/student layout → allow (anonymous or JWT).
+	 * Private layout or unknown user → deny (JWT does not bypass).
 	 *
 	 * @since 4.2.0
 	 *
@@ -1108,10 +1111,6 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function permission_public_author( WP_REST_Request $request ) {
-		if ( static::process_api_request() ) {
-			return true;
-		}
-
 		return static::is_public_profile_layout_open( absint( $request->get_param( 'id' ) ) );
 	}
 
