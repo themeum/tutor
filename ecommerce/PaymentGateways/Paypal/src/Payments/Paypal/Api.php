@@ -190,10 +190,6 @@ final class Api {
 
 		http_response_code( 200 );
 		echo 'OK';
-
-		if ( function_exists( 'fastcgi_finish_request' ) ) {
-			fastcgi_finish_request();
-		}
 	}
 
 	/**
