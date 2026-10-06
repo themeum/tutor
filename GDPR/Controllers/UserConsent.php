@@ -110,10 +110,10 @@ class UserConsent extends BaseController {
 			return $value;
 		}
 
-		$user_name   = tutor_json_encode( $user->display_name ) ?? '';
-		$user_joined = $user->user_registered ?? '';
-		$user_email  = $user->user_email ?? '';
-		$user_login  = $user->user_login ?? '';
+		$user_name   = tutor_json_encode( $this->sanitize_csv_field( $user->display_name ) ) ?? '';
+		$user_joined = $this->sanitize_csv_field( $user->user_registered ) ?? '';
+		$user_email  = $this->sanitize_csv_field( $user->user_email ) ?? '';
+		$user_login  = $this->sanitize_csv_field( $user->user_login ) ?? '';
 		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
 
 		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="'
@@ -313,6 +313,14 @@ class UserConsent extends BaseController {
 					return $record;
 				}
 
+				if ( isset( $record->user_agent ) ) {
+					$record->user_agent = $this->sanitize_csv_field( $record->user_agent );
+				}
+
+				if ( isset( $record->ip_address ) ) {
+					$record->ip_address = $this->sanitize_csv_field( $record->ip_address );
+				}
+
 				$record->time_ago = sprintf(
 					/* translators: %s human-readable time difference. */
 					__( '%s ago', 'tutor' ),
@@ -328,6 +336,29 @@ class UserConsent extends BaseController {
 	}
 
 	/**
+	 * Sanitize CSV field
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed $value Value to sanitize.
+	 *
+	 * @return mixed Sanitized value.
+	 */
+	private function sanitize_csv_field( $value ) {
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+
+		$dangerous_chars = array( '=', '+', '-', '@', "\t", "\r" );
+
+		if ( in_array( substr( $value, 0, 1 ), $dangerous_chars, true ) ) {
+			return "'" . $value;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Build and store give consent
 	 *
 	 * @since 4.0.0
@@ -338,6 +369,15 @@ class UserConsent extends BaseController {
 	 */
 	private function build_and_store( $consent, $user_data, $display_key ) {
 		$build_consent = LegalConsent::build_consent_snapshot( $consent );
+
+		if ( isset( $build_consent['user_agent'] ) ) {
+			$build_consent['user_agent'] = $this->sanitize_csv_field( $build_consent['user_agent'] );
+		}
+
+		if ( isset( $build_consent['ip_address'] ) ) {
+			$build_consent['ip_address'] = $this->sanitize_csv_field( $build_consent['ip_address'] );
+		}
+
 		if ( ! empty( $build_consent ) ) {
 			$build_consent['user_id']    = $user_data->ID;
 			$build_consent['user_email'] = $user_data->user_email;
@@ -372,28 +412,6 @@ class UserConsent extends BaseController {
 	}
 
 	/**
-	 * Check if a user already gave consent for a display key and version.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $display_key Consent display key.
-	 * @param string $version     Consent version.
-	 * @param int    $user_id     User ID. Defaults to current user.
-	 *
-	 * @return bool
-	 */
-	private function is_consent_given_by_user( string $display_key, string $version, int $user_id ): bool {
-		$user_data = get_userdata( $user_id );
-		if ( ! $user_data ) {
-			return false;
-		}
-
-		$given_consent = $this->model->is_consent_given_by_user( $user_id, $display_key, $version );
-
-		return $given_consent;
-	}
-
-	/**
 	 * Render consent logs button.
 	 * Called via action hook.
 	 *
@@ -407,10 +425,10 @@ class UserConsent extends BaseController {
 			return;
 		}
 
-		$user_name   = tutor_json_encode( $user_data->display_name ) ?? '';
-		$user_joined = $user_data->user_registered ?? '';
-		$user_email  = $user_data->user_email ?? '';
-		$user_login  = $user_data->user_login ?? '';
+		$user_name   = tutor_json_encode( $this->sanitize_csv_field( $user_data->display_name ) ) ?? '';
+		$user_joined = $this->sanitize_csv_field( $user_data->user_registered ) ?? '';
+		$user_email  = $this->sanitize_csv_field( $user_data->user_email ) ?? '';
+		$user_login  = $this->sanitize_csv_field( $user_data->user_login ) ?? '';
 		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
 		?>
 		<div class="tutor-dropdown-parent">
