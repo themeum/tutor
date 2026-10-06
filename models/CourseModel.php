@@ -10,9 +10,7 @@
 
 namespace Tutor\Models;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
