@@ -587,7 +587,16 @@ class RestAuth {
 			wp_send_json_success( $response );
 
 		} catch ( \Throwable $th ) {
-			wp_send_json_error( $th->getMessage() );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional server-side logging; do not expose to clients.
+			error_log(
+				sprintf(
+					'Tutor REST API permission update failed: %s in %s at line %d',
+					$th->getMessage(),
+					$th->getFile(),
+					$th->getLine()
+				)
+			);
+			wp_send_json_error( __( 'API permission update failed, please try again.', 'tutor' ) );
 		}
 	}
 
