@@ -9,6 +9,16 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * User object passed from User::edit_user_profile().
+ *
+ * @var \WP_User|null $user
+ */
+if ( ! is_admin() || ! ( $user instanceof \WP_User ) ) {
+	return;
+}
 ?>
 <h2>
 	<?php esc_html_e( 'Tutor Fields', 'tutor' ); ?>
@@ -24,14 +34,14 @@ wp_enqueue_media();
 <table class="form-table">
 	<?php do_action( 'tutor_backend_profile_fields_before' ); ?>
 	<tr class="user-description-wrap">
-		<th><label for="description"><?php esc_html_e( 'Job Title', 'tutor' ); ?></label></th>
+		<th><label for="_tutor_profile_job_title"><?php esc_html_e( 'Job Title', 'tutor' ); ?></label></th>
 		<td>
 			<input type="text" name="_tutor_profile_job_title" id="_tutor_profile_job_title" value="<?php echo esc_attr( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" class="regular-text" />
 		</td>
 	</tr>
 
 	<tr class="user-description-wrap">
-		<th><label for="description"><?php esc_html_e( 'Profile Bio', 'tutor' ); ?></label></th>
+		<th><label for="_tutor_profile_bio"><?php esc_html_e( 'Profile Bio', 'tutor' ); ?></label></th>
 		<td>
 			<?php
 			$profile_bio = wp_kses( get_user_meta( $user->ID, '_tutor_profile_bio', true ), tutor_utils()->allowed_profile_bio_tags() );
@@ -43,7 +53,7 @@ wp_enqueue_media();
 	</tr>
 
 	<tr class="user-description-wrap">
-		<th><label for="description"><?php esc_html_e( 'Profile Photo', 'tutor' ); ?></label></th>
+		<th><label><?php esc_html_e( 'Profile Photo', 'tutor' ); ?></label></th>
 		<td>
 			<div class="tutor-video-poster-wrap">
 				<p class="video-poster-img">
@@ -63,4 +73,3 @@ wp_enqueue_media();
 	</tr>
 	<?php do_action( 'tutor_backend_profile_fields_after' ); ?>
 </table>
-
