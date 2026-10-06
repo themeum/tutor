@@ -13,9 +13,8 @@ use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
 
-$data        = isset( $data ) && is_array( $data ) ? $data : array();
-$question_id = isset( $data['question_id'] ) ? (int) $data['question_id'] : ( isset( $question_id ) ? (int) $question_id : 0 );
-$context     = isset( $data['context'] ) ? $data['context'] : ( isset( $context ) ? $context : '' );
+$question_id = (int) ( $data['question_id'] ?? $question_id ?? 0 );
+$context     = $data['context'] ?? $context ?? '';
 
 // QNA data.
 $question = tutor_utils()->get_qa_question( $question_id );
@@ -24,22 +23,15 @@ if ( ! is_object( $question ) ) {
 	return;
 }
 
-/**
- * Question object.
- *
- * @var object{course_id: int, user_id: int, post_title: string, meta: array<string, mixed>} $question
- */
-
-$meta = property_exists( $question, 'meta' ) && is_array( $question->meta ) ? $question->meta : array();
+$meta = is_array( $question->meta ?? null ) ? $question->meta : array();
 
 $answers          = tutor_utils()->get_qa_answer_by_question( $question_id );
 $default_back_url = remove_query_arg( 'question_id', is_admin() ? admin_url( 'admin.php?page=question_answer' ) : tutor()->current_url );
-$raw_back_url     = ! empty( $data['back_url'] ) ? $data['back_url'] : ( isset( $back_url ) ? $back_url : $default_back_url );
-$back_url         = wp_validate_redirect( $raw_back_url, $default_back_url );
+$back_url         = wp_validate_redirect( (string) ( $data['back_url'] ?? $back_url ?? $default_back_url ), $default_back_url );
 
 // Badges data.
 $_user_id      = get_current_user_id();
-$is_user_asker = property_exists( $question, 'user_id' ) && (int) $question->user_id === (int) $_user_id;
+$is_user_asker = (int) ( $question->user_id ?? 0 ) === (int) $_user_id;
 $id_slug       = $is_user_asker ? '_' . $_user_id : '';
 $is_solved     = (int) tutor_utils()->array_get( 'tutor_qna_solved' . $id_slug, $meta, 0 );
 $is_important  = (int) tutor_utils()->array_get( 'tutor_qna_important' . $id_slug, $meta, 0 );
@@ -51,10 +43,8 @@ $reply_hidden = ! wp_doing_ajax() ? 'display:none;' : '';
 
 // Update read status for the current viewer (asker or privileged course instructor/admin).
 $is_course_instructor = tutor_utils()->has_user_role( 'administrator', $_user_id ) || tutor_utils()->is_instructor_of_this_course( $_user_id, $question->course_id );
-if ( $is_user_asker ) {
-	update_comment_meta( $question_id, 'tutor_qna_read_' . $_user_id, 1 );
-} elseif ( $is_course_instructor ) {
-	update_comment_meta( $question_id, 'tutor_qna_read', 1 );
+if ( $is_user_asker || $is_course_instructor ) {
+	update_comment_meta( $question_id, $is_user_asker ? 'tutor_qna_read_' . $_user_id : 'tutor_qna_read', 1 );
 }
 ?>
 

@@ -11,11 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$data           = isset( $data ) && is_array( $data ) ? $data : array();
-$qna_list       = isset( $data['qna_list'] ) && is_array( $data['qna_list'] ) ? $data['qna_list'] : ( isset( $qna_list ) && is_array( $qna_list ) ? $qna_list : array() );
-$context        = isset( $data['context'] ) ? $data['context'] : ( isset( $context ) ? $context : '' );
-$qna_pagination = isset( $data['qna_pagination'] ) && is_array( $data['qna_pagination'] ) ? $data['qna_pagination'] : ( isset( $qna_pagination ) && is_array( $qna_pagination ) ? $qna_pagination : array() );
-$view_as        = isset( $data['view_as'] ) ? $data['view_as'] : ( isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 'student' ) );
+$qna_list       = $data['qna_list'] ?? $qna_list ?? array();
+$context        = $data['context'] ?? $context ?? '';
+$qna_pagination = $data['qna_pagination'] ?? $qna_pagination ?? array();
+$view_as        = $data['view_as'] ?? $view_as ?? ( is_admin() ? 'instructor' : 'student' );
 
 $page_key      = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
@@ -43,7 +42,7 @@ $table_columns = include __DIR__ . '/contexts.php';
 					$is_self          = (int) $current_user_id === (int) $qna->user_id;
 					$key_slug         = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
 
-					$meta         = property_exists( $qna, 'meta' ) && is_array( $qna->meta ) ? $qna->meta : array();
+					$meta         = is_array( $qna->meta ?? null ) ? $qna->meta : array();
 					$is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved' . $key_slug, $meta, 0 );
 					$is_important = (int) tutor_utils()->array_get( 'tutor_qna_important' . $key_slug, $meta, 0 );
 					$is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived' . $key_slug, $meta, 0 );
@@ -60,32 +59,30 @@ $table_columns = include __DIR__ . '/contexts.php';
 									<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 										<div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
 											<span
-												data-state-class-0="tutor-icon-important-line"
-												data-state-class-1="tutor-icon-important-bold"
-												data-action="important"
+												data-action="solved"
+												data-question_id="<?php echo esc_attr( (string) $qna->comment_ID ); ?>"
 												data-state-class-selector="i"
-											>
-												<i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" aria-hidden="true"></i>
+												data-state-class-0="tutor-icon-circle-mark-line tutor-color-muted"
+												data-state-class-1="tutor-icon-circle-mark tutor-color-success"
+												role="button">
+												<i class="tutor-fs-6 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
 											</span>
-
-											<span class="tooltip-txt tooltip-right arrow-center">
-												<?php $is_important ? esc_html_e( 'This conversation is important', 'tutor' ) : esc_html_e( 'Mark this conversation as important', 'tutor' ); ?>
+											<span class="tooltip-txt tooltip-top">
+												<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Mark as solved', 'tutor' ); ?>
 											</span>
 										</div>
 
-										<?php
-										echo wp_kses(
-											tutor_utils()->get_tutor_avatar( $qna->user_id ),
-											tutor_utils()->allowed_avatar_tags()
-										);
-										?>
-
-										<div>
-											<div>
-												<?php echo esc_html( $qna->display_name ); ?>
-											</div>
-											<div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
-												<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+										<div class="tutor-d-flex tutor-align-center">
+											<?php
+												echo wp_kses(
+													tutor_utils()->get_tutor_avatar( $qna->user_id, 'sm' ),
+													tutor_utils()->allowed_avatar_tags()
+												);
+											?>
+											<div class="tutor-ml-12">
+												<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+													<?php echo esc_html( $qna->comment_author ); ?>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -93,9 +90,8 @@ $table_columns = include __DIR__ . '/contexts.php';
 									<?php $content = ( stripslashes( $qna->comment_content ) ); ?>
 									<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>">
 										<div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-											<i class="tutor-icon-bullet-point tutor-form-feedback-icon" aria-hidden="true"></i>
-											<div class="tutor-qna-desc">
-												<div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
+											<div class="tutor-qna-question-title tutor-fs-7">
+												<div>
 													<?php
 														$limit   = 60;
 														$content = strlen( $content ) > $limit ? substr( $content, 0, $limit ) . '...' : $content;
@@ -104,8 +100,7 @@ $table_columns = include __DIR__ . '/contexts.php';
 													?>
 												</div>
 												<div class="tutor-fs-7 tutor-color-secondary">
-													<span class="tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>
-													<span><?php echo esc_html( $qna->post_title ); ?></span>
+													<?php echo esc_html( $qna->post_title ); ?>
 												</div>
 											</div>
 										</div>
@@ -125,14 +120,11 @@ $table_columns = include __DIR__ . '/contexts.php';
 									<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 										<?php
 											$query_args = array( 'question_id' => $qna->comment_ID );
-											$front_url  = add_query_arg( $query_args, tutor()->current_url );
-											$admin_url  = add_query_arg( $query_args, admin_url( 'admin.php?page=question_answer' ) );
-											$url        = is_admin() ? $admin_url : $front_url;
+											$view_url   = add_query_arg( $query_args, tutor()->current_url );
 										?>
-										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e( 'Reply', 'tutor' ); ?>
+										<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( $view_url ); ?>">
+											<?php esc_html_e( 'View', 'tutor' ); ?>
 										</a>
-
 										<div class="tutor-dropdown-parent">
 											<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 												<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
@@ -142,47 +134,35 @@ $table_columns = include __DIR__ . '/contexts.php';
 													<li class="tutor-qna-badges tutor-qna-badges-wrapper">
 														<a class="tutor-dropdown-item" href="#" data-action="archived" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php esc_attr_e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php esc_attr_e( 'Un-archive', 'tutor' ); ?>">
 															<span class="tutor-icon-archive tutor-mr-8" data-state-class></span>
-															<span data-state-text>
-																<?php $is_archived ? esc_html_e( 'Un-archive', 'tutor' ) : esc_html_e( 'Archive', 'tutor' ); ?>
-															</span>
+															<span data-state-text><?php $is_archived ? esc_html_e( 'Un-archive', 'tutor' ) : esc_html_e( 'Archive', 'tutor' ); ?></span>
 														</a>
 													</li>
 												<?php endif; ?>
-												<li class="tutor-qna-badges tutor-qna-badges-wrapper">
-													<a class="tutor-dropdown-item" href="#" data-action="read" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php esc_attr_e( 'Mark as Read', 'tutor' ); ?>" data-state-text-1="<?php esc_attr_e( 'Mark as Unread', 'tutor' ); ?>">
-														<span class="tutor-icon-envelope tutor-mr-8" data-state-class></span>
-														<span data-state-text>
-															<?php $is_read ? esc_html_e( 'Mark as Unread', 'tutor' ) : esc_html_e( 'Mark as read', 'tutor' ); ?>
-														</span>
-													</a>
-												</li>
 												<li>
 													<a class="tutor-dropdown-item" href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>">
-														<span class="tutor-icon-trash-can-bold tutor-mr-8"></span>
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 														<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 													</a>
 												</li>
 											</ul>
 										</div>
-
-										<!-- Delete confirmation modal -->
-										<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id_string_delete ); ?>-title" aria-hidden="true">
-											<div class="tutor-modal-overlay"></div>
-											<div class="tutor-modal-window">
-												<div class="tutor-modal-content tutor-modal-content-white">
-													<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
-														<span class="tutor-icon-times" aria-hidden="true"></span>
-													</button>
-
-													<div class="tutor-modal-body tutor-text-center">
-														<div class="tutor-mt-48">
-															<img class="tutor-d-inline-block" src="<?php echo esc_url( trailingslashit( tutor()->url ) . 'assets/images/icon-trash.svg' ); ?>" alt="" aria-hidden="true" />
-														</div>
-
-														<div id="<?php echo esc_attr( $id_string_delete ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Question?', 'tutor' ); ?></div>
-														<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?></div>
-														
-														<div class="tutor-d-flex tutor-justify-center tutor-my-48">
+									</div>
+									<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal tutor-modal-primary">
+										<div class="tutor-modal-overlay"></div>
+										<div class="tutor-modal-window">
+											<div class="tutor-modal-content">
+												<div class="tutor-modal-body tutor-text-center">
+													<div class="tutor-modal-icon">
+														<img src="<?php echo esc_url( tutor()->url . 'assets/images/icon-trash.svg' ); ?>" />
+													</div>
+													<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">
+														<?php esc_html_e( 'Do You Want to Delete This Question?', 'tutor' ); ?>
+													</div>
+													<div class="tutor-fs-6 tutor-color-muted">
+														<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
+													</div>
+													<div class="tutor-d-flex tutor-justify-center tutor-mt-48 tutor-mb-24 tutor-modal-actions">
+														<div>
 															<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 																<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 															</button>
@@ -218,7 +198,6 @@ $table_columns = include __DIR__ . '/contexts.php';
 			</div>
 		<?php endif; ?>
 	</div>
-	<!-- end table responsive -->
 <?php else : ?>
-	<?php tutor_utils()->render_list_empty_state(); ?>
+	<?php tutor_utils()->tutor_empty_state(); ?>
 <?php endif; ?>

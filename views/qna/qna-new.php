@@ -11,9 +11,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$data      = isset( $data ) && is_array( $data ) ? $data : array();
-$course_id = isset( $data['course_id'] ) ? (int) $data['course_id'] : ( isset( $course_id ) ? (int) $course_id : 0 );
-$context   = isset( $data['context'] ) ? $data['context'] : ( isset( $context ) ? $context : '' );
+$course_id = (int) ( $data['course_id'] ?? $course_id ?? 0 );
+$context   = $data['context'] ?? $context ?? '';
 ?>
 <div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( (string) $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
 	<div class="tutor-quesanswer-askquestion tutor-qna-reply-editor">
@@ -43,17 +42,17 @@ $context   = isset( $data['context'] ) ? $data['context'] : ( isset( $context ) 
 			</div>
 
 			<div class="sidebar-ask-new-qna-btn-wrap">
-				<a class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-primary tutor-btn-block">
-					<?php esc_html_e( 'Ask a New Question', 'tutor' ); ?>
-				</a>
-			</div>
-		<?php else : ?>
-			<div class="tutor-d-flex tutor-justify-end tutor-mt-24">
-				<button class="sidebar-ask-new-qna-submit-btn tutor-btn tutor-btn-primary">
-					<?php esc_html_e( 'Ask Question', 'tutor' ); ?>
+				<button class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-outline-primary tutor-btn-block">
+					<span class="tutor-icon-plus tutor-mr-8" aria-hidden="true"></span>
+					<span><?php esc_html_e( 'Ask a New Question', 'tutor' ); ?></span>
 				</button>
 			</div>
-		<?php endif ?>
+		<?php else : ?>
+			<div class="tutor-d-flex tutor-justify-end tutor-mt-16">
+				<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor_qna_ask_question">
+					<?php esc_html_e( 'Submit', 'tutor' ); ?>
+				</button>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
-<div class="tutor-qna-single-question"></div>
