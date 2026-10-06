@@ -10,9 +10,7 @@
 
 namespace Tutor\Models;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
