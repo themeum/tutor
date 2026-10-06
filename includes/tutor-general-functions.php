@@ -2037,3 +2037,25 @@ if ( ! function_exists( 'tutor_price_allowed_html' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'tutor_json_encode' ) ) {
+	/**
+	 * Encode data to JSON safely for use inside HTML attributes, Alpine.js, and inline JS expressions.
+	 *
+	 * Automatically applies flags to escape single quotes (JSON_HEX_APOS), double quotes (JSON_HEX_QUOT),
+	 * HTML tags (JSON_HEX_TAG), and ampersands (JSON_HEX_AMP) to prevent HTML attribute breakout and XSS.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param mixed $data Data to encode.
+	 * @param int   $options Additional json_encode options bitmask.
+	 * @param int   $depth Maximum depth. Must be greater than zero.
+	 *
+	 * @return string|false JSON string or false on failure.
+	 */
+	function tutor_json_encode( $data, int $options = 0, int $depth = 512 ) {
+		$default_flags = JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP;
+		return wp_json_encode( $data, $default_flags | $options, $depth );
+	}
+}
+

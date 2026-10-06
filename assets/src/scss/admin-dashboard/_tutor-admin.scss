@@ -512,6 +512,15 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 }
+.tutor-form-control[type='number'] {
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
 
 .tutor-option-field-row input[type='text'],
 .tutor-option-field-row input[type='email'],

@@ -57,6 +57,10 @@
       &:focus {
         outline: none;
       }
+
+      &:focus-visible {
+        @include tutor-focus-ring();
+      }
     }
 
     &-replies {
