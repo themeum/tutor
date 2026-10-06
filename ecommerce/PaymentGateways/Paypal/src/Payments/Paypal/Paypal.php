@@ -344,92 +344,6 @@ class Paypal extends BasePayment {
 	}
 
 	/**
-	 * Creates a webhook for PayPal notifications if it does not already exist.
-	 *
-	 * @return object|null Returns the webhook object or null if already registered.
-	 *
-	 * @throws ErrorException Throws an exception if there's an issue with the HTTP request or if webhook information is not found.
-	 * @since  1.0.0
-	 * @since  4.1.2 Uses Http::send() and catches HttpRequestException.
-	 */
-	public function createWebhook(): ?object {
-		try {
-
-			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
-
-			$requestData = array(
-				'url'     => $webhookApiUrl,
-				'options' => array(
-					'headers' => $this->headers,
-					'method'  => HttpHelper::METHOD_GET,
-				),
-			);
-
-			$responseData = Http::send( $requestData );
-
-			if ( isset( $responseData->webhooks ) && is_array( $responseData->webhooks ) ) {
-
-				$registeredWebhookUrls  = array_column( $responseData->webhooks, 'url' );
-				$isWebhookUrlRegistered = in_array( $this->config->get( 'webhook_url' ), $registeredWebhookUrls );
-
-				return ! $isWebhookUrlRegistered ? $this->createNewWebhook() : null;
-			}
-
-			throw new ErrorException( 'Webhook Information Not Found' );
-
-		} catch ( HttpRequestException $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
-		}
-	}
-
-	/**
-	 * Creates a new webhook for the specified events.
-	 *
-	 * @return object Returns an object containing the webhook_id and webhook_url of the newly created webhook.
-	 *
-	 * @throws InvalidDataException Throws an exception if the webhook information is invalid or the creation fails.
-	 * @throws ErrorException       Throws an exception if the HTTP request fails.
-	 * @since  1.0.0
-	 * @since  4.1.2 Uses Http::send() and catches HttpRequestException.
-	 */
-	private function createNewWebhook() {
-		try {
-
-			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
-
-			$body = (object) array(
-				'url'         => $this->config->get( 'webhook_url' ),
-				'event_types' => array( (object) array( 'name' => 'PAYMENT.CAPTURE.REFUNDED' ) ),
-			);
-
-			$requestData = array(
-				'url'     => $webhookApiUrl,
-				'options' => array(
-					'headers' => $this->headers,
-					'body'    => json_encode( $body ),
-					'method'  => HttpHelper::METHOD_POST,
-				),
-			);
-
-			$responseData = Http::send( $requestData );
-
-			if ( $responseData->url === $this->config->get( 'webhook_url' ) && $responseData->id ) {
-				return (object) array(
-					'webhook_id'  => $responseData->id,
-					'webhook_url' => $responseData->url,
-				);
-			}
-
-			throw new InvalidDataException( 'Invalid Webhook Information' );
-
-		} catch ( HttpRequestException $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
-		}
-	}
-
-	/**
 	 * Processes a refund payment based on the received payment data.
 	 *
 	 * @param  object $paymentData The payment data received from PayPal, containing refund information.
@@ -455,7 +369,7 @@ class Paypal extends BasePayment {
 				$returnData->refund_payload = json_encode( $paymentData );
 			}
 
-			$returnData->refund_status = static::getRefundStatus( $payloadStream->links, 'up' );
+			$returnData->refund_status = Api::getRefundStatus( $payloadStream->links, 'up' );
 
 			return $returnData;
 
