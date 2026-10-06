@@ -9,6 +9,7 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ * @deprecated 4.2.0 Use views/elements/list-filters.php instead.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -182,7 +183,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
-					<?php if ( ! isset( $data['sort_by'] ) || true == $data['sort_by'] ) : ?>
+					<?php if ( ! isset( $data['sort_by'] ) || ! empty( $data['sort_by'] ) ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
