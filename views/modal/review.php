@@ -9,8 +9,11 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Modal;
 
+$course_id              = isset( $course_id ) ? (int) $course_id : 0;
 $is_course_details_page = tutor_utils()->is_course_details_page();
 
 $modal_id = 'tutor-review-modal-' . $course_id;
