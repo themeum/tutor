@@ -32,8 +32,10 @@ if ( ! is_object( $question ) ) {
 
 $meta = property_exists( $question, 'meta' ) && is_array( $question->meta ) ? $question->meta : array();
 
-$answers  = tutor_utils()->get_qa_answer_by_question( $question_id );
-$back_url = ! empty( $data['back_url'] ) ? $data['back_url'] : ( isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', is_admin() ? admin_url( 'admin.php?page=question_answer' ) : tutor()->current_url ) );
+$answers          = tutor_utils()->get_qa_answer_by_question( $question_id );
+$default_back_url = remove_query_arg( 'question_id', is_admin() ? admin_url( 'admin.php?page=question_answer' ) : tutor()->current_url );
+$raw_back_url     = ! empty( $data['back_url'] ) ? $data['back_url'] : ( isset( $back_url ) ? $back_url : $default_back_url );
+$back_url         = wp_validate_redirect( $raw_back_url, $default_back_url );
 
 // Badges data.
 $_user_id      = get_current_user_id();
@@ -47,8 +49,13 @@ $is_read       = (int) tutor_utils()->array_get( 'tutor_qna_read' . $id_slug, $m
 $modal_id     = 'tutor_qna_delete_single_' . $question_id;
 $reply_hidden = ! wp_doing_ajax() ? 'display:none;' : '';
 
-// At first set this as read.
-update_comment_meta( $question_id, 'tutor_qna_read' . $id_slug, 1 );
+// Update read status for the current viewer (asker or privileged course instructor/admin).
+$is_course_instructor = tutor_utils()->has_user_role( 'administrator', $_user_id ) || tutor_utils()->is_instructor_of_this_course( $_user_id, $question->course_id );
+if ( $is_user_asker ) {
+	update_comment_meta( $question_id, 'tutor_qna_read_' . $_user_id, 1 );
+} elseif ( $is_course_instructor ) {
+	update_comment_meta( $question_id, 'tutor_qna_read', 1 );
+}
 ?>
 
 <div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo esc_attr( (string) $question->course_id ); ?>" data-question_id="<?php echo esc_attr( (string) $question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>">
@@ -120,7 +127,7 @@ update_comment_meta( $question_id, 'tutor_qna_read' . $id_slug, 1 );
 								<div class="tutor-qna-chat <?php echo esc_attr( $css_class . ' ' . $reply_class ); ?>" style="<?php echo esc_attr( $css_style ); ?>">
 									<div class="tutor-qna-user">
 										<div>
-											<img src="<?php echo wp_kses( get_avatar_url( $answer->user_id ), tutor_utils()->allowed_avatar_tags() ); ?>" />
+											<img src="<?php echo esc_url( get_avatar_url( $answer->user_id ) ); ?>" alt="<?php echo esc_attr( $answer->display_name ); ?>" />
 										</div>
 
 										<div>
@@ -140,7 +147,7 @@ update_comment_meta( $question_id, 'tutor_qna_read' . $id_slug, 1 );
 									<div class="tutor-qna-text tutor-fs-7">
 										<?php
 											$content = stripslashes( $answer->comment_content );
-											echo tutor()->has_pro ? wp_kses_post( $content ) : esc_textarea( $content );
+											echo tutor()->has_pro ? wp_kses_post( $content ) : nl2br( esc_html( $content ) );
 										?>
 									</div>
 
