@@ -14,8 +14,8 @@ export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?
   },
 });
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const URL_PATTERN = /^https?:\/\//i;
+const EMAIL_PATTERN = /^[^\s@.]+(?:\.[^\s@.]+)*@[^\s@.]+(?:\.[^\s@.]+)*\.[A-Za-z]{2,}$/;
+const URL_PATTERN = /^(?:[a-z][a-z\d+.-]*:\/\/|(?:[a-z\d-]+\.)+[a-z\d-]+\/)/i;
 
 export const emailRule = (): object => ({
   validate: (value?: string) => {
