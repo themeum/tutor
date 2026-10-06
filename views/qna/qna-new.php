@@ -9,21 +9,25 @@
  * @since 2.0.0
  */
 
-extract( $data ); // $course_id, $context.
+defined( 'ABSPATH' ) || exit;
+
+$data      = isset( $data ) && is_array( $data ) ? $data : array();
+$course_id = isset( $data['course_id'] ) ? (int) $data['course_id'] : ( isset( $course_id ) ? (int) $course_id : 0 );
+$context   = isset( $data['context'] ) ? $data['context'] : ( isset( $context ) ? $context : '' );
 ?>
-<div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
+<div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( (string) $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
 	<div class="tutor-quesanswer-askquestion tutor-qna-reply-editor">
 
 		<?php
 			$placeholder = __( 'Do you have any questions?', 'tutor' );
-			$text_editor = '<textarea placeholder="' . $placeholder . '" class="tutor-form-control"></textarea>';
-            //phpcs:ignore
+			$text_editor = '<textarea placeholder="' . esc_attr( $placeholder ) . '" class="tutor-form-control"></textarea>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo apply_filters(
 				'tutor_qna_text_editor',
 				$text_editor
 			);
 			?>
-		<?php if ( 'course-single-qna-sidebar' == $data['context'] ) : ?>
+		<?php if ( 'course-single-qna-sidebar' === $context ) : ?>
 			<div class="sidebar-ask-new-qna-submit tutor-row tutor-mt-16">
 				<div class="tutor-col">
 					<button class="sidebar-ask-new-qna-cancel-btn tutor-btn tutor-btn-outline-primary tutor-btn-block">
