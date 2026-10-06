@@ -1432,6 +1432,28 @@ class RestAuth {
 	}
 
 	/**
+	 * Shared REST response helper for static auth handlers.
+	 *
+	 * Avoids constructing RestAuth (which registers hooks) and keeps a single
+	 * instance `response()` API like Tutor Pro.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return object Object using REST_Response.
+	 */
+	private static function rest_responder() {
+		static $responder = null;
+
+		if ( null === $responder ) {
+			$responder = new class() {
+				use REST_Response;
+			};
+		}
+
+		return $responder;
+	}
+
+	/**
 	 * Login — issue access + refresh tokens.
 	 *
 	 * Requires a valid Read-capable API key/secret (permission_callback). The key id
@@ -1445,30 +1467,34 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_login( WP_REST_Request $request ) {
+		$responder   = self::rest_responder();
 		$credentials = self::get_api_credentials_from_request();
 		if ( ! $credentials ) {
-			return new \WP_Error(
-				'rest_forbidden',
+			return $responder->response(
+				'tutor_auth_login',
 				__( 'API key and secret are required.', 'tutor' ),
-				array( 'status' => rest_authorization_required_code() )
+				'',
+				$responder->forbidden_code
 			);
 		}
 
 		$record = static::validate_api_key_secret( $credentials['key'], $credentials['secret'], true );
 		if ( ! is_object( $record ) ) {
-			return new \WP_Error(
-				'rest_forbidden',
+			return $responder->response(
+				'tutor_auth_login',
 				__( 'Invalid API key or secret.', 'tutor' ),
-				array( 'status' => rest_authorization_required_code() )
+				'',
+				$responder->forbidden_code
 			);
 		}
 
 		$kid = absint( $record->umeta_id );
 		if ( ! $kid || '' === self::permission_from_key_meta( $record->meta_value ) ) {
-			return new \WP_Error(
-				'rest_forbidden',
+			return $responder->response(
+				'tutor_auth_login',
 				__( 'Invalid API key or secret.', 'tutor' ),
-				array( 'status' => rest_authorization_required_code() )
+				'',
+				$responder->forbidden_code
 			);
 		}
 
@@ -1476,10 +1502,11 @@ class RestAuth {
 		$password = (string) $request->get_param( 'password' );
 
 		if ( '' === $username || '' === $password ) {
-			return new \WP_Error(
-				'rest_invalid_credentials',
+			return $responder->response(
+				'tutor_auth_login',
 				__( 'Invalid username or password.', 'tutor' ),
-				array( 'status' => 401 )
+				'',
+				$responder->unauthorized_code
 			);
 		}
 
@@ -1492,14 +1519,20 @@ class RestAuth {
 
 		$user = wp_authenticate( $username, $password );
 		if ( is_wp_error( $user ) ) {
-			return new \WP_Error(
-				'rest_invalid_credentials',
+			return $responder->response(
+				'tutor_auth_login',
 				__( 'Invalid username or password.', 'tutor' ),
-				array( 'status' => 401 )
+				'',
+				$responder->unauthorized_code
 			);
 		}
 
-		return rest_ensure_response( self::build_token_response( (int) $user->ID, $kid ) );
+		return $responder->response(
+			'tutor_auth_login',
+			__( 'Login successful.', 'tutor' ),
+			self::build_token_response( (int) $user->ID, $kid ),
+			$responder->success_code
+		);
 	}
 
 	/**
@@ -1513,33 +1546,42 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_refresh( WP_REST_Request $request ) {
-		$refresh = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
+		$responder = self::rest_responder();
+		$refresh   = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
 		if ( '' === $refresh ) {
-			return new \WP_Error(
-				'rest_invalid_refresh',
+			return $responder->response(
+				'tutor_auth_refresh',
 				__( 'Invalid refresh token.', 'tutor' ),
-				array( 'status' => 401 )
+				'',
+				$responder->unauthorized_code
 			);
 		}
 
 		$session = self::consume_refresh_token( $refresh );
 		if ( ! $session ) {
-			return new \WP_Error(
-				'rest_invalid_refresh',
+			return $responder->response(
+				'tutor_auth_refresh',
 				__( 'Invalid refresh token.', 'tutor' ),
-				array( 'status' => 401 )
+				'',
+				$responder->unauthorized_code
 			);
 		}
 
 		if ( '' === self::get_permission_by_kid( $session['kid'] ) ) {
-			return new \WP_Error(
-				'rest_forbidden',
+			return $responder->response(
+				'tutor_auth_refresh',
 				__( 'API key has been revoked.', 'tutor' ),
-				array( 'status' => rest_authorization_required_code() )
+				'',
+				$responder->forbidden_code
 			);
 		}
 
-		return rest_ensure_response( self::build_token_response( $session['user_id'], $session['kid'] ) );
+		return $responder->response(
+			'tutor_auth_refresh',
+			__( 'Token refreshed successfully.', 'tutor' ),
+			self::build_token_response( $session['user_id'], $session['kid'] ),
+			$responder->success_code
+		);
 	}
 
 	/**
@@ -1552,8 +1594,9 @@ class RestAuth {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public static function rest_logout( WP_REST_Request $request ) {
-		$refresh = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
-		$all     = (bool) $request->get_param( 'all' );
+		$responder = self::rest_responder();
+		$refresh   = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
+		$all       = (bool) $request->get_param( 'all' );
 
 		if ( $all ) {
 			$token   = self::get_access_token_from_request();
@@ -1568,10 +1611,13 @@ class RestAuth {
 			self::delete_refresh_token( $refresh );
 		}
 
-		return rest_ensure_response(
+		return $responder->response(
+			'tutor_auth_logout',
+			__( 'Logged out successfully.', 'tutor' ),
 			array(
 				'success' => true,
-			)
+			),
+			$responder->success_code
 		);
 	}
 

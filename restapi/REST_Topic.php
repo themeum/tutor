@@ -53,12 +53,12 @@ class REST_Topic {
 		$this->post_parent = $request->get_param( 'course_id' );
 
 		if ( ! isset( $this->post_parent ) ) {
-			$response = array(
-				'code'    => 'get_topic',
-				'message' => __( 'course_id is required', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_topic',
+				__( 'course_id is required', 'tutor' ),
+				array(),
+				$this->client_error_code
 			);
-			return self::send( $response );
 		}
 
 		$course_id     = absint( $this->post_parent );
@@ -80,20 +80,19 @@ class REST_Topic {
 		}
 
 		if ( count( $result ) > 0 ) {
-			$response = array(
-				'code'    => 'get_topic',
-				'message' => __( 'Topic retrieved successfully', 'tutor' ),
-				'data'    => $result,
+			return $this->response(
+				'tutor_read_topic',
+				__( 'Topic retrieved successfully', 'tutor' ),
+				$result,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Topic not found for given course ID', 'tutor' ),
-			'data'    => array(),
-		);
 
-		return self::send( $response );
+		return $this->response(
+			'tutor_read_topic',
+			__( 'Topic not found for given course ID', 'tutor' ),
+			array(),
+			$this->not_found_code
+		);
 	}
 }

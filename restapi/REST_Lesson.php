@@ -59,12 +59,12 @@ class REST_Lesson {
 		$this->post_parent = $request->get_param( 'topic_id' );
 
 		if ( ! isset( $this->post_parent ) ) {
-			$response = array(
-				'code'    => 'not_found',
-				'message' => __( 'topic_id is required', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_lesson',
+				__( 'topic_id is required', 'tutor' ),
+				array(),
+				$this->client_error_code
 			);
-			return self::send( $response );
 		}
 
 		$topic_id      = absint( $this->post_parent );
@@ -94,22 +94,20 @@ class REST_Lesson {
 				}
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Lesson retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_lesson',
+				__( 'Lesson retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Lesson not found for the given topic ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_lesson',
+			__( 'Lesson not found for the given topic ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**

@@ -10,10 +10,11 @@
 
 namespace TUTOR;
 
+use WP_Error;
+use WP_Post;
 use WP_Query;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,7 +77,7 @@ class REST_Course {
 	 *
 	 * @param WP_REST_Request $request request data.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function course( WP_REST_Request $request ) {
 		$order      = self::sanitize_course_order( $request->get_param( 'order' ) );
@@ -191,22 +192,20 @@ class REST_Course {
 				array_push( $data['posts'], $item );
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_course',
+				__( 'Course retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Course not found', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_course',
+			__( 'Course not found', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**
@@ -216,27 +215,27 @@ class REST_Course {
 	 *
 	 * @param WP_REST_Request $request request params.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function course_detail( WP_REST_Request $request ) {
 		$post_id = absint( $request->get_param( 'id' ) );
 
 		$detail = $this->course_additional_info( $post_id, ! RestAuth::is_rest_authenticated() );
 		if ( $detail ) {
-			$response = array(
-				'code'    => 'course_detail',
-				'message' => __( 'Course detail retrieved successfully', 'tutor' ),
-				'data'    => $detail,
+			return $this->response(
+				'tutor_read_course',
+				__( 'Course detail retrieved successfully', 'tutor' ),
+				$detail,
+				$this->success_code
 			);
-			return self::send( $response );
 		}
-		$response = array(
-			'code'    => 'course_detail',
-			'message' => __( 'Detail not found for given ID', 'tutor' ),
-			'data'    => array(),
-		);
 
-		return self::send( $response );
+		return $this->response(
+			'tutor_read_course',
+			__( 'Detail not found for given ID', 'tutor' ),
+			array(),
+			$this->not_found_code
+		);
 	}
 
 	/**
@@ -310,7 +309,7 @@ class REST_Course {
 	 *
 	 * @param WP_REST_Request $request request params.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function course_contents( WP_REST_Request $request ) {
 		$course_id     = absint( $request->get_param( 'id' ) );
@@ -354,21 +353,20 @@ class REST_Course {
 				array_push( $data, $current_topic );
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_course',
+				__( 'Course contents retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_course',
+			__( 'Contents for this course with the given course id not found', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**
@@ -431,23 +429,23 @@ class REST_Course {
 		$ratings = tutor_utils()->get_course_rating( $post->ID );
 
 		$item = (object) array(
-			'ID'               => (int) $post->ID,
-			'post_title'       => $post->post_title,
-			'post_name'        => $post->post_name,
-			'thumbnail_url'    => get_the_post_thumbnail_url( $post->ID, apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' ) ),
-			'price'            => get_post_meta( $post->ID, '_regular_price', true ),
-			'post_author'      => $author
+			'ID'              => (int) $post->ID,
+			'post_title'      => $post->post_title,
+			'post_name'       => $post->post_name,
+			'thumbnail_url'   => get_the_post_thumbnail_url( $post->ID, apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' ) ),
+			'price'           => get_post_meta( $post->ID, '_regular_price', true ),
+			'post_author'     => $author
 				? (object) array(
 					'ID'           => (int) $author->ID,
 					'display_name' => $author->display_name,
 				)
 				: new \stdClass(),
-			'ratings'          => (object) array(
+			'ratings'         => (object) array(
 				'rating_count' => isset( $ratings->rating_count ) ? $ratings->rating_count : 0,
 				'rating_avg'   => isset( $ratings->rating_avg ) ? $ratings->rating_avg : 0,
 			),
-			'course_category'  => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_cat_tax ) ),
-			'course_tag'       => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_tag_tax ) ),
+			'course_category' => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_cat_tax ) ),
+			'course_tag'      => self::terms_to_name_dto( wp_get_post_terms( $post->ID, $this->course_tag_tax ) ),
 		);
 
 		return $item;

@@ -83,12 +83,12 @@ class REST_Quiz {
 		$quiz_post = get_post( $quiz_id );
 
 		if ( ! $quiz_post || $this->post_type !== $quiz_post->post_type || 'publish' !== $quiz_post->post_status ) {
-			$response = array(
-				'code'    => 'not_found',
-				'message' => __( 'Quiz not found for given ID', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Quiz not found for given ID', 'tutor' ),
+				array(),
+				$this->not_found_code
 			);
-			return self::send( $response );
 		}
 
 		$quiz = REST_Posts::to_public_post_dto( $quiz_post );
@@ -126,13 +126,12 @@ class REST_Quiz {
 
 		$quiz->quiz_questions = $questions;
 
-		$response = array(
-			'code'    => 'success',
-			'message' => __( 'Quiz retrieved successfully', 'tutor' ),
-			'data'    => $quiz,
+		return $this->response(
+			'tutor_read_quiz',
+			__( 'Quiz retrieved successfully', 'tutor' ),
+			$quiz,
+			$this->success_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**
@@ -154,20 +153,20 @@ class REST_Quiz {
 				$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Quiz retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Quiz retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Quiz not found for given ID', 'tutor' ),
-			'data'    => $data,
+		return $this->response(
+			'tutor_read_quiz',
+			__( 'Quiz not found for given ID', 'tutor' ),
+			$data,
+			$this->not_found_code
 		);
-		return self::send( $response );
 	}
 
 	/**
@@ -217,22 +216,20 @@ class REST_Quiz {
 				$data = self::redact_answers_for_student( $data );
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Question retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Question retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Question not found for given ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_quiz',
+			__( 'Question not found for given ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**
@@ -299,22 +296,20 @@ class REST_Quiz {
 
 			$attempts = array_values( $attempts );
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Quiz attempts retrieved successfully', 'tutor' ),
-				'data'    => $attempts,
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Quiz attempts retrieved successfully', 'tutor' ),
+				$attempts,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Quiz attempts not found for given ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_quiz',
+			__( 'Quiz attempts not found for given ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**

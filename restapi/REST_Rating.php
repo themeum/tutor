@@ -69,12 +69,12 @@ class REST_Rating {
 		$limit  = ! empty( $limit ) ? min( $limit, 100 ) : 10;
 
 		if ( ! CourseModel::get_post_types( $this->post_id ) || 'publish' !== get_post_status( $this->post_id ) ) {
-			$response = array(
-				'code'    => 'not_found',
-				'message' => __( 'Course not found', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_rating',
+				__( 'Course not found', 'tutor' ),
+				array(),
+				$this->not_found_code
 			);
-			return self::send( $response );
 		}
 
 		$ratings = tutor_utils()->get_course_rating( $this->post_id );
@@ -93,21 +93,20 @@ class REST_Rating {
 			if ( is_array( $reviews ) ) {
 				foreach ( $reviews as $review ) {
 					$payload->reviews[] = (object) array(
-						'display_name'      => isset( $review->display_name ) ? $review->display_name : '',
-						'comment_content'   => isset( $review->comment_content ) ? $review->comment_content : '',
-						'comment_date_gmt'  => isset( $review->comment_date_gmt ) ? $review->comment_date_gmt : '',
-						'rating'            => isset( $review->rating ) ? $review->rating : 0,
+						'display_name'     => isset( $review->display_name ) ? $review->display_name : '',
+						'comment_content'  => isset( $review->comment_content ) ? $review->comment_content : '',
+						'comment_date_gmt' => isset( $review->comment_date_gmt ) ? $review->comment_date_gmt : '',
+						'rating'           => isset( $review->rating ) ? $review->rating : 0,
 					);
 				}
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
-				'data'    => $payload,
+			return $this->response(
+				'tutor_read_rating',
+				__( 'Course rating retrieved successfully', 'tutor' ),
+				$payload,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
 		$ratings->reviews = is_array( $reviews ) ? $reviews : array();
@@ -119,12 +118,11 @@ class REST_Rating {
 			}
 		}
 
-		$response = array(
-			'code'    => 'success',
-			'message' => __( 'Course rating retrieved successfully', 'tutor' ),
-			'data'    => $ratings,
+		return $this->response(
+			'tutor_read_rating',
+			__( 'Course rating retrieved successfully', 'tutor' ),
+			$ratings,
+			$this->success_code
 		);
-
-		return self::send( $response );
 	}
 }

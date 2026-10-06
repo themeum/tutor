@@ -47,13 +47,12 @@ class REST_Author {
 		$user_data = get_userdata( $this->user_id );
 
 		if ( ! is_a( $user_data, 'WP_User' ) ) {
-			$response = array(
-				'code'    => 'invalid_id',
-				'message' => __( 'Author not found', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_author',
+				__( 'Author not found', 'tutor' ),
+				array(),
+				$this->not_found_code
 			);
-
-			return self::send( $response );
 		}
 
 		$author = (object) array(
@@ -70,13 +69,12 @@ class REST_Author {
 			$author->user_url        = $user_data->user_url;
 		}
 
-		$response = array(
-			'code'    => 'success',
-			'message' => __( 'Author details retrieved successfully', 'tutor' ),
-			'data'    => $author,
+		return $this->response(
+			'tutor_read_author',
+			__( 'Author details retrieved successfully', 'tutor' ),
+			$author,
+			$this->success_code
 		);
-
-		return self::send( $response );
 	}
 
 	/**

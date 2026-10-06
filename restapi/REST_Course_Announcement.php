@@ -62,21 +62,19 @@ class REST_Course_Announcement {
 		);
 
 		if ( count( $result ) > 0 ) {
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Announcement retrieved successfully', 'tutor' ),
-				'data'    => $result,
+			return $this->response(
+				'tutor_read_announcement',
+				__( 'Announcement retrieved successfully', 'tutor' ),
+				$result,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Announcement not found for given ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_announcement',
+			__( 'Announcement not found for given ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 }
