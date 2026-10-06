@@ -12,6 +12,7 @@ export interface QuizLayoutConfig {
   quizId?: number;
   enableAnswerReveal?: boolean;
   revealWaitMs?: number;
+  startIndex?: number;
 }
 
 const quizLayout = (config: QuizLayoutConfig) => {
@@ -32,7 +33,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
     formId: config.formId ?? '',
 
     totalQuestions: Number(config.totalQuestions) || 0,
-    currentIndex: 1,
+    currentIndex: Number(config.startIndex) > 0 ? Number(config.startIndex) : 1,
     attemptId: config.attemptId ?? '',
     quizId: config.quizId ?? 0,
     enableAnswerReveal: config.enableAnswerReveal ?? false,
@@ -73,13 +74,15 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
       if (handleFirstTab) window.addEventListener('keydown', handleFirstTab);
 
+      const initialIndex = Number(config.startIndex) > 0 ? Number(config.startIndex) : 1;
+      this.currentIndex = Math.min(Math.max(1, initialIndex), this.totalQuestions || 1);
+
       this.answerRequiredByIndex = this.getAnswerRequiredMap();
       this.revealStateByIndex = this.getRevealStateMap();
       this.skippedByIndex = this.getSkippedStateMap();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
-      this.currentIndex = 1;
       this.syncCurrentRevealFooterState();
 
       paginationEl = (this.$root ?? this.$el)?.querySelector<HTMLElement>(QUIZ_LAYOUT_SELECTORS.PAGINATION) ?? null;
@@ -562,7 +565,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         if (Number.isNaN(index) || index < 1) {
           return;
         }
-        map[index] = false;
+        map[index] = index < this.currentIndex && !this.revealStateByIndex[index];
       });
 
       return map;

@@ -30,7 +30,19 @@
 					<?php
 					foreach ( $questions as $question ) {
 						$question_i++;
-						$markup = "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
+						$is_question_committed = isset( $committed_attempt_answers[ (int) $question->question_id ] );
+						$state_class           = '';
+						if ( $is_question_committed ) {
+							$state_class = ' answered';
+							if ( $enable_answer_reveal ) {
+								$is_answer_correct = '1' === (string) $committed_attempt_answers[ (int) $question->question_id ]->is_correct;
+								$state_class      .= $is_answer_correct ? ' correct' : ' incorrect';
+							}
+						} elseif ( $question_i < ( $start_question_index ?? 1 ) ) {
+							$state_class = ' skipped';
+						}
+						$is_active = ( ( $start_question_index ?? 1 ) == $question_i );
+						$markup    = "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item{$state_class}" . ( $is_active ? ' active' : '' ) . "'>{$question_i}</a> </li>";
 						echo wp_kses(
 							$markup,
 							array(
@@ -58,8 +70,10 @@
 			$question_i = 0;
 		foreach ( $questions as $question ) {
 			$question_i++;
-			$question_settings = maybe_unserialize( $question->question_settings );
-			$style_display     = ( 'question_below_each_other' !== $question_layout_view && 1 == $question_i ) ? 'block' : 'none';
+			$is_question_committed      = isset( $committed_attempt_answers[ (int) $question->question_id ] );
+			$question->committed_answer = $is_question_committed ? $committed_attempt_answers[ (int) $question->question_id ] : null;
+			$question_settings          = maybe_unserialize( $question->question_settings );
+			$style_display              = ( 'question_below_each_other' !== $question_layout_view && ( $start_question_index ?? 1 ) == $question_i ) ? 'block' : 'none';
 			if ( 'question_below_each_other' === $question_layout_view ) {
 				$style_display = 'block';
 			}
@@ -75,7 +89,11 @@
 					data-enable-answer-reveal="<?php echo esc_attr( $enable_answer_reveal ? '1' : '0' ); ?>"
 					data-question_index="<?php echo esc_attr( $question_i ); ?>"
 					data-question-id="<?php echo esc_attr( $question->question_id ); ?>"
-					data-question-type="<?php echo esc_attr( $question->question_type ); ?>">
+					data-question-type="<?php echo esc_attr( $question->question_type ); ?>"
+					<?php if ( $is_question_committed ) : ?>
+						data-revealed="1"
+					<?php endif; ?>
+				>
 
 					<div class="quiz-question tutor-mt-44 tutor-mr-md-100">
 					<?php
@@ -208,7 +226,7 @@
 									<?php
 							}
 							?>
-							<button disabled="disabled" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn tutor-quiz-next-btn-all <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+							<button <?php echo $is_question_committed ? '' : 'disabled="disabled"'; ?> type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn tutor-quiz-next-btn-all <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
 							<?php if ( ! isset( $question_settings['answer_required'] ) || '0' === $question_settings['answer_required'] ) : ?>

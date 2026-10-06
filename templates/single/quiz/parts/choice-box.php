@@ -57,19 +57,37 @@ if ( isset( $question_settings['has_multiple_correct_answer'] ) ) {
 }
 
 $choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
+
+$committed_answer = $question->committed_answer ?? null;
+$is_committed     = ! empty( $committed_answer );
+$given_answers    = array();
+if ( $is_committed ) {
+	$unserialized  = maybe_unserialize( $committed_answer->given_answer );
+	$given_answers = is_array( $unserialized ) ? array_map( 'strval', $unserialized ) : array( (string) $unserialized );
+}
 ?>
 
-<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?>">
+<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?>" <?php echo $is_committed ? 'style="pointer-events: none;"' : ''; ?>>
 	<div id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $class ); ?> tutor-quiz-wrap">
 		<div class="tutor-row">
 			<?php if ( count( $answers ) ) : ?>
 				<?php foreach ( $answers as $answer ) : ?>
 					<?php
-						$answer_title = stripslashes( $answer->answer_title );
+					$answer_title  = stripslashes( $answer->answer_title );
+					$answer_id_str = (string) $answer->answer_id;
+					$is_checked    = $is_committed && in_array( $answer_id_str, $given_answers, true );
+					$state_class   = '';
+					if ( $is_committed && ! empty( $enable_answer_reveal ) ) {
+						if ( ! empty( $answer->is_correct ) ) {
+							$state_class = ' tutor-quiz-answer-single-correct';
+						} elseif ( $is_checked ) {
+							$state_class = ' tutor-quiz-answer-single-incorrect';
+						}
+					}
 					?>
 
 					<?php if ( 'image' !== $answer->answer_view_format && 'text_image' !== $answer->answer_view_format ) : ?>
-						<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-16 tutor-quiz-answer-single">
+						<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-16 tutor-quiz-answer-single<?php echo esc_attr( $state_class ); ?>">
 							<label for="<?php echo esc_attr( $answer->answer_id ); ?>" class="tutor-quiz-question-item">
 								<div class="tutor-card tutor-px-16 tutor-py-12">
 									<div class="tutor-d-flex tutor-align-center">
@@ -77,7 +95,12 @@ $choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
 												id="<?php echo esc_attr( $answer->answer_id ); ?>" 
 												name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question->question_id ); ?>]<?php echo 'multiple_choice' === $question_type ? '[]' : ''; ?>" 
 												type="<?php echo esc_attr( $choice_type ); ?>" 
-												value="<?php echo esc_attr( $answer->answer_id ); ?>">
+												value="<?php echo esc_attr( $answer->answer_id ); ?>"
+												<?php if ( $is_committed ) : ?>
+													disabled="disabled"
+													<?php echo $is_checked ? 'checked="checked"' : ''; ?>
+												<?php endif; ?>
+										>
 
 										<span class="tutor-fs-6 tutor-color-black tutor-ml-8">
 											<?php echo esc_html( 'True' === $answer_title || 'False' === $answer_title ? tutor_utils()->translate_dynamic_text( strtolower( $answer_title ) ) : $answer_title ); ?>
@@ -85,14 +108,25 @@ $choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
 									</div>
 								</div>
 							</label>
+							<?php if ( $is_committed && ! empty( $enable_answer_reveal ) && ! empty( $answer->is_correct ) ) : ?>
+								<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
+									<i class="tutor-icon-mark tutor-color-success" aria-hidden="true"></i>
+									<?php esc_html_e( 'Correct Answer', 'tutor' ); ?>
+								</span>
+							<?php endif; ?>
 						</div>
 					<?php else : ?>
-						<div class="tutor-col-12 tutor-col-sm-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
+						<div class="tutor-col-12 tutor-col-sm-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single<?php echo esc_attr( $state_class ); ?>">
 							<label for="<?php echo esc_attr( $answer->answer_id ); ?>" class="tutor-quiz-question-item tutor-quiz-question-item-has-media">
 								<input 	type="<?php echo esc_attr( $choice_type ); ?>" 
 										class="tutor-form-check-input" id="<?php echo esc_attr( $answer->answer_id ); ?>" 
 										name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question->question_id ); ?>]<?php echo 'multiple_choice' === $question_type ? '[]' : ''; ?>" 
-										value="<?php echo esc_attr( $answer->answer_id ); ?>" />
+										value="<?php echo esc_attr( $answer->answer_id ); ?>"
+										<?php if ( $is_committed ) : ?>
+											disabled="disabled"
+											<?php echo $is_checked ? 'checked="checked"' : ''; ?>
+										<?php endif; ?>
+								/>
 
 								<div class="tutor-card">
 									<img class="tutor-card-image<?php echo 'text_image' == $answer->answer_view_format ? '-top' : ''; ?>" src="<?php echo esc_url( wp_get_attachment_image_url( $answer->image_id, 'full' ) ); ?>" />
@@ -103,6 +137,12 @@ $choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
 									<?php endif; ?>
 								</div>
 							</label>
+							<?php if ( $is_committed && ! empty( $enable_answer_reveal ) && ! empty( $answer->is_correct ) ) : ?>
+								<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
+									<i class="tutor-icon-mark tutor-color-success" aria-hidden="true"></i>
+									<?php esc_html_e( 'Correct Answer', 'tutor' ); ?>
+								</span>
+							<?php endif; ?>
 						</div>
 					<?php endif; ?>
 				<?php endforeach; ?>

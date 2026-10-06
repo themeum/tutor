@@ -89,6 +89,10 @@ $modal_cancel_button = Button::make()
 	->attr( '@click', "handleAbandonCancel(); TutorCore.modal.closeModal('$modal_id')" )
 	->get();
 
+$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $tutor_is_started_quiz->attempt_id );
+
+$last_answered_index = 0;
+
 $default_values = array(
 	'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question_ids][]' => array_map(
 		function ( $question ) {
@@ -97,6 +101,18 @@ $default_values = array(
 		$questions
 	),
 );
+
+if ( is_array( $questions ) ) {
+	foreach ( $questions as $question_index => $question ) {
+		if ( isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
+			$last_answered_index = $question_index + 1;
+		}
+	}
+}
+
+$start_index = $last_answered_index > 0
+	? min( count( $questions ), $last_answered_index + 1 )
+	: 1;
 
 ?>
 <form 
@@ -118,6 +134,7 @@ $default_values = array(
 			totalQuestions: <?php echo (int) count( $questions ); ?>,
 			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
 			revealWaitMs: <?php echo (int) $reveal_wait_ms; ?>,
+			startIndex: <?php echo (int) $start_index; ?>,
 		});
 
 		const submission = tutorQuizSubmission({
@@ -199,9 +216,10 @@ $default_values = array(
 		<?php
 		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id, $quiz_attempt_info );
 		foreach ( $questions as $index => $question ) {
-			$question_settings = maybe_unserialize( $question->question_settings );
-			$answer_required   = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
-			$question_index    = $index + 1;
+			$question_settings          = maybe_unserialize( $question->question_settings );
+			$answer_required            = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
+			$question_index             = $index + 1;
+			$question->committed_answer = $committed_attempt_answers[ (int) $question->question_id ] ?? null;
 			?>
 			<div
 				class="tutor-quiz-question-wrapper"

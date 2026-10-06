@@ -51,6 +51,17 @@ $field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $q
 
 $answer_is_required = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
 $required_message   = __( 'The answer for this question is required', 'tutor' );
+
+$committed_answer = $committed_answer ?? ( $question->committed_answer ?? null );
+$is_revealed      = ! empty( $committed_answer );
+$reveal_result    = '';
+if ( $is_revealed ) {
+	if ( '1' === (string) $committed_answer->is_correct ) {
+		$reveal_result = 'correct';
+	} elseif ( '0' === (string) $committed_answer->is_correct ) {
+		$reveal_result = 'incorrect';
+	}
+}
 ?>
 
 <div
@@ -58,6 +69,12 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 	id="<?php echo esc_attr( $question_id ); ?>"
 	data-question="<?php echo esc_attr( $question->question_type ); ?>"
 	data-answer-required="<?php echo esc_attr( $answer_is_required ); ?>"
+	<?php if ( $is_revealed ) : ?>
+		data-revealed="1"
+		<?php if ( $reveal_result ) : ?>
+			data-result="<?php echo esc_attr( $reveal_result ); ?>"
+		<?php endif; ?>
+	<?php endif; ?>
 >
 	<?php
 	// Render question header.
@@ -78,6 +95,8 @@ $required_message   = __( 'The answer for this question is required', 'tutor' );
 			'answer_is_required'       => $answer_is_required,
 			'required_message'         => $required_message,
 			'question_field_name_base' => $field_name_base,
+			'committed_answer'         => $committed_answer,
+			'is_revealed'              => $is_revealed,
 		)
 	);
 

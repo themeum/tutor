@@ -921,8 +921,10 @@ class Quiz {
 				);
 			}
 
-			$total_marks     = 0;
-			$review_required = false;
+			$total_marks                = 0;
+			$review_required            = false;
+			$committed_attempt_answers  = QuizModel::get_committed_answers_by_attempt( (int) $attempt_id );
+			$has_committed_answers      = ! empty( $committed_attempt_answers );
 
 			if ( tutor_utils()->count( $quiz_answers ) ) {
 
@@ -931,6 +933,11 @@ class Quiz {
 					if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 						continue;
 					}
+
+					if ( isset( $committed_attempt_answers[ (int) $question_id ] ) ) {
+						continue;
+					}
+
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -1114,16 +1121,22 @@ class Quiz {
 				}
 			}
 
+			$total_answered_questions = tutor_utils()->count( $quiz_answers );
+			$earned_marks             = max( 0.0, $total_marks );
+
+			if ( $has_committed_answers ) {
+				$stats                    = QuizModel::get_attempt_answers_stats( (int) $attempt_id );
+				$earned_marks             = max( 0.0, $stats->total_earned_marks );
+				$total_answered_questions = $stats->total_answered_count;
+				$review_required          = $review_required || $stats->pending_review_count > 0;
+			}
+
 			$attempt_info = array(
-				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
-				'earned_marks'             => max( 0.0, $total_marks ),
-				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
+				'total_answered_questions' => $total_answered_questions,
+				'earned_marks'             => $earned_marks,
+				'attempt_status'           => $review_required ? QuizModel::REVIEW_REQUIRED : QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
-
-			if ( $review_required ) {
-				$attempt_info['attempt_status'] = QuizModel::REVIEW_REQUIRED;
-			}
 
 			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
 
@@ -1337,14 +1350,55 @@ class Quiz {
 		}
 		$submitted_ids = array_map( 'intval', array_filter( (array) $submitted, 'is_numeric' ) );
 
+		if ( empty( $submitted_ids ) ) {
+			$this->json_response( __( 'An answer is required to verify this question', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$existing_answer_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT attempt_answer_id 
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers 
+				  WHERE quiz_attempt_id = %d AND question_id = %d",
+				$attempt_id,
+				$question_id
+			)
+		);
+
+		if ( $existing_answer_id ) {
+			$this->json_response( __( 'Answer has already been committed for this question', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
 		$is_correct = false;
-		if ( ! empty( $submitted_ids ) && ! empty( $correct_answer_ids ) ) {
+		if ( ! empty( $correct_answer_ids ) ) {
 			$sorted_submitted_ids      = $submitted_ids;
 			$sorted_correct_answer_ids = $correct_answer_ids;
 			sort( $sorted_submitted_ids );
 			sort( $sorted_correct_answer_ids );
 			$is_correct = ( $sorted_submitted_ids === $sorted_correct_answer_ids );
 		}
+
+		$question_mark = (float) ( $question->question_mark ?? 0 );
+		$achieved_mark = $is_correct ? $question_mark : 0.0;
+
+		$given_answer = ( QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE === $question->question_type )
+			? maybe_serialize( $submitted_ids )
+			: (string) ( $submitted_ids[0] ?? '' );
+
+		$answers_data = array(
+			'user_id'         => $user_id,
+			'quiz_id'         => $effective_quiz_id,
+			'question_id'     => $question_id,
+			'quiz_attempt_id' => $attempt_id,
+			'given_answer'    => $given_answer,
+			'question_mark'   => $question_mark,
+			'achieved_mark'   => $achieved_mark,
+			'minus_mark'      => 0,
+			'is_correct'      => $is_correct ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT,
+		);
+
+		$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question->question_type, $user_id, $attempt_id );
+
+		$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 
 		$explanation = apply_filters( 'tutor_quiz_question_answer_explanation', '', $question, $attempt );
 
@@ -2743,6 +2797,7 @@ class Quiz {
 				'question'          => $question,
 				'question_settings' => $question_settings,
 				'question_type'     => $template,
+				'committed_answer'  => $question->committed_answer ?? null,
 			)
 		);
 	}

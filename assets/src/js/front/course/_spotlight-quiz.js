@@ -48,7 +48,7 @@ window.jQuery(document).ready($ => {
 
     function feedback_response($question_wrap, correct_answers, explanation) {
         if (get_quiz_layout_view() !== 'question_below_each_other') {
-            $('.tutor-quiz-answer-single-info').remove();
+            $question_wrap.find('.tutor-quiz-answer-single-info').remove();
         }
 
         $question_wrap.find('.tutor-quiz-answer-single').removeClass('tutor-quiz-answer-single-correct tutor-quiz-answer-single-incorrect');
@@ -275,6 +275,11 @@ window.jQuery(document).ready($ => {
                 checkedAnswers.push($(this).val());
             });
 
+            if (!checkedAnswers.length) {
+                moveToNext();
+                return;
+            }
+
             $that.prop('disabled', true);
 
             $.ajax({
@@ -428,6 +433,13 @@ window.jQuery(document).ready($ => {
             $lastQuestion.find('input[type="radio"]:checked, input[type="checkbox"]:checked').each(function () {
                 checkedAnswers.push($(this).val());
             });
+
+            if (!checkedAnswers.length) {
+                $btn.addClass('is-loading');
+                $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
+                document.getElementById('tutor-answering-quiz').submit();
+                return;
+            }
 
             $btn.prop('disabled', true);
 

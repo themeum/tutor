@@ -1009,6 +1009,79 @@ class QuizModel {
 	}
 
 	/**
+	 * Get committed attempt answers keyed by question ID.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return array<int, object>
+	 */
+	public static function get_committed_answers_by_attempt( int $attempt_id ): array {
+		global $wpdb;
+
+		if ( empty( $attempt_id ) ) {
+			return array();
+		}
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT question_id, given_answer, is_correct, achieved_mark
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				  WHERE quiz_attempt_id = %d",
+				$attempt_id
+			),
+			OBJECT_K
+		);
+
+		return is_array( $results ) ? $results : array();
+	}
+
+	/**
+	 * Get attempt answers aggregated statistics (earned marks, answered count, pending review count).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return object{total_earned_marks: float, total_answered_count: int, pending_review_count: int}
+	 */
+	public static function get_attempt_answers_stats( int $attempt_id ): object {
+		$default = (object) array(
+			'total_earned_marks'   => 0.0,
+			'total_answered_count' => 0,
+			'pending_review_count' => 0,
+		);
+
+		if ( $attempt_id <= 0 ) {
+			return $default;
+		}
+
+		global $wpdb;
+
+		$stats = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COALESCE(SUM(achieved_mark), 0) AS total_earned_marks,
+						COUNT(*) AS total_answered_count,
+						COALESCE(SUM(CASE WHEN is_correct IS NULL THEN 1 ELSE 0 END), 0) AS pending_review_count
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				  WHERE quiz_attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		if ( ! $stats ) {
+			return $default;
+		}
+
+		return (object) array(
+			'total_earned_marks'   => (float) $stats->total_earned_marks,
+			'total_answered_count' => (int) $stats->total_answered_count,
+			'pending_review_count' => (int) $stats->pending_review_count,
+		);
+	}
+
+	/**
 	 * Check whether an attempt answer should be treated as skipped.
 	 *
 	 * @since 4.0.0
