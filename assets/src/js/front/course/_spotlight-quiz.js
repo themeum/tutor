@@ -291,7 +291,7 @@ window.jQuery(document).ready($ => {
                 return;
             }
 
-            $that.prop('disabled', true);
+            $that.prop('disabled', true).addClass('is-loading');
 
             $.ajax({
                 url: window._tutorobject.ajaxurl,
@@ -310,7 +310,7 @@ window.jQuery(document).ready($ => {
                     }
                 },
                 complete: function () {
-                    $that.prop('disabled', false);
+                    $that.prop('disabled', false).removeClass('is-loading');
                     clearRevealTimeout();
                     revealTimeoutId = setTimeout(function () {
                         revealTimeoutId = null;
@@ -462,7 +462,7 @@ window.jQuery(document).ready($ => {
                 return;
             }
 
-            $btn.prop('disabled', true);
+            $btn.prop('disabled', true).addClass('is-loading');
 
             $.ajax({
                 url: window._tutorobject.ajaxurl,
@@ -481,7 +481,7 @@ window.jQuery(document).ready($ => {
                     }
                 },
                 complete: function () {
-                    $btn.prop('disabled', false);
+                    $btn.prop('disabled', false).removeClass('is-loading');
                     clearRevealTimeout();
                     revealTimeoutId = setTimeout(function () {
                         revealTimeoutId = null;
