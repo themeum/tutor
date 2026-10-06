@@ -1191,9 +1191,12 @@ class QuizModel {
 		$is_skipped           = self::is_attempt_answer_skipped( $attempt_answer );
 
 		if ( $is_instructor_review && ! $is_skipped && $review_field_name ) {
-			$label_map   = wp_json_encode( $badge['label_map'] );
-			$variant_map = wp_json_encode( $badge['variant_map'] );
-			$field       = esc_attr( $review_field_name );
+			$label_map   = tutor_json_encode( $badge['label_map'] );
+			$variant_map = tutor_json_encode( $badge['variant_map'] );
+
+			// Whitelist-sanitize: only alphanumerics, underscores, and brackets are safe
+			// inside a JS single-quoted string literal (esc_attr does not escape ').
+			$field = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', $review_field_name );
 
 			Badge::make()
 				->rounded()
