@@ -1,6 +1,6 @@
 <?php
 /**
- * Pagination component
+ * Global Pagination Template for Backend Pages
  *
  * @package Tutor\Views
  * @subpackage Tutor\ViewElements
