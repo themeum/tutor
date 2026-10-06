@@ -116,7 +116,7 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                     <div class="tutor-consent-user-card">
                         ${avatarSrc ? `<img src="${avatarSrc}" alt="${userName}" />` : ''}
                         <div class="tutor-consent-user-card-info">
-                            <span class="tutor-consent-user-card-name">${userName}</span>
+                            <span class="tutor-consent-user-card-name">${JSON.parse(userName)}</span>
                             <span class="tutor-consent-user-card-joined">${userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : ''}</span>
                         </div>
                     </div>
