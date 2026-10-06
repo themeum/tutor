@@ -114,7 +114,7 @@ class HttpHelper {
 	public static function get( $url, $data = array(), $headers = array(), $args = array() ) {
 
 		if ( ! empty( $data ) ) {
-			$url = add_query_arg( $data, $url );
+			$url = UrlHelper::add_query_params( $url, $data );
 		}
 
 		$args = array_merge(

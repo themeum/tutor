@@ -3,10 +3,11 @@
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use Ollyo\PaymentHub\Core\Support\Path;
-use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 use Tutor\Helpers\HttpHelper;
+use Tutor\PaymentGateways\Http;
+use Tutor\PaymentGateways\Utils;
 
 /**
  * Paypal Helper Class
@@ -45,7 +46,7 @@ final class Helper {
 			(array) $data->items
 		);
 
-		$minChargeApplicable = System::isTotalAmountZero( $data );
+		$minChargeApplicable = Utils::isTotalAmountZero( $data );
 
 		if ( $minChargeApplicable ) {
 			$items[] = array(
@@ -260,7 +261,7 @@ final class Helper {
 	 * @since  3.0.0
 	 */
 	public static function getShippingInfo( $shipping ): array {
-		[$address1, $address2] = System::splitAddress( $shipping, 300 );
+		[$address1, $address2] = Utils::splitAddress( $shipping, 300 );
 
 		return array(
 			'type'    => 'SHIPPING',
@@ -440,7 +441,7 @@ final class Helper {
 			),
 		);
 
-		$responseData = System::sendHttpRequest( $requestData );
+		$responseData = Http::send( $requestData );
 
 		return strtolower( $responseData->status ) ?? null;
 	}

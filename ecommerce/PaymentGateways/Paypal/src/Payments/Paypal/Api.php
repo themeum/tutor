@@ -3,10 +3,10 @@
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use ErrorException;
-use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 use Tutor\Helpers\HttpHelper;
+use Tutor\PaymentGateways\Http;
 
 /**
  * Paypal Api Class
@@ -76,7 +76,7 @@ final class Api {
 				),
 			);
 
-			$response = System::sendHttpRequest( $requestData );
+			$response = Http::send( $requestData );
 
 			if ( $response->token_type && $response->access_token ) {
 				$this->accessToken = "{$response->token_type}  {$response->access_token}";
@@ -109,7 +109,7 @@ final class Api {
 			),
 		);
 
-		return System::sendHttpRequest( $request_data );
+		return Http::send( $request_data );
 	}
 
 
@@ -136,7 +136,7 @@ final class Api {
 			),
 		);
 
-		System::sendHttpRequest( $requestData );
+		Http::send( $requestData );
 	}
 
 	/**
@@ -171,7 +171,7 @@ final class Api {
 				),
 			);
 
-			$response_data = System::sendHttpRequest( $request_data );
+			$response_data = Http::send( $request_data );
 
 			return 'SUCCESS' === $response_data->verification_status ? true : false;
 		} catch ( \Throwable $error ) {
@@ -217,7 +217,7 @@ final class Api {
 				),
 			);
 
-			return System::sendHttpRequest( $request_data );
+			return Http::send( $request_data );
 
 		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
@@ -253,7 +253,7 @@ final class Api {
 				),
 			);
 
-			System::sendHttpRequest( $request_data );
+			Http::send( $request_data );
 		} catch ( \Throwable $th ) {
 			throw $th;
 		}
@@ -282,7 +282,7 @@ final class Api {
 				),
 			);
 
-			return System::sendHttpRequest( $request_data );
+			return Http::send( $request_data );
 
 		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();

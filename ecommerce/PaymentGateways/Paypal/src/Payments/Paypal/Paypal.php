@@ -5,13 +5,14 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 use Throwable;
 use ErrorException;
 use Ollyo\PaymentHub\Core\Support\Arr;
-use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 use Tutor\Helpers\HttpHelper;
+use Tutor\PaymentGateways\Http;
+use Tutor\PaymentGateways\Utils;
 
 class Paypal extends BasePayment {
 
@@ -119,7 +120,10 @@ class Paypal extends BasePayment {
 		$type           = $data->type ?? 'one-time';
 		$items          = 'one-time' === $type ? Helper::getItems( $data ) : null;
 		$amount         = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
-		$tutor_metadata = System::get_tutor_metadata( $this->config->get( 'mode' ), $data->order_user_id );
+		$tutor_metadata = array_merge(
+			Utils::prepare_merchant_metadata( $data->order_user_id ),
+			array( 'env' => $this->config->get( 'mode' ) )
+		);
 		$description    = implode(
 			',',
 			array_map(
@@ -250,7 +254,7 @@ class Paypal extends BasePayment {
 	 * @since  3.0.0
 	 */
 	private function setReturnData( $payloadStream ): object {
-		$returnData = System::defaultOrderData();
+		$returnData = Utils::defaultOrderData();
 
 		$statusMap = array(
 			'DECLINED'  => 'failed',
@@ -346,7 +350,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if there's an issue with the HTTP request or if webhook information is not found.
 	 * @since  1.0.0
-	 * @since  4.1.2 Uses System::sendHttpRequest() and catches HttpRequestException.
+	 * @since  4.1.2 Uses Http::send() and catches HttpRequestException.
 	 */
 	public function createWebhook(): ?object {
 		try {
@@ -361,7 +365,7 @@ class Paypal extends BasePayment {
 				),
 			);
 
-			$responseData = System::sendHttpRequest( $requestData );
+			$responseData = Http::send( $requestData );
 
 			if ( isset( $responseData->webhooks ) && is_array( $responseData->webhooks ) ) {
 
@@ -387,7 +391,7 @@ class Paypal extends BasePayment {
 	 * @throws InvalidDataException Throws an exception if the webhook information is invalid or the creation fails.
 	 * @throws ErrorException       Throws an exception if the HTTP request fails.
 	 * @since  1.0.0
-	 * @since  4.1.2 Uses System::sendHttpRequest() and catches HttpRequestException.
+	 * @since  4.1.2 Uses Http::send() and catches HttpRequestException.
 	 */
 	private function createNewWebhook() {
 		try {
@@ -408,7 +412,7 @@ class Paypal extends BasePayment {
 				),
 			);
 
-			$responseData = System::sendHttpRequest( $requestData );
+			$responseData = Http::send( $requestData );
 
 			if ( $responseData->url === $this->config->get( 'webhook_url' ) && $responseData->id ) {
 				return (object) array(
@@ -436,7 +440,7 @@ class Paypal extends BasePayment {
 	 * @since  1.0.0
 	 */
 	private function processRefund( $paymentData ): object {
-		$returnData = System::defaultOrderData( 'refund' );
+		$returnData = Utils::defaultOrderData( 'refund' );
 
 		try {
 
