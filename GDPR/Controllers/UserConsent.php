@@ -208,7 +208,7 @@ class UserConsent extends BaseController {
 				$user_id = Input::post( 'user_id', 0, Input::TYPE_INT );
 
 				$validate_user = ValidationHelper::validate(
-					array( 'user_id' => 'required|is_exists' ),
+					array( 'user_id' => 'required|user_exists' ),
 					array( 'user_id' => $user_id )
 				);
 
@@ -338,7 +338,7 @@ class UserConsent extends BaseController {
 	/**
 	 * Sanitize CSV field
 	 *
-	 * @since 4.0.0
+	 * @since 4.1.1
 	 *
 	 * @param mixed $value Value to sanitize.
 	 *
