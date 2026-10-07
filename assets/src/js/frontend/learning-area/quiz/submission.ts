@@ -36,6 +36,8 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
     hasTimedOut: false,
     isRevealSubmitting: false,
+    isWaitingSubmit: false,
+    submitTimeoutId: null as number | null,
     beforeUnloadTriggered: false,
     isAbandoningNavigation: false,
     skipBeforeUnload: false,
@@ -123,8 +125,28 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       });
     },
 
+    clearSubmitTimeout() {
+      if (this.submitTimeoutId !== null) {
+        window.clearTimeout(this.submitTimeoutId);
+        this.submitTimeoutId = null;
+      }
+      this.isWaitingSubmit = false;
+      this.isRevealSubmitting = false;
+    },
+
     async handleQuizSubmit(data: Record<string, unknown>) {
-      if (this.isRevealSubmitting || this.submitQuizMutation?.isPending) {
+      if (this.submitQuizMutation?.isPending) {
+        return;
+      }
+
+      if (this.isWaitingSubmit) {
+        this.clearSubmitTimeout();
+        const payload = this.buildSubmitPayload(data);
+        this.submitQuizMutation?.mutate(payload);
+        return;
+      }
+
+      if (this.isRevealSubmitting) {
         return;
       }
 
@@ -136,9 +158,12 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         try {
           const delay = await config.beforeSubmit.call(this);
           if (typeof delay === 'number' && delay > 0) {
-            window.setTimeout(() => {
+            this.isRevealSubmitting = false;
+            this.isWaitingSubmit = true;
+            this.submitTimeoutId = window.setTimeout(() => {
+              this.submitTimeoutId = null;
+              this.isWaitingSubmit = false;
               this.submitQuizMutation?.mutate(payload);
-              this.isRevealSubmitting = false;
             }, delay);
             return;
           }
@@ -238,7 +263,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       if (this.isAbandoningNavigation) {
         return false;
       }
-      if (this.hasTimedOut || this.isRevealSubmitting) {
+      if (this.hasTimedOut || this.isRevealSubmitting || this.isWaitingSubmit) {
         return false;
       }
       if (this.submitQuizMutation?.isPending || this.abandonQuizMutation?.isPending) {
@@ -443,6 +468,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     destroy() {
+      this.clearSubmitTimeout();
       if (this.beforeUnloadHandler) {
         window.removeEventListener('beforeunload', this.beforeUnloadHandler);
       }

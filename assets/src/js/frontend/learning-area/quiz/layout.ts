@@ -15,6 +15,14 @@ export interface QuizLayoutConfig {
   startIndex?: number;
 }
 
+/**
+ * Provided by `tutorQuizSubmission` (`submission.ts`), merged into the
+ * same Alpine component via `attempt.php`.
+ */
+interface QuizSubmissionContext {
+  clearSubmitTimeout?: () => void;
+}
+
 const quizLayout = (config: QuizLayoutConfig) => {
   const { form } = window.TutorCore;
   const { tutorConfig } = window.TutorCore.config;
@@ -274,6 +282,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       }
       if (this.currentIndex > 1) {
         this.clearRevealTimeout();
+        (this as unknown as QuizSubmissionContext).clearSubmitTimeout?.();
         this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex -= 1;
@@ -348,6 +357,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         return;
       }
       this.clearRevealTimeout();
+      (this as unknown as QuizSubmissionContext).clearSubmitTimeout?.();
       this.markCurrentAsSkipped();
       this.runWithViewTransition(
         () => {
@@ -436,6 +446,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
       );
       const answers = checkedInputs.map((input) => Number(input.value)).filter((val) => !Number.isNaN(val));
 
+      if (!answers.length) {
+        return false;
+      }
+
       this.isVerifying = true;
 
       try {
@@ -480,6 +494,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
       const wrapper = this.getQuestionWrapper(this.currentIndex);
       if (!wrapper || !this.shouldReveal(wrapper) || this.isQuestionRevealed(wrapper)) {
+        return false;
+      }
+
+      if (!this.isQuestionAttempted(this.currentIndex)) {
         return false;
       }
 

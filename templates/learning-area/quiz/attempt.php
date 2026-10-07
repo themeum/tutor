@@ -312,7 +312,7 @@ $start_index = $last_answered_index > 0
 						->size( Size::LARGE )
 						->variant( Variant::LINK_GRAY )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isRevealing || isVerifying' )
+						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
 						->attr( 'x-show', 'canSkip(currentIndex) && revealFooterState === ""' )
 						->attr( '@click', 'goNext({ skipValidation: true })' )
 						->attr( 'class', 'tutor-quiz-skip-btn' )
@@ -328,7 +328,7 @@ $start_index = $last_answered_index > 0
 						->icon( Icon::ARROW_LEFT_2, 'left', 20 )
 						->flip_rtl()
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isVerifying' )
+						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
 						->attr( '@click', 'goPrev()' )
 						->attr( 'x-show', $show_previous_button ? 'currentIndex > 1' : 'false' )
 						->attr( 'class', 'tutor-quiz-answer-previous-btn' )
@@ -338,7 +338,7 @@ $start_index = $last_answered_index > 0
 						->label( __( 'Next', 'tutor' ) )
 						->size( Size::LARGE )
 						->attr( 'type', 'button' )
-						->attr( ':disabled', 'isRevealSubmitting || isVerifying || shouldDisableNextButton()' )
+						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending || shouldDisableNextButton()' )
 						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying }' )
 						->attr( '@click', 'goNext()' )
 						->attr( 'x-show', 'currentIndex < totalQuestions' )
@@ -350,8 +350,8 @@ $start_index = $last_answered_index > 0
 						->size( Size::LARGE )
 						->attr( 'type', 'submit' )
 						->attr( 'x-show', 'currentIndex === totalQuestions' )
-						->attr( ':disabled', 'isRevealSubmitting || submitQuizMutation?.isPending' )
-						->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
+						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
+						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending }' )
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
 				?>
@@ -366,8 +366,8 @@ $start_index = $last_answered_index > 0
 					->size( Size::LARGE )
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'isRevealSubmitting || submitQuizMutation?.isPending' )
-					->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
+					->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
+					->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();
 			?>
