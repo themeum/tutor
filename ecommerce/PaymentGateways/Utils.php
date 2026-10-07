@@ -220,17 +220,19 @@ class Utils {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @param int $order_user_id The ID of the user who placed the order.
+	 * @param int    $order_user_id The ID of the user who placed the order.
+	 * @param string $gateway_environment Payment environment mode
 	 *
 	 * @return array The metadata as string key/value pairs.
 	 */
-	public static function prepare_merchant_metadata( $order_user_id ): array {
+	public static function prepareMerchantMetadata( $order_user_id, $gateway_environment ): array {
 		$user = $order_user_id ? get_userdata( $order_user_id ) : false;
 
 		return array(
 			'tutor_version' => defined( 'TUTOR_VERSION' ) ? TUTOR_VERSION : '',
 			'wp_user'       => $user ? "{$user->ID} | {$user->user_email}" : '',
 			'site_url'      => get_site_url(),
+			'env'           => $gateway_environment,
 		);
 	}
 }

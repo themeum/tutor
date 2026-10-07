@@ -120,10 +120,7 @@ class Paypal extends BasePayment {
 		$type           = $data->type ?? 'one-time';
 		$items          = 'one-time' === $type ? Helper::getItems( $data ) : null;
 		$amount         = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
-		$tutor_metadata = array_merge(
-			Utils::prepare_merchant_metadata( $data->order_user_id ),
-			array( 'env' => $this->config->get( 'mode' ) )
-		);
+		$tutor_metadata = Utils::prepareMerchantMetadata( $data->order_user_id, $this->config->get( 'mode' ) );
 		$description    = implode(
 			',',
 			array_map(
