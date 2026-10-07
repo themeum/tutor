@@ -484,8 +484,8 @@ class DropdownFilter extends BaseComponent {
 					offset: 4,
 				}),
 				<?php if ( $this->active_value ) : ?>
-					labels: <?php echo esc_attr( wp_json_encode( array_column( $options, 'label', 'value' ) ) ); ?>,
-					counts: <?php echo esc_attr( wp_json_encode( array_column( $options, 'count', 'value' ) ) ); ?>
+					labels: <?php echo esc_attr( tutor_json_encode( array_column( $options, 'label', 'value' ) ) ); ?>,
+					counts: <?php echo esc_attr( tutor_json_encode( array_column( $options, 'count', 'value' ) ) ); ?>
 				<?php endif; ?>
 			}"
 		>
@@ -497,7 +497,7 @@ class DropdownFilter extends BaseComponent {
 			>
 				<span class="tutor-truncate <?php echo Variant::LINK === $this->variant ? esc_attr( 'tutor-text-secondary' ) : ''; ?>" style="max-width: 150px;"
 					<?php if ( $this->active_value ) : ?>
-						x-text="labels[<?php echo esc_attr( $this->active_value ); ?>] || '<?php echo esc_js( $label ); ?>'"
+						x-text="labels[<?php echo esc_attr( tutor_json_encode( (string) $this->active_value ) ); ?>] || <?php echo esc_attr( tutor_json_encode( (string) $label ) ); ?>"
 					<?php endif; ?>
 				>
 					<?php echo esc_html( $label ); ?>
