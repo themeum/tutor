@@ -29,7 +29,6 @@ if ( isset( $data ) ) : ?>
 			<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
 				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 					<form id="tutor-admin-bulk-action-form" action method="post">
-						<?php tutor_nonce_field(); ?>
 						<input type="hidden" name="action" value="<?php echo esc_attr( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
 							<div class="tutor-mr-12">

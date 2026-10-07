@@ -13,12 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <?php if ( isset( $data ) ) : ?>
-
 	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between">
 		<?php if ( $data['bulk_action'] ) : ?>
 			<div class="tutor-admin-bulk-action-wrapper">
 				<form action="" method="post">
-					<?php tutor_nonce_field(); ?>
 					<div class="tutor-bulk-action-group">
 						<select name="bulk-action" id="tutor-backend-bulk-action">
 							<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
