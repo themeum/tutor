@@ -72,7 +72,7 @@ if ( $is_revealed ) {
 	<?php if ( $is_revealed ) : ?>
 		data-revealed="1"
 		<?php if ( $reveal_result ) : ?>
-			data-result="<?php echo esc_attr( $reveal_result ); ?>"
+			data-reveal-result="<?php echo esc_attr( $reveal_result ); ?>"
 		<?php endif; ?>
 	<?php endif; ?>
 >
