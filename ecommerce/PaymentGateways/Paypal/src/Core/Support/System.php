@@ -7,7 +7,7 @@ use Ollyo\PaymentHub\Exceptions\NotFoundException;
  * Core helpers for the PaymentHub library.
  *
  * @since 1.0.0
- * @since 4.1.2 HTTP, money, address and order data helpers moved to
+ * @since 4.2.0 HTTP, money, address and order data helpers moved to
  *              \Tutor\PaymentGateways\Http and \Tutor\PaymentGateways\Utils.
  */
 class System {

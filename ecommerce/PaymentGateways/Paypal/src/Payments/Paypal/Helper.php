@@ -178,7 +178,7 @@ final class Helper {
 	 * @param  HttpRequestException $errorResponse The error response from the HTTP request.
 	 * @return string|null                          The formatted error message.
 	 * @since  3.0.0
-	 * @since  4.1.2 Accepts HttpRequestException instead of Guzzle's RequestException.
+	 * @since  4.2.0 Accepts HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public static function handleErrorResponse( $errorResponse ): ?string {
 		$message = '';

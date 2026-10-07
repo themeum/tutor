@@ -8,14 +8,14 @@ use Tutor\Helpers\HttpHelper;
 /**
  * Thrown when an HTTP request fails at the transport level or returns a 4xx/5xx status.
  *
- * @since 4.1.2
+ * @since 4.2.0
  */
 class HttpRequestException extends RuntimeException {
 
 	/**
 	 * The response, or null when the request never received one.
 	 *
-	 * @since 4.1.2
+	 * @since 4.2.0
 	 *
 	 * @var HttpHelper|null
 	 */
@@ -24,7 +24,7 @@ class HttpRequestException extends RuntimeException {
 	/**
 	 * Create a new exception instance.
 	 *
-	 * @since 4.1.2
+	 * @since 4.2.0
 	 *
 	 * @param string          $message  The exception message.
 	 * @param int             $code     The HTTP status code, or 0 for transport errors.
@@ -40,7 +40,7 @@ class HttpRequestException extends RuntimeException {
 	/**
 	 * Get the response, or null for transport errors.
 	 *
-	 * @since 4.1.2
+	 * @since 4.2.0
 	 *
 	 * @return HttpHelper|null
 	 */
@@ -51,7 +51,7 @@ class HttpRequestException extends RuntimeException {
 	/**
 	 * Determine if a response was received.
 	 *
-	 * @since 4.1.2
+	 * @since 4.2.0
 	 *
 	 * @return bool
 	 */

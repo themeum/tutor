@@ -5,7 +5,7 @@
  * @package Tutor\Test
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 4.1.2
+ * @since 4.2.0
  */
 
 namespace TutorTest;
@@ -18,7 +18,7 @@ use WP_Error;
  *
  * Requests are intercepted with the `pre_http_request` filter, so no real HTTP call is made.
  *
- * @since 4.1.2
+ * @since 4.2.0
  */
 class HttpHelperTest extends \WP_UnitTestCase {
 

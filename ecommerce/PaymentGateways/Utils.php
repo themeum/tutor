@@ -5,7 +5,7 @@
  * @package Tutor\Ecommerce
  * @author Themeum
  * @link https://themeum.com
- * @since 4.1.2
+ * @since 4.2.0
  */
 
 namespace Tutor\PaymentGateways;
@@ -24,14 +24,14 @@ use Ollyo\PaymentHub\Exceptions\InvalidDataException;
  * Most methods were moved from Ollyo\PaymentHub\Core\Support\System. The money
  * methods need brick/money, which GatewayBase loads from the PayPal vendor folder.
  *
- * @since 4.1.2
+ * @since 4.2.0
  */
 class Utils {
 	/**
 	 * Create an object for the default order data.
 	 *
 	 * @since 1.0.0
-	 * @since 4.1.2 Moved from System.
+	 * @since 4.2.0 Moved from System.
 	 *
 	 * @param string $type Order data type: 'payment' or 'refund'. Default 'payment'.
 	 *
@@ -79,7 +79,7 @@ class Utils {
 	 * @throws InvalidDataException If the email address is invalid according to `FILTER_SANITIZE_EMAIL`
 	 *                              or `FILTER_VALIDATE_EMAIL` filters.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System.
+	 * @since  4.2.0 Moved from System.
 	 */
 	public static function validateAndSanitizeEmailAddress( string $email ) {
 		$sanitizeEmail = filter_var( $email, FILTER_SANITIZE_EMAIL );
@@ -98,7 +98,7 @@ class Utils {
 	 * @param  string|null $name    The full name string to be processed.
 	 * @return array                An array containing the first and last name, or null if the name is empty.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System.
+	 * @since  4.2.0 Moved from System.
 	 */
 	public static function extractNameParts( $name ): array {
 		if ( empty( $name ) ) {
@@ -122,7 +122,7 @@ class Utils {
 	 * @param  int    $maxLength     The maximum length for the first part of the street address.
 	 * @return array                The formatted part of the street address.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System.
+	 * @since  4.2.0 Moved from System.
 	 */
 	public static function splitAddress( $data, $maxLength ) {
 		if ( empty( $data->address1 ) ) {
@@ -143,7 +143,7 @@ class Utils {
 	 *
 	 * @return int|float               The minor currency amount as an integer, or 0.0 when the amount is empty.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System. Returns 0.0 instead of null when the amount is empty.
+	 * @since  4.2.0 Moved from System. Returns 0.0 instead of null when the amount is empty.
 	 */
 	public static function getMinorAmountBasedOnCurrency( $amount, $currency ) {
 		if ( ! empty( $amount ) ) {
@@ -161,7 +161,7 @@ class Utils {
 	 *
 	 * @return float           The major currency amount, or 0.0 when the amount is empty.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System. Returns 0.0 instead of null when the amount is empty.
+	 * @since  4.2.0 Moved from System. Returns 0.0 instead of null when the amount is empty.
 	 */
 	public static function convertMinorAmountToMajor( $amount, $currency ) {
 		if ( ! empty( $amount ) ) {
@@ -177,7 +177,7 @@ class Utils {
 	 * @param  object $data Contains the order's necessary charges.
 	 * @return bool         Returns true if the total amount equals zero, false otherwise.
 	 * @since  1.0.0
-	 * @since  4.1.2 Moved from System.
+	 * @since  4.2.0 Moved from System.
 	 */
 	public static function isTotalAmountZero( &$data ): bool {
 		$data->subtotal        ??= 0;
@@ -196,7 +196,7 @@ class Utils {
 	 * @param   object $config  Configuration object that provides the URLs and payment method.
 	 * @return  string          The updated webhook URL with encoded data.
 	 * @since   1.0.0
-	 * @since   4.1.2 Moved from System.
+	 * @since   4.2.0 Moved from System.
 	 */
 	public static function updateWebhookUrl( $config ): string {
 		$encodedUrlData = base64_encode(
@@ -218,7 +218,7 @@ class Utils {
 	/**
 	 * Builds the Tutor metadata attached to payment gateway requests.
 	 *
-	 * @since 4.1.2
+	 * @since 4.2.0
 	 *
 	 * @param int    $order_user_id The ID of the user who placed the order.
 	 * @param string $gateway_environment Payment environment mode

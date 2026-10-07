@@ -167,7 +167,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error retrieving the checkout URL or handling the response.
 	 * @since  3.0.0
-	 * @since  4.1.2 Catches HttpRequestException, logs the error and shows a generic message.
+	 * @since  4.2.0 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createPayment() {
 		try {
@@ -199,7 +199,7 @@ class Paypal extends BasePayment {
 	 * @return object           Returns the processed order data or an error response.
 	 * @throws HttpRequestException If the request fails.
 	 * @since  3.0.0
-	 * @since  4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
+	 * @since  4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
@@ -278,7 +278,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error during the payment process or request handling.
 	 * @since  3.0.0
-	 * @since  4.1.2 Catches HttpRequestException, logs the error and shows a generic message.
+	 * @since  4.2.0 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createRecurringPayment() {
 		try {
@@ -327,7 +327,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if an error occurs while making the HTTP request or processing the response.
 	 * @since  3.0.0
-	 * @since  4.1.2 Catches HttpRequestException instead of Guzzle's RequestException.
+	 * @since  4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function createRefund() {
 

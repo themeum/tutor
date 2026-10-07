@@ -5,7 +5,7 @@
  * @package Tutor\Ecommerce
  * @author Themeum
  * @link https://themeum.com
- * @since 4.1.2
+ * @since 4.2.0
  */
 
 namespace Tutor\PaymentGateways;
@@ -22,7 +22,7 @@ use Tutor\Helpers\HttpHelper;
  * Unlike HttpHelper, it throws HttpRequestException on transport errors and
  * 4xx/5xx responses so gateways can handle failures in one catch block.
  *
- * @since 4.1.2
+ * @since 4.2.0
  */
 class Http {
 	/**
@@ -36,7 +36,7 @@ class Http {
 	 * - options (array)  Optional. `headers` (array), `body` (array|string) and `method`.
 	 *                    For GET, an array `body` is sent as query parameters.
 	 *
-	 * @since 4.1.2 Moved from System::sendHttpRequest() and sends the request through HttpHelper instead of Guzzle.
+	 * @since 4.2.0 Moved from System::sendHttpRequest() and sends the request through HttpHelper instead of Guzzle.
 	 *
 	 * @param array|object $request_data       Request data with url, optional method, and options.
 	 * @param bool         $return_raw_payload Whether to return the HttpHelper response
