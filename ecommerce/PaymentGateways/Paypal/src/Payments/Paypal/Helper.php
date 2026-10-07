@@ -9,6 +9,10 @@ use Tutor\PaymentGateways\Utils;
 
 /**
  * Paypal Helper Class
+ *
+ * Builds PayPal request data and formats PayPal error responses.
+ *
+ * @since 3.0.0
  */
 final class Helper {
 
@@ -18,6 +22,7 @@ final class Helper {
 	 * @param  object $data The data object containing item details.
 	 * @return array        An array of formatted items.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::isTotalAmountZero() instead of System::isTotalAmountZero().
 	 */
 	public static function getItems( &$data ): array {
 		$currency       = $data->currency->code;
@@ -257,6 +262,7 @@ final class Helper {
 	 * @param  object $shipping The shipping data containing the receiver's name and address.
 	 * @return array        The formatted shipping information including type, name, and address.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::splitAddress() instead of System::splitAddress().
 	 */
 	public static function getShippingInfo( $shipping ): array {
 		[$address1, $address2] = Utils::splitAddress( $shipping, 300 );

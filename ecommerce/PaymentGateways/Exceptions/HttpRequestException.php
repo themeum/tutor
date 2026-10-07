@@ -1,6 +1,16 @@
 <?php
+/**
+ * Exception for failed payment gateway HTTP requests.
+ *
+ * @package Tutor\Ecommerce
+ * @author Themeum
+ * @link https://themeum.com
+ * @since 4.2.0
+ */
 
 namespace Tutor\PaymentGateways\Exceptions;
+
+defined( 'ABSPATH' ) || exit;
 
 use RuntimeException;
 use Throwable;

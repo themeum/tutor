@@ -10,6 +10,11 @@ use Tutor\PaymentGateways\Http;
 
 /**
  * Paypal Api Class
+ *
+ * Sends requests to the PayPal REST API.
+ *
+ * @since 3.9.0
+ * @since 4.2.0 Sends requests through \Tutor\PaymentGateways\Http instead of Guzzle.
  */
 final class Api {
 
@@ -30,8 +35,9 @@ final class Api {
 	protected static $headers;
 
 	/**
-	 * @var string|null $accessToken
-	 * This property holds the access token required for authenticating API requests.
+	 * The access token required for authenticating API requests.
+	 *
+	 * @var   string|null
 	 * @since 1.0.0
 	 */
 	protected $accessToken;
@@ -59,7 +65,9 @@ final class Api {
 	 * "token_type access_token".
 	 *
 	 * @return string The access token in the format "token_type access_token".
+	 * @throws HttpRequestException If the token request fails.
 	 * @since  3.0.0
+	 * @since  4.2.0 Sends the request through Http::send() with a Basic Authorization header instead of Guzzle.
 	 */
 	private function getAccessToken(): string {
 		if ( empty( $this->accessToken ) ) {
@@ -90,11 +98,14 @@ final class Api {
 	 * Creates a new PayPal order by sending a POST request to the PayPal API.
 	 *
 	 * @since  3.0.0
+	 * @since  4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $data The order data to be sent in the request body.
 	 * @param string $order_id A unique identifier for the order.
 	 *
 	 * @return object The response from the PayPal API, decoded from JSON.
+	 *
+	 * @throws HttpRequestException If the request fails or PayPal returns a 4xx/5xx response.
 	 */
 	public static function createOrder( $data, $order_id ): object {
 
@@ -117,9 +128,11 @@ final class Api {
 	 * Capture a PayPal payment based on the provided webhook payload.
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $payloadStream The decoded webhook payload containing payment resource data.
 	 * @return void
+	 * @throws HttpRequestException If the capture request fails.
 	 */
 	public static function capturePayment( $payloadStream ) {
 
@@ -143,6 +156,7 @@ final class Api {
 	 * Validate the PayPal webhook signature to ensure the authenticity of the incoming event.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $payload The webhook payload containing stream and server headers.
 	 * @return bool True if the webhook signature is verified successfully, false otherwise.
@@ -225,6 +239,7 @@ final class Api {
 	 * Initiate a refund request for a PayPal order.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param string       $refund_url The PayPal API refund endpoint URL.
 	 * @param string|int   $order_id The associated order ID for the refund request.
@@ -289,10 +304,15 @@ final class Api {
 	/**
 	 * Retrieves the refund status based on the provided links and type.
 	 *
-	 * @param array       $links An array of links provided by the PayPal API.
-	 * @param string|null $type The type of link to use.
-	 *
 	 * @since 1.0.0
+	 * @since 4.2.0 Moved from Paypal as a public static method and sends the request through Http::send().
+	 *
+	 * @param array  $links An array of links provided by the PayPal API.
+	 * @param string $type  The `rel` of the link to request. Default 'self'.
+	 *
+	 * @return string|null The lowercase refund status, e.g. 'completed'.
+	 *
+	 * @throws HttpRequestException If the request fails or PayPal returns a 4xx/5xx response.
 	 */
 	public static function getRefundStatus( $links, $type = 'self' ): ?string {
 		$url = Helper::getUrl( $links, $type );

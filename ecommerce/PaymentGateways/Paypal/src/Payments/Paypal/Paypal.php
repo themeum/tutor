@@ -11,6 +11,14 @@ use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Tutor\PaymentGateways\Exceptions\HttpRequestException;
 use Tutor\PaymentGateways\Utils;
 
+/**
+ * Paypal payment gateway.
+ *
+ * Creates one-time and recurring PayPal orders, handles webhooks and processes refunds.
+ *
+ * @since 3.0.0
+ * @since 4.2.0 Uses \Tutor\PaymentGateways\Utils and HttpRequestException instead of System and Guzzle.
+ */
 class Paypal extends BasePayment {
 
 	/**
@@ -22,25 +30,34 @@ class Paypal extends BasePayment {
 	protected $config;
 
 	/**
-	 * @var string|null $orderID
-	 * This property stores the ID of the current order being processed.
+	 * The ID of the current order being processed.
+	 *
+	 * @var   string|null
 	 * @since 3.0.0
 	 */
 	protected $orderID;
 
 	/**
-	 * @var object|null $previousPayload
-	 * This property contains the payload from a previous transaction, used in recurring payments.
+	 * The payload from a previous transaction, used in recurring payments.
+	 *
+	 * @var   object|null
+	 * @since 3.0.0
 	 */
 	protected $previousPayload;
 
 	/**
 	 * The API endpoint URL used to process PayPal refund requests.
 	 *
-	 * @var string|null
+	 * @var   string|null
+	 * @since 3.9.0
 	 */
 	protected $refundLink;
 
+	/**
+	 * PayPal webhook event types handled by this gateway.
+	 *
+	 * @since 3.0.0
+	 */
 	const CHECKOUT_ORDER_APPROVED   = 'CHECKOUT.ORDER.APPROVED';
 	const PAYMENT_CAPTURE_COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
 	const PAYMENT_CAPTURE_REFUNDED  = 'PAYMENT.CAPTURE.REFUNDED';
@@ -66,6 +83,15 @@ class Paypal extends BasePayment {
 		return $isConfigOk;
 	}
 
+	/**
+	 * Sets up the PayPal API client and requests an access token.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 *
+	 * @throws Throwable If the access token request fails.
+	 */
 	public function setup(): void {
 
 		try {
@@ -110,6 +136,7 @@ class Paypal extends BasePayment {
 	 * @param  object $data The raw data to be processed.
 	 * @return array        The structured data for sending to `Paypal Server`.
 	 * @since  3.0.0
+	 * @since  4.2.0 Adds Tutor merchant metadata to the purchase unit description.
 	 */
 	public function prepareData( $data ): array {
 
@@ -194,7 +221,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
-	 * @throws HttpRequestException If the request fails.
+	 * @throws \Exception If a PayPal API request fails.
 	 * @since  3.0.0
 	 * @since  4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
@@ -246,6 +273,7 @@ class Paypal extends BasePayment {
 	 * @param  object $payloadStream The payload stream object containing order and payment details.
 	 * @return object                     The constructed order data object.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::defaultOrderData() instead of System::defaultOrderData().
 	 */
 	private function setReturnData( $payloadStream ): object {
 		$returnData = Utils::defaultOrderData();
@@ -346,6 +374,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if there is an error during the HTTP request or while processing the refund.
 	 * @since  1.0.0
+	 * @since  4.2.0 Uses Utils::defaultOrderData() and Api::getRefundStatus(), and catches HttpRequestException.
 	 */
 	private function processRefund( $paymentData ): object {
 		$returnData = Utils::defaultOrderData( 'refund' );
