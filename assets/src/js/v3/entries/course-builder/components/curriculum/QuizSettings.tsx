@@ -107,9 +107,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const questionsCount = questions.length;
   const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
   const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
+  const hasCharacterLimitQuestions = hasOpenEndedQuestions || hasShortAnswerQuestions;
   const hasAttemptsLimit = form.watch('quiz_option.limit_attempts_allowed');
   const showPassRequired =
     isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && hasAttemptsLimit;
+  const showContentDripSettings =
+    isAddonEnabled(Addons.CONTENT_DRIP) &&
+    contentType !== 'tutor_h5p_quiz' &&
+    Boolean(contentDripType) &&
+    contentDripType !== 'unlock_sequentially';
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const questionsOrder = form.watch('quiz_option.questions_order');
@@ -696,13 +702,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </div>
         </Show>
 
-        <Show
-          when={
-            (isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType) || hasOpenEndedQuestions || hasShortAnswerQuestions
-          }
-        >
+        <Show when={hasCharacterLimitQuestions || showContentDripSettings}>
           <div css={styles.card}>
-            <Show when={hasOpenEndedQuestions || hasShortAnswerQuestions}>
+            <Show when={hasCharacterLimitQuestions}>
               <h5>{__('Character Limits', 'tutor')}</h5>
 
               <div css={styles.innerCard}>
@@ -756,7 +758,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               </div>
             </Show>
 
-            <Show when={isAddonEnabled(Addons.CONTENT_DRIP) && contentType !== 'tutor_h5p_quiz'}>
+            <Show when={showContentDripSettings}>
               <Show when={contentDripType === 'unlock_by_date'}>
                 <h5 css={styles.contentDripLabel}>
                   <SVGIcon name="contentDrip" height={24} width={24} />
