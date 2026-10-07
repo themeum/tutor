@@ -446,14 +446,4 @@
 	.rtl & {
 		background-position: right top;
 	}
-
-	[data-tutor-motion='reduce'] & {
-		animation: none;
-		background-image: none;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		animation: none;
-		background-image: none;
-	}
 }
