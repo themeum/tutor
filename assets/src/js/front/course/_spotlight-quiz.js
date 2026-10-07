@@ -224,6 +224,12 @@ window.jQuery(document).ready($ => {
             clearRevealTimeout();
             var $prev = $(this).closest('.quiz-attempt-single-question').hide().prev();
             $prev.show();
+
+            if (has_pagination_enabled() && $('.tutor-quiz-questions-pagination').length) {
+                $('.tutor-quiz-question-paginate-item').removeClass('active');
+                $('.tutor-quiz-questions-pagination a[href="#' + $prev.attr('id') + '"]').addClass('active');
+            }
+
             if ($prev.attr('data-revealed') === '1') {
                 $prev.find('.tutor-quiz-next-btn-all').prop('disabled', false);
             }
