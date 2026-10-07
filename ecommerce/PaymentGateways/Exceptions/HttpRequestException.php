@@ -1,5 +1,6 @@
 <?php
-namespace Ollyo\PaymentHub\Exceptions;
+
+namespace Tutor\PaymentGateways\Exceptions;
 
 use RuntimeException;
 use Throwable;

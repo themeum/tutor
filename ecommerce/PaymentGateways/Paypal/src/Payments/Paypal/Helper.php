@@ -4,9 +4,7 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
-use Ollyo\PaymentHub\Exceptions\HttpRequestException;
-use Tutor\Helpers\HttpHelper;
-use Tutor\PaymentGateways\Http;
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
 use Tutor\PaymentGateways\Utils;
 
 /**

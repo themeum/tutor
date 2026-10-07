@@ -16,7 +16,7 @@ use stdClass;
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
 use Ollyo\PaymentHub\Core\Support\Uri;
-use Ollyo\PaymentHub\Exceptions\InvalidDataException;
+use Tutor\PaymentGateways\Exceptions\InvalidDataException;
 
 /**
  * Order data, money, address and metadata helpers shared by payment gateways.

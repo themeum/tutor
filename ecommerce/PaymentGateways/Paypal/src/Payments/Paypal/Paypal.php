@@ -7,11 +7,8 @@ use ErrorException;
 use Ollyo\PaymentHub\Core\Support\Arr;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
-use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
-use Ollyo\PaymentHub\Exceptions\HttpRequestException;
-use Tutor\Helpers\HttpHelper;
-use Tutor\PaymentGateways\Http;
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
 use Tutor\PaymentGateways\Utils;
 
 class Paypal extends BasePayment {

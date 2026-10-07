@@ -12,8 +12,8 @@ namespace Tutor\PaymentGateways;
 
 defined( 'ABSPATH' ) || exit;
 
-use Ollyo\PaymentHub\Exceptions\HttpRequestException;
 use Tutor\Helpers\HttpHelper;
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
 
 /**
  * Sends payment gateway API requests through HttpHelper.
