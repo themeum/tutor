@@ -17,6 +17,7 @@ use WP_Error;
  * HttpHelperTest Class
  *
  * Requests are intercepted with the `pre_http_request` filter, so no real HTTP call is made.
+ * Run test by: vendor/bin/phpunit --filter=HttpHelperTest
  *
  * @since 4.2.0
  */
