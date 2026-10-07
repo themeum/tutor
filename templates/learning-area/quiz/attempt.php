@@ -339,7 +339,7 @@ $start_index = $last_answered_index > 0
 						->size( Size::LARGE )
 						->attr( 'type', 'button' )
 						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending || shouldDisableNextButton()' )
-						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying }' )
+						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying, \'tutor-quiz-btn-countdown\': isRevealing }' )
 						->attr( '@click', 'goNext()' )
 						->attr( 'x-show', 'currentIndex < totalQuestions' )
 						->attr( 'class', 'tutor-quiz-answer-next-btn' )
@@ -351,7 +351,7 @@ $start_index = $last_answered_index > 0
 						->attr( 'type', 'submit' )
 						->attr( 'x-show', 'currentIndex === totalQuestions' )
 						->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
-						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending }' )
+						->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending, \'tutor-quiz-btn-countdown\': isWaitingSubmit }' )
 						->attr( 'class', 'tutor-quiz-submit-btn' )
 						->render();
 				?>
@@ -367,7 +367,7 @@ $start_index = $last_answered_index > 0
 					->attr( 'form', $form_id )
 					->attr( 'type', 'submit' )
 					->attr( ':disabled', 'isVerifying || submitQuizMutation?.isPending' )
-					->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending }' )
+					->attr( ':class', '{ \'tutor-btn-loading\': isVerifying || submitQuizMutation?.isPending, \'tutor-quiz-btn-countdown\': isWaitingSubmit }' )
 					->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 					->render();
 			?>

@@ -25,6 +25,7 @@ window.jQuery(document).ready($ => {
             clearTimeout(revealTimeoutId);
             revealTimeoutId = null;
         }
+        $('.tutor-quiz-btn-countdown').removeClass('tutor-quiz-btn-countdown');
     }
 
     function get_reveal_wait_time() {
@@ -312,8 +313,10 @@ window.jQuery(document).ready($ => {
                 complete: function () {
                     $that.prop('disabled', false).removeClass('is-loading');
                     clearRevealTimeout();
+                    $that.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', get_reveal_wait_time() + 'ms');
                     revealTimeoutId = setTimeout(function () {
                         revealTimeoutId = null;
+                        $that.removeClass('tutor-quiz-btn-countdown');
                         moveToNext();
                     }, get_reveal_wait_time());
                 },
@@ -483,8 +486,10 @@ window.jQuery(document).ready($ => {
                 complete: function () {
                     $btn.prop('disabled', false).removeClass('is-loading');
                     clearRevealTimeout();
+                    $btn.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', get_reveal_wait_time() + 'ms');
                     revealTimeoutId = setTimeout(function () {
                         revealTimeoutId = null;
+                        $btn.removeClass('tutor-quiz-btn-countdown');
                         $btn.prop('disabled', true).addClass('is-loading');
                         $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
                         document.getElementById('tutor-answering-quiz').submit();

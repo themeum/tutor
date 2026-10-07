@@ -58,6 +58,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     init() {
       container = (this.$root ?? this.$el)?.querySelector(QUIZ_LAYOUT_SELECTORS.QUESTIONS_CONTAINER);
+      (this.$root ?? this.$el)?.style.setProperty('--reveal-wait-duration', `${this.getRevealWaitTime()}ms`);
 
       // Keyboard vs Mouse Navigation helper for focus styles
       handleFirstTab = (e: KeyboardEvent) => {
@@ -328,9 +329,9 @@ const quizLayout = (config: QuizLayoutConfig) => {
           return;
         }
 
-        this.isRevealing = true;
         const verified = await this.verifyAndRevealQuestion(wrapper, this.currentIndex);
         if (verified) {
+          this.isRevealing = true;
           const wait = this.getRevealWaitTime();
           this.revealTimeoutId = window.setTimeout(() => {
             this.isRevealing = false;
