@@ -628,7 +628,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   </Show>
                 </div>
 
-                <div css={styles.inlineForm}>
+                <div css={styles.inlineForm({ minHeight: '34px' })}>
                   <Controller
                     control={form.control}
                     name="quiz_option.enable_answer_reveal"
@@ -1097,6 +1097,8 @@ const styles = {
 
     ${withPrefix &&
     css`
+      width: auto;
+      flex-shrink: 0;
       justify-content: flex-end;
 
       [data-prefix] {
