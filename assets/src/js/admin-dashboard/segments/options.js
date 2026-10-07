@@ -770,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const usageAjaxAction = config.usage_check_action;
 		const confirmationType = config.type || 'turnoff';
 
-		if (!message) {
+		if (!message && !config.messages) {
 			return;
 		}
 
@@ -844,15 +844,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		} else if (confirmationType === 'change') {
 			document.querySelectorAll(`#field_${fieldKey} select`).forEach((selectElement) => {
 				let previousValue = selectElement.value;
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const customSelect = selectElement.nextElementSibling;
+				if (customSelect && customSelect.classList.contains('tutor-js-form-select')) {
+					customSelect.addEventListener('click', () => {
+						if (!customSelect.classList.contains('is-active')) {
+							wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+						}
+					});
+				} else {
+					selectElement.addEventListener('focus', () => {
+						wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+					});
+				}
 
 				selectElement.addEventListener('change', function () {
 					const newValue = this.value;
 					if (newValue === previousValue) {
 						return;
 					}
-
-					const saveBtn = document.getElementById('save_tutor_option');
-					const wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
 
 					const revertSelect = () => {
 						this.value = previousValue;
@@ -870,7 +882,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								optionsWrap.querySelector('.is-active')?.classList.remove('is-active');
 								const prevItem = optionsWrap.querySelector(`[data-key="${previousValue}"]`);
 								if (prevItem) {
-									prevItem.classList.add('is-active');
+									(prevItem.closest('.tutor-form-select-option') || prevItem).classList.add('is-active');
 								}
 							}
 						}
@@ -880,7 +892,8 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					};
 
-					tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
+					const modalMessage = (config.messages && config.messages[newValue]) || message;
+					tutorConfirmOptionModal(modalMessage, title, cancelText, confirmText).then((confirmed) => {
 						if (confirmed) {
 							previousValue = newValue;
 							if (saveBtn) {
