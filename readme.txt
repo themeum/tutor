@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.1.1 - 05 Oct, 2026
+= 4.1.1 - 06 Oct, 2026
 
 Update: Optimized SQL queries for improved performance in Orders and Analytics.
 Fix: Added missing input validation to payment method configuration.
