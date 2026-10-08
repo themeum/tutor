@@ -12,10 +12,10 @@
 defined( 'ABSPATH' ) || exit;
 
 $data           = isset( $data ) && is_array( $data ) ? $data : array();
-$qna_list       = $data['qna_list'] ?? $qna_list ?? array();
-$context        = $data['context'] ?? $context ?? '';
-$qna_pagination = $data['qna_pagination'] ?? $qna_pagination ?? array();
-$view_as        = $data['view_as'] ?? $view_as ?? ( is_admin() ? 'instructor' : 'student' );
+$qna_list       = $data['qna_list'] ?? array();
+$context        = $data['context'] ?? '';
+$qna_pagination = $data['qna_pagination'] ?? array();
+$view_as        = $data['view_as'] ?? ( is_admin() ? 'instructor' : 'student' );
 
 $page_key      = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
