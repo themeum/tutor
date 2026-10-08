@@ -286,7 +286,7 @@ class EnrollmentModel {
 		$user_id   = absint( $user_id );
 		$course_id = absint( $course_id );
 
-		if ( ! in_array( $status, array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ), true ) ) {
+		if ( ! empty( $status ) && ! in_array( $status, array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ), true ) ) {
 			return null;
 		}
 

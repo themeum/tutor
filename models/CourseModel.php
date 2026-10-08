@@ -170,8 +170,12 @@ class CourseModel {
 		$exclude_query = '';
 		$post_status   = array_intersect( $post_status, self::get_status_list() );
 
+		if ( empty( $post_status ) ) {
+			$post_status = array( 'publish' );
+		}
+
 		if ( count( $excludes ) ) {
-			$exclude_placeholders = implode( ', ', array_fill( 0, count( $excludes ), '%d' ) );
+			$exclude_placeholders = QueryHelper::prepare_in_clause( $excludes );
 			$exclude_query        = "AND ID NOT IN({$exclude_placeholders})";
 		}
 
@@ -191,8 +195,7 @@ class CourseModel {
 					{$exclude_query}
 					AND post_type = %s;
 			",
-				self::POST_TYPE,
-				$excludes
+				self::POST_TYPE
 			)
 		);
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
