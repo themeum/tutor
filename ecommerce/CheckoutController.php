@@ -887,6 +887,7 @@ class CheckoutController {
 			'subtotal'           => floatval( $subtotal_price ),
 			'total_price'        => floatval( $total_price ),
 			'order_id'           => $order_id,
+			'order_user_id'      => $order_user_id,
 			'store_name'         => $site_name,
 			'order_description'  => 'Tutor Order',
 			'tax'                => 0,
@@ -976,6 +977,7 @@ class CheckoutController {
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
 			'order_id'         => $order_id,
+			'order_user_id'    => $order_user_id,
 			'customer'         => (object) $customer_info,
 			'shipping_address' => (object) $shipping_and_billing,
 		);
