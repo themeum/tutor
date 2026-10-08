@@ -645,20 +645,16 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
-				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
-				if ( is_wp_error( $can_buy ) ) {
-					array_push( $errors, $can_buy->get_error_message() );
+				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+				if ( is_wp_error( $can_purchase ) ) {
+					array_push( $errors, $can_purchase->get_error_message() );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-			$item_id = $object_ids[0] ?? 0;
-			if ( $item_id ) {
-				$plan = apply_filters( 'tutor_get_plan_info', null, $item_id );
-				if ( ! $plan ) {
-					array_push( $errors, __( 'Invalid plan', 'tutor' ) );
-				}
-			} else {
-				array_push( $errors, __( 'Invalid plan', 'tutor' ) );
+			$plan_id      = absint( $object_ids[0] ?? 0 );
+			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+			if ( is_wp_error( $can_purchase ) ) {
+				array_push( $errors, $can_purchase->get_error_message() );
 			}
 		} else {
 			array_push( $errors, __( 'Invalid order type', 'tutor' ) );
