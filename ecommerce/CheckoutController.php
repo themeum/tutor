@@ -919,7 +919,7 @@ class CheckoutController {
 	public static function prepare_recurring_payment_data( int $order_id ) {
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		if ( ! $order_data ) {
-			throw new \Exception( __( 'Order not found!', 'tutor' ) );
+			throw new \Exception( esc_html( __( 'Order not found!', 'tutor' ) ) );
 		}
 
 		$amount = $order_data->total_price;
