@@ -59,16 +59,16 @@ $table_columns = include __DIR__ . '/contexts.php';
 									<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 										<div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
 											<span
-												data-action="solved"
+												data-action="important"
 												data-question_id="<?php echo esc_attr( (string) $qna->comment_ID ); ?>"
 												data-state-class-selector="i"
-												data-state-class-0="tutor-icon-circle-mark-line tutor-color-muted"
-												data-state-class-1="tutor-icon-circle-mark tutor-color-success"
+												data-state-class-0="tutor-icon-important-line"
+												data-state-class-1="tutor-icon-important-bold"
 												role="button">
-												<i class="tutor-fs-6 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
+												<i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?> tutor-cursor-pointer" aria-hidden="true"></i>
 											</span>
-											<span class="tooltip-txt tooltip-top">
-												<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Mark as solved', 'tutor' ); ?>
+											<span class="tooltip-txt tooltip-right arrow-center">
+												<?php $is_important ? esc_html_e( 'This conversation is important', 'tutor' ) : esc_html_e( 'Mark this conversation as important', 'tutor' ); ?>
 											</span>
 										</div>
 
@@ -147,29 +147,30 @@ $table_columns = include __DIR__ . '/contexts.php';
 											</ul>
 										</div>
 									</div>
-									<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal tutor-modal-primary">
+									<!-- Delete confirmation modal -->
+									<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $id_string_delete ); ?>-title" aria-hidden="true">
 										<div class="tutor-modal-overlay"></div>
 										<div class="tutor-modal-window">
-											<div class="tutor-modal-content">
+											<div class="tutor-modal-content tutor-modal-content-white">
+												<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+													<span class="tutor-icon-times" aria-hidden="true"></span>
+												</button>
+
 												<div class="tutor-modal-body tutor-text-center">
-													<div class="tutor-modal-icon">
-														<img src="<?php echo esc_url( tutor()->url . 'assets/images/icon-trash.svg' ); ?>" />
+													<div class="tutor-mt-48">
+														<img class="tutor-d-inline-block" src="<?php echo esc_url( trailingslashit( tutor()->url ) . 'assets/images/icon-trash.svg' ); ?>" alt="" aria-hidden="true" />
 													</div>
-													<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">
-														<?php esc_html_e( 'Do You Want to Delete This Question?', 'tutor' ); ?>
-													</div>
-													<div class="tutor-fs-6 tutor-color-muted">
-														<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
-													</div>
-													<div class="tutor-d-flex tutor-justify-center tutor-mt-48 tutor-mb-24 tutor-modal-actions">
-														<div>
-															<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-																<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-															</button>
-															<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo esc_attr( (string) $qna->comment_ID ); ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
-																<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
-															</button>
-														</div>
+
+													<div id="<?php echo esc_attr( $id_string_delete ); ?>-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Question?', 'tutor' ); ?></div>
+													<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?></div>
+													
+													<div class="tutor-d-flex tutor-justify-center tutor-my-48">
+														<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
+															<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+														</button>
+														<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo esc_attr( (string) $qna->comment_ID ); ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+															<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+														</button>
 													</div>
 												</div>
 											</div>
@@ -199,5 +200,5 @@ $table_columns = include __DIR__ . '/contexts.php';
 		<?php endif; ?>
 	</div>
 <?php else : ?>
-	<?php tutor_utils()->tutor_empty_state(); ?>
+	<?php tutor_utils()->render_list_empty_state(); ?>
 <?php endif; ?>

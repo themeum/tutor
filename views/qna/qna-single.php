@@ -13,8 +13,8 @@ use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
 
-$question_id = (int) ( $data['question_id'] ?? $question_id ?? 0 );
-$context     = $data['context'] ?? $context ?? '';
+$question_id = (int) ( $data['question_id'] ?? 0 );
+$context     = $data['context'] ?? '';
 
 // QNA data.
 $question = tutor_utils()->get_qa_question( $question_id );
@@ -158,20 +158,20 @@ if ( $is_user_asker || $is_course_instructor ) {
 				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24 tutor-qna-reply-editor" data-context="<?php echo esc_attr( $context ); ?>" style="<?php echo esc_attr( $is_single ? $reply_hidden : '' ); ?>">
 					<?php if ( function_exists( 'tutor_pro' ) ) : ?>
 						<?php
-						wp_editor(
-							'',
-							'tutor_qna_reply_editor_' . $question_id,
-							tutor_utils()->text_editor_config(
-								array(
-									'plugins' => 'codesample',
-									'tinymce' => array(
-										'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist,codesample',
-										'toolbar2' => '',
-										'toolbar3' => '',
-									),
+							wp_editor(
+								'',
+								'tutor_qna_reply_editor_' . $question_id,
+								tutor_utils()->text_editor_config(
+									array(
+										'plugins' => 'codesample',
+										'tinymce' => array(
+											'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist,codesample',
+											'toolbar2' => '',
+											'toolbar3' => '',
+										),
+									)
 								)
-							)
-						);
+							);
 						?>
 						<?php else : ?>
 						<textarea class="tutor-form-control" placeholder="<?php esc_attr_e( 'Write here...', 'tutor' ); ?>"></textarea>
