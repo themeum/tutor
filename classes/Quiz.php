@@ -921,10 +921,10 @@ class Quiz {
 				);
 			}
 
-			$total_marks                = 0;
-			$review_required            = false;
-			$committed_attempt_answers  = QuizModel::get_committed_answers_by_attempt( (int) $attempt_id );
-			$has_committed_answers      = ! empty( $committed_attempt_answers );
+			$total_marks               = 0;
+			$review_required           = false;
+			$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $attempt_id );
+			$has_committed_answers     = ! empty( $committed_attempt_answers );
 
 			if ( tutor_utils()->count( $quiz_answers ) ) {
 
