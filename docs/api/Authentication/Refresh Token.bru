@@ -1,0 +1,67 @@
+meta {
+  name: Refresh Token
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/auth/refresh
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "refresh_token": "{{refresh_token}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200 && res.body && res.body.data) {
+    bru.setEnvVar("access_token", res.body.data.access_token);
+    bru.setEnvVar("refresh_token", res.body.data.refresh_token);
+  }
+}
+
+docs {
+  # POST /auth/refresh
+  
+  Rotate the access JWT using a valid refresh token. The previous refresh token is consumed and a new pair is issued.
+  
+  ## HTTP Method & Route
+  - **Method:** `POST`
+  - **Route:** `/wp-json/tutor/v1/auth/refresh`
+  
+  ## Authentication
+  - **Type:** Public (refresh token in body)
+  - **No API key or Bearer token required**
+  
+  ## Request Body
+  
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `refresh_token` | `string` | **Yes** | Refresh token from login (or prior refresh). |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "tutor_auth_refresh",
+    "message": "Token refreshed successfully.",
+    "data": {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "expires_in": 86400,
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "user_id": 1,
+      "display_name": "Admin"
+    }
+  }
+  ```
+  
+  ### 401 Unauthorized
+  Invalid or expired refresh token.
+  
+  ### 403 Forbidden
+  API key bound to the refresh session has been revoked.
+}

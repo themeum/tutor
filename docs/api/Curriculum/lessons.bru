@@ -7,16 +7,15 @@ meta {
 get {
   url: {{base_url}}/lessons
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
   ~topic_id: 1
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
@@ -29,7 +28,8 @@ docs {
   - **Route:** `/wp-json/tutor/v1/lessons`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Type:** Bearer JWT (`Authorization: Bearer {{access_token}}` or `Tutor-User-Token`)
+  - **Prerequisite:** Run **Authentication → Login** first to obtain tokens.
   - **Required Permission:** `Read` or `All`
   
   ## Query Parameters
