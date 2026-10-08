@@ -100,7 +100,7 @@ class CourseModel {
 	 *
 	 * @return bool
 	 */
-	public static function is_course_accessible( $course_id = 0 ) {
+	public static function is_course_accessible( $course_id = 0, $args = array() ) {
 		$course = get_post( $course_id );
 		if ( ! $course || ! is_object( $course ) ) {
 			return false;
@@ -110,8 +110,13 @@ class CourseModel {
 			return false;
 		}
 
-		if ( ! in_array( $course->post_status, array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
-			return false;
+		if ( ! empty( $args['status'] ) && is_array( $args['status'] ) ) {
+			$valid            = array_intersect( $args['status'], Course::course_status_list() );
+			$allowed_statuses = array_merge( array( self::STATUS_PUBLISH ), $valid );
+
+			if ( ! in_array( $course->post_status, $allowed_statuses, true ) ) {
+				return false;
+			}
 		}
 
 		return true;
