@@ -1797,7 +1797,10 @@ class QuizModel {
 		$answers = is_array( $answers ) ? $answers : array();
 
 		$has_pending = (bool) count(
-			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
+			array_filter(
+				$answers,
+				fn( $answer ) => null === $answer->is_correct && ! self::is_attempt_answer_skipped( $answer )
+			)
 		);
 
 		if ( $has_pending ) {
@@ -1853,6 +1856,17 @@ class QuizModel {
 	public static function update_attempt_result( $attempt_id ) {
 		$attempt_result = self::prepare_attempt_result( $attempt_id );
 		if ( $attempt_result ) {
+			if ( self::RESULT_PENDING !== $attempt_result ) {
+				QueryHelper::update(
+					'tutor_quiz_attempts',
+					array( 'attempt_status' => self::ATTEMPT_ENDED ),
+					array(
+						'attempt_id'     => $attempt_id,
+						'attempt_status' => self::REVIEW_REQUIRED,
+					)
+				);
+			}
+
 			QueryHelper::update(
 				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
 				array( 'result' => $attempt_result ),
