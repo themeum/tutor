@@ -275,6 +275,7 @@ class REST_Quiz {
 			$user_id      = get_current_user_id();
 			$course_id    = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
 			$can_view_all = $course_id && tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+			$reveal_keys  = RestAuth::can_reveal_quiz_answers( $quiz_id, $user_id );
 
 			// unserialize each attempt info.
 			foreach ( $attempts as $key => $attempt ) {
@@ -288,6 +289,15 @@ class REST_Quiz {
 				$answers = $this->get_quiz_attempt_ans( (int) $attempt->attempt_id );
 
 				if ( false !== $answers ) {
+					// Match frontend: students do not see correctness when details are hidden
+					// (or before a finished attempt when answer keys stay closed).
+					if ( ! $can_view_all && ! $reveal_keys ) {
+						foreach ( $answers as $answer ) {
+							if ( is_object( $answer ) ) {
+								unset( $answer->is_correct );
+							}
+						}
+					}
 					$attempt->attempts_answer = $answers;
 				} else {
 					$attempt->attempts_answer = array();

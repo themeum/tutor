@@ -1360,7 +1360,36 @@ class RestAuth {
 	}
 
 	/**
+	 * Whether quiz attempt details are hidden for a student viewer.
+	 *
+	 * Matches views/quiz/attempt-details.php and attempt-table.php when the
+	 * "Hide Quiz Details" option is enabled.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return bool
+	 */
+	public static function is_quiz_details_hidden_for_user( $user_id = 0 ) {
+		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		if ( ! $user_id || ! tutor_utils()->get_option( 'hide_quiz_details' ) ) {
+			return false;
+		}
+
+		// Match views/quiz/attempt-details.php (admin / instructor still see details).
+		if ( User::is_admin( $user_id ) || User::is_instructor( $user_id, false ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Whether answer keys (is_correct) may be revealed.
+	 *
+	 * Students never receive answer keys when "Hide Quiz Details" is on,
+	 * matching the frontend attempt-details UI.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1379,6 +1408,10 @@ class RestAuth {
 		$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
 		if ( $course_id && tutor_utils()->has_user_course_content_access( $user_id, $course_id ) ) {
 			return true;
+		}
+
+		if ( self::is_quiz_details_hidden_for_user( $user_id ) ) {
+			return false;
 		}
 
 		$attempt = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
