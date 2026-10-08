@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
 use TUTOR\Course;
@@ -164,22 +166,20 @@ class CourseModel {
 	public static function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
 		global $wpdb;
 
-		$excludes      = (array) $excludes;
+		$excludes      = array_filter( array_map( 'absint', (array) $excludes ) );
 		$exclude_query = '';
+		$post_status   = array_intersect( $post_status, self::get_status_list() );
 
-		if ( count( $excludes ) ) {
-			$exclude_query = implode( "','", $excludes );
+		if ( empty( $post_status ) ) {
+			$post_status = array( 'publish' );
 		}
 
-		$post_status = array_map(
-			function ( $element ) {
-				return "'" . $element . "'";
-			},
-			$post_status
-		);
+		if ( count( $excludes ) ) {
+			$exclude_placeholders = QueryHelper::prepare_in_clause( $excludes );
+			$exclude_query        = "AND ID NOT IN({$exclude_placeholders})";
+		}
 
-		$post_status      = implode( ',', $post_status );
-		$course_post_type = tutor()->course_post_type;
+		$post_status = QueryHelper::prepare_in_clause( $post_status );
 
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $wpdb->get_results(
@@ -192,10 +192,10 @@ class CourseModel {
 					menu_order
 			FROM 	{$wpdb->posts}
 			WHERE 	post_status IN ({$post_status})
-					AND ID NOT IN('$exclude_query')
+					{$exclude_query}
 					AND post_type = %s;
 			",
-				$course_post_type
+				self::POST_TYPE
 			)
 		);
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -749,7 +749,7 @@ class CourseModel {
 		);
 
 		// Check if the current user is an admin.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			$args['author'] = $current_user->ID;
 		}
 
@@ -1186,7 +1186,7 @@ class CourseModel {
 			),
 		);
 
-		$courses = current_user_can( 'administrator' ) ? self::get_courses() : self::get_courses_by_instructor();
+		$courses = current_user_can( 'manage_options' ) ? self::get_courses() : self::get_courses_by_instructor();
 		if ( ! empty( $courses ) ) {
 			foreach ( $courses as $course ) {
 				$course_options[] = array(
