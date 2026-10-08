@@ -896,8 +896,10 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     }
 
     @media (prefers-reduced-motion: reduce) {
-      animation: none;
-      background-image: none;
+      [data-tutor-motion='auto'] & {
+        animation: none;
+        background-image: none;
+      }
     }
   }
 
