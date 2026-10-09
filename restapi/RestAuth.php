@@ -838,16 +838,14 @@ class RestAuth {
 	 * Login uses API key/secret. All other routes use the access token's bound key permission.
 	 *
 	 * @since 2.2.1
-	 * @since 4.2.0 Honor key permission; accept Tutor-Api-Key headers.
-	 * @since 4.2.0 Delegate to process_read/write/delete_request().
-	 * @since 4.2.0 Login-only key/secret; other routes use JWT kid permission.
+	 * @since 4.2.0 Key permission by method; login accepts any valid key; other routes use JWT kid.
 	 *
 	 * @return boolean
 	 */
 	public static function process_api_request() {
-		// Login may POST with a Read-capable API key.
+		// Login exchanges credentials for a JWT; any valid key permission may authenticate.
 		if ( static::is_login_route() ) {
-			return static::process_read_request();
+			return '' !== self::get_api_key_permission();
 		}
 
 		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
@@ -1489,7 +1487,7 @@ class RestAuth {
 	/**
 	 * Login — issue access + refresh tokens.
 	 *
-	 * Requires a valid Read-capable API key/secret (permission_callback). The key id
+	 * Requires a valid API key/secret with any permission (permission_callback). The key id
 	 * is bound into issued tokens so later requests need only the Bearer token.
 	 *
 	 * @since 4.2.0
