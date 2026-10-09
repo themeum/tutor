@@ -33,7 +33,7 @@ class UserConsent extends BaseController {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var UserContents
+	 * @var UserConsents
 	 */
 	private $model;
 
@@ -110,7 +110,27 @@ class UserConsent extends BaseController {
 			return $value;
 		}
 
-		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="' . esc_attr( $user_id ) . '" data-user-name="' . esc_attr( $user->display_name ) . '" data-user-joined="' . esc_attr( $user->user_registered ) . '" data-user-email="' . esc_attr( $user->user_email ) . '" data-user-login="' . esc_attr( $user->user_login ) . '" data-avatar-src="' . esc_url( tutor_utils()->get_user_avatar_url( $user_id ) ) . '"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
+		$user_name   = $user->display_name ?? '';
+		$user_joined = $user->user_registered ?? '';
+		$user_email  = $user->user_email ?? '';
+		$user_login  = $user->user_login ?? '';
+		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
+
+		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="'
+		. esc_attr( $user_id ) .
+		'" data-user-name="'
+		. esc_attr( $user_name ) .
+		'" data-user-joined="'
+		. esc_attr( $user_joined ) .
+		'" data-user-email="'
+		. esc_attr( $user_email ) .
+		'" data-user-login="'
+		. esc_attr( $user_login ) .
+		'" data-avatar-src="'
+		. esc_url( $avatar_src ) .
+		'" data-avatar-alt="'
+		. esc_attr( $user_name ) .
+		'"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
 
 		return $value;
 	}
@@ -188,7 +208,7 @@ class UserConsent extends BaseController {
 				$user_id = Input::post( 'user_id', 0, Input::TYPE_INT );
 
 				$validate_user = ValidationHelper::validate(
-					array( 'user_id' => 'required|is_exists' ),
+					array( 'user_id' => 'required|user_exists' ),
 					array( 'user_id' => $user_id )
 				);
 
@@ -318,6 +338,7 @@ class UserConsent extends BaseController {
 	 */
 	private function build_and_store( $consent, $user_data, $display_key ) {
 		$build_consent = LegalConsent::build_consent_snapshot( $consent );
+
 		if ( ! empty( $build_consent ) ) {
 			$build_consent['user_id']    = $user_data->ID;
 			$build_consent['user_email'] = $user_data->user_email;
@@ -349,28 +370,6 @@ class UserConsent extends BaseController {
 		}
 
 		return $user_consent_id;
-	}
-
-	/**
-	 * Check if a user already gave consent for a display key and version.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $display_key Consent display key.
-	 * @param string $version     Consent version.
-	 * @param int    $user_id     User ID. Defaults to current user.
-	 *
-	 * @return bool
-	 */
-	private function is_consent_given_by_user( string $display_key, string $version, int $user_id ): bool {
-		$user_data = get_userdata( $user_id );
-		if ( ! $user_data ) {
-			return false;
-		}
-
-		$given_consent = $this->model->is_consent_given_by_user( $user_id, $display_key, $version );
-
-		return $given_consent;
 	}
 
 	/**

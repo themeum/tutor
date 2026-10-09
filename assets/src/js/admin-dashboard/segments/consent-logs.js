@@ -114,9 +114,9 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
 			}
 			const userCard = `
                     <div class="tutor-consent-user-card">
-                        ${avatarSrc ? `<img src="${avatarSrc}" alt="${userName}" />` : ''}
+                        ${avatarSrc ? `<img src="" alt="" />` : ''}
                         <div class="tutor-consent-user-card-info">
-                            <span class="tutor-consent-user-card-name">${userName}</span>
+                            <span class="tutor-consent-user-card-name"></span>
                             <span class="tutor-consent-user-card-joined">${userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : ''}</span>
                         </div>
                     </div>
@@ -126,6 +126,14 @@ const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, user
                     ${userCard}
                 `;
 			if (downloadBtn) downloadBtn.style.display = '';
+			userNameEl = modalBody.querySelector('.tutor-consent-user-card-name')
+			if (userNameEl) userNameEl.textContent = userName;
+
+			const userAvatarEl = modalBody.querySelector('.tutor-consent-user-card img')
+			if (userAvatarEl && avatarSrc) {
+				userAvatarEl.src = avatarSrc
+				userAvatarEl.alt = userName;
+			}
 		})
 		.catch(() => showEmpty());
 };
@@ -151,7 +159,23 @@ const downloadCSV = () => {
 		log.user_agent || '',
 	]);
 
-	const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+	const escape = (v) => {
+		v = String(v || '').trim();
+
+		if (
+			v.startsWith('=') ||
+			v.startsWith('+') ||
+			v.startsWith('-') ||
+			v.startsWith('@') ||
+			v.startsWith('\t') ||
+			v.startsWith('\r')
+		) {
+			v = "'" + v;
+		}
+
+		v = `"${v.replace(/"/g, '""')}"`
+		return v;
+	};
 
 	const csv = [...studentInfo, headers, ...rows]
 		.map((row) => row.map(escape).join(','))
