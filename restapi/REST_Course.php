@@ -184,7 +184,9 @@ class REST_Course {
 
 					$item->course_tag = $tag;
 
-					$item->price = get_post_meta( $post->ID, '_regular_price', true );
+					$course_prices    = tutor_utils()->get_raw_course_price( $post->ID );
+					$item->price      = $course_prices->regular_price;
+					$item->sale_price = $course_prices->sale_price;
 				}
 
 				$item = apply_filters( 'tutor_rest_course_single_post', $item );
@@ -425,15 +427,17 @@ class REST_Course {
 	 * @return object
 	 */
 	private function to_catalog_card_dto( WP_Post $post ) {
-		$author  = get_userdata( $post->post_author );
-		$ratings = tutor_utils()->get_course_rating( $post->ID );
+		$author        = get_userdata( $post->post_author );
+		$ratings       = tutor_utils()->get_course_rating( $post->ID );
+		$course_prices = tutor_utils()->get_raw_course_price( $post->ID );
 
 		$item = (object) array(
 			'ID'              => (int) $post->ID,
 			'post_title'      => $post->post_title,
 			'post_name'       => $post->post_name,
 			'thumbnail_url'   => get_the_post_thumbnail_url( $post->ID, apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' ) ),
-			'price'           => get_post_meta( $post->ID, '_regular_price', true ),
+			'price'           => $course_prices->regular_price,
+			'sale_price'      => $course_prices->sale_price,
 			'post_author'     => $author
 				? (object) array(
 					'ID'           => (int) $author->ID,
