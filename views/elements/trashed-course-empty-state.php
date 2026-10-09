@@ -9,6 +9,11 @@
  * @since 3.7.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+$data                 = isset( $data ) && is_array( $data ) ? $data : array();
+$trashed_course_count = isset( $data['trashed_courses_count'] ) ? (int) $data['trashed_courses_count'] : 0;
+$trashed_course_url   = isset( $data['trashed_courses_url'] ) ? $data['trashed_courses_url'] : '';
 ?>
 <div class="tutor-divider tutor-radius-12 tutor-overflow-hidden">
 	<div class="tutor-px-32 tutor-py-64 tutor-bg-white tutor-text-center">
@@ -22,11 +27,11 @@
 				_n(
 					'You have %1$s course in Trash %2$s',
 					'You have %1$s courses in Trash %2$s',
-					$data['trashed_courses_count'],
+					$trashed_course_count,
 					'tutor'
 				),
-				number_format_i18n( $data['trashed_courses_count'] ),
-				'<a href="' . esc_url( $data['trashed_courses_url'] ) . '" class="tutor-btn tutor-btn-link">' . esc_html__( 'View Trash', 'tutor' ) . '</a>'
+				number_format_i18n( $trashed_course_count ),
+				'<a href="' . esc_url( $trashed_course_url ) . '" class="tutor-btn tutor-btn-link">' . esc_html__( 'View Trash', 'tutor' ) . '</a>'
 			);
 			echo wp_kses(
 				$message,

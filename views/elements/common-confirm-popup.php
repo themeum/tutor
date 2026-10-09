@@ -13,6 +13,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-modal" id="tutor-common-confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-common-confirmation-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
@@ -65,7 +67,7 @@
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
 						<button type="submit" class="tutor-btn tutor-btn-primary tutor-ml-16" data-tutor-modal-submit>
-							<?php esc_html_e( "Yes, I’m sure", 'tutor' ); ?>
+							<?php esc_html_e( 'Yes, I’m sure', 'tutor' ); ?>
 						</button>
 					</div>
 				</form>

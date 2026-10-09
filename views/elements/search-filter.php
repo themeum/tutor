@@ -9,9 +9,10 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <?php if ( isset( $data ) ) : ?>
-
 	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between">
 		<?php if ( $data['bulk_action'] ) : ?>
 			<div class="tutor-admin-bulk-action-wrapper">
