@@ -354,12 +354,6 @@ class ValidationHelper {
 	 * @return boolean
 	 */
 	public static function has_record( $table, $column, $value ) {
-		global $wpdb;
-		$table_prefix = $wpdb->prefix;
-		if ( strpos( $table, $table_prefix ) !== 0 ) {
-			$table = $table_prefix . $table;
-		}
-
 		$record = QueryHelper::get_row( $table, array( $column => $value ), $column );
 		return $record ? true : false;
 	}

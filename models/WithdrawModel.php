@@ -195,7 +195,7 @@ class WithdrawModel {
                         HAVING user_id = u.ID
                     ),0) total_matured
                     
-                FROM {$wpdb->prefix}users u WHERE u.ID=%d
+                FROM {$wpdb->users} u WHERE u.ID=%d
                 
                 ) a",
 				'completed',
