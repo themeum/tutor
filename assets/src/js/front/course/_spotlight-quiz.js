@@ -18,7 +18,7 @@ window.jQuery(document).ready($ => {
     }
 
 
-    var revealTimeoutId = null;
+    let revealTimeoutId = null;
 
     function clearRevealTimeout() {
         if (revealTimeoutId !== null) {
@@ -222,7 +222,7 @@ window.jQuery(document).ready($ => {
         // Show previous quiz if press previous button
         if ($(this).hasClass('tutor-quiz-answer-previous-btn')) {
             clearRevealTimeout();
-            var $prev = $(this).closest('.quiz-attempt-single-question').hide().prev();
+            const $prev = $(this).closest('.quiz-attempt-single-question').hide().prev();
             $prev.show();
 
             if (has_pagination_enabled() && $('.tutor-quiz-questions-pagination').length) {
@@ -285,10 +285,10 @@ window.jQuery(document).ready($ => {
                 moveToNext();
                 return;
             }
-            var $form = $('form#tutor-answering-quiz');
-            var attemptId = $form.find('input[name="attempt_id"]').val();
-            var quizId = $form.find('input[name="quiz_id"]').val();
-            var checkedAnswers = [];
+            const $form = $('form#tutor-answering-quiz');
+            const attemptId = $form.find('input[name="attempt_id"]').val();
+            const quizId = $form.find('input[name="quiz_id"]').val();
+            const checkedAnswers = [];
             $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked').each(function () {
                 checkedAnswers.push($(this).val());
             });
@@ -314,17 +314,25 @@ window.jQuery(document).ready($ => {
                 success: function (res) {
                     if (res && res.data) {
                         feedback_response($question_wrap, res.data.correct_answer_ids, res.data.answer_explanation);
+
+                        $that.prop('disabled', false).removeClass('is-loading');
+                        clearRevealTimeout();
+                        const waitTime = get_reveal_wait_time();
+                        $that.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', waitTime + 'ms');
+                        revealTimeoutId = setTimeout(function () {
+                            revealTimeoutId = null;
+                            $that.removeClass('tutor-quiz-btn-countdown');
+                            moveToNext();
+                        }, waitTime);
+                        return;
                     }
-                },
-                complete: function () {
+
                     $that.prop('disabled', false).removeClass('is-loading');
-                    clearRevealTimeout();
-                    $that.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', get_reveal_wait_time() + 'ms');
-                    revealTimeoutId = setTimeout(function () {
-                        revealTimeoutId = null;
-                        $that.removeClass('tutor-quiz-btn-countdown');
-                        moveToNext();
-                    }, get_reveal_wait_time());
+                    moveToNext();
+                },
+                error: function () {
+                    $that.prop('disabled', false).removeClass('is-loading');
+                    moveToNext();
                 },
             });
             return;
@@ -442,6 +450,12 @@ window.jQuery(document).ready($ => {
         const $lastQuestion = $(lastQuestion);
         const lastQuestionType = $lastQuestion.data('question-type');
 
+        const submitQuizForm = function () {
+            $btn.prop('disabled', true).addClass('is-loading');
+            $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
+            document.getElementById('tutor-answering-quiz').submit();
+        };
+
         if (
             is_reveal_mode() &&
             get_quiz_layout_view() === 'single_question' &&
@@ -449,25 +463,20 @@ window.jQuery(document).ready($ => {
         ) {
             if ($lastQuestion.attr('data-revealed') === '1') {
                 clearRevealTimeout();
-                $btn.prop('disabled', true).addClass('is-loading');
-                $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
-                document.getElementById('tutor-answering-quiz').submit();
+                submitQuizForm();
                 return;
             }
 
-            var attemptId = $form.find('input[name="attempt_id"]').val();
-            var quizId = $form.find('input[name="quiz_id"]').val();
-            var question_id = parseInt($lastQuestion.attr('id').match(/\d+/)[0], 10);
-            var checkedAnswers = [];
+            const attemptId = $form.find('input[name="attempt_id"]').val();
+            const quizId = $form.find('input[name="quiz_id"]').val();
+            const question_id = parseInt($lastQuestion.attr('id').match(/\d+/)[0], 10);
+            const checkedAnswers = [];
             $lastQuestion.find('input[type="radio"]:checked, input[type="checkbox"]:checked').each(function () {
                 checkedAnswers.push($(this).val());
             });
 
             if (!checkedAnswers.length) {
-                clearRevealTimeout();
-                $btn.addClass('is-loading');
-                $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
-                document.getElementById('tutor-answering-quiz').submit();
+                submitQuizForm();
                 return;
             }
 
@@ -487,27 +496,29 @@ window.jQuery(document).ready($ => {
                 success: function (res) {
                     if (res && res.data) {
                         feedback_response($lastQuestion, res.data.correct_answer_ids, res.data.answer_explanation);
+
+                        $btn.prop('disabled', false).removeClass('is-loading');
+                        clearRevealTimeout();
+                        const waitTime = get_reveal_wait_time();
+                        $btn.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', waitTime + 'ms');
+                        revealTimeoutId = setTimeout(function () {
+                            revealTimeoutId = null;
+                            $btn.removeClass('tutor-quiz-btn-countdown');
+                            submitQuizForm();
+                        }, waitTime);
+                        return;
                     }
+
+                    submitQuizForm();
                 },
-                complete: function () {
-                    $btn.prop('disabled', false).removeClass('is-loading');
-                    clearRevealTimeout();
-                    $btn.addClass('tutor-quiz-btn-countdown').css('--reveal-wait-duration', get_reveal_wait_time() + 'ms');
-                    revealTimeoutId = setTimeout(function () {
-                        revealTimeoutId = null;
-                        $btn.removeClass('tutor-quiz-btn-countdown');
-                        $btn.prop('disabled', true).addClass('is-loading');
-                        $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
-                        document.getElementById('tutor-answering-quiz').submit();
-                    }, get_reveal_wait_time());
+                error: function () {
+                    submitQuizForm();
                 },
             });
             return;
         }
 
-        $btn.prop('disabled', true).addClass('is-loading');
-        $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
-        document.getElementById('tutor-answering-quiz').submit();
+        submitQuizForm();
     });
 
     //warn user before leave page if quiz is running
