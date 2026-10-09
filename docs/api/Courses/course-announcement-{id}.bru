@@ -15,31 +15,31 @@ auth:bearer {
 }
 
 docs {
-  # Get Course Announcements
+  # GET /course-announcement/{id}
   
-  Retrieves all broadcast announcements published by the course instructors for a specific course.
+  Retrieves announcements for a course.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/course-announcement/:id`
   
   ## Authentication
-  - **Type:** Bearer JWT (`Authorization: Bearer {{access_token}}` or `Tutor-User-Token`)
-  - **Prerequisite:** Run **Authentication → Login** first to obtain tokens.
+  - **Requires** API key + Bearer JWT (always authenticated).
+  - User must be able to view the course.
   - **Required Permission:** `Read`, `Read/Write`, or `All`
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  | `id` | `integer` | **Yes** | Course post ID. |
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_announcement",
     "message": "Announcement retrieved successfully",
     "data": [
       {
@@ -55,7 +55,7 @@ docs {
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_announcement",
     "message": "Announcement not found for given ID",
     "data": []
   }

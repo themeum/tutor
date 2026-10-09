@@ -15,31 +15,35 @@ auth:bearer {
 }
 
 docs {
-  # Get Quiz Details
+  # GET /quizzes/{id}
   
-  Retrieves complete details for a specific quiz, including all questions, question types, point values, descriptions, and answer options.
+  Retrieves a quiz with settings and questions.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/quizzes/:id`
   
   ## Authentication
-  - **Type:** Bearer JWT (`Authorization: Bearer {{access_token}}` or `Tutor-User-Token`)
-  - **Prerequisite:** Run **Authentication → Login** first to obtain tokens.
+  - **Requires** API key + Bearer JWT.
+  - User must be able to view the parent course.
   - **Required Permission:** `Read`, `Read/Write`, or `All`
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  | `id` | `integer` | **Yes** | Quiz post ID. |
+  
+  ## Notes
+  
+  Correct-answer keys may be redacted when the caller cannot reveal quiz answers.
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_quiz",
     "message": "Quiz retrieved successfully",
     "data": {
       "ID": 501,
@@ -56,27 +60,24 @@ docs {
           "passing_grade": "80"
         }
       ],
-      "questions": [
+      "quiz_questions": [
         {
-          "question_id": 12,
+          "question_id": "12",
           "question_title": "Which HTTP method is idempotent?",
           "question_description": "Select the correct answer.",
           "question_type": "single_choice",
-          "question_mark": 1,
-          "question_settings": {
-            "answer_required": "1",
-            "randomize_question": "0"
-          },
-          "answers": [
+          "question_mark": "1",
+          "question_settings": "...",
+          "question_answers": [
             {
-              "answer_id": 45,
+              "answer_id": "45",
               "answer_title": "GET",
-              "is_correct": 1
+              "is_correct": "1"
             },
             {
-              "answer_id": 46,
+              "answer_id": "46",
               "answer_title": "POST",
-              "is_correct": 0
+              "is_correct": "0"
             }
           ]
         }
@@ -85,10 +86,12 @@ docs {
   }
   ```
   
+  Field names are `quiz_questions` and `question_answers` (not `questions` / `answers`).
+  
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_quiz",
     "message": "Quiz not found for given ID",
     "data": []
   }

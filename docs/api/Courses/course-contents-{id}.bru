@@ -15,31 +15,35 @@ auth:bearer {
 }
 
 docs {
-  # Get Course Contents Tree
+  # GET /course-contents/{id}
   
-  Retrieves the complete hierarchical curriculum structure for a course, grouping topics and their nested child items (lessons, quizzes, assignments).
+  Retrieves the curriculum tree (topics → lessons / quizzes / assignments).
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/course-contents/:id`
   
   ## Authentication
-  - **Type:** Bearer JWT (`Authorization: Bearer {{access_token}}` or `Tutor-User-Token`)
-  - **Prerequisite:** Run **Authentication → Login** first to obtain tokens.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - **With API key + JWT:** user must be able to view the course.
+  - **Without API key:** allowed only when the course is **public**.
+  - **Required Permission (API key):** `Read`, `Read/Write`, or `All`
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  | `id` | `integer` | **Yes** | Course post ID. |
+  
+  ## Notes
+  
+  When learning payloads cannot be revealed, topic `summary` is empty and content items are outline-only (no `post_content`).
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_course",
     "message": "Course contents retrieved successfully",
     "data": [
       {
@@ -52,14 +56,16 @@ docs {
             "post_title": "Lesson 1: What is a REST API?",
             "post_content": "Detailed overview text...",
             "post_name": "what-is-a-rest-api",
-            "post_type": "lesson"
+            "post_type": "lesson",
+            "menu_order": 0
           },
           {
             "ID": 302,
             "post_title": "Quiz 1: HTTP Basics",
             "post_content": "Test your knowledge of status codes.",
             "post_name": "quiz-1-http-basics",
-            "post_type": "tutor_quiz"
+            "post_type": "tutor_quiz",
+            "menu_order": 1
           }
         ]
       }
@@ -70,7 +76,7 @@ docs {
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_course",
     "message": "Contents for this course with the given course id not found",
     "data": []
   }
