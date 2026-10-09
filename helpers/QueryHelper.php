@@ -12,7 +12,7 @@ namespace Tutor\Helpers;
 /**
  * Do the common db operations through helper methods.
  *
- * @deprecated since 4.1.2. Use \Tutor\Helpers\DB instead.
+ * @deprecated since 4.2.0 Use \Tutor\Helpers\DB instead.
  */
 class QueryHelper {
 
@@ -221,7 +221,7 @@ class QueryHelper {
 
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // Escape values.
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // phpcs:ignore -- escape values.
 
 			if ( $first_key === $k ) {
 				$sql .= "INSERT INTO
