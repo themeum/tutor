@@ -1009,8 +1009,7 @@ class Quiz {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( QuizModel::QUESTION_TYPE_OPEN_ENDED === $question_type || QuizModel::QUESTION_TYPE_SHORT_ANSWER === $question_type ) {
-						$review_required = true;
-						$given_answer    = wp_kses_post( $answers );
+						$given_answer = wp_kses_post( $answers );
 
 					} elseif ( QuizModel::QUESTION_TYPE_ORDERING === $question_type || QuizModel::QUESTION_TYPE_MATCHING === $question_type || QuizModel::QUESTION_TYPE_IMAGE_MATCHING === $question_type ) {
 						$answers = (array) tutor_utils()->avalue_dot( 'answers', $answers );
@@ -1089,12 +1088,15 @@ class Quiz {
 					);
 
 					/**
-					 * Check if question_type open ended or short ans the set
-					 * is_correct default value null before saving
+					 * Check if question_type open ended or short ans then set
+					 * is_correct default value null before saving.
+					 * Only mark review as required if an answer was submitted.
 					 */
 					if ( in_array( $question_type, QuizModel::get_manual_review_types(), true ) ) {
 						$answers_data['is_correct'] = null;
-						$review_required            = true;
+						if ( '' !== trim( wp_strip_all_tags( (string) $given_answer ) ) ) {
+							$review_required = true;
+						}
 					}
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
