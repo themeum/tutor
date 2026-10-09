@@ -783,14 +783,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
 				};
 
-				const toggleWrap = checkbox.closest('.tutor-form-toggle, label');
-				if (toggleWrap) {
-					toggleWrap.addEventListener('pointerdown', captureSaveState);
-				} else {
-					checkbox.addEventListener('pointerdown', captureSaveState);
-				}
+				(checkbox.closest('.tutor-form-toggle, label') || checkbox).addEventListener('pointerdown', captureSaveState);
 				checkbox.addEventListener('focus', captureSaveState);
-				checkbox.addEventListener('click', captureSaveState);
 
 				checkbox.addEventListener('change', function (e) {
 					if (this.checked) {
@@ -837,8 +831,6 @@ document.addEventListener('DOMContentLoaded', function () {
 						tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
 							if (confirmed) {
 								proceedWithTurnoff();
-							} else {
-								revertToggle();
 							}
 						});
 					};
