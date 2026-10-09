@@ -776,6 +776,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (confirmationType === 'turnoff') {
 			document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const captureSaveState = () => {
+					wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+				};
+
+				const toggleWrap = checkbox.closest('.tutor-form-toggle, label');
+				if (toggleWrap) {
+					toggleWrap.addEventListener('pointerdown', captureSaveState);
+				} else {
+					checkbox.addEventListener('pointerdown', captureSaveState);
+				}
+				checkbox.addEventListener('focus', captureSaveState);
+				checkbox.addEventListener('click', captureSaveState);
+
 				checkbox.addEventListener('change', function (e) {
 					if (this.checked) {
 						return;
@@ -798,6 +814,10 @@ document.addEventListener('DOMContentLoaded', function () {
 							hiddenInput.value = 'on';
 						}
 						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = wasSaveDisabled;
+						}
 					};
 
 					const proceedWithTurnoff = () => {
@@ -806,6 +826,10 @@ document.addEventListener('DOMContentLoaded', function () {
 							hiddenInput.value = 'off';
 						}
 						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = false;
+						}
 					};
 
 					const confirmAndTurnoff = () => {
@@ -813,6 +837,8 @@ document.addEventListener('DOMContentLoaded', function () {
 						tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
 							if (confirmed) {
 								proceedWithTurnoff();
+							} else {
+								revertToggle();
 							}
 						});
 					};
