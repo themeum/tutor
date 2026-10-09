@@ -7,43 +7,47 @@ meta {
 get {
   url: {{base_url}}/lessons
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
-  ~topic_id: 1
+  topic_id: 1
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Lessons by Topic
+  # GET /lessons
   
-  Retrieves all lessons belonging to a specific topic, including lesson descriptions, downloadable attachments, video player settings, and thumbnails.
+  Retrieves lessons for a topic.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/lessons`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **With API key:** Bearer JWT — user must be able to view the parent course.
+  - **Without API key:** allowed only when the parent course is **public**.
+  - **Required Permission (API key):** `Read`, `Read/Write`, or `All`
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `topic_id` | `integer` | **Yes** | The WordPress Post ID of the parent topic. |
+  | `topic_id` | `integer` | **Yes** | Parent topic post ID. |
+  
+  ## Notes
+  
+  Guests / non-enrolled users on locked courses receive an **outline** (`ID`, `post_title`, `post_name`, `post_type`, optional `duration`). Full content, attachments, thumbnail, and video require learning-payload access.
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK (full lesson — enrolled / unlocked)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_lesson",
     "message": "Lesson retrieved successfully",
     "data": [
       {
@@ -58,9 +62,19 @@ docs {
         "thumbnail": "http://tutor-dev.local/wp-content/uploads/lesson-thumb.jpg",
         "video": [
           {
-            "source": "html5",
-            "source_video_id": 450,
-            "poster": "http://tutor-dev.local/wp-content/uploads/poster.jpg"
+            "source": "youtube",
+            "source_video_id": "",
+            "poster": "",
+            "source_external_url": "",
+            "source_shortcode": "",
+            "source_youtube": "https://www.youtube.com/watch?v=example",
+            "source_vimeo": "",
+            "source_embedded": "",
+            "runtime": {
+              "hours": 0,
+              "minutes": 10,
+              "seconds": 0
+            }
           }
         ]
       }
@@ -68,21 +82,21 @@ docs {
   }
   ```
   
-  ### Error Responses
+  `video` is the stored `_video` post meta (`get_post_meta(..., false)`), so it is an **array** of the internal meta object (`source` + `source_youtube`, etc.) — not the Pro write-API `{ source_type, source }` shape.
   
-  When `topic_id` is missing:
+  ### Missing `topic_id`
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_lesson",
     "message": "topic_id is required",
     "data": []
   }
   ```
   
-  When no lessons exist for the topic ID:
+  ### No lessons
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_lesson",
     "message": "Lesson not found for the given topic ID",
     "data": []
   }

@@ -52,28 +52,29 @@ class REST_Course_Announcement {
 	public function course_announcement( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'id' );
 
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare( "SELECT ID, post_title, post_content, post_name FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent )
+		$result = REST_Posts::get_published_child_posts(
+			$this->post_type,
+			$this->post_parent,
+			array(
+				'orderby' => 'date',
+				'order'   => 'DESC',
+			)
 		);
 
 		if ( count( $result ) > 0 ) {
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Announcement retrieved successfully', 'tutor' ),
-				'data'    => $result,
+			return $this->response(
+				'tutor_read_announcement',
+				__( 'Announcement retrieved successfully', 'tutor' ),
+				$result,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Announcement not found for given ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_announcement',
+			__( 'Announcement not found for given ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
-
-		return self::send( $response );
 	}
 }

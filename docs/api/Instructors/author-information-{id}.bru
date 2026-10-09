@@ -7,62 +7,52 @@ meta {
 get {
   url: {{base_url}}/author-information/1
   body: none
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Instructor Information
+  # GET /author-information/{id}
   
-  Retrieves public instructor/author details including display name, email, registration date, biographical info, and a list of courses authored by the instructor.
+  Retrieves public instructor profile fields and published course IDs.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/author-information/:id`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Public** when the user's public profile layout is not private.
+  - Bearer optional. Private fields (`user_login`, `user_email`, `user_registered`, `user_url`) only when the caller may view private user fields.
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress User ID of the instructor/author. |
+  | `id` | `integer` | **Yes** | Instructor user ID. |
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK (public fields)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_author",
     "message": "Author details retrieved successfully",
     "data": {
-      "ID": "1",
-      "user_login": "jane_instructor",
-      "user_nicename": "jane_instructor",
-      "user_email": "jane@example.com",
-      "user_url": "https://example.com",
-      "user_registered": "2025-01-01 12:00:00",
-      "user_status": "0",
+      "ID": 1,
       "display_name": "Jane Doe",
-      "courses": [
-        "105",
-        "110",
-        "120"
-      ]
+      "user_nicename": "jane_instructor",
+      "courses": [105, 110, 120]
     }
   }
   ```
   
-  ### 404 / Invalid ID
+  ### 404 Not Found
   ```json
   {
-    "code": "invalid_id",
+    "code": "tutor_read_author",
     "message": "Author not found",
     "data": []
   }

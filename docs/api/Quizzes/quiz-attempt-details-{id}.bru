@@ -7,65 +7,67 @@ meta {
 get {
   url: {{base_url}}/quiz-attempt-details/1
   body: none
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Quiz Attempt Details
+  # GET /quiz-attempt-details/{id}
   
-  Retrieves historical attempt records, passing status, marks obtained, and earned grades for a given quiz ID.
+  Retrieves attempt records for a quiz.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/quiz-attempt-details/:id`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Requires** API key + Bearer JWT.
+  - Students see only their own attempts; instructors/admins with course access see all.
+  - **Required Permission:** `Read`, `Read/Write`, or `All`
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  | `id` | `integer` | **Yes** | Quiz post ID. |
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
-    "message": "Quiz attempt detail retrieved successfully",
+    "code": "tutor_read_quiz",
+    "message": "Quiz attempts retrieved successfully",
     "data": [
       {
-        "attempt_id": 88,
-        "course_id": 105,
-        "quiz_id": 501,
-        "user_id": 14,
-        "total_questions": 10,
-        "total_answered_questions": 10,
+        "attempt_id": "88",
+        "user_id": "14",
+        "total_questions": "10",
+        "total_answered_questions": "10",
         "total_marks": "100.00",
         "earned_marks": "90.00",
-        "attempt_status": "review_required",
-        "attempt_info": "...",
+        "attempt_status": "attempt_ended",
+        "attempt_info": {},
         "attempt_started_at": "2026-02-01 14:20:00",
         "attempt_ended_at": "2026-02-01 14:45:00",
-        "is_manually_reviewed": 0
+        "is_manually_reviewed": "0",
+        "manually_reviewed_at": null,
+        "attempts_answer": []
       }
     ]
   }
   ```
   
+  Attempt rows do not include `course_id` / `quiz_id` in the SQL select. Nested answers are under `attempts_answer`; `is_correct` may be hidden for students.
+  
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
-    "message": "Quiz attempt detail not found for given ID",
+    "code": "tutor_read_quiz",
+    "message": "Quiz attempts not found for given ID",
     "data": []
   }
   ```

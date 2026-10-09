@@ -7,70 +7,75 @@ meta {
 get {
   url: {{base_url}}/quiz-question-answer/1
   body: none
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Quiz Question Answers
+  # GET /quiz-question-answer/{id}
   
-  Retrieves a flattened list of all questions and their configured answers for a given quiz ID.
+  Retrieves questions for a quiz, each with nested `question_answers`.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/quiz-question-answer/:id`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Requires** API key + Bearer JWT.
+  - User must be able to view the parent course.
+  - **Required Permission:** `Read`, `Read/Write`, or `All`
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  | `id` | `integer` | **Yes** | Quiz post ID. |
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
-    "message": "Quiz question and answer retrieved successfully",
+    "code": "tutor_read_quiz",
+    "message": "Question retrieved successfully",
     "data": [
       {
-        "question_id": 12,
+        "question_id": "12",
         "question_title": "Which HTTP method is idempotent?",
         "question_description": "Select the correct answer.",
         "question_type": "single_choice",
-        "question_mark": 1,
-        "answer_id": 45,
-        "answer_title": "GET",
-        "is_correct": 1
-      },
-      {
-        "question_id": 12,
-        "question_title": "Which HTTP method is idempotent?",
-        "question_description": "Select the correct answer.",
-        "question_type": "single_choice",
-        "question_mark": 1,
-        "answer_id": 46,
-        "answer_title": "POST",
-        "is_correct": 0
+        "question_mark": "1",
+        "question_settings": {
+          "answer_required": "1",
+          "randomize_question": "0"
+        },
+        "question_answers": [
+          {
+            "answer_id": "45",
+            "answer_title": "GET",
+            "is_correct": "1"
+          },
+          {
+            "answer_id": "46",
+            "answer_title": "POST",
+            "is_correct": "0"
+          }
+        ]
       }
     ]
   }
   ```
   
+  This is a list of questions with nested answers (not a flattened question+answer row list). Correctness may be redacted.
+  
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
-    "message": "Quiz question not found for given ID",
+    "code": "tutor_read_quiz",
+    "message": "Question not found for given ID",
     "data": []
   }
   ```

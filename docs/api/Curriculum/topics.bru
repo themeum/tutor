@@ -7,76 +7,72 @@ meta {
 get {
   url: {{base_url}}/topics
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
-  ~course_id: 1
+  course_id: 1
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Topics by Course
+  # GET /topics
   
-  Retrieves all topic modules belonging to a specific course.
+  Retrieves topic modules for a course.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/topics`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **With API key:** Bearer JWT (`Authorization: Bearer {{access_token}}` or `Tutor-User-Token`) — user must be able to view the course (enrolled / instructor / public).
+  - **Without API key:** allowed only when the course is **public**.
+  - **Required Permission (API key):** `Read`, `Read/Write`, or `All`
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `course_id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  | `course_id` | `integer` | **Yes** | Parent course post ID. |
+  
+  ## Notes
+  
+  Full topic bodies (`post_content`) are returned only when the caller may reveal learning payloads (enrolled / instructor / public free course). Otherwise topics are outline-only: `ID`, `post_title`, `post_name`.
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "get_topic",
+    "code": "tutor_read_topic",
     "message": "Topic retrieved successfully",
     "data": [
       {
-        "ID": "201",
+        "ID": 201,
         "post_title": "Getting Started with the Environment",
         "post_content": "Detailed overview of tools, IDE plugins, and prerequisites.",
         "post_name": "getting-started-environment"
-      },
-      {
-        "ID": "202",
-        "post_title": "Core Concepts & Deep Dive",
-        "post_content": "Deep exploration of architecture and API patterns.",
-        "post_name": "core-concepts-deep-dive"
       }
     ]
   }
   ```
   
-  ### 404 / Missing Param Errors
-  
-  When `course_id` is missing:
+  ### Missing `course_id`
   ```json
   {
-    "code": "get_topic",
+    "code": "tutor_read_topic",
     "message": "course_id is required",
     "data": []
   }
   ```
   
-  When no topics exist for the provided ID:
+  ### No topics
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_topic",
     "message": "Topic not found for given course ID",
     "data": []
   }

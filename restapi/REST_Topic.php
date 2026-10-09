@@ -53,35 +53,46 @@ class REST_Topic {
 		$this->post_parent = $request->get_param( 'course_id' );
 
 		if ( ! isset( $this->post_parent ) ) {
-			$response = array(
-				'code'    => 'get_topic',
-				'message' => __( 'course_id is required', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_topic',
+				__( 'course_id is required', 'tutor' ),
+				array(),
+				$this->client_error_code
 			);
-			return self::send( $response );
 		}
 
-		global $wpdb;
+		$course_id     = absint( $this->post_parent );
+		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
 
-		$result = $wpdb->get_results(
-			$wpdb->prepare( "SELECT ID, post_title, post_content, post_name FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent )
-		);
+		$result = REST_Posts::get_published_child_posts( $this->post_type, $this->post_parent );
+
+		if ( ! $reveal_bodies ) {
+			$result = array_map(
+				static function ( $topic ) {
+					return (object) array(
+						'ID'         => (int) $topic->ID,
+						'post_title' => $topic->post_title,
+						'post_name'  => $topic->post_name,
+					);
+				},
+				$result
+			);
+		}
 
 		if ( count( $result ) > 0 ) {
-			$response = array(
-				'code'    => 'get_topic',
-				'message' => __( 'Topic retrieved successfully', 'tutor' ),
-				'data'    => $result,
+			return $this->response(
+				'tutor_read_topic',
+				__( 'Topic retrieved successfully', 'tutor' ),
+				$result,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Topic not found for given course ID', 'tutor' ),
-			'data'    => array(),
-		);
 
-		return self::send( $response );
+		return $this->response(
+			'tutor_read_topic',
+			__( 'Topic not found for given course ID', 'tutor' ),
+			array(),
+			$this->not_found_code
+		);
 	}
 }

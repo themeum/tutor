@@ -1,0 +1,64 @@
+meta {
+  name: Logout
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/auth/logout
+  body: json
+  auth: none
+}
+
+headers {
+  ~Authorization: Bearer {{access_token}}
+}
+
+body:json {
+  {
+    "refresh_token": "{{refresh_token}}",
+    "all": false
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("access_token", "");
+    bru.setEnvVar("refresh_token", "");
+  }
+}
+
+docs {
+  # POST /auth/logout
+  
+  Invalidate refresh token(s). Optionally revoke all sessions for the user.
+  
+  ## HTTP Method & Route
+  - **Method:** `POST`
+  - **Route:** `/wp-json/tutor/v1/auth/logout`
+  
+  ## Authentication
+  - **Type:** Public for single-token logout; Bearer recommended when `all: true`
+  
+  ## Request Body
+  
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `refresh_token` | `string` | No* | Specific refresh token to revoke. |
+  | `all` | `boolean` | No | When `true`, revoke all refresh tokens for the user (requires Bearer access token, or a valid `refresh_token` to resolve the user). |
+  
+  \* Provide `refresh_token` and/or set `all: true` with a Bearer token.
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "tutor_auth_logout",
+    "message": "Logged out successfully.",
+    "data": {
+      "success": true
+    }
+  }
+  ```
+}

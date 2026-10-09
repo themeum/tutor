@@ -4,45 +4,62 @@ This directory contains the complete, interactive API documentation and executab
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Open in Bruno GUI
+
 1. Download and install [Bruno](https://www.usebruno.com/downloads).
 2. Open Bruno, click **"Open Collection"**, and select the `wp-content/plugins/tutor/docs/api` directory.
 
 ### 2. Configure Environment & Authentication
-Tutor LMS REST API uses Basic Authentication with **API Keys** and **API Secrets**.
 
-1. In your WordPress admin dashboard, navigate to **Tutor LMS > Settings > REST API / API**.
-2. Generate an API Key & Secret with the desired permission level (`Read`, `Write`, or `All`).
-3. Set up your local environment file:
-   - Make a copy of `environments/local.bru.example` named `environments/local.bru`:
-     ```bash
-     cp docs/api/environments/local.bru.example docs/api/environments/local.bru
-     ```
-   - In Bruno, select the **local** environment from the top-right dropdown.
-   - Configure `base_url`, `api_key`, and `api_secret` in the environment settings (or directly in `environments/local.bru`). Note that `local.bru` is gitignored so your credentials won't be committed.
-4. For production environments, configure `environments/production.bru`.
+Tutor LMS REST API uses **JWT authentication** (since 4.2.0):
+
+1. In WordPress admin, go to **Tutor LMS → Settings → REST API**.
+2. Generate an API Key & Secret with the desired permission (`Read` in Free; Pro also offers `Write`, `Delete`, `Read/Write`, and `All`).
+3. Set up your local environment:
+   ```bash
+   cp docs/api/environments/local.bru.example docs/api/environments/local.bru
+   ```
+4. In Bruno, select the **local** environment and set:
+   - `base_url` — e.g. `http://yoursite.local/wp-json/tutor/v1`
+   - `api_key` / `api_secret` — from Tutor settings
+   - `username` / `password` — WordPress user credentials
+5. Run **Authentication → Login**. It stores `access_token` and `refresh_token` in the environment.
+6. All other authenticated requests send `Authorization: Bearer {{access_token}}`.
+
+`local.bru` is gitignored so credentials are not committed. For production, configure `environments/production.bru`.
+
+### Auth flow
+
+```
+Tutor-Api-Key + Tutor-Api-Secret + username/password
+        │
+        ▼
+  POST /auth/login  →  access_token + refresh_token
+        │
+        ▼
+  Authorization: Bearer <access_token>  (or Tutor-User-Token header)
+        │
+        ├── POST /auth/refresh  (body: refresh_token) when access expires
+        └── POST /auth/logout   (invalidate refresh token(s))
+```
 
 ---
 
-## 📁 Collection Structure
+## Collection Structure
 
-The collection is organized into the following categories:
-
-- **`environments/`**: Contains `local.bru.example` and `production.bru`.
-- **`Authentication/`**: Overview of authentication mechanisms, key management, and headers.
-- **`Courses/`**: Endpoints for querying course listings, course details, complete curriculum trees, announcements, and ratings/reviews.
-- **`Curriculum/`**: Topic modules and lesson querying endpoints.
-- **`Quizzes/`**: Quiz structures, questions, answers, and student attempt histories.
-- **`Instructors/`**: Author/instructor profiles, bio, and associated course references.
-- **`Ecommerce & Webhooks/`**: Payment gateway webhooks and processing handlers.
+- **`environments/`**: `local.bru.example` and `production.bru`.
+- **`Authentication/`**: Login, refresh, and logout.
+- **`Courses/`**: Course listings, details, curriculum trees, announcements, ratings.
+- **`Curriculum/`**: Topics and lessons (read).
+- **`Quizzes/`**: Quizzes, questions/answers, attempt details.
+- **`Instructors/`**: Author/instructor profiles.
+- **`Ecommerce & Webhooks/`**: Payment gateway webhooks (public).
 
 ---
 
-## 💻 Running Requests via CLI
-
-You can execute this collection in terminal or CI/CD pipelines using the Bruno CLI:
+## Running Requests via CLI
 
 ```bash
 # Run against the local environment
@@ -55,21 +72,22 @@ npx @usebruno/cli run docs/api --env production
 npx @usebruno/cli run docs/api/Courses --env local
 ```
 
+Run **Authentication → Login** first (or ensure `access_token` is set) before authenticated folders.
+
 ---
 
-## 📡 API Response Format
-
-All Tutor LMS REST API endpoints return a standardized JSON envelope:
+## API Response Format
 
 ```json
 {
   "code": "success",
   "message": "Human readable message",
-  "data": { ... }
+  "data": {}
 }
 ```
 
-### Common Status Codes:
+### Common Status Codes
+
 - `200 OK`: Request succeeded.
-- `401 Unauthorized` / `403 Forbidden`: Missing, invalid, or insufficient API keys / user capabilities.
-- `404 Not Found`: Resource (Course, Topic, Lesson, Quiz, or Instructor) does not exist for the provided ID.
+- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT, revoked API key, or insufficient permission.
+- `404 Not Found`: Resource does not exist for the provided ID.

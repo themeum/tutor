@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -53,6 +54,7 @@ class REST_Rating {
 	 * Retrieve course ratings via REST API.
 	 *
 	 * @since 1.7.1
+	 * @since 4.2.0 Guest payload matches reviews UI; require published course.
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 *
@@ -64,27 +66,63 @@ class REST_Rating {
 		$limit         = (int) sanitize_text_field( $request->get_param( 'limit' ) );
 
 		$offset = ! empty( $offset ) ? $offset : 0;
-		$limit  = ! empty( $limit ) ? $limit : 10;
+		$limit  = ! empty( $limit ) ? min( $limit, 100 ) : 10;
 
-		$ratings          = tutor_utils()->get_course_rating( $this->post_id );
-		$ratings->reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
-
-		if ( ! empty( $ratings ) ) {
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
-				'data'    => $ratings,
+		if ( ! CourseModel::get_post_types( $this->post_id ) || 'publish' !== get_post_status( $this->post_id ) ) {
+			return $this->response(
+				'tutor_read_rating',
+				__( 'Course not found', 'tutor' ),
+				array(),
+				$this->not_found_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Rating not found for given ID', 'tutor' ),
-			'data'    => array(),
-		);
+		$ratings = tutor_utils()->get_course_rating( $this->post_id );
+		$reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
 
-		return self::send( $response );
+		$is_guest = ! RestAuth::is_rest_authenticated();
+
+		if ( $is_guest ) {
+			$payload = (object) array(
+				'rating_count'   => isset( $ratings->rating_count ) ? $ratings->rating_count : 0,
+				'rating_avg'     => isset( $ratings->rating_avg ) ? $ratings->rating_avg : 0,
+				'count_by_value' => isset( $ratings->count_by_value ) ? $ratings->count_by_value : array(),
+				'reviews'        => array(),
+			);
+
+			if ( is_array( $reviews ) ) {
+				foreach ( $reviews as $review ) {
+					$payload->reviews[] = (object) array(
+						'display_name'     => isset( $review->display_name ) ? $review->display_name : '',
+						'comment_content'  => isset( $review->comment_content ) ? $review->comment_content : '',
+						'comment_date_gmt' => isset( $review->comment_date_gmt ) ? $review->comment_date_gmt : '',
+						'rating'           => isset( $review->rating ) ? $review->rating : 0,
+					);
+				}
+			}
+
+			return $this->response(
+				'tutor_read_rating',
+				__( 'Course rating retrieved successfully', 'tutor' ),
+				$payload,
+				$this->success_code
+			);
+		}
+
+		$ratings->reviews = is_array( $reviews ) ? $reviews : array();
+
+		foreach ( $ratings->reviews as $review ) {
+			$user_id = isset( $review->user_id ) ? (int) $review->user_id : 0;
+			if ( ! RestAuth::can_view_user_private_fields( $user_id ) ) {
+				unset( $review->comment_author_email );
+			}
+		}
+
+		return $this->response(
+			'tutor_read_rating',
+			__( 'Course rating retrieved successfully', 'tutor' ),
+			$ratings,
+			$this->success_code
+		);
 	}
 }

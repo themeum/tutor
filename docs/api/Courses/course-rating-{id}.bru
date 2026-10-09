@@ -7,7 +7,7 @@ meta {
 get {
   url: {{base_url}}/course-rating/1
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
@@ -15,62 +15,54 @@ params:query {
   ~limit: 10
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Course Ratings & Reviews
+  # GET /course-rating/{id}
   
-  Retrieves overall rating statistics (count, average rating, star breakdown) and a paginated list of approved student reviews for a course.
+  Retrieves rating summary and reviews for a published course.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/course-rating/:id`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Public** (`permission_public_rating`). Bearer optional.
+  - Guests get a reduced review payload (display name, content, date, rating only).
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  | `id` | `integer` | **Yes** | Course post ID. |
   
   ## Query Parameters
   
   | Parameter | Type | Default | Description |
   | :--- | :--- | :--- | :--- |
-  | `offset` | `integer` | `0` | Offset for pagination of reviews. |
-  | `limit` | `integer` | `10` | Number of reviews to return per request. |
+  | `offset` | `integer` | `0` | Review list offset. |
+  | `limit` | `integer` | `10` | Page size (capped at 100). |
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK (authenticated)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_rating",
     "message": "Course rating retrieved successfully",
     "data": {
       "rating_count": 8,
       "rating_avg": 4.88,
-      "five_star_count": 7,
-      "four_star_count": 1,
-      "three_star_count": 0,
-      "two_star_count": 0,
-      "one_star_count": 0,
-      "reviews": [
-        {
-          "comment_ID": "85",
-          "comment_post_ID": "105",
-          "comment_author": "Alex Smith",
-          "comment_content": "Exceptional course! Very clear and concise.",
-          "rating": 5,
-          "review_title": "Great practical examples"
-        }
-      ]
+      "count_by_value": {
+        "5": 7,
+        "4": 1,
+        "3": 0,
+        "2": 0,
+        "1": 0
+      },
+      "reviews": []
     }
   }
   ```
@@ -78,8 +70,8 @@ docs {
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
-    "message": "Rating not found for given ID",
+    "code": "tutor_read_rating",
+    "message": "Course not found",
     "data": []
   }
   ```

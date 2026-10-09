@@ -1,0 +1,77 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Tutor-Api-Key: {{api_key}}
+  Tutor-Api-Secret: {{api_secret}}
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200 && res.body && res.body.data) {
+    bru.setEnvVar("access_token", res.body.data.access_token);
+    bru.setEnvVar("refresh_token", res.body.data.refresh_token);
+  }
+}
+
+docs {
+  # POST /auth/login
+  
+  Exchange API credentials and WordPress user credentials for an access JWT and refresh token.
+  
+  ## HTTP Method & Route
+  - **Method:** `POST`
+  - **Route:** `/wp-json/tutor/v1/auth/login`
+  
+  ## Authentication
+  - **Type:** API Key headers only (no Bearer token yet)
+  - **Headers:** `Tutor-Api-Key`, `Tutor-Api-Secret`
+  - **Required Permission:** Any valid API key permission (`Read`, `Write`, `Delete`, `Read/Write`, or `All`)
+  
+  ## Request Body
+  
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `username` | `string` | **Yes** | WordPress username or email. |
+  | `password` | `string` | **Yes** | WordPress user password. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "tutor_auth_login",
+    "message": "Login successful.",
+    "data": {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "expires_in": 86400,
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "user_id": 1,
+      "display_name": "Admin"
+    }
+  }
+  ```
+  
+  On success, this request stores `access_token` and `refresh_token` in the active Bruno environment for subsequent requests.
+  
+  ### 401 Unauthorized
+  Invalid username or password.
+  
+  ### 403 Forbidden
+  Missing or invalid API key/secret.
+}

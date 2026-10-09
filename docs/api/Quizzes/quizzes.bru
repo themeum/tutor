@@ -7,51 +7,50 @@ meta {
 get {
   url: {{base_url}}/quizzes
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
-  ~topic_id: 1
+  topic_id: 1
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Quizzes by Topic
+  # GET /quizzes
   
-  Retrieves all quizzes configured under a specific topic module, including quiz settings (time limits, passing grades, attempt limits).
+  Retrieves quizzes under a topic (with quiz settings meta).
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/quizzes`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Requires** API key + Bearer JWT (always authenticated).
+  - User must be able to view the parent course.
+  - **Required Permission:** `Read`, `Read/Write`, or `All`
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `topic_id` | `integer` | **Yes** | The WordPress Post ID of the parent topic. |
+  | `topic_id` | `integer` | **Yes** | Parent topic post ID. |
   
   ## Responses
   
   ### 200 OK (Success)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_quiz",
     "message": "Quiz retrieved successfully",
     "data": [
       {
         "ID": 501,
         "post_title": "Module 1 Knowledge Check",
-        "post_content": "Short 10-question evaluation of module 1 concepts.",
+        "post_content": "Short evaluation of module 1 concepts.",
         "post_name": "module-1-knowledge-check",
-        "topic_id": 201,
         "quiz_settings": [
           {
             "time_limit": {
@@ -68,11 +67,13 @@ docs {
   }
   ```
   
-  ### 404 / Missing Param Errors
+  `quiz_settings` is `get_post_meta(..., 'tutor_quiz_option', false)` (array of settings objects).
+  
+  ### 404 Not Found
   ```json
   {
-    "code": "not_found",
-    "message": "topic_id is required",
+    "code": "tutor_read_quiz",
+    "message": "Quiz not found for given ID",
     "data": []
   }
   ```

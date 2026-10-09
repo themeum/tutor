@@ -48,6 +48,9 @@ class REST_Lesson {
 	/**
 	 * Get lessons for a specific topic.
 	 *
+	 * Guests / non-enrolled users on public paid courses receive an outline
+	 * (title + duration) matching the single-course curriculum UI.
+	 *
 	 * @param WP_REST_Request $request REST request object.
 	 *
 	 * @return mixed
@@ -56,18 +59,25 @@ class REST_Lesson {
 		$this->post_parent = $request->get_param( 'topic_id' );
 
 		if ( ! isset( $this->post_parent ) ) {
-			$response = array(
-				'code'    => 'not_found',
-				'message' => __( 'topic_id is required', 'tutor' ),
-				'data'    => array(),
+			return $this->response(
+				'tutor_read_lesson',
+				__( 'topic_id is required', 'tutor' ),
+				array(),
+				$this->client_error_code
 			);
-			return self::send( $response );
 		}
+
+		$topic_id      = absint( $this->post_parent );
+		$course_id     = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
 
 		$args = array(
 			'post_type'      => $this->post_type,
-			'post_parent'    => $this->post_parent,
+			'post_parent'    => $topic_id,
+			'post_status'    => 'publish',
 			'posts_per_page' => -1,
+			'orderby'        => 'menu_order',
+			'order'          => 'ASC',
 		);
 
 		$lessons_query = new WP_Query( $args );
@@ -77,48 +87,63 @@ class REST_Lesson {
 		if ( $lessons_query->have_posts() ) {
 			$posts = $lessons_query->get_posts();
 			foreach ( $posts as $post ) {
-
-				$lesson = new \stdClass();
-
-				$lesson->ID           = $post->ID;
-				$lesson->post_title   = $post->post_title;
-				$lesson->post_content = $post->post_content;
-				$lesson->post_name    = $post->post_name;
-				$lesson->topic_id     = wp_get_post_parent_id( $lesson->ID );
-
-				$attachments    = array();
-				$attachments_id = get_post_meta( $lesson->ID, '_tutor_attachments', false );
-				if ( is_array( $attachments_id ) && count( $attachments_id ) > 0 ) {
-					$attachments_id = $attachments_id[0];
-
-					foreach ( $attachments_id as $id ) {
-						$guid = get_the_guid( $id );
-						array_push( $attachments, $guid );
-					}
+				if ( $reveal_bodies ) {
+					$data[] = self::to_full_lesson_dto( $post, $topic_id );
+				} else {
+					$data[] = REST_Posts::to_outline_post_dto( $post );
 				}
-
-				$lesson->attachments = $attachments;
-				$lesson->thumbnail   = get_the_post_thumbnail_url( $lesson->ID );
-				$lesson->video       = get_post_meta( $lesson->ID, '_video', false );
-
-				array_push( $data, $lesson );
 			}
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Lesson retrieved successfully', 'tutor' ),
-				'data'    => $data,
+			return $this->response(
+				'tutor_read_lesson',
+				__( 'Lesson retrieved successfully', 'tutor' ),
+				$data,
+				$this->success_code
 			);
-
-			return self::send( $response );
 		}
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Lesson not found for the given topic ID', 'tutor' ),
-			'data'    => array(),
+		return $this->response(
+			'tutor_read_lesson',
+			__( 'Lesson not found for the given topic ID', 'tutor' ),
+			array(),
+			$this->not_found_code
 		);
+	}
 
-		return self::send( $response );
+	/**
+	 * Full lesson payload (enrolled / public-free / instructor).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param \WP_Post $post     Lesson post.
+	 * @param int      $topic_id Topic id.
+	 *
+	 * @return object
+	 */
+	private static function to_full_lesson_dto( $post, $topic_id ) {
+		$lesson = new \stdClass();
+
+		$lesson->ID           = $post->ID;
+		$lesson->post_title   = $post->post_title;
+		$lesson->post_content = $post->post_content;
+		$lesson->post_name    = $post->post_name;
+		$lesson->topic_id     = absint( $topic_id );
+
+		$attachments    = array();
+		$attachments_id = get_post_meta( $lesson->ID, '_tutor_attachments', false );
+		if ( is_array( $attachments_id ) && count( $attachments_id ) > 0 ) {
+			$attachments_id = $attachments_id[0];
+
+			foreach ( $attachments_id as $id ) {
+				$guid = get_the_guid( $id );
+				array_push( $attachments, $guid );
+			}
+		}
+
+		$lesson->attachments = $attachments;
+		$lesson->thumbnail   = get_the_post_thumbnail_url( $lesson->ID );
+		$lesson->video       = get_post_meta( $lesson->ID, '_video', false );
+
+		return $lesson;
 	}
 }
