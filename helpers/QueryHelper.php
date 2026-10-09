@@ -974,7 +974,8 @@ class QueryHelper {
 		}
 
 		$in_array  = is_array( $where_in ) ? $where_in : explode( ',', $where_in );
-		$in_clause = self::prepare_in_clause( array_filter( array_map( 'trim', $in_array ) ) );
+		$in_array  = array_filter( array_map( static fn( $value ) => trim( $value, " \t\n\r\0\x0B'\"" ), $in_array ), static fn( $value ) => '' !== $value );
+		$in_clause = self::prepare_in_clause( $in_array );
 
 		if ( empty( $in_clause ) ) {
 			return false;
