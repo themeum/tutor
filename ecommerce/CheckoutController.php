@@ -397,14 +397,16 @@ class CheckoutController {
 	 * @since 3.0.0
 	 *
 	 * @since 3.3.0 is_coupon_applicable check added
+	 * @since 4.2.0 order_id parameter added
 	 *
 	 * @param int|array $item_ids Required, course ids or plan id.
 	 * @param string    $order_type order type.
 	 * @param string    $coupon_code coupon code.
+	 * @param int       $order_id order id.
 	 *
 	 * @return object
 	 */
-	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null ) {
+	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null, $order_id = 0 ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 		$response = array();
 		$user_id  = get_current_user_id();
@@ -433,7 +435,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, $order_id );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
@@ -682,7 +684,7 @@ class CheckoutController {
 			}
 		}
 
-		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
+		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code, $order_id );
 
 		if ( ! isset( $checkout_data->items ) || ! tutor_utils()->count( $checkout_data->items ) ) {
 			array_push( $errors, __( 'No items found for purchase', 'tutor' ) );

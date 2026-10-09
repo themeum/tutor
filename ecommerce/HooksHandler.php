@@ -16,8 +16,9 @@ use TUTOR\Earnings;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Models\EnrollmentModel;
+use Tutor\Models\CouponModel;
 use Tutor\Models\OrderMetaModel;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\User;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -36,6 +37,24 @@ class HooksHandler {
 	 * @var OrderModel
 	 */
 	private $order_model;
+
+	/**
+	 * CouponModel
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var CouponModel
+	 */
+	private $coupon_model;
+
+	/**
+	 * OrderMetaModel
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var OrderMetaModel
+	 */
+	private $order_meta_model;
 
 	/**
 	 * OrderActivitiesModel
@@ -64,6 +83,8 @@ class HooksHandler {
 		$this->order_activities_model = new OrderActivitiesModel();
 		$this->order_model            = new OrderModel();
 		$this->coupon_ctrl            = new CouponController( false );
+		$this->coupon_model           = new CouponModel();
+		$this->order_meta_model       = new OrderMetaModel();
 
 		// Register hooks.
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
@@ -94,7 +115,47 @@ class HooksHandler {
 		 * @since 3.5.0
 		 */
 		add_action( 'tutor_order_placed', array( $this, 'store_billing_address_for_order' ) );
+		add_action( 'tutor_order_placed', array( $this, 'reserve_coupon_code_for_order' ) );
 		add_action( 'tutor_order_updated', array( $this, 'store_billing_address_for_order' ) );
+	}
+
+	/**
+	 * Store reserved coupon code for order.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $order_data Order data.
+	 *
+	 * @return void
+	 */
+	public function reserve_coupon_code_for_order( array $order_data ) {
+		$order_id     = $order_data['id'] ?? 0;
+		$order_status = $order_data['order_status'] ?? '';
+		$coupon_code  = $order_data['coupon_code'] ?? '';
+		$user_id      = $order_data['user_id'] ?? 0;
+
+		if ( ! $order_id || ! $user_id ) {
+			return;
+		}
+
+		if ( ! empty( $coupon_code ) && OrderModel::ORDER_INCOMPLETE === $order_status ) {
+			$selected_coupon = null;
+			if ( Settings::is_coupon_usage_enabled() && '-1' !== $coupon_code ) {
+				$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
+				if ( ! $selected_coupon ) {
+					$this->coupon_model->set_apply_coupon_error( $this->coupon_model->get_coupon_failed_error_msg( 'not_found' ) );
+				}
+			}
+
+			$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+			if ( $is_valid ) {
+				$reserved_coupon_meta_key = 'reserved_coupon_code_' . $user_id;
+				$reserved_coupon          = $this->order_meta_model->get_meta( $order_id, $reserved_coupon_meta_key );
+				if ( empty( $reserved_coupon ) ) {
+					$this->order_meta_model->add_meta( $order_id, $reserved_coupon_meta_key, $coupon_code );
+				}
+			}
+		}
 	}
 
 	/**
@@ -443,23 +504,21 @@ class HooksHandler {
 						do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
 					}
 				}
-			} else {
-				if ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
+			} elseif ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
 					// Insert enrollment.
-					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
+					add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
-					if ( $enrollment_id ) {
-						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
-							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
-						}
-						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
-
-						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
-					} else {
-						// Log error message with student id and course id.
-						error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
+				if ( $enrollment_id ) {
+					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
+						BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 					}
+					update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
+
+					do_action( 'tutor_order_enrolled', $order, $enrollment_id );
+				} else {
+					// Log error message with student id and course id.
+					error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
 				}
 			}
 		}
