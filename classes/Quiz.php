@@ -1300,19 +1300,18 @@ class Quiz {
 		$user_id     = get_current_user_id();
 		$attempt_id  = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
-		$quiz_id     = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 
 		$attempt = self::validate_attempt( $attempt_id, $user_id );
 		if ( ! $attempt ) {
 			$this->json_response( __( 'Operation not allowed, attempt not found or permission denied', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
 		}
 
-		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status || QuizModel::ATTEMPT_ENDED === $attempt->attempt_status ) {
-			$this->json_response( __( 'Attempt has ended or timed out', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		if ( QuizModel::ATTEMPT_STARTED !== $attempt->attempt_status ) {
+			$this->json_response( __( 'Quiz attempt is not in progress', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$effective_quiz_id    = $quiz_id ? $quiz_id : (int) $attempt->quiz_id;
-		$quiz_settings        = tutor_utils()->get_quiz_option( $effective_quiz_id );
+		$quiz_id              = (int) $attempt->quiz_id;
+		$quiz_settings        = tutor_utils()->get_quiz_option( $quiz_id );
 		$enable_answer_reveal = '1' === (string) ( $quiz_settings['enable_answer_reveal'] ?? '0' );
 		if ( ! $enable_answer_reveal ) {
 			$this->json_response( __( 'Answer reveal is disabled for this quiz', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
@@ -1329,6 +1328,16 @@ class Quiz {
 
 		if ( ! $question ) {
 			$this->json_response( __( 'Question not found or does not belong to this quiz', 'tutor' ), null, HttpHelper::STATUS_NOT_FOUND );
+		}
+
+		$supported_types = array(
+			QuizModel::QUESTION_TYPE_TRUE_FALSE,
+			QuizModel::QUESTION_TYPE_SINGLE_CHOICE,
+			QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE,
+		);
+
+		if ( ! in_array( $question->question_type, $supported_types, true ) ) {
+			$this->json_response( __( 'This question type does not support instant answer verification', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
 		$answers            = QuizModel::get_answers_by_quiz_question( $question_id );
@@ -1386,7 +1395,7 @@ class Quiz {
 
 		$answers_data = array(
 			'user_id'         => $user_id,
-			'quiz_id'         => $effective_quiz_id,
+			'quiz_id'         => $quiz_id,
 			'question_id'     => $question_id,
 			'quiz_attempt_id' => $attempt_id,
 			'given_answer'    => $given_answer,
@@ -1398,7 +1407,11 @@ class Quiz {
 
 		$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question->question_type, $user_id, $attempt_id );
 
-		$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
+		$inserted = $wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
+
+		if ( false === $inserted ) {
+			$this->json_response( __( 'Failed to save answer', 'tutor' ), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
 
 		$explanation = apply_filters( 'tutor_quiz_question_answer_explanation', '', $question, $attempt );
 
