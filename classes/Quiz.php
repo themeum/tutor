@@ -926,9 +926,9 @@ class Quiz {
 			$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $attempt_id );
 			$has_committed_answers     = ! empty( $committed_attempt_answers );
 
-			if ( tutor_utils()->count( $quiz_answers ) ) {
+			if ( tutor_utils()->count( $question_ids ) ) {
 
-				foreach ( $quiz_answers as $question_id => $answers ) {
+				foreach ( $question_ids as $question_id ) {
 					$question = QuizModel::get_quiz_question_by_id( $question_id );
 					if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 						continue;
@@ -937,6 +937,8 @@ class Quiz {
 					if ( isset( $committed_attempt_answers[ (int) $question_id ] ) ) {
 						continue;
 					}
+
+					$answers = $quiz_answers[ $question_id ] ?? '';
 
 					$question_type = $question->question_type;
 
