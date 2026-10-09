@@ -52,7 +52,7 @@ $should_calculate_tax     = Tax::should_calculate_tax();
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 
-$checkout_data   = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
+$checkout_data   = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code, $order_id );
 $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_coupon_applied;
 ?>
 

@@ -15,6 +15,7 @@ use TUTOR\BaseController;
 use TUTOR\Course;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
@@ -91,8 +92,8 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->model         = new CouponModel();
-		$this->checkout_ctrl = new CheckoutController( false );
+		$this->model            = new CouponModel();
+		$this->checkout_ctrl    = new CheckoutController( false );
 
 		if ( $register_hooks ) {
 			// Register hooks here.
@@ -935,6 +936,7 @@ class CouponController extends BaseController {
 
 				try {
 					$this->model->store_coupon_usage( $data );
+					$this->model->remove_reserved_coupon( $order_id, $order->user_id );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 				}
