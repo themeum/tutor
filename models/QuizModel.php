@@ -1038,19 +1038,18 @@ class QuizModel {
 	}
 
 	/**
-	 * Get attempt answers aggregated statistics (earned marks, answered count, pending review count).
+	 * Get attempt answers aggregated statistics (earned marks, answered count).
 	 *
 	 * @since 4.2.0
 	 *
 	 * @param int $attempt_id Attempt ID.
 	 *
-	 * @return object{total_earned_marks: float, total_answered_count: int, pending_review_count: int}
+	 * @return object{total_earned_marks: float, total_answered_count: int}
 	 */
 	public static function get_attempt_answers_stats( int $attempt_id ): object {
 		$default = (object) array(
 			'total_earned_marks'   => 0.0,
 			'total_answered_count' => 0,
-			'pending_review_count' => 0,
 		);
 
 		if ( $attempt_id <= 0 ) {
@@ -1062,8 +1061,7 @@ class QuizModel {
 		$stats = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT COALESCE(SUM(achieved_mark), 0) AS total_earned_marks,
-						COUNT(*) AS total_answered_count,
-						COALESCE(SUM(CASE WHEN is_correct IS NULL THEN 1 ELSE 0 END), 0) AS pending_review_count
+						COUNT(*) AS total_answered_count
 				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers
 				  WHERE quiz_attempt_id = %d",
 				$attempt_id
@@ -1077,7 +1075,6 @@ class QuizModel {
 		return (object) array(
 			'total_earned_marks'   => (float) $stats->total_earned_marks,
 			'total_answered_count' => (int) $stats->total_answered_count,
-			'pending_review_count' => (int) $stats->pending_review_count,
 		);
 	}
 

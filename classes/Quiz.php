@@ -1130,7 +1130,6 @@ class Quiz {
 				$stats                    = QuizModel::get_attempt_answers_stats( (int) $attempt_id );
 				$earned_marks             = max( 0.0, $stats->total_earned_marks );
 				$total_answered_questions = $stats->total_answered_count;
-				$review_required          = $review_required || $stats->pending_review_count > 0;
 			}
 
 			$attempt_info = array(
