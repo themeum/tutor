@@ -16,7 +16,7 @@ This directory contains the complete, interactive API documentation and executab
 Tutor LMS REST API uses **JWT authentication** (since 4.2.0):
 
 1. In WordPress admin, go to **Tutor LMS → Settings → REST API**.
-2. Generate an API Key & Secret with the desired permission (`Read`, `Write`, or `All`).
+2. Generate an API Key & Secret with the desired permission (`Read` in Free; Pro also offers `Write`, `Delete`, `Read/Write`, and `All`).
 3. Set up your local environment:
    ```bash
    cp docs/api/environments/local.bru.example docs/api/environments/local.bru
