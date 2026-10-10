@@ -225,7 +225,7 @@
 
       &:focus,
       &:focus-within {
-        &:not(:has(:checked)) {
+        &:not(:has(:checked)):not(:has(:disabled)) {
           border-color: $tutor-border-hover;
           background-color: $tutor-quiz-hover;
         }
@@ -281,7 +281,7 @@
         }
       }
 
-      &:focus-within:has(:checked) {
+      &:focus-within:has(:checked):not(:has(:disabled)) {
         font-weight: $tutor-font-weight-medium;
         border-color: $tutor-border-brand;
         background-color: $tutor-surface-brand-secondary;

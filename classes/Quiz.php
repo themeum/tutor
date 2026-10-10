@@ -157,6 +157,13 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_abandon', array( $this, 'tutor_quiz_abandon' ) );
 
 		/**
+		 * Quiz check answer action (per-question reveal)
+		 *
+		 * @since 4.2.0
+		 */
+		add_action( 'wp_ajax_tutor_quiz_check_answer', array( $this, 'tutor_quiz_check_answer' ) );
+
+		/**
 		 * Delete quiz attempt
 		 *
 		 * @since 2.1.0
@@ -914,16 +921,25 @@ class Quiz {
 				);
 			}
 
-			$total_marks     = 0;
-			$review_required = false;
+			$total_marks               = 0;
+			$review_required           = false;
+			$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $attempt_id );
+			$has_committed_answers     = ! empty( $committed_attempt_answers );
 
-			if ( tutor_utils()->count( $quiz_answers ) ) {
+			if ( tutor_utils()->count( $question_ids ) ) {
 
-				foreach ( $quiz_answers as $question_id => $answers ) {
+				foreach ( $question_ids as $question_id ) {
 					$question = QuizModel::get_quiz_question_by_id( $question_id );
 					if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 						continue;
 					}
+
+					if ( isset( $committed_attempt_answers[ (int) $question_id ] ) ) {
+						continue;
+					}
+
+					$answers = $quiz_answers[ $question_id ] ?? '';
+
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -1107,16 +1123,21 @@ class Quiz {
 				}
 			}
 
+			$total_answered_questions = tutor_utils()->count( $quiz_answers );
+			$earned_marks             = max( 0.0, $total_marks );
+
+			if ( $has_committed_answers ) {
+				$stats                    = QuizModel::get_attempt_answers_stats( (int) $attempt_id );
+				$earned_marks             = max( 0.0, $stats->total_earned_marks );
+				$total_answered_questions = $stats->total_answered_count;
+			}
+
 			$attempt_info = array(
-				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
-				'earned_marks'             => max( 0.0, $total_marks ),
-				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
+				'total_answered_questions' => $total_answered_questions,
+				'earned_marks'             => $earned_marks,
+				'attempt_status'           => $review_required ? QuizModel::REVIEW_REQUIRED : QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
-
-			if ( $review_required ) {
-				$attempt_info['attempt_status'] = QuizModel::REVIEW_REQUIRED;
-			}
 
 			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
 
@@ -1261,6 +1282,150 @@ class Quiz {
 		}
 
 		wp_send_json_error( __( 'Quiz has been timeout already', 'tutor' ) );
+	}
+
+	/**
+	 * Check answer for a single quiz question during answer reveal mode.
+	 *
+	 * Grades only the submitted question and returns its verification status,
+	 * correct option IDs, and answer explanation. Correct answer data is never
+	 * sent for any subsequent questions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void JSON response
+	 */
+	public function tutor_quiz_check_answer() {
+		tutor_utils()->checking_nonce();
+
+		$user_id     = get_current_user_id();
+		$attempt_id  = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
+
+		$attempt = self::validate_attempt( $attempt_id, $user_id );
+		if ( ! $attempt ) {
+			$this->json_response( __( 'Operation not allowed, attempt not found or permission denied', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		if ( QuizModel::ATTEMPT_STARTED !== $attempt->attempt_status ) {
+			$this->json_response( __( 'Quiz attempt is not in progress', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id              = (int) $attempt->quiz_id;
+		$quiz_settings        = tutor_utils()->get_quiz_option( $quiz_id );
+		$enable_answer_reveal = '1' === (string) ( $quiz_settings['enable_answer_reveal'] ?? '0' );
+		if ( ! $enable_answer_reveal ) {
+			$this->json_response( __( 'Answer reveal is disabled for this quiz', 'tutor' ), null, HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		global $wpdb;
+		$question = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d AND quiz_id = %d",
+				$question_id,
+				$attempt->quiz_id
+			)
+		);
+
+		if ( ! $question ) {
+			$this->json_response( __( 'Question not found or does not belong to this quiz', 'tutor' ), null, HttpHelper::STATUS_NOT_FOUND );
+		}
+
+		$supported_types = array(
+			QuizModel::QUESTION_TYPE_TRUE_FALSE,
+			QuizModel::QUESTION_TYPE_SINGLE_CHOICE,
+			QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE,
+		);
+
+		if ( ! in_array( $question->question_type, $supported_types, true ) ) {
+			$this->json_response( __( 'This question type does not support instant answer verification', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$answers            = QuizModel::get_answers_by_quiz_question( $question_id );
+		$correct_answer_ids = array();
+		if ( is_array( $answers ) ) {
+			foreach ( $answers as $answer ) {
+				if ( ! empty( $answer->is_correct ) ) {
+					$correct_answer_ids[] = (int) $answer->answer_id;
+				}
+			}
+		}
+
+		$submitted = Input::post( 'answers', array(), Input::TYPE_ARRAY );
+		if ( empty( $submitted ) ) {
+			$single_value = Input::post( 'answer' );
+			if ( null !== $single_value && '' !== $single_value ) {
+				$submitted = array( $single_value );
+			}
+		}
+		$submitted_ids = array_map( 'intval', array_filter( (array) $submitted, 'is_numeric' ) );
+
+		if ( empty( $submitted_ids ) ) {
+			$this->json_response( __( 'An answer is required to verify this question', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$existing_answer_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT attempt_answer_id 
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers 
+				  WHERE quiz_attempt_id = %d AND question_id = %d",
+				$attempt_id,
+				$question_id
+			)
+		);
+
+		if ( $existing_answer_id ) {
+			$this->json_response( __( 'Answer has already been committed for this question', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$is_correct = false;
+		if ( ! empty( $correct_answer_ids ) ) {
+			$sorted_submitted_ids      = $submitted_ids;
+			$sorted_correct_answer_ids = $correct_answer_ids;
+			sort( $sorted_submitted_ids );
+			sort( $sorted_correct_answer_ids );
+			$is_correct = ( $sorted_submitted_ids === $sorted_correct_answer_ids );
+		}
+
+		$question_mark = (float) ( $question->question_mark ?? 0 );
+		$achieved_mark = $is_correct ? $question_mark : 0.0;
+
+		$given_answer = ( QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE === $question->question_type )
+			? maybe_serialize( $submitted_ids )
+			: (string) ( $submitted_ids[0] ?? '' );
+
+		$answers_data = array(
+			'user_id'         => $user_id,
+			'quiz_id'         => $quiz_id,
+			'question_id'     => $question_id,
+			'quiz_attempt_id' => $attempt_id,
+			'given_answer'    => $given_answer,
+			'question_mark'   => $question_mark,
+			'achieved_mark'   => $achieved_mark,
+			'minus_mark'      => 0,
+			'is_correct'      => $is_correct ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT,
+		);
+
+		$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question->question_type, $user_id, $attempt_id );
+
+		$inserted = $wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
+
+		if ( false === $inserted ) {
+			$this->json_response( __( 'Failed to save answer', 'tutor' ), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
+		$explanation = apply_filters( 'tutor_quiz_question_answer_explanation', '', $question, $attempt );
+
+		$this->json_response(
+			'',
+			array(
+				'question_id'        => $question_id,
+				'is_correct'         => $is_correct,
+				'correct_answer_ids' => $correct_answer_ids,
+				'answer_explanation' => $explanation,
+			),
+			HttpHelper::STATUS_OK
+		);
 	}
 
 	/**
@@ -2646,6 +2811,7 @@ class Quiz {
 				'question'          => $question,
 				'question_settings' => $question_settings,
 				'question_type'     => $template,
+				'committed_answer'  => $question->committed_answer ?? null,
 			)
 		);
 	}
