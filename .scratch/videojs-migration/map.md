@@ -83,7 +83,13 @@ release/versioning mechanics are out of scope.
   `services/player/legacy.ts` over `TutorCore.player.getActive()` (`currentTime` get/set → `seek`,
   `play()`, `on('enter/exitfullscreen')` re-emitted with `{ srcElement }`, warn-once). Wired at both
   `notifyReady` sites; `tutorLessonPlayerReady` unchanged. Unblocks Pro tickets 10–12. 3 unit tests
+  sites; `tutorLessonPlayerReady` unchanged. Unblocks Pro tickets 10–12. 3 unit tests
   (43 total); gates green.
+- **13 done** — added `cypress/e2e/frontend/lesson-video-player.cy.ts` covering the engine mount,
+  `on('ready')`, fullscreen (`is-fullscreen` + `fullscreenchange` with `element`), Strict-Mode clamp,
+  resume, and ended→auto-next (env-dependent cases skip). Authored only, not executed: the Cypress
+  `baseUrl` targets the remote `themeum-tutor.com` and `pnpm test` runs the whole suite. `tsc`/`eslint`
+  clean; Vitest covers engine + controller (43).
 
 ## Not yet specified
 
