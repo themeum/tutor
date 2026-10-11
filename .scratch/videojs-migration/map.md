@@ -44,6 +44,11 @@ release/versioning mechanics are out of scope.
   ticket 04 keeps the full `videoFeatures` bundle (no ADR-0008/0003 fallback). Spike also found
   that the skin sizes only native `<video>`/`<audio>`; embed media (`youtube-video`/`vimeo-video`)
   must be sized `display:block; width/height:100%` by the engine — folded into ticket 04.
+- **03 done** — shared player contract added at `assets/core/ts/types/player.ts`
+  (`TutorPlayer`/`PlayerProvider`/`PlayerEvent`/`PlayerEventPayload`/`PlayerOptions`/`PlayerService`)
+  and `TutorCore.player` typed as `PlayerService`; dropped `global: true` from the Alpine `player`
+  component so `TutorCore.player` is free for the service (Q7) while `x-data="tutorPlayer"` still
+  registers. `tsc`/`eslint`/`rspack` all green.
 
 ## Not yet specified
 
