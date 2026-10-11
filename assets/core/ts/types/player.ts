@@ -1,23 +1,21 @@
 export type PlayerProvider = 'html5' | 'external' | 'youtube' | 'vimeo';
 
-export type PlayerEvent =
-  | 'ready'
-  | 'play'
-  | 'pause'
-  | 'ended'
-  | 'timeupdate'
-  | 'seek'
-  | 'volumechange'
-  | 'enterfullscreen'
-  | 'exitfullscreen'
-  | 'error';
-
-export interface PlayerEventPayload {
-  player: TutorPlayer;
-  originalEvent?: Event;
-  currentTime: number;
-  duration: number;
+export interface PlayerEventMap {
+  ready: { player: TutorPlayer };
+  play: { player: TutorPlayer };
+  pause: { player: TutorPlayer };
+  ended: { player: TutorPlayer };
+  timeupdate: { player: TutorPlayer; currentTime: number; duration: number };
+  seek: { player: TutorPlayer; currentTime: number; duration: number };
+  volumechange: { player: TutorPlayer; volume: number; muted: boolean };
+  enterfullscreen: { player: TutorPlayer };
+  exitfullscreen: { player: TutorPlayer };
+  error: { player: TutorPlayer; error: Error };
 }
+
+export type PlayerEvent = keyof PlayerEventMap;
+
+export type PlayerEventPayload<E extends PlayerEvent = PlayerEvent> = PlayerEventMap[E];
 
 export interface PlayerOptions {
   provider?: PlayerProvider;
@@ -46,8 +44,8 @@ export interface TutorPlayer {
   seek(time: number): void;
   enterFullscreen(): Promise<void>;
   exitFullscreen(): Promise<void>;
-  on(event: PlayerEvent, handler: (payload: PlayerEventPayload) => void): void;
-  off(event: PlayerEvent, handler?: (payload: PlayerEventPayload) => void): void;
+  on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): void;
+  off<E extends PlayerEvent>(event: E, handler?: (payload: PlayerEventMap[E]) => void): void;
   dispose(): void;
 }
 
