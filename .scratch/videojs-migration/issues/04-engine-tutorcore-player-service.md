@@ -1,5 +1,5 @@
 Type: task
-Status: open
+Status: done
 Blocked by: 02, 03
 
 ## Question
@@ -39,3 +39,33 @@ mobile-fullscreen aspect fix too (`.media-container:fullscreen` → `width: 177.
 Unit-test the pure parts (providers, handle event fan-out/clamping, service
 active-tracking). `assets/core/ts/index.ts` must never import this module. Outcome:
 `TutorCore.player.create(target)` returns a working handle for an HTML5 lesson.
+
+## Outcome
+
+Landed:
+
+- `providers.ts` — `detectSource` + pure URL helpers (`youtubeVideoId`, `vimeoVideoId`,
+  `providerFromUrl`); classifies html5/external by host and YouTube/Vimeo by id.
+- `Player.ts` — `createTutorPlayer({ element, store, provider })` over a structural
+  `PlayerStore`; event fan-out from `store.subscribe` (ready/play/pause/ended/timeupdate/
+  volumechange/error), `fullscreenchange` from the document event, seek/volume clamping, and
+  `dispose`. Kept store-injectable so it is unit-testable without video.js.
+- `PlayerService.ts` — `create(target, options)` resolves the target, detects the source
+  (or takes `options.src`), builds the player tree, tracks the active handle and proxies
+  `getCurrentTime`/`getDuration`/`seek`/`play`/`pause`/`on`. The DOM boundary
+  (`createElement`/`getStore`) and handle factory are injectable for tests.
+- `elements.ts` — `createPlayer({ features: videoFeatures })`, defines `tutor-video-player`,
+  builds `<tutor-video-player><video-skin><media></video-skin></tutor-video-player>`.
+- `index.ts` — side-effect imports `@videojs/html/{media/vimeo-video,media/youtube-video,video/skin}`,
+  defines the element, creates the service, assigns `window.TutorCore.player`.
+- Sizing + YouTube crop in `assets/src/scss/frontend/components/_videojs-player.scss` (survives
+  PurgeCSS in `css/tutor-learning-area.min.css`).
+- Vitest: `vitest.config.mts` (happy-dom) + `test:unit` script; 25 tests across
+  `providers.test.ts`, `Player.test.ts`, `PlayerService.test.ts`.
+
+`assets/core/ts/index.ts` still does not import the engine. `tsc`, `eslint` and `rspack
+--mode=production` are green; `assets/js/tutor-player.js` emitted.
+
+Deferred: the mobile-fullscreen aspect fix targets `.media-container`, which lives in the
+skin's shadow DOM and is not reachable from global CSS — left to ticket 14 to confirm on a
+real device (the skin's own `:fullscreen` rules may already cover it).

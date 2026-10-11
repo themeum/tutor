@@ -48,7 +48,17 @@ release/versioning mechanics are out of scope.
   (`TutorPlayer`/`PlayerProvider`/`PlayerEvent`/`PlayerEventPayload`/`PlayerOptions`/`PlayerService`)
   and `TutorCore.player` typed as `PlayerService`; dropped `global: true` from the Alpine `player`
   component so `TutorCore.player` is free for the service (Q7) while `x-data="tutorPlayer"` still
-  registers. `tsc`/`eslint`/`rspack` all green.
+  registers. `tsc`/`eslint`/`rspack` all green. Addendum: the first cut used
+  `enterfullscreen`/`exitfullscreen` events and property-style accessors; ticket 04 realigned the
+  contract to the plan (method accessors, one `fullscreenchange` event with `{ fullscreen, element }`,
+  `on()` returns an unsubscribe).
+- **04 done** — engine behind `TutorCore.player`: `providers.ts` detects provider/source from the
+  `.tutorPlayer` markup, `Player.ts` wraps the video.js store as a `TutorPlayer` handle (event
+  fan-out via `store.subscribe`, seek/volume clamping, fullscreenchange, `dispose`), `PlayerService.ts`
+  resolves the target, builds the `<tutor-video-player><video-skin>` tree and tracks the active
+  player, and `index.ts` imports the skin + media packages, defines the element and assigns
+  `window.TutorCore.player`. Embed sizing + YouTube `::part(iframe)` crop live in
+  `_videojs-player.scss`. 25 Vitest tests pass; `tsc`/`eslint`/`rspack` green (`js/tutor-player.js`).
 
 ## Not yet specified
 

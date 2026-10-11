@@ -28,3 +28,9 @@ done.
 
 Verified: `tsc --noEmit` clean, `eslint` clean, `rspack --mode=production` green
 (`js/tutor-player.js` emitted).
+
+Addendum (ticket 04): the first cut of the contract diverged from the plan — it used
+`enterfullscreen`/`exitfullscreen` events and property-style accessors. It was realigned to
+the plan's API mapping: method accessors (`getCurrentTime`/`getDuration`/`setMuted`/`setVolume`),
+a single `fullscreenchange` event carrying `{ fullscreen, element }`, and `on()` returning an
+unsubscribe.
