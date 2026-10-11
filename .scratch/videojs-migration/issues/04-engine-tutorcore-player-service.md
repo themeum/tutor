@@ -15,6 +15,11 @@ Implement the engine under `assets/core/ts/services/player/`:
   `@videojs/html/video/skin`, the media packages; registers the `tutor-video-player`
   element class; assigns `window.TutorCore.player`.
 
+Sizing (found by the ticket-02 spike): the packaged skin sizes only native
+`<video>`/`<audio>`; size embed media ourselves so `youtube-video`/`vimeo-video` fill the
+container (`display:block; width:100%; height:100%`) — otherwise the `<iframe>` sits at
+300×150 in a corner.
+
 Unit-test the pure parts (providers, handle event fan-out/clamping, service
 active-tracking). `assets/core/ts/index.ts` must never import this module. Outcome:
 `TutorCore.player.create(target)` returns a working handle for an HTML5 lesson.

@@ -39,6 +39,11 @@ release/versioning mechanics are out of scope.
   `@videojs/youtube-video`, `@videojs/vimeo-video` (`10.0.1`) + Vitest; a second rspack config
   with `output.module` emits `assets/js/tutor-player.js` (stub sets `window.TutorCore.player`);
   a `script_loader_tag` filter marks that handle `type="module"`. Verified with `pnpm build-dev`.
+- **02 done** — ADR-0009 gate passes: the packaged skin fullscreens `<media-container>`, never
+  the `<iframe>`, and YouTube's own fullscreen chrome does not appear in a real fullscreen, so
+  ticket 04 keeps the full `videoFeatures` bundle (no ADR-0008/0003 fallback). Spike also found
+  that the skin sizes only native `<video>`/`<audio>`; embed media (`youtube-video`/`vimeo-video`)
+  must be sized `display:block; width/height:100%` by the engine — folded into ticket 04.
 
 ## Not yet specified
 
@@ -46,8 +51,6 @@ release/versioning mechanics are out of scope.
 
 - Removing the deprecated `window.TutorLessonPlayer` adapter and `tutorLessonPlayerReady`
   after one cycle — revisit once the migration ships.
-- Whether any YouTube/Vimeo behavior gap uncovered by the Phase 0 spike needs its own
-  ticket.
 - SCSS cleanup depth once the Plyr controls are gone.
 
 ## Out of scope
