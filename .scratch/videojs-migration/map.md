@@ -90,6 +90,11 @@ release/versioning mechanics are out of scope.
   resume, and ended→auto-next (env-dependent cases skip). Authored only, not executed: the Cypress
   `baseUrl` targets the remote `themeum-tutor.com` and `pnpm test` runs the whole suite. `tsc`/`eslint`
   clean; Vitest covers engine + controller (43).
+- **15 done** — Plyr removed: both `tutor-plyr` enqueues dropped (`classes/Assets.php`), vendored
+  `assets/lib/plyr/*` + `plyr.d.ts` + dead `frontend/types/index.ts` deleted, Plyr SCSS dropped,
+  dangling `@FrontendTypes` alias removed. `.plyr__video-embed` kept — it is the engine's
+  provider-detection hook. No static Plyr load / `cdn.plyr.io` ref remains. Gates green. Ticket 14
+  (manual provider matrix) skipped per instruction; `pnpm test` not run (remote site).
 
 ## Not yet specified
 
