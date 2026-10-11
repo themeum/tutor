@@ -9,6 +9,7 @@ import { type ModalService } from '@Core/ts/services/Modal';
 import { type QueryService } from '@Core/ts/services/Query';
 import { type ToastService } from '@Core/ts/services/toast/Toast';
 import { type WPMediaService } from '@Core/ts/services/WPMedia';
+import { type PlayerService } from '@Core/ts/types/player';
 import { type wpGet, type wpPost, type wpPostForm } from '@Core/ts/utils/api';
 import { type createPriceFormatter, type formatPrice } from '@Core/ts/utils/currency';
 import type endpoints from '@Core/ts/utils/endpoints';
@@ -50,6 +51,7 @@ export interface TutorCore {
   query: QueryService;
   modal: ModalService;
   wpMedia: WPMediaService;
+  player: PlayerService;
   api: {
     wpPost: typeof wpPost;
     wpPostForm: typeof wpPostForm;

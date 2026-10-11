@@ -105,5 +105,4 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => ({
 export const playerMeta: AlpineComponentMeta<PlayerProps> = {
   name: 'player',
   component: player,
-  global: true,
 };
