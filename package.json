@@ -90,6 +90,7 @@
     "style-loader": "^4.0.0",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.37.0",
+    "vitest": "^5.0.3",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
@@ -105,6 +106,9 @@
     "@react-spring/web": "^9.7.3",
     "@tanstack/react-query": "5.62.15",
     "@tippyjs/react": "^4.2.6",
+    "@videojs/html": "10.0.1",
+    "@videojs/vimeo-video": "10.0.1",
+    "@videojs/youtube-video": "10.0.1",
     "@wordpress/block-editor": "^17.1.0",
     "@wordpress/blocks": "^16.0.0",
     "@wordpress/components": "^40.1.0",
