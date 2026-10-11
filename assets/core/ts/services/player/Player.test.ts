@@ -20,8 +20,6 @@ function createStore(overrides: Partial<PlayerStore> = {}) {
     seek: vi.fn((time: number) => time),
     setVolume: vi.fn((volume: number) => volume),
     setMuted: vi.fn((muted: boolean) => muted),
-    requestFullscreen: vi.fn(async () => undefined),
-    exitFullscreen: vi.fn(async () => undefined),
     subscribe: (callback: () => void) => {
       listeners.add(callback);
       return () => listeners.delete(callback);

@@ -1,10 +1,10 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { type PlayerOptions, type PlayerUnsubscribe, type TutorPlayer } from '@Core/ts/types/player';
+import { type PlayerUnsubscribe, type TutorPlayer } from '@Core/ts/types/player';
 import { isMobileDevice } from '@Core/ts/utils/util';
 
 export interface PlayerProps {
-  options?: PlayerOptions;
+  options?: Record<string, unknown>;
 }
 
 export interface AlpinePlayerData {
@@ -14,7 +14,7 @@ export interface AlpinePlayerData {
   destroy(): void;
 }
 
-export const player = (props: PlayerProps = {}): AlpinePlayerData => {
+export const player = (): AlpinePlayerData => {
   const unsubscribers: PlayerUnsubscribe[] = [];
 
   return {
@@ -36,7 +36,7 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => {
         return;
       }
 
-      const handle = service.create(element, props.options);
+      const handle = service.create(element);
       this.player = handle;
 
       unsubscribers.push(

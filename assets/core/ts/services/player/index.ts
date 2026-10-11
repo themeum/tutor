@@ -16,6 +16,5 @@ window.TutorCore = Object.assign(window.TutorCore || {}, { player });
 window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.PLAYER_ENGINE_READY));
 
 export { createTutorPlayer } from './Player';
-export type { PlayerHandleFactory, PlayerServiceDependencies } from './PlayerService';
 export { TutorPlayerService } from './PlayerService';
 export * from './providers';

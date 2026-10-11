@@ -6,10 +6,6 @@ import {
   type TutorPlayer,
 } from '@Core/ts/types/player';
 
-export interface PlayerStoreTarget {
-  readonly media: Element | null;
-}
-
 /**
  * The subset of the Video.js player store the handle depends on. Kept structural so the
  * handle can be unit-tested against a fake store.
@@ -23,14 +19,12 @@ export interface PlayerStore {
   readonly muted: boolean;
   readonly isFullscreen: boolean;
   readonly error?: Error | null;
-  readonly target: PlayerStoreTarget | null;
+  readonly target: { readonly media: Element | null } | null;
   play(): Promise<void>;
   pause(): void;
   seek(time: number): Promise<number> | number;
   setVolume(volume: number): number;
   setMuted(muted: boolean): boolean;
-  requestFullscreen(): Promise<void>;
-  exitFullscreen(): Promise<void>;
   subscribe(callback: () => void): () => void;
   destroy(): void;
 }

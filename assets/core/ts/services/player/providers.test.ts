@@ -46,7 +46,6 @@ describe('detectSource', () => {
       provider: 'external',
       src: 'https://cdn.example.com/a.mp4',
       poster: 'p.jpg',
-      type: 'video/mp4',
     });
   });
 

@@ -4,7 +4,6 @@ export interface DetectedSource {
   provider: PlayerProvider;
   src: string;
   poster?: string;
-  type?: string;
 }
 
 const INVALID_HOST = 'example.invalid';
@@ -96,7 +95,6 @@ export function detectSource(root: Element): DetectedSource | null {
         provider: providerFromUrl(src, host),
         src,
         poster: video.getAttribute('poster') || undefined,
-        type: source?.getAttribute('type') || undefined,
       };
     }
   }

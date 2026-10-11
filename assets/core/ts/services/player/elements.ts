@@ -5,7 +5,7 @@ import { type PlayerStore } from './Player';
 import { type DetectedSource, vimeoVideoId, youtubeVideoId } from './providers';
 
 export const VIDEO_PLAYER_TAG = 'tutor-video-player';
-export const VIDEO_SKIN_TAG = 'video-skin';
+const VIDEO_SKIN_TAG = 'video-skin';
 
 export interface VideoPlayerElement extends HTMLElement {
   store: PlayerStore;
@@ -57,10 +57,6 @@ export function createPlayerElement(source: DetectedSource, document: Document):
   host.appendChild(skin);
 
   return host;
-}
-
-export function isVideoPlayerElement(element: Element): element is VideoPlayerElement {
-  return element.tagName.toLowerCase() === VIDEO_PLAYER_TAG;
 }
 
 export function getStore(element: VideoPlayerElement): PlayerStore | null {

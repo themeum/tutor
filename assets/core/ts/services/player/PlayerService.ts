@@ -1,7 +1,6 @@
 import {
   type PlayerEvent,
   type PlayerEventMap,
-  type PlayerOptions,
   type PlayerService,
   type PlayerUnsubscribe,
   type TutorPlayer,
@@ -21,7 +20,6 @@ export interface PlayerServiceDependencies {
   createHandle?: PlayerHandleFactory;
   createElement?: (source: DetectedSource, document: Document) => VideoPlayerElement;
   getStore?: (element: VideoPlayerElement) => PlayerStore | null;
-  document?: Document;
 }
 
 const noop: PlayerUnsubscribe = () => undefined;
@@ -31,29 +29,19 @@ export class TutorPlayerService implements PlayerService {
   #createHandle: PlayerHandleFactory;
   #createElement: (source: DetectedSource, document: Document) => VideoPlayerElement;
   #getStore: (element: VideoPlayerElement) => PlayerStore | null;
-  #document: Document;
 
   constructor(dependencies: PlayerServiceDependencies = {}) {
     this.#createHandle = dependencies.createHandle ?? createTutorPlayer;
     this.#createElement = dependencies.createElement ?? createPlayerElement;
     this.#getStore = dependencies.getStore ?? getStore;
-    this.#document = dependencies.document ?? document;
   }
 
   get active(): TutorPlayer | null {
     return this.#active;
   }
 
-  create(target: HTMLElement | string, options: PlayerOptions = {}): TutorPlayer {
-    const element = this.#resolve(target);
-
-    if (!element) {
-      throw new Error('[tutor] player: target element not found');
-    }
-
-    const source: DetectedSource | null = options.src
-      ? { provider: options.provider ?? 'html5', src: options.src, poster: options.poster }
-      : detectSource(element);
+  create(element: HTMLElement): TutorPlayer {
+    const source: DetectedSource | null = detectSource(element);
 
     if (!source) {
       throw new Error('[tutor] player: no playable source found on target');
@@ -81,30 +69,11 @@ export class TutorPlayerService implements PlayerService {
     return this.#active?.getCurrentTime() ?? 0;
   }
 
-  getDuration(): number {
-    return this.#active?.getDuration() ?? 0;
-  }
-
   seek(time: number): void {
     this.#active?.seek(time);
   }
 
-  play(): void {
-    void this.#active?.play();
-  }
-
-  pause(): void {
-    this.#active?.pause();
-  }
-
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe {
     return this.#active?.on(event, handler) ?? noop;
-  }
-
-  #resolve(target: HTMLElement | string): HTMLElement | null {
-    if (typeof target !== 'string') {
-      return target;
-    }
-    return this.#document.querySelector<HTMLElement>(target);
   }
 }

@@ -17,16 +17,6 @@ export type PlayerEventPayload<E extends PlayerEvent = PlayerEvent> = PlayerEven
 
 export type PlayerUnsubscribe = () => void;
 
-export interface PlayerOptions {
-  provider?: PlayerProvider;
-  src?: string;
-  poster?: string;
-  autoplay?: boolean;
-  muted?: boolean;
-  controls?: boolean;
-  startTime?: number;
-}
-
 export interface TutorPlayer {
   readonly provider: PlayerProvider;
   readonly element: HTMLElement;
@@ -51,13 +41,10 @@ export interface TutorPlayer {
 export interface PlayerService {
   readonly active: TutorPlayer | null;
 
-  create(target: HTMLElement | string, options?: PlayerOptions): TutorPlayer;
+  create(target: HTMLElement): TutorPlayer;
   getActive(): TutorPlayer | null;
 
   getCurrentTime(): number;
-  getDuration(): number;
   seek(time: number): void;
-  play(): void;
-  pause(): void;
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe;
 }
