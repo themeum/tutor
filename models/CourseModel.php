@@ -95,12 +95,16 @@ class CourseModel {
 	 * Check if a course is available for enrollment or purchase.
 	 *
 	 * @since 4.0.0
+	 * @since 4.2.0 added args() param
 	 *
 	 * @param integer $course_id the course id.
+	 * @param array   $args      Optional. Additional arguments.
 	 *
 	 * @return bool
 	 */
 	public static function is_course_accessible( $course_id = 0, $args = array() ) {
+		$requested_status = array();
+
 		$course = get_post( $course_id );
 		if ( ! $course || ! is_object( $course ) ) {
 			return false;
@@ -111,12 +115,12 @@ class CourseModel {
 		}
 
 		if ( ! empty( $args['status'] ) && is_array( $args['status'] ) ) {
-			$valid            = array_intersect( $args['status'], Course::course_status_list() );
-			$allowed_statuses = array_merge( array( self::STATUS_PUBLISH ), $valid );
+			$requested_status = array_intersect( $args['status'], Course::course_status_list() );
+		}
 
-			if ( ! in_array( $course->post_status, $allowed_statuses, true ) ) {
-				return false;
-			}
+		$allowed_statuses = array_merge( array( self::STATUS_PUBLISH ), $requested_status );
+		if ( ! in_array( $course->post_status, $allowed_statuses, true ) ) {
+			return false;
 		}
 
 		return true;
