@@ -67,6 +67,7 @@ class Assets {
 		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
 		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
+		add_filter( 'script_loader_tag', array( $this, 'mark_player_script_as_module' ), 10, 3 );
 
 		/**
 		 * Register translatable function to load
@@ -334,6 +335,9 @@ class Assets {
 		if ( is_single_course( true ) ) {
 			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
 			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+
+			// Video.js player engine (ES module, ADR-0002).
+			wp_enqueue_script( 'tutor-player', tutor()->url . 'assets/js/tutor-player.js', array(), TUTOR_VERSION, true );
 		}
 
 		// Social Share.
@@ -921,10 +925,36 @@ class Assets {
 			if ( is_single_course( true ) ) {
 				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );
 				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
+
+				// Video.js player engine (ES module, ADR-0002).
+				wp_enqueue_script( 'tutor-player', tutor()->assets_url . 'js/tutor-player.js', array(), $version, true );
 			}
 		}
 
 		wp_enqueue_style( 'tutor-cart-button' );
+	}
+
+	/**
+	 * Load the Video.js player engine as an ES module.
+	 *
+	 * The plugin minimum WordPress version (5.3) predates `wp_enqueue_script_module`,
+	 * so the module type is added to the script tag directly.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $tag    The script tag.
+	 * @param string $handle The script handle.
+	 * @param string $src    The script source URL.
+	 *
+	 * @return string
+	 */
+	public function mark_player_script_as_module( $tag, $handle, $src ) {
+		if ( 'tutor-player' !== $handle ) {
+			return $tag;
+		}
+
+		// Replace WP's own `type` attribute if present, otherwise add one.
+		return preg_replace( '/<script\b(\s+type=(["\'])[^"\']*\2)?/', '<script type="module"', $tag, 1 );
 	}
 
 	/**
