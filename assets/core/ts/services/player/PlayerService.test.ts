@@ -1,0 +1,100 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { type TutorPlayer } from '@Core/ts/types/player';
+
+import { type VideoPlayerElement } from './elements';
+import { type PlayerStore } from './Player';
+import { TutorPlayerService } from './PlayerService';
+
+function fakePlayer(): TutorPlayer {
+  return {
+    provider: 'html5',
+    element: document.createElement('div'),
+    media: null,
+    getCurrentTime: vi.fn(() => 5),
+    getDuration: vi.fn(() => 50),
+    isPaused: vi.fn(() => true),
+    getVolume: vi.fn(() => 1),
+    setVolume: vi.fn(),
+    isMuted: vi.fn(() => false),
+    setMuted: vi.fn(),
+    play: vi.fn(async () => undefined),
+    pause: vi.fn(),
+    seek: vi.fn(),
+    on: vi.fn(() => () => undefined),
+    dispose: vi.fn(),
+  };
+}
+
+function setup() {
+  const handle = fakePlayer();
+  const host = document.createElement('div') as unknown as VideoPlayerElement;
+  (host as unknown as { store: PlayerStore }).store = {} as PlayerStore;
+
+  const service = new TutorPlayerService({
+    createHandle: () => handle,
+    createElement: () => host,
+    getStore: (element) => element.store ?? null,
+  });
+
+  return { service, handle, host };
+}
+
+function target(): HTMLElement {
+  document.body.innerHTML = '<div class="tutor-video-player"><video class="tutorPlayer"></video></div>';
+  return document.querySelector('.tutorPlayer') as HTMLElement;
+}
+
+const options = { src: 'https://lesson.test/wp-content/uploads/a.mp4' };
+
+describe('TutorPlayerService', () => {
+  it('tracks the active player created from a target', () => {
+    const { service, handle } = setup();
+
+    expect(service.create(target(), options)).toBe(handle);
+    expect(service.getActive()).toBe(handle);
+    expect(service.active).toBe(handle);
+    expect(service.getCurrentTime()).toBe(5);
+    expect(service.getDuration()).toBe(50);
+  });
+
+  it('proxies calls to the active player', () => {
+    const { service, handle } = setup();
+    service.create(target(), options);
+
+    service.seek(10);
+    service.play();
+    service.pause();
+
+    expect(handle.seek).toHaveBeenCalledWith(10);
+    expect(handle.play).toHaveBeenCalledTimes(1);
+    expect(handle.pause).toHaveBeenCalledTimes(1);
+  });
+
+  it('replaces the target element with the built player', () => {
+    const { service, host } = setup();
+    const element = target();
+
+    service.create(element, options);
+
+    expect(element.isConnected).toBe(false);
+    expect(document.body.contains(host)).toBe(true);
+  });
+
+  it('returns a noop unsubscribe and zeroed time when there is no active player', () => {
+    const { service } = setup();
+
+    expect(typeof service.on('play', () => undefined)).toBe('function');
+    expect(service.getCurrentTime()).toBe(0);
+  });
+
+  it('throws when no source can be detected', () => {
+    const { service } = setup();
+
+    expect(() => service.create(target())).toThrow();
+  });
+});
+
+afterEach(() => {
+  document.body.innerHTML = '';
+});
