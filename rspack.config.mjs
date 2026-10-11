@@ -278,6 +278,8 @@ const createConfig = (env, options) => {
           'assets/src/',
           'assets/json/',
           'assets/core/',
+          // Emitted by the separate ES-module config; the IIFE config's clean must not race it away.
+          'assets/js/tutor-player.js',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -352,6 +354,26 @@ const resolveAliases = {
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
 };
 
+// The player engine must be emitted and loaded as an ES module (ADR-0002), so it cannot
+// share a build with the IIFE entries: one config cannot mix `output.module`.
+const playerEntry = { 'tutor-player': './assets/core/ts/services/player/index.ts' };
+
+const createPlayerModuleConfig = (baseConfig) => ({
+  ...baseConfig,
+  name: 'tutor-player',
+  entry: playerEntry,
+  output: {
+    ...baseConfig.output,
+    filename: 'js/[name].js',
+    chunkFilename: 'js/lazy-chunks/[name].js',
+    module: true,
+    chunkFormat: 'module',
+    // Only the IIFE config may clean `assets/`, or the two configs delete each other's output.
+    clean: false,
+  },
+  experiments: { outputModule: true },
+});
+
 const isScssEntry = (entry) => {
   return String(entry).includes('-scss');
 };
@@ -379,17 +401,30 @@ export default (env, options) => {
   const allEntries = { ...jsEntries, ...scssEntries };
 
   if (isDevelopment) {
-    return Object.entries(allEntries).map(([entryKey, entryPath]) => ({
-      ...baseConfig,
-      name: entryKey,
-      entry: {
-        [entryKey]: entryPath,
-      },
-    }));
+    return [
+      ...Object.entries(allEntries).map(([entryKey, entryPath]) => ({
+        ...baseConfig,
+        name: entryKey,
+        entry: {
+          [entryKey]: entryPath,
+        },
+      })),
+      createPlayerModuleConfig(baseConfig),
+    ];
   }
 
-  return {
-    ...baseConfig,
-    entry: isMakePot ? jsEntries : allEntries,
-  };
+  if (isMakePot) {
+    return {
+      ...baseConfig,
+      entry: jsEntries,
+    };
+  }
+
+  return [
+    {
+      ...baseConfig,
+      entry: allEntries,
+    },
+    createPlayerModuleConfig(baseConfig),
+  ];
 };
