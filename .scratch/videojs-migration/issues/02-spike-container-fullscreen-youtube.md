@@ -24,6 +24,10 @@ fallback the map must adopt so ticket 04 can be adjusted.
 - Assertion #2 PASS: in real fullscreen only the player container expands; YouTube's own
   fullscreen chrome does not appear.
 
+Separate from this gate: YouTube's persistent title/channel overlay still shows during
+normal playback (it did under Plyr too, hidden by a crop trick) — tracked in ticket 04, not
+a failure of ADR-0009.
+
 Spike fixture was throwaway (`spike-videojs/`, uncommitted, deleted).
 
 Finding handed to ticket 04: the packaged skin sizes only native `<video>`/`<audio>`
