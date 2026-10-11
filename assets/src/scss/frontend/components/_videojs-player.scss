@@ -1,0 +1,31 @@
+// Video.js lesson player engine (ticket 04).
+//
+// The packaged skin (`@videojs/html/video/skin`) sizes only native `<video>`/`<audio>`, so
+// embed media is sized here; and it crops YouTube's own title/overlay the same way the old
+// Plyr `.plyr--youtube iframe` trick did.
+.tutor-video-player {
+  tutor-video-player {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  video-skin {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  youtube-video,
+  vimeo-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  youtube-video::part(iframe) {
+    height: 200% !important;
+    top: -50%;
+    pointer-events: none;
+  }
+}
