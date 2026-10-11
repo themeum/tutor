@@ -1,3 +1,6 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { LessonPlaybackController, readPlayerData } from '@LearningArea/lesson/player';
+
 import '../admin-dashboard/segments/filter';
 import '../admin-dashboard/segments/lib';
 import { isMobileDevice } from '../helper/utils';
@@ -118,254 +121,64 @@ jQuery(document).ready(function($) {
 	 * END jQuery UI Touch Punch
 	 */
 
-	const videoPlayer = {
-		ajaxurl: window._tutorobject.ajaxurl,
-		nonce_key: window._tutorobject.nonce_key,
-		played_once: false,
-		max_seek_time: 0,
-		video_data: function() {
-			const video_track_data = $('#tutor_video_tracking_information').val();
-			return video_track_data ? JSON.parse(video_track_data) : {};
-		},
-		track_player: function() {
-			const that = this;
-			if (typeof Plyr !== 'undefined') {
-				let syncTimeInterval;
-				const video_data = that.video_data();
-				const player = new Plyr(this.player_DOM, {
-					keyboard: {
-						focused: that.isRequiredPercentage() ? false : true,
-						global: false,
-					},
-					listeners: {
-						...(that.isRequiredPercentage() && {
-							seek(e) {
-								const newTime = that.getTargetTime(player, e);
-								const currentTime = player.currentTime;
-								const max_seek_time = currentTime > that.max_seek_time ? currentTime : that.max_seek_time;
-								// Disallow moving forward
-								if (newTime > max_seek_time) {
-									e.preventDefault();
-									tutor_toast(__('Warning', 'tutor'), __('Forward seeking is disabled', 'tutor'), 'error');
-									return false;
-								}
-								return true;
-							},
-						}),
-					}
-				});
-				player.on('ready', function(event) {
-					const instance = event.detail.plyr;
-					const { best_watch_time = 0 } = video_data || {};
+	const createLegacyPlayerEnvironment = (videoData) => {
+		const tutorObject = window._tutorobject || {};
+		const nonceKey = tutorObject.nonce_key;
+		const ajaxurl = tutorObject.ajaxurl;
 
-					/**
-					 * Fix: Mobile Vimeo autoplay sound issue
-					 * Always start muted on mobile to comply with autoplay policy.
-					 * 
-					 * @since 3.9.2
-					 */
-					if (player.provider === 'vimeo' && isMobileDevice()) {
-						try {
-							player.muted = true;
-							if (typeof player.mute === 'function') {
-								player.mute();
-							}
-						} catch (err) {
-							console.warn('Vimeo mute init failed:', err);
-						}
-					}
+		const post = (action, payload) =>
+			$.post(ajaxurl, Object.assign({ action, [nonceKey]: tutorObject[nonceKey] }, payload));
 
-					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
-						var previous_duration = Math.floor(best_watch_time);
-						var previousTimeSetter = setTimeout(function(){
-							if (player.playing !== true && player.currentTime !== previous_duration) {
-								if (instance.provider === 'youtube') {
-									instance.embed.seekTo(best_watch_time);
-								} else {
-									instance.media.currentTime = previous_duration;
-								}
-							} else {
-								clearTimeout(previousTimeSetter);
-							}
-						});
-					}
-					that.sync_time(instance);
-
-					// Set player to window and dispatch custom event if lesson single page
-					if ($(that.player_DOM).closest('.tutor-course-topic-single-body .tutor-video-player-wrapper').length) {
-						const customEvent = new CustomEvent('tutorLessonPlayerReady', {
-							detail: { player: instance }
-						});
-						window.dispatchEvent(customEvent);
-						window.TutorLessonPlayer = player;
-					}
-				});
-				
-				player.on('play', (event) => {
-					that.played_once = true;
-
-					/**
-					 * Unmute automatically after first user interaction
-					 * Mobile browsers allow audio only after gesture.
-					 * 
-					 * @since 3.9.2
-					 */
-					if (player.provider === 'vimeo' && isMobileDevice()) {
-						try {
-							player.muted = false;
-							if (typeof player.unmute === 'function') {
-								player.unmute();
-							}
-						} catch (err) {
-							console.warn('Vimeo unmute on play failed:', err);
-						}
-					}
-
-					// Send to tutor backend about video playing time in this interval
-					const intervalSeconds = 10;
-					const instance = event.detail.plyr;
-					syncTimeInterval = setInterval(() => {
-						that.sync_time(instance);
-					}, intervalSeconds * 1000);
-
-					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
-						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 0);
-					}
-				});
-
-				player.on('pause', (event) => {
-					clearInterval(syncTimeInterval);
-					const instance = event.detail.plyr;
-					that.sync_time(instance);
-				});
-
-				player.on('ended', function(event) {
-					clearInterval(syncTimeInterval);
-					const video_data = that.video_data();
-					const instance = event.detail.plyr;
-					const data = { is_ended: true };
-					that.sync_time(instance, data);
-					if (video_data.autoload_next_course_content && that.played_once) {
-						that.autoload_content();
-					}
-
-					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
-						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 1);
-					}
-				});
-			}
-		},
-		sync_time: function(instance, options) {
-			const video_data = this.video_data();
-			if (!video_data) {
-				return;
-			}
-
-			// If user is not enrolled like lesson preview.
-			if (!video_data.is_enrolled) {
-				return;
-			}
-
-			if (this.isRequiredPercentage()) {
-				this.enable_complete_lesson_btn(instance);
-			}
-
-			//TUTOR is sending about video playback information to server.
-			let data = {
-				action: 'sync_video_playback',
-				currentTime: instance.currentTime,
-				duration: instance.duration,
-				post_id: video_data.post_id,
-			};
-			data[this.nonce_key] = _tutorobject[this.nonce_key];
-			let data_send = data;
-			if (options) {
-				data_send = Object.assign(data, options);
-			}
-			$.post(this.ajaxurl, data_send);
-			
-			const seekTime = video_data.best_watch_time > instance.currentTime ? video_data.best_watch_time : instance.currentTime;
-			if (seekTime > this.max_seek_time) {
-				this.max_seek_time = seekTime;
-			}
-		},
-		autoload_content: function() {
-			console.log('Autoloader called');
-			const post_id = this.video_data().post_id;
-			const data = { action: 'autoload_next_course_content', post_id };
-			data[this.nonce_key] = _tutorobject[this.nonce_key];
-			$.post(this.ajaxurl, data).done(function(response) {
-				console.log(response);
-				if (response.success && response.data.next_url) {
-					location.href = response.data.next_url;
+		return {
+			proActive: Boolean(tutorObject.tutor_pro_url),
+			autoPlayNext: Boolean(videoData.autoload_next_course_content),
+			isMobile: isMobileDevice(),
+			syncIntervalSeconds: 10,
+			syncPlayback: (payload) => {
+				if (!videoData.is_enrolled) {
+					return;
 				}
-			});
-		},
-		isRequiredPercentage: function() {
-			const video_data = this.video_data();
-			if (!video_data) {
-				return false;
-			}
+				post('sync_video_playback', payload);
+			},
+			fetchNextUrl: (postId) =>
+				post('autoload_next_course_content', { post_id: postId }).then((response) =>
+					response && response.success && response.data && response.data.next_url ? response.data.next_url : null,
+				),
+			toastWarning: (message) => {
+				tutor_toast(__('Warning', 'tutor'), message, 'error');
+			},
+			openUrl: (url) => {
+				window.location.href = url;
+			},
+			notifyReady: (player) => {
+				if (player.element.closest('.tutor-course-topic-single-body .tutor-video-player-wrapper')) {
+					window.dispatchEvent(
+						new CustomEvent(TUTOR_CUSTOM_EVENTS.LESSON_PLAYER_READY, { detail: { player } }),
+					);
+					window.TutorLessonPlayer = player;
+				}
+			},
+			document,
+		};
+	};
 
-			const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = video_data;
-			if (_tutorobject.tutor_pro_url && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion) {
-				return true;
-			}
-			return false;
-		},
-		enable_complete_lesson_btn: function(instance) {
-			const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
-			const video_data = this.video_data();
-			const completedPercentage = this.getPercentage(Number(instance.currentTime), Number(instance.duration));
-			
-			if (completedPercentage >= video_data.required_percentage) {
-				complete_lesson_btn.attr('disabled', false);
-				complete_lesson_btn.next().remove();
-			}
-		},
-		disable_complete_lesson_btn: function() {
-			const video_data = this.video_data();
-			if (!video_data) {
-				return;
-			}
-
-			const { best_watch_time, video_duration, required_percentage } = video_data;
-			const completedPercentage = this.getPercentage(Number(best_watch_time), Number(video_duration));
-			
-			if (completedPercentage < required_percentage) {
-				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
-				complete_lesson_btn.attr('disabled', true);
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>');
-				complete_lesson_btn.after(
-					/* translators: %s is the required watch percentage (e.g., 80) */
-					`<span class="tooltip-txt tooltip-bottom">${ sprintf(
-						__( 'Watch at least %s%% to complete the lesson.', 'tutor' ),
-						video_data.required_percentage
-					) }</span>`
-				);
-			}
-		},
-		getPercentage: function(value, total) {
-			if (value > 0 && total > 0) {
-				return Math.round((value / total) * 100);
-			}
-			return 0;
-		},
-		getTargetTime: function(player, input) {
-			if (
-			  typeof input === "object" &&
-			  (input.type === "input" || input.type === "change")
-			) {
-			  return input.target.value / input.target.max * player.media.duration;
-			} else {
-			  return Number(input);
-			}
-		},
+	const videoPlayer = {
 		init: function(element) {
-			this.player_DOM = element;
-			this.track_player();
-			if (this.isRequiredPercentage()) {
-				this.disable_complete_lesson_btn();
+			const start = () => {
+				if (typeof window.TutorCore === 'undefined' || typeof window.TutorCore.player === 'undefined') {
+					return;
+				}
+
+				const videoData = readPlayerData(document);
+				const player = window.TutorCore.player.create(element);
+
+				new LessonPlaybackController(player, videoData, createLegacyPlayerEnvironment(videoData)).start();
+			};
+
+			if (window.TutorCore && window.TutorCore.player) {
+				start();
+			} else {
+				window.addEventListener(TUTOR_CUSTOM_EVENTS.PLAYER_ENGINE_READY, start, { once: true });
 			}
 		},
 	};

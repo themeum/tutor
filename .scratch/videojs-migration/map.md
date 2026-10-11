@@ -70,6 +70,11 @@ release/versioning mechanics are out of scope.
   runtime and waits for a new `tutor-player-engine-ready` event (IIFE runs before the deferred engine
   module); preserves the `tutorLessonPlayerReady` dispatch + `window.TutorLessonPlayer`, and toggles
   `is-fullscreen` on the player host on `fullscreenchange`. 40 Vitest tests; `tsc`/`eslint`/`rspack` green.
+- **07 done** — legacy path rewritten: the `videoPlayer`/`new Plyr` block in `tutor-front.js` now uses
+  `TutorCore.player.create()` + the shared `LessonPlaybackController` with a legacy env adapter
+  (`_tutorobject`/`$.post` + nonce, `tutor_toast`, `autoload_next_course_content` gate, conditional
+  `tutorLessonPlayerReady` + `window.TutorLessonPlayer`). Course-intro engine was already enqueued on
+  `is_single_course(true)` — no PHP change. `tsc`/`vitest` (40)/`rspack` green.
 
 ## Not yet specified
 
