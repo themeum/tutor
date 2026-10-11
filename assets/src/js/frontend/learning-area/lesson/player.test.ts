@@ -242,6 +242,20 @@ describe('LessonPlaybackController mobile vimeo', () => {
   });
 });
 
+describe('LessonPlaybackController fullscreen', () => {
+  it('toggles is-fullscreen on the host element', () => {
+    const { player, emit } = createFakePlayer();
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('fullscreenchange', { fullscreen: true });
+    expect(player.element.classList.contains('is-fullscreen')).toBe(true);
+
+    emit('fullscreenchange', { fullscreen: false });
+    expect(player.element.classList.contains('is-fullscreen')).toBe(false);
+  });
+});
+
 describe('LessonPlaybackController auto-next', () => {
   it('loads the next url after playing once and ending', async () => {
     const { player, emit } = createFakePlayer();

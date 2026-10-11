@@ -1,5 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
 interface AutoLoadResponse {
@@ -83,6 +84,7 @@ export class LessonPlaybackController {
       this.#player.on('pause', this.#onPause),
       this.#player.on('ended', this.#onEnded),
       this.#player.on('timeupdate', this.#onTimeUpdate),
+      this.#player.on('fullscreenchange', this.#onFullscreenChange),
     ];
   }
 
@@ -160,6 +162,10 @@ export class LessonPlaybackController {
     if (currentTime > this.#maxSeekTime) {
       this.#maxSeekTime = currentTime;
     }
+  };
+
+  #onFullscreenChange = ({ fullscreen }: PlayerEventMap['fullscreenchange']): void => {
+    this.#player.element.classList.toggle('is-fullscreen', fullscreen);
   };
 
   #isStrict(): boolean {
@@ -304,7 +310,7 @@ function createEnvironment(document: Document): LessonEnvironment {
       window.location.assign(url);
     },
     notifyReady: (player) => {
-      window.dispatchEvent(new CustomEvent('tutorLessonPlayerReady', { detail: { player } }));
+      window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.LESSON_PLAYER_READY, { detail: { player } }));
       window.TutorLessonPlayer = player;
     },
     document,
@@ -312,6 +318,12 @@ function createEnvironment(document: Document): LessonEnvironment {
 }
 
 export const initializeLessonPlayer = (): void => {
+  if (!window.TutorCore?.player) {
+    // The engine is a deferred ES module that loads after this IIFE bundle.
+    window.addEventListener(TUTOR_CUSTOM_EVENTS.PLAYER_ENGINE_READY, initializeLessonPlayer, { once: true });
+    return;
+  }
+
   const target = document.querySelector('.tutor-lesson-video-wrapper .tutorPlayer') as HTMLElement | null;
 
   if (!target) {
@@ -319,11 +331,6 @@ export const initializeLessonPlayer = (): void => {
     return;
   }
 
-  const playerService = window.TutorCore?.player;
-  if (!playerService) {
-    return;
-  }
-
-  const player = playerService.create(target);
+  const player = window.TutorCore.player.create(target);
   new LessonPlaybackController(player, readPlayerData(document), createEnvironment(document)).start();
 };

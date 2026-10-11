@@ -66,6 +66,10 @@ release/versioning mechanics are out of scope.
   Dropped the old poster hack and YouTube iframe `tabindex` hack (skin/adapter own those); auto-next
   preserved on the real `user_preferences.auto_play_next` gate. 14 new Vitest tests (39 total);
   `tsc`/`eslint`/`rspack` green. `window.TutorLessonPlayer` retyped `TutorPlayer`.
+- **06 done** — Learning Area wired: `initializeLessonPlayer()` reads `window.TutorCore.player` at
+  runtime and waits for a new `tutor-player-engine-ready` event (IIFE runs before the deferred engine
+  module); preserves the `tutorLessonPlayerReady` dispatch + `window.TutorLessonPlayer`, and toggles
+  `is-fullscreen` on the player host on `fullscreenchange`. 40 Vitest tests; `tsc`/`eslint`/`rspack` green.
 
 ## Not yet specified
 

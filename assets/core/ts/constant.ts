@@ -12,6 +12,7 @@ export const TUTOR_CUSTOM_EVENTS = {
   FORM_RESET: 'tutor-form-reset',
   WP_EDITOR_FOCUS: 'wp-editor-focus',
   TUTOR_PLAYER_READY: 'tutor-player-ready',
+  PLAYER_ENGINE_READY: 'tutor-player-engine-ready',
   COMMENT_REPLIED: 'tutor:comment:replied',
   LESSON_PLAYER_READY: 'tutorLessonPlayerReady',
   QUIZ_TIME_EXPIRED: 'tutor-quiz-time-expired',
