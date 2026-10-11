@@ -59,6 +59,13 @@ release/versioning mechanics are out of scope.
   player, and `index.ts` imports the skin + media packages, defines the element and assigns
   `window.TutorCore.player`. Embed sizing + YouTube `::part(iframe)` crop live in
   `_videojs-player.scss`. 25 Vitest tests pass; `tsc`/`eslint`/`rspack` green (`js/tutor-player.js`).
+- **05 done** — lesson controller (`assets/src/js/frontend/learning-area/lesson/player.ts`) rewritten
+  as `LessonPlaybackController` over a `TutorPlayer` handle + `initializeLessonPlayer()`: Strict Mode
+  guard (detected on `timeupdate`, seeks back + warns), completion-percentage button, Watch Progress
+  Sync (play interval + pause/ready/ended), resume from Best Watch Time, auto-next, mobile Vimeo mute.
+  Dropped the old poster hack and YouTube iframe `tabindex` hack (skin/adapter own those); auto-next
+  preserved on the real `user_preferences.auto_play_next` gate. 14 new Vitest tests (39 total);
+  `tsc`/`eslint`/`rspack` green. `window.TutorLessonPlayer` retyped `TutorPlayer`.
 
 ## Not yet specified
 
