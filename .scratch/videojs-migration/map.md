@@ -75,6 +75,10 @@ release/versioning mechanics are out of scope.
   (`_tutorobject`/`$.post` + nonce, `tutor_toast`, `autoload_next_course_content` gate, conditional
   `tutorLessonPlayerReady` + `window.TutorLessonPlayer`). Course-intro engine was already enqueued on
   `is_single_course(true)` — no PHP change. `tsc`/`vitest` (40)/`rspack` green.
+- **08 done** — the Alpine `player` component now builds its handle via `TutorCore.player.create()`
+  (`player: TutorPlayer | null`), dispatches `tutor-player-ready` with `{ player, component }`, keeps
+  mobile-Vimeo mute/unmute + `is-fullscreen`, drops the YouTube-iframe hack, and adds
+  `destroy()`/`dispose()`. Dormant (no in-repo template consumes it). Gates green.
 
 ## Not yet specified
 
