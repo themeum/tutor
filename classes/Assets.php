@@ -331,12 +331,8 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-sortable' );
         wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
-		// Plyr.
+		// Video.js player engine for course-intro playback (ES module, ADR-0002).
 		if ( is_single_course( true ) ) {
-			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-
-			// Video.js player engine (ES module, ADR-0002).
 			wp_enqueue_script( 'tutor-player', tutor()->url . 'assets/js/tutor-player.js', array(), TUTOR_VERSION, true );
 		}
 
@@ -922,11 +918,8 @@ class Assets {
 			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
 			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n', 'wp-date' ), $version, true );
 
+			// Video.js player engine (ES module, ADR-0002).
 			if ( is_single_course( true ) ) {
-				wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), $version );
-				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
-
-				// Video.js player engine (ES module, ADR-0002).
 				wp_enqueue_script( 'tutor-player', tutor()->assets_url . 'js/tutor-player.js', array(), $version, true );
 			}
 		}
