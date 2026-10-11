@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { getLegacyTutorLessonPlayer } from '@Core/ts/services/player/legacy';
 import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
 interface AutoLoadResponse {
@@ -311,7 +312,7 @@ function createEnvironment(document: Document): LessonEnvironment {
     },
     notifyReady: (player) => {
       window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.LESSON_PLAYER_READY, { detail: { player } }));
-      window.TutorLessonPlayer = player;
+      window.TutorLessonPlayer = getLegacyTutorLessonPlayer();
     },
     document,
   };

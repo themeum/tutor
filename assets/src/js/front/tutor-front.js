@@ -1,4 +1,5 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { getLegacyTutorLessonPlayer } from '@Core/ts/services/player/legacy';
 import { LessonPlaybackController, readPlayerData } from '@LearningArea/lesson/player';
 
 import '../admin-dashboard/segments/filter';
@@ -155,7 +156,7 @@ jQuery(document).ready(function($) {
 					window.dispatchEvent(
 						new CustomEvent(TUTOR_CUSTOM_EVENTS.LESSON_PLAYER_READY, { detail: { player } }),
 					);
-					window.TutorLessonPlayer = player;
+					window.TutorLessonPlayer = getLegacyTutorLessonPlayer();
 				}
 			},
 			document,

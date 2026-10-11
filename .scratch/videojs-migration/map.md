@@ -79,6 +79,11 @@ release/versioning mechanics are out of scope.
   (`player: TutorPlayer | null`), dispatches `tutor-player-ready` with `{ player, component }`, keeps
   mobile-Vimeo mute/unmute + `is-fullscreen`, drops the YouTube-iframe hack, and adds
   `destroy()`/`dispose()`. Dormant (no in-repo template consumes it). Gates green.
+- **09 done** — `window.TutorLessonPlayer` is now the deprecated adapter in
+  `services/player/legacy.ts` over `TutorCore.player.getActive()` (`currentTime` get/set → `seek`,
+  `play()`, `on('enter/exitfullscreen')` re-emitted with `{ srcElement }`, warn-once). Wired at both
+  `notifyReady` sites; `tutorLessonPlayerReady` unchanged. Unblocks Pro tickets 10–12. 3 unit tests
+  (43 total); gates green.
 
 ## Not yet specified
 
