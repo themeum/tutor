@@ -4,6 +4,7 @@ import { type Alpine as AlpineType } from 'alpinejs';
 import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { type ToastService } from '@Core/ts/services/toast/Toast';
 import { type TutorCore } from '@Core/ts/types';
+import { type TutorPlayer } from '@Core/ts/types/player';
 import { type ToastType } from '@Core/ts/types/toast';
 
 interface WPMediaFrameOptions {
@@ -55,7 +56,7 @@ declare global {
   interface Window {
     Alpine: AlpineType;
     TutorComponentRegistry: typeof TutorComponentRegistry;
-    TutorLessonPlayer?: Plyr;
+    TutorLessonPlayer?: TutorPlayer;
     TutorCore: TutorCore & {
       toast?: ToastService;
       security?: {

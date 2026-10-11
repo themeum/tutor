@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { isVimeoPlyr, isYouTubePlyr } from '@FrontendTypes/index';
+import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
 interface AutoLoadResponse {
   success: boolean;
@@ -9,7 +9,7 @@ interface AutoLoadResponse {
   };
 }
 
-interface PlayerData {
+export interface PlayerData {
   strict_mode?: boolean;
   control_video_lesson_completion?: boolean;
   lesson_completed?: boolean;
@@ -21,379 +21,309 @@ interface PlayerData {
   autoload_next_course_content?: boolean;
 }
 
-class LessonPlayer {
-  private element: HTMLElement;
-  private player: Plyr | null = null;
-  private playerData: PlayerData;
-  private syncInterval: ReturnType<typeof setInterval> | null = null;
-  private maxSeekTime: number = 0;
-  private playedOnce: boolean = false;
+export interface LessonEnvironment {
+  proActive: boolean;
+  autoPlayNext: boolean;
+  isMobile: boolean;
+  syncIntervalSeconds: number;
+  syncPlayback: (data: Record<string, unknown>) => void;
+  fetchNextUrl: (postId: number) => Promise<string | null>;
+  toastWarning: (message: string) => void;
+  openUrl: (url: string) => void;
+  notifyReady?: (player: TutorPlayer) => void;
+  document: Document;
+}
 
-  constructor(element: HTMLElement) {
-    this.element = element;
-    this.playerData = this.getPlayerData();
-    this.maxSeekTime = this.playerData.best_watch_time || 0;
-    this.initPlyr();
+const SEEK_TOLERANCE = 1;
+const DEFAULT_SYNC_INTERVAL_SECONDS = 10;
+
+export function getPercentage(value: number, total: number): number {
+  if (value > 0 && total > 0) {
+    return Math.round((value / total) * 100);
+  }
+  return 0;
+}
+
+export function readPlayerData(document: Document): PlayerData {
+  const element = document.getElementById('tutor_video_tracking_information');
+
+  if (!(element instanceof HTMLInputElement) || !element.value) {
+    return {};
   }
 
-  /**
-   * Get player data from hidden input
-   */
-  private getPlayerData(): PlayerData {
-    const el = document.getElementById('tutor_video_tracking_information');
+  try {
+    return JSON.parse(element.value) as PlayerData;
+  } catch {
+    return {};
+  }
+}
 
-    if (!(el instanceof HTMLInputElement) || !el.value) {
-      return {};
-    }
+export class LessonPlaybackController {
+  #player: TutorPlayer;
+  #data: PlayerData;
+  #env: LessonEnvironment;
+  #syncTimer: ReturnType<typeof setInterval> | null = null;
+  #maxSeekTime = 0;
+  #lastTime = 0;
+  #playedOnce = false;
+  #unsubscribers: PlayerUnsubscribe[] = [];
 
-    try {
-      return JSON.parse(el.value) as PlayerData;
-    } catch {
-      return {};
-    }
+  constructor(player: TutorPlayer, data: PlayerData, environment: LessonEnvironment) {
+    this.#player = player;
+    this.#data = data;
+    this.#env = environment;
+    this.#maxSeekTime = data.best_watch_time || 0;
+    this.#lastTime = data.best_watch_time || 0;
   }
 
-  /**
-   * Check if the current lesson requires a watch percentage
-   */
-  private isRequiredPercentage(): boolean {
-    const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = this.playerData;
-    const { tutorConfig } = window.TutorCore.config;
+  start(): void {
+    this.#unsubscribers = [
+      this.#player.on('ready', this.#onReady),
+      this.#player.on('play', this.#onPlay),
+      this.#player.on('pause', this.#onPause),
+      this.#player.on('ended', this.#onEnded),
+      this.#player.on('timeupdate', this.#onTimeUpdate),
+    ];
+  }
+
+  destroy(): void {
+    this.#clearSyncTimer();
+    this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
+    this.#unsubscribers = [];
+  }
+
+  #onReady = (): void => {
+    this.#env.document.querySelector('.tutor-video-player .loading-spinner')?.remove();
+
+    this.#syncTime();
+
+    const bestWatchTime = this.#data.best_watch_time || 0;
+
+    if (this.#env.proActive && bestWatchTime > 0) {
+      this.#player.seek(Math.floor(bestWatchTime));
+    }
+
+    if (this.#isStrict()) {
+      this.#disableCompleteLessonBtn();
+    }
+
+    if (this.#env.isMobile && this.#player.provider === 'vimeo') {
+      this.#player.setMuted(true);
+    }
+
+    this.#env.notifyReady?.(this.#player);
+  };
+
+  #onPlay = (): void => {
+    this.#playedOnce = true;
+
+    if (this.#env.isMobile && this.#player.provider === 'vimeo') {
+      this.#player.setMuted(false);
+    }
+
+    if (this.#env.proActive) {
+      this.#clearSyncTimer();
+      this.#syncTimer = setInterval(() => this.#syncTime(), this.#env.syncIntervalSeconds * 1000);
+    }
+  };
+
+  #onPause = (): void => {
+    this.#clearSyncTimer();
+
+    if (this.#env.proActive) {
+      this.#syncTime();
+    }
+  };
+
+  #onEnded = (): void => {
+    this.#clearSyncTimer();
+    this.#syncTime({ is_ended: true });
+
+    if (this.#env.autoPlayNext && this.#playedOnce) {
+      void this.#autoloadContent();
+    }
+  };
+
+  #onTimeUpdate = ({ currentTime }: PlayerEventMap['timeupdate']): void => {
+    if (this.#isStrict()) {
+      const limit = Math.max(this.#maxSeekTime, this.#lastTime);
+
+      if (currentTime > limit + SEEK_TOLERANCE) {
+        this.#player.seek(this.#maxSeekTime);
+        this.#env.toastWarning(__('Forward seeking is disabled', 'tutor'));
+        return;
+      }
+    }
+
+    this.#lastTime = currentTime;
+
+    if (currentTime > this.#maxSeekTime) {
+      this.#maxSeekTime = currentTime;
+    }
+  };
+
+  #isStrict(): boolean {
+    const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = this.#data;
+
     return Boolean(
-      tutorConfig.tutor_pro_url && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion,
+      this.#env.proActive && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion,
     );
   }
 
-  /**
-   * Calculate percentage
-   */
-  private getPercentage(value: number, total: number): number {
-    if (value > 0 && total > 0) {
-      return Math.round((value / total) * 100);
+  #syncTime(options: Record<string, unknown> = {}): void {
+    if (!this.#data.post_id) {
+      return;
     }
-    return 0;
+
+    if (this.#isStrict()) {
+      this.#enableCompleteLessonBtn();
+    }
+
+    const currentTime = this.#player.getCurrentTime();
+
+    this.#env.syncPlayback({
+      currentTime,
+      duration: this.#player.getDuration(),
+      post_id: this.#data.post_id,
+      ...options,
+    });
+
+    const bestWatchTime = this.#data.best_watch_time || 0;
+    const seekTime = Math.max(bestWatchTime, currentTime);
+
+    if (seekTime > this.#maxSeekTime) {
+      this.#maxSeekTime = seekTime;
+    }
   }
 
-  /**
-   * UI: Enable Complete Lesson Button
-   */
-  private enableCompleteLessonBtn() {
-    const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
-    if (!btn || !this.player) return;
+  #enableCompleteLessonBtn(): void {
+    const btn = this.#env.document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement | null;
 
-    const completedPercentage = this.getPercentage(Number(this.player.currentTime), Number(this.player.duration));
-    const requiredPercentage = this.playerData.required_percentage || 0;
+    if (!btn) {
+      return;
+    }
+
+    const completedPercentage = getPercentage(this.#player.getCurrentTime(), this.#player.getDuration());
+    const requiredPercentage = this.#data.required_percentage || 0;
 
     if (completedPercentage >= requiredPercentage) {
       btn.disabled = false;
+
       if (btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
         btn.nextElementSibling.remove();
       }
+
       if (btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
         btn.parentElement.replaceWith(btn);
       }
     }
   }
 
-  /**
-   * UI: Disable Complete Lesson Button
-   */
-  private disableCompleteLessonBtn() {
-    const { best_watch_time = 0, video_duration = 0, required_percentage = 0 } = this.playerData;
-    const completedPercentage = this.getPercentage(Number(best_watch_time), Number(video_duration));
+  #disableCompleteLessonBtn(): void {
+    const { best_watch_time = 0, video_duration = 0, required_percentage = 0 } = this.#data;
+    const completedPercentage = getPercentage(Number(best_watch_time), Number(video_duration));
 
-    if (completedPercentage < required_percentage) {
-      const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
-      if (btn && !btn.disabled) {
-        btn.disabled = true;
-        if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'tutor-tooltip-wrap';
-          wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
-          btn.parentNode?.insertBefore(wrapper, btn);
-          wrapper.appendChild(btn);
-          btn.setAttribute('x-ref', 'trigger');
-        }
+    if (completedPercentage >= required_percentage) {
+      return;
+    }
 
-        if (!btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
-          btn.insertAdjacentHTML(
-            'afterend',
-            `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${sprintf(
-              /* translators: %s is the required watch percentage (e.g., 80) */
-              __('Watch at least %s%% to complete the lesson.', 'tutor'),
-              required_percentage,
-            )}</div>`,
-          );
+    const document = this.#env.document;
+    const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement | null;
 
-          if (window.Alpine) {
-            window.Alpine.initTree(btn.parentElement as HTMLElement);
-          }
-        }
+    if (!btn || btn.disabled) {
+      return;
+    }
+
+    btn.disabled = true;
+
+    if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'tutor-tooltip-wrap';
+      wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
+      btn.parentNode?.insertBefore(wrapper, btn);
+      wrapper.appendChild(btn);
+      btn.setAttribute('x-ref', 'trigger');
+    }
+
+    if (!btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
+      btn.insertAdjacentHTML(
+        'afterend',
+        `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${sprintf(
+          /* translators: %s is the required watch percentage (e.g., 80) */
+          __('Watch at least %s%% to complete the lesson.', 'tutor'),
+          required_percentage,
+        )}</div>`,
+      );
+
+      if (window.Alpine) {
+        window.Alpine.initTree(btn.parentElement as HTMLElement);
       }
     }
   }
 
-  /**
-   * Sync time with server
-   */
-  private syncTime(options: Record<string, unknown> = {}) {
-    if (!this.player || !this.playerData.post_id) return;
-
-    if (this.isRequiredPercentage()) {
-      this.enableCompleteLessonBtn();
+  async #autoloadContent(): Promise<void> {
+    if (!this.#data.post_id) {
+      return;
     }
 
-    const data: Record<string, unknown> = {
-      currentTime: this.player.currentTime,
-      duration: this.player.duration,
-      post_id: this.playerData.post_id,
-      ...options,
-    };
+    const nextUrl = await this.#env.fetchNextUrl(this.#data.post_id);
 
-    const { wpPost } = window.TutorCore.api;
-    wpPost('sync_video_playback', data);
-
-    const currentTime = this.player.currentTime;
-    const bestWatchTime = this.playerData.best_watch_time || 0;
-    const seekTime = bestWatchTime > currentTime ? bestWatchTime : currentTime;
-
-    if (seekTime > this.maxSeekTime) {
-      this.maxSeekTime = seekTime;
+    if (nextUrl) {
+      this.#env.openUrl(nextUrl);
     }
   }
 
-  /**
-   * Autoload next course content
-   */
-  private autoloadContent() {
-    if (!this.playerData.post_id) return;
-
-    const { wpPost } = window.TutorCore.api;
-    wpPost<AutoLoadResponse>('autoload_next_course_content', {
-      post_id: this.playerData.post_id,
-    }).then((response) => {
-      if (response.success && response.data?.next_url) {
-        window.location.href = response.data.next_url;
-      }
-    });
-  }
-
-  /**
-   * Get target time from seek event input
-   */
-  private getTargetTime(player: Plyr, event: Plyr.PlyrEvent): number {
-    const target = event.target;
-    if (target instanceof HTMLInputElement) {
-      const value = Number(target.value);
-      const max = Number(target.max) || 1;
-      return (value / max) * player.duration;
-    }
-    return Number(event);
-  }
-
-  /**
-   * Initialize Plyr
-   */
-  private initPlyr() {
-    if (typeof window.Plyr === 'undefined') return;
-
-    const requiredPercentage = this.isRequiredPercentage();
-    const config: Plyr.Options = {
-      keyboard: {
-        focused: !requiredPercentage,
-        global: false,
-      },
-      listeners: {
-        ...(requiredPercentage && {
-          seek: (e) => {
-            if (!this.player) return true;
-            const newTime = this.getTargetTime(this.player, e);
-            const currentTime = this.player.currentTime;
-            const maxSeek = currentTime > this.maxSeekTime ? currentTime : this.maxSeekTime;
-
-            if (newTime > maxSeek) {
-              e.preventDefault();
-              window.TutorCore.toast.warning(__('Forward seeking is disabled', 'tutor'));
-              return false;
-            }
-            return true;
-          },
-        }),
-      },
-    };
-
-    this.player = new window.Plyr(this.element, config);
-    this.setupEvents();
-
-    if (requiredPercentage) {
-      this.disableCompleteLessonBtn();
-    }
-  }
-
-  /**
-   * Setup Plyr events
-   */
-  private setupEvents() {
-    if (!this.player) return;
-
-    this.player.on('ready', (event: Plyr.PlyrEvent) => {
-      // Remove loading spinner
-      document.querySelector('.tutor-video-player .loading-spinner')?.remove();
-
-      this.syncTime();
-
-      const instance = event.detail.plyr;
-      // Tab click reveals youtube controls fixed
-      if (isYouTubePlyr(instance)) {
-        const iframe = instance.elements.wrapper?.querySelector('iframe');
-        iframe?.setAttribute('tabindex', '-1');
-        iframe?.setAttribute('aria-hidden', 'true');
-      }
-
-      /**
-       * Play from best watch time
-       */
-      const { best_watch_time = 0 } = this.playerData;
-      const { tutorConfig } = window.TutorCore.config;
-      if (tutorConfig.tutor_pro_url && best_watch_time > 0) {
-        const previousDuration = Math.floor(best_watch_time);
-        setTimeout(() => {
-          if (instance.playing !== true && instance.currentTime !== previousDuration) {
-            if (isYouTubePlyr(instance)) {
-              instance.embed.seekTo(best_watch_time);
-            } else {
-              instance.currentTime = previousDuration;
-            }
-          }
-        }, 0);
-      }
-
-      /**
-       * Fix: Mobile Vimeo autoplay sound issue
-       * Always start muted on mobile to comply with autoplay policy.
-       */
-      const { isMobileDevice } = window.TutorCore.device;
-      if (isVimeoPlyr(instance) && isMobileDevice()) {
-        try {
-          instance.muted = true;
-          if (typeof instance.mute === 'function') {
-            instance.mute();
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.warn('Vimeo mute init failed:', err);
-        }
-      }
-
-      // Dispatch custom event and set player to window
-      const customEvent = new CustomEvent('tutorLessonPlayerReady', {
-        detail: { player: instance },
-      });
-      window.dispatchEvent(customEvent);
-      window.TutorLessonPlayer = instance;
-    });
-
-    this.player.on('play', (event: Plyr.PlyrEvent) => {
-      if (this.syncInterval) clearInterval(this.syncInterval);
-
-      this.playedOnce = true;
-
-      /**
-       * Send to tutor backend about video playing time in this interval
-       */
-      const intervalSeconds = 10;
-      const { tutorConfig } = window.TutorCore.config;
-      if (tutorConfig.tutor_pro_url) {
-        this.syncInterval = setInterval(() => {
-          this.syncTime();
-        }, intervalSeconds * 1000);
-      }
-
-      /**
-       * Unmute automatically after first user interaction
-       * Mobile browsers allow audio only after gesture.
-       */
-      const instance = event.detail.plyr;
-      const { isMobileDevice } = window.TutorCore.device;
-      if (isVimeoPlyr(instance) && isMobileDevice()) {
-        try {
-          instance.muted = false;
-          if (typeof instance.unmute === 'function') {
-            instance.unmute();
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.warn('Vimeo unmute on play failed:', err);
-        }
-      }
-
-      /**
-       * Fix: YouTube poster issue
-       */
-      if (tutorConfig.tutor_pro_url && instance.provider === 'youtube') {
-        const poster = instance.elements.container?.querySelector('.plyr__poster') as HTMLElement;
-        if (poster) {
-          poster.style.opacity = '0';
-        }
-      }
-    });
-
-    this.player.on('pause', () => {
-      if (this.syncInterval) clearInterval(this.syncInterval);
-
-      const { tutorConfig } = window.TutorCore.config;
-      if (tutorConfig.tutor_pro_url) {
-        this.syncTime();
-      }
-    });
-
-    this.player.on('ended', (event: Plyr.PlyrEvent) => {
-      if (this.syncInterval) clearInterval(this.syncInterval);
-
-      const instance = event.detail.plyr;
-      this.syncTime({ is_ended: true });
-
-      const { tutorConfig } = window.TutorCore.config;
-      if (tutorConfig.user_preferences.auto_play_next && this.playedOnce) {
-        this.autoloadContent();
-      }
-
-      /**
-       * Fix: YouTube poster issue
-       */
-      if (tutorConfig.tutor_pro_url && instance.provider === 'youtube') {
-        const poster = instance.elements.container?.querySelector('.plyr__poster') as HTMLElement;
-        if (poster) {
-          poster.style.opacity = '1';
-        }
-      }
-    });
-
-    this.player.on('enterfullscreen', (event) => {
-      const instance = event.detail.plyr;
-      instance?.elements.wrapper?.classList.add('is-fullscreen');
-    });
-
-    this.player.on('exitfullscreen', (event) => {
-      const instance = event.detail.plyr;
-      instance?.elements.wrapper?.classList.remove('is-fullscreen');
-    });
-  }
-
-  /**
-   * Initialize Lesson Player
-   */
-  public static init() {
-    const player = document.querySelector('.tutor-lesson-video-wrapper .tutorPlayer') as HTMLElement;
-    if (player) {
-      new LessonPlayer(player);
-    } else {
-      // Remove loading spinner
-      document.querySelector('.tutor-video-player .loading-spinner')?.remove();
+  #clearSyncTimer(): void {
+    if (this.#syncTimer) {
+      clearInterval(this.#syncTimer);
+      this.#syncTimer = null;
     }
   }
 }
 
-export const initializeLessonPlayer = () => {
-  LessonPlayer.init();
+function createEnvironment(document: Document): LessonEnvironment {
+  const core = window.TutorCore;
+  const config = core.config.tutorConfig;
+
+  return {
+    proActive: Boolean(config.tutor_pro_url),
+    autoPlayNext: Boolean(config.user_preferences?.auto_play_next),
+    isMobile: core.device.isMobileDevice(),
+    syncIntervalSeconds: DEFAULT_SYNC_INTERVAL_SECONDS,
+    syncPlayback: (data) => {
+      core.api.wpPost('sync_video_playback', data);
+    },
+    fetchNextUrl: async (postId) => {
+      const response = await core.api.wpPost<AutoLoadResponse>('autoload_next_course_content', { post_id: postId });
+      return response?.data?.next_url ?? null;
+    },
+    toastWarning: (message) => {
+      core.toast.warning(message);
+    },
+    openUrl: (url) => {
+      window.location.assign(url);
+    },
+    notifyReady: (player) => {
+      window.dispatchEvent(new CustomEvent('tutorLessonPlayerReady', { detail: { player } }));
+      window.TutorLessonPlayer = player;
+    },
+    document,
+  };
+}
+
+export const initializeLessonPlayer = (): void => {
+  const target = document.querySelector('.tutor-lesson-video-wrapper .tutorPlayer') as HTMLElement | null;
+
+  if (!target) {
+    document.querySelector('.tutor-video-player .loading-spinner')?.remove();
+    return;
+  }
+
+  const playerService = window.TutorCore?.player;
+  if (!playerService) {
+    return;
+  }
+
+  const player = playerService.create(target);
+  new LessonPlaybackController(player, readPlayerData(document), createEnvironment(document)).start();
 };
