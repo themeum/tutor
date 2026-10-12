@@ -89,16 +89,12 @@ export class LessonPlaybackController {
       this.#player.on('timeupdate', this.#onTimeUpdate),
       this.#player.on('fullscreenchange', this.#onFullscreenChange),
     ];
-    // The embed media element re-emits the provider SDK's fullscreen echo as a
-    // non-bubbling DOM event; capture phase still observes it from the host.
-    this.#player.element.addEventListener('fullscreenchange', this.#onMediaFullscreenEcho, true);
   }
 
   destroy(): void {
     this.#clearSyncTimer();
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
     this.#unsubscribers = [];
-    this.#player.element.removeEventListener('fullscreenchange', this.#onMediaFullscreenEcho, true);
   }
 
   #onReady = (): void => {
@@ -180,9 +176,13 @@ export class LessonPlaybackController {
       CONTENT_TITLE_ATTRIBUTE,
       fullscreen ? (this.#data.lesson_title?.trim() ?? '') : '',
     );
+
+    if (!fullscreen) {
+      this.#resyncFullscreen();
+    }
   };
 
-  #onMediaFullscreenEcho = (): void => {
+  #resyncFullscreen(): void {
     const document = this.#player.element.ownerDocument;
 
     if (!document || document.fullscreenElement || !this.#player.isFullscreen()) {
@@ -192,11 +192,23 @@ export class LessonPlaybackController {
     // The packaged store syncs synchronously on document fullscreenchange but
     // trusts the provider's fullscreen flag, which Vimeo only settles
     // asynchronously via its SDK echo — so after an exit the store can stay
-    // stuck reporting fullscreen and the toggle dies. The echo arriving means
-    // the flag is fresh now, so re-run the store sync. The webkit alias avoids
-    // re-firing our own and Pro's fullscreenchange handlers.
-    document.dispatchEvent(new Event('webkitfullscreenchange'));
-  };
+    // stuck reporting fullscreen and the next toggle misfires exitFullscreen
+    // ("Document not active"). Reset a stale provider flag, then re-run the
+    // store sync. The webkit alias avoids re-firing our own and Pro's
+    // fullscreenchange handlers.
+    const resync = (): void => {
+      if (!document.fullscreenElement && this.#player.isFullscreen()) {
+        document.dispatchEvent(new Event('webkitfullscreenchange'));
+      }
+    };
+
+    try {
+      const media = this.#player.media as { exitFullscreen?: () => unknown } | null;
+      Promise.resolve(media?.exitFullscreen?.()).then(resync, resync);
+    } catch {
+      resync();
+    }
+  }
 
   #isStrict(): boolean {
     const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = this.#data;
