@@ -564,7 +564,6 @@ class CheckoutController {
 			return;
 		}
 
-		global $wpdb;
 		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = get_current_user_id();
@@ -722,7 +721,7 @@ class CheckoutController {
 				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
 				if ( is_wp_error( $guest_user ) ) {
 					// Delete the billing info if user registration failed.
-					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
+					QueryHelper::delete( 'tutor_customers', array( 'user_id' => $current_user_id ) );
 
 					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
 
