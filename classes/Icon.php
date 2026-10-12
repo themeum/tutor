@@ -54,8 +54,10 @@ final class Icon {
 	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
+	const BAG                        = 'bag';
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
+	const BASKET                     = 'basket';
 	const BILLING                    = 'billing';
 	const BOOK                       = 'book';
 	const BOOKMARK                   = 'bookmark';
@@ -225,6 +227,7 @@ final class Icon {
 	const HOME_FILL                  = 'home-fill';
 	const HTML                       = 'html';
 	const IMAGE                      = 'image';
+	const IMAGE_ADD                  = 'image-add';
 	const IMAGE_PLUS                 = 'image-plus';
 	const IMAGE_PREVIEW              = 'image-preview';
 	const IMAGE_PREVIEW_LINE         = 'image-preview-line';
