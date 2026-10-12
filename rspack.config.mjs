@@ -280,6 +280,7 @@ const createConfig = (env, options) => {
           'assets/core/',
           // Emitted by the separate ES-module config; the IIFE config's clean must not race it away.
           'assets/js/tutor-player.js',
+          'assets/js/lazy-chunks/',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -367,7 +368,6 @@ const createPlayerModuleConfig = (baseConfig) => ({
     chunkFilename: 'js/lazy-chunks/[name].js',
     module: true,
     chunkFormat: 'module',
-    // Only the IIFE config may clean `assets/`, or the two configs delete each other's output.
     clean: false,
   },
   experiments: { outputModule: true },
@@ -396,7 +396,6 @@ export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const isDevelopment = options.mode === 'development';
   const isMakePot = env?.['make-pot'];
-
   const allEntries = { ...jsEntries, ...scssEntries };
 
   if (isDevelopment) {
