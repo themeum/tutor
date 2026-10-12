@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.1.2 - 09 Oct, 2026
+= 4.1.2 - 12 Oct, 2026
 
 Fix: Resolved an issue where zoom & google meeting deleting was not working. (Pro)
 Fix: Resolved an issue where student wasn't able to upload assignment attachment. (Pro)
