@@ -50,7 +50,7 @@ class REST_Quiz {
 	public function get_quiz( WP_REST_Request $request ) {
 		global $wpdb;
 
-		$quiz_id   = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
+		$quiz_id   = absint( $request->get_param( 'id' ) );
 		$quiz_post = get_post( $quiz_id );
 
 		if ( ! $quiz_post || $this->post_type !== $quiz_post->post_type || 'publish' !== $quiz_post->post_status ) {
@@ -211,7 +211,7 @@ class REST_Quiz {
 	public function quiz_attempt_details( WP_REST_Request $request ) {
 		global $wpdb;
 
-		$quiz_id = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
+		$quiz_id = absint( $request->get_param( 'id' ) );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_attempts table; no WP API.
 		$attempts = $wpdb->get_results(
