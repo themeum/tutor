@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { CONTENT_TITLE_ATTRIBUTE } from '@Core/ts/services/player/elements';
 import { getLegacyTutorLessonPlayer } from '@Core/ts/services/player/legacy';
 import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
@@ -21,6 +22,7 @@ export interface PlayerData {
   video_duration?: number;
   post_id?: number;
   autoload_next_course_content?: boolean;
+  lesson_title?: string;
 }
 
 export interface LessonEnvironment {
@@ -167,6 +169,13 @@ export class LessonPlaybackController {
 
   #onFullscreenChange = ({ fullscreen }: PlayerEventMap['fullscreenchange']): void => {
     this.#player.element.classList.toggle('is-fullscreen', fullscreen);
+
+    // The skin's media-title follows the player content-title: lesson title in
+    // fullscreen, empty (hidden) otherwise. Never the provider's own title.
+    this.#player.element.setAttribute(
+      CONTENT_TITLE_ATTRIBUTE,
+      fullscreen ? (this.#data.lesson_title?.trim() ?? '') : '',
+    );
   };
 
   #isStrict(): boolean {

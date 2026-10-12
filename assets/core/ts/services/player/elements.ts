@@ -25,9 +25,6 @@ const HIDE_UNSUPPORTED_CONTROLS_CSS = `
   [data-hidden] {
     display: none !important;
   }
-  media-title {
-    display: none !important;
-  }
 `;
 
 export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
@@ -73,8 +70,7 @@ export function patchVideoSkinStyles(): void {
          media-pip-button[data-availability="unsupported"],
          [data-availability="unavailable"],
          [data-availability="unsupported"],
-         [data-hidden] { display: none !important; }
-         media-title { display: none !important; }`,
+         [data-hidden] { display: none !important; }`,
         VideoSkin.styles.cssRules.length,
       );
     } catch {
@@ -120,6 +116,8 @@ export function createMediaElement(source: DetectedSource, document: Document): 
   return element;
 }
 
+export const CONTENT_TITLE_ATTRIBUTE = 'content-title';
+
 export function createPlayerElement(source: DetectedSource, document: Document): VideoPlayerElement {
   const host = document.createElement(VIDEO_PLAYER_TAG) as VideoPlayerElement;
   const skin = document.createElement(VIDEO_SKIN_TAG);
@@ -128,6 +126,10 @@ export function createPlayerElement(source: DetectedSource, document: Document):
 
   skin.appendChild(createMediaElement(source, document));
   host.appendChild(skin);
+
+  // Tutor never shows the provider's own title; the lesson controller sets the
+  // lesson title here for fullscreen via the same attribute.
+  host.setAttribute(CONTENT_TITLE_ATTRIBUTE, '');
 
   return host;
 }

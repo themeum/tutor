@@ -254,6 +254,31 @@ describe('LessonPlaybackController fullscreen', () => {
     emit('fullscreenchange', { fullscreen: false });
     expect(player.element.classList.contains('is-fullscreen')).toBe(false);
   });
+
+  it('sets the lesson title on fullscreen and clears it on exit', () => {
+    const { player, emit } = createFakePlayer();
+    const controller = new LessonPlaybackController(
+      player,
+      { post_id: 1, lesson_title: 'Direct Links To Video Files' },
+      createEnvironment(),
+    );
+    controller.start();
+
+    emit('fullscreenchange', { fullscreen: true });
+    expect(player.element.getAttribute('content-title')).toBe('Direct Links To Video Files');
+
+    emit('fullscreenchange', { fullscreen: false });
+    expect(player.element.getAttribute('content-title')).toBe('');
+  });
+
+  it('clears the title on fullscreen without a lesson title', () => {
+    const { player, emit } = createFakePlayer();
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('fullscreenchange', { fullscreen: true });
+    expect(player.element.getAttribute('content-title')).toBe('');
+  });
 });
 
 describe('LessonPlaybackController auto-next', () => {

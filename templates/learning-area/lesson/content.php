@@ -32,6 +32,7 @@ if ( ! in_array( $active_tab, $valid_tabs, true ) ) {
 
 $json_data                                 = array();
 $json_data['post_id']                      = $tutor_current_content_id;
+$json_data['lesson_title']                 = get_the_title( $tutor_current_content_id );
 $json_data['best_watch_time']              = 0;
 $json_data['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
 

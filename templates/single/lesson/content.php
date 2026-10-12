@@ -40,6 +40,7 @@ $next_is_locked = ! ( $is_enrolled || $next_is_preview || $is_public );
 
 $json_data                                 = array();
 $json_data['post_id']                      = get_the_ID();
+$json_data['lesson_title']                 = get_the_title( $course_content_id );
 $json_data['best_watch_time']              = 0;
 $json_data['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
 
