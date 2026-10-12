@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use WP_Query;
 use WP_REST_Request;
 
@@ -63,7 +64,7 @@ class REST_Lesson {
 				'tutor_read_lesson',
 				__( 'topic_id is required', 'tutor' ),
 				array(),
-				$this->client_error_code
+				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
@@ -98,7 +99,7 @@ class REST_Lesson {
 				'tutor_read_lesson',
 				__( 'Lesson retrieved successfully', 'tutor' ),
 				$data,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -106,7 +107,7 @@ class REST_Lesson {
 			'tutor_read_lesson',
 			__( 'Lesson not found for the given topic ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 

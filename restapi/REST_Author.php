@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
@@ -51,7 +52,7 @@ class REST_Author {
 				'tutor_read_author',
 				__( 'Author not found', 'tutor' ),
 				array(),
-				$this->not_found_code
+				HttpHelper::STATUS_NOT_FOUND
 			);
 		}
 
@@ -73,7 +74,7 @@ class REST_Author {
 			'tutor_read_author',
 			__( 'Author details retrieved successfully', 'tutor' ),
 			$author,
-			$this->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 

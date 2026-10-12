@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use WP_Error;
 use WP_Post;
 use WP_Query;
@@ -198,7 +199,7 @@ class REST_Course {
 				'tutor_read_course',
 				__( 'Course retrieved successfully', 'tutor' ),
 				$data,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -206,7 +207,7 @@ class REST_Course {
 			'tutor_read_course',
 			__( 'Course not found', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 
@@ -228,7 +229,7 @@ class REST_Course {
 				'tutor_read_course',
 				__( 'Course detail retrieved successfully', 'tutor' ),
 				$detail,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -236,7 +237,7 @@ class REST_Course {
 			'tutor_read_course',
 			__( 'Detail not found for given ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 
@@ -359,7 +360,7 @@ class REST_Course {
 				'tutor_read_course',
 				__( 'Course contents retrieved successfully', 'tutor' ),
 				$data,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -367,7 +368,7 @@ class REST_Course {
 			'tutor_read_course',
 			__( 'Contents for this course with the given course id not found', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 

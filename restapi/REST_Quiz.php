@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 use WP_REST_Request;
@@ -87,7 +88,7 @@ class REST_Quiz {
 				'tutor_read_quiz',
 				__( 'Quiz not found for given ID', 'tutor' ),
 				array(),
-				$this->not_found_code
+				HttpHelper::STATUS_NOT_FOUND
 			);
 		}
 
@@ -130,7 +131,7 @@ class REST_Quiz {
 			'tutor_read_quiz',
 			__( 'Quiz retrieved successfully', 'tutor' ),
 			$quiz,
-			$this->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 
@@ -157,7 +158,7 @@ class REST_Quiz {
 				'tutor_read_quiz',
 				__( 'Quiz retrieved successfully', 'tutor' ),
 				$data,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -165,7 +166,7 @@ class REST_Quiz {
 			'tutor_read_quiz',
 			__( 'Quiz not found for given ID', 'tutor' ),
 			$data,
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 
@@ -220,7 +221,7 @@ class REST_Quiz {
 				'tutor_read_quiz',
 				__( 'Question retrieved successfully', 'tutor' ),
 				$data,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -228,7 +229,7 @@ class REST_Quiz {
 			'tutor_read_quiz',
 			__( 'Question not found for given ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 
@@ -310,7 +311,7 @@ class REST_Quiz {
 				'tutor_read_quiz',
 				__( 'Quiz attempts retrieved successfully', 'tutor' ),
 				$attempts,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -318,7 +319,7 @@ class REST_Quiz {
 			'tutor_read_quiz',
 			__( 'Quiz attempts not found for given ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 

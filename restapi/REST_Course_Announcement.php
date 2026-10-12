@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -66,7 +67,7 @@ class REST_Course_Announcement {
 				'tutor_read_announcement',
 				__( 'Announcement retrieved successfully', 'tutor' ),
 				$result,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -74,7 +75,7 @@ class REST_Course_Announcement {
 			'tutor_read_announcement',
 			__( 'Announcement not found for given ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 }

@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -57,7 +58,7 @@ class REST_Topic {
 				'tutor_read_topic',
 				__( 'course_id is required', 'tutor' ),
 				array(),
-				$this->client_error_code
+				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
@@ -84,7 +85,7 @@ class REST_Topic {
 				'tutor_read_topic',
 				__( 'Topic retrieved successfully', 'tutor' ),
 				$result,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -92,7 +93,7 @@ class REST_Topic {
 			'tutor_read_topic',
 			__( 'Topic not found for given course ID', 'tutor' ),
 			array(),
-			$this->not_found_code
+			HttpHelper::STATUS_NOT_FOUND
 		);
 	}
 }

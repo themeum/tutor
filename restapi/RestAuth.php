@@ -12,6 +12,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
@@ -1505,7 +1506,7 @@ class RestAuth {
 				'tutor_auth_login',
 				__( 'API key and secret are required.', 'tutor' ),
 				'',
-				$responder->forbidden_code
+				HttpHelper::STATUS_FORBIDDEN
 			);
 		}
 
@@ -1515,7 +1516,7 @@ class RestAuth {
 				'tutor_auth_login',
 				__( 'Invalid API key or secret.', 'tutor' ),
 				'',
-				$responder->forbidden_code
+				HttpHelper::STATUS_FORBIDDEN
 			);
 		}
 
@@ -1525,7 +1526,7 @@ class RestAuth {
 				'tutor_auth_login',
 				__( 'Invalid API key or secret.', 'tutor' ),
 				'',
-				$responder->forbidden_code
+				HttpHelper::STATUS_FORBIDDEN
 			);
 		}
 
@@ -1537,7 +1538,7 @@ class RestAuth {
 				'tutor_auth_login',
 				__( 'Invalid username or password.', 'tutor' ),
 				'',
-				$responder->unauthorized_code
+				HttpHelper::STATUS_UNAUTHORIZED
 			);
 		}
 
@@ -1554,7 +1555,7 @@ class RestAuth {
 				'tutor_auth_login',
 				__( 'Invalid username or password.', 'tutor' ),
 				'',
-				$responder->unauthorized_code
+				HttpHelper::STATUS_UNAUTHORIZED
 			);
 		}
 
@@ -1562,7 +1563,7 @@ class RestAuth {
 			'tutor_auth_login',
 			__( 'Login successful.', 'tutor' ),
 			self::build_token_response( (int) $user->ID, $kid ),
-			$responder->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 
@@ -1584,7 +1585,7 @@ class RestAuth {
 				'tutor_auth_refresh',
 				__( 'Invalid refresh token.', 'tutor' ),
 				'',
-				$responder->unauthorized_code
+				HttpHelper::STATUS_UNAUTHORIZED
 			);
 		}
 
@@ -1594,7 +1595,7 @@ class RestAuth {
 				'tutor_auth_refresh',
 				__( 'Invalid refresh token.', 'tutor' ),
 				'',
-				$responder->unauthorized_code
+				HttpHelper::STATUS_UNAUTHORIZED
 			);
 		}
 
@@ -1603,7 +1604,7 @@ class RestAuth {
 				'tutor_auth_refresh',
 				__( 'API key has been revoked.', 'tutor' ),
 				'',
-				$responder->forbidden_code
+				HttpHelper::STATUS_FORBIDDEN
 			);
 		}
 
@@ -1611,7 +1612,7 @@ class RestAuth {
 			'tutor_auth_refresh',
 			__( 'Token refreshed successfully.', 'tutor' ),
 			self::build_token_response( $session['user_id'], $session['kid'] ),
-			$responder->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 
@@ -1648,7 +1649,7 @@ class RestAuth {
 			array(
 				'success' => true,
 			),
-			$responder->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 

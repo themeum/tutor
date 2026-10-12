@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
@@ -73,7 +74,7 @@ class REST_Rating {
 				'tutor_read_rating',
 				__( 'Course not found', 'tutor' ),
 				array(),
-				$this->not_found_code
+				HttpHelper::STATUS_NOT_FOUND
 			);
 		}
 
@@ -105,7 +106,7 @@ class REST_Rating {
 				'tutor_read_rating',
 				__( 'Course rating retrieved successfully', 'tutor' ),
 				$payload,
-				$this->success_code
+				HttpHelper::STATUS_OK
 			);
 		}
 
@@ -122,7 +123,7 @@ class REST_Rating {
 			'tutor_read_rating',
 			__( 'Course rating retrieved successfully', 'tutor' ),
 			$ratings,
-			$this->success_code
+			HttpHelper::STATUS_OK
 		);
 	}
 }

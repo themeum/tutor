@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use WP_Error;
 use WP_REST_Response;
 
@@ -25,69 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait REST_Response {
 
 	/**
-	 * Success status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $success_code = 200;
-
-	/**
-	 * Created status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $created_code = 201;
-
-	/**
-	 * Client side error status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $client_error_code = 400;
-
-	/**
-	 * Unauthorized status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $unauthorized_code = 401;
-
-	/**
-	 * Forbidden status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $forbidden_code = 403;
-
-	/**
-	 * Not found status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $not_found_code = 404;
-
-	/**
-	 * Server side error status code.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @var int
-	 */
-	public $server_error_code = 500;
-
-	/**
 	 * Build a Tutor REST API response (same envelope rules as Tutor Pro).
 	 *
 	 * @since 4.2.0
@@ -100,14 +38,14 @@ trait REST_Response {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function response( $code, string $message, $data = '', int $status_code = 200 ) {
-		if ( in_array( $status_code, array( $this->unauthorized_code, $this->forbidden_code, $this->not_found_code ), true ) ) {
+		if ( in_array( $status_code, array( HttpHelper::STATUS_UNAUTHORIZED, HttpHelper::STATUS_FORBIDDEN, HttpHelper::STATUS_NOT_FOUND ), true ) ) {
 			$error_data = array( 'status' => $status_code );
 			if ( '' !== $data && null !== $data ) {
 				$error_data['details'] = $data;
 			}
 
 			$response = new WP_Error( $code, $message, $error_data );
-		} elseif ( $this->client_error_code === $status_code || $this->server_error_code === $status_code ) {
+		} elseif ( HttpHelper::STATUS_BAD_REQUEST === $status_code || HttpHelper::STATUS_INTERNAL_SERVER_ERROR === $status_code ) {
 			$response = new WP_REST_Response(
 				array(
 					'code'    => $code,
@@ -158,7 +96,7 @@ trait REST_Response {
 			$code,
 			null !== $message ? $message : $default_message,
 			$errors,
-			$this->client_error_code
+			HttpHelper::STATUS_BAD_REQUEST
 		);
 	}
 
@@ -180,7 +118,7 @@ trait REST_Response {
 			$code,
 			$message,
 			'',
-			$this->server_error_code
+			HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 		);
 	}
 
