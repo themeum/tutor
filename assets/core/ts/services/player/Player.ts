@@ -132,6 +132,7 @@ export function createTutorPlayer({ element, store, provider }: CreateTutorPlaye
     setMuted: (muted: boolean) => {
       store.setMuted(muted);
     },
+    isFullscreen: () => store.isFullscreen,
 
     play: () => store.play(),
     pause: () => store.pause(),

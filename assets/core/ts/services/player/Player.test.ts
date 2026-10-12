@@ -131,6 +131,17 @@ describe('createTutorPlayer', () => {
     expect(onExit).toHaveBeenCalledWith(expect.objectContaining({ srcElement: player.element }));
   });
 
+  it('reads fullscreen state from the store', () => {
+    const { store, set } = createStore();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+
+    expect(player.isFullscreen()).toBe(false);
+
+    set({ isFullscreen: true });
+
+    expect(player.isFullscreen()).toBe(true);
+  });
+
   it('returns an unsubscribe from on()', () => {
     const { store, emit, set } = createStore();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5' });

@@ -31,6 +31,7 @@ export interface TutorPlayer {
   setVolume(volume: number): void;
   isMuted(): boolean;
   setMuted(muted: boolean): void;
+  isFullscreen(): boolean;
 
   play(): Promise<void>;
   pause(): void;

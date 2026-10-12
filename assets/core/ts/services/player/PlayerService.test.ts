@@ -18,6 +18,7 @@ function fakePlayer(): TutorPlayer {
     setVolume: vi.fn(),
     isMuted: vi.fn(() => false),
     setMuted: vi.fn(),
+    isFullscreen: vi.fn(() => false),
     play: vi.fn(async () => undefined),
     pause: vi.fn(),
     seek: vi.fn(),

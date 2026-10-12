@@ -26,6 +26,7 @@ function createFakePlayer(overrides: Partial<TutorPlayer> = {}) {
     setVolume: vi.fn(),
     isMuted: vi.fn(() => false),
     setMuted: vi.fn(),
+    isFullscreen: vi.fn(() => false),
     play: vi.fn(async () => undefined),
     pause: vi.fn(),
     seek: vi.fn(),
@@ -278,6 +279,69 @@ describe('LessonPlaybackController fullscreen', () => {
 
     emit('fullscreenchange', { fullscreen: true });
     expect(player.element.getAttribute('content-title')).toBe('');
+  });
+
+  it('re-syncs a stuck fullscreen store when the media echo lands after exit', () => {
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    const resync = vi.fn();
+    document.addEventListener('webkitfullscreenchange', resync);
+
+    try {
+      const { player } = createFakePlayer({ isFullscreen: vi.fn(() => true) });
+      const media = document.createElement('vimeo-video');
+      player.element.appendChild(media);
+      const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+      controller.start();
+
+      media.dispatchEvent(new Event('fullscreenchange'));
+
+      expect(resync).toHaveBeenCalledTimes(1);
+      controller.destroy();
+    } finally {
+      document.removeEventListener('webkitfullscreenchange', resync);
+    }
+  });
+
+  it('skips the re-sync when already exited or still fullscreen', () => {
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    const resync = vi.fn();
+    document.addEventListener('webkitfullscreenchange', resync);
+
+    try {
+      const { player } = createFakePlayer({ isFullscreen: vi.fn(() => false) });
+      const media = document.createElement('vimeo-video');
+      player.element.appendChild(media);
+      const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+      controller.start();
+
+      media.dispatchEvent(new Event('fullscreenchange'));
+
+      expect(resync).not.toHaveBeenCalled();
+      controller.destroy();
+    } finally {
+      document.removeEventListener('webkitfullscreenchange', resync);
+    }
+  });
+
+  it('stops observing the media echo after destroy', () => {
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    const resync = vi.fn();
+    document.addEventListener('webkitfullscreenchange', resync);
+
+    try {
+      const { player } = createFakePlayer({ isFullscreen: vi.fn(() => true) });
+      const media = document.createElement('vimeo-video');
+      player.element.appendChild(media);
+      const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+      controller.start();
+      controller.destroy();
+
+      media.dispatchEvent(new Event('fullscreenchange'));
+
+      expect(resync).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener('webkitfullscreenchange', resync);
+    }
   });
 });
 
