@@ -66,6 +66,12 @@
     inset-inline-end: 48px;
   }
 
+  &.is-fullscreen .tutor-video-lesson-take-note-button {
+    top: 20px;
+    bottom: auto;
+    inset-inline-end: 20px;
+  }
+
   .tutor-player-fullscreen {
     z-index: 1001 !important;
   }
