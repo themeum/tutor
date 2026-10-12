@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use WP_Error;
 use WP_Post;
 use WP_Query;
@@ -79,7 +80,7 @@ class REST_Course {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function course( WP_REST_Request $request ) {
-		$order      = self::sanitize_course_order( $request->get_param( 'order' ) );
+		$order      = QueryHelper::get_valid_sort_order( $request->get_param( 'order' ) );
 		$orderby    = self::sanitize_course_orderby( $request->get_param( 'orderby' ) );
 		$paged      = sanitize_text_field( $request->get_param( 'paged' ) );
 		$categories = null;
@@ -481,26 +482,6 @@ class REST_Course {
 		}
 
 		return $out;
-	}
-
-	/**
-	 * Whitelist WP_Query order direction for the course list.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @param mixed $order Raw request order value.
-	 *
-	 * @return string ASC or DESC.
-	 */
-	private static function sanitize_course_order( $order ) {
-		$order   = strtoupper( sanitize_text_field( (string) $order ) );
-		$allowed = array( 'ASC', 'DESC' );
-
-		if ( in_array( $order, $allowed, true ) ) {
-			return $order;
-		}
-
-		return 'ASC';
 	}
 
 	/**
