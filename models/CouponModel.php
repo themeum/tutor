@@ -988,7 +988,7 @@ class CouponModel {
 
 			$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
 			if ( ! $course_price->sale_price ) {
-				++$regular_price_item_count;
+				$regular_price_item_count++;
 			}
 		}
 
