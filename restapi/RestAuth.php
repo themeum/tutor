@@ -1479,7 +1479,7 @@ class RestAuth {
 	 *
 	 * @return object Object using REST_Response.
 	 */
-	private static function rest_responder() {
+	private static function responder() {
 		static $responder = null;
 
 		if ( null === $responder ) {
@@ -1504,8 +1504,8 @@ class RestAuth {
 	 *
 	 * @return \WP_REST_Response|\WP_Error
 	 */
-	public static function rest_login( WP_REST_Request $request ) {
-		$responder   = self::rest_responder();
+	public static function login( WP_REST_Request $request ) {
+		$responder   = self::responder();
 		$credentials = self::get_api_credentials_from_request();
 		if ( ! $credentials ) {
 			return $responder->response(
@@ -1583,8 +1583,8 @@ class RestAuth {
 	 *
 	 * @return \WP_REST_Response|\WP_Error
 	 */
-	public static function rest_refresh( WP_REST_Request $request ) {
-		$responder = self::rest_responder();
+	public static function refresh( WP_REST_Request $request ) {
+		$responder = self::responder();
 		$refresh   = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
 		if ( '' === $refresh ) {
 			return $responder->response(
@@ -1631,8 +1631,8 @@ class RestAuth {
 	 *
 	 * @return \WP_REST_Response|\WP_Error
 	 */
-	public static function rest_logout( WP_REST_Request $request ) {
-		$responder = self::rest_responder();
+	public static function logout( WP_REST_Request $request ) {
+		$responder = self::responder();
 		$refresh   = sanitize_text_field( (string) $request->get_param( 'refresh_token' ) );
 		$all       = (bool) $request->get_param( 'all' );
 

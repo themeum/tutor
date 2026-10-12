@@ -275,7 +275,7 @@ class RestAPI {
 			'/auth/login',
 			array(
 				'methods'             => HttpHelper::METHOD_POST,
-				'callback'            => array( RestAuth::class, 'rest_login' ),
+				'callback'            => array( RestAuth::class, 'login' ),
 				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
@@ -285,7 +285,7 @@ class RestAPI {
 			'/auth/refresh',
 			array(
 				'methods'             => HttpHelper::METHOD_POST,
-				'callback'            => array( RestAuth::class, 'rest_refresh' ),
+				'callback'            => array( RestAuth::class, 'refresh' ),
 				'permission_callback' => '__return_true',
 			)
 		);
@@ -295,7 +295,7 @@ class RestAPI {
 			'/auth/logout',
 			array(
 				'methods'             => HttpHelper::METHOD_POST,
-				'callback'            => array( RestAuth::class, 'rest_logout' ),
+				'callback'            => array( RestAuth::class, 'logout' ),
 				'permission_callback' => '__return_true',
 			)
 		);
