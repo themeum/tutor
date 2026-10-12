@@ -5,6 +5,8 @@
 
 .tutor-video-player {
   position: relative;
+  border-radius: inherit;
+  overflow: hidden;
 
   .loading-spinner {
     position: absolute;

@@ -3,6 +3,9 @@
 // The packaged skin (`@videojs/html/video/skin`) sizes only native `<video>`/`<audio>`, so
 // embed media is sized here; and it crops YouTube's own title/overlay.
 .tutor-video-player {
+  border-radius: inherit;
+  overflow: hidden;
+
   tutor-video-player {
     display: block;
     width: 100%;
@@ -26,5 +29,9 @@
     height: 200% !important;
     top: -50%;
     pointer-events: none;
+  }
+
+  [data-availability="unavailable"] {
+    display: none !important;
   }
 }
