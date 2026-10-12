@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\HttpHelper;
+use WP_Post;
 use WP_Query;
 use WP_REST_Request;
 
@@ -114,12 +115,12 @@ class REST_Lesson {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param \WP_Post $post     Lesson post.
-	 * @param int      $topic_id Topic id.
+	 * @param WP_Post $post     Lesson post.
+	 * @param int     $topic_id Topic id.
 	 *
 	 * @return object
 	 */
-	private static function to_full_lesson_dto( $post, $topic_id ) {
+	private static function to_full_lesson_dto( WP_Post $post, $topic_id ) {
 		$lesson = new \stdClass();
 
 		$lesson->ID           = $post->ID;
