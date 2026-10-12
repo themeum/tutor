@@ -925,6 +925,10 @@ class CouponController extends BaseController {
 
 		$order = $order_model->get_order_by_id( $order_id );
 		if ( $order ) {
+			if ( in_array( $order->order_status, array( OrderModel::ORDER_CANCELLED, OrderModel::ORDER_TRASH ), true ) ) {
+				$this->model->remove_reserved_coupon( $order_id, $order->user_id );
+			}
+
 			if ( $order->coupon_amount > 0 && $order_model::ORDER_COMPLETED === $order->order_status ) {
 				// Store coupon usage.
 				$data = array(

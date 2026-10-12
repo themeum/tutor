@@ -1107,9 +1107,26 @@ class CouponModel {
 			)
 		);
 
-		if ( $reserved_coupon_count >= $total_usage_limit ) {
-			$has_limit = false;
-			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
+		if ( $total_usage_limit > 0 ) {
+			if ( $reserved_coupon_count >= $total_usage_limit ) {
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
+			}
+		}
+
+		$user_reserved_coupons = QueryHelper::get_count(
+			'tutor_ordermeta',
+			array(
+				'meta_key'   => $reserved_coupon_meta_key,
+				'meta_value' => $coupon->coupon_code,
+			)
+		);
+
+		if ( $user_usage_limit > 0 ) {
+			if ( $user_reserved_coupons >= $user_usage_limit ) {
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
+			}
 		}
 
 		return $has_limit;
