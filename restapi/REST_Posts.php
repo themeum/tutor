@@ -12,9 +12,7 @@ namespace TUTOR;
 
 use WP_Post;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class REST_Posts

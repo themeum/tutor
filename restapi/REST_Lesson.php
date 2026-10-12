@@ -14,9 +14,7 @@ use Tutor\Helpers\HttpHelper;
 use WP_Query;
 use WP_REST_Request;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class REST_Lesson

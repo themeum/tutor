@@ -19,9 +19,7 @@ use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
 use WP_REST_Request;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Rest API authentication

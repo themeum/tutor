@@ -13,9 +13,7 @@ namespace TUTOR;
 use Tutor\Helpers\HttpHelper;
 use WP_REST_Request;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class REST_Course_Announcement

@@ -14,9 +14,7 @@ use Tutor\Helpers\HttpHelper;
 use WP_Error;
 use WP_REST_Response;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Centralized REST response helpers (aligned with Tutor Pro RestResponse).

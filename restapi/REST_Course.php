@@ -17,9 +17,7 @@ use WP_Query;
 use WP_REST_Request;
 use WP_REST_Response;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Rest_Course class
