@@ -1067,17 +1067,6 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: course ratings / reviews (anonymous allowed).
-	 *
-	 * @since 4.2.0
-	 *
-	 * @return bool
-	 */
-	public static function permission_public_rating() {
-		return true;
-	}
-
-	/**
 	 * Whether a user's public profile layout is open (not private).
 	 *
 	 * Mirrors templates/public-profile.php layout keys.

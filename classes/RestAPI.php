@@ -480,7 +480,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'permission_public_rating' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 
