@@ -99,7 +99,11 @@ class CourseModel {
 	 * @since 4.2.0 added args() param
 	 *
 	 * @param WP_Post|int $course the course id.
-	 * @param array       $args      Optional. Additional arguments.
+	 * @param array       $args {
+	 *           Optional. Additional arguments.
+	 *           @type string[] $status Extra post statuses to accept in addition to 'publish'.
+	 *           Must be an array, e.g. array( CourseModel::STATUS_PRIVATE ).
+	 * }
 	 *
 	 * @return bool
 	 */
