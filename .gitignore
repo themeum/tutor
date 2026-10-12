@@ -65,3 +65,5 @@ storybook-static
 
 # Bruno Local Environment
 docs/api/environments/local.bru
+docs/api/environments/Tutorlms.bru
+docs/api/environments/TutorLMS.bru
