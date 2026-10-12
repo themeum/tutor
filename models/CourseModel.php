@@ -106,8 +106,8 @@ class CourseModel {
 	public static function is_course_accessible( $course, $args = array() ) {
 		$requested_status = array();
 
-		if ( is_int( $course ) ) {
-			$course = get_post( $course );
+		if ( is_numeric( $course ) ) {
+			$course = (int) $course > 0 ? get_post( $course ) : null;
 		}
 
 		if ( ! $course || ! $course instanceof WP_Post ) {
