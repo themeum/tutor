@@ -19,6 +19,7 @@ use InvalidArgumentException;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
+use WP_Post;
 
 /**
  * CourseModel Class
@@ -97,16 +98,19 @@ class CourseModel {
 	 * @since 4.0.0
 	 * @since 4.2.0 added args() param
 	 *
-	 * @param integer $course_id the course id.
-	 * @param array   $args      Optional. Additional arguments.
+	 * @param WP_Post|int $course the course id.
+	 * @param array       $args      Optional. Additional arguments.
 	 *
 	 * @return bool
 	 */
-	public static function is_course_accessible( $course_id = 0, $args = array() ) {
+	public static function is_course_accessible( $course, $args = array() ) {
 		$requested_status = array();
 
-		$course = get_post( $course_id );
-		if ( ! $course || ! is_object( $course ) ) {
+		if ( is_int( $course ) ) {
+			$course = get_post( $course );
+		}
+
+		if ( ! $course || ! $course instanceof WP_Post ) {
 			return false;
 		}
 
