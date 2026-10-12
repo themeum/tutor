@@ -123,14 +123,14 @@ class RestAuth {
 	 *
 	 * @var int
 	 */
-	const ACCESS_TTL = 86400;
+	const ACCESS_TTL = DAY_IN_SECONDS;
 
 	/**
 	 * Default refresh token lifetime in seconds (30 days).
 	 *
 	 * @var int
 	 */
-	const REFRESH_TTL = 2592000;
+	const REFRESH_TTL = DAY_IN_SECONDS * 30;
 
 	/**
 	 * Option key for access JWT lifetime (seconds).
