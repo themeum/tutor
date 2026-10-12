@@ -1067,17 +1067,6 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: published course catalog (anonymous allowed).
-	 *
-	 * @since 4.2.0
-	 *
-	 * @return bool
-	 */
-	public static function permission_public_catalog() {
-		return true;
-	}
-
-	/**
 	 * Permission: course ratings / reviews (anonymous allowed).
 	 *
 	 * @since 4.2.0

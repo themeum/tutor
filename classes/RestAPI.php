@@ -310,7 +310,7 @@ class RestAPI {
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => array( RestAuth::class, 'permission_public_catalog' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 
