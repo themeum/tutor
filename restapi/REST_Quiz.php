@@ -39,34 +39,6 @@ class REST_Quiz {
 	private $post_parent;
 
 	/**
-	 * Quiz questions table name
-	 *
-	 * @var string The table name for quiz questions.
-	 */
-	private $t_quiz_question = 'tutor_quiz_questions';
-
-	/**
-	 * Quiz question answers table name
-	 *
-	 * @var string The table name for quiz question answers.
-	 */
-	private $t_quiz_ques_ans = 'tutor_quiz_question_answers';
-
-	/**
-	 * Quiz question answer options table name
-	 *
-	 * @var string The table name for quiz attempts.
-	 */
-	private $t_quiz_attempt = 'tutor_quiz_attempts';
-
-	/**
-	 * Quiz attempt answers table name
-	 *
-	 * @var string The table name for quiz attempt answers.
-	 */
-	private $t_quiz_attempt_ans = 'tutor_quiz_attempt_answers';
-
-	/**
 	 * Obtain quiz detail for a single quiz.
 	 *
 	 * @since 2.7.1
@@ -92,8 +64,6 @@ class REST_Quiz {
 
 		$quiz = REST_Posts::to_public_post_dto( $quiz_post );
 
-		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
-
 		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_questions table; no WP API.
 		$questions = $wpdb->get_results(
@@ -104,7 +74,7 @@ class REST_Quiz {
 				question_description,
 				question_type,
 				question_mark,
-				question_settings FROM {$wpdb->q_t}
+				question_settings FROM {$wpdb->tutor_quiz_questions}
 				WHERE quiz_id = %d
 				",
 				$quiz->ID
@@ -180,8 +150,6 @@ class REST_Quiz {
 
 		$this->post_parent = $request->get_param( 'id' );
 
-		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_questions table; no WP API.
 		$quizs = $wpdb->get_results(
 			$wpdb->prepare(
@@ -191,7 +159,7 @@ class REST_Quiz {
 				question_description,
 				question_type,
 				question_mark,
-				question_settings FROM {$wpdb->q_t}
+				question_settings FROM {$wpdb->tutor_quiz_questions}
 				WHERE quiz_id = %d
 				",
 				$this->post_parent
@@ -245,8 +213,6 @@ class REST_Quiz {
 
 		$quiz_id = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
 
-		$wpdb->quiz_attempt = $wpdb->prefix . $this->t_quiz_attempt;
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_attempts table; no WP API.
 		$attempts = $wpdb->get_results(
 			$wpdb->prepare(
@@ -263,7 +229,7 @@ class REST_Quiz {
 				att.attempt_ended_at,
 				att.is_manually_reviewed,
 				att.manually_reviewed_at
-			FROM {$wpdb->quiz_attempt} att
+			FROM {$wpdb->tutor_quiz_attempts} att
 				WHERE att.quiz_id = %d
 			",
 				$quiz_id
@@ -339,9 +305,6 @@ class REST_Quiz {
 			return false;
 		}
 
-		$wpdb->quiz_attempt_ans = $wpdb->prefix . $this->t_quiz_attempt_ans;
-		$wpdb->quiz_question    = $wpdb->prefix . $this->t_quiz_question;
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom attempt/question tables; no WP API.
 		$answers = $wpdb->get_results(
 			$wpdb->prepare(
@@ -351,8 +314,8 @@ class REST_Quiz {
 				att_ans.question_mark,
 				att_ans.achieved_mark,
 				att_ans.minus_mark,
-				att_ans.is_correct FROM {$wpdb->quiz_attempt_ans} as att_ans
-			JOIN {$wpdb->quiz_question} q ON q.question_id = att_ans.question_id
+				att_ans.is_correct FROM {$wpdb->tutor_quiz_attempt_answers} as att_ans
+			JOIN {$wpdb->tutor_quiz_questions} q ON q.question_id = att_ans.question_id
 			WHERE att_ans.quiz_attempt_id = %d
 			",
 				$attempt_id
@@ -387,7 +350,6 @@ class REST_Quiz {
 	 */
 	protected function answer_titles_by_id( $id ) {
 		global $wpdb;
-		$wpdb->t_quiz_ques_ans = $wpdb->prefix . $this->t_quiz_ques_ans;
 
 		$ids = array_filter( array_map( 'absint', (array) $id ) );
 		if ( empty( $ids ) ) {
@@ -400,7 +362,7 @@ class REST_Quiz {
 		$results = $wpdb->get_results(
 			"SELECT
 				answer_title
-			FROM {$wpdb->t_quiz_ques_ans}
+			FROM {$wpdb->tutor_quiz_question_answers}
 			WHERE
 			answer_id IN ({$array})" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs prepared via QueryHelper::prepare_in_clause.
 		);
