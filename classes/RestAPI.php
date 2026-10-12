@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -149,7 +151,12 @@ class RestAPI {
 	public function check_permission( $response, $handler, $request ) {
 		$id            = absint( $request['id'] );
 		$method        = $request->get_method();
-		$write_methods = array( 'POST', 'PUT', 'PATCH', 'DELETE' );
+		$write_methods = array(
+			HttpHelper::METHOD_POST,
+			HttpHelper::METHOD_PUT,
+			HttpHelper::METHOD_PATCH,
+			HttpHelper::METHOD_DELETE,
+		);
 		$is_write      = in_array( $method, $write_methods, true );
 
 		if ( ! $id ) {
@@ -267,7 +274,7 @@ class RestAPI {
 			self::$namespace,
 			'/auth/login',
 			array(
-				'methods'             => 'POST',
+				'methods'             => HttpHelper::METHOD_POST,
 				'callback'            => array( RestAuth::class, 'rest_login' ),
 				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
@@ -277,7 +284,7 @@ class RestAPI {
 			self::$namespace,
 			'/auth/refresh',
 			array(
-				'methods'             => 'POST',
+				'methods'             => HttpHelper::METHOD_POST,
 				'callback'            => array( RestAuth::class, 'rest_refresh' ),
 				'permission_callback' => '__return_true',
 			)
@@ -287,7 +294,7 @@ class RestAPI {
 			self::$namespace,
 			'/auth/logout',
 			array(
-				'methods'             => 'POST',
+				'methods'             => HttpHelper::METHOD_POST,
 				'callback'            => array( RestAuth::class, 'rest_logout' ),
 				'permission_callback' => '__return_true',
 			)
@@ -298,7 +305,7 @@ class RestAPI {
 			self::$namespace,
 			'/courses',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course',
@@ -312,7 +319,7 @@ class RestAPI {
 			self::$namespace,
 			'/courses/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course_detail',
@@ -329,7 +336,7 @@ class RestAPI {
 			self::$namespace,
 			'/topics',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->topic_obj,
 					'course_topic',
@@ -346,7 +353,7 @@ class RestAPI {
 			self::$namespace,
 			'/lessons',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->lesson_obj,
 					'topic_lesson',
@@ -363,7 +370,7 @@ class RestAPI {
 			self::$namespace,
 			'/course-announcement/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->announcement_obj,
 					'course_announcement',
@@ -380,7 +387,7 @@ class RestAPI {
 			self::$namespace,
 			'/quizzes',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_with_settings',
@@ -397,7 +404,7 @@ class RestAPI {
 			self::$namespace,
 			'/quizzes/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'get_quiz',
@@ -414,7 +421,7 @@ class RestAPI {
 			self::$namespace,
 			'/quiz-question-answer/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_question_ans',
@@ -431,7 +438,7 @@ class RestAPI {
 			self::$namespace,
 			'/quiz-attempt-details/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_attempt_details',
@@ -448,7 +455,7 @@ class RestAPI {
 			self::$namespace,
 			'/author-information/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->author_obj,
 					'author_detail',
@@ -465,7 +472,7 @@ class RestAPI {
 			self::$namespace,
 			'/course-rating/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->rating_obj,
 					'course_rating',
@@ -482,7 +489,7 @@ class RestAPI {
 			self::$namespace,
 			'/course-contents/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course_contents',

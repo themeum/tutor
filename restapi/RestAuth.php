@@ -847,13 +847,21 @@ class RestAuth {
 			return '' !== self::get_api_key_permission();
 		}
 
-		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : HttpHelper::METHOD_GET;
 
-		if ( 'DELETE' === $method ) {
+		if ( HttpHelper::METHOD_DELETE === $method ) {
 			return static::process_delete_request();
 		}
 
-		if ( in_array( $method, array( 'POST', 'PUT', 'PATCH' ), true ) ) {
+		if ( in_array(
+			$method,
+			array(
+				HttpHelper::METHOD_POST,
+				HttpHelper::METHOD_PUT,
+				HttpHelper::METHOD_PATCH,
+			),
+			true
+		) ) {
 			return static::process_write_request();
 		}
 
