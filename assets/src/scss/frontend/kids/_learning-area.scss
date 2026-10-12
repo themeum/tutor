@@ -81,6 +81,13 @@
 
   .tutor-lesson-content .tutor-lesson-content-tab {
     margin-bottom: $tutor-spacing-2;
+    overflow: hidden;
+
+    .tutor-lesson-video-wrapper {
+      border-top-left-radius: $tutor-radius-6xl;
+      border-top-right-radius: $tutor-radius-6xl;
+      overflow: hidden;
+    }
   }
 
   .tutor-quiz-submission[data-question-layout-view='single_question'],
@@ -257,6 +264,12 @@
     .tutor-lesson-content .tutor-lesson-content-tab,
     .tutor-quiz-summary .tutor-quiz-result {
       box-shadow: none;
+    }
+
+    .tutor-lesson-content .tutor-lesson-content-tab {
+      .tutor-lesson-video-wrapper {
+        border-radius: 0;
+      }
     }
 
     .tutor-quiz .tutor-quiz-attempts {

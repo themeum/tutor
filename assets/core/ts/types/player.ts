@@ -8,6 +8,8 @@ export interface PlayerEventMap {
   timeupdate: { player: TutorPlayer; currentTime: number; duration: number };
   volumechange: { player: TutorPlayer; volume: number; muted: boolean };
   fullscreenchange: { player: TutorPlayer; fullscreen: boolean; element: HTMLElement };
+  enterfullscreen: { player: TutorPlayer; srcElement: HTMLElement; target?: HTMLElement };
+  exitfullscreen: { player: TutorPlayer; srcElement: HTMLElement; target?: HTMLElement };
   error: { player: TutorPlayer; error: Error };
 }
 

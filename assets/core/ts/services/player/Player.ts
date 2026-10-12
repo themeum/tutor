@@ -103,7 +103,15 @@ export function createTutorPlayer({ element, store, provider }: CreateTutorPlaye
       return;
     }
     const active = (element.ownerDocument?.fullscreenElement as HTMLElement | undefined) ?? null;
-    emit('fullscreenchange', { player: handle, fullscreen: Boolean(active), element: active ?? element });
+    const fullscreen = Boolean(active);
+    const fullscreenElement = active ?? element;
+
+    emit('fullscreenchange', { player: handle, fullscreen, element: fullscreenElement });
+    emit(fullscreen ? 'enterfullscreen' : 'exitfullscreen', {
+      player: handle,
+      srcElement: fullscreenElement,
+      target: fullscreenElement,
+    });
   }
 
   const handle: TutorPlayer = {

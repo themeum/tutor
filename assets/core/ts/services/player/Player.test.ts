@@ -111,12 +111,24 @@ describe('createTutorPlayer', () => {
     const { store } = createStore();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
     const onChange = vi.fn();
+    const onEnter = vi.fn();
+    const onExit = vi.fn();
     player.on('fullscreenchange', onChange);
+    player.on('enterfullscreen', onEnter);
+    player.on('exitfullscreen', onExit);
 
     Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: player.element });
     document.dispatchEvent(new Event('fullscreenchange'));
 
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ fullscreen: true, element: player.element }));
+    expect(onEnter).toHaveBeenCalledWith(expect.objectContaining({ srcElement: player.element }));
+    expect(onExit).not.toHaveBeenCalled();
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    document.dispatchEvent(new Event('fullscreenchange'));
+
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ fullscreen: false, element: player.element }));
+    expect(onExit).toHaveBeenCalledWith(expect.objectContaining({ srcElement: player.element }));
   });
 
   it('returns an unsubscribe from on()', () => {
