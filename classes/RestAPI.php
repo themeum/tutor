@@ -34,6 +34,17 @@ class RestAPI {
 	private $namespace = 'tutor/v1';
 
 	/**
+	 * Get the REST API namespace.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return string
+	 */
+	public function get_namespace() {
+		return $this->namespace;
+	}
+
+	/**
 	 * Course post type
 	 *
 	 * @var string
