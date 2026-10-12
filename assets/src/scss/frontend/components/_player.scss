@@ -5,14 +5,15 @@
 
 .tutor-video-player {
   position: relative;
-  border-radius: inherit;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
   overflow: hidden;
 
   .loading-spinner {
     position: absolute;
     inset: 0;
     background: $tutor-surface-base;
-    border-radius: $tutor-radius-sm;
+    border-radius: 0;
     z-index: $tutor-z-positive;
     @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
 

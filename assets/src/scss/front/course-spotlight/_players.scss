@@ -1,5 +1,9 @@
 .tutor-video-player {
 	position: relative;
+	aspect-ratio: 16 / 9;
+	border-radius: 0;
+	overflow: hidden;
+
 	.loading-spinner {
 		&:before {
 			top: 50%;
@@ -11,6 +15,8 @@
 
 .tutor-video-player-wrapper {
 	position: relative;
+	border-radius: 0;
+	overflow: hidden;
 }
 
 .tutor-course-single-content-wrapper {
@@ -26,11 +32,15 @@
 	}
 
 	.tutor-video-player {
+		aspect-ratio: 16 / 9;
+		border-radius: 0;
+		overflow: hidden;
+
 		.loading-spinner {
 			position: absolute;
 			inset: 0;
 			background: var(--tutor-color-gray-10);
-			border-radius: 3px;
+			border-radius: 0;
 			z-index: 10;
 
 			@include spinner(var(--tutor-color-primary), #eee);
