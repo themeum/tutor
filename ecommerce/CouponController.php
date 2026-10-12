@@ -15,14 +15,12 @@ use TUTOR\BaseController;
 use TUTOR\Course;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -92,8 +90,8 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->model            = new CouponModel();
-		$this->checkout_ctrl    = new CheckoutController( false );
+		$this->model         = new CouponModel();
+		$this->checkout_ctrl = new CheckoutController( false );
 
 		if ( $register_hooks ) {
 			// Register hooks here.
