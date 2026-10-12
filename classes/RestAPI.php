@@ -31,17 +31,20 @@ class RestAPI {
 	 *
 	 * @var string
 	 */
-	private $namespace = 'tutor/v1';
+	private static $namespace = 'tutor/v1';
 
 	/**
 	 * Get the REST API namespace.
+	 *
+	 * Static so callers do not need the RestAPI instance (e.g. early
+	 * rest_pre_dispatch hooks where tutor()->rest_api is unavailable).
 	 *
 	 * @since 4.2.0
 	 *
 	 * @return string
 	 */
-	public function get_namespace() {
-		return $this->namespace;
+	public static function get_namespace() {
+		return self::$namespace;
 	}
 
 	/**
@@ -261,7 +264,7 @@ class RestAPI {
 	public function init_routes() {
 		// Auth: login / refresh / logout.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/auth/login',
 			array(
 				'methods'             => 'POST',
@@ -271,7 +274,7 @@ class RestAPI {
 		);
 
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/auth/refresh',
 			array(
 				'methods'             => 'POST',
@@ -281,7 +284,7 @@ class RestAPI {
 		);
 
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/auth/logout',
 			array(
 				'methods'             => 'POST',
@@ -292,7 +295,7 @@ class RestAPI {
 
 		// Courses.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/courses',
 			array(
 				'methods'             => 'GET',
@@ -306,7 +309,7 @@ class RestAPI {
 
 		// Course details.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/courses/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -323,7 +326,7 @@ class RestAPI {
 
 		// Course topic.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/topics',
 			array(
 				'methods'             => 'GET',
@@ -340,7 +343,7 @@ class RestAPI {
 
 		// Lesson by topic.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/lessons',
 			array(
 				'methods'             => 'GET',
@@ -357,7 +360,7 @@ class RestAPI {
 
 		// Course announcement by course id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-announcement/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -374,7 +377,7 @@ class RestAPI {
 
 		// Quiz by topic id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quizzes',
 			array(
 				'methods'             => 'GET',
@@ -391,7 +394,7 @@ class RestAPI {
 
 		// Quiz by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quizzes/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -408,7 +411,7 @@ class RestAPI {
 
 		// Quiz question answer by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quiz-question-answer/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -425,7 +428,7 @@ class RestAPI {
 
 		// Quiz attempt details by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quiz-attempt-details/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -442,7 +445,7 @@ class RestAPI {
 
 		// Author detail by id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/author-information/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -459,7 +462,7 @@ class RestAPI {
 
 		// Reviews by course id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-rating/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -476,7 +479,7 @@ class RestAPI {
 
 		// Get course content by id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-contents/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
