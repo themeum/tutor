@@ -58,15 +58,11 @@
     display: none !important;
   }
 
+  // Added by Pro only while the player is fullscreen, so this is the
+  // fullscreen position: top, clear of the control bar.
   .tutor-video-lesson-take-note-button {
     position: fixed;
     z-index: 1000 !important;
-    bottom: 72px;
-    top: auto;
-    inset-inline-end: 48px;
-  }
-
-  &.is-fullscreen .tutor-video-lesson-take-note-button {
     top: 20px;
     bottom: auto;
     inset-inline-end: 20px;

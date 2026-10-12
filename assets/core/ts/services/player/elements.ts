@@ -25,6 +25,9 @@ const HIDE_UNSUPPORTED_CONTROLS_CSS = `
   [data-hidden] {
     display: none !important;
   }
+  media-title {
+    display: none !important;
+  }
 `;
 
 export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
@@ -70,7 +73,8 @@ export function patchVideoSkinStyles(): void {
          media-pip-button[data-availability="unsupported"],
          [data-availability="unavailable"],
          [data-availability="unsupported"],
-         [data-hidden] { display: none !important; }`,
+         [data-hidden] { display: none !important; }
+         media-title { display: none !important; }`,
         VideoSkin.styles.cssRules.length,
       );
     } catch {

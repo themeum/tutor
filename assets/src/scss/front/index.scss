@@ -20,6 +20,9 @@
 //Any kind of denied (permission, unauthorized, not found)
 @import "_denied";
 @import "./course-spotlight/index.scss";
+// Video.js lesson player engine sizing (host/skin/embed). Shared partial, no
+// legacy variable dependencies; also compiled into the learning-area bundle.
+@import "../frontend/components/videojs-player";
 @import "../modules/qna.scss";
 @import "../modules/quiz-attempts.scss";
 @import "../modules/quiz-icons.scss";
