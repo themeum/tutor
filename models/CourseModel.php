@@ -111,7 +111,7 @@ class CourseModel {
 		$requested_status = array();
 
 		if ( is_numeric( $course ) ) {
-			$course = (int) $course > 0 ? get_post( $course ) : null;
+			$course = $course > 0 ? get_post( $course ) : null;
 		}
 
 		if ( ! $course || ! $course instanceof WP_Post ) {
@@ -122,7 +122,7 @@ class CourseModel {
 			return false;
 		}
 
-		if ( ! empty( $args['status'] ) && is_array( $args['status'] ) ) {
+		if ( tutils()->count( $args['status'] ) ) {
 			$requested_status = array_intersect( $args['status'], Course::course_status_list() );
 		}
 
