@@ -1144,7 +1144,7 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: course marketing detail (anonymous with website login option).
+	 * Permission: course marketing detail (overview for purchase/enroll).
 	 *
 	 * @since 4.2.0
 	 *
@@ -1158,11 +1158,21 @@ class RestAuth {
 			return false;
 		}
 
-		if ( static::process_api_request() ) {
-			return static::can_view_course_content( $course_id );
+		if ( 'publish' !== get_post_status( $course_id ) ) {
+			if ( ! static::process_api_request() ) {
+				return false;
+			}
+
+			$user_id = tutor_utils()->get_user_id();
+			return $user_id && tutor_utils()->can_user_edit_course( $user_id, $course_id );
 		}
 
 		if ( Course_List::is_public( $course_id ) ) {
+			return true;
+		}
+
+		// Authenticated users may open the marketing/overview page without enrollment.
+		if ( static::process_api_request() ) {
 			return true;
 		}
 
@@ -1336,6 +1346,41 @@ class RestAuth {
 		}
 
 		if ( EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
+			return true;
+		}
+
+		return (bool) tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+	}
+
+	/**
+	 * Whether internal course_settings meta may be included in REST payloads.
+	 *
+	 * Unlike can_view_course_content(), public courses alone do not qualify —
+	 * settings are not marketing fields on single-course.php.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return bool
+	 */
+	public static function can_reveal_course_internal_meta( $course_id, $user_id = 0 ) {
+		if ( ! static::is_rest_authenticated() ) {
+			return false;
+		}
+
+		$course_id = absint( $course_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
+		if ( ! $course_id || ! $user_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		if ( EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
+			return true;
+		}
+
+		if ( tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
 			return true;
 		}
 

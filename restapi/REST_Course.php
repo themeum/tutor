@@ -176,7 +176,10 @@ class REST_Course {
 					$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
 					$item->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
 
-					$item->additional_info = $this->course_additional_info( $post->ID );
+					$item->additional_info = $this->course_additional_info(
+						$post->ID,
+						! RestAuth::can_reveal_course_internal_meta( $post->ID )
+					);
 
 					$item->ratings = tutor_utils()->get_course_rating( $post->ID );
 
@@ -222,7 +225,11 @@ class REST_Course {
 	public function course_detail( WP_REST_Request $request ) {
 		$post_id = absint( $request->get_param( 'id' ) );
 
-		$detail = $this->course_additional_info( $post_id, ! RestAuth::is_rest_authenticated() );
+		// Marketing viewers omit course_settings (enrolled / instructor / IA only).
+		$detail = $this->course_additional_info(
+			$post_id,
+			! RestAuth::can_reveal_course_internal_meta( $post_id )
+		);
 		if ( $detail ) {
 			return $this->response(
 				'tutor_read_course',

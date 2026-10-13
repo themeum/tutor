@@ -24,9 +24,10 @@ docs {
   - **Route:** `/wp-json/tutor/v1/courses/:id`
   
   ## Authentication
-  - **With API key + JWT:** user must be able to view the course.
+  - **With API key + JWT:** allowed for marketing/overview (enrollment not required). Learning content is gated on other routes/payloads.
   - **Without API key:** public courses always; non-public courses only if `student_must_login_to_view_course` is off.
-  - Guests do **not** receive `course_settings`.
+  - Published courses only for marketing viewers; drafts/private require a JWT course editor.
+  - `course_settings` only for enrolled students, course instructors/admins, or IA content access — not for guests or non-enrolled JWT (including on public courses). Trailer `video` and other marketing fields match single-course.php.
   
   ## Path Parameters
   
