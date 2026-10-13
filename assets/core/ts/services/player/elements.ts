@@ -7,6 +7,31 @@ import { type DetectedSource, vimeoVideoId, youtubeVideoId } from './providers';
 export const VIDEO_PLAYER_TAG = 'tutor-video-player';
 const VIDEO_SKIN_TAG = 'video-skin';
 
+type DeferredMediaProvider = 'youtube' | 'vimeo';
+
+// YouTube/Vimeo adapters drag in the embed SDKs (~120 KB raw). They are code-split and
+// pulled only when a lesson actually uses that provider, keeping the HTML5/external path lean.
+const DEFERRED_MEDIA_LOADERS: Record<DeferredMediaProvider, () => Promise<unknown>> = {
+  youtube: () => import(/* webpackChunkName: "tutor-player-youtube" */ '@videojs/html/media/youtube-video'),
+  vimeo: () => import(/* webpackChunkName: "tutor-player-vimeo" */ '@videojs/html/media/vimeo-video'),
+};
+
+const providerModulePromises = new Map<DeferredMediaProvider, Promise<unknown>>();
+
+/** Resolves once the code-split adapter for a provider has been imported and defined. */
+export function loadProviderModule(provider: DeferredMediaProvider): Promise<unknown> {
+  let promise = providerModulePromises.get(provider);
+  if (!promise) {
+    promise = DEFERRED_MEDIA_LOADERS[provider]();
+    providerModulePromises.set(provider, promise);
+  }
+  return promise;
+}
+
+function isDeferredProvider(provider: DetectedSource['provider']): provider is DeferredMediaProvider {
+  return provider === 'youtube' || provider === 'vimeo';
+}
+
 export interface VideoPlayerElement extends HTMLElement {
   store: PlayerStore;
 }
@@ -124,8 +149,16 @@ export function createPlayerElement(source: DetectedSource, document: Document):
 
   applyUnsupportedControlsPatch(skin);
 
-  skin.appendChild(createMediaElement(source, document));
   host.appendChild(skin);
+
+  if (isDeferredProvider(source.provider)) {
+    // Append the media once the adapter is defined so the custom element upgrades with it present.
+    void loadProviderModule(source.provider).then(() => {
+      skin.appendChild(createMediaElement(source, document));
+    });
+  } else {
+    skin.appendChild(createMediaElement(source, document));
+  }
 
   // Tutor never shows the provider's own title; the lesson controller sets the
   // lesson title here for fullscreen via the same attribute.

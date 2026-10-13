@@ -3,8 +3,6 @@ import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { defineVideoPlayer } from './elements';
 import { TutorPlayerService } from './PlayerService';
 
-import '@videojs/html/media/vimeo-video';
-import '@videojs/html/media/youtube-video';
 import '@videojs/html/video/skin';
 
 defineVideoPlayer();
