@@ -2062,6 +2062,7 @@ class RestAuth {
 			return sodium_bin2base64( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
 		}
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- JWT Base64URL fallback when ext-sodium is unavailable.
 		return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' );
 	}
 
@@ -2086,6 +2087,7 @@ class RestAuth {
 			$data .= str_repeat( '=', 4 - $remainder );
 		}
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- JWT Base64URL fallback when ext-sodium is unavailable.
 		$decoded = base64_decode( strtr( $data, '-_', '+/' ), true );
 		return false === $decoded ? '' : $decoded;
 	}
