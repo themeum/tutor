@@ -925,7 +925,7 @@ class CouponController extends BaseController {
 
 		$order = $order_model->get_order_by_id( $order_id );
 		if ( $order ) {
-			if ( in_array( $order->order_status, array( OrderModel::ORDER_CANCELLED, OrderModel::ORDER_TRASH ), true ) ) {
+			if ( in_array( $order->order_status, array( OrderModel::ORDER_CANCELLED, OrderModel::ORDER_TRASH, OrderModel::ORDER_COMPLETED ), true ) ) {
 				$this->model->remove_reserved_coupon( $order_id, $order->user_id );
 			}
 
@@ -938,7 +938,6 @@ class CouponController extends BaseController {
 
 				try {
 					$this->model->store_coupon_usage( $data );
-					$this->model->remove_reserved_coupon( $order_id, $order->user_id );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 				}

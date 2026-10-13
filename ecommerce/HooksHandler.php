@@ -116,6 +116,7 @@ class HooksHandler {
 		 */
 		add_action( 'tutor_order_placed', array( $this, 'store_billing_address_for_order' ) );
 		add_action( 'tutor_order_placed', array( $this, 'reserve_coupon_code_for_order' ) );
+		add_action( 'tutor_order_updated', array( $this, 'reserve_coupon_code_for_order' ) );
 		add_action( 'tutor_order_updated', array( $this, 'store_billing_address_for_order' ) );
 	}
 
@@ -150,10 +151,7 @@ class HooksHandler {
 			$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
 			if ( $is_valid ) {
 				$reserved_coupon_meta_key = 'reserved_coupon_code_' . $user_id;
-				$reserved_coupon          = $this->order_meta_model->get_meta( $order_id, $reserved_coupon_meta_key );
-				if ( empty( $reserved_coupon ) ) {
-					$this->order_meta_model->add_meta( $order_id, $reserved_coupon_meta_key, $coupon_code );
-				}
+				$this->order_meta_model->update_meta( $order_id, $reserved_coupon_meta_key, $coupon_code );
 			}
 		}
 	}
