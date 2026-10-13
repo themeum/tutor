@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         return;
     }
 
+    const isSuccessResponse = (res) => Number(res?.status_code) === 200;
+    const getErrorMessage = (res) => res?.message || defaultErrMsg;
+
     // Save token lifetime settings
     if (tokenSettingsForm) {
         tokenSettingsForm.onsubmit = async (e) => {
@@ -34,12 +37,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                 const post = await ajaxHandler(formData);
                 const res = await post.json();
-                const { success, data } = res;
 
-                if (success) {
-                    tutor_toast(__("Success", "tutor"), data, "success");
+                if (isSuccessResponse(res)) {
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
                 } else {
-                    tutor_toast(__("Failed", "tutor"), data, "error");
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
                 }
             } catch (error) {
                 tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
@@ -64,13 +66,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 const post = await ajaxHandler(formData);
                 const res = await post.json();
-                const { success, data } = res;
     
-                if (success) {
-                    listTable.insertAdjacentHTML("afterbegin", `${data}`);
-                    tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully", 'tutor'), "success");
+                if (isSuccessResponse(res)) {
+                    listTable.insertAdjacentHTML("afterbegin", `${res.data}`);
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
                 } else {
-                    tutor_toast(__("Failed", "tutor"), data, "error");
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
                 }
             } catch (error) {
                 tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
@@ -101,13 +102,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 const post = await ajaxHandler(formData);
                 const res = await post.json();
-                const { success, data } = res;
     
-                if (success) {
-                    document.getElementById(formData.get("meta_id")).innerHTML = data;
-                    tutor_toast(__("Success", "tutor"), __("API key permission updated successfully", 'tutor'), "success");
+                if (isSuccessResponse(res)) {
+                    document.getElementById(formData.get("meta_id")).innerHTML = res.data;
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
                 } else {
-                    tutor_toast(__("Failed", "tutor"), data, "error");
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
                 }
             } catch (error) {
                 tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
@@ -136,13 +136,14 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                     const post = await ajaxHandler(formData);
                     const res = await post.json();
-                    const { success, data } = res;
 
-                    if (success) {
+                    if (isSuccessResponse(res)) {
                         target.closest("tr").remove();
-                        tutor_toast(__("Success", "tutor"), data, "success");
+                        tutor_toast(__("Success", "tutor"), res.message, "success");
                     } else {
-                        tutor_toast(__("Failed", "tutor"), data, "error");
+                        tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
+                        target.classList.remove("is-loading");
+                        target.removeAttribute("disabled");
                     }
                 } catch (error) {
                     tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");

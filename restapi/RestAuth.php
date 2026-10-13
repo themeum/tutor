@@ -165,15 +165,15 @@ class RestAuth {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
-		add_action( 'wp_ajax_tutor_update_api_permission', __CLASS__ . '::update_api_permission' );
-		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
-		add_action( 'wp_ajax_tutor_save_rest_api_token_settings', __CLASS__ . '::save_token_settings' );
+		add_action( 'wp_ajax_tutor_generate_api_keys', array( $this, 'generate_api_keys' ) );
+		add_action( 'wp_ajax_tutor_update_api_permission', array( $this, 'update_api_permission' ) );
+		add_action( 'wp_ajax_tutor_revoke_api_keys', array( $this, 'revoke_api_keys' ) );
+		add_action( 'wp_ajax_tutor_save_rest_api_token_settings', array( $this, 'save_token_settings' ) );
 		add_filter( 'determine_current_user', array( $this, 'api_auth' ) );
 		add_action( 'profile_update', array( $this, 'maybe_invalidate_tokens_on_profile_update' ), 10, 2 );
 		add_action( 'after_password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
 		add_action( 'password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
-		add_filter( 'rest_request_before_callbacks', array( __CLASS__, 'enforce_actor_identity' ), 20, 3 );
+		add_filter( 'rest_request_before_callbacks', array( $this, 'enforce_actor_identity' ), 20, 3 );
 	}
 
 	/**
@@ -313,11 +313,8 @@ class RestAuth {
 	 * @return void
 	 */
 	public static function save_token_settings() {
-		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$default_access_days  = self::ttl_seconds_to_days( static::ACCESS_TTL );
 		$default_refresh_days = self::ttl_seconds_to_days( static::REFRESH_TTL );
@@ -325,29 +322,37 @@ class RestAuth {
 		$refresh_days         = Input::post( static::OPTION_REFRESH_TTL, $default_refresh_days, Input::TYPE_INT );
 
 		if ( ! self::is_valid_ttl_days( $access_days ) ) {
-			wp_send_json_error(
+			tutor_utils()->json_response(
 				sprintf(
 					/* translators: 1: min days, 2: max days */
 					__( 'Access token lifetime must be 0 (unlimited) or between %1$d and %2$d days.', 'tutor' ),
 					static::MIN_TTL_DAYS,
 					static::MAX_TTL_DAYS
-				)
+				),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
 		if ( ! self::is_valid_ttl_days( $refresh_days ) ) {
-			wp_send_json_error(
+			tutor_utils()->json_response(
 				sprintf(
 					/* translators: 1: min days, 2: max days */
 					__( 'Refresh token lifetime must be 0 (unlimited) or between %1$d and %2$d days.', 'tutor' ),
 					static::MIN_TTL_DAYS,
 					static::MAX_TTL_DAYS
-				)
+				),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
 		if ( static::TTL_UNLIMITED === $access_days && static::TTL_UNLIMITED !== $refresh_days ) {
-			wp_send_json_error( __( 'When the access token has no expiration, the refresh token must also have no expiration.', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'When the access token has no expiration, the refresh token must also have no expiration.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		if (
@@ -355,13 +360,17 @@ class RestAuth {
 			&& static::TTL_UNLIMITED !== $refresh_days
 			&& $refresh_days <= $access_days
 		) {
-			wp_send_json_error( __( 'Refresh token lifetime must be greater than access token lifetime.', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'Refresh token lifetime must be greater than access token lifetime.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		tutor_utils()->update_option( static::OPTION_ACCESS_TTL, self::ttl_days_to_seconds( $access_days ) );
 		tutor_utils()->update_option( static::OPTION_REFRESH_TTL, self::ttl_days_to_seconds( $refresh_days ) );
 
-		wp_send_json_success( __( 'Token settings saved successfully', 'tutor' ) );
+		tutor_utils()->json_response( __( 'Token settings saved successfully', 'tutor' ) );
 	}
 
 	/**
@@ -502,14 +511,11 @@ class RestAuth {
 	 * @since 2.2.1
 	 * @since 4.2.0 Reject permissions not in available_permissions().
 	 *
-	 * @return void send wp_json response
+	 * @return void JSON response.
 	 */
 	public static function generate_api_keys() {
-		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$api_key    = 'key_' . bin2hex( random_bytes( 16 ) );
 		$api_secret = 'secret_' . bin2hex( random_bytes( 32 ) );
@@ -518,7 +524,11 @@ class RestAuth {
 		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
 
 		if ( ! self::is_allowed_api_permission( $permission ) ) {
-			wp_send_json_error( __( 'Invalid permission.', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'Invalid permission.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$info = wp_json_encode(
@@ -536,12 +546,19 @@ class RestAuth {
 			$info
 		);
 
-		if ( $add ) {
-			$response = static::prepare_response( $add, $api_key, $api_secret, $permission, $description );
-			wp_send_json_success( $response );
-		} else {
-			wp_send_json_error( tutor_utils()->error_message( '0' ) );
+		if ( ! $add ) {
+			tutor_utils()->json_response(
+				tutor_utils()->error_message( '0' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
+
+		$response = static::prepare_response( $add, $api_key, $api_secret, $permission, $description );
+		tutor_utils()->json_response(
+			__( 'API key & secret generated successfully', 'tutor' ),
+			$response
+		);
 	}
 
 	/**
@@ -550,23 +567,24 @@ class RestAuth {
 	 * @since 2.5.0
 	 * @since 4.2.0 Reject permissions not in available_permissions().
 	 *
-	 * @return void send wp_json response
+	 * @return void JSON response.
 	 */
 	public static function update_api_permission() {
 		global $wpdb;
 
-		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$meta_id     = Input::post( 'meta_id', 0, Input::TYPE_INT );
 		$permission  = Input::post( 'permission' );
 		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
 
 		if ( ! self::is_allowed_api_permission( $permission ) ) {
-			wp_send_json_error( __( 'Invalid permission.', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'Invalid permission.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
@@ -583,7 +601,10 @@ class RestAuth {
 			);
 
 			$response = static::prepare_response( $meta_id, $meta_value->key, $meta_value->secret, $permission, $description );
-			wp_send_json_success( $response );
+			tutor_utils()->json_response(
+				__( 'API key permission updated successfully', 'tutor' ),
+				$response
+			);
 
 		} catch ( \Throwable $th ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional server-side logging; do not expose to clients.
@@ -595,7 +616,11 @@ class RestAuth {
 					$th->getLine()
 				)
 			);
-			wp_send_json_error( __( 'API permission update failed, please try again.', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'API permission update failed, please try again.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 	}
 
@@ -604,29 +629,34 @@ class RestAuth {
 	 *
 	 * @since 2.2.1
 	 *
-	 * @return void send wp_json response
+	 * @return void JSON response.
 	 */
 	public static function revoke_api_keys() {
-		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$meta_id = Input::post( 'meta_id', 0, Input::TYPE_INT );
 
 		if ( ! $meta_id ) {
-			wp_send_json_error( __( 'Invalid meta id', 'tutor' ) );
+			tutor_utils()->json_response(
+				__( 'Invalid meta id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		global $wpdb;
 		$delete = QueryHelper::delete( $wpdb->usermeta, array( 'umeta_id' => $meta_id ) );
 
-		if ( $delete ) {
-			wp_send_json_success( __( 'API keys permanently revoked', 'tutor' ) );
-		} else {
-			wp_send_json_error( __( 'API keys revoke failed, please try again.', 'tutor' ) );
+		if ( ! $delete ) {
+			tutor_utils()->json_response(
+				__( 'API keys revoke failed, please try again.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
+
+		tutor_utils()->json_response( __( 'API keys permanently revoked', 'tutor' ) );
 	}
 
 	/**
