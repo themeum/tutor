@@ -36,25 +36,13 @@ trait REST_Response {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function response( $code, string $message, $data = '', int $status_code = 200 ) {
-		if ( in_array( $status_code, array( HttpHelper::STATUS_UNAUTHORIZED, HttpHelper::STATUS_FORBIDDEN, HttpHelper::STATUS_NOT_FOUND ), true ) ) {
+		if ( $status_code >= HttpHelper::STATUS_BAD_REQUEST ) {
 			$error_data = array( 'status' => $status_code );
 			if ( '' !== $data && null !== $data ) {
 				$error_data['details'] = $data;
 			}
 
 			$response = new WP_Error( $code, $message, $error_data );
-		} elseif ( HttpHelper::STATUS_BAD_REQUEST === $status_code || HttpHelper::STATUS_INTERNAL_SERVER_ERROR === $status_code ) {
-			$response = new WP_REST_Response(
-				array(
-					'code'    => $code,
-					'message' => $message,
-					'data'    => array(
-						'status'  => $status_code,
-						'details' => $data,
-					),
-				),
-				$status_code
-			);
 		} else {
 			$response = new WP_REST_Response(
 				array(
