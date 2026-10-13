@@ -27,17 +27,17 @@ use TUTOR\Icon;
 		'button'      => array(
 			'text'  => __( 'Go to Home', 'tutor' ),
 			'url'   => get_home_url(),
-			'class' => 'tutor-btn',
+			'class' => 'tutor-btn tutor-btn-primary',
 		),
 	);
 	tutor_load_template( 'feature_disabled', $args );
 	?>
 <?php else : ?>
-	<div id="tutor-registration-wrap" class="tutor-card tutor-p-none tutor-py-9" style="max-width: 520px; margin: 0px auto;">
+	<div id="tutor-registration-wrap" class="tutor-card tutor-shadow-md tutor-p-none tutor-py-9" style="max-width: 520px; margin: 40px auto;">
 
 		<?php do_action( 'tutor_before_student_reg_form' ); ?>
 
-		<form method="post" enctype="multipart/form-data" id="tutor-registration-form" class="tutor-p-8">
+		<form method="post" enctype="multipart/form-data" id="tutor-registration-form" class="tutor-p-8 tutor-flex tutor-flex-column tutor-gap-6">
 			<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo isset( $_GET['enrol_course_id'] ) ? (int) $_GET['enrol_course_id'] : ''; ?>">
 			<?php do_action( 'tutor_student_reg_form_start' ); ?>
 
@@ -52,127 +52,133 @@ use TUTOR\Icon;
 						->text( $validation_error )
 						->variant( Alert::ERROR )
 						->icon( Icon::WARNING )
-						->attr( 'class', 'tutor-mb-8' )
 						->render();
 				endforeach;
 			endif;
 			?>
-			<div class="tutor-form-group">
-				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'First Name', 'tutor' ); ?></label>
-				<div class="tutor-input-field tutor-mb-8">
-					<input class="tutor-form-control tutor-input" type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
+
+			<div class="tutor-input-field">
+				<label for="first_name" class="tutor-label tutor-label-required"><?php esc_html_e( 'First Name', 'tutor' ); ?></label>
+				<div class="tutor-input-wrapper">
+					<input class="tutor-input" id="first_name" type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
 				</div>
 			</div>
 
-			<div class="tutor-form-group">
-				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Last Name', 'tutor' ); ?></label>
-				<div class="tutor-input-field tutor-mb-8">
-					<input class="tutor-form-control tutor-input" type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
+			<div class="tutor-input-field">
+				<label for="last_name" class="tutor-label tutor-label-required"><?php esc_html_e( 'Last Name', 'tutor' ); ?></label>
+				<div class="tutor-input-wrapper">
+					<input class="tutor-input" id="last_name" type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
 				</div>
 			</div>
 
-			<div class="tutor-form-group">
-				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'User Name', 'tutor' ); ?></label>
-				<div class="tutor-input-field tutor-mb-8">
-					<input class="tutor-form-control tutor-input" type="text" name="user_login" class="tutor_user_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_html_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
+			<div class="tutor-input-field">
+				<label for="user_login" class="tutor-label tutor-label-required"><?php esc_html_e( 'User Name', 'tutor' ); ?></label>
+				<div class="tutor-input-wrapper">
+					<input class="tutor-input tutor_user_name" id="user_login" type="text" name="user_login" value="<?php echo esc_attr( tutor_utils()->input_old( 'user_login' ) ); ?>" placeholder="<?php esc_attr_e( 'User Name', 'tutor' ); ?>" required autocomplete="username">
 				</div>
 			</div>
 
-			<div class="tutor-form-group">
-				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'E-Mail', 'tutor' ); ?></label>
-				<div class="tutor-input-field tutor-mb-8">
-					<input class="tutor-form-control tutor-input" type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
+			<div class="tutor-input-field">
+				<label for="email" class="tutor-label tutor-label-required"><?php esc_html_e( 'E-Mail', 'tutor' ); ?></label>
+				<div class="tutor-input-wrapper">
+					<input class="tutor-input" id="email" type="email" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_attr_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
 				</div>
 			</div>
 
 			<div class="tutor-password-strength-checker" x-data="{ show: false, value: '' }">
-				<div class="tutor-password-field">
-					<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
-					<div class="tutor-input-field tutor-mb-8" style="position: relative;">
-						<span 
-							class="tutor-flex tutor-items-center tutor-justify-center"
-							style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-							x-show="value.length"
-							@click="show = !show"
-						>
-							<template x-if="!show">
-								<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
-							</template>
-							<template x-if="show">
-								<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
-							</template>
-						</span>
+				<div class="tutor-password-field tutor-input-field">
+					<label for="tutor-new-password" class="tutor-label tutor-label-required"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
+					<div class="tutor-input-wrapper">
 						<input 
-							class="tutor-form-control tutor-input password-checker" 
+							class="tutor-input tutor-input-content-right password-checker" 
 							id="tutor-new-password" 
 							:type="show ? 'text' : 'password'" 
 							name="password" 
 							x-model="value" 
-							placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" 
+							placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>" 
 							required 
 							autocomplete="new-password" 
 						>
+						<div class="tutor-input-content tutor-input-content-right">
+							<button 
+								type="button" 
+								class="tutor-input-password-toggle"
+								x-show="value.length"
+								x-cloak
+								@click="show = !show"
+								aria-label="<?php esc_attr_e( 'Toggle password visibility', 'tutor' ); ?>"
+							>
+								<span x-show="!show" x-cloak><?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 16 )->render(); ?></span>
+								<span x-show="show" x-cloak><?php SvgIcon::make()->name( Icon::EYE )->size( 16 )->render(); ?></span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="tutor-form-group">
-				<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password confirmation', 'tutor' ); ?></label>
-				<div class="tutor-form-wrap">
-					<div class="tutor-input-field tutor-mb-8">
-						<input 
-							class="tutor-form-control tutor-input" 
-							type="password" 
-							name="password_confirmation" 
-							placeholder="<?php esc_html_e( 'Password Confirmation', 'tutor' ); ?>" 
-							required 
-							autocomplete="new-password" 
+			<div class="tutor-password-field tutor-input-field" x-data="{ show: false, value: '' }">
+				<label for="password_confirmation" class="tutor-label tutor-label-required"><?php esc_html_e( 'Password confirmation', 'tutor' ); ?></label>
+				<div class="tutor-input-wrapper">
+					<input 
+						class="tutor-input tutor-input-content-right" 
+						id="password_confirmation"
+						:type="show ? 'text' : 'password'" 
+						name="password_confirmation" 
+						x-model="value"
+						placeholder="<?php esc_attr_e( 'Password Confirmation', 'tutor' ); ?>" 
+						required 
+						autocomplete="new-password" 
+					>
+					<div class="tutor-input-content tutor-input-content-right">
+						<button 
+							type="button" 
+							class="tutor-input-password-toggle"
+							x-show="value.length"
+							x-cloak
+							@click="show = !show"
+							aria-label="<?php esc_attr_e( 'Toggle password visibility', 'tutor' ); ?>"
 						>
+							<span x-show="!show" x-cloak><?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 16 )->render(); ?></span>
+							<span x-show="show" x-cloak><?php SvgIcon::make()->name( Icon::EYE )->size( 16 )->render(); ?></span>
+						</button>
 					</div>
 				</div>
 			</div>
 
 			<div class="tutor-form-row">
 				<div class="tutor-form-col-12">
-					<div class="tutor-form-group">
 					<?php
-						// providing register_form hook.
-						do_action( 'tutor_student_reg_form_middle' );
-						do_action( 'register_form' );
+					// Providing register_form hook.
+					do_action( 'tutor_student_reg_form_middle' );
+					do_action( 'register_form' );
 					?>
-					</div>
 				</div>
 			</div>    
 
-				<?php do_action( 'tutor_student_reg_form_end' ); ?>
+			<?php do_action( 'tutor_student_reg_form_end' ); ?>
 
 			<?php
 			$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 			$consents            = LegalConsent::get_consent_by_display_key( LegalConsent::DISPLAY_ON_STD_REG );
 			if ( tutor_utils()->count( $consents ) ) :
-
+				foreach ( $consents as $consent ) :
+					LegalConsent::render_consent_field( $consent );
+				endforeach;
+			elseif ( $tutor_toc_page_link ) :
 				?>
-				<?php foreach ( $consents as $consent ) : ?>
-					<?php LegalConsent::render_consent_field( $consent, 'tutor-mb-8' ); ?>
-				<?php endforeach; ?>
-
-			<?php else : ?>
-				<?php if ( $tutor_toc_page_link ) : ?>	
-					<div class="tutor-form-row tutor-mb-8">
-						<div class="tutor-input-field">
-							<div class="tutor-input-wrapper">
-								<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox tutor-checkbox-md" required>
-								<label for="tutor-terms-conditions" class="tutor-label">
-									<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-								</label>
-							</div>
-						</div>
+				<div class="tutor-input-field">
+					<div class="tutor-input-wrapper">
+						<input type="checkbox" id="tutor-terms-conditions" name="terms_conditions" class="tutor-checkbox tutor-checkbox-md" required>
+						<label for="tutor-terms-conditions" class="tutor-label">
+							<?php esc_html_e( 'By signing up, you agree to the ', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+						</label>
 					</div>
-				<?php endif; ?>
+				</div>
 			<?php endif; ?>
+
 			<div>
 				<button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register', 'tutor' ); ?></button>
-				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-8">
+				<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-6">
 					<div class="tutor-small">
 						<?php esc_html_e( 'Already have an account?', 'tutor' ); ?>
 					</div>
