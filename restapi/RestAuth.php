@@ -1643,7 +1643,7 @@ class RestAuth {
 	}
 
 	/**
-	 * Logout — delete refresh token(s).
+	 * Logout — revoke refresh token(s); when all=true, also bump token_version.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1663,7 +1663,7 @@ class RestAuth {
 				$user_id = self::find_user_id_by_refresh_token( $refresh );
 			}
 			if ( $user_id ) {
-				self::delete_all_refresh_tokens( $user_id );
+				static::invalidate_user_tokens( $user_id );
 			}
 		} elseif ( $refresh ) {
 			self::delete_refresh_token( $refresh );
