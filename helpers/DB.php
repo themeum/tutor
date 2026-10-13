@@ -972,9 +972,8 @@ class DB {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results( $sql, $output );
 
-		$has_records = is_array( $results ) && count( $results );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
+		$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 		$total_pages = (int) ceil( $total_count / $per_page );
 
 		return array(
