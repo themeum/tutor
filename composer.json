@@ -10,6 +10,7 @@
       "Tutor\\Migrations\\":"migrations/",
       "Tutor\\Models\\": "models/",
       "Tutor\\Helpers\\": "helpers/",
+      "Tutor\\Exceptions\\": "exceptions/",
       "Tutor\\Traits\\": "traits/",
       "Tutor\\Ecommerce\\": "ecommerce/",
       "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways",

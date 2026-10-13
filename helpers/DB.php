@@ -12,6 +12,8 @@
 
 namespace Tutor\Helpers;
 
+use Tutor\Exceptions\DatabaseException;
+
 /**
  * Class DB
  *
@@ -1127,7 +1129,7 @@ class DB {
 	 * @param array $data   Assoc array of column => value pairs.
 	 * @param array $format Optional format specifiers (%s, %d, %f) for each value.
 	 *
-	 * @throws \Exception If a database error occurs.
+	 * @throws DatabaseException If a database error occurs.
 	 *
 	 * @return int Inserted row ID.
 	 */
@@ -1138,7 +1140,7 @@ class DB {
 		$result = $wpdb->insert( $this->table, $data, ! empty( $format ) ? $format : null );
 
 		if ( $wpdb->last_error ) {
-			throw new \Exception( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
 		return $result ? $wpdb->insert_id : 0;
@@ -1154,7 +1156,7 @@ class DB {
 	 *
 	 * @param array $rows Array of assoc arrays, each representing a row.
 	 *
-	 * @throws \Exception If a database error occurs.
+	 * @throws DatabaseException If a database error occurs.
 	 *
 	 * @return bool True on success.
 	 */
@@ -1189,7 +1191,7 @@ class DB {
 		$wpdb->query( $sql );
 
 		if ( $wpdb->last_error ) {
-			throw new \Exception( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
 		return true;
@@ -1205,7 +1207,7 @@ class DB {
 	 *
 	 * @param array $data Assoc array of column => value pairs to update.
 	 *
-	 * @throws \Exception If a database error occurs.
+	 * @throws DatabaseException If a database error occurs.
 	 *
 	 * @return bool True on success.
 	 */
@@ -1240,7 +1242,7 @@ class DB {
 		$wpdb->query( $sql );
 
 		if ( $wpdb->last_error ) {
-			throw new \Exception( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
 		return true;
@@ -1254,7 +1256,7 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @throws \Exception If a database error occurs.
+	 * @throws DatabaseException If a database error occurs.
 	 *
 	 * @return int Number of affected rows.
 	 */
@@ -1277,7 +1279,7 @@ class DB {
 		$result = $wpdb->query( $sql );
 
 		if ( $wpdb->last_error ) {
-			throw new \Exception( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
 		return (int) $result;
