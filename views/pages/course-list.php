@@ -446,6 +446,10 @@ if ( 0 === $total_courses_count ) {
 														<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+														<i class="tutor-icon-edit-o tutor-mr-8" aria-hidden="true"></i>
+														<span><?php esc_html_e( 'WP Editor', 'tutor' ); ?></span>
+													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 													<?php if ( $show_course_delete ) : ?>
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">

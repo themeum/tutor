@@ -279,7 +279,7 @@ const HeaderActions = () => {
       dataCy: 'switch-to-draft',
     };
 
-    const backToLegacyItem = {
+    const wpEditorItem = {
       text: (
         <div
           css={[
@@ -289,19 +289,19 @@ const HeaderActions = () => {
             },
           ]}
         >
-          {__('Legacy Mode', 'tutor')}
+          {__('WP Editor', 'tutor')}
           <SVGIcon name="linkExternal" width={24} height={24} />
         </div>
       ),
       onClick: () => {
-        const legacyUrl = courseId
+        const wpEditorUrl = courseId
           ? `${config.TUTOR_SITE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
           : `${config.TUTOR_SITE_URL}/wp-admin/post-new.php?post_type=courses`;
 
-        window.open(legacyUrl, '_blank', 'noopener');
+        window.open(wpEditorUrl, '_blank', 'noopener');
       },
       isDanger: false,
-      dataCy: 'back-to-legacy',
+      dataCy: 'wp-editor',
     };
 
     const publishImmediatelyItem = {
@@ -342,7 +342,7 @@ const HeaderActions = () => {
     }
 
     if (isAdmin || hasWpAdminAccess) {
-      items.push(backToLegacyItem);
+      items.push(wpEditorItem);
     }
 
     return items;
