@@ -1144,54 +1144,97 @@ class CheckoutController {
 			exit;
 		}
 
-		if ( $order_id ) {
-			$order_model = new OrderModel();
-			$order_data  = $order_model->get_order_by_id( $order_id );
-			if ( $order_data && get_current_user_id() === (int) $order_data->user_id ) {
-				try {
-
-					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
-						$billing_info = $billing_model->get_info( $order_data->user_id );
-						if ( $billing_info ) {
-							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
-
-							if ( ! $update_billing ) {
-								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
-							}
-						} else {
-							// Save billing info.
-							$billing_fillable_fields['user_id'] = $order_data->user_id;
-
-							$save = $billing_model->insert( $billing_fillable_fields );
-
-							if ( ! $save ) {
-								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing info save failed!', 'tutor' ) );
-							}
-						}
-
-						$update_order_data                   = $order_model->get_recalculated_order_tax_data( $order_id );
-						$update_order_data['payment_method'] = $payment_method;
-
-						$updated = $order_model->update_order( $order_data->id, $update_order_data );
-
-						if ( $updated ) {
-							$order_data = $order_model->get_order_by_id( $order_id );
-						}
-					}
-
-					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
-					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
-				} catch ( \Throwable $th ) {
-					tutor_log( $th );
-					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
-				}
-			} else {
-				$error_msg = __( 'Order not found!', 'tutor' );
-				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $error_msg );
-			}
-		} else {
+		if ( ! $order_id ) {
 			$error_msg = __( 'Invalid order ID!', 'tutor' );
 			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $error_msg );
+		}
+
+		$order_model = new OrderModel();
+		$order_data  = $order_model->get_order_by_id( $order_id );
+
+		if ( empty( $order_data ) || get_current_user_id() !== (int) $order_data->user_id ) {
+			$error_msg = __( 'Order not found!', 'tutor' );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $error_msg );
+		}
+
+		$items       = $order_data->items[0] ?? null;
+		$coupon_code = isset( $order_data->coupon_code ) ? $order_data->coupon_code : '';
+		$item_id     = $items->id ?? 0;
+
+		if ( Settings::is_coupon_usage_enabled() && '-1' !== $coupon_code ) {
+			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
+			if ( empty( $selected_coupon ) || ! $this->coupon_model->is_coupon_valid( $selected_coupon, $order_id ) ) {
+				$coupon_code = null;
+				$this->coupon_model->remove_reserved_coupon( $order_id, $order_data->user_id );
+			}
+		}
+
+		$checkout_data       = $this->prepare_checkout_items( array( $item_id ), $order_data->order_type, $coupon_code, $order_id );
+		$updated_order_items = array();
+		foreach ( $checkout_data->items as $item ) {
+			$updated_order_items[] = array(
+				'item_id'        => $item->item_id,
+				'regular_price'  => $item->regular_price,
+				'sale_price'     => $item->sale_price,
+				'discount_price' => $item->discount_price,
+				'coupon_code'    => $item->is_coupon_applied ? $item->coupon_code : null,
+			);
+		}
+
+		$args = apply_filters(
+			'tutor_order_create_args',
+			array(
+				'payment_method'  => $payment_method,
+				'coupon_amount'   => $checkout_data->coupon_discount,
+				'discount_amount' => $checkout_data->sale_discount,
+			)
+		);
+
+		$order_data = (object) $this->order_ctrl->update_order(
+			$order_id,
+			$order_data->user_id,
+			$updated_order_items,
+			OrderModel::PAYMENT_UNPAID,
+			$order_data->order_type,
+			$checkout_data->coupon_code,
+			$args,
+			true
+		);
+
+		try {
+			if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
+				$billing_info = $billing_model->get_info( $order_data->user_id );
+				if ( $billing_info ) {
+					$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
+
+					if ( ! $update_billing ) {
+						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
+					}
+				} else {
+					// Save billing info.
+					$billing_fillable_fields['user_id'] = $order_data->user_id;
+
+					$save = $billing_model->insert( $billing_fillable_fields );
+
+					if ( ! $save ) {
+						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing info save failed!', 'tutor' ) );
+					}
+				}
+
+				$update_order_data                   = $order_model->get_recalculated_order_tax_data( $order_id );
+				$update_order_data['payment_method'] = $payment_method;
+
+				$updated = $order_model->update_order( $order_data->id, $update_order_data );
+
+				if ( $updated ) {
+					$order_data = $order_model->get_order_by_id( $order_id );
+				}
+			}
+			$payment_data = $this->prepare_payment_data( (array) $order_data );
+			$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
 		}
 	}
 
