@@ -161,10 +161,17 @@ class RestAuth {
 	 * Register hooks.
 	 *
 	 * @since 2.2.1
+	 * @since 4.2.0 $register_hooks param added to reuse this class without registering hooks.
+	 *
+	 * @param bool $register_hooks Whether to register hooks. Default true.
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		add_action( 'wp_ajax_tutor_generate_api_keys', array( $this, 'generate_api_keys' ) );
 		add_action( 'wp_ajax_tutor_update_api_permission', array( $this, 'update_api_permission' ) );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', array( $this, 'revoke_api_keys' ) );
@@ -2051,7 +2058,11 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function base64url_encode( $data ) {
-		return sodium_bin2base64( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
+		if ( function_exists( 'sodium_bin2base64' ) ) {
+			return sodium_bin2base64( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
+		}
+
+		return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' );
 	}
 
 	/**
@@ -2062,11 +2073,21 @@ class RestAuth {
 	 * @return string
 	 */
 	private static function base64url_decode( $data ) {
-		try {
-			return sodium_base642bin( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
-		} catch ( \Throwable $e ) {
-			return '';
+		if ( function_exists( 'sodium_base642bin' ) ) {
+			try {
+				return sodium_base642bin( $data, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
+			} catch ( \Throwable $e ) {
+				return '';
+			}
 		}
+
+		$remainder = strlen( $data ) % 4;
+		if ( $remainder ) {
+			$data .= str_repeat( '=', 4 - $remainder );
+		}
+
+		$decoded = base64_decode( strtr( $data, '-_', '+/' ), true );
+		return false === $decoded ? '' : $decoded;
 	}
 
 	/**
