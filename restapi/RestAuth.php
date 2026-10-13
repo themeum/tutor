@@ -1591,7 +1591,6 @@ class RestAuth {
 	 * Refresh access token (rotates refresh token).
 	 *
 	 * @since 4.2.0
-	 * @since 4.2.0 No API key/secret; reuses kid stored with the refresh token.
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
