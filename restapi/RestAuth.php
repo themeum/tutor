@@ -1323,7 +1323,7 @@ class RestAuth {
 			return true;
 		}
 
-		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id ) {
 			return false;
 		}
@@ -1354,7 +1354,7 @@ class RestAuth {
 			return false;
 		}
 
-		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		if ( $user_id && EnrollmentModel::is_enrolled( $course_id, $user_id ) ) {
 			return true;
@@ -1391,7 +1391,7 @@ class RestAuth {
 	 * @return bool
 	 */
 	public static function is_quiz_details_hidden_for_user( $user_id = 0 ) {
-		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id || ! tutor_utils()->get_option( 'hide_quiz_details' ) ) {
 			return false;
 		}
@@ -1419,7 +1419,7 @@ class RestAuth {
 	 */
 	public static function can_reveal_quiz_answers( $quiz_id, $user_id = 0 ) {
 		$quiz_id = absint( $quiz_id );
-		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $quiz_id || ! $user_id ) {
 			return false;
 		}
@@ -1449,7 +1449,7 @@ class RestAuth {
 	 */
 	public static function can_view_user_private_fields( $target_user_id, $viewer_id = 0 ) {
 		$target_user_id = absint( $target_user_id );
-		$viewer_id      = $viewer_id ? absint( $viewer_id ) : get_current_user_id();
+		$viewer_id      = tutor_utils()->get_user_id( $viewer_id );
 
 		if ( ! $viewer_id ) {
 			return false;
