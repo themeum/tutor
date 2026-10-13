@@ -72,10 +72,10 @@ class DB {
     public function distinct(): self;
     public function as( string $alias ): self;
 
-    // Joins
-    public function join( string $table, string $first, string $operator, string $second ): self;
-    public function left_join( string $table, string $first, string $operator, string $second ): self;
-    public function right_join( string $table, string $first, string $operator, string $second ): self;
+    // Joins (supports 4-argument syntax or closure for multiple ON conditions)
+    public function join( string $table, $first, string $operator = '', string $second = '' ): self;
+    public function left_join( string $table, $first, string $operator = '', string $second = '' ): self;
+    public function right_join( string $table, $first, string $operator = '', string $second = '' ): self;
 
     // Where Clauses
     public function where( string $column, $operator_or_val, $val = null ): self;
@@ -133,12 +133,16 @@ class DB {
     // Debug & Inspection
     public function to_sql(): string;
 
-    // Utility Helpers
+    // Utility & Validation Helpers
     public static function prepare_value( $value ): string;
     public static function prepare_in_clause( array $values ): string;
     public static function prepare_table_name( string $table ): string;
     public static function get_table_prefix(): string;
     public static function get_last_query(): string;
+    public static function parse_column_alias( string $expression ): ?string;
+    public static function is_valid_column( string $column ): bool;
+    public static function is_valid_identifier( string $identifier ): bool;
+    public static function is_valid_operator( string $operator ): bool;
 }
 ```
 
@@ -174,6 +178,22 @@ Specifies which columns to retrieve. Multiple calls append columns.
 DB::table('users')->select('ID', 'user_email');
 ```
 
+#### Column Aliases
+Column aliases are fully supported using uppercase `AS`, lowercase `as`, or implicit space separation:
+
+```php
+DB::table('orders')
+    ->select('id AS order_id', 'parent_id as parent_order_id', 'name person_name');
+
+// With table prefixes:
+DB::table('users')
+    ->as('u')
+    ->select('u.id AS user_id', 'u.user_login as username');
+```
+
+> [!NOTE]
+> All column names and alias identifiers are individually validated against strict regex patterns (`is_valid_column` and `is_valid_identifier`) to prevent SQL injection.
+
 ### `select_raw( string $expression, array $bindings = [] ): self`
 Injects raw SQL expressions into the `SELECT` clause (e.g., aggregate functions).
 
@@ -194,22 +214,50 @@ DB::table('posts')->distinct()->select('post_type')->get();
 
 ## Joins
 
-Joins accept:
-1. Target table (optionally with alias: `'users AS u'`)
-2. Left column
-3. Operator (`=`, `>`, etc.)
-4. Right column
+Joins support two distinct styles:
+1. **Standard 4-argument syntax:** Table, first column, operator, second column.
+2. **Closure syntax:** For advanced joins with multiple `ON` conditions chained via `on()` or `or_on()`.
 
 ### Supported Join Methods:
-- `join( $table, $first, $operator, $second )` — `INNER JOIN`
-- `left_join( $table, $first, $operator, $second )` — `LEFT JOIN`
-- `right_join( $table, $first, $operator, $second )` — `RIGHT JOIN`
+- `join( string $table, $first, string $operator = '', string $second = '' )` — `INNER JOIN`
+- `left_join( string $table, $first, string $operator = '', string $second = '' )` — `LEFT JOIN`
+- `right_join( string $table, $first, string $operator = '', string $second = '' )` — `RIGHT JOIN`
 
+### 1. Standard 4-Argument Syntax
 ```php
 DB::table('tutor_earnings')
     ->as('e')
     ->select('e.*', 'u.user_login')
     ->left_join("{$wpdb->users} AS u", 'e.user_id', '=', 'u.ID')
+    ->get();
+```
+
+### 2. Closure Syntax for Multiple ON Conditions
+Pass a closure accepting the `$join` collector as the second argument. The closure supports chaining multiple `on()` and `or_on()` conditions:
+
+```php
+$users = DB::table('users')
+    ->join('contacts', function ($join) {
+        $join->on('users.id', '=', 'contacts.user_id')
+             ->on('users.status', '=', 'contacts.status');
+    })
+    ->select('users.*', 'contacts.phone')
+    ->get();
+```
+
+#### Closure Methods:
+- `$join->on( $first, $operator, $second )` — Combines condition with `AND` (default).
+- `$join->on( $first, $second )` — 2-argument shortcut defaulting the operator to `=`.
+- `$join->or_on( $first, $operator, $second )` — Combines condition with `OR`.
+- `$join->or_on( $first, $second )` — 2-argument shortcut with `OR`.
+
+```php
+// Chaining with OR conditions and table aliases:
+DB::table('users')
+    ->left_join('contacts AS c', function ($join) {
+        $join->on('users.id', '=', 'c.user_id')
+             ->or_on('users.email', '=', 'c.email');
+    })
     ->get();
 ```
 
@@ -460,6 +508,6 @@ DB::get_last_query();                   // Returns $wpdb->last_query
 ## Security Architecture
 
 1. **Prepared Statements:** All literal values passed into `where()`, `where_in()`, `where_between()`, `insert()`, `update()`, and raw bindings are passed through `$wpdb->prepare()`.
-2. **Identifier Validation:** Column identifiers and table names are strictly validated against `/^[A-Za-z_*][A-Za-z0-9_.*]*$/`. Characters that could trigger SQL injection (spaces, semicolons, comments, quotes, brackets) are rejected.
+2. **Identifier Validation:** Column identifiers and table names are strictly validated against `/^[A-Za-z_*][A-Za-z0-9_.*]*$/`. Column aliases in `select()` are parsed and verified against strict column and alias patterns (`is_valid_column` and `is_valid_identifier`). Join conditions (including closure-based `on()` and `or_on()` conditions) validate both columns and operators against allowlists before inclusion. Characters that could trigger SQL injection (semicolons, comments, quotes, brackets) are rejected.
 3. **LIKE-Injection Protection:** `where_like()` automatically processes input values via `$wpdb->esc_like()`, preventing wildcard abuse (`%` or `_`).
 4. **WPCS Compliance:** Follows WordPress Coding Standards (WPCS) with full escaping and cache awareness annotations.

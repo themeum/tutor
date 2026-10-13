@@ -207,7 +207,10 @@ class DB {
 	 */
 	public function select( string ...$columns ): self {
 		foreach ( $columns as $column ) {
-			if ( self::is_valid_column( $column ) ) {
+			$aliased = self::parse_column_alias( $column );
+			if ( null !== $aliased ) {
+				$this->columns[] = $aliased;
+			} elseif ( self::is_valid_column( $column ) ) {
 				$this->columns[] = $column;
 			}
 		}
@@ -277,49 +280,206 @@ class DB {
 	/**
 	 * Add an INNER JOIN clause.
 	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $table    Table to join (may include alias, e.g., 'users AS u').
-	 * @param string $first    First column in the ON condition.
-	 * @param string $operator Comparison operator.
-	 * @param string $second   Second column in the ON condition.
+	 * @param string          $table    Table to join (may include alias, e.g., 'users AS u').
+	 * @param string|callable $first    First column in the ON condition, or a closure for multiple ON conditions.
+	 * @param string          $operator Comparison operator (omitted if using closure).
+	 * @param string          $second   Second column in the ON condition (omitted if using closure).
 	 *
 	 * @return self
 	 */
-	public function join( string $table, string $first, string $operator, string $second ): self {
+	public function join( string $table, $first, string $operator = '', string $second = '' ): self {
+		if ( is_callable( $first ) ) {
+			return $this->add_join_closure( 'INNER', $table, $first );
+		}
+
 		return $this->add_join( 'INNER', $table, $first, $operator, $second );
 	}
 
 	/**
 	 * Add a LEFT JOIN clause.
 	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $table    Table to join.
-	 * @param string $first    First column.
-	 * @param string $operator Comparison operator.
-	 * @param string $second   Second column.
+	 * @param string          $table    Table to join.
+	 * @param string|callable $first    First column or closure.
+	 * @param string          $operator Comparison operator.
+	 * @param string          $second   Second column.
 	 *
 	 * @return self
 	 */
-	public function left_join( string $table, string $first, string $operator, string $second ): self {
+	public function left_join( string $table, $first, string $operator = '', string $second = '' ): self {
+		if ( is_callable( $first ) ) {
+			return $this->add_join_closure( 'LEFT', $table, $first );
+		}
+
 		return $this->add_join( 'LEFT', $table, $first, $operator, $second );
 	}
 
 	/**
 	 * Add a RIGHT JOIN clause.
 	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $table    Table to join.
-	 * @param string $first    First column.
-	 * @param string $operator Comparison operator.
-	 * @param string $second   Second column.
+	 * @param string          $table    Table to join.
+	 * @param string|callable $first    First column or closure.
+	 * @param string          $operator Comparison operator.
+	 * @param string          $second   Second column.
 	 *
 	 * @return self
 	 */
-	public function right_join( string $table, string $first, string $operator, string $second ): self {
+	public function right_join( string $table, $first, string $operator = '', string $second = '' ): self {
+		if ( is_callable( $first ) ) {
+			return $this->add_join_closure( 'RIGHT', $table, $first );
+		}
+
 		return $this->add_join( 'RIGHT', $table, $first, $operator, $second );
+	}
+
+	/**
+	 * Internal method to parse and prepare a join table with optional alias.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table Table name, may include alias e.g., 'users AS u'.
+	 *
+	 * @return string
+	 */
+	private function parse_join_table( string $table ): string {
+		$parts       = preg_split( '/\s+(?:AS\s+)?/i', $table, 2 );
+		$table_name  = self::prepare_table_name( trim( $parts[0] ) );
+		$table_alias = isset( $parts[1] ) ? trim( $parts[1] ) : '';
+
+		$table_expr = $table_name;
+		if ( ! empty( $table_alias ) && self::is_valid_identifier( $table_alias ) ) {
+			$table_expr .= " AS {$table_alias}";
+		}
+
+		return $table_expr;
+	}
+
+	/**
+	 * Internal method to add a JOIN clause using a closure collector.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string   $type     Join type (INNER, LEFT, RIGHT, CROSS).
+	 * @param string   $table    Table name, may include alias.
+	 * @param callable $callback Closure to configure join conditions.
+	 *
+	 * @return self
+	 */
+	private function add_join_closure( string $type, string $table, callable $callback ): self {
+		$type = strtoupper( $type );
+
+		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
+		if ( ! in_array( $type, $allowed_types, true ) ) {
+			return $this;
+		}
+
+		$table_expr = $this->parse_join_table( $table );
+		$collector  = self::create_join_collector();
+
+		$callback( $collector );
+
+		if ( ! empty( $collector->conditions ) ) {
+			$on_parts = '';
+			foreach ( $collector->conditions as $index => $condition ) {
+				if ( 0 === $index ) {
+					$on_parts .= $condition['sql'];
+				} else {
+					$on_parts .= " {$condition['boolean']} {$condition['sql']}";
+				}
+			}
+			$this->joins[] = "{$type} JOIN {$table_expr} ON {$on_parts}";
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Create an anonymous class collector for closure-based joins.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return object
+	 */
+	private static function create_join_collector(): object {
+		return new class() {
+
+			/**
+			 * Collected ON conditions.
+			 *
+			 * @var array
+			 */
+			public $conditions = array();
+
+			/**
+			 * Add an ON condition (AND).
+			 *
+			 * @param string      $first              First column.
+			 * @param string      $operator_or_second Operator or second column if 2 args.
+			 * @param string|null $second             Second column if 3 args.
+			 *
+			 * @return self
+			 */
+			public function on( string $first, string $operator_or_second, ?string $second = null ): self {
+				if ( null === $second ) {
+					return $this->add_on( $first, '=', $operator_or_second, 'AND' );
+				}
+
+				return $this->add_on( $first, $operator_or_second, $second, 'AND' );
+			}
+
+			/**
+			 * Add an OR ON condition.
+			 *
+			 * @param string      $first              First column.
+			 * @param string      $operator_or_second Operator or second column if 2 args.
+			 * @param string|null $second             Second column if 3 args.
+			 *
+			 * @return self
+			 */
+			public function or_on( string $first, string $operator_or_second, ?string $second = null ): self {
+				if ( null === $second ) {
+					return $this->add_on( $first, '=', $operator_or_second, 'OR' );
+				}
+
+				return $this->add_on( $first, $operator_or_second, $second, 'OR' );
+			}
+
+			/**
+			 * Internal method to validate and store an ON condition.
+			 *
+			 * @param string $first    First column.
+			 * @param string $operator Comparison operator.
+			 * @param string $second   Second column.
+			 * @param string $boolean  Boolean connector (AND/OR).
+			 *
+			 * @return self
+			 */
+			private function add_on( string $first, string $operator, string $second, string $boolean ): self {
+				if ( DB::is_valid_column( $first )
+					&& DB::is_valid_operator( $operator )
+					&& DB::is_valid_column( $second )
+				) {
+					$operator           = strtoupper( $operator );
+					$this->conditions[] = array(
+						'sql'     => "{$first} {$operator} {$second}",
+						'boolean' => $boolean,
+					);
+				}
+
+				return $this;
+			}
+		};
 	}
 
 	/**
@@ -346,15 +506,7 @@ class DB {
 			return $this;
 		}
 
-		// Parse "table AS alias" or "table alias" format.
-		$parts       = preg_split( '/\s+(?:AS\s+)?/i', $table, 2 );
-		$table_name  = self::prepare_table_name( trim( $parts[0] ) );
-		$table_alias = isset( $parts[1] ) ? trim( $parts[1] ) : '';
-
-		$table_expr = $table_name;
-		if ( ! empty( $table_alias ) && self::is_valid_identifier( $table_alias ) ) {
-			$table_expr .= " AS {$table_alias}";
-		}
+		$table_expr = $this->parse_join_table( $table );
 
 		if ( self::is_valid_column( $first )
 			&& self::is_valid_operator( $operator )
@@ -1667,6 +1819,35 @@ class DB {
 	// ─────────────────────────────────────────────
 
 	/**
+	 * Parse a column expression that may contain an alias.
+	 *
+	 * Supports: 'col AS alias', 'col as alias', 'col alias'.
+	 * Returns normalized 'col AS alias', or null if invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $expression Column expression.
+	 *
+	 * @return string|null Normalized 'column AS alias' or null.
+	 */
+	public static function parse_column_alias( string $expression ): ?string {
+		$parts = preg_split( '/\s+(?:AS\s+)?/i', trim( $expression ), 2 );
+
+		if ( 2 !== count( $parts ) ) {
+			return null;
+		}
+
+		$column = trim( $parts[0] );
+		$alias  = trim( $parts[1] );
+
+		if ( self::is_valid_column( $column ) && self::is_valid_identifier( $alias ) ) {
+			return "{$column} AS {$alias}";
+		}
+
+		return null;
+	}
+
+	/**
 	 * Validate a SQL column identifier.
 	 *
 	 * Allows: column, table.column, t.*, *, _col, col123, etc.
@@ -1677,7 +1858,7 @@ class DB {
 	 *
 	 * @return bool True if valid.
 	 */
-	private static function is_valid_column( string $column ): bool {
+	public static function is_valid_column( string $column ): bool {
 		return (bool) preg_match( '/^[A-Za-z_*][A-Za-z0-9_.*]*$/', $column );
 	}
 
@@ -1690,7 +1871,7 @@ class DB {
 	 *
 	 * @return bool True if valid.
 	 */
-	private static function is_valid_identifier( string $identifier ): bool {
+	public static function is_valid_identifier( string $identifier ): bool {
 		return (bool) preg_match( '/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier );
 	}
 
@@ -1703,7 +1884,7 @@ class DB {
 	 *
 	 * @return bool True if the operator is valid.
 	 */
-	private static function is_valid_operator( string $operator ): bool {
+	public static function is_valid_operator( string $operator ): bool {
 		return in_array( strtoupper( $operator ), self::$valid_operators, true );
 	}
 

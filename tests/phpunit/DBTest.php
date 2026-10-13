@@ -425,4 +425,216 @@ class DBTest extends \WP_UnitTestCase {
 			->exists();
 		$this->assertFalse( $after_delete_exists );
 	}
+
+	/**
+	 * Test column aliases in select() using uppercase AS, lowercase as, and implicit alias.
+	 *
+	 * @return void
+	 */
+	public function test_select_column_aliases() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'orders' )
+			->select( 'id AS order_id', 'parent_id as parent_order_id', 'name person_name' )
+			->to_sql();
+
+		$expected = "SELECT id AS order_id, parent_id AS parent_order_id, name AS person_name FROM {$prefix}orders";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test mixing regular columns and aliased columns in select().
+	 *
+	 * @return void
+	 */
+	public function test_select_mixed_columns_and_aliases() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->select( 'id', 'user_email AS email', 'display_name' )
+			->to_sql();
+
+		$expected = "SELECT id, user_email AS email, display_name FROM {$prefix}users";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test column aliases with table prefixes in select().
+	 *
+	 * @return void
+	 */
+	public function test_select_aliases_with_table_prefix() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->as( 'u' )
+			->select( 'u.id AS user_id', 'u.user_login as username' )
+			->to_sql();
+
+		$expected = "SELECT u.id AS user_id, u.user_login AS username FROM {$prefix}users AS u";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test that invalid column aliases or injection attempts in select() are rejected.
+	 *
+	 * @return void
+	 */
+	public function test_select_invalid_aliases_rejected() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'orders' )
+			->select( 'id AS valid_id', 'id AS 123invalid', 'id; DROP TABLE orders; --' )
+			->to_sql();
+
+		$expected = "SELECT id AS valid_id FROM {$prefix}orders";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test closure-based join with multiple on() conditions.
+	 *
+	 * @return void
+	 */
+	public function test_join_with_closure_multiple_conditions() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join(
+				'contacts',
+				function ( $join ) {
+					$join->on( 'users.id', '=', 'contacts.user_id' )
+						->on( 'users.status', '=', 'contacts.status' );
+				}
+			)
+			->select( 'users.*', 'contacts.phone' )
+			->to_sql();
+
+		$expected = "SELECT users.*, contacts.phone FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id AND users.status = contacts.status";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test closure-based join with two arguments defaulting operator to '='.
+	 *
+	 * @return void
+	 */
+	public function test_join_with_closure_two_arguments() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join(
+				'contacts',
+				function ( $join ) {
+					$join->on( 'users.id', 'contacts.user_id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test closure-based left_join and right_join.
+	 *
+	 * @return void
+	 */
+	public function test_left_and_right_join_with_closure() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'posts' )
+			->left_join(
+				'postmeta',
+				function ( $join ) {
+					$join->on( 'posts.ID', '=', 'postmeta.post_id' )
+						->on( 'postmeta.meta_key', '=', 'posts.post_type' );
+				}
+			)
+			->right_join(
+				'users',
+				function ( $join ) {
+					$join->on( 'posts.post_author', '=', 'users.ID' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}posts LEFT JOIN {$prefix}postmeta ON posts.ID = postmeta.post_id AND postmeta.meta_key = posts.post_type RIGHT JOIN {$prefix}users ON posts.post_author = users.ID";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test closure-based join with or_on() conditions.
+	 *
+	 * @return void
+	 */
+	public function test_join_closure_with_or_on() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join(
+				'contacts',
+				function ( $join ) {
+					$join->on( 'users.id', '=', 'contacts.user_id' )
+						->or_on( 'users.email', '=', 'contacts.email' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id OR users.email = contacts.email";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test closure-based join with table alias syntax.
+	 *
+	 * @return void
+	 */
+	public function test_join_closure_with_table_alias() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join(
+				'contacts AS c',
+				function ( $join ) {
+					$join->on( 'users.id', '=', 'c.user_id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts AS c ON users.id = c.user_id";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test that invalid ON conditions within a join closure are safely ignored.
+	 *
+	 * @return void
+	 */
+	public function test_join_closure_invalid_conditions_rejected() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join(
+				'contacts',
+				function ( $join ) {
+					$join->on( 'users.id', '=', 'contacts.user_id' )
+						->on( '1=1; DROP TABLE users; --', '=', 'contacts.status' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id";
+		$this->assertSame( $expected, $sql );
+	}
 }
