@@ -1165,6 +1165,8 @@ class RestAuth {
 	/**
 	 * Resolve course id from common REST route params.
 	 *
+	 * Prefers `id`, then `course_id`. Returns 0 unless the value is a course post type.
+	 *
 	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
@@ -1175,6 +1177,10 @@ class RestAuth {
 		$course_id = absint( $request->get_param( 'id' ) );
 		if ( ! $course_id ) {
 			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return 0;
 		}
 
 		return $course_id;
