@@ -178,18 +178,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const isIntegerNumberField = (field) => ['integer', 'int'].includes(field.getAttribute('data-number-type') || 'decimal');
+
 	const checkNumberFields = (inputFields) => {
 		inputFields.forEach((numberField) => {
+			numberField.addEventListener('beforeinput', (e) => {
+				if (!e.data) {
+					return;
+				}
+				if (/[eE+-]/.test(e.data) || (isIntegerNumberField(numberField) && '.' === e.data)) {
+					e.preventDefault();
+				}
+			});
+
+			numberField.addEventListener(
+				'wheel',
+				(e) => {
+					if (document.activeElement !== numberField) {
+						return;
+					}
+					e.preventDefault();
+					window.scrollBy({ top: e.deltaY, behavior: 'instant' });
+				},
+				{ passive: false },
+			);
+
 			numberField.oninput = (e) => {
 				const { target } = e;
+				if ('' === target.value) {
+					return;
+				}
+
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
-				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
 
-				if (min !== -Infinity && value <= min) e.target.value = min;
-				if (max !== Infinity && value >= max) e.target.value = max;
-				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
+				if (min !== -Infinity && value < min) {
+					e.target.value = min;
+				}
+				if (max !== Infinity && value > max) {
+					e.target.value = max;
+				}
+				if (isIntegerNumberField(target)) {
+					e.target.value = parseInt(e.target.value);
+				}
 			};
 		});
 	};
@@ -738,12 +770,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		const usageAjaxAction = config.usage_check_action;
 		const confirmationType = config.type || 'turnoff';
 
-		if (!message) {
+		if (!message && !config.messages) {
 			return;
 		}
 
 		if (confirmationType === 'turnoff') {
 			document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const captureSaveState = () => {
+					wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+				};
+
+				(checkbox.closest('.tutor-form-toggle, label') || checkbox).addEventListener('pointerdown', captureSaveState);
+				checkbox.addEventListener('focus', captureSaveState);
+
 				checkbox.addEventListener('change', function (e) {
 					if (this.checked) {
 						return;
@@ -766,6 +808,10 @@ document.addEventListener('DOMContentLoaded', function () {
 							hiddenInput.value = 'on';
 						}
 						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = wasSaveDisabled;
+						}
 					};
 
 					const proceedWithTurnoff = () => {
@@ -774,6 +820,10 @@ document.addEventListener('DOMContentLoaded', function () {
 							hiddenInput.value = 'off';
 						}
 						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = false;
+						}
 					};
 
 					const confirmAndTurnoff = () => {
@@ -812,15 +862,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		} else if (confirmationType === 'change') {
 			document.querySelectorAll(`#field_${fieldKey} select`).forEach((selectElement) => {
 				let previousValue = selectElement.value;
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const customSelect = selectElement.nextElementSibling;
+				if (customSelect && customSelect.classList.contains('tutor-js-form-select')) {
+					customSelect.addEventListener('click', () => {
+						if (!customSelect.classList.contains('is-active')) {
+							wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+						}
+					});
+				} else {
+					selectElement.addEventListener('focus', () => {
+						wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+					});
+				}
 
 				selectElement.addEventListener('change', function () {
 					const newValue = this.value;
 					if (newValue === previousValue) {
 						return;
 					}
-
-					const saveBtn = document.getElementById('save_tutor_option');
-					const wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
 
 					const revertSelect = () => {
 						this.value = previousValue;
@@ -838,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								optionsWrap.querySelector('.is-active')?.classList.remove('is-active');
 								const prevItem = optionsWrap.querySelector(`[data-key="${previousValue}"]`);
 								if (prevItem) {
-									prevItem.classList.add('is-active');
+									(prevItem.closest('.tutor-form-select-option') || prevItem).classList.add('is-active');
 								}
 							}
 						}
@@ -848,7 +910,8 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					};
 
-					tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
+					const modalMessage = (config.messages && config.messages[newValue]) || message;
+					tutorConfirmOptionModal(modalMessage, title, cancelText, confirmText).then((confirmed) => {
 						if (confirmed) {
 							previousValue = newValue;
 							if (saveBtn) {

@@ -65,15 +65,15 @@ if ( is_array( $questions ) ) {
 	<?php if ( ! is_admin() ) : ?>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='(() => {
+		x-data="(() => {
 			const form = tutorForm({
-				id: "<?php echo esc_attr( $form_id ); ?>",
-				mode: "onChange",
-				defaultValues: <?php echo wp_json_encode( $form_default_values, JSON_HEX_APOS ); ?>
+				id: '<?php echo esc_js( $form_id ); ?>',
+				mode: 'onChange',
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $form_default_values ) ); ?>
 			});
-			const feedback =  tutorQuizAttemptFeedback({
-				attemptId: <?php echo esc_attr( $attempt_id ); ?>,
-				formId: "<?php echo esc_attr( $form_id ); ?>"
+			const feedback = tutorQuizAttemptFeedback({
+				attemptId: <?php echo (int) $attempt_id; ?>,
+				formId: '<?php echo esc_js( $form_id ); ?>'
 			});
 
 			return {
@@ -84,7 +84,7 @@ if ( is_array( $questions ) ) {
 					feedback.init?.call(this);
 				},
 			};
-		})()'
+		})()"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => handleSaveFeedback(data))($event)"
 	>

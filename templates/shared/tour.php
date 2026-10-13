@@ -46,13 +46,13 @@ $slides_data = array(
 $tour_content_template = tutor_get_template( 'shared.tour-content' );
 $tour_modal_id         = 'tutor-tour-modal';
 $tour_user_id          = get_current_user_id();
-$slides_json           = wp_json_encode( $slides_data );
+$slides_json           = tutor_json_encode( $slides_data );
 ?>
 
 <div
 	x-data="tutorTour({
 		slidesData: <?php echo esc_attr( $slides_json ); ?>,
-		modalId: '<?php echo esc_attr( $tour_modal_id ); ?>',
+		modalId: '<?php echo esc_js( $tour_modal_id ); ?>',
 		userId: <?php echo absint( $tour_user_id ); ?>
 	})"
 >

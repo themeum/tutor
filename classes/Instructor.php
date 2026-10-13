@@ -165,8 +165,8 @@ class Instructor {
 			return;
 		}
 
-		$first_name = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name  = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
@@ -312,14 +312,14 @@ class Instructor {
 			wp_send_json_error( array( 'errors' => $validation_errors ) );
 		}
 
-		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name              = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name               = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email                   = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
+		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',

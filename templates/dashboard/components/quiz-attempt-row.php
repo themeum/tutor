@@ -48,7 +48,7 @@ $details_url = $quiz_attempt_obj->get_review_url(
 	</div>
 
 	<div class="tutor-quiz-item-marks">
-		<div x-data="tutorStatics({ value: <?php echo esc_attr( $attempt['marks_percent'] ?? 0 ); ?>, type: 'progress' })">
+		<div x-data="tutorStatics({ value: <?php echo (float) ( $attempt['marks_percent'] ?? 0 ); ?>, type: 'progress' })">
 			<div x-html="render()"></div>
 		</div>
 		<div class="tutor-quiz-marks-breakdown">

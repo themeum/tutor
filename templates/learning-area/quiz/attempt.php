@@ -118,30 +118,30 @@ $default_values = array(
 	id="<?php echo esc_attr( $form_id ); ?>"
 	class="tutor-quiz tutor-quiz-submission"
 	data-question-layout-view="<?php echo esc_attr( $question_layout_view ); ?>"
-	x-data='(() => {
+	x-data="(() => {
 		const form = tutorForm({
-			id: "<?php echo esc_attr( $form_id ); ?>",
-			mode: "onSubmit",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
+			id: '<?php echo esc_js( $form_id ); ?>',
+			mode: 'onSubmit',
+			defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
 		});
 		const submission = tutorQuizSubmission({
-			formId: "<?php echo esc_attr( $form_id ); ?>",
-			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
-			quizId: <?php echo esc_attr( $tutor_is_started_quiz->quiz_id ); ?>,
-			abandonModalId: "<?php echo esc_attr( $modal_id ); ?>",
-			submittedModalId: "<?php echo esc_attr( $submitted_modal_id ); ?>",
-			timeoutModalId: "<?php echo esc_attr( $timeout_modal_id ); ?>",
-			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
+			formId: '<?php echo esc_js( $form_id ); ?>',
+			attemptId: <?php echo (int) $tutor_is_started_quiz->attempt_id; ?>,
+			quizId: <?php echo (int) $tutor_is_started_quiz->quiz_id; ?>,
+			abandonModalId: '<?php echo esc_js( $modal_id ); ?>',
+			submittedModalId: '<?php echo esc_js( $submitted_modal_id ); ?>',
+			timeoutModalId: '<?php echo esc_js( $timeout_modal_id ); ?>',
+			totalQuestions: <?php echo (int) count( $questions ); ?>,
 			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
-			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
+			revealWaitMs: <?php echo (int) $reveal_wait_ms; ?>,
 		});
 
 		const layout = tutorQuizLayout({
-			layout: "<?php echo esc_attr( $question_layout_view ); ?>",
-			formId: "<?php echo esc_attr( $form_id ); ?>",
-			totalQuestions: <?php echo esc_attr( count( $questions ) ); ?>,
+			layout: '<?php echo esc_js( $question_layout_view ); ?>',
+			formId: '<?php echo esc_js( $form_id ); ?>',
+			totalQuestions: <?php echo (int) count( $questions ); ?>,
 			enableAnswerReveal: <?php echo $enable_answer_reveal ? 'true' : 'false'; ?>,
-			revealWaitMs: <?php echo esc_attr( (int) $reveal_wait_ms ); ?>,
+			revealWaitMs: <?php echo (int) $reveal_wait_ms; ?>,
 		});
 
 		return {
@@ -154,7 +154,7 @@ $default_values = array(
 				layout.init?.call(this);
 			},
 		};
-	})()'
+	})()"
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit(
 		(data) => handleQuizSubmit(data),

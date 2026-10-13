@@ -78,21 +78,21 @@ $settings_tab_data = array_values(
 
 <section x-data="tutorSettings()">
 	<div 
-		x-data='(() => {
-			const initialTab = new URL(window.location.href).searchParams.get("tab");
+		x-data="(() => {
+			const initialTab = new URL(window.location.href).searchParams.get('tab');
 			const tabs = tutorTabs({
-				tabs: <?php echo wp_json_encode( $settings_tab_data, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP ); ?>,
-				orientation: "vertical",
-				defaultTab: window.innerWidth >= 768 ? "account" : "none",
+				tabs: <?php echo esc_attr( tutor_json_encode( $settings_tab_data ) ); ?>,
+				orientation: 'vertical',
+				defaultTab: window.innerWidth >= 768 ? 'account' : 'none',
 				urlParams: {
 					enabled: true,
-					paramName: "tab",
+					paramName: 'tab',
 				}
 			});
 
 			return {
 				...tabs,
-				backUrl: <?php echo wp_json_encode( $back_url, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP ); ?>,
+				backUrl: <?php echo esc_attr( tutor_json_encode( $back_url ) ); ?>,
 				viewportWidth: window.innerWidth,
 				hasInitialUrlTab: tabs.tabs.some((tab) => tab.id === initialTab),
 				handleViewportResize() {
@@ -105,20 +105,20 @@ $settings_tab_data = array_values(
 						return;
 					}
 
-					if (isDesktop && this.activeTab === "none") {
-						this.selectTab("account");
-					} else if (!isDesktop && this.activeTab !== "none") {
-						this.selectTab("none");
+					if (isDesktop && this.activeTab === 'none') {
+						this.selectTab('account');
+					} else if (!isDesktop && this.activeTab !== 'none') {
+						this.selectTab('none');
 					}
 				},
 				selectTab(tabId) {
-					if (tabId === "none") {
-						this.activeTab = "none";
+					if (tabId === 'none') {
+						this.activeTab = 'none';
 
 						if (this.urlParamsConfig.enabled) {
 							const url = new URL(window.location.href);
 							url.searchParams.delete(this.urlParamsConfig.paramName);
-							window.history.replaceState({}, "", url.toString());
+							window.history.replaceState({}, '', url.toString());
 						}
 
 						return;
@@ -127,15 +127,15 @@ $settings_tab_data = array_values(
 					return tabs.selectTab.call(this, tabId);
 				},
 				handleClose() {
-					if (window.innerWidth < 768 && this.activeTab !== "none") {
-						this.selectTab("none");
+					if (window.innerWidth < 768 && this.activeTab !== 'none') {
+						this.selectTab('none');
 						return;
 					}
 
 					window.location.href = this.backUrl;
 				},
 			};
-		})()'
+		})()"
 		class="tutor-profile-settings-section"
 	>
 		<?php tutor_load_template( 'dashboard.account.settings.header', array( 'back_url' => $back_url ) ); ?>
