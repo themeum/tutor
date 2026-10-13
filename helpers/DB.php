@@ -1230,8 +1230,8 @@ class DB {
 		$set_clause   = implode( ', ', $set_parts );
 		$where_clause = $this->build_where_sql();
 
-		$table_expr = ! empty( $this->alias ) ? "{$this->table} AS {$this->alias}" : $this->table;
-		$sql        = "UPDATE {$table_expr} SET {$set_clause}";
+		$table_name = ! empty( $this->alias ) ? "{$this->table} AS {$this->alias}" : $this->table;
+		$sql        = "UPDATE {$table_name} SET {$set_clause}";
 		if ( ! empty( $where_clause ) ) {
 			$sql .= " WHERE {$where_clause}";
 		}
