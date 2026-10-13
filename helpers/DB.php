@@ -1166,7 +1166,8 @@ class DB {
 			return false;
 		}
 
-		$columns     = array_keys( $rows[0] );
+		$first_row   = reset( $rows );
+		$columns     = is_array( $first_row ) ? array_keys( $first_row ) : array();
 		$column_list = implode( ', ', array_map( 'sanitize_key', $columns ) );
 
 		$value_groups = array();
