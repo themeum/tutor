@@ -69,11 +69,11 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
-							<button class="tutor-popover-menu-item" @click="editingId = <?php echo (int) $comment_item->comment_ID; ?>; $nextTick(() => $dispatch('tutor-focus-form-<?php echo esc_attr( $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID ); ?>')); hide()">
+							<button class="tutor-popover-menu-item" @click="editingId = <?php echo (int) $comment_item->comment_ID; ?>; $nextTick(() => $dispatch('tutor-focus-form-<?php echo esc_js( $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID ); ?>')); hide()">
 								<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item" @click="handleDeleteComment({commentId: <?php echo esc_html( $comment_item->comment_ID ); ?>}); hide()">
+							<button class="tutor-popover-menu-item" @click="handleDeleteComment({commentId: <?php echo (int) $comment_item->comment_ID; ?>}); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

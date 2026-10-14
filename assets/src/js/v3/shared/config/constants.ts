@@ -10,6 +10,13 @@ import {
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 export const DEFAULT_QUIZ_ATTEMPTS_ALLOWED = 10;
+export const QUIZ_NEGATIVE_MARK_TYPES = {
+  FIXED: 'fixed',
+  PERCENT: 'percent',
+} as const;
+export type QuizNegativeMarkType = (typeof QUIZ_NEGATIVE_MARK_TYPES)[keyof typeof QUIZ_NEGATIVE_MARK_TYPES];
+export const DEFAULT_QUIZ_NEGATIVE_MARK_TYPE: QuizNegativeMarkType = QUIZ_NEGATIVE_MARK_TYPES.PERCENT;
+export const DEFAULT_QUIZ_NEGATIVE_MARK_VALUE = 15;
 export const ITEMS_PER_PAGE = 10;
 export const TAG_ITEMS_PER_PAGE = 48;
 export const MAX_MULTISELECT_CHIPS = 7;

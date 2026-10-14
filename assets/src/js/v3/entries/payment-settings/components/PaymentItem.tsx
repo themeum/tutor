@@ -33,15 +33,18 @@ import Show from '@TutorShared/controls/Show';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isObject } from '@TutorShared/utils/types';
-import { requiredRule } from '@TutorShared/utils/validation';
+import { credentialRule, emailRule, requiredRule } from '@TutorShared/utils/validation';
 
 import Badge from '../atoms/Badge';
 import { usePaymentContext } from '../contexts/payment-context';
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import {
+  EMAIL_AS_CREDENTIAL_FIELDS,
   getWebhookUrl,
   manualMethodFields,
+  OPTIONAL_PAYMENT_FIELDS,
+  type PaymentField,
   type PaymentMethod,
   type PaymentSettings,
   useInstallPaymentMutation,
@@ -53,6 +56,25 @@ interface PaymentItemProps {
   paymentIndex: number;
   isOverlay?: boolean;
 }
+
+const getFieldRules = (field: PaymentField) => {
+  if (OPTIONAL_PAYMENT_FIELDS.includes(field.name)) {
+    return { required: false };
+  }
+
+  if (field.type === 'email') {
+    return { ...requiredRule(), ...emailRule() };
+  }
+
+  if (field.type === 'secret_key') {
+    return {
+      ...requiredRule(),
+      ...credentialRule({ allowEmail: EMAIL_AS_CREDENTIAL_FIELDS.includes(field.name) }),
+    };
+  }
+
+  return { ...requiredRule() };
+};
 
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
   const { payment_gateways } = usePaymentContext();
@@ -91,7 +113,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const hasEmptyFields = form
     .getValues(`payment_methods.${paymentIndex}.fields`)
-    ?.some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
+    ?.some((field) => !OPTIONAL_PAYMENT_FIELDS.includes(field.name) && !field.value);
 
   useEffect(() => {
     if (hasEmptyFields) {
@@ -229,13 +251,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                     key={field.name}
                     name={`payment_methods.${paymentIndex}.fields.${index}.value`}
                     control={form.control}
-                    rules={
-                      ['icon', 'webhook_url'].includes(field.name || '')
-                        ? {
-                            required: false,
-                          }
-                        : { ...requiredRule() }
-                    }
+                    rules={getFieldRules(field)}
                     render={(controllerProps) => {
                       switch (field.type) {
                         case 'select':

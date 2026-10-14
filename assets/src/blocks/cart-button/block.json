@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tutor-blocks/cart-button",
+  "title": "Cart Button",
+  "category": "tutor",
+  "icon": "cart",
+  "description": "Display a cart button with item count for Tutor LMS ecommerce",
+  "attributes": {
+    "showCount": {
+      "type": "string",
+      "default": "if_has_items"
+    },
+    "customClass": {
+      "type": "string",
+      "default": "tutor-cart-button"
+    },
+    "iconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "cartIcon": {
+      "type": "string",
+      "default": "cart"
+    },
+    "iconSize": {
+      "type": "number",
+      "default": 20
+    },
+    "badgeBgColor": {
+      "type": "string",
+      "default": "#0c111d"
+    },
+    "badgeTextColor": {
+      "type": "string",
+      "default": "#ffffff"
+    }
+  },
+  "supports": {
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "tutor-cart-button",
+  "render": "file:./render.php"
+}

@@ -178,18 +178,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const isIntegerNumberField = (field) => ['integer', 'int'].includes(field.getAttribute('data-number-type') || 'decimal');
+
 	const checkNumberFields = (inputFields) => {
 		inputFields.forEach((numberField) => {
+			numberField.addEventListener('beforeinput', (e) => {
+				if (!e.data) {
+					return;
+				}
+				if (/[eE+-]/.test(e.data) || (isIntegerNumberField(numberField) && '.' === e.data)) {
+					e.preventDefault();
+				}
+			});
+
+			numberField.addEventListener(
+				'wheel',
+				(e) => {
+					if (document.activeElement !== numberField) {
+						return;
+					}
+					e.preventDefault();
+					window.scrollBy({ top: e.deltaY, behavior: 'instant' });
+				},
+				{ passive: false },
+			);
+
 			numberField.oninput = (e) => {
 				const { target } = e;
+				if ('' === target.value) {
+					return;
+				}
+
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
-				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
 
-				if (min !== -Infinity && value <= min) e.target.value = min;
-				if (max !== Infinity && value >= max) e.target.value = max;
-				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
+				if (min !== -Infinity && value < min) {
+					e.target.value = min;
+				}
+				if (max !== Infinity && value > max) {
+					e.target.value = max;
+				}
+				if (isIntegerNumberField(target)) {
+					e.target.value = parseInt(e.target.value);
+				}
 			};
 		});
 	};
@@ -713,4 +745,240 @@ document.addEventListener('DOMContentLoaded', function () {
 			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
 		});
 	}
+
+	/**
+	 * Option change and turn-off confirmation modals.
+	 *
+	 * Intercepts user interactions on options configured in the localized
+	 * `tutorOptionConfirmations` map (keyed by field key).
+	 *
+	 * Supports:
+	 * - 'turnoff': When a toggle switch is turned OFF.
+	 * - 'change': When a field value (e.g. select dropdown) changes.
+	 *
+	 * The map is localized by Tutor Pro; Free only provides this generic,
+	 * configuration-driven mechanism.
+	 *
+	 * @since 4.1.0
+	 */
+	const optionConfirmations = window.tutorOptionConfirmations || {};
+	Object.entries(optionConfirmations).forEach(([fieldKey, config]) => {
+		const message = config.message;
+		const title = config.title;
+		const cancelText = config.cancel;
+		const confirmText = config.confirm;
+		const usageAjaxAction = config.usage_check_action;
+		const confirmationType = config.type || 'turnoff';
+
+		if (!message && !config.messages) {
+			return;
+		}
+
+		if (confirmationType === 'turnoff') {
+			document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const captureSaveState = () => {
+					wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+				};
+
+				(checkbox.closest('.tutor-form-toggle, label') || checkbox).addEventListener('pointerdown', captureSaveState);
+				checkbox.addEventListener('focus', captureSaveState);
+
+				checkbox.addEventListener('change', function (e) {
+					if (this.checked) {
+						return;
+					}
+
+					const hiddenInput = this.previousElementSibling;
+					const syncToggleVisibility = () => {
+						const $toggle = $(this);
+						if ($toggle.data('toggle-fields')) {
+							showHideToggleChildren($toggle);
+						}
+						if ($toggle.data('toggle-blocks')) {
+							showHideToggleBlock($toggle);
+						}
+					};
+
+					const revertToggle = () => {
+						this.checked = true;
+						if (hiddenInput) {
+							hiddenInput.value = 'on';
+						}
+						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = wasSaveDisabled;
+						}
+					};
+
+					const proceedWithTurnoff = () => {
+						this.checked = false;
+						if (hiddenInput) {
+							hiddenInput.value = 'off';
+						}
+						syncToggleVisibility();
+
+						if (saveBtn) {
+							saveBtn.disabled = false;
+						}
+					};
+
+					const confirmAndTurnoff = () => {
+						revertToggle();
+						tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
+							if (confirmed) {
+								proceedWithTurnoff();
+							}
+						});
+					};
+
+					if (!usageAjaxAction) {
+						confirmAndTurnoff();
+						return;
+					}
+
+					const formData = new FormData();
+					formData.append('action', usageAjaxAction);
+					formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+					fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
+						.then((response) => response.json())
+						.then((result) => {
+							const hasCustomized = result?.data?.has_customized;
+							if (hasCustomized) {
+								confirmAndTurnoff();
+							} else {
+								proceedWithTurnoff();
+							}
+						})
+						.catch(() => {
+							revertToggle();
+						});
+				});
+			});
+		} else if (confirmationType === 'change') {
+			document.querySelectorAll(`#field_${fieldKey} select`).forEach((selectElement) => {
+				let previousValue = selectElement.value;
+				const saveBtn = document.getElementById('save_tutor_option');
+				let wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+				const customSelect = selectElement.nextElementSibling;
+				if (customSelect && customSelect.classList.contains('tutor-js-form-select')) {
+					customSelect.addEventListener('click', () => {
+						if (!customSelect.classList.contains('is-active')) {
+							wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+						}
+					});
+				} else {
+					selectElement.addEventListener('focus', () => {
+						wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+					});
+				}
+
+				selectElement.addEventListener('change', function () {
+					const newValue = this.value;
+					if (newValue === previousValue) {
+						return;
+					}
+
+					const revertSelect = () => {
+						this.value = previousValue;
+
+						const customSelect = this.nextElementSibling;
+						if (customSelect && customSelect.classList.contains('tutor-js-form-select')) {
+							const selectLabel = customSelect.querySelector('.tutor-form-select-label');
+							const selectedOption = Array.from(this.options).find((opt) => opt.value === previousValue);
+							if (selectLabel && selectedOption) {
+								selectLabel.innerText = selectedOption.text;
+								selectLabel.dataset.value = previousValue;
+							}
+							const optionsWrap = customSelect.querySelector('.tutor-form-select-options');
+							if (optionsWrap) {
+								optionsWrap.querySelector('.is-active')?.classList.remove('is-active');
+								const prevItem = optionsWrap.querySelector(`[data-key="${previousValue}"]`);
+								if (prevItem) {
+									(prevItem.closest('.tutor-form-select-option') || prevItem).classList.add('is-active');
+								}
+							}
+						}
+
+						if (saveBtn) {
+							saveBtn.disabled = wasSaveDisabled;
+						}
+					};
+
+					const modalMessage = (config.messages && config.messages[newValue]) || message;
+					tutorConfirmOptionModal(modalMessage, title, cancelText, confirmText).then((confirmed) => {
+						if (confirmed) {
+							previousValue = newValue;
+							if (saveBtn) {
+								saveBtn.disabled = false;
+							}
+						} else {
+							revertSelect();
+						}
+					});
+				});
+			});
+		}
+	});
 });
+
+/**
+ * Show a confirmation modal for option changes or turn-offs.
+ *
+ * @since 4.1.0
+ *
+ * @param {string} message The confirmation message.
+ * @param {string} [title] Optional modal title.
+ * @param {string} [cancelText] Optional cancel button label.
+ * @param {string} [confirmText] Optional confirm button label.
+ * @return {Promise<boolean>} Resolves true if confirmed, false if cancelled.
+ */
+function tutorConfirmOptionModal(message, title, cancelText, confirmText) {
+	const { __ } = wp.i18n;
+
+	return new Promise((resolve) => {
+		let popup;
+		let resolved = false;
+
+		const finish = (confirmed) => {
+			if (resolved) {
+				return;
+			}
+			resolved = true;
+			resolve(confirmed);
+			popup.find('[data-tutor-modal-close]').click();
+		};
+
+		popup = new window.tutor_popup(window.jQuery, '').popup({
+			title: title || __('Confirm setting?', 'tutor'),
+			description: message,
+			buttons: {
+				cancel: {
+					title: cancelText || __('No, keep it', 'tutor'),
+					id: 'cancel',
+					class: 'tutor-btn tutor-btn-outline-primary',
+					callback: function () {
+						finish(false);
+					},
+				},
+				confirm: {
+					title: confirmText || __('Yes, turn off', 'tutor'),
+					id: 'confirm',
+					class: 'tutor-btn tutor-btn-primary tutor-ml-20',
+					callback: function () {
+						finish(true);
+					},
+				},
+			},
+		});
+
+		popup.on('click', '[data-tutor-modal-close], .tutor-modal-overlay', function () {
+			finish(false);
+		});
+	});
+}

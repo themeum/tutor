@@ -34,6 +34,7 @@ type FormImageInputProps = {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+const hasImageConnector = tutorConfig.settings?.has_image_connector ?? hasOpenAiAPIKey;
 
 const FormImageInput = ({
   field,
@@ -94,12 +95,13 @@ const FormImageInput = ({
           image2x: generateImage2x,
         },
       });
-    } else if (!hasOpenAiAPIKey) {
+    } else if (!hasImageConnector) {
       showModal({
         component: SetupOpenAiModal,
         props: {
           image: generateImage,
           image2x: generateImage2x,
+          isImage: true,
         },
       });
     } else {

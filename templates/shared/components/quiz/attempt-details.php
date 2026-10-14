@@ -53,12 +53,12 @@ if ( ! $attempt_data || empty( $attempt_data->attempt_id ) ) {
 	return;
 }
 
-if ( $is_instructor_review ) {
-	if ( ! tutor_utils()->can_user_manage( 'attempt', (int) $attempt_data->attempt_id ) ) {
-		$render_attempt_not_found( __( 'Attempt not found or access permission denied', 'tutor' ) );
-		return;
-	}
-} elseif ( $user_id > 0 && (int) $attempt_data->user_id !== $user_id ) {
+$is_attempt_owner   = $user_id > 0 && (int) $attempt_data->user_id === $user_id;
+$can_manage_attempt = tutor_utils()->can_user_manage( 'attempt', (int) $attempt_data->attempt_id );
+// Instructor review: admin/instructor only. Otherwise: attempt owner, admin, or course instructor.
+$can_view_attempt = $is_instructor_review ? $can_manage_attempt : ( $is_attempt_owner || $can_manage_attempt );
+
+if ( ! $can_view_attempt ) {
 	$render_attempt_not_found( __( 'Attempt not found or access permission denied', 'tutor' ) );
 	return;
 }

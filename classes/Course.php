@@ -1004,7 +1004,8 @@ class Course extends Tutor_Base {
 	public function ajax_create_course() {
 		tutor_utils()->check_nonce();
 
-		$this->check_access();
+		$course_id = intval( wp_unslash( $_POST['ID'] ?? 0 ) );
+		$this->check_access( $course_id ); // Check user cap for the given id before processing.
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1570,12 +1571,14 @@ class Course extends Tutor_Base {
 		$settings                          = Options_V2::get_only( $required_options );
 		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
 		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
-		$settings['chatgpt_key_exist']     = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
 		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
 		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();
 		$settings['enable_individual_tax_control'] = Tax::get_setting( 'enable_individual_tax_control' );
+
+		$settings = apply_filters( 'tutor_course_builder_settings', $settings, $course_id );
 
 		$new_data = array( 'settings' => $settings );
 
@@ -1631,7 +1634,7 @@ class Course extends Tutor_Base {
 			$data['course_builder_additional_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-additional', $data['local'] );
 		}
 
-		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
+		$data = apply_filters( 'tutor_course_builder_localized_data', $data, $course_id );
 
 		return $data;
 	}
@@ -1687,9 +1690,13 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function get_wc_products() {
+		tutor_utils()->checking_nonce();
+
 		$exclude                 = array();
 		$exclude_linked_products = Input::has( 'exclude_linked_products' );
 		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
 
 		if ( $exclude_linked_products ) {
 			$exclude = tutor_utils()->get_linked_product_ids();
@@ -1720,9 +1727,11 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$this->check_access( $course_id );
+
 		$product_id = Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
 
@@ -3640,10 +3649,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			foreach ( $content_parent as $topic ) {
-				$provided_topic_ids[]   = $topic['parent_topic_id'];
-				$provided_content_ids[] = $topic['content_id'];
-			}
+			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
+			$provided_content_ids[] = $content_parent['content_id'];			
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );

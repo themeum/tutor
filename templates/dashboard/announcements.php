@@ -184,7 +184,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 												'@click',
 												sprintf(
 													'openEditModal(%s)',
-													wp_json_encode(
+													tutor_json_encode(
 														array(
 															'id'        => (int) $announcement->ID,
 															'title'     => $announcement->post_title,
@@ -218,7 +218,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 												@click="hide(); openEditModal(
 												<?php
 												echo esc_attr(
-													wp_json_encode(
+													tutor_json_encode(
 														array(
 															'id'        => (int) $announcement->ID,
 															'title'     => $announcement->post_title,
@@ -235,7 +235,7 @@ $create_modal_id = 'tutor-announcement-form-modal';
 											</button>
 											<button 
 												class="tutor-popover-menu-item"
-												@click="hide(); TutorCore.modal.showModal('<?php echo esc_attr( $delete_modal_id ); ?>', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
+												@click="hide(); TutorCore.modal.showModal('<?php echo esc_attr( $delete_modal_id ); ?>', { announcementId: <?php echo (int) $announcement->ID; ?> });"
 											>
 												<?php SvgIcon::make()->name( Icon::DELETE_2 )->render(); ?>
 												<?php esc_html_e( 'Delete', 'tutor' ); ?>
