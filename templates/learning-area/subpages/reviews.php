@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
