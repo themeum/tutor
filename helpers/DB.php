@@ -12,6 +12,7 @@
 
 namespace Tutor\Helpers;
 
+use Closure;
 use Tutor\Exceptions\DatabaseException;
 
 /**
@@ -285,14 +286,14 @@ class DB {
 	 * @since 4.2.0
 	 *
 	 * @param string          $table    Table to join (may include alias, e.g., 'users AS u').
-	 * @param string|callable $first    First column in the ON condition, or a closure for multiple ON conditions.
+	 * @param string|\Closure $first    First column in the ON condition, or a closure for multiple ON conditions.
 	 * @param string          $operator Comparison operator (omitted if using closure).
 	 * @param string          $second   Second column in the ON condition (omitted if using closure).
 	 *
 	 * @return self
 	 */
 	public function join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( is_callable( $first ) ) {
+		if ( $first instanceof Closure ) {
 			return $this->add_join_closure( 'INNER', $table, $first );
 		}
 
@@ -307,14 +308,14 @@ class DB {
 	 * @since 4.2.0
 	 *
 	 * @param string          $table    Table to join.
-	 * @param string|callable $first    First column or closure.
+	 * @param string|Closure  $first    First column or Closure.
 	 * @param string          $operator Comparison operator.
 	 * @param string          $second   Second column.
 	 *
 	 * @return self
 	 */
 	public function left_join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( is_callable( $first ) ) {
+		if ( $first instanceof Closure ) {
 			return $this->add_join_closure( 'LEFT', $table, $first );
 		}
 
@@ -329,14 +330,14 @@ class DB {
 	 * @since 4.2.0
 	 *
 	 * @param string          $table    Table to join.
-	 * @param string|callable $first    First column or closure.
+	 * @param string|Closure  $first    First column or Closure.
 	 * @param string          $operator Comparison operator.
 	 * @param string          $second   Second column.
 	 *
 	 * @return self
 	 */
 	public function right_join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( is_callable( $first ) ) {
+		if ( $first instanceof Closure ) {
 			return $this->add_join_closure( 'RIGHT', $table, $first );
 		}
 
@@ -1074,8 +1075,20 @@ class DB {
 		$saved_distinct = $this->is_distinct;
 
 		// Override for count.
-		$this->columns          = array();
-		$this->raw_columns      = array( "COUNT({$column}) AS aggregate" );
+		$this->columns = array();
+
+		if ( $saved_distinct ) {
+			if ( '*' !== $column ) {
+				$this->raw_columns = array( "COUNT(DISTINCT {$column}) AS aggregate" );
+			} elseif ( 1 === count( $saved_columns ) && self::is_valid_column( $saved_columns[0] ) && '*' !== $saved_columns[0] ) {
+				$this->raw_columns = array( "COUNT(DISTINCT {$saved_columns[0]}) AS aggregate" );
+			} else {
+				$this->raw_columns = array( "COUNT({$column}) AS aggregate" );
+			}
+		} else {
+			$this->raw_columns = array( "COUNT({$column}) AS aggregate" );
+		}
+
 		$this->order_by_clauses = array();
 		$this->limit_value      = null;
 		$this->offset_value     = 0;
@@ -1291,11 +1304,11 @@ class DB {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->insert( $this->table, $data, ! empty( $format ) ? $format : null );
 
-		if ( $wpdb->last_error ) {
+		if ( false === $result ) {
 			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
-		return $result ? $wpdb->insert_id : 0;
+		return $wpdb->insert_id;
 	}
 
 	/**
@@ -1319,14 +1332,25 @@ class DB {
 			return false;
 		}
 
-		$first_row   = reset( $rows );
-		$columns     = is_array( $first_row ) ? array_keys( $first_row ) : array();
-		$column_list = implode( ', ', array_map( 'sanitize_key', $columns ) );
+		$first_row  = reset( $rows );
+		$columns    = is_array( $first_row ) ? array_keys( $first_row ) : array();
+		$valid_cols = array();
+		foreach ( $columns as $col ) {
+			if ( self::is_valid_identifier( $col ) ) {
+				$valid_cols[] = $col;
+			}
+		}
+
+		if ( empty( $valid_cols ) ) {
+			return false;
+		}
+
+		$column_list = implode( ', ', $valid_cols );
 
 		$value_groups = array();
 		foreach ( $rows as $row ) {
 			$row_parts = array();
-			foreach ( $columns as $col ) {
+			foreach ( $valid_cols as $col ) {
 				$val = $row[ $col ] ?? null;
 				if ( is_null( $val ) ) {
 					$row_parts[] = 'NULL';
@@ -1340,9 +1364,9 @@ class DB {
 		$sql = "INSERT INTO {$this->table} ({$column_list}) VALUES " . implode( ', ', $value_groups );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline via prepare_value().
-		$wpdb->query( $sql );
+		$result = $wpdb->query( $sql );
 
-		if ( $wpdb->last_error ) {
+		if ( false === $result ) {
 			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
@@ -1372,13 +1396,20 @@ class DB {
 
 		$set_parts = array();
 		foreach ( $data as $column => $value ) {
-			$safe_column = sanitize_key( $column );
+			if ( ! self::is_valid_identifier( $column ) ) {
+				continue;
+			}
+
 			if ( is_null( $value ) ) {
-				$set_parts[] = "{$safe_column} = NULL";
+				$set_parts[] = "{$column} = NULL";
 			} else {
 				$prepared    = self::prepare_value( $value );
-				$set_parts[] = "{$safe_column} = {$prepared}";
+				$set_parts[] = "{$column} = {$prepared}";
 			}
+		}
+
+		if ( empty( $set_parts ) ) {
+			return false;
 		}
 
 		$set_clause   = implode( ', ', $set_parts );
@@ -1391,9 +1422,9 @@ class DB {
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline.
-		$wpdb->query( $sql );
+		$result = $wpdb->query( $sql );
 
-		if ( $wpdb->last_error ) {
+		if ( false === $result ) {
 			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 
@@ -1430,7 +1461,7 @@ class DB {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WHERE values prepared inline.
 		$result = $wpdb->query( $sql );
 
-		if ( $wpdb->last_error ) {
+		if ( false === $result ) {
 			throw new DatabaseException( esc_html( $wpdb->last_error ) );
 		}
 

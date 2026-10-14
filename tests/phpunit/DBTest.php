@@ -637,4 +637,129 @@ class DBTest extends \WP_UnitTestCase {
 		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id";
 		$this->assertSame( $expected, $sql );
 	}
+
+	/**
+	 * Test that distinct() handles count() correctly.
+	 *
+	 * @return void
+	 */
+	public function test_distinct_count() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// 1. With explicit column passed to count().
+		$builder = DB::table( 'users' )->distinct();
+		// Test live count.
+		$count1 = $builder->count( 'user_status' );
+		$this->assertIsInt( $count1 );
+
+		// 2. With column specified via select() and count() without args.
+		$count2 = DB::table( 'users' )
+			->distinct()
+			->select( 'user_status' )
+			->count();
+		$this->assertIsInt( $count2 );
+	}
+
+	/**
+	 * Test that string column matching a global PHP function is not treated as a closure in join.
+	 *
+	 * @return void
+	 */
+	public function test_join_with_string_callable_not_treated_as_closure() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sql    = DB::table( 'users' )
+			->join( 'contacts', 'trim', '=', 'contacts.id' )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON trim = contacts.id";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test that write operations preserve column casing and reject invalid columns.
+	 *
+	 * @return void
+	 */
+	public function test_write_operations_preserve_casing_and_reject_invalid() {
+		$unique_key = 'qb_test_case_' . time() . '_' . wp_rand( 1000, 9999 );
+
+		// insert_multiple with mixed casing and invalid column.
+		$rows = array(
+			array(
+				'option_name'            => $unique_key,
+				'option_value'           => 'val1',
+				'autoload'               => 'no',
+				'invalid; DROP TABLE;--' => 'injected',
+			),
+		);
+
+		$result = DB::table( 'options' )->insert_multiple( $rows );
+		$this->assertTrue( $result );
+
+		// Verify row was inserted.
+		$val = DB::table( 'options' )->where( 'option_name', $unique_key )->value( 'option_value' );
+		$this->assertSame( 'val1', $val );
+
+		// update with invalid column ignored.
+		$update_result = DB::table( 'options' )
+			->where( 'option_name', $unique_key )
+			->update(
+				array(
+					'option_value'           => 'val2',
+					'invalid; DROP TABLE;--' => 'ignored',
+				)
+			);
+		$this->assertTrue( $update_result );
+
+		$val2 = DB::table( 'options' )->where( 'option_name', $unique_key )->value( 'option_value' );
+		$this->assertSame( 'val2', $val2 );
+
+		// Clean up.
+		DB::table( 'options' )->where( 'option_name', $unique_key )->delete();
+	}
+
+	/**
+	 * Test that CRUD operations do not throw an exception when wpdb has a stale last_error.
+	 *
+	 * @return void
+	 */
+	public function test_crud_operations_ignore_stale_last_error() {
+		global $wpdb;
+
+		// Simulate a previous query failure that left last_error populated.
+		$wpdb->last_error = 'Table dummy_table does not exist';
+
+		$unique_key = 'qb_stale_err_' . time() . '_' . wp_rand( 1000, 9999 );
+
+		// insert should not throw.
+		$insert_id = DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $unique_key,
+				'option_value' => 'clean',
+				'autoload'     => 'no',
+			)
+		);
+		$this->assertGreaterThan( 0, $insert_id );
+
+		// update should not throw.
+		$wpdb->last_error = 'Stale update error';
+		$updated          = DB::table( 'options' )
+			->where( 'option_name', $unique_key )
+			->update( array( 'option_value' => 'clean_updated' ) );
+		$this->assertTrue( $updated );
+
+		// delete should not throw.
+		$wpdb->last_error = 'Stale delete error';
+		$deleted          = DB::table( 'options' )
+			->where( 'option_name', $unique_key )
+			->delete();
+		$this->assertSame( 1, $deleted );
+
+		// Reset last error.
+		$wpdb->last_error = '';
+	}
 }
