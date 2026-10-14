@@ -938,6 +938,11 @@ class Assets {
 	 * @return boolean
 	 */
 	public static function should_load_legacy_scripts(): bool {
+		// Always load in the admin panel.
+		if ( is_admin() ) {
+			return true;
+		}
+
 		$load = true;
 
 		$post_id = get_the_ID();
@@ -976,6 +981,21 @@ class Assets {
 				if ( $has_shortcode ) {
 					$load = false;
 					break;
+				}
+			}
+
+			// Ignore loading legacy scripts for these blocks on frontend.
+			if ( $load && function_exists( 'has_block' ) ) {
+				$blocks = array(
+					'tutor-gutenberg/student-registration',
+					'tutor-gutenberg/instructor-registration',
+				);
+
+				foreach ( $blocks as $block ) {
+					if ( has_block( $block, $post_id ) ) {
+						$load = false;
+						break;
+					}
 				}
 			}
 		}
