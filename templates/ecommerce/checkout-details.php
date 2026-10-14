@@ -223,6 +223,6 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 		$checkout_data->pay_now_btn_text        = $pay_now_btn_text;
 		$checkout_data->payment_method_required = $show_payment_methods;
 		?>
-		<input type="hidden" id="checkout_data" value="<?php echo esc_attr( wp_json_encode( $checkout_data ) ); ?>">
+		<input type="hidden" id="checkout_data" value="<?php echo esc_attr( tutor_json_encode( $checkout_data ) ); ?>">
 	</div>
 </div>

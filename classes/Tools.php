@@ -44,6 +44,7 @@ class Tools {
 	 */
 	public function regenerate_tutor_pages() {
 		tutor_utils()->checking_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$tutor_pages = tutor_utils()->tutor_pages();
 

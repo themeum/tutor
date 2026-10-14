@@ -22,7 +22,7 @@
 					<?php esc_html_e( 'Questions No', 'tutor' ); ?>:
 					</span>
 					<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary tutor-quiz-question-counter">
-						<span>1</span>/<?php echo esc_html( $total_questions ); ?>
+						<span><?php echo esc_html( $start_question_index ?? 1 ); ?></span>/<?php echo esc_html( $total_questions ); ?>
 					</span>
 				</div>
 				<?php
@@ -73,8 +73,8 @@
 				
 				<span id="tutor-quiz-time-update" 
 					class="tutor-fs-6 tutor-fw-medium tutor-text-nowrap <?php $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
-					data-attempt-settings="<?php echo esc_attr( wp_json_encode( $is_started_quiz ) ); ?>" 
-					data-attempt-meta="<?php echo esc_attr( wp_json_encode( $quiz_attempt_info ) ); ?>">
+					data-attempt-settings="<?php echo esc_attr( tutor_json_encode( $is_started_quiz ) ); ?>" 
+					data-attempt-meta="<?php echo esc_attr( tutor_json_encode( $quiz_attempt_info ) ); ?>">
 				
 				</span>
 			</div>
