@@ -221,7 +221,7 @@ class QueryHelper {
 
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // phpcs:ignore -- escape values.
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); //phpcs:ignore
 
 			if ( $first_key === $k ) {
 				$sql .= "INSERT INTO
