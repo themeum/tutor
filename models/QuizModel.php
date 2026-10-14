@@ -976,7 +976,7 @@ class QuizModel {
 	public static function get_quiz_answers_by_attempt_id( $attempt_id, $add_index = false ) {
 		global $wpdb;
 
-		$ids = array_values( array_filter( array_map( 'intval', (array) $attempt_id ) ) );
+		$ids = array_values( array_filter( array_map( 'intval', (array) $attempt_id ), fn( $id ) => $id > 0 ) );
 
 		if ( empty( $ids ) ) {
 			// Prevent empty.
@@ -1502,7 +1502,7 @@ class QuizModel {
 	 */
 	public static function get_quiz_count_by_course( $course_id ) {
 		global $wpdb;
-		$course_ids = array_values( array_filter( array_map( 'intval', (array) $course_id ) ) );
+		$course_ids = array_values( array_filter( array_map( 'intval', (array) $course_id ), fn( $id ) => $id > 0 ) );
 		if ( empty( $course_ids ) ) {
 			return 0;
 		}
