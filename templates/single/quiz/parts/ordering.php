@@ -17,8 +17,7 @@
 		$answer_i = 0;
 		foreach ( $answers as $answer ) {
 			$answer_i++;
-			$answer_title                         = stripslashes( $answer->answer_title );
-			$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
+			$answer_title = stripslashes( $answer->answer_title );
 			if ( 'image' === $answer->answer_view_format || 'text_image' === $answer->answer_view_format ) {
 				?>
 	<div class="quiz-image-ordering-ans tutor-d-flex tutor-align-center">

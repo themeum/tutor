@@ -22,7 +22,7 @@
 					<?php esc_html_e( 'Questions No', 'tutor' ); ?>:
 					</span>
 					<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary tutor-quiz-question-counter">
-						<span>1</span>/<?php echo esc_html( $total_questions ); ?>
+						<span><?php echo esc_html( $start_question_index ?? 1 ); ?></span>/<?php echo esc_html( $total_questions ); ?>
 					</span>
 				</div>
 				<?php
