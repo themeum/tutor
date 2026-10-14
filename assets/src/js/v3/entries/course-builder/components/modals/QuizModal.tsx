@@ -13,7 +13,15 @@ import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionT
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { CURRENT_VIEWPORT, DEFAULT_QUIZ_ATTEMPTS_ALLOWED, modal } from '@TutorShared/config/constants';
+import { tutorConfig } from '@TutorShared/config/config';
+import {
+  CURRENT_VIEWPORT,
+  DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
+  DEFAULT_QUIZ_NEGATIVE_MARK_TYPE,
+  DEFAULT_QUIZ_NEGATIVE_MARK_VALUE,
+  modal,
+  QUIZ_NEGATIVE_MARK_TYPES,
+} from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -101,6 +109,13 @@ const QuizModal = ({
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,
         open_ended_answer_characters_limit: 500,
+        enable_partial_marking: false,
+        enable_negative_marking: false,
+        negative_mark_type:
+          tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
+            ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
+            : DEFAULT_QUIZ_NEGATIVE_MARK_TYPE,
+        negative_mark_value: Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
         content_drip_settings: {
           unlock_date: '',
           after_xdays_of_enroll: 0,

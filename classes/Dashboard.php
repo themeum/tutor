@@ -48,7 +48,8 @@ class Dashboard {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
+		new DashboardSectionManager();
+		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ) );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
 		add_action( 'template_redirect', array( $this, 'redirect_old_dashboard_pages' ) );
 		add_filter( 'tutor_dashboard_back_url', array( $this, 'filter_dashboard_back_url' ) );
