@@ -1,10 +1,10 @@
-# DB Helper (`Tutor\Helpers\DB`)
+# DB Helper (`Tutor\Core\DB`)
 
-- **Class:** `Tutor\Helpers\DB`
-- **File:** `wp-content/plugins/tutor/helpers/DB.php`
-- **Namespace:** `Tutor\Helpers`
+- **Class:** `Tutor\Core\DB`
+- **File:** `wp-content/plugins/tutor/core/DB.php`
+- **Namespace:** `Tutor\Core`
 - **Since:** `4.2.0`
-- **Package:** `Tutor\Helpers`
+- **Package:** `Tutor\Core`
 
 ---
 
@@ -43,7 +43,7 @@ The `DB` class provides a fluent, chainable query builder interface for WordPres
 ## Quick Start
 
 ```php
-use Tutor\Helpers\DB;
+use Tutor\Core\DB;
 
 // Fetch active courses with instructor names
 $courses = DB::table('posts')

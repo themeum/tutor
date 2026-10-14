@@ -8,7 +8,7 @@
 
 namespace TutorTest;
 
-use Tutor\Helpers\DB;
+use Tutor\Core\DB;
 
 /**
  * Unit tests for DB fluent API and SQL compilation.

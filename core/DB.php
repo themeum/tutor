@@ -6,11 +6,11 @@
  * database queries while ensuring SQL injection prevention through
  * consistent use of $wpdb->prepare().
  *
- * @package Tutor\Helpers
+ * @package Tutor\Core
  * @since 4.2.0
  */
 
-namespace Tutor\Helpers;
+namespace Tutor\Core;
 
 use Closure;
 use Tutor\Exceptions\DatabaseException;
@@ -307,10 +307,10 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string          $table    Table to join.
-	 * @param string|Closure  $first    First column or Closure.
-	 * @param string          $operator Comparison operator.
-	 * @param string          $second   Second column.
+	 * @param string         $table    Table to join.
+	 * @param string|Closure $first    First column or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column.
 	 *
 	 * @return self
 	 */
@@ -329,10 +329,10 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string          $table    Table to join.
-	 * @param string|Closure  $first    First column or Closure.
-	 * @param string          $operator Comparison operator.
-	 * @param string          $second   Second column.
+	 * @param string         $table    Table to join.
+	 * @param string|Closure $first    First column or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column.
 	 *
 	 * @return self
 	 */
