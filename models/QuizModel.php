@@ -976,7 +976,7 @@ class QuizModel {
 	public static function get_quiz_answers_by_attempt_id( $attempt_id, $add_index = false ) {
 		global $wpdb;
 
-		$ids = array_values( array_filter( array_map( 'absint', (array) $attempt_id ) ) );
+		$ids = array_values( array_filter( array_map( 'intval', (array) $attempt_id ) ) );
 
 		if ( empty( $ids ) ) {
 			// Prevent empty.
@@ -1376,7 +1376,7 @@ class QuizModel {
 	public static function get_quiz_attempt_timing( $attempt_data ) {
 		$attempt_duration       = '';
 		$attempt_duration_taken = '';
-		$raw_info               = $attempt_data->attempt_info ?? '';
+		$raw_info               = trim( (string) $attempt_data->attempt_info ?? '' );
 		$attempt_info           = is_string( $raw_info ) && is_serialized( $raw_info ) ? unserialize( $raw_info, array( 'allowed_classes' => false ) ) : array();
 		if ( is_array( $attempt_info ) ) {
 			// Allowed duration.
@@ -1502,7 +1502,7 @@ class QuizModel {
 	 */
 	public static function get_quiz_count_by_course( $course_id ) {
 		global $wpdb;
-		$course_ids = array_values( array_filter( array_map( 'absint', (array) $course_id ) ) );
+		$course_ids = array_values( array_filter( array_map( 'intval', (array) $course_id ) ) );
 		if ( empty( $course_ids ) ) {
 			return 0;
 		}
