@@ -5416,7 +5416,7 @@ class Utils {
 		$total_questions = (int) $attempt->total_questions;
 		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = 'RAND()';
+		$order_by = ! empty( $attempt->attempt_id ) ? 'RAND(' . (int) $attempt->attempt_id . ')' : 'RAND()';
 		$order    = '';
 
 		if ( 'asc' === $questions_order ) {

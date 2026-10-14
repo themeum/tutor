@@ -34,7 +34,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table = self::prepare_table_name( $table );
-		$data  = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
+		$data  = \Tutor\Core\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,

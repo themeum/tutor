@@ -23,7 +23,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Variant;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\User;
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );

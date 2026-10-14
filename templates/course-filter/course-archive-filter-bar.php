@@ -13,7 +13,7 @@ if ( ! tutor_utils()->get_option( 'course_archive_filter_sorting', true, true, t
 	return;
 }
 
-$sort_by = \TUTOR\Input::get( 'course_order', '' );
+$sort_by = \Tutor\Core\Input::get( 'course_order', '' );
 ?>
 
 <!--
