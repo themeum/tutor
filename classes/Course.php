@@ -3649,10 +3649,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			foreach ( $content_parent as $topic ) {
-				$provided_topic_ids[]   = $topic['parent_topic_id'];
-				$provided_content_ids[] = $topic['content_id'];
-			}
+			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
+			$provided_content_ids[] = $content_parent['content_id'];			
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );

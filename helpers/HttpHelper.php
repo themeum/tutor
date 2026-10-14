@@ -101,45 +101,58 @@ class HttpHelper {
 	/**
 	 * Make HTTP GET request.
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $data    Optional. The data to include in the request (added to the URL as query parameters).
-	 * @param array  $headers Optional. Additional headers for the request.
+	 * @since 4.2.0 param $args added
+	 *
+	 * @param string $url     Request URL.
+	 * @param array  $data    Request body. Default empty array.
+	 * @param array  $headers Request headers. Default empty array.
+	 * @param array  $args    Additional arguments passed through to send(),
+	 *                        merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function get( $url, $data = array(), $headers = array() ) {
-		$url_with_params = add_query_arg( $data, $url );
+	public static function get( $url, $data = array(), $headers = array(), $args = array() ) {
 
-		$response = wp_remote_get( $url_with_params, array( 'headers' => $headers ) );
+		if ( ! empty( $data ) ) {
+			$url = UrlHelper::add_query_params( $url, $data );
+		}
 
-		$self = new self();
-		$self->parse_response( $response );
+		$args = array_merge(
+			array(
+				'headers' => $headers,
+				'method'  => self::METHOD_GET,
+			),
+			$args
+		);
 
-		return $self;
+		return self::send( $url, $args );
 	}
 
 	/**
 	 * Make HTTP POST request.
 	 *
-	 * @param string $url     The URL for the request.
-	 * @param array  $data    Optional. The data to include in the request body.
-	 * @param array  $headers Optional. Additional headers for the request.
+	 * @since 4.2.0 param $args added
+	 *
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
 	 *
 	 * @return self
 	 */
-	public static function post( $url, $data = array(), $headers = array() ) {
-		$response = wp_remote_post(
-			$url,
+	public static function post( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
 			array(
 				'body'    => $data,
 				'headers' => $headers,
-			)
+				'method'  => self::METHOD_POST,
+			),
+			$args
 		);
 
-		$self = new self();
-		$self->parse_response( $response );
-
-		return $self;
+		return self::send( $url, $args );
 	}
 
 	/**
@@ -194,5 +207,109 @@ class HttpHelper {
 	 */
 	public function get_error_message() {
 		return $this->wp_error->get_error_message();
+	}
+
+	/**
+	 * Sends an HTTP request and parses the response.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $url  Request URL.
+	 * @param array  $args Optional request arguments.
+	 *
+	 * @return self Parsed HTTP response instance.
+	 */
+	private static function send( $url, $args = array() ) {
+
+		$response = wp_remote_request(
+			$url,
+			$args
+		);
+
+		$self = new self();
+		$self->parse_response( $response );
+
+		return $self;
+	}
+
+	/**
+	 * Make HTTP PUT request.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
+	 *
+	 * @return self
+	 */
+	public static function put( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_PUT,
+			),
+			$args
+		);
+
+		return self::send( $url, $args );
+	}
+
+	/**
+	 * Make HTTP PATCH request.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
+	 *
+	 * @return self
+	 */
+	public static function patch( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_PATCH,
+			),
+			$args
+		);
+
+		return self::send( $url, $args );
+	}
+
+	/**
+	 * Make HTTP DELETE request.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string       $url     Request URL.
+	 * @param array|string $data    Request body. An array is form-encoded; a string (e.g. JSON) is sent as-is. Default empty array.
+	 * @param array        $headers Request headers. Default empty array.
+	 * @param array        $args    Additional arguments passed through to send(),
+	 *                              merged over the defaults. Default empty array.
+	 *
+	 * @return self
+	 */
+	public static function delete( $url, $data = array(), $headers = array(), $args = array() ) {
+
+		$args = array_merge(
+			array(
+				'body'    => $data,
+				'headers' => $headers,
+				'method'  => self::METHOD_DELETE,
+			),
+			$args
+		);
+
+		return self::send( $url, $args );
 	}
 }

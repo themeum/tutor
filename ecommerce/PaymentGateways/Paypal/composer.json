@@ -10,7 +10,6 @@
     }
   },
   "require": {
-    "guzzlehttp/guzzle": "^7.9.2",
     "brick/money": "0.7"
   }
 }
