@@ -24,9 +24,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/quiz-attempt-details/:id`
   
   ## Authentication
-  - **Requires** API key + Bearer JWT.
+  - **Requires** Bearer JWT.
   - Students see only their own attempts; instructors/admins with course access see all.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - Permission from the bound API key: `Read`, `Read/Write`, or `All`.
   
   ## Path Parameters
   
@@ -61,14 +61,16 @@ docs {
   }
   ```
   
-  Attempt rows do not include `course_id` / `quiz_id` in the SQL select. Nested answers are under `attempts_answer`; `is_correct` may be hidden for students.
+  Attempt rows do not include `course_id` / `quiz_id` in the SQL select. Nested answers are under `attempts_answer`; `is_correct` may be hidden for students when quiz details/answer keys are closed.
   
   ### 404 Not Found
   ```json
   {
     "code": "tutor_read_quiz",
     "message": "Quiz attempts not found for given ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

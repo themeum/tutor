@@ -41,7 +41,7 @@ docs {
   ## Authentication
   - **Type:** API Key headers only (no Bearer token yet)
   - **Headers:** `Tutor-Api-Key`, `Tutor-Api-Secret`
-  - **Required Permission:** Any valid API key permission (`Read`, `Write`, `Delete`, `Read/Write`, or `All`)
+  - **Required Permission:** Any valid API key permission (`Read` in Free; Pro may also offer `Write`, `Delete`, `Read/Write`, or `All`)
   
   ## Request Body
   
@@ -67,11 +67,29 @@ docs {
   }
   ```
   
-  On success, this request stores `access_token` and `refresh_token` in the active Bruno environment for subsequent requests.
+  On success, this request stores `access_token` and `refresh_token` in the active Bruno environment for subsequent requests. Subsequent Tutor REST calls use **Bearer JWT only** (not API key headers).
   
   ### 401 Unauthorized
-  Invalid username or password.
+  ```json
+  {
+    "code": "tutor_auth_login",
+    "message": "Invalid username or password.",
+    "data": {
+      "status": 401
+    }
+  }
+  ```
   
   ### 403 Forbidden
-  Missing or invalid API key/secret.
+  ```json
+  {
+    "code": "tutor_auth_login",
+    "message": "API key and secret are required.",
+    "data": {
+      "status": 403
+    }
+  }
+  ```
+  
+  (Invalid key/secret uses the same envelope with message `"Invalid API key or secret."`.)
 }

@@ -29,8 +29,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/course-rating/:id`
   
   ## Authentication
-  - **Public** (`__return_true`). Bearer optional.
+  - **Public** (`__return_true`). Bearer JWT optional.
   - Guests get a reduced review payload (display name, content, date, rating only).
+  - Authenticated callers get the full rating object (including `rating_sum`) and full approved review rows (`comment_author_email` omitted unless the caller may view private user fields).
   
   ## Path Parameters
   
@@ -47,7 +48,7 @@ docs {
   
   ## Responses
   
-  ### 200 OK (authenticated)
+  ### 200 OK — guest (reduced reviews)
   ```json
   {
     "code": "tutor_read_rating",
@@ -62,7 +63,45 @@ docs {
         "2": 0,
         "1": 0
       },
-      "reviews": []
+      "reviews": [
+        {
+          "display_name": "Alex",
+          "comment_content": "Great course!",
+          "comment_date_gmt": "2026-01-10 12:00:00",
+          "rating": 5
+        }
+      ]
+    }
+  }
+  ```
+  
+  ### 200 OK — authenticated
+  ```json
+  {
+    "code": "tutor_read_rating",
+    "message": "Course rating retrieved successfully",
+    "data": {
+      "rating_count": 8,
+      "rating_avg": 4.88,
+      "rating_sum": 39,
+      "count_by_value": {
+        "5": 7,
+        "4": 1,
+        "3": 0,
+        "2": 0,
+        "1": 0
+      },
+      "reviews": [
+        {
+          "comment_ID": "42",
+          "user_id": "14",
+          "display_name": "Alex",
+          "comment_content": "Great course!",
+          "comment_date": "2026-01-10 12:00:00",
+          "comment_date_gmt": "2026-01-10 12:00:00",
+          "rating": 5
+        }
+      ]
     }
   }
   ```
@@ -72,7 +111,9 @@ docs {
   {
     "code": "tutor_read_rating",
     "message": "Course not found",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

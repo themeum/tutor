@@ -28,23 +28,24 @@ docs {
   - **Route:** `/wp-json/tutor/v1/lessons`
   
   ## Authentication
-  - **With API key:** Bearer JWT — user must be able to view the parent course.
-  - **Without API key:** allowed only when the parent course is **public**.
-  - **Required Permission (API key):** `Read`, `Read/Write`, or `All`
+  - **With Bearer JWT:** user must be able to view the parent course.
+  - **Without JWT:** allowed only when the parent course is **public**.
+  - Permission for JWT callers comes from the bound API key (`Read`, `Read/Write`, or `All`).
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `topic_id` | `integer` | **Yes** | Parent topic post ID. |
+  | `topic_id` | `integer` | **Yes** | Parent topic post ID. Registered as a required REST arg; omitting it typically yields WordPress `rest_missing_callback_param` before the controller runs. |
   
-  ## Notes
+  ## Notes — outline vs full DTO
   
-  Guests / non-enrolled users on locked courses receive an **outline** (`ID`, `post_title`, `post_name`, `post_type`, optional `duration`). Full content, attachments, thumbnail, and video require learning-payload access.
+  - **Outline** (guests / non-enrolled on locked courses): `ID`, `post_title`, `post_name`, `post_type`, optional `duration`.
+  - **Full** (enrolled / unlocked / instructor): `ID`, `post_title`, `post_content`, `post_name`, `topic_id`, `attachments`, `thumbnail`, `video`.
   
   ## Responses
   
-  ### 200 OK (full lesson — enrolled / unlocked)
+  ### 200 OK — full lesson (enrolled / unlocked)
   ```json
   {
     "code": "tutor_read_lesson",
@@ -84,12 +85,32 @@ docs {
   
   `video` is the stored `_video` post meta (`get_post_meta(..., false)`), so it is an **array** of the internal meta object (`source` + `source_youtube`, etc.) — not the Pro write-API `{ source_type, source }` shape.
   
-  ### Missing `topic_id`
+  ### 200 OK — outline
   ```json
   {
     "code": "tutor_read_lesson",
-    "message": "topic_id is required",
-    "data": []
+    "message": "Lesson retrieved successfully",
+    "data": [
+      {
+        "ID": 301,
+        "post_title": "1.1 Setting Up Your Development Workspace",
+        "post_name": "1-1-setting-up-workspace",
+        "post_type": "lesson",
+        "duration": "00:10:00"
+      }
+    ]
+  }
+  ```
+  
+  ### Missing `topic_id` (WordPress validation)
+  ```json
+  {
+    "code": "rest_missing_callback_param",
+    "message": "Missing parameter(s): topic_id",
+    "data": {
+      "status": 400,
+      "params": ["topic_id"]
+    }
   }
   ```
   
@@ -98,7 +119,9 @@ docs {
   {
     "code": "tutor_read_lesson",
     "message": "Lesson not found for the given topic ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

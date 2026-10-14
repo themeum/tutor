@@ -44,10 +44,10 @@ docs {
   
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `refresh_token` | `string` | No* | Specific refresh token to revoke. |
-  | `all` | `boolean` | No | When `true`, revoke all refresh tokens for the user (requires Bearer access token, or a valid `refresh_token` to resolve the user). |
+  | `refresh_token` | `string` | No* | Specific refresh token to revoke (hash removed from that user’s stored list). |
+  | `all` | `boolean` | No | When `true`, bump `token_version` and delete all refresh tokens for the user. Resolves the user from Bearer access token, or from a valid `refresh_token` if Bearer is absent. |
   
-  \* Provide `refresh_token` and/or set `all: true` with a Bearer token.
+  \* Provide `refresh_token` and/or set `all: true` with a Bearer token (or a valid `refresh_token` to identify the user). Omitting both still returns success but revokes nothing.
   
   ## Responses
   

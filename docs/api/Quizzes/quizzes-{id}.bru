@@ -24,9 +24,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/quizzes/:id`
   
   ## Authentication
-  - **Requires** API key + Bearer JWT.
+  - **Requires** Bearer JWT.
   - User must be able to view the parent course.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - Permission from the bound API key: `Read`, `Read/Write`, or `All`.
   
   ## Path Parameters
   
@@ -36,11 +36,22 @@ docs {
   
   ## Notes
   
-  Correct-answer keys may be redacted when the caller cannot reveal quiz answers.
+  ### Response fields (`REST_Quiz::get_quiz`)
+  - Public post DTO: `ID`, `post_title`, `post_content`, `post_name`
+  - `quiz_settings`: from quiz post meta `tutor_quiz_option` (`get_post_meta(..., false)` → array)
+  - `quiz_questions`: rows from `tutor_quiz_questions` with `question_id`, `question_title`, `question_description`, `question_type`, `question_mark`, `question_settings`, `question_answers`
+  - `question_settings` is selected from the questions table column. Current PHP does not reliably unserialize it on this endpoint (unlike `GET /quiz-question-answer/{id}`, which calls `maybe_unserialize` on each question). Expect a serialized string or already-unserialized array depending on storage.
+  
+  ### Answer redaction (students)
+  When `RestAuth::can_reveal_quiz_answers` is false:
+  - Choice types (`true_false`, `single_choice`, `multiple_choice`): keep option titles; strip `is_correct` and `answer_two_gap_match`
+  - Other types: `question_answers` is emptied
+  
+  Instructors / admins with course content access, or students after a finished attempt when “Hide Quiz Details” is off, may still receive answer keys.
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK (instructor / answers revealed)
   ```json
   {
     "code": "tutor_read_quiz",
@@ -67,7 +78,7 @@ docs {
           "question_description": "Select the correct answer.",
           "question_type": "single_choice",
           "question_mark": "1",
-          "question_settings": "...",
+          "question_settings": "a:2:{s:15:\"answer_required\";s:1:\"1\";s:18:\"randomize_question\";s:1:\"0\";}",
           "question_answers": [
             {
               "answer_id": "45",
@@ -93,7 +104,9 @@ docs {
   {
     "code": "tutor_read_quiz",
     "message": "Quiz not found for given ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

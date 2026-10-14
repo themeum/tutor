@@ -24,9 +24,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/course-announcement/:id`
   
   ## Authentication
-  - **Requires** API key + Bearer JWT (always authenticated).
+  - **Requires** Bearer JWT (always authenticated).
   - User must be able to view the course.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - Permission from the bound API key: `Read`, `Read/Write`, or `All`.
   
   ## Path Parameters
   
@@ -57,7 +57,9 @@ docs {
   {
     "code": "tutor_read_announcement",
     "message": "Announcement not found for given ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

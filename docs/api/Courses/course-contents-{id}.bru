@@ -24,9 +24,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/course-contents/:id`
   
   ## Authentication
-  - **With API key + JWT:** user must be able to view the course.
-  - **Without API key:** allowed only when the course is **public**.
-  - **Required Permission (API key):** `Read`, `Read/Write`, or `All`
+  - **With Bearer JWT:** user must be able to view the course (enrolled / instructor / public).
+  - **Without JWT:** allowed only when the course is **public**.
+  - Permission for JWT callers comes from the bound API key (`Read`, `Read/Write`, or `All`).
   
   ## Path Parameters
   
@@ -36,7 +36,7 @@ docs {
   
   ## Notes
   
-  When learning payloads cannot be revealed, topic `summary` is empty and content items are outline-only (no `post_content`).
+  When learning payloads cannot be revealed, topic `summary` is empty and content items are outline-only (`ID`, `post_title`, `post_name`, `post_type`, `menu_order`, optional `duration`) — no `post_content`.
   
   ## Responses
   
@@ -78,7 +78,9 @@ docs {
   {
     "code": "tutor_read_course",
     "message": "Contents for this course with the given course id not found",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

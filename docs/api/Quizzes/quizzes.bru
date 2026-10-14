@@ -28,15 +28,15 @@ docs {
   - **Route:** `/wp-json/tutor/v1/quizzes`
   
   ## Authentication
-  - **Requires** API key + Bearer JWT (always authenticated).
+  - **Requires** Bearer JWT (always authenticated).
   - User must be able to view the parent course.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - Permission from the bound API key: `Read`, `Read/Write`, or `All`.
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `topic_id` | `integer` | **Yes** | Parent topic post ID. |
+  | `topic_id` | `integer` | **Yes** | Parent topic post ID. Required REST arg; omitting it typically yields `rest_missing_callback_param`. |
   
   ## Responses
   
@@ -67,14 +67,16 @@ docs {
   }
   ```
   
-  `quiz_settings` is `get_post_meta(..., 'tutor_quiz_option', false)` (array of settings objects).
+  Each item is a public post DTO (`ID`, `post_title`, `post_content`, `post_name`) plus `quiz_settings` from `get_post_meta(..., 'tutor_quiz_option', false)` (array of settings objects).
   
   ### 404 Not Found
   ```json
   {
     "code": "tutor_read_quiz",
     "message": "Quiz not found for given ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

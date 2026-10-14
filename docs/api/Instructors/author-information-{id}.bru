@@ -24,8 +24,16 @@ docs {
   - **Route:** `/wp-json/tutor/v1/author-information/:id`
   
   ## Authentication
-  - **Public** when the user's public profile layout is not private.
-  - Bearer optional. Private fields (`user_login`, `user_email`, `user_registered`, `user_url`) only when the caller may view private user fields.
+  - **Public** when the user's public profile layout is not private (`permission_public_author`).
+  - Bearer JWT optional.
+  
+  ## Public vs private fields
+  
+  Always returned:
+  - `ID`, `display_name`, `user_nicename`, `courses` (published instructor course IDs)
+  
+  Added only when `RestAuth::can_view_user_private_fields( target_user_id )` is true (self, users with `list_users`, or instructor of a course the target is enrolled in):
+  - `user_login`, `user_email`, `user_registered`, `user_url`
   
   ## Path Parameters
   
@@ -35,7 +43,7 @@ docs {
   
   ## Responses
   
-  ### 200 OK (public fields)
+  ### 200 OK — public fields
   ```json
   {
     "code": "tutor_read_author",
@@ -49,12 +57,32 @@ docs {
   }
   ```
   
+  ### 200 OK — with private fields
+  ```json
+  {
+    "code": "tutor_read_author",
+    "message": "Author details retrieved successfully",
+    "data": {
+      "ID": 1,
+      "display_name": "Jane Doe",
+      "user_nicename": "jane_instructor",
+      "courses": [105, 110, 120],
+      "user_login": "jane",
+      "user_email": "jane@example.com",
+      "user_registered": "2024-01-01 00:00:00",
+      "user_url": "https://example.com"
+    }
+  }
+  ```
+  
   ### 404 Not Found
   ```json
   {
     "code": "tutor_read_author",
     "message": "Author not found",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

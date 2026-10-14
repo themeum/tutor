@@ -24,15 +24,19 @@ docs {
   - **Route:** `/wp-json/tutor/v1/quiz-question-answer/:id`
   
   ## Authentication
-  - **Requires** API key + Bearer JWT.
+  - **Requires** Bearer JWT.
   - User must be able to view the parent course.
-  - **Required Permission:** `Read`, `Read/Write`, or `All`
+  - Permission from the bound API key: `Read`, `Read/Write`, or `All`.
   
   ## Path Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
   | `id` | `integer` | **Yes** | Quiz post ID. |
+  
+  ## Notes
+  
+  `question_settings` is unserialized from the questions table. Correctness may be redacted the same way as `GET /quizzes/{id}` when the caller cannot reveal quiz answers.
   
   ## Responses
   
@@ -69,14 +73,16 @@ docs {
   }
   ```
   
-  This is a list of questions with nested answers (not a flattened question+answer row list). Correctness may be redacted.
+  This is a list of questions with nested answers (not a flattened question+answer row list).
   
   ### 404 Not Found
   ```json
   {
     "code": "tutor_read_quiz",
     "message": "Question not found for given ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

@@ -33,17 +33,28 @@ Tutor LMS REST API uses **JWT authentication** (since 4.2.0):
 ### Auth flow
 
 ```
-Tutor-Api-Key + Tutor-Api-Secret + username/password
+Login only:
+  Tutor-Api-Key + Tutor-Api-Secret + username/password
         │
         ▼
   POST /auth/login  →  access_token + refresh_token
         │
         ▼
+Other Tutor REST routes (when authenticated):
   Authorization: Bearer <access_token>  (or Tutor-User-Token header)
         │
         ├── POST /auth/refresh  (body: refresh_token) when access expires
         └── POST /auth/logout   (invalidate refresh token(s))
 ```
+
+**Auth clarification**
+
+| Route                       | Credentials                                                                                                                                     |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /auth/login`          | `Tutor-Api-Key` + `Tutor-Api-Secret` headers + username/password body                                                                           |
+| All other Tutor REST routes | Bearer JWT only (`Authorization: Bearer …` or `Tutor-User-Token`). Permission is taken from the API key id (`kid`) bound into the access token. |
+| `POST /auth/refresh`        | Refresh token in body (no API key / Bearer required)                                                                                            |
+| `POST /auth/logout`         | Optional Bearer and/or `refresh_token` / `all` in body                                                                                          |
 
 ---
 
@@ -78,16 +89,55 @@ Run **Authentication → Login** first (or ensure `access_token` is set) before 
 
 ## API Response Format
 
+Successful Tutor REST responses use an operation-specific `code` (not a generic `"success"`):
+
 ```json
 {
-  "code": "success",
+  "code": "tutor_read_course",
   "message": "Human readable message",
   "data": {}
 }
 ```
 
-### Common Status Codes
+Examples of operation codes: `tutor_read_course`, `tutor_read_rating`, `tutor_read_quiz`, `tutor_auth_login`, `tutor_auth_refresh`, `tutor_auth_logout`.
 
-- `200 OK`: Request succeeded.
+### Error shape (`WP_Error`)
+
+HTTP status ≥ 400 responses are WordPress `WP_Error` objects. The REST API serializes them as:
+
+```json
+{
+  "code": "tutor_read_course",
+  "message": "Course not found",
+  "data": {
+    "status": 404
+  }
+}
+```
+
+When the controller passes extra error details, they appear under `data.details`:
+
+```json
+{
+  "code": "tutor_validation_error",
+  "message": "Invalid input",
+  "data": {
+    "status": 400,
+    "details": { "field": "…" }
+  }
+}
+```
+
+WordPress may also return core codes such as `rest_missing_callback_param` (missing required args) with `data.status` and `data.params`.
+
+### HTTP status codes
+
+- `200 OK`: Request succeeded (Tutor core read/auth routes).
+- `201 Created`: Not used by Tutor LMS **core** REST routes today (core is mostly `GET` plus auth). Pro write endpoints may return `201` where applicable.
+- `400 Bad Request`: Validation / missing required parameters.
 - `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT, revoked API key, or insufficient permission.
 - `404 Not Found`: Resource does not exist for the provided ID.
+
+### Ecommerce webhook exception
+
+`POST|GET|… /ecommerce-webhook/{payment_method}` does **not** use the Tutor JSON envelope. It is a public gateway callback: empty `payment_method` logs and exits; otherwise the gateway driver verifies the signature and may redirect. Prefer treating `payment_method` as effectively required.

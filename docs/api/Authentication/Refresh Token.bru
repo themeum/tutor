@@ -60,8 +60,24 @@ docs {
   ```
   
   ### 401 Unauthorized
-  Invalid or expired refresh token.
+  ```json
+  {
+    "code": "tutor_auth_refresh",
+    "message": "Invalid refresh token.",
+    "data": {
+      "status": 401
+    }
+  }
+  ```
   
   ### 403 Forbidden
-  API key bound to the refresh session has been revoked.
+  ```json
+  {
+    "code": "tutor_auth_refresh",
+    "message": "API key has been revoked.",
+    "data": {
+      "status": 403
+    }
+  }
+  ```
 }
