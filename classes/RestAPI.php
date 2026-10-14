@@ -178,8 +178,15 @@ class RestAPI {
 			return $response;
 		}
 
-		// Prevent write actions which are only allowed for author.
-		if ( $is_write && ! current_user_can( 'edit_post', $id ) ) {
+		// Prefer Tutor manage rules over raw edit_post. For another author's course,
+		// edit_post maps to edit_others_tutor_courses, which administrators may lack
+		// even though User::is_admin() / can_user_edit_course() should allow the write.
+		$can_edit = User::is_admin()
+			|| tutor_utils()->can_user_edit_course( get_current_user_id(), $id )
+			|| current_user_can( 'edit_post', $id );
+
+		// Prevent write actions which are only allowed for author / course managers.
+		if ( $is_write && ! $can_edit ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
@@ -187,8 +194,8 @@ class RestAPI {
 			);
 		}
 
-		// Prevent access to non-publish posts, only author can access.
-		if ( 'publish' !== $post->post_status && ! current_user_can( 'edit_post', $id ) ) {
+		// Prevent access to non-publish posts, only author / course managers can access.
+		if ( 'publish' !== $post->post_status && ! $can_edit ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
