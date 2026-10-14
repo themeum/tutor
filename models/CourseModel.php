@@ -122,7 +122,7 @@ class CourseModel {
 			return false;
 		}
 
-		if ( tutils()->count( $args ) && isset( $args['status'] ) ) {
+		if ( tutils()->count( $args['status'] ) ) {
 			$requested_status = array_intersect( $args['status'], Course::course_status_list() );
 		}
 
