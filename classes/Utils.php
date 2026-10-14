@@ -5416,7 +5416,7 @@ class Utils {
 		$total_questions = (int) $attempt->total_questions;
 		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = 'RAND()';
+		$order_by = ! empty( $attempt->attempt_id ) ? 'RAND(' . (int) $attempt->attempt_id . ')' : 'RAND()';
 		$order    = '';
 
 		if ( 'asc' === $questions_order ) {
@@ -9709,6 +9709,8 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
+	 * @since 4.2.0 Removed the total_enrollment count since no caller is using it
+	 *
 	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
@@ -9738,7 +9740,6 @@ class Utils {
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
 				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);
 
@@ -9752,7 +9753,6 @@ class Utils {
 					'tutor_quiz'        => array(),
 					'lesson'            => array(),
 					'topics'            => 0,
-					'tutor_enrolled'    => 0,
 				);
 			}
 
@@ -9779,7 +9779,6 @@ class Utils {
 			}
 		}
 
-		$course_meta = $this->assign_child_count( $course_meta, 'tutor_enrolled' );
 		$course_meta = $this->assign_child_count( $course_meta, 'topics' );
 
 		// Return single count if the course id was single.
