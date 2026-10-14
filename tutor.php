@@ -19,7 +19,7 @@ use TUTOR\Tutor;
 
 defined( 'ABSPATH' ) || exit;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 
 /**
  * Constants for tutor plugin.

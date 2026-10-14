@@ -16,7 +16,7 @@ use TUTOR\Dashboard;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Helpers\UrlHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\User;
 
 $is_account_route = tutor_utils()->is_dashboard_page( Dashboard::ACCOUNT_PAGE_SLUG );

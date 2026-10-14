@@ -13,7 +13,7 @@ namespace Tutor\GDPR\Controllers;
 use Exception;
 use Tutor\GDPR\Models\UserConsents;
 use Tutor\Helpers\ValidationHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Traits\JsonResponse;
 use WP_User;
 

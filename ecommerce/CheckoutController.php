@@ -13,7 +13,7 @@ namespace Tutor\Ecommerce;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\GDPR\Controllers\LegalConsent;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;

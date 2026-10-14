@@ -12,7 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 /**
  * WithdrawModel Class

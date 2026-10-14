@@ -16,7 +16,7 @@ use TUTOR\Course;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
