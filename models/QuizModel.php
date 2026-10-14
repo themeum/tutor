@@ -1926,17 +1926,6 @@ class QuizModel {
 	public static function update_attempt_result( $attempt_id ) {
 		$attempt_result = self::prepare_attempt_result( $attempt_id );
 		if ( $attempt_result ) {
-			if ( self::RESULT_PENDING !== $attempt_result ) {
-				QueryHelper::update(
-					'tutor_quiz_attempts',
-					array( 'attempt_status' => self::ATTEMPT_ENDED ),
-					array(
-						'attempt_id'     => $attempt_id,
-						'attempt_status' => self::REVIEW_REQUIRED,
-					)
-				);
-			}
-
 			QueryHelper::update(
 				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
 				array( 'result' => $attempt_result ),
