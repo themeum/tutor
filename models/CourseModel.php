@@ -272,16 +272,15 @@ class CourseModel {
 			return (int) $cache;
 		}
 
-		$course_post_type   = QueryHelper::prepare_in_clause( $post_type );
-		$course_post_status = QueryHelper::prepare_in_clause( $post_status );
+		$course_post_type   = count( $post_type ) ? QueryHelper::prepare_in_clause( $post_type ) : "''";
+		$course_post_status = count( $post_status ) ? QueryHelper::prepare_in_clause( $post_status ) : "''";
 		$search_sql         = '';
+		$params             = array( $instructor_id, '_tutor_instructor_course_id' );
 		if ( ! empty( $search ) ) {
 			$like       = '%' . $wpdb->esc_like( $search ) . '%';
-			$search_sql = $wpdb->prepare(
-				" AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ",
-				$like,
-				$like
-			);
+			$search_sql = " AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ";
+			$params[]   = $like;
+			$params[]   = $like;
 		}
 
 		// phpcs:disable
@@ -297,8 +296,7 @@ class CourseModel {
 				AND post_type IN ({$course_post_type})
 				{$search_sql}
 			",
-				$instructor_id,
-				'_tutor_instructor_course_id',
+			$params
 			)
 		);
 		// phpcs:enable
@@ -397,7 +395,7 @@ class CourseModel {
 		$query = $wpdb->prepare(
 			"SELECT $select_col
 			FROM {$wpdb->posts}
-			INNER JOIN {$wpdb->usermeta}
+			LEFT JOIN {$wpdb->usermeta}
 				ON {$wpdb->usermeta}.user_id = %d
 				AND {$wpdb->usermeta}.meta_key = %s
 				AND {$wpdb->usermeta}.meta_value = {$wpdb->posts}.ID
@@ -1473,7 +1471,7 @@ class CourseModel {
 
 		$courses = TutorCache::get( $cache_key );
 
-		if ( ! $courses ) {
+		if ( ! tutor_utils()->count( $courses ) ) {
 			// Don't need to call this twice.
 			$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
 			TutorCache::set( $cache_key, $courses );
