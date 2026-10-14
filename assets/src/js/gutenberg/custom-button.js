@@ -8,11 +8,13 @@ import { __ } from '@wordpress/i18n';
  */
 
  ( function( window, wp ){
-    const buttonId = 'tutor-frontend-builder-trigger';
+    const buttonId    = 'tutor-frontend-builder-trigger';
+    const editUrl     = tutorInlineData?.edit_course_url;
+    const buttonLabel = tutorInlineData?.button_label || __('Edit with Course Builder', 'tutor');
     // prepare our custom link's html.
     const buttonHtml = `
-        <a id="${buttonId}" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-text-nowrap" href="${tutorInlineData.frontend_dashboard_url}" target="_blank">
-        ${__('Edit with Frontend Course Builder', 'tutor')}
+        <a id="${buttonId}" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-text-nowrap" href="${editUrl}">
+        ${buttonLabel}
         </a>
     `;
 

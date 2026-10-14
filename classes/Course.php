@@ -159,6 +159,11 @@ class Course extends Tutor_Base {
 		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
 
 		/**
+		 * Classic editor Course Builder button
+		 */
+		add_action( 'edit_form_after_title', array( $this, 'add_course_builder_button_classic_editor' ) );
+
+		/**
 		 * Do Stuff for the course save from frontend
 		 */
 		add_action( 'save_tutor_course', array( $this, 'attach_product_with_course' ), 10, 2 );
@@ -2502,6 +2507,33 @@ class Course extends Tutor_Base {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Add "Edit with Course Builder" button on classic editor
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param \WP_Post $post post object.
+	 *
+	 * @return void
+	 */
+	public function add_course_builder_button_classic_editor( $post ) {
+		if ( ! is_a( $post, 'WP_Post' ) || $this->course_post_type !== $post->post_type ) {
+			return;
+		}
+
+		$course_id = $post->ID;
+		$edit_url  = tutor_utils()->course_edit_link( $course_id );
+
+		?>
+		<div class="tutor-classic-editor-builder-btn-wrap" style="margin: 15px 0 10px;">
+			<a href="<?php echo esc_url( $edit_url ); ?>" class="button button-primary button-large" style="display: inline-flex; align-items: center; gap: 6px;">
+				<span class="dashicons dashicons-edit" style="font-size: 18px; line-height: 1.2;"></span>
+				<?php esc_html_e( 'Edit with Course Builder', 'tutor' ); ?>
+			</a>
+		</div>
+		<?php
 	}
 
 

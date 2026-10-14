@@ -845,13 +845,15 @@ class Assets {
 
 		if ( is_a( $wp_screen, 'WP_Screen' ) && tutor()->course_post_type === $wp_screen->post_type ) {
 			wp_enqueue_script( 'tutor-gutenberg', tutor()->url . 'assets/js/tutor-gutenberg.js', array(), TUTOR_VERSION, true );
-			$data = array(
-				'frontend_dashboard_url' => esc_url( trailingslashit( tutor_utils()->tutor_dashboard_url( 'create-course' ) ) ) . '?course_id=' . get_the_ID(),
+			$course_id = get_the_ID();
+			$data      = array(
+				'edit_course_url' => esc_url( tutor_utils()->course_edit_link( $course_id ) ),
+				'button_label'    => __( 'Edit with Course Builder', 'tutor' ),
 			);
 
 			wp_add_inline_script(
 				'tutor-gutenberg',
-				'const tutorInlineData =' . json_encode( $data ),
+				'const tutorInlineData = ' . wp_json_encode( $data ) . ';',
 				'before'
 			);
 		}
