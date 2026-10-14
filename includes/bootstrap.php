@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Map old tutor classes to new namespace.
+ * Map old namespace to new namespace.
  *
  * @since 4.2.0
  *
