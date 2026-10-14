@@ -6,6 +6,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var array $menu_items passed from tutor\templates\learning-area\index.php
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -42,7 +44,6 @@ $course_retake_modal_id;
 $is_preview  = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
 $current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
-$menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Template::learning_area_active_subpage();
 
 $course_reset_progress = tutor_utils()->get_option( 'course_reset_progress', false );
