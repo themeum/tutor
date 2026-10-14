@@ -5,6 +5,7 @@
   "autoload": {
     "psr-4": {
       "TUTOR\\": "classes/",
+      "Tutor\\Core\\": "core/",
       "Tutor\\Components\\": "components/",
       "Tutor\\Cache\\": "cache/",
       "Tutor\\Migrations\\":"migrations/",

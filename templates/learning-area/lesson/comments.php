@@ -15,7 +15,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Lesson;
 
 $user_id       = get_current_user_id();

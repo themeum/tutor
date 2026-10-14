@@ -19,12 +19,25 @@ use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
 
-$quick_tips = array(
-	__( 'Use notes to save key ideas as you watch', 'tutor' ),
-	__( 'Check the calendar for upcoming live sessions', 'tutor' ),
-	__( 'Discussions are a great place to ask questions', 'tutor' ),
-	__( 'You can pause and resume courses any time', 'tutor' ),
-);
+$quick_tips = array();
+
+if ( tutor_utils()->should_show_dicussion_menu() ) {
+	$quick_tips[] = __( 'Discussions are a great place to ask questions', 'tutor' );
+}
+
+$quick_tips[] = __( 'You can pause and resume courses any time', 'tutor' );
+
+/**
+ * Filter the quick tips shown on the empty student dashboard.
+ *
+ * Pro/addon features append their own tips (e.g. lesson notes, calendar)
+ * so the tips stay in sync with the site configuration.
+ *
+ * @since 4.2.0
+ *
+ * @param string[] $quick_tips List of tip strings.
+ */
+$quick_tips = apply_filters( 'tutor_dashboard_quick_tips', $quick_tips );
 ?>
 <div class="tutor-dashboard-welcome-card">
 	<div class="tutor-dashboard-welcome-content">
