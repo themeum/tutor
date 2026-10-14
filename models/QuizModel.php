@@ -976,7 +976,7 @@ class QuizModel {
 	public static function get_quiz_answers_by_attempt_id( $attempt_id, $add_index = false ) {
 		global $wpdb;
 
-		$ids = array_filter( array_map( 'absint', (array) $attempt_id ) );
+		$ids = array_values( array_filter( array_map( 'absint', (array) $attempt_id ) ) );
 
 		if ( empty( $ids ) ) {
 			// Prevent empty.
@@ -1377,7 +1377,7 @@ class QuizModel {
 		$attempt_duration       = '';
 		$attempt_duration_taken = '';
 		$raw_info               = $attempt_data->attempt_info ?? '';
-		$attempt_info           = is_string( $raw_info ) ? unserialize( $raw_info, array( 'allowed_classes' => false ) ) : array();
+		$attempt_info           = is_string( $raw_info ) && is_serialized( $raw_info ) ? unserialize( $raw_info, array( 'allowed_classes' => false ) ) : array();
 		if ( is_array( $attempt_info ) ) {
 			// Allowed duration.
 			if ( isset( $attempt_info['time_limit'] ) ) {
@@ -1496,22 +1496,32 @@ class QuizModel {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param int $course_id Course id.
+	 * @param int|array $course_id Course id or array of course ids.
 	 *
 	 * @return int
 	 */
 	public static function get_quiz_count_by_course( $course_id ) {
-		$topic_ids = tutor_utils()->get_topics( absint( $course_id ), array( 'fields' => 'ids' ) )->get_posts();
+		global $wpdb;
+		$course_ids = array_values( array_filter( array_map( 'absint', (array) $course_id ) ) );
+		if ( empty( $course_ids ) ) {
+			return 0;
+		}
 
-		$count = QueryHelper::get_count(
-			'posts',
-			array(
-				'post_parent' => array( 'IN', $topic_ids ),
-				'post_type'   => tutor()->quiz_post_type,
-				'post_status' => 'publish',
+		$placeholders = implode( ', ', array_fill( 0, count( $course_ids ), '%d' ) );
+
+		//phpcs:disable
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(ID) FROM {$wpdb->posts}
+			    WHERE post_parent IN (
+				    SELECT ID FROM {$wpdb->posts}
+				    WHERE post_type = 'topics' AND post_parent IN ({$placeholders}) AND post_status = 'publish'
+			    )
+            AND post_type = %s AND post_status = 'publish'",
+				array( ...$course_ids, tutor()->quiz_post_type )
 			)
 		);
-		return $count ? $count : 0;
+		//phpcs:enable
 	}
 
 	/**
