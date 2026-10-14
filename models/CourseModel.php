@@ -16,6 +16,7 @@ use TUTOR\Course;
 use TUTOR\Lesson;
 use Tutor\Ecommerce\Tax;
 use InvalidArgumentException;
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
@@ -252,16 +253,37 @@ class CourseModel {
 	 * Get course count by instructor
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 param $post_type,$post_status and $search added.
 	 *
-	 * @param int $instructor_id instructor ID.
+	 * @param int    $instructor_id instructor ID.
+	 * @param array  $post_type the post types.
+	 * @param array  $post_status the post statuses.
+	 * @param string $search the search term.
 	 *
-	 * @return null|string
+	 * @return int
 	 */
-	public static function get_course_count_by_instructor( $instructor_id ) {
+	public static function get_course_count_by_instructor( $instructor_id, $post_type = array( self::POST_TYPE ), $post_status = array( self::STATUS_PUBLISH ), $search = '' ) {
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$cache_key = 'tutor_course_count_by_instructor_' . $instructor_id . '_' . implode( '_', $post_type ) . '_' . implode( '_', $post_status ) . '_' . $search;
 
+		$cache = TutorCache::get( $cache_key );
+		if ( false !== $cache ) {
+			return (int) $cache;
+		}
+
+		$course_post_type   = count( $post_type ) ? QueryHelper::prepare_in_clause( $post_type ) : "''";
+		$course_post_status = count( $post_status ) ? QueryHelper::prepare_in_clause( $post_status ) : "''";
+		$search_sql         = '';
+		$params             = array( $instructor_id, '_tutor_instructor_course_id' );
+		if ( ! empty( $search ) ) {
+			$like       = '%' . $wpdb->esc_like( $search ) . '%';
+			$search_sql = " AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ";
+			$params[]   = $like;
+			$params[]   = $like;
+		}
+
+		// phpcs:disable
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(ID)
@@ -270,15 +292,16 @@ class CourseModel {
 							ON user_id = %d
 							AND meta_key = %s
 							AND meta_value = ID
-			WHERE 	post_status = %s
-					AND post_type = %s;
+			WHERE 	post_status IN ({$course_post_status})
+				AND post_type IN ({$course_post_type})
+				{$search_sql}
 			",
-				$instructor_id,
-				'_tutor_instructor_course_id',
-				'publish',
-				$course_post_type
+			$params
 			)
 		);
+		// phpcs:enable
+
+		TutorCache::set( $cache_key, $count );
 
 		return $count;
 	}
@@ -1441,10 +1464,18 @@ class CourseModel {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		if ( empty( $start_date ) && empty( $end_date ) ) {
-			return (int) self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX, true );
+			return (int) self::get_course_count_by_instructor( $user_id, array( tutor()->course_post_type ), array( 'publish', 'private' ) );
 		}
 
-		$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
+		$cache_key = 'tutor_course_count_by_date_' . $user_id;
+
+		$courses = TutorCache::get( $cache_key );
+
+		if ( ! tutor_utils()->count( $courses ) ) {
+			// Don't need to call this twice.
+			$courses = self::get_courses_by_instructor( $user_id, array( 'publish', 'private' ), 0, PHP_INT_MAX );
+			TutorCache::set( $cache_key, $courses );
+		}
 
 		if ( empty( $courses ) ) {
 			return 0;
