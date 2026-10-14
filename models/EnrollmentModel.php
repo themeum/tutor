@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\TutorCache;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
@@ -281,9 +283,17 @@ class EnrollmentModel {
 	 */
 	public static function get_enrolled_data( $user_id = 0, $course_id = 0, $status = self::STATUS_COMPLETED ) {
 		global $wpdb;
+		$user_id   = absint( $user_id );
+		$course_id = absint( $course_id );
+
+		if ( ! empty( $status ) && ! in_array( $status, array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ), true ) ) {
+			return null;
+		}
+
 		$status_clause = $status ? $wpdb->prepare( 'AND post_status = %s ', $status ) : '';
+
 		// If course ID provided, it will return single row data.
-		if ( $course_id > 0 ) {
+		if ( $course_id > 0 && tutor()->course_post_type === get_post_type( $course_id ) ) {
 			return $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT * FROM 	{$wpdb->posts} 
