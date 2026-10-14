@@ -1211,15 +1211,16 @@ class Course extends Tutor_Base {
 
 		$this->check_access( $course_id );
 
-		$builder = Input::post( 'builder' );
+		$builder      = Input::post( 'builder' );
+		$post_content = (string) get_post_field( 'post_content', $course_id, 'raw' );
 		if ( 'elementor' === $builder ) {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
 			delete_post_meta( $course_id, 'droip_editor_mode' );
 		} elseif ( 'divi' === $builder ) {
-			$old_post_content     = get_post_meta( $course_id, '_et_pb_old_content', true );
+			$post_content         = get_post_meta( $course_id, '_et_pb_old_content', true );
 			$course               = get_post( $course_id );
-			$course->post_content = $old_post_content;
+			$course->post_content = $post_content;
 			$result               = wp_update_post( $course );
 
 			if ( $result && ! is_wp_error( $result ) ) {
@@ -1233,7 +1234,10 @@ class Course extends Tutor_Base {
 
 		$this->json_response(
 			__( 'Builder unlinked successfully.', 'tutor' ),
-			$course_id,
+			array(
+				'course_id'    => $course_id,
+				'post_content' => $post_content,
+			),
 			HttpHelper::STATUS_OK
 		);
 	}
