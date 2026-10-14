@@ -166,7 +166,7 @@ class CourseModel {
 	public static function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
 		global $wpdb;
 
-		$excludes      = array_filter( array_map( 'absint', (array) $excludes ) );
+		$excludes      = array_values( array_filter( array_map( 'intval', (array) $excludes ), fn( $id ) => $id > 0 ) );
 		$exclude_query = '';
 		$post_status   = array_intersect( $post_status, self::get_status_list() );
 
