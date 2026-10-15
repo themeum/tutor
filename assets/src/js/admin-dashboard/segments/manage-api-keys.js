@@ -10,13 +10,46 @@ document.addEventListener("DOMContentLoaded", async function() {
     const submitBtn = document.querySelector("#tutor-generate-api-keys button[type=submit]");
     const modal = document.getElementById("tutor-add-new-api-keys");
     const noRecordElem = document.getElementById("tutor-api-keys-no-record");
+    const tokenSettingsForm = document.getElementById("tutor-rest-api-token-settings");
+    const tokenSettingsSubmitBtn = document.querySelector("#tutor-rest-api-token-settings button[type=submit]");
     
     const updatePermissionForm = document.querySelector("#tutor-update-permission-form");
     const updateSubmitBtn = document.querySelector("#tutor-update-permission-modal button[type=submit]");
     const updatePermissionModal = document.querySelector("#tutor-update-permission-modal");
 
-    if (!keysListWrapper) {
+    if (!keysListWrapper && !tokenSettingsForm) {
         return;
+    }
+
+    const isSuccessResponse = (res) => Number(res?.status_code) === 200;
+    const getErrorMessage = (res) => res?.message || defaultErrMsg;
+
+    // Save token lifetime settings
+    if (tokenSettingsForm) {
+        tokenSettingsForm.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(tokenSettingsForm);
+
+            try {
+                tokenSettingsSubmitBtn.classList.add("is-loading");
+                tokenSettingsSubmitBtn.setAttribute("disabled", true);
+
+                const post = await ajaxHandler(formData);
+                const res = await post.json();
+
+                if (isSuccessResponse(res)) {
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
+                } else {
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
+                }
+            } catch (error) {
+                tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
+            } finally {
+                tokenSettingsSubmitBtn.classList.remove("is-loading");
+                tokenSettingsSubmitBtn.removeAttribute("disabled");
+            }
+        };
     }
 
     // Add API keys
@@ -33,13 +66,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 const post = await ajaxHandler(formData);
                 const res = await post.json();
-                const { success, data } = res;
     
-                if (success) {
-                    listTable.insertAdjacentHTML("afterbegin", `${data}`);
-                    tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully", 'tutor'), "success");
+                if (isSuccessResponse(res)) {
+                    listTable.insertAdjacentHTML("afterbegin", `${res.data}`);
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
                 } else {
-                    tutor_toast(__("Failed", "tutor"), data, "error");
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
                 }
             } catch (error) {
                 tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
@@ -70,13 +102,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 const post = await ajaxHandler(formData);
                 const res = await post.json();
-                const { success, data } = res;
     
-                if (success) {
-                    document.getElementById(formData.get("meta_id")).innerHTML = data;
-                    tutor_toast(__("Success", "tutor"), __("API key permission updated successfully", 'tutor'), "success");
+                if (isSuccessResponse(res)) {
+                    document.getElementById(formData.get("meta_id")).innerHTML = res.data;
+                    tutor_toast(__("Success", "tutor"), res.message, "success");
                 } else {
-                    tutor_toast(__("Failed", "tutor"), data, "error");
+                    tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
                 }
             } catch (error) {
                 tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
@@ -105,13 +136,14 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                     const post = await ajaxHandler(formData);
                     const res = await post.json();
-                    const { success, data } = res;
 
-                    if (success) {
+                    if (isSuccessResponse(res)) {
                         target.closest("tr").remove();
-                        tutor_toast(__("Success", "tutor"), data, "success");
+                        tutor_toast(__("Success", "tutor"), res.message, "success");
                     } else {
-                        tutor_toast(__("Failed", "tutor"), data, "error");
+                        tutor_toast(__("Failed", "tutor"), getErrorMessage(res), "error");
+                        target.classList.remove("is-loading");
+                        target.removeAttribute("disabled");
                     }
                 } catch (error) {
                     tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
