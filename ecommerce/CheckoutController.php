@@ -578,7 +578,7 @@ class CheckoutController {
 	 *
 	 * @param array $data The data array to validate.
 	 *
-	 * @return object The validation result. It returns validation object.
+	 * @return array|true If validation fails return error messages array else validation passed return true.
 	 */
 	protected function validate_pay_now_request( array $data ) {
 
@@ -603,7 +603,16 @@ class CheckoutController {
 			}
 		}
 
-		return ValidationHelper::validate( $validation_rules, $data );
+		$errors     = array();
+		$validation = ValidationHelper::validate( $validation_rules, $data );
+
+		if ( ! $validation->success ) {
+			foreach ( $validation->errors as $error ) {
+				$errors = array_merge( $errors, (array) $error );
+			}
+		}
+
+		return empty( $errors ) ? true : $errors;
 	}
 
 	/**
@@ -660,12 +669,10 @@ class CheckoutController {
 
 		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
 		$order_fields            = $this->filter_allowed_keys( $request, $allowed_order_fields );
-		$validate                = $this->validate_pay_now_request( $order_fields );
 
-		if ( ! $validate->success ) {
-			foreach ( $validate->errors as $error ) {
-				$errors = array_merge( $errors, (array) $error );
-			}
+		$validated = $this->validate_pay_now_request( $order_fields );
+		if ( ! $validated ) {
+			$errors = array_merge( $errors, (array) $validated );
 		}
 
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
