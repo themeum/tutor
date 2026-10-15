@@ -630,6 +630,23 @@ class CheckoutController {
 	}
 
 	/**
+	 * Get allowed order fields.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return array
+	 */
+	protected function get_allowed_order_fields() {
+		return array(
+			'object_ids',
+			'coupon_code',
+			'payment_method',
+			'payment_type',
+			'order_type',
+		);
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -659,16 +676,8 @@ class CheckoutController {
 			}
 		}
 
-		$allowed_order_fields = array(
-			'object_ids',
-			'coupon_code',
-			'payment_method',
-			'payment_type',
-			'order_type',
-		);
-
 		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
-		$order_fields            = $this->filter_allowed_keys( $request, $allowed_order_fields );
+		$order_fields            = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
 
 		$validated = $this->validate_pay_now_request( $order_fields );
 		if ( ! $validated ) {
