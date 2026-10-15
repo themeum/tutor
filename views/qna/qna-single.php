@@ -9,7 +9,7 @@
  * @since 2.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 extract( $data ); // $question_id
 

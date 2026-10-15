@@ -9,7 +9,7 @@
  */
 
 use Tutor\Ecommerce\CheckoutController;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 tutor_utils()->tutor_custom_header();
 
