@@ -1,7 +1,11 @@
-import { type CourseFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
+
 import endpoints from '@TutorShared/utils/endpoints';
-import { loginAsAdmin, loginAsInstructor } from 'cypress/support/auth';
+
+import { type CourseFormData } from '@CourseBuilderServices/course';
+
+import { loginAsAdmin, loginAsInstructor } from '@Cypress/support/auth';
+
 import { backendUrls, frontendUrls } from '../../../config/page-urls';
 
 describe('Give Instructor Course Publish Permissions', () => {

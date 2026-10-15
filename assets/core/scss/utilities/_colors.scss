@@ -1,0 +1,197 @@
+// Color Utilities
+// Background, border, and text color utilities with theme awareness
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// ------------------------------------------------------------
+// Transparent / Current Color Utilities
+// ------------------------------------------------------------
+.tutor-bg-transparent {
+  background-color: transparent;
+}
+
+.tutor-bg-current {
+  background-color: currentColor;
+}
+
+// ------------------------------------------------------------
+// Brand Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-brand-colors {
+  .tutor-bg-brand-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-brand-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Gray Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-gray-colors {
+  .tutor-bg-gray-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-gray-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Success Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-success-colors {
+  .tutor-bg-success-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-success-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Warning Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-warning-colors {
+  .tutor-bg-warning-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-warning-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Error Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-error-colors {
+  .tutor-bg-error-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-error-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Exception Colors (Background & Text)
+// ------------------------------------------------------------
+@each $key, $value in $tutor-exception-colors {
+  .tutor-bg-exception-#{$key} {
+    background-color: $value;
+  }
+  .tutor-text-exception-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Surface Colors
+// ------------------------------------------------------------
+@each $key, $value in $tutor-surfaces {
+  .tutor-surface-#{$key} {
+    background-color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Text Colors
+// ------------------------------------------------------------
+@each $key, $value in $tutor-text-colors {
+  .tutor-text-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Icon Colors
+// ------------------------------------------------------------
+@each $key, $value in $tutor-icons {
+  .tutor-icon-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Actions Colors
+// ------------------------------------------------------------
+@each $key, $value in $tutor-actions {
+  .tutor-actions-#{$key} {
+    color: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Shadow Utilities
+// ------------------------------------------------------------
+@each $key, $value in $tutor-shadows {
+  .tutor-shadow-#{$key} {
+    box-shadow: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Opacity Utilities
+// ------------------------------------------------------------
+$opacities: (
+  0: 0,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1,
+);
+
+// Generate classes
+@each $key, $value in $opacities {
+  .tutor-opacity-#{$key} {
+    opacity: $value;
+  }
+}
+
+// ------------------------------------------------------------
+// Hover State Utilities
+// ------------------------------------------------------------
+.tutor-hover-surface-l1:hover {
+  background-color: $tutor-surface-l1-hover;
+}
+
+.tutor-hover-surface-l2:hover {
+  background-color: $tutor-surface-l2-hover;
+}
+
+.tutor-hover-text-primary:hover {
+  color: $tutor-text-primary;
+}
+
+.tutor-hover-text-brand:hover {
+  color: $tutor-text-brand;
+}
+
+.tutor-hover-border-brand:hover {
+  border-color: $tutor-border-brand;
+}
+
+.tutor-hover-shadow-md:hover {
+  box-shadow: $tutor-shadow-md;
+}
+
+.tutor-hover-shadow-lg:hover {
+  box-shadow: $tutor-shadow-lg;
+}
+
+// ------------------------------------------------------------
+// Focus State Utilities
+// ------------------------------------------------------------
+.tutor-focus-border-brand:focus {
+  border-color: $tutor-border-brand;
+}
+
+.tutor-focus-ring:focus {
+  @include tutor-focus-ring;
+}
+
+.tutor-focus-outline-none:focus {
+  outline: none;
+}

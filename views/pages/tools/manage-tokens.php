@@ -74,16 +74,16 @@ $user        = get_userdata( get_current_user_id() );
 </div>
 
 <!-- add new token modal  -->
-<div id="tutor-add-new-api-keys" class="tutor-modal tutor-modal-scrollable">
+<div id="tutor-add-new-api-keys" class="tutor-modal tutor-modal-scrollable" role="dialog" aria-modal="true" aria-labelledby="tutor-add-new-api-keys-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<form id="tutor-generate-api-keys" class="tutor-modal-content" autocomplete="off" method="post">
 			<div class="tutor-modal-header">
-				<div class="tutor-modal-title">
+				<div id="tutor-add-new-api-keys-title" class="tutor-modal-title">
 					<?php esc_html_e( 'Generate API Key, Secret', 'tutor' ); ?>
 				</div>
-				<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<button type="button" class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 			</div>
 
@@ -139,16 +139,16 @@ $user        = get_userdata( get_current_user_id() );
 </div>
 
 <!-- Update permission modal  -->
-<div id="tutor-update-permission-modal" class="tutor-modal tutor-modal-scrollable">
+<div id="tutor-update-permission-modal" class="tutor-modal tutor-modal-scrollable" role="dialog" aria-modal="true" aria-labelledby="tutor-update-permission-modal-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<form id="tutor-update-permission-form" class="tutor-modal-content" autocomplete="off" method="post">
 			<div class="tutor-modal-header">
-				<div class="tutor-modal-title">
+				<div id="tutor-update-permission-modal-title" class="tutor-modal-title">
 					<?php esc_html_e( 'Update API', 'tutor' ); ?>
 				</div>
-				<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<button type="button" class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 			</div>
 

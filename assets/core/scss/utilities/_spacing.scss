@@ -1,0 +1,199 @@
+// Spacing Utilities
+// Margin, padding, and negative margin utilities
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// Margin utilities
+
+@each $key, $value in $tutor-spacing {
+  .tutor-m-#{$key} {
+    margin: $value;
+  }
+
+  .tutor-mt-#{$key} {
+    margin-top: $value;
+  }
+
+  .tutor-mr-#{$key} {
+    margin-inline-end: $value;
+  }
+
+  .tutor-mb-#{$key} {
+    margin-bottom: $value;
+  }
+
+  .tutor-ml-#{$key} {
+    margin-inline-start: $value;
+  }
+
+  .tutor-mx-#{$key} {
+    margin-inline: $value;
+  }
+
+  .tutor-my-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+}
+
+// Padding utilities
+@each $key, $value in $tutor-spacing {
+  .tutor-p-#{$key} {
+    padding: $value;
+  }
+
+  .tutor-pt-#{$key} {
+    padding-top: $value;
+  }
+
+  .tutor-pr-#{$key} {
+    padding-inline-end: $value;
+  }
+
+  .tutor-pb-#{$key} {
+    padding-bottom: $value;
+  }
+
+  .tutor-pl-#{$key} {
+    padding-inline-start: $value;
+  }
+
+  .tutor-px-#{$key} {
+    padding-inline: $value;
+  }
+
+  .tutor-py-#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+}
+
+// Negative margins
+@each $key, $value in $tutor-spacing {
+  @if $key !=0 {
+    .-tutor-m-#{$key} {
+      margin: -$value;
+    }
+
+    .-tutor-mt-#{$key} {
+      margin-top: -$value;
+    }
+
+    .-tutor-mr-#{$key} {
+      margin-inline-end: -$value;
+    }
+
+    .-tutor-mb-#{$key} {
+      margin-bottom: -$value;
+    }
+
+    .-tutor-ml-#{$key} {
+      margin-inline-start: -$value;
+    }
+
+    .-tutor-mx-#{$key} {
+      margin-inline: -$value;
+    }
+
+    .-tutor-my-#{$key} {
+      margin-top: -$value;
+      margin-bottom: -$value;
+    }
+  }
+}
+
+// Auto margins
+.tutor-m-auto {
+  margin: auto;
+}
+
+.tutor-mt-auto {
+  margin-top: auto;
+}
+
+.tutor-mr-auto {
+  margin-inline-end: auto;
+}
+
+.tutor-mb-auto {
+  margin-bottom: auto;
+}
+
+.tutor-ml-auto {
+  margin-inline-start: auto;
+}
+
+.tutor-mx-auto {
+  margin-inline: auto;
+}
+
+.tutor-my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+// Responsive spacing utilities
+@each $breakpoint, $min-width in $tutor-responsive-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    @each $space-key, $space-value in $tutor-responsive-spacing {
+      .tutor-#{$breakpoint}-m-#{$space-key} {
+        margin: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-mt-#{$space-key} {
+        margin-top: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-mr-#{$space-key} {
+        margin-inline-end: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-mb-#{$space-key} {
+        margin-bottom: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-ml-#{$space-key} {
+        margin-inline-start: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-mx-#{$space-key} {
+        margin-inline: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-my-#{$space-key} {
+        margin-top: $space-value;
+        margin-bottom: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-p-#{$space-key} {
+        padding: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-pt-#{$space-key} {
+        padding-top: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-pr-#{$space-key} {
+        padding-inline-end: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-pb-#{$space-key} {
+        padding-bottom: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-pl-#{$space-key} {
+        padding-inline-start: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-px-#{$space-key} {
+        padding-inline: $space-value;
+      }
+
+      .tutor-#{$breakpoint}-py-#{$space-key} {
+        padding-top: $space-value;
+        padding-bottom: $space-value;
+      }
+    }
+  }
+}

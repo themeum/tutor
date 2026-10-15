@@ -19,7 +19,7 @@ $video_info = $video_info ? (array) $video_info : array();
 do_action( 'tutor_lesson/single/before/video/shortcode' );
 ?>
 	<div class="tutor-video-player">
-		<div class="loading-spinner" area-hidden="true"></div>
+		<div class="loading-spinner" aria-hidden="true"></div>
 		<div class="tutor-ratio tutor-ratio-16x9">
 			<?php echo do_shortcode( tutor_utils()->array_get( 'source_shortcode', $video_info ) ); ?>
 		</div>

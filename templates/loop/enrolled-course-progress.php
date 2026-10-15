@@ -24,6 +24,6 @@ $course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, t
 		</span>
 	</div>
 	<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
-		<span class="tutor-progress-value" area-hidden="true"></span>
+		<span class="tutor-progress-value" aria-hidden="true"></span>
 	</div>
 </div>

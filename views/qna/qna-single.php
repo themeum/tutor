@@ -52,7 +52,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 				<div class="tutor-col-lg">
 					<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
 						<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
-							<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
+							<span class="tutor-icon-previous tutor-mr-8" aria-hidden="true"></span>
 							<?php esc_html_e( 'Back', 'tutor' ); ?>
 						</a>
 					</div>
@@ -77,7 +77,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 							</span>
 						<?php endif; ?>
 						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo esc_attr( $modal_id ); ?>">
-							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+							<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 							<?php esc_html_e( 'Delete', 'tutor' ); ?>
 						</span>
 					</div>
@@ -89,7 +89,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
 		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32<?php echo is_single_course( true ) || ( Input::has( 'action' ) ) ? ' tutor-d-none' : ''; ?>">
 			<?php echo esc_html( $question->post_title ); ?>
-			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
+			<div class="tutor-hr tutor-mt-20" aria-hidden="true"></div>
 		</div>
 		<div class="tutor-qna-single-wrapper">
 			<div class="tutor-qa-reply-wrapper tutor-mt-20">

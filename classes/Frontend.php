@@ -39,6 +39,7 @@ class Frontend {
 		add_action( 'wp_head', array( new Utils(), 'handle_flash_message' ), 999 );
 
 		add_action( 'tutor_course/single/before/wrap', array( $this, 'do_auto_course_complete' ) );
+		add_filter( 'body_class', array( $this, 'add_kids_mode_attribute' ) );
 	}
 
 	/**
@@ -122,5 +123,25 @@ class Frontend {
 	public function add_menu_atts( $atts, $item, $args ) {
 		$atts['onClick'] = 'return true';
 		return $atts;
+	}
+
+	/**
+	 * Add kids mode data attribute to the <body> tag.
+	 *
+	 * Note: body_class filter only accepts class names, not attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $classes Body classes.
+	 *
+	 * @return array
+	 */
+	public function add_kids_mode_attribute( $classes ) {
+		if ( ! tutor_utils()->is_kids_mode() ) {
+			return $classes;
+		}
+
+		echo ' data-tutor-ui="kids"';
+		return $classes;
 	}
 }

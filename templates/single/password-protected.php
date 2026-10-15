@@ -8,8 +8,12 @@
  * @since 3.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Models\EnrollmentModel;
+
 $course_id      = get_the_ID();
-$is_enrolled    = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+$is_enrolled    = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() );
 $password_error = get_transient( 'tutor_post_password_error' );
 ?>
 <?php tutor_utils()->tutor_custom_header(); ?>
@@ -18,21 +22,21 @@ $password_error = get_transient( 'tutor_post_password_error' );
 	<?php ( isset( $is_enrolled ) && $is_enrolled ) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
 	<?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 
-	<div class="tutor-modal tutor-is-active">
+	<div id="tutor-password-protected-modal" class="tutor-modal tutor-is-active" role="dialog" aria-modal="true" aria-labelledby="tutor-password-protected-title" aria-hidden="false" data-tutor-modal-no-dismiss>
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
-				<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-iconic-btn tutor-modal-close-o">
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-iconic-btn tutor-modal-close-o" aria-label="<?php esc_attr_e( 'Back to course list', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</a>
 				<div class="tutor-row">
 					<div class="tutor-col-md-7">
 						<div class="tutor-d-flex tutor-flex-column">
 							<div class="tutor-fs-3 tutor-mb-12">
-								<i class="tutor-icon-lock-line"></i>
+								<i class="tutor-icon-lock-line" aria-hidden="true"></i>
 							</div>
 							<span class="tutor-locked-badge tutor-mb-8"><?php esc_html_e( 'Course is locked', 'tutor' ); ?></span>
-							<h3 class="tutor-fw-medium tutor-fs-5 tutor-color-black"><?php the_title(); ?></h3>
+							<h3 id="tutor-password-protected-title" class="tutor-fw-medium tutor-fs-5 tutor-color-black"><?php the_title(); ?></h3>
 						</div>
 					</div>
 					<div class="tutor-col-md-5">

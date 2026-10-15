@@ -1,0 +1,60 @@
+// Design Tokens - Action Colors
+// CSS variables for theme-aware action colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-actions-success-primary: var(--tutor-actions-success-primary);
+$tutor-actions-success-secondary: var(--tutor-actions-success-secondary);
+$tutor-actions-success-tertiary: var(--tutor-actions-success-tertiary);
+$tutor-actions-success-exception: var(--tutor-actions-success-exception);
+$tutor-actions-warning-primary: var(--tutor-actions-warning-primary);
+$tutor-actions-warning-secondary: var(--tutor-actions-warning-secondary);
+$tutor-actions-warning-tertiary: var(--tutor-actions-warning-tertiary);
+$tutor-actions-warning-exception: var(--tutor-actions-warning-exception);
+$tutor-actions-brand-primary: var(--tutor-actions-brand-primary);
+$tutor-actions-brand-secondary: var(--tutor-actions-brand-secondary);
+$tutor-actions-brand-tertiary: var(--tutor-actions-brand-tertiary);
+$tutor-actions-gray-empty: var(--tutor-actions-gray-empty);
+$tutor-actions-gray-secondary: var(--tutor-actions-gray-secondary);
+$tutor-actions-gray-tertiary: var(--tutor-actions-gray-tertiary);
+$tutor-actions-gray-quaternary: var(--tutor-actions-gray-quaternary);
+$tutor-actions-critical-primary: var(--tutor-actions-critical-primary);
+$tutor-actions-critical-secondary: var(--tutor-actions-critical-secondary);
+$tutor-actions-caution: var(--tutor-actions-caution);
+$tutor-actions-caution-secondary: var(--tutor-actions-caution-secondary);
+$tutor-actions-inverse: var(--tutor-actions-inverse);
+$tutor-actions-exception3-highlight: var(--tutor-actions-exception3-highlight);
+$tutor-actions-exception5: var(--tutor-actions-exception5);
+$tutor-actions-exception6: var(--tutor-actions-exception6);
+
+// =============================================================================
+// ACTION COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-actions: (
+  success-primary: $tutor-actions-success-primary,
+  success-secondary: $tutor-actions-success-secondary,
+  success-tertiary: $tutor-actions-success-tertiary,
+  success-exception: $tutor-actions-success-exception,
+  warning-primary: $tutor-actions-warning-primary,
+  warning-secondary: $tutor-actions-warning-secondary,
+  warning-tertiary: $tutor-actions-warning-tertiary,
+  warning-exception: $tutor-actions-warning-exception,
+  brand-primary: $tutor-actions-brand-primary,
+  brand-secondary: $tutor-actions-brand-secondary,
+  brand-tertiary: $tutor-actions-brand-tertiary,
+  gray-empty: $tutor-actions-gray-empty,
+  gray-secondary: $tutor-actions-gray-secondary,
+  gray-tertiary: $tutor-actions-gray-tertiary,
+  gray-quaternary: $tutor-actions-gray-quaternary,
+  critical-primary: $tutor-actions-critical-primary,
+  critical-secondary: $tutor-actions-critical-secondary,
+  caution: $tutor-actions-caution,
+  caution-secondary: $tutor-actions-caution-secondary,
+  inverse: $tutor-actions-inverse,
+  exception3-highlight: $tutor-actions-exception3-highlight,
+  exception5: $tutor-actions-exception5,
+  exception6: $tutor-actions-exception6,
+);

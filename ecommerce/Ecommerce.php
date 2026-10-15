@@ -80,7 +80,7 @@ class Ecommerce {
 		// Globals.
 		add_action(
 			'init',
-			function() {
+			function () {
 				$GLOBALS['tutor_coupon_apply_err_msg'] = ( new CouponModel() )->get_coupon_failed_error_msg( 'not_applicable' );
 			}
 		);
@@ -224,6 +224,11 @@ class Ecommerce {
 	 * @return string
 	 */
 	public static function get_payment_method_label( $payment_method ) {
+
+		if ( empty( $payment_method ) ) {
+			return $payment_method;
+		}
+
 		$payment_method_labels = array(
 			'paypal' => __( 'PayPal', 'tutor' ),
 		);

@@ -1,0 +1,8 @@
+// Dashboard Main Entry Point
+// Compiles all dashboard-related styles using core design tokens and mixins
+
+// Import dashboard-specific styles
+@use '../dashboard';
+
+// Import shared components
+@use '../components';

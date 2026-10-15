@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
@@ -29,6 +27,10 @@ class Instructors_List {
 	const INSTRUCTOR_LIST_PAGE       = 'tutor-instructors';
 	const INSTRUCTOR_LIST_CACHE_KEY  = 'tutor-instructors-list';
 	const INSTRUCTOR_COUNT_CACHE_KEY = 'tutor-instructors-count';
+
+	const STATUS_APPROVED = 'approved';
+	const STATUS_PENDING  = 'pending';
+	const STATUS_BLOCKED  = 'blocked';
 
 	/**
 	 * Trait for utilities
@@ -125,9 +127,10 @@ class Instructors_List {
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return array
 	 */
-	public function prpare_bulk_actions(): array {
+	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
 			$this->bulk_action_approved(),
@@ -277,6 +280,7 @@ class Instructors_List {
 
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
 		update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
+		update_user_meta( $instructor_id, User::INSTRUCTOR_APPROVAL_NOTICE_META, true );
 
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->add_role( tutor()->instructor_role );
@@ -299,6 +303,8 @@ class Instructors_List {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+		// Set view as student for blocked and pending instructor.
+		update_user_meta( $instructor_id, User::VIEW_MODE_USER_META, User::VIEW_AS_STUDENT );
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->remove_role( tutor()->instructor_role );
 	}
@@ -356,27 +362,42 @@ class Instructors_List {
 	public static function get_instructors( array $status, $offset, $per_page, $search = '', $course_id = '', $date = '', $order = 'DESC' ) {
 		global $wpdb;
 
-		$wild = '%';
+		$params        = array();
+		$search_clause = '%' . $wpdb->esc_like( $search ) . '%';
 
-		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+		$params[] = $search_clause;
+		$params[] = $search_clause;
+
 		$course_clause = '';
-		if ( '' !== $course_id ) {
-			$course_id     = (int) $course_id;
-			$course_clause = "AND umeta.meta_value = {$course_id}";
+		if ( '' !== $course_id && 0 !== (int) $course_id ) {
+			$course_clause = 'AND umeta.meta_value = %d';
+			$params[]      = absint( $course_id );
 		}
 
-		$order_clause = '';
-		if ( '' !== $order ) {
-			$is_valid_sql = sanitize_sql_orderby( $order );
-			if ( $is_valid_sql ) {
-				$order_clause = "ORDER BY user.ID {$order}";
+		$date_clause = '';
+		if ( '' !== $date ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date );
+			if ( '' !== $formatted_date ) {
+				$date_clause = 'AND DATE(user.user_registered) = CAST(%s AS DATE)';
+				$params[]    = $formatted_date;
 			}
 		}
 
-		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
-		$in_clause     = QueryHelper::prepare_in_clause( $status );
+		$order        = QueryHelper::get_valid_sort_order( $order );
+		$order_clause = "ORDER BY user.ID {$order}";
 
-		$query  = "SELECT
+		$status    = array_values( array_filter( array_map( 'sanitize_key', $status ) ) );
+		$in_clause = QueryHelper::prepare_in_clause( $status );
+		if ( empty( $in_clause ) ) {
+			$in_clause = "''";
+		}
+
+		$offset   = absint( $offset );
+		$per_page = absint( $per_page );
+		$params[] = $offset;
+		$params[] = $per_page;
+
+		$query = "SELECT
 					DISTINCT user.*,
 					ins_status.meta_value AS status,
 					(
@@ -409,10 +430,7 @@ class Instructors_List {
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
 						$query,
-						$search_clause,
-						$search_clause,
-						$offset,
-						$per_page
+						$params
 					)
 				)
 				//phpcs:enable
@@ -440,16 +458,32 @@ class Instructors_List {
 	public static function count_total_instructors( array $status, $search = '', $course_id = '', $date = '', $unique_cache_key = '' ) {
 		global $wpdb;
 
-		$wild = '%';
+		$params        = array();
+		$search_clause = '%' . $wpdb->esc_like( $search ) . '%';
 
-		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+		$params[] = $search_clause;
+		$params[] = $search_clause;
+
 		$course_clause = '';
-		if ( '' !== $course_id ) {
-			$course_id     = (int) $course_id;
-			$course_clause =  "AND umeta.meta_value = {$course_id}";
+		if ( '' !== $course_id && 0 !== (int) $course_id ) {
+			$course_clause = 'AND umeta.meta_value = %d';
+			$params[]      = absint( $course_id );
 		}
-		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
-		$in_clause     = QueryHelper::prepare_in_clause( $status );
+
+		$date_clause = '';
+		if ( '' !== $date ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date );
+			if ( '' !== $formatted_date ) {
+				$date_clause = 'AND DATE(user.user_registered) = CAST(%s AS DATE)';
+				$params[]    = $formatted_date;
+			}
+		}
+
+		$status    = array_values( array_filter( array_map( 'sanitize_key', $status ) ) );
+		$in_clause = QueryHelper::prepare_in_clause( $status );
+		if ( empty( $in_clause ) ) {
+			$in_clause = "''";
+		}
 
 		$query  = "SELECT
 					COUNT(DISTINCT user.ID)
@@ -475,8 +509,7 @@ class Instructors_List {
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
 						$query,
-						$search_clause,
-						$search_clause
+						$params
 					)
 				)
 				//phpcs:enable

@@ -1,7 +1,9 @@
-import Alert from '@TutorShared/atoms/Alert';
-import { icons } from '@TutorShared/icons/types';
 import React from 'react';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+import Alert from '@TutorShared/atoms/Alert';
+
+import { icons } from '@TutorShared/icons/types';
 
 const meta = {
   title: 'Atoms/Alert',

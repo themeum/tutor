@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import { colorTokens } from '@TutorShared/config/styles';
 import Table, { type Column } from '@TutorShared/molecules/Table';
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 type User = {
   id: number;

@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // Pagination.
 $paged                    = $data['paged'];
 $per_page                 = $data['per_page'];
@@ -68,8 +70,8 @@ if ( ( isset( $data['total_page'] ) && $data['total_page'] ) || ( isset( $data['
 						'format'    => '?current_page=%#%',
 						'current'   => $paged,
 						'total'     => $total_page,
-						'prev_text' => '<span class="tutor-icon-angle-left"></span>',
-						'next_text' => '<span class="tutor-icon-angle-right"></span>',
+						'prev_text' => '<span class="tutor-icon-angle-left" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__( 'Previous page', 'tutor' ) . '</span>',
+						'next_text' => '<span class="tutor-icon-angle-right" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__( 'Next page', 'tutor' ) . '</span>',
 					)
 				);
 			?>

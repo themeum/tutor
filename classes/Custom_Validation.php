@@ -11,7 +11,7 @@
 namespace TUTOR;
 
 /**
- * Custom Valaidation Trait
+ * Custom Validation Trait
  *
  * @since 2.0.0
  */
@@ -26,7 +26,7 @@ trait Custom_Validation {
 	 * @return bool
 	 */
 	public function validate_order( $order ) {
-		return in_array( strtolower( $order ), array( 'asc', 'desc' ) );
+		return in_array( strtolower( $order ), array( 'asc', 'desc' ), true );
 	}
 }
 

@@ -1,0 +1,9 @@
+@use './spacing';
+
+// Design Tokens - Progress
+// CSS variables for theme-aware progress geometry
+
+$tutor-progress-height: var(--tutor-progress-height, 8px);
+$tutor-progress-indicator-top: var(--tutor-progress-indicator-top, 2px);
+$tutor-progress-indicator-height: var(--tutor-progress-indicator-height, 1.5px);
+$tutor-progress-indicator-secondary-display: var(--tutor-progress-indicator-secondary-display, none);

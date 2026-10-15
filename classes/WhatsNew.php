@@ -77,15 +77,7 @@ class WhatsNew {
 	 * @return array
 	 */
 	private function get_plugin_version_info() {
-		$transient_key = 'tutor_plugin_info';
-		$plugin_info   = get_transient( $transient_key );
-
-		if ( false === $plugin_info ) {
-			$plugin_info = tutils()->get_remote_plugin_info();
-			set_transient( $transient_key, $plugin_info, HOUR_IN_SECONDS );
-		}
-
-		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
+		$remote_version    = tutils()->get_wp_org_update_version( 'tutor/tutor.php', true, HOUR_IN_SECONDS );
 		$installed_version = TUTOR_VERSION;
 		$update_required   = version_compare( $remote_version, $installed_version, '>' );
 

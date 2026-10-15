@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$attachments    = tutor_utils()->get_attachments();
-$open_mode_view = apply_filters( 'tutor_pro_attachment_open_mode', null ) == 'view' ? ' target="_blank" ' : null;
+$attachments  = tutor_utils()->get_attachments();
+$is_view_mode = 'view' === apply_filters( 'tutor_pro_attachment_open_mode', null );
 
 do_action( 'tutor_global/before/attachments' );
 
@@ -31,8 +31,14 @@ if ( is_array( $attachments ) && count( $attachments ) ) : ?>
 							</div>
 
 							<div class="tutor-col-auto">
-								<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-stretched-link" <?php echo esc_attr( $open_mode_view ? $open_mode_view : "download={$attachment->name}" ); ?>>
-									<span class="tutor-icon-download" area-hidden="true"></span>
+								<a href="<?php echo esc_url( $attachment->url ); ?>" 
+									class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-stretched-link"
+									<?php if ( $is_view_mode ) : ?>
+										target="_blank" rel="noopener noreferrer"
+									<?php else : ?>
+										download="<?php echo esc_attr( $attachment->name ); ?>"
+									<?php endif; ?>>
+									<span class="tutor-icon-download" aria-hidden="true"></span>
 								</a>
 							</div>
 						</div>

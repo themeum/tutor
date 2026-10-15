@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { backendUrls, frontendUrls } from 'cypress/config/page-urls';
+
+import { backendUrls, frontendUrls } from '@Cypress/config/page-urls';
 
 describe('Purchase Course', () => {
   let orderId: string;

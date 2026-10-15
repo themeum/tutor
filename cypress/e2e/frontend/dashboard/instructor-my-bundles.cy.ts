@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
+
 import endpoints from '@TutorShared/utils/endpoints';
+
 import { backendUrls, frontendUrls } from '../../../config/page-urls';
 
 describe('Tutor Dashboard My Bundles', () => {

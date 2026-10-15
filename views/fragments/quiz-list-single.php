@@ -20,11 +20,11 @@
 			<?php do_action( 'tutor_course_builder_before_quiz_btn_action', $data['quiz_id'] ); ?>
 			<?php if ( $data['topic_id'] > 0 ) : ?>
 				<a href="javascript:;" class="open-tutor-quiz-modal tutor-iconic-btn" data-quiz-id="<?php echo esc_attr( $data['quiz_id'] ); ?>" data-topic-id="<?php echo esc_attr( $data['topic_id'] ); ?>"> 
-					<span class="tutor-icon-edit" area-hidden="true"></span>
+					<span class="tutor-icon-edit" aria-hidden="true"></span>
 				</a>
 			<?php endif; ?>
 			<a href="javascript:;" class="tutor-delete-quiz-btn tutor-iconic-btn" data-quiz-id="<?php echo esc_attr( $data['quiz_id'] ); ?>">
-				<span class="tutor-icon-trash-can-line" area-hidden="true"></span>
+				<span class="tutor-icon-trash-can-line" aria-hidden="true"></span>
 			</a>
 		</div>
 	</div>

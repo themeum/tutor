@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
-import Button from '@TutorShared/atoms/Button';
-import EmptyState from '@TutorShared/molecules/EmptyState';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import Button from '@TutorShared/atoms/Button';
+
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
 const meta = {
   title: 'Molecules/EmptyState',

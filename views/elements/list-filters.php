@@ -151,7 +151,7 @@ if ( isset( $data ) ) : ?>
 
 				<form action="" method="get" id="tutor-admin-search-filter-form">
 					<div class="tutor-form-wrap">
-						<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
+						<span class="tutor-form-icon"><span class="tutor-icon-search" aria-hidden="true"></span></span>
 						<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search_query ) ); ?>" />
 					</div>
 				</form>

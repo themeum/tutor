@@ -1,0 +1,44 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-statics {
+  @include tutor-flex(row, center, center);
+  position: relative;
+  width: fit-content;
+
+  &-progress {
+    transform: rotate(-90deg);
+
+    &-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      @include tutor-typography('tiny', 'bold', 'primary', 'body');
+
+      &-large {
+        @include tutor-typography('h1', 'bold', 'primary', 'heading');
+      }
+    }
+  }
+
+  &-complete {
+    @include tutor-flex(row, center, center);
+    border-radius: $tutor-radius-full;
+    background: $tutor-actions-brand-primary;
+
+    svg {
+      color: $tutor-icon-idle-inverse;
+    }
+  }
+
+  &-locked {
+    @include tutor-flex(row, center, center);
+    border-radius: $tutor-radius-full;
+    background: transparent;
+
+    svg {
+      color: $tutor-icon-idle;
+    }
+  }
+}

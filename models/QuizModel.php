@@ -11,6 +11,9 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Components\Badge;
+use TUTOR\Course_List;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Quiz;
 
@@ -30,6 +33,54 @@ class QuizModel {
 	const RESULT_FAIL    = 'fail';
 	const RESULT_PENDING = 'pending';
 
+	const ATTEMPTS_TABLE = 'tutor_quiz_attempts';
+
+	/**
+	 * Attempt-answer correctness values.
+	 *
+	 * These values are only for tutor_quiz_attempt_answers rows. Question-answer
+	 * option rows remain binary and must continue to use 0 or 1.
+	 */
+	const ATTEMPT_ANSWER_INCORRECT = 0;
+	const ATTEMPT_ANSWER_CORRECT   = 1;
+
+	/**
+	 * Attempt-answer status for manually graded questions.
+	 *
+	 * @since 4.1.0
+	 */
+	const ATTEMPT_ANSWER_MANUAL_GRADED = 3;
+
+	/**
+	 * Question type constants
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const QUESTION_TYPE_TRUE_FALSE        = 'true_false';
+	const QUESTION_TYPE_SINGLE_CHOICE     = 'single_choice';
+	const QUESTION_TYPE_MULTIPLE_CHOICE   = 'multiple_choice';
+	const QUESTION_TYPE_OPEN_ENDED        = 'open_ended';
+	const QUESTION_TYPE_FILL_IN_THE_BLANK = 'fill_in_the_blank';
+	const QUESTION_TYPE_SHORT_ANSWER      = 'short_answer';
+	const QUESTION_TYPE_MATCHING          = 'matching';
+	const QUESTION_TYPE_IMAGE_MATCHING    = 'image_matching';
+	const QUESTION_TYPE_IMAGE_ANSWERING   = 'image_answering';
+	const QUESTION_TYPE_ORDERING          = 'ordering';
+
+	/**
+	 * Newly added question types.
+	 * These questions types are not supported in legacy learning mode.
+	 *
+	 * @since 4.0.0
+	 */
+	const QUESTION_TYPE_DRAW_IMAGE  = 'draw_image';
+	const QUESTION_TYPE_SCALE       = 'scale';
+	const QUESTION_TYPE_PIN_IMAGE   = 'pin_image';
+	const QUESTION_TYPE_COORDINATES = 'coordinates';
+	const QUESTION_TYPE_PUZZLE      = 'puzzle';
+
 	/**
 	 * Get quiz table name
 	 *
@@ -38,8 +89,118 @@ class QuizModel {
 	 * @return string
 	 */
 	public function get_table(): string {
-		global $wpdb;
-		return $wpdb->prefix . 'tutor_quiz_attempts';
+		return QueryHelper::prepare_table_name( self::ATTEMPTS_TABLE );
+	}
+
+
+	/**
+	 * Get all quiz types which are only available in modern learning mode.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_modern_mode_quiz_types() {
+		return array(
+			self::QUESTION_TYPE_DRAW_IMAGE  => array(
+				'name'   => __( 'Image Marking', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_SCALE       => array(
+				'name'   => __( 'Range', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-scale tutor-icon-slider-horizontal"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PIN_IMAGE   => array(
+				'name'   => __( 'Pin', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-pin-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_COORDINATES => array(
+				'name'   => __( 'Graph', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-coordinates tutor-icon-grid"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_PUZZLE      => array(
+				'name'   => __( 'Puzzle', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-puzzle tutor-icon-images"></i></span>',
+				'is_pro' => true,
+			),
+		);
+	}
+
+	/**
+	 * Get all question types
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $type type.
+	 *
+	 * @return array|mixed
+	 */
+	public static function get_question_types( $type = '' ) {
+		$types = array(
+			self::QUESTION_TYPE_TRUE_FALSE        => array(
+				'name'   => __( 'True/False', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-boolean tutor-icon-circle-half"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_SINGLE_CHOICE     => array(
+				'name'   => __( 'Single Choice', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-single-choice tutor-icon-mark"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_MULTIPLE_CHOICE   => array(
+				'name'   => __( 'Multiple Choice', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-multiple-choices tutor-icon-double-mark"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_OPEN_ENDED        => array(
+				'name'   => __( 'Open Ended', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-open-ended tutor-icon-text-width"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_FILL_IN_THE_BLANK => array(
+				'name'   => __( 'Fill In The Blanks', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-quiz-type-fill-blanks tutor-icon-hourglass"></i></span>',
+				'is_pro' => false,
+			),
+			self::QUESTION_TYPE_SHORT_ANSWER      => array(
+				'name'   => __( 'Short Answer', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-short-answer tutor-icon-minimize"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_MATCHING          => array(
+				'name'   => __( 'Matching', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-matching tutor-icon-arrow-right-left"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_IMAGE_MATCHING    => array(
+				'name'   => __( 'Image Matching', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-matching tutor-icon-images"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_IMAGE_ANSWERING   => array(
+				'name'   => __( 'Image Answering', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-image-answering tutor-icon-camera"></i></span>',
+				'is_pro' => true,
+			),
+			self::QUESTION_TYPE_ORDERING          => array(
+				'name'   => __( 'Ordering', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
+				'is_pro' => true,
+			),
+		);
+
+		$types = $types + self::get_modern_mode_quiz_types();
+		$types = apply_filters( 'tutor_get_question_types', $types );
+
+		if ( isset( $types[ $type ] ) ) {
+			return $types[ $type ];
+		}
+
+		return $types;
 	}
 
 	/**
@@ -50,7 +211,119 @@ class QuizModel {
 	 * @return array
 	 */
 	public static function get_manual_review_types() {
-		return array( 'open_ended', 'short_answer' );
+		return array(
+			self::QUESTION_TYPE_OPEN_ENDED,
+			self::QUESTION_TYPE_SHORT_ANSWER,
+		);
+	}
+
+
+	/**
+	 * Format the quiz attempts result obtained from query.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
+	 * @param string $result attempt result type.
+	 *
+	 * @return array
+	 */
+	public static function format_quiz_attempts( array $quiz_attempts, string $result = '' ): array {
+		$formatted_attempts = array();
+
+		if ( ! count( $quiz_attempts ) ) {
+			return $quiz_attempts;
+		}
+
+		foreach ( $quiz_attempts as $quiz_attempt ) {
+			$course_title = $quiz_attempt->course_title ?? '';
+			$quiz_title   = $quiz_attempt->post_title ?? '';
+
+			$quiz_attempt_result = $quiz_attempt->result ?? 'fail';
+			$result_types        = array( self::RESULT_FAIL, self::RESULT_PASS, self::RESULT_PENDING );
+
+			if ( ! empty( $result ) && in_array( $result, $result_types, true ) && $quiz_attempt_result !== $result ) {
+				continue;
+			}
+
+			// Common formatting logic.
+			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
+				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+
+			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
+			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
+
+			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
+
+			$answers           = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
+			$answer_counts     = self::get_attempt_answer_counts( $answers );
+			$correct_answers   = $answer_counts['correct'];
+			$incorrect_answers = $answer_counts['incorrect'];
+
+			$formatted_attempt = array(
+				'attempt_id'        => $quiz_attempt->attempt_id ?? 0,
+				'result'            => $quiz_attempt_result,
+				'marks_percent'     => $earned_percent ?? 0,
+				'correct_answers'   => $correct_answers,
+				'incorrect_answers' => $incorrect_answers,
+				'time_taken'        => $attempt_time ?? '',
+				'date'              => $start_time ?? '',
+				'quiz_title'        => $quiz_title,
+				'course_title'      => $course_title,
+				'quiz_id'           => $quiz_attempt->quiz_id ?? 0,
+				'course_id'         => $quiz_attempt->course_id ?? 0,
+				'student'           => $quiz_attempt->display_name ?? '',
+				'attempt_info'      => maybe_unserialize( $quiz_attempt->attempt_info ) ?? array(),
+			);
+
+			$formatted_attempts[] = $formatted_attempt;
+		}
+
+		return $formatted_attempts;
+	}
+
+	/**
+	 * Get formatted quiz attempt list by quiz data.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $quizzes list of quiz data.
+	 * @param string $result attempt result type.
+	 *
+	 * @return array
+	 */
+	public function get_formatted_quiz_attempt_list_by_quiz_id( $quizzes, $result = '' ) {
+		$quiz_attempts_list = array();
+
+		if ( ! tutor_utils()->count( $quizzes ) ) {
+			return $quiz_attempts_list;
+		}
+
+		foreach ( $quizzes as $quiz_info ) {
+			$quiz_id   = $quiz_info['quiz_id'] ?? 0;
+			$course_id = $quiz_info['course_id'] ?? 0;
+
+			$quiz_attempts           = $this->quiz_attempts( $quiz_id, get_current_user_id() );
+			$formatted_quiz_attempts = self::format_quiz_attempts( $quiz_attempts, $result );
+
+			if ( ! tutor_utils()->count( $formatted_quiz_attempts ) ) {
+				continue;
+			}
+
+			$quiz_attempts_list[ $quiz_id ] = array(
+				'quiz_id'      => $quiz_id,
+				'quiz_title'   => get_the_title( $quiz_id ),
+				'course_title' => get_the_title( $course_id ),
+				'course_id'    => $course_id,
+				'attempts'     => array(),
+			);
+
+			foreach ( $formatted_quiz_attempts as $attempt ) {
+				$quiz_attempts_list[ $quiz_id ]['attempts'][] = $attempt;
+			}
+		}
+
+		return $quiz_attempts_list;
 	}
 
 	/**
@@ -354,27 +627,28 @@ class QuizModel {
 	 * @since 1.0.0
 	 * @since 1.9.5 sorting params added.
 	 * @since 3.8.0 refactor and query optimize.
+	 * @since 4.0.0 date-range filtering added via $start_date / $end_date.
 	 *
-	 * @param integer $start start.
-	 * @param integer $limit limit.
-	 * @param string  $search_filter search filter.
-	 * @param string  $course_filter course filter.
-	 * @param string  $date_filter date filter.
-	 * @param string  $order_filter order filter.
-	 * @param mixed   $result_state result state.
-	 * @param boolean $count_only count only or not.
-	 * @param boolean $instructor_id_check need instructor id check or not.
+	 * @param integer $start              Query offset.
+	 * @param integer $limit              Number of rows to return (0 = no limit).
+	 * @param string  $search_filter      Search keyword matched against user email, display name, quiz title, and course title.
+	 * @param string  $course_filter      Course ID (or array of IDs) to restrict results to.
+	 * @param string  $start_date         Range start date (Y-m-d).
+	 * @param string  $end_date           Range end date (Y-m-d).
+	 * @param string  $order_filter       SQL ORDER BY direction – 'ASC' or 'DESC'.
+	 * @param mixed   $result_state       Attempt result to filter by (pass|fail|pending). Null returns all results.
+	 * @param boolean $count_only         When true, returns an integer count instead of rows.
+	 * @param boolean $instructor_id_check When true, restricts results to courses the current user instructs.
 	 *
-	 * @return mixed
+	 * @return mixed Integer count when $count_only is true, array of row objects otherwise.
 	 */
-	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
+	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $start_date = '', $end_date = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
 		$start         = (int) $start;
 		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
 		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$search_term_raw = $search_filter;
@@ -390,13 +664,17 @@ class QuizModel {
 			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
-		// Filter by date.
-		$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
+		// Filter by date (single) or date range.
+		$date_filter = '';
+		if ( '' !== $start_date && '' !== $end_date ) {
+			$start_date  = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$end_date    = tutor_get_formated_date( 'Y-m-d', $end_date );
+			$date_filter = $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) BETWEEN %s AND %s ', $start_date, $end_date );
+		}
 
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
-		$limit_offset   = $count_only ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';
+		$limit_offset   = $count_only || ( 0 === $limit && 0 === $start ) ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.
 		$instructor_clause = '';
@@ -446,7 +724,7 @@ class QuizModel {
 	}
 
 	/**
-	 * Delete quizattempt for user
+	 * Delete quiz attempt for user
 	 *
 	 * @since 1.9.5
 	 *
@@ -455,21 +733,44 @@ class QuizModel {
 	 * @return void
 	 */
 	public static function delete_quiz_attempt( $attempt_ids ) {
+		// Singlular to array.
 		global $wpdb;
 
-		// Singlular to array.
+		// Singular to array.
 		! is_array( $attempt_ids ) ? $attempt_ids = array( $attempt_ids ) : 0;
+		$attempt_ids                              = array_map( 'absint', array_filter( $attempt_ids ) );
 
 		if ( count( $attempt_ids ) ) {
-			$attempt_ids = implode( ',', $attempt_ids );
+			// Collect file paths from all question types that store files (e.g. draw_image). Files deleted after DB for safety.
+			$attempt_file_paths = apply_filters( 'tutor_quiz/attempt_file_paths_for_deletion', array(), $attempt_ids );
+			$attempt_file_paths = is_array( $attempt_file_paths ) ? array_values( array_filter( array_unique( $attempt_file_paths ) ) ) : array();
 
-			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$attempt_ids = QueryHelper::prepare_in_clause( $attempt_ids );
+
 			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
-			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN({$attempt_ids})" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+			self::delete_files_by_paths( $attempt_file_paths );
 
 			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
+		}
+	}
+
+	/**
+	 * Delete files by absolute path (e.g. after DB rows have been removed).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $paths Array of absolute file paths.
+	 *
+	 * @return void
+	 */
+	public static function delete_files_by_paths( array $paths ) {
+		foreach ( $paths as $path ) {
+			if ( is_string( $path ) && '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				wp_delete_file( $path );
+			}
 		}
 	}
 
@@ -494,30 +795,31 @@ class QuizModel {
 	public static function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only = false, $all_attempt = false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
-		$course_filter = (int) sanitize_text_field( $course_filter );
+		$course_filter = absint( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
-		$order_filter  = sanitize_sql_orderby( $order_filter );
+		$start         = absint( $start );
+		$limit         = absint( $limit );
 
-		$course_ids = array_map(
-			function ( $id ) {
-				return "'" . esc_sql( $id ) . "'";
-			},
-			$course_ids
-		);
+		$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
 
-		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . implode( ', ', $course_ids ) . ') ' : '';
+		$course_ids    = array_filter( array_map( 'absint', (array) $course_ids ) );
+		$course_ids_in = count( $course_ids ) ? ' AND quiz_attempts.course_id IN (' . QueryHelper::prepare_in_clause( $course_ids ) . ') ' : '';
 
 		$search_filter   = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_term_raw = $search_filter;
-		$search_filter   = $search_filter ? "AND ( users.user_email = '{$search_term_raw}' OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
+		$search_filter   = $search_filter ? $wpdb->prepare( 'AND ( users.user_email = %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )', $search_term_raw, $search_filter, $search_filter, $search_filter ) : '';
 
-		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
-		$date_filter   = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter   = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
-		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
+		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = {$course_filter} " : '';
+		if ( '' !== $date_filter ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_filter    = '' !== $formatted_date ? $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = CAST(%s AS DATE) ', $formatted_date ) : '';
+		} else {
+			$date_filter = '';
+		}
+		$user_filter = $user_id ? ' AND user_id = ' . absint( $user_id ) . ' ' : '';
 
-		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
-		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
+		$limit_offset = $count_only || ( 0 === $limit && 0 === $start ) ? '' : " LIMIT {$start}, {$limit} ";
+		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, quiz.* ';
 
 		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
 
@@ -536,10 +838,76 @@ class QuizModel {
 					{$course_filter}
 					{$date_filter}
 					{$user_filter}
-			ORDER 	BY quiz_attempts.attempt_id {$order_filter} {$limit_offset};";
+			ORDER 	BY quiz_attempts.attempt_id {$order_direction} {$limit_offset};";
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
+	}
+
+	/**
+	 * Obtain quiz data based on student quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $user_id the user id.
+	 * @param integer $course_id the course id.
+	 * @param integer $start the query offset.
+	 * @param integer $limit the query limit.
+	 * @param string  $order_filter filter for ASC or DESC order.
+	 * @param array   $args list of filters to apply.
+	 *
+	 * @return array
+	 */
+	public static function get_attempted_quizzes( $user_id = 0, $course_id = 0, $start = 0, $limit = 0, $order_filter = 'DESC', $args = array() ) {
+		$quiz_table    = 'posts as quiz';
+		$user_table    = 'users as users';
+		$courses_table = 'posts as course';
+
+		$join_conditions = array(
+			array(
+				'type'  => 'INNER',
+				'table' => $quiz_table,
+				'on'    => 'quiz_attempts.quiz_id = quiz.ID',
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => $user_table,
+				'on'    => 'quiz_attempts.user_id = users.ID',
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => $courses_table,
+				'on'    => 'course.ID = quiz_attempts.course_id',
+			),
+		);
+
+		$where_conditions = array(
+			'quiz_attempts.attempt_status' => array( '!=', 'attempt_started' ),
+			'user_id'                      => $user_id,
+		);
+
+		if ( $course_id ) {
+			$where_conditions['quiz_attempts.course_id'] = $course_id;
+		}
+
+		if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+			$where_conditions['quiz_attempts.result'] = $args['status'];
+		}
+
+		$quiz_ids = QueryHelper::get_joined_data(
+			self::ATTEMPTS_TABLE . ' as quiz_attempts',
+			$join_conditions,
+			array( 'DISTINCT quiz_attempts.quiz_id,quiz_attempts.course_id' ),
+			$where_conditions,
+			array(),
+			'quiz_attempts.quiz_id',
+			$limit,
+			$start,
+			$order_filter,
+			'ARRAY_A',
+		);
+
+		return $quiz_ids;
 	}
 
 	/**
@@ -638,6 +1006,244 @@ class QuizModel {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Check whether an attempt answer should be treated as skipped.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 *
+	 * @return bool
+	 */
+	public static function is_attempt_answer_skipped( $attempt_answer ): bool {
+		if ( ! is_object( $attempt_answer ) ) {
+			return true;
+		}
+
+		$given_answer = maybe_unserialize( $attempt_answer->given_answer ?? '' );
+
+		if ( is_array( $given_answer ) ) {
+			$given_answer = array_filter(
+				array_map(
+					static function ( $item ) {
+						return trim( wp_strip_all_tags( (string) $item ) );
+					},
+					$given_answer
+				),
+				static function ( string $item ) {
+					return '' !== $item;
+				}
+			);
+
+			return empty( $given_answer );
+		}
+
+		return '' === trim( wp_strip_all_tags( (string) $given_answer ) );
+	}
+
+	/**
+	 * Filter attempt answers for attempt-details views.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attempt_answers Attempt answer rows.
+	 * @param bool  $is_instructor_review Whether the current view is instructor review.
+	 *
+	 * @return array
+	 */
+	public static function filter_attempt_answers_for_details( $attempt_answers, bool $is_instructor_review = false ): array {
+		if ( ! is_array( $attempt_answers ) ) {
+			return array();
+		}
+
+		return array_values(
+			array_filter(
+				$attempt_answers,
+				static function ( $attempt_answer ) use ( $is_instructor_review ) {
+					if ( ! is_object( $attempt_answer ) ) {
+						return false;
+					}
+
+					if ( $is_instructor_review ) {
+						return true;
+					}
+
+					return ! self::is_attempt_answer_skipped( $attempt_answer );
+				}
+			)
+		);
+	}
+
+	/**
+	 * Get normalized attempt-answer status.
+	 *
+	 * Manually graded questions have a separate lifecycle: pending until reviewed,
+	 * then graded. Auto-graded questions use the attempt-answer correctness constants.
+	 *
+	 * Status rules follow legacy attempt-details logic:
+	 * - correct: is_correct is truthy.
+	 * - pending: is_correct is null for manually reviewed question types.
+	 * - incorrect: all other cases.
+	 * - graded: is_correct set after an instructor reviews a manually reviewed question.
+	 * - skipped: question has no given answer.
+	 *
+	 * @since 4.0.0
+	 * @since 4.1.0 Added manual graded questions and filter hook.
+	 *
+	 * @param object $attempt_answer Attempt answer object.
+	 *
+	 * @return string One of: pending, correct, incorrect, graded, skipped (or one from the filter).
+	 */
+	public static function get_attempt_answer_status( $attempt_answer ): string {
+		$question_type = (string) ( $attempt_answer->question_type ?? '' );
+		$is_correct    = $attempt_answer->is_correct ?? null;
+
+		if ( 'image_matching' === $question_type ) {
+			$question_type = 'matching';
+		}
+
+		if ( 'single_choice' === $question_type ) {
+			$question_type = 'multiple_choice';
+		}
+
+		if ( self::is_attempt_answer_skipped( $attempt_answer ) ) {
+			$status = 'skipped';
+		} elseif ( null === $is_correct ) {
+			$status = 'pending';
+		} elseif ( in_array( $question_type, self::get_manual_review_types(), true ) ) {
+			$status = 'graded';
+		} elseif ( self::ATTEMPT_ANSWER_CORRECT === (int) $is_correct ) {
+			$status = 'correct';
+		} else {
+			$status = 'incorrect';
+		}
+
+		return apply_filters( 'tutor_quiz_attempt_answer_status', $status, $attempt_answer );
+	}
+
+	/**
+	 * Get attempt answer status badge metadata.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 *
+	 * @return array Associative array with status, label, variant, label_map, and variant_map.
+	 */
+	public static function get_attempt_answer_badge( $attempt_answer ): array {
+		$status = $attempt_answer ? self::get_attempt_answer_status( $attempt_answer ) : 'skipped';
+
+		$label_map = array(
+			'pending'   => __( 'Pending', 'tutor' ),
+			'correct'   => __( 'Correct', 'tutor' ),
+			'incorrect' => __( 'Incorrect', 'tutor' ),
+			'graded'    => __( 'Graded', 'tutor' ),
+			'skipped'   => __( 'Skipped', 'tutor' ),
+		);
+
+		$variant_map = array(
+			'pending'   => Badge::WARNING,
+			'correct'   => Badge::SUCCESS,
+			'incorrect' => Badge::ERROR,
+			'graded'    => Badge::HIGHLIGHT,
+			'skipped'   => Badge::INFO,
+		);
+
+		// Legacy class map: old `label-*` CSS classes used by the admin attempt-details
+		// badge rendering. The new Badge component variant map is used instead where available.
+		$class_map = array(
+			'pending'   => 'label-warning',
+			'correct'   => 'label-success',
+			'incorrect' => 'label-danger',
+			'graded'    => 'label-primary',
+			'skipped'   => 'label-default',
+		);
+
+		$badge = array(
+			'status'      => $status,
+			'label'       => $label_map[ $status ] ?? '',
+			'variant'     => $variant_map[ $status ] ?? Badge::INFO,
+			'class'       => $class_map[ $status ] ?? 'label-default',
+			'label_map'   => $label_map,
+			'variant_map' => $variant_map,
+			'class_map'   => $class_map,
+		);
+
+		return apply_filters( 'tutor_quiz_attempt_answer_badge', $badge, $attempt_answer );
+	}
+
+	/**
+	 * Render attempt answer status badge.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object|null $attempt_answer Attempt answer object.
+	 * @param array       $options Optional rendering options (is_instructor_review, review_field_name).
+	 *
+	 * @return void
+	 */
+	public static function render_attempt_answer_badge( $attempt_answer, array $options = array() ): void {
+		$badge                = self::get_attempt_answer_badge( $attempt_answer );
+		$is_instructor_review = ! empty( $options['is_instructor_review'] );
+		$review_field_name    = (string) ( $options['review_field_name'] ?? '' );
+		$is_skipped           = self::is_attempt_answer_skipped( $attempt_answer );
+
+		if ( $is_instructor_review && ! $is_skipped && $review_field_name ) {
+			$label_map   = tutor_json_encode( $badge['label_map'] );
+			$variant_map = tutor_json_encode( $badge['variant_map'] );
+
+			// Whitelist-sanitize: only alphanumerics, underscores, and brackets are safe
+			// inside a JS single-quoted string literal (esc_attr does not escape ').
+			$field = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', $review_field_name );
+
+			Badge::make()
+				->rounded()
+				->attr( 'x-text', "({$label_map})[watch('{$field}')] ?? ''" )
+				->attr( ':class', "'tutor-badge tutor-badge-rounded tutor-badge-' + (({$variant_map})[watch('{$field}')] ?? 'info')" )
+				->render();
+		} else {
+			if ( empty( $badge['label'] ) ) {
+				return;
+			}
+
+			Badge::make()
+				->label( $badge['label'] )
+				->variant( $badge['variant'] )
+				->rounded()
+				->render();
+		}
+	}
+
+	/**
+	 * Get attempt answer counts categorized by status.
+	 *
+	 * Fully correct answers are counted under 'correct' and incorrect answers under 'incorrect'.
+	 * Pending, graded, and skipped answers are excluded.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|null $answers List of answer objects.
+	 *
+	 * @return array Associative array with answer status counts.
+	 */
+	public static function get_attempt_answer_counts( $answers ): array {
+		$counts = array(
+			'correct'   => 0,
+			'incorrect' => 0,
+		);
+
+		if ( is_array( $answers ) ) {
+			foreach ( $answers as $answer ) {
+				$status = self::get_attempt_answer_status( $answer );
+				if ( isset( $counts[ $status ] ) ) {
+					++$counts[ $status ];
+				}
+			}
+		}
+
+		return apply_filters( 'tutor_quiz_attempt_answer_counts', $counts, $answers );
 	}
 
 	/**
@@ -1042,7 +1648,45 @@ class QuizModel {
 			}
 		}
 
-		return $answers;
+		/**
+		 * Filter question answers after loading (e.g. expand stored mask paths for REST/API).
+		 *
+		 * @param array       $answers        Answer rows.
+		 * @param int         $question_id    Question id.
+		 * @param string|null $question_type  Question type when known.
+		 */
+		return apply_filters( 'tutor_quiz_question_answers', $answers, $question_id, $question_type );
+	}
+
+	/**
+	 * Get full image URL for a quiz answer.
+	 *
+	 * Uses attachment ID if present; falls back to stored image URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $answer Quiz answer object.
+	 * @param string $size   Image size to retrieve. Default full.
+	 *
+	 * @return string
+	 */
+	public static function get_answer_image_url( $answer, $size = 'full' ) {
+		if ( empty( $answer ) ) {
+			return '';
+		}
+
+		if ( ! empty( $answer->image_id ) ) {
+			$url = wp_get_attachment_image_url( $answer->image_id, $size );
+			if ( $url ) {
+				return $url;
+			}
+		}
+
+		if ( ! empty( $answer->image_url ) ) {
+			return $answer->image_url;
+		}
+
+		return '';
 	}
 
 	/**
@@ -1219,5 +1863,89 @@ class QuizModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Kill the current execution if user don't have access to this quiz
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param int  $quiz_id Quiz id to check the access.
+	 * @param int  $course_id Quiz's course id.
+	 * @param bool $wp_die Whether to die the execution or not.
+	 *
+	 * @return mixed If wp_die is true then this method will kill the execution if
+	 * user don't have access to the provided quiz. Otherwise returns bool.
+	 */
+	public static function has_quiz_access( $quiz_id, $course_id = 0, $wp_die = true ) {
+		$message    = __( 'Something went wrong', 'tutor' );
+		$has_access = true;
+
+		$course_id = $course_id ? $course_id : tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		if ( Course_List::is_public( $course_id ) ) {
+			return true;
+		}
+
+		if ( ! $quiz_id ) {
+			$message    = __( 'Invalid quiz ID', 'tutor' );
+			$has_access = false;
+		} elseif ( ! tutor_utils()->has_enrolled_content_access( 'quiz', $quiz_id ) ) {
+			$message    = __( 'You don\'t have access to this course', 'tutor' );
+			$has_access = false;
+		}
+
+		if ( ! $has_access && $wp_die ) {
+			wp_die( esc_html( $message ) );
+		}
+
+		return $has_access;
+	}
+
+	/**
+	 * Get the question feedback map from attempt info.
+	 *
+	 * Consistent extraction for the question_feedback map stored inside
+	 * attempt_info, keyed by attempt answer ID with a question ID fallback.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_attempt_feedback_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$feedback_map = $attempt_info['question_feedback'] ?? array();
+
+		return is_array( $feedback_map ) ? $feedback_map : array();
+	}
+
+	/**
+	 * Get the manual overrides map from attempt info.
+	 *
+	 * Consistent extraction for the manual_overrides map stored inside
+	 * attempt_info, keyed by question ID.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array|string $attempt_info Attempt info snapshot array or serialized string.
+	 *
+	 * @return array
+	 */
+	public static function get_manual_overrides_map( $attempt_info ): array {
+		$attempt_info = is_array( $attempt_info ) ? $attempt_info : ( is_string( $attempt_info ) ? maybe_unserialize( $attempt_info ) : array() );
+
+		if ( ! is_array( $attempt_info ) ) {
+			return array();
+		}
+
+		$overrides_map = $attempt_info['manual_overrides'] ?? array();
+
+		return is_array( $overrides_map ) ? $overrides_map : array();
 	}
 }

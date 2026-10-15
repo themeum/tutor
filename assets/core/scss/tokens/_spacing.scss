@@ -1,0 +1,58 @@
+// Design Tokens - Spacing
+// Consistent spacing scale for margins, padding, and gaps
+
+// =============================================================================
+// SPACING SCALE
+// =============================================================================
+
+$tutor-spacing-none: 0px;
+$tutor-spacing-1: 2px;
+$tutor-spacing-2: 4px;
+$tutor-spacing-3: 6px;
+$tutor-spacing-4: 8px;
+$tutor-spacing-5: 12px;
+$tutor-spacing-6: 16px;
+$tutor-spacing-7: 20px;
+$tutor-spacing-8: 24px;
+$tutor-spacing-9: 32px;
+$tutor-spacing-10: 40px;
+$tutor-spacing-11: 48px;
+$tutor-spacing-12: 56px;
+$tutor-spacing-13: 64px;
+$tutor-spacing-14: 72px;
+$tutor-spacing-15: 80px;
+$tutor-spacing-16: 88px;
+$tutor-spacing-17: 96px;
+$tutor-spacing-18: 104px;
+$tutor-spacing-19: 112px;
+$tutor-spacing-20: 120px;
+$tutor-spacing-21: 200px;
+
+// =============================================================================
+// SPACING MAP (for utility generation)
+// =============================================================================
+
+$tutor-spacing: (
+  none: $tutor-spacing-none,
+  1: $tutor-spacing-1,
+  2: $tutor-spacing-2,
+  3: $tutor-spacing-3,
+  4: $tutor-spacing-4,
+  5: $tutor-spacing-5,
+  6: $tutor-spacing-6,
+  7: $tutor-spacing-7,
+  8: $tutor-spacing-8,
+  9: $tutor-spacing-9,
+  10: $tutor-spacing-10,
+  11: $tutor-spacing-11,
+  12: $tutor-spacing-12,
+  13: $tutor-spacing-13,
+  14: $tutor-spacing-14,
+  15: $tutor-spacing-15,
+  16: $tutor-spacing-16,
+  17: $tutor-spacing-17,
+  18: $tutor-spacing-18,
+  19: $tutor-spacing-19,
+  20: $tutor-spacing-20,
+  21: $tutor-spacing-21
+);

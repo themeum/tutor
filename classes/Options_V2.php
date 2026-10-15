@@ -10,13 +10,13 @@
 
 namespace Tutor;
 
+defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\User;
 
 /**
  * Contains all the settings options
@@ -26,6 +26,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Options_V2 {
 
 	use JsonResponse;
+
+	/**
+	 * Learning modes.
+	 *
+	 * @since 4.0.0
+	 */
+	const LEARNING_MODE_MODERN = 'modern';
+	const LEARNING_MODE_KIDS   = 'kids';
+	const LEARNING_MODE_LEGACY = 'legacy';
+
+	/**
+	 * Default theme.
+	 *
+	 * @since 4.0.0
+	 */
+	const DEFAULT_THEME_LIGHT  = 'light';
+	const DEFAULT_THEME_DARK   = 'dark';
+	const DEFAULT_THEME_SYSTEM = 'system';
+
+	/**
+	 * Brand color.
+	 *
+	 * @since 4.0.0
+	 */
+	const DEFAULT_BRAND_COLOR = '#3e64de';
 
 	/**
 	 * Undocumented variable
@@ -166,6 +191,10 @@ class Options_V2 {
 	public function tutor_option_search() {
 		tutor_utils()->checking_nonce();
 
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
@@ -210,8 +239,8 @@ class Options_V2 {
 	 */
 	public function tutor_export_settings() {
 		tutor_utils()->checking_nonce();
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -253,7 +282,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -283,7 +312,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -307,7 +336,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -333,35 +362,6 @@ class Options_V2 {
 	}
 
 	/**
-	 * Tutor default settings update options
-	 * and send json response
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void send wp_json response
-	 */
-	public function tutor_default_settings() {
-		$attr = $this->get_setting_fields();
-
-		foreach ( $attr as $sections ) {
-
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $field ) {
-						if ( isset( $field['default'] ) ) {
-							$attr_default[ $field['key'] ] = $field['default'];
-						}
-					}
-				}
-			}
-		}
-
-		update_option( 'tutor_option', $attr_default );
-
-		wp_send_json_success( $attr_default );
-	}
-
-	/**
 	 * Tutor settings log
 	 *
 	 * @since 2.0.0
@@ -372,7 +372,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -390,7 +390,7 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -427,10 +427,11 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::is_admin() ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
+		//phpcs:ignore
 		$data = $_FILES['data'];
 
 		if ( ! isset( $data['tmp_name'] ) ) {
@@ -516,12 +517,31 @@ class Options_V2 {
 	public function tutor_option_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
-		$data_before = get_option( 'tutor_option' );
+		$data_before   = get_option( 'tutor_option' );
+		$login_page_id = 0;
+
+		if ( isset( $data_before['tutor_login_page'] ) ) {
+			$login_page_id = $data_before['tutor_login_page'];
+		}
+
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
+		unset( $option['enable_spotlight_mode'], $option['tutor_frontend_course_page_logo_id'] );
+
+		foreach ( array( 'brand_logo_light', 'brand_logo_dark' ) as $brand_logo_key ) {
+			$attachment_id             = absint( $option[ $brand_logo_key ] ?? 0 );
+			$option[ $brand_logo_key ] = $attachment_id && wp_attachment_is_image( $attachment_id ) ? $attachment_id : 0;
+		}
+
 		do_action( 'tutor_option_save_before', $option );
+
+		if ( ! isset( $option['tutor_login_page'] ) ) {
+			$option['tutor_login_page'] = $login_page_id ? $login_page_id : 0;
+		}
 
 		$option = Input::sanitize_array(
 			$option,
@@ -614,10 +634,14 @@ class Options_V2 {
 	public function tutor_option_default_save() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$attr                 = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option   = get_option( 'tutor_option' );
+		$attr_default         = array();
 
 		foreach ( $attr as $sections ) {
 			if ( is_array( $sections ) && count( $sections ) ) {
@@ -652,6 +676,7 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function load_settings_page() {
+		$template_path = '';
 		extract( $this->get_setting_fields() ); //phpcs:ignore
 
 		if ( ! $template_path ) {
@@ -701,9 +726,10 @@ class Options_V2 {
 
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
+		$default_visibility     = (bool) tutor_utils()->get_option( 'enable_spotlight_mode', true ) ? 'off' : 'on';
 
 		$attr = array(
-			'general'      => array(
+			'general'        => array(
 				'label'    => __( 'General', 'tutor' ),
 				'slug'     => 'general',
 				'desc'     => __( 'General Settings', 'tutor' ),
@@ -807,7 +833,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'course'       => array(
+			'course'         => array(
 				'label'    => __( 'Course', 'tutor' ),
 				'slug'     => 'course',
 				'desc'     => __( 'Course Settings', 'tutor' ),
@@ -843,14 +869,6 @@ class Options_V2 {
 								'desc'    => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_spotlight_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Spotlight Mode', 'tutor' ),
-								'default'     => 'off',
-								'label_title' => '',
-								'desc'        => __( 'This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor' ),
-							),
-							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Auto Complete Course on All Lesson Completion', 'tutor' ),
@@ -883,6 +901,14 @@ class Options_V2 {
 								'default'     => 'off',
 								'label_title' => '',
 								'desc'        => __( 'Enabling this feature will allow students to reset course progress and start over.', 'tutor' ),
+							),
+							array(
+								'key'         => 'course_reset_progress',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Reset Progress', 'tutor' ),
+								'default'     => 'off',
+								'label_title' => '',
+								'desc'        => __( 'Enabling this feature allows students to reset their progress and start over before completing the course.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_course_review_moderation',
@@ -956,14 +982,6 @@ class Options_V2 {
 								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
 							),
 							array(
-								'key'         => 'quiz_attempts_allowed',
-								'type'        => 'number',
-								'number_type' => 'integer',
-								'label'       => __( 'Default Quiz Attempt limit (When Retry Mode is enabled)', 'tutor' ),
-								'default'     => '10',
-								'desc'        => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
-							),
-							array(
 								'key'     => 'quiz_previous_button_enabled',
 								'type'    => 'toggle_switch',
 								'label'   => __( 'Show Quiz Previous Button', 'tutor' ),
@@ -1019,7 +1037,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'monetization' => array(
+			'monetization'   => array(
 				'label'    => __( 'Monetization', 'tutor' ),
 				'slug'     => 'monetization',
 				'desc'     => __( 'Monetization Settings', 'tutor' ),
@@ -1204,14 +1222,93 @@ class Options_V2 {
 					),
 				),
 			),
-			'design'       => array(
+			'design'         => array(
 				'label'    => __( 'Design', 'tutor' ),
 				'slug'     => 'design',
 				'desc'     => __( 'Design Settings', 'tutor' ),
 				'template' => 'design',
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
-					'block_course'   => array(
+					// Experimental.
+					'block_appearance'    => array(
+						'label'      => __( 'Appearance', 'tutor' ),
+						'slug'       => 'appearance',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'learning_mode',
+								'type'    => 'radio_horizontal_image',
+								'label'   => __( 'Learning Mode', 'tutor' ),
+								'desc'    => __( 'Decide how students will experience the courses you create.', 'tutor' ),
+								'default' => self::LEARNING_MODE_MODERN,
+								'options' => array(
+									self::LEARNING_MODE_MODERN      => array(
+										'title' => __( 'Modern', 'tutor' ),
+										'image' => 'learning-mode/modern.svg',
+									),
+									self::LEARNING_MODE_KIDS    => array(
+										'title' => __( 'Kids', 'tutor' ),
+										'image' => 'learning-mode/kids.svg',
+									),
+									self::LEARNING_MODE_LEGACY        => array(
+										'title' => __( 'Legacy', 'tutor' ),
+										'image' => 'learning-mode/legacy.svg',
+									),
+								),
+							),
+							array(
+								'key'     => 'default_theme',
+								'type'    => 'radio_horizontal_image',
+								'label'   => __( 'Default Theme', 'tutor' ),
+								'desc'    => __( 'Set the default appearance for learners across your platform. Learners can switch between dark and light mode if enabled.', 'tutor' ),
+								'default' => self::DEFAULT_THEME_SYSTEM,
+								'options' => array(
+									self::DEFAULT_THEME_LIGHT      => array(
+										'title' => __( 'Light', 'tutor' ),
+										'image' => 'default-theme/light.webp',
+									),
+									self::DEFAULT_THEME_DARK       => array(
+										'title' => __( 'Dark', 'tutor' ),
+										'image' => 'default-theme/dark.webp',
+									),
+									self::DEFAULT_THEME_SYSTEM     => array(
+										'title' => __( 'Auto', 'tutor' ),
+										'image' => 'default-theme/auto.webp',
+									),
+								),
+							),
+							array(
+								'key'         => 'brand_color',
+								'preset_name' => 'brand_color',
+								'type'        => 'color_field',
+								'label'       => __( 'Brand Color', 'tutor' ),
+								'desc'        => __( 'Customize the primary accent color used across your learning platform to match your brand identity.', 'tutor' ),
+								'class'       => 'color-picker-wrapper',
+								'default'     => tutor_utils()->get_default_brand_color(),
+							),
+							array(
+								'key'   => 'brand_logo',
+								'type'  => 'image_upload_list',
+								'label' => __( 'Brand Logo', 'tutor' ),
+								'desc'  => __( 'Upload your brand logo to display it in the Course Builder and Frontend Dashboard.', 'tutor' ),
+								'items' => array(
+									'light' => array(
+										'label'   => __( 'Light Mode', 'tutor' ),
+										'key'     => 'brand_logo_light',
+										'icon'    => Icon::LIGHT,
+										'default' => get_tutor_option( 'tutor_frontend_course_page_logo_id', 0 ),
+									),
+									'dark'  => array(
+										'label'   => __( 'Dark Mode', 'tutor' ),
+										'key'     => 'brand_logo_dark',
+										'icon'    => Icon::DARK,
+										'default' => 0,
+									),
+								),
+							),
+						),
+					),
+					'block_course'        => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -1270,7 +1367,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'layout'         => array(
+					'layout'              => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -1360,7 +1457,55 @@ class Options_V2 {
 							),
 						),
 					),
-					'course-details' => array(
+					'block_page_elements' => array(
+						'label'      => __( 'Page Elements', 'tutor' ),
+						'slug'       => 'page-elements',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'page_elements',
+								'type'    => 'toggle_matrix',
+								'label'   => __( 'Header & Footer', 'tutor' ),
+								'desc'    => __( 'Control the visibility of Header and Footer for Dashboard and Learning Area', 'tutor' ),
+								'columns' => array(
+									'header' => array(
+										'label'      => __( 'Header', 'tutor' ),
+										'icon'       => Icon::FOOTER,
+										'icon_attrs' => array( 'data-header-icon' => 'true' ),
+									),
+									'footer' => array(
+										'label' => __( 'Footer', 'tutor' ),
+										'icon'  => Icon::FOOTER,
+									),
+								),
+								'items'   => array(
+									'dashboard' => array(
+										'label'  => __( 'Dashboard', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_dashboard_site_header',
+											'default' => 'off',
+										),
+										'footer' => array(
+											'key'     => 'show_dashboard_site_footer',
+											'default' => 'off',
+										),
+									),
+									'learning'  => array(
+										'label'  => __( 'Learning Area', 'tutor' ),
+										'header' => array(
+											'key'     => 'show_learning_site_header',
+											'default' => $default_visibility,
+										),
+										'footer' => array(
+											'key'     => 'show_learning_site_footer',
+											'default' => $default_visibility,
+										),
+									),
+								),
+							),
+						),
+					),
+					'course-details'      => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',
@@ -1511,199 +1656,6 @@ class Options_V2 {
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show course review section', 'tutor' ),
-									)
-								),
-							),
-						),
-					),
-					'colors'         => array(
-						'label'        => __( 'Colors', 'tutor' ),
-						'slug'         => 'colors',
-						'block_type'   => 'color_picker',
-						'fields_group' => array(
-							array(
-								'key'     => 'color_preset_type',
-								'type'    => 'color_preset',
-								'label'   => __( 'Preset Colors', 'tutor' ),
-								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'default' => 'default',
-								'fields'  => array(
-									/* First 4 preset_name should be same as color_fields */
-									array(
-										'key'    => 'default',
-										'label'  => __( 'Default', 'tutor' ),
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#3E64DE',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#395BCA',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#212327',
-											),
-											array(
-												'slug'  => 'tutor_gray_color',
-												'preset_name' => 'gray',
-												'value' => '#E3E5EB',
-											),
-											array(
-												'slug'  => 'tutor_border_color',
-												'preset_name' => 'border',
-												'value' => '#CDCFD5',
-											),
-										),
-									),
-									array(
-										'key'    => 'landscape',
-										'label'  => __( 'Landscape', 'tutor' ),
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#239371',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#117D5D',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#212327',
-											),
-											array(
-												'slug'  => 'tutor_gray_color',
-												'preset_name' => 'gray',
-												'value' => '#E3E5EB',
-											),
-											array(
-												'slug'  => 'tutor_border_color',
-												'preset_name' => 'border',
-												'value' => '#CDCFD5',
-											),
-										),
-									),
-									array(
-										'key'    => 'ocean',
-										'label'  => __( 'Ocean', 'tutor' ),
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#5A18C2',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#3F02A0',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#212327',
-											),
-											array(
-												'slug'  => 'tutor_gray_color',
-												'preset_name' => 'gray',
-												'value' => '#E3E5EB',
-											),
-											array(
-												'slug'  => 'tutor_border_color',
-												'preset_name' => 'border',
-												'value' => '#CDCFD5',
-											),
-										),
-									),
-									array(
-										'key'    => 'custom',
-										'label'  => __( 'Custom', 'tutor' ),
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#3E64DE',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#28408E',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#1A1B1E',
-											),
-											array(
-												'slug'  => 'tutor_gray_color',
-												'preset_name' => 'gray',
-												'value' => '#E3E5EB',
-											),
-											array(
-												'slug'  => 'tutor_border_color',
-												'preset_name' => 'border',
-												'value' => '#CDCFD5',
-											),
-										),
-									),
-								),
-							),
-							array(
-								'key'    => 'tutor_color_presets',
-								'type'   => 'color_fields',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'fields' => array(
-									array(
-										'key'          => 'tutor_primary_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'primary',
-										'preset_exist' => true,
-										'label'        => __( 'Primary Color', 'tutor' ),
-										'default'      => '#3E64DE',
-										'desc'         => __( 'Choose a primary color', 'tutor' ),
-									),
-									array(
-										'key'          => 'tutor_primary_hover_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'hover',
-										'preset_exist' => true,
-										'label'        => __( 'Primary Hover Color', 'tutor' ),
-										'default'      => '#395BCA',
-										'desc'         => __( 'Choose a primary hover color', 'tutor' ),
-									),
-									array(
-										'key'          => 'tutor_text_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'text',
-										'preset_exist' => true,
-										'label'        => __( 'Text Color', 'tutor' ),
-										'default'      => '#212327',
-										'desc'         => __( 'Choose a text color for your website', 'tutor' ),
-									),
-									array(
-										'key'          => 'tutor_gray_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'gray',
-										'preset_exist' => false,
-										'label'        => __( 'Gray', 'tutor' ),
-										'default'      => '#E3E5EB',
-										'desc'         => __( 'Choose a color for elements like table, card etc', 'tutor' ),
-									),
-									array(
-										'key'          => 'tutor_border_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'border',
-										'preset_exist' => false,
-										'label'        => __( 'Border', 'tutor' ),
-										'default'      => '#CDCFD5',
-										'desc'         => __( 'Choose a border color for your website', 'tutor' ),
 									),
 								),
 							),
@@ -1711,7 +1663,7 @@ class Options_V2 {
 					),
 				),
 			),
-			'advanced'     => array(
+			'advanced'       => array(
 				'label'    => __( 'Advanced', 'tutor' ),
 				'slug'     => 'advanced',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
@@ -1770,10 +1722,10 @@ class Options_V2 {
 								'label'       => __( 'YouTube API Key', 'tutor' ),
 								'default'     => '',
 								'desc'        => __(
-									'To host live videos on your platform using YouTube, enter your YouTube API key.',
+									'Connect your YouTube API key to access additional features',
 									'tutor'
 								),
-								'placeholder' => __( 'Insert API key here', 'tutor' ),
+								'placeholder' => __( 'Enter your YouTube API key', 'tutor' ),
 							),
 						),
 					),
@@ -1841,6 +1793,28 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Enabling maintenance mode will display a custom message on the frontend. During maintenance mode, visitors cannot access site content, but the wp-admin dashboard remains accessible.', 'tutor' ),
+							),
+						),
+					),
+				),
+			),
+			'legal_consents' => array(
+				'label'    => __( 'Legal Consents', 'tutor' ),
+				'slug'     => 'legal_consents',
+				'desc'     => __( 'Legal Consents', 'tutor' ),
+				'template' => 'legal_consents',
+				'icon'     => 'tutor-icon-lesson',
+				'blocks'   => array(
+					array(
+						'label'      => __( 'Legal Consents', 'tutor' ),
+						'slug'       => 'legal_consents',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'legal_consents',
+								'type'    => 'text',
+								'label'   => __( 'Legal Consents', 'tutor' ),
+								'default' => array(),
 							),
 						),
 					),
@@ -2061,7 +2035,7 @@ class Options_V2 {
 			}
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
+				if ( ! empty( $save_import_data['dataset'] ) ) {
 					update_option( 'tutor_option', $save_import_data['dataset'] );
 				}
 			}
@@ -2069,12 +2043,10 @@ class Options_V2 {
 			$get_final_data = get_option( 'tutor_settings_log' );
 
 		} else {
-			if ( ! empty( $import_data ) ) {
-				update_option( 'tutor_settings_log', $import_data );
-			}
+			update_option( 'tutor_settings_log', $import_data );
 
 			if ( 'imported' === $action ) {
-				if ( ! empty( $save_import_data ) ) {
+				if ( ! empty( $save_import_data['dataset'] ) ) {
 					update_option( 'tutor_option', $save_import_data['dataset'] );
 				}
 			}

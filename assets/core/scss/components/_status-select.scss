@@ -1,0 +1,85 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-status-select {
+  @include tutor-typography(tiny, medium);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $tutor-spacing-2;
+  width: fit-content;
+  max-width: max-content;
+  border-radius: $tutor-radius-full;
+  padding: $tutor-spacing-none $tutor-spacing-4;
+
+  select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 32px;
+    padding: $tutor-spacing-none;
+    cursor: pointer;
+    z-index: $tutor-z-positive;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  // Icons
+  &-icon,
+  &-arrow {
+    @include tutor-flex(row, center, center);
+    pointer-events: none;
+    z-index: $tutor-z-positive;
+  }
+
+  &-icon {
+    &-wrapper,
+    span {
+      @include tutor-flex(row, center, center);
+    }
+  }
+
+  // Variants based on badge logic
+  &-default {
+    background-color: $tutor-surface-l2;
+    color: $tutor-text-primary;
+  }
+
+  &-primary {
+    background-color: $tutor-actions-brand-secondary;
+    color: $tutor-text-brand;
+  }
+
+  &-success {
+    background-color: $tutor-actions-success-tertiary;
+    color: $tutor-text-success;
+  }
+
+  &-warning {
+    background-color: $tutor-actions-warning-secondary;
+    color: $tutor-text-warning;
+  }
+
+  &-danger,
+  &-error {
+    background-color: $tutor-actions-critical-secondary;
+    color: $tutor-text-critical;
+  }
+
+  &-disabled {
+    background-color: $tutor-actions-gray-secondary;
+    color: $tutor-text-subdued;
+  }
+}

@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 
 const meta = {
   title: 'Atoms/TutorBadge',

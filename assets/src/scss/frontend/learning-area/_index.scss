@@ -1,0 +1,16 @@
+// Learning Area styles index
+// Import all learning area related styles
+
+// Layout components
+@forward 'layout/header';
+@forward 'layout/sidebar';
+@forward 'layout/layout';
+@forward 'layout/footer';
+
+// Content components
+@forward 'lesson-content';
+@forward 'lesson-comments';
+@forward 'quiz';
+
+// Pages
+@forward './pages/';

@@ -4,7 +4,7 @@
  *
  * @package Tutor
  * @author Themeum <support@themeum.com>
- * @link https://themeum.com
+ * @link https://www.themeum.com/
  * @since 1.0.0
  */
 
@@ -12,8 +12,9 @@ namespace TUTOR;
 
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\GDPR\GDPR;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 final class Tutor extends Singleton {
+
 	/**
 	 * Tutor version
 	 *
@@ -231,6 +233,15 @@ final class Tutor extends Singleton {
 	 * @var object
 	 */
 	private $user;
+
+	/**
+	 * UserPreference class object
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var UserPreference
+	 */
+	private $user_preference;
 
 	/**
 	 * Theme_Compatibility class object
@@ -475,6 +486,8 @@ final class Tutor extends Singleton {
 
 		do_action( 'tutor_before_load' );
 
+		GDPR::get_instance();
+
 		$this->addons                = new Addons();
 		$this->post_types            = new Post_types();
 		$this->taxonomies            = new Taxonomies();
@@ -495,6 +508,7 @@ final class Tutor extends Singleton {
 		$this->quiz                  = new Quiz();
 		$this->tools                 = new Tools();
 		$this->user                  = new User();
+		$this->user_preference       = new UserPreference();
 		$this->theme_compatibility   = new Theme_Compatibility();
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();
@@ -508,9 +522,6 @@ final class Tutor extends Singleton {
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
-
-		// Template import.
-		new TemplateImportInit();
 
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
@@ -561,6 +572,7 @@ final class Tutor extends Singleton {
 		do_action( 'tutor_loaded' );
 
 		add_action( 'init', array( $this, 'init_action' ) );
+		add_action( 'init', array( $this, 'update_instructor_capability' ) );
 
 		/**
 		 * Check activated plugin
@@ -576,6 +588,8 @@ final class Tutor extends Singleton {
 		 * @since 2.8.0
 		 */
 		add_action( 'admin_init', array( $this, 'redirect_to_setup_page' ) );
+
+		// add_filter( 'rest_request_before_callbacks', array( $this, 'enforce_courses_privacy_rest_api' ), 10, 3 );
 	}
 
 	/**
@@ -633,10 +647,20 @@ final class Tutor extends Singleton {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
-		$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
-		if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
-			include $tutor_droip_path;
+		// Only kirki latest has class KirkiMain.
+		$is_kirki_active = \is_plugin_active( 'kirki-pro/kirki-pro.php' ) && class_exists( 'KirkiProMain' );
+
+		if ( $is_kirki_active ) {
+			$tutor_kirki_path = $tutor_path . 'includes/kirki/kirki.php';
+			if ( file_exists( $tutor_kirki_path ) ) {
+				include $tutor_kirki_path;
+			}
+		} else {
+			$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
+			$tutor_droip_path = $tutor_path . 'includes/droip/droip.php';
+			if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
+				include $tutor_droip_path;
+			}
 		}
 	}
 
@@ -664,8 +688,13 @@ final class Tutor extends Singleton {
 
 	/**
 	 * Do some task during plugin activation
+	 *
+	 * @since 4.0.0 Flush rewrite rules on activation.
 	 */
 	public static function tutor_activate() {
+		// Rewrite Flush.
+		Permalink::set_permalink_flag();
+
 		$version = get_option( 'tutor_version' );
 		if ( ! function_exists( 'tutor_time' ) ) {
 			include tutor()->path . 'includes/tutor-general-functions.php';
@@ -680,8 +709,6 @@ final class Tutor extends Singleton {
 			$options = self::default_options();
 			update_option( 'tutor_option', $options );
 
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 			self::manage_tutor_roles_and_permissions();
 
 			// Save initial Page.
@@ -704,8 +731,6 @@ final class Tutor extends Singleton {
 			self::create_withdraw_database();
 			// Update the tutor version.
 			update_option( 'tutor_version', '1.2.0' );
-			// Rewrite Flush.
-			Permalink::set_permalink_flag();
 		}
 
 		/**
@@ -718,7 +743,6 @@ final class Tutor extends Singleton {
 				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
-				Permalink::set_permalink_flag();
 			}
 		}
 
@@ -1059,8 +1083,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_course',
 			'delete_tutor_courses',
 			'edit_tutor_courses',
-			'edit_others_tutor_courses',
-			'read_private_tutor_courses',
 			'edit_tutor_courses',
 
 			'edit_tutor_lesson',
@@ -1068,8 +1090,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_lesson',
 			'delete_tutor_lessons',
 			'edit_tutor_lessons',
-			'edit_others_tutor_lessons',
-			'read_private_tutor_lessons',
 			'edit_tutor_lessons',
 			'publish_tutor_lessons',
 
@@ -1078,8 +1098,6 @@ final class Tutor extends Singleton {
 			'delete_tutor_quiz',
 			'delete_tutor_quizzes',
 			'edit_tutor_quizzes',
-			'edit_others_tutor_quizzes',
-			'read_private_tutor_quizzes',
 			'edit_tutor_quizzes',
 			'publish_tutor_quizzes',
 
@@ -1088,9 +1106,7 @@ final class Tutor extends Singleton {
 			'delete_tutor_question',
 			'delete_tutor_questions',
 			'edit_tutor_questions',
-			'edit_others_tutor_questions',
 			'publish_tutor_questions',
-			'read_private_tutor_questions',
 			'edit_tutor_questions',
 		);
 
@@ -1098,6 +1114,7 @@ final class Tutor extends Singleton {
 		if ( $instructor ) {
 			$instructor_cap = array(
 				'edit_posts',
+				'edit_published_posts',
 				'read',
 				'upload_files',
 			);
@@ -1194,7 +1211,6 @@ final class Tutor extends Singleton {
 			'course_permalink_base'             => 'courses',
 			'lesson_permalink_base'             => 'lessons',
 			'quiz_when_time_expires'            => 'autosubmit',
-			'quiz_attempts_allowed'             => '10',
 			'quiz_grade_method'                 => 'highest_grade',
 			'enable_public_profile'             => '1',
 			'email_to_students'                 =>
@@ -1214,7 +1230,6 @@ final class Tutor extends Singleton {
 			'email_footer_text'                 => '',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
-			'color_preset_type'                 => 'default',
 
 			// Default options for tutor ecommerce.
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,
@@ -1359,8 +1374,8 @@ final class Tutor extends Singleton {
 				'tutor_announcements',
 			);
 
-			$post_type_strings = "'" . implode( "','", $post_types ) . "'";
-			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$in_clause   = QueryHelper::prepare_in_clause( $post_types );
+			$tutor_posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID from {$wpdb->posts} WHERE post_type IN({$in_clause}) ;" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
 				foreach ( $tutor_posts as $post_id ) {
@@ -1385,10 +1400,10 @@ final class Tutor extends Singleton {
 			/**
 			 * Deleting Comments (reviews, questions, quiz_answers, etc)
 			 */
-			$tutor_comments       = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
-			$comments_ids_strings = "'" . implode( "','", $tutor_comments ) . "'";
+			$tutor_comments = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
 			if ( is_array( $tutor_comments ) && count( $tutor_comments ) ) {
-				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$in_clause = QueryHelper::prepare_in_clause( $tutor_comments );
+				$wpdb->query( $wpdb->prepare( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$in_clause}) " ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 			$wpdb->delete( $wpdb->comments, array( 'comment_agent' => 'comment_agent' ) );
 
@@ -1408,6 +1423,64 @@ final class Tutor extends Singleton {
 			//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( "DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws " );
 
+		}
+	}
+
+	/**
+	 * Update instructor capability
+	 *
+	 * Remove other author items permission
+	 *
+	 * @since 4.0.5
+	 *
+	 * @since 4.0.6 read_private_{items} permissions removed
+	 */
+	public function update_instructor_capability() {
+		// Remove edit_others content cap from tutor_instructor role.
+		$is_removed_edit_other_items_permissions = get_option( 'tutor_removed_edit_other_items_permission', false );
+		$is_removed_private_items_permissions    = get_option( 'tutor_removed_read_private_items_permission', false );
+
+		$role = get_role( tutor()->instructor_role );
+		if ( ! ( $role instanceof \WP_Role ) ) {
+			return;
+		}
+
+		if ( ! $is_removed_edit_other_items_permissions ) {
+
+			$caps_to_be_removed = array(
+				'edit_others_tutor_courses',
+				'edit_others_tutor_lessons',
+				'edit_others_tutor_quizzes',
+				'edit_others_tutor_questions',
+				'edit_others_tutor_assignments',
+			);
+
+			foreach ( $caps_to_be_removed as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
+				}
+			}
+
+			update_option( 'tutor_removed_edit_other_items_permission', true, false );
+		}
+
+		// Removed private items permission @since 4.0.6.
+		if ( ! $is_removed_private_items_permissions ) {
+			$caps_to_be_removed = array(
+				'read_private_tutor_courses',
+				'read_private_tutor_lessons',
+				'read_private_tutor_quizzes',
+				'read_private_tutor_assignments',
+				'read_private_tutor_questions',
+			);
+
+			foreach ( $caps_to_be_removed as $cap ) {
+				if ( $role->has_cap( $cap ) ) {
+					$role->remove_cap( $cap );
+				}
+			}
+
+			update_option( 'tutor_removed_read_private_items_permission', true, false );
 		}
 	}
 }

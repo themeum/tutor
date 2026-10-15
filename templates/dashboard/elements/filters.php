@@ -10,6 +10,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 

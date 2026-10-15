@@ -1,0 +1,95 @@
+// Upcoming Lesson Card Component
+// Card component for displaying upcoming lesson information
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-upcoming-lesson-card {
+  background-color: $tutor-surface-l1;
+  padding: $tutor-spacing-6;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+
+  &:hover,
+  &:focus-within {
+    background-color: $tutor-surface-l1-hover;
+
+    @include tutor-breakpoint-up(sm) {
+      .tutor-upcoming-lesson-card-live-tag-badge {
+        opacity: 0;
+      }
+      .tutor-upcoming-lesson-card-action {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  &-header {
+    @include tutor-flex(row, center, space-between);
+    margin-bottom: $tutor-spacing-1;
+    min-height: 32px;
+  }
+
+  &-meta {
+    @include tutor-flex(row, center, flex-start);
+    gap: $tutor-spacing-2;
+    align-items: center;
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+  }
+
+  &-icon {
+    @include tutor-flex-center;
+  }
+
+  &-live-tag {
+    position: relative;
+
+    &-badge {
+      @include tutor-flex(row, center, center);
+      opacity: 1;
+      z-index: $tutor-z-positive;
+      @include tutor-transition(opacity);
+    }
+  }
+
+  &-action {
+    @include tutor-flex(row, center, center);
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: $tutor-z-dropdown;
+    @include tutor-transition(opacity);
+
+    &:hover {
+      color: $tutor-text-primary-inverse;
+    }
+  }
+
+  &-title {
+    display: block;
+    @include tutor-typography('small', 'medium', 'primary', 'body');
+    @include tutor-text-truncate();
+    margin: 0 0 $tutor-spacing-5 0;
+
+    &:hover {
+      color: $tutor-text-brand;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &-course {
+    @include tutor-flex(row, baseline, flex-start);
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+    gap: $tutor-spacing-1;
+  }
+
+  &-course-name {
+    font-style: italic;
+  }
+}

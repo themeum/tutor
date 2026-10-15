@@ -1,0 +1,78 @@
+// Tutor player styles
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-video-player {
+  position: relative;
+
+  .loading-spinner {
+    position: absolute;
+    inset: 0;
+    background: $tutor-surface-base;
+    border-radius: $tutor-radius-sm;
+    z-index: $tutor-z-positive;
+    @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
+
+    &::before {
+      width: 50px;
+      height: 50px;
+      top: calc(50% - 25px);
+    }
+  }
+
+  video {
+    width: 100%;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .plyr--vimeo .plyr__captions {
+    display: none !important;
+  }
+
+  /* Plyr buttons specificity increase */
+  .plyr__control {
+    background: transparent;
+    border: 0;
+    border-radius: 3px;
+    border-radius: var(--plyr-control-radius, 3px);
+    color: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: visible;
+    padding: 7px;
+    padding: calc(var(--plyr-control-spacing, 10px) * 0.7);
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:focus {
+      background: unset;
+      color: unset;
+      outline: 0;
+    }
+  }
+
+  .plyr__control--overlaid {
+    background: #00b3ff;
+    background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
+    border: 0;
+    border-radius: 100%;
+    color: #fff;
+    color: var(--plyr-video-control-color, #fff);
+    display: block;
+    left: 50%;
+    opacity: 0.9;
+    padding: 15px;
+    padding: calc(var(--plyr-control-spacing, 10px) * 1.5);
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.3s;
+    z-index: 2;
+  }
+}

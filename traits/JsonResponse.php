@@ -78,8 +78,9 @@ trait JsonResponse {
 	public function response_fail( $message, $status_code = 200 ) {
 		wp_send_json(
 			array(
-				'success' => false,
-				'message' => $message,
+				'status_code' => $status_code,
+				'success'     => false,
+				'message'     => $message,
 			),
 			$status_code
 		);
@@ -96,8 +97,9 @@ trait JsonResponse {
 	public function response_data( $data, $status_code = 200 ) {
 		wp_send_json(
 			array(
-				'success' => true,
-				'data'    => $data,
+				'status_code' => $status_code,
+				'success'     => true,
+				'data'        => $data,
 			),
 			$status_code
 		);

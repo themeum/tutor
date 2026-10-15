@@ -1,0 +1,61 @@
+import { __ } from '@wordpress/i18n';
+
+export type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
+
+export const QUIZ_REVEAL_CONFIG = {
+  ANSWER_CONTEXT_ID: 'tutor-quiz-context',
+  DEFAULT_WAIT_MS: 2000,
+  SUPPORTED_TYPES: ['true_false', 'single_choice', 'multiple_choice'] as const,
+  OPTION_SELECTOR: '.tutor-quiz-question-option',
+  QUESTION_SELECTOR: '.tutor-quiz-question',
+  EXPLANATION_SELECTOR: '[data-quiz-explanation]',
+  EXPLANATION_TRIGGER_SELECTOR: '[data-quiz-explanation-toggle]',
+  EXPLANATION_BODY_SELECTOR: '.tutor-quiz-explanation-body',
+  EXPLANATION_CONTENT_DATASET: 'quizExplanationContent',
+  DATA_OPTION_ATTR: 'data-option',
+  DATA_REVEALED_ATTR: 'data-revealed',
+  DATA_RESULT_ATTR: 'data-reveal-result',
+  DATA_OPTION_CORRECT: 'correct',
+  DATA_OPTION_INCORRECT: 'incorrect',
+} as const;
+
+export const QUIZ_ABANDON_CONFIG = {
+  NAVIGATION_EVENT: 'click',
+  IGNORE_ANCHOR_PREFIXES: ['#', 'javascript:'],
+} as const;
+
+export const QuestionTimeoutAction = {
+  AUTO_ABANDON: 'auto_abandon',
+  AUTO_SUBMIT: 'auto_submit',
+} as const;
+
+export const QuizLayoutType = {
+  QUESTION_BELOW_EACH_OTHER: 'question_below_each_other',
+  QUESTION_PAGINATION: 'question_pagination',
+  SINGLE_QUESTION: 'single_question',
+} as const;
+
+export const ERROR_MESSAGES = {
+  SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
+  ABANDON_FAILED: __('Failed to abandon quiz', 'tutor'),
+  REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
+} as const;
+
+export const QUIZ_LAYOUT_SELECTORS = {
+  QUESTIONS_CONTAINER: '.tutor-quiz-questions',
+  QUESTION_WRAPPER_ATTR: 'data-quiz-question-index',
+  QUESTION_WRAPPER: '.tutor-quiz-question-wrapper',
+  PAGINATION: '.tutor-quiz-questions-pagination',
+  PAGINATION_ITEM_ATTR: 'data-quiz-question-index',
+  PAGINATION_ITEM: '.tutor-quiz-question-paginate-item',
+  PAGINATION_HAS_SCROLL_LEFT_ATTR: 'data-has-scroll-left',
+  PAGINATION_HAS_SCROLL_RIGHT_ATTR: 'data-has-scroll-right',
+} as const;
+
+export const QUIZ_LAYOUT_KEYS = {
+  QUESTION_VALUE_PREFIX: '[quiz_question]',
+} as const;
+
+export const QUIZ_EVENTS = {
+  AUTO_START_COMPLETE: 'tutor-quiz-autostart-complete',
+} as const;

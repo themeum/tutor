@@ -19,6 +19,8 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
+use TUTOR_PRO\QuizImageStorage;
+use WP_Error;
 
 /**
  * Class QuizBuilder
@@ -26,6 +28,34 @@ use Tutor\Traits\JsonResponse;
  * @since 1.0.0
  */
 class QuizBuilder {
+
+	/**
+	 * Store question ids of current quiz.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var array|null
+	 */
+	private $current_quiz_question_ids = null;
+
+	/**
+	 * Store answer ids of current quiz.
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var array|null
+	 */
+	private $current_quiz_answer_ids = null;
+
+	/**
+	 * Store current quiz details
+	 *
+	 * @since 4.0.5
+	 *
+	 * @var object|null
+	 */
+	private $current_quiz = null;
+
 	use JsonResponse;
 
 	const TRACKING_KEY   = '_data_status';
@@ -82,16 +112,27 @@ class QuizBuilder {
 	 * @param int    $question_id question id.
 	 * @param string $question_type question type.
 	 * @param array  $input answer data.
+	 * @param string $data_status answer data status.
 	 *
 	 * @return array
 	 */
-	public function prepare_answer_data( $question_id, $question_type, $input ) {
-		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
-		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
-		$image_id             = Input::sanitize( $input['image_id'] ?? null );
-		$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '' );
-		$answer_view_format   = Input::sanitize( $input['answer_view_format'] ?? '' );
-		$answer_settings      = null;
+	public function prepare_answer_data( $question_id, $question_type, $input, $data_status = self::FLAG_NO_CHANGE ) {
+		$answer_title = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
+		$is_correct   = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
+		$image_id     = Input::sanitize( $input['image_id'] ?? null );
+		// Let the hook handle special cases (e.g. draw_image, pin_image) and return a normalized value (URL).
+		$answer_two_gap_match_raw = isset( $input['answer_two_gap_match'] ) ? wp_unslash( $input['answer_two_gap_match'] ) : '';
+		$answer_two_gap_match_raw = apply_filters(
+			'tutor_save_quiz_draw_image_mask',
+			$answer_two_gap_match_raw,
+			$question_type,
+			array(
+				'data_status' => $data_status,
+			)
+		);
+		$answer_two_gap_match     = Input::sanitize( $answer_two_gap_match_raw ?? '', '' );
+		$answer_view_format       = Input::sanitize( $input['answer_view_format'] ?? '' );
+		$answer_settings          = null;
 
 		$answer_data = array(
 			'belongs_question_id'   => $question_id,
@@ -125,7 +166,8 @@ class QuizBuilder {
 		$answer_order = 0;
 		foreach ( $question_answers as $answer ) {
 			$data_status = isset( $answer[ self::TRACKING_KEY ] ) ? $answer[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
-			$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer );
+			$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer, $data_status );
+			$answer_id   = 0;
 
 			// New answer.
 			if ( self::FLAG_NEW === $data_status ) {
@@ -136,11 +178,20 @@ class QuizBuilder {
 			// Update answer.
 			if ( self::FLAG_UPDATE === $data_status ) {
 				$answer_id = $answer['answer_id'];
+				$old_mask  = '';
+				if ( $this->is_mask_image_question_type( $question_type ) ) {
+					$old_answer = QueryHelper::get_row( $answers_table, array( 'answer_id' => (int) $answer_id ), 'answer_id' );
+					$old_mask   = is_object( $old_answer ) ? (string) ( $old_answer->answer_two_gap_match ?? '' ) : '';
+				}
 				$wpdb->update(
 					$answers_table,
 					$answer_data,
 					array( 'answer_id' => $answer_id )
 				);
+				if ( $this->is_mask_image_question_type( $question_type ) ) {
+					$new_mask = (string) ( $answer_data['answer_two_gap_match'] ?? '' );
+					$this->delete_replaced_mask_file( $old_mask, $new_mask );
+				}
 			}
 
 			if ( self::FLAG_NO_CHANGE === $data_status ) {
@@ -148,13 +199,66 @@ class QuizBuilder {
 			}
 
 			// Save sort order.
-			$answer_order++;
+			++$answer_order;
 			$wpdb->update(
 				$answers_table,
 				array( 'answer_order' => $answer_order ),
 				array( 'answer_id' => $answer_id )
 			);
 		}
+	}
+
+	/**
+	 * Whether question type stores a mask image URL in answer_two_gap_match.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $question_type Question type.
+	 *
+	 * @return bool
+	 */
+	private function is_mask_image_question_type( $question_type ) {
+		return in_array( $question_type, array( 'draw_image', 'pin_image' ), true );
+	}
+
+	/**
+	 * Delete old mask file if it was replaced with a different mask URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $old_mask Previous mask URL.
+	 * @param string $new_mask New mask URL.
+	 *
+	 * @return void
+	 */
+	private function delete_replaced_mask_file( $old_mask, $new_mask ) {
+		$old_mask = trim( (string) $old_mask );
+		$new_mask = trim( (string) $new_mask );
+
+		if ( '' === $old_mask || $old_mask === $new_mask ) {
+			return;
+		}
+
+		if ( ! class_exists( '\TUTOR_PRO\QuizImageStorage' ) ) {
+			return;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return;
+		}
+
+		$old_path = QuizImageStorage::quiz_image_stored_value_to_path( $old_mask );
+		if ( '' === $old_path || ! is_file( $old_path ) || ! is_readable( $old_path ) ) {
+			return;
+		}
+
+		$quiz_dir = trailingslashit( $upload_dir['basedir'] ) . QuizImageStorage::QUIZ_IMAGES_SUBDIR . '/';
+		if ( 0 !== strpos( $old_path, $quiz_dir ) ) {
+			return;
+		}
+
+		wp_delete_file( $old_path );
 	}
 
 	/**
@@ -166,6 +270,8 @@ class QuizBuilder {
 	 * @param array $questions questions data.
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception When saving a draw_image question while Legacy learning mode is enabled.
 	 */
 	public function save_questions( $quiz_id, $questions ) {
 		global $wpdb;
@@ -173,15 +279,28 @@ class QuizBuilder {
 
 		$question_order = 0;
 		foreach ( $questions as $question ) {
+			$question_id = 0;
 			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
-			$question_order++;
+			++$question_order;
 			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
 				$question['question_order'] = $question_order;
 				do_action( 'tutor_content_bank_question_linked_to_quiz', $quiz_id, (object) $question );
 				continue;
 			}
 
-			$question_type    = Input::sanitize( $question['question_type'] );
+			$question_type = Input::sanitize( $question['question_type'] );
+			if ( 'draw_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				throw new \Exception( esc_html__( 'Image Marking questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+			}
+			if ( 'pin_image' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				throw new \Exception( esc_html__( 'Pin questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+			}
+			if ( 'scale' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				throw new \Exception( esc_html__( 'Range questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+			}
+			if ( 'puzzle' === $question_type && tutor_utils()->is_legacy_learning_mode() ) {
+				throw new \Exception( esc_html__( 'Puzzle questions are not available when Legacy learning mode is enabled.', 'tutor' ) );
+			}
 			$question_data    = $this->prepare_question_data( $quiz_id, $question );
 			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
 
@@ -203,7 +322,10 @@ class QuizBuilder {
 				$wpdb->update(
 					$questions_table,
 					$question_data,
-					array( 'question_id' => $question_id )
+					array(
+						'question_id' => $question_id,
+						'quiz_id'     => $quiz_id,
+					)
 				);
 			}
 
@@ -215,7 +337,10 @@ class QuizBuilder {
 			$wpdb->update(
 				$questions_table,
 				array( 'question_order' => $question_order ),
-				array( 'question_id' => $question_id )
+				array(
+					'question_id' => $question_id,
+					'quiz_id'     => $quiz_id,
+				)
 			);
 
 			// Save question's answers.
@@ -228,6 +353,8 @@ class QuizBuilder {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 4.0.5 Quiz's question & answer id discrepancy validation added
+	 *
 	 * @param array $payload payload.
 	 *
 	 * @return object consist success, errors.
@@ -239,6 +366,27 @@ class QuizBuilder {
 		if ( ! is_array( $payload ) ) {
 			$success           = false;
 			$errors['payload'] = __( 'Invalid payload', 'tutor' );
+		}
+
+		$quiz_id   = (int) $payload['ID'] ?? 0;
+		$questions = $payload['questions'] ?? array();
+		$quiz      = get_post( $quiz_id );
+
+		if ( $quiz_id && ( ! $quiz || tutor()->quiz_post_type !== $quiz->post_type ) ) {
+			$success        = false;
+			$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
+		}
+
+		if ( $quiz && ! current_user_can( 'edit_post', $quiz_id ) ) {
+			$success                = false;
+			$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
+		}
+
+		if ( ! $success ) {
+			return (object) array(
+				'success' => $success,
+				'errors'  => $errors,
+			);
 		}
 
 		$rules = array(
@@ -257,7 +405,48 @@ class QuizBuilder {
 			$errors  = array_merge( $errors, $validation->errors );
 		}
 
-		foreach ( $payload['questions'] as $question ) {
+		if ( ! empty( $questions ) ) {
+			$this->set_current_quiz_questions_answer_ids( $quiz_id );
+			try {
+				$this->is_valid_quiz_question_answer_payload( $questions );
+			} catch ( \Throwable $th ) {
+				$success                 = false;
+				$errors['bad_request'][] = $th->getMessage();
+			}
+		}
+
+		$deleted_question_ids = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
+		$deleted_answer_ids   = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
+
+		// Validate deleted question ids are valid.
+		if ( $deleted_question_ids ) {
+			if ( $quiz ) {
+				$is_diff = array_diff( $deleted_question_ids, $this->current_quiz_question_ids );
+				if ( ! empty( $is_diff ) ) {
+					$success                 = false;
+					$errors['bad_request'][] = __( 'Invalid deleted question id found', 'tutor' );
+				}
+			} else {
+				$success                 = false;
+				$errors['bad_request'][] = __( 'Invalid deleted question id found', 'tutor' );
+			}
+		}
+
+		// Validate deleted answer ids are valid.
+		if ( $deleted_answer_ids ) {
+			if ( $quiz ) {
+				$is_diff = array_diff( $deleted_answer_ids, $this->current_quiz_answer_ids );
+				if ( ! empty( $is_diff ) ) {
+					$success                 = false;
+					$errors['bad_request'][] = __( 'Invalid deleted answer id found', 'tutor' );
+				}
+			} else {
+				$success                 = false;
+				$errors['bad_request'][] = __( 'Invalid deleted answer id found', 'tutor' );
+			}
+		}
+
+		foreach ( $questions as $question ) {
 			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
 				$success = false;
 				// translators: %s is the tracking key required for each question.
@@ -292,26 +481,290 @@ class QuizBuilder {
 	 *
 	 * @param array $deleted_question_ids question ids.
 	 * @param array $deleted_answer_ids answer ids.
+	 * @param array $deleted_temp_mask_values unsaved draw/pin/puzzle mask values.
 	 *
 	 * @return void
 	 */
-	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array() ) {
+	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array(), $deleted_temp_mask_values = array() ) {
 		global $wpdb;
-		$deleted_question_ids = array_filter( $deleted_question_ids, 'is_numeric' );
-		$deleted_answer_ids   = array_filter( $deleted_answer_ids, 'is_numeric' );
+		$deleted_question_ids     = array_filter( $deleted_question_ids, 'is_numeric' );
+		$deleted_answer_ids       = array_filter( $deleted_answer_ids, 'is_numeric' );
+		$deleted_temp_mask_values = is_array( $deleted_temp_mask_values ) ? array_values( array_filter( array_map( 'strval', $deleted_temp_mask_values ) ) ) : array();
+		$question_file_paths      = array();
+		$mask_question_ids        = array();
 
 		if ( count( $deleted_question_ids ) ) {
-			$id_str = QueryHelper::prepare_in_clause( $deleted_question_ids );
-            //phpcs:ignore -- sanitized $id_str.
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN (" . $id_str . ')' );
+			$mask_question_ids = $this->get_deletable_mask_question_ids( $deleted_question_ids );
+
+			if ( count( $mask_question_ids ) ) {
+				$question_file_paths = $this->get_question_file_paths_for_deletion( $mask_question_ids );
+
+				$in_clause = QueryHelper::prepare_in_clause( $mask_question_ids );
+				// Only remove answers automatically for file-based quiz types (draw/pin/puzzle).
+				//phpcs:ignore -- sanitized $in_clause.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN ({$in_clause})" ) );
+			}
+
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_question_ids );
+			// Preserve previous behavior for all non file-based quiz types and linked-content hooks.
+			//phpcs:ignore -- sanitized $in_clause.
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN ({$in_clause})" ) );
 			do_action( 'tutor_deleted_quiz_question_ids', $deleted_question_ids );
 		}
 
 		if ( count( $deleted_answer_ids ) ) {
-			$id_str = QueryHelper::prepare_in_clause( $deleted_answer_ids );
-            //phpcs:ignore -- sanitized $id_str.
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN (" . $id_str . ')' );
+			$in_clause = QueryHelper::prepare_in_clause( $deleted_answer_ids );
+            //phpcs:ignore -- sanitized $in_clause.
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN ({$in_clause})" ) );
 		}
+
+		if ( count( $question_file_paths ) ) {
+			QuizModel::delete_files_by_paths( $question_file_paths );
+		}
+
+		if ( count( $deleted_temp_mask_values ) ) {
+			$temp_file_paths = $this->get_temp_mask_file_paths_for_deletion( $deleted_temp_mask_values );
+			if ( count( $temp_file_paths ) ) {
+				QuizModel::delete_files_by_paths( $temp_file_paths );
+			}
+		}
+	}
+
+	/**
+	 * Get deletable question IDs for file-based question types.
+	 *
+	 * Only draw/pin/puzzle are selected to keep behavior unchanged for other quiz types.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $question_ids Question IDs from payload.
+	 *
+	 * @return int[]
+	 */
+	private function get_deletable_mask_question_ids( array $question_ids ) {
+		$question_ids = array_map( 'intval', array_filter( $question_ids, 'is_numeric' ) );
+		if ( empty( $question_ids ) ) {
+			return array();
+		}
+
+		$question_rows = QueryHelper::get_all(
+			QueryHelper::prepare_table_name( 'tutor_quiz_questions' ),
+			array(
+				'question_id'   => array( 'IN', $question_ids ),
+				'content_id'    => array( 'IS', 'NULL' ),
+				'question_type' => array( 'IN', array( 'draw_image', 'pin_image', 'puzzle' ) ),
+			),
+			'question_id',
+			-1
+		);
+
+		if ( empty( $question_rows ) ) {
+			return array();
+		}
+
+		return array_values(
+			array_unique(
+				array_map(
+					static function ( $row ) {
+						return (int) ( $row->question_id ?? 0 );
+					},
+					$question_rows
+				)
+			)
+		);
+	}
+
+	/**
+	 * Collect draw/pin/puzzle files linked to question answers before question deletion.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $question_ids Question IDs that will be deleted.
+	 *
+	 * @return string[]
+	 */
+	private function get_question_file_paths_for_deletion( array $question_ids ) {
+		$paths = array();
+
+		if ( empty( $question_ids ) || ! class_exists( '\TUTOR_PRO\QuizImageStorage' ) ) {
+			return $paths;
+		}
+
+		$answers = QueryHelper::get_all(
+			QueryHelper::prepare_table_name( 'tutor_quiz_question_answers' ),
+			array(
+				'belongs_question_id'   => array( 'IN', $question_ids ),
+				'belongs_question_type' => array( 'IN', array( 'draw_image', 'pin_image', 'puzzle' ) ),
+			),
+			'answer_id',
+			-1
+		);
+
+		if ( empty( $answers ) ) {
+			return $paths;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $paths;
+		}
+
+		$quiz_dir = trailingslashit( $upload_dir['basedir'] ) . QuizImageStorage::QUIZ_IMAGES_SUBDIR . '/';
+
+		foreach ( $answers as $answer ) {
+			$stored = isset( $answer->answer_two_gap_match ) ? trim( (string) $answer->answer_two_gap_match ) : '';
+			if ( '' === $stored ) {
+				continue;
+			}
+
+			$path = $this->resolve_mask_stored_value_to_path( $stored );
+
+			if ( '' === $path && 'puzzle' === ( $answer->belongs_question_type ?? '' ) ) {
+				$payload = json_decode( stripslashes( $stored ), true );
+				if ( is_array( $payload ) && ! empty( $payload['playground_snapshot_file'] ) ) {
+					$path = $this->resolve_mask_stored_value_to_path( (string) $payload['playground_snapshot_file'] );
+				}
+			}
+
+			if ( '' === $path || ! is_readable( $path ) ) {
+				continue;
+			}
+
+			if ( 0 !== strpos( $path, $quiz_dir ) ) {
+				continue;
+			}
+
+			$paths[] = $path;
+		}
+
+		return array_values( array_unique( $paths ) );
+	}
+
+	/**
+	 * Resolve a stored draw/pin/puzzle mask value to local file path.
+	 *
+	 * Supports basename, uploads-relative path, uploads URL, and absolute uploads path.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $stored Stored mask value from answer_two_gap_match.
+	 *
+	 * @return string
+	 */
+	private function resolve_mask_stored_value_to_path( $stored ) {
+		$stored = is_string( $stored ) ? trim( stripslashes( $stored ) ) : '';
+		$stored = trim( $stored, "\"' \t\n\r\0\x0B" );
+		$stored = str_replace( '\\/', '/', $stored );
+
+		if ( '' === $stored ) {
+			return '';
+		}
+
+		$path = QuizImageStorage::quiz_image_stored_value_to_path( $stored );
+		if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+			return $path;
+		}
+
+		$basename = QuizImageStorage::sanitize_quiz_image_filename( wp_basename( str_replace( '\\', '/', $stored ) ) );
+		if ( '' !== $basename ) {
+			$path = QuizImageStorage::quiz_image_stored_value_to_path( $basename );
+			if ( '' !== $path && is_file( $path ) && is_readable( $path ) ) {
+				return $path;
+			}
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return '';
+		}
+
+		$uploads_base_dir = trailingslashit( str_replace( '\\', '/', (string) $upload_dir['basedir'] ) );
+		$uploads_marker   = '/wp-content/uploads/';
+
+		$url_path   = wp_parse_url( $stored, PHP_URL_PATH );
+		$url_path   = is_string( $url_path ) ? $url_path : '';
+		$marker_pos = '' !== $url_path ? strpos( $url_path, $uploads_marker ) : false;
+		if ( false !== $marker_pos ) {
+			$relative = ltrim( substr( $url_path, $marker_pos + strlen( $uploads_marker ) ), '/' );
+			$relative = QuizImageStorage::normalize_uploads_relative_store_value( $relative );
+			if ( '' !== $relative ) {
+				$resolved = $uploads_base_dir . $relative;
+				if ( is_file( $resolved ) && is_readable( $resolved ) ) {
+					return $resolved;
+				}
+			}
+		}
+
+		$is_abs_path = '/' === substr( $stored, 0, 1 );
+		if ( ! $is_abs_path ) {
+			return '';
+		}
+
+		$marker_pos = strpos( $stored, $uploads_marker );
+		if ( false === $marker_pos ) {
+			return '';
+		}
+
+		$relative = ltrim( substr( $stored, $marker_pos + strlen( $uploads_marker ) ), '/' );
+		$relative = QuizImageStorage::normalize_uploads_relative_store_value( $relative );
+		if ( '' === $relative ) {
+			return '';
+		}
+
+		$resolved = $uploads_base_dir . $relative;
+		return ( is_file( $resolved ) && is_readable( $resolved ) ) ? $resolved : '';
+	}
+
+	/**
+	 * Collect temp draw/pin/puzzle file paths from unsaved question deletions.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string[] $stored_values Stored values coming from quiz builder payload.
+	 *
+	 * @return string[]
+	 */
+	private function get_temp_mask_file_paths_for_deletion( array $stored_values ) {
+		$paths = array();
+
+		if ( empty( $stored_values ) || ! class_exists( '\TUTOR_PRO\QuizImageStorage' ) ) {
+			return $paths;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $paths;
+		}
+
+		$quiz_dir = trailingslashit( $upload_dir['basedir'] ) . QuizImageStorage::QUIZ_IMAGES_SUBDIR . '/';
+
+		foreach ( $stored_values as $stored ) {
+			$stored = is_string( $stored ) ? trim( $stored ) : '';
+			if ( '' === $stored ) {
+				continue;
+			}
+
+			$path = $this->resolve_mask_stored_value_to_path( $stored );
+
+			if ( '' === $path && ( false !== strpos( $stored, '{' ) || false !== strpos( $stored, 'playground_snapshot_file' ) ) ) {
+				$payload = json_decode( stripslashes( $stored ), true );
+				if ( is_array( $payload ) && ! empty( $payload['playground_snapshot_file'] ) ) {
+					$path = $this->resolve_mask_stored_value_to_path( (string) $payload['playground_snapshot_file'] );
+				}
+			}
+
+			if ( '' === $path || ! is_readable( $path ) ) {
+				continue;
+			}
+
+			if ( 0 !== strpos( $path, $quiz_dir ) ) {
+				continue;
+			}
+
+			$paths[] = $path;
+		}
+
+		return array_values( array_unique( $paths ) );
 	}
 
 	/**
@@ -330,6 +783,10 @@ class QuizBuilder {
 		$errors  = array();
 
 		$validation = $this->validate_payload( $payload );
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$validation->success              = false;
+			$validation->errors['topic_id'][] = tutor_utils()->error_message();
+		}
 
 		if ( ! $validation->success ) {
 			return (object) array(
@@ -370,6 +827,7 @@ class QuizBuilder {
 
 			// Save quiz settings.
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
+			$quiz_option = apply_filters( 'tutor_quiz_settings', $quiz_option, $quiz_id );
 			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
 			do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
@@ -379,9 +837,11 @@ class QuizBuilder {
 			}
 
 			// Delete questions and answers.
-			$deleted_question_ids = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
-			$deleted_answer_ids   = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
-			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids );
+			$deleted_question_ids     = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
+			$deleted_answer_ids       = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
+			$deleted_temp_mask_values = Input::post( 'deleted_temp_mask_values', array(), Input::TYPE_ARRAY );
+
+			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids, $deleted_temp_mask_values );
 
 			$wpdb->query( 'COMMIT' );
 
@@ -430,6 +890,88 @@ class QuizBuilder {
 		} else {
 			$this->json_response( __( 'Error', 'tutor' ), $result->errors, HttpHelper::STATUS_BAD_REQUEST );
 		}
+	}
 
+	/**
+	 * Set current quiz questions & answer ids
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param int $quiz_id Quiz id.
+	 *
+	 * @return void
+	 */
+	private function set_current_quiz_questions_answer_ids( int $quiz_id ) {
+		if ( ! $quiz_id ) {
+			return;
+		}
+
+		if ( is_null( $this->current_quiz ) ) {
+			$quiz_details = QuizModel::get_quiz_details( $quiz_id );
+			if ( $quiz_details ) {
+				$this->current_quiz = $quiz_details;
+			}
+		}
+
+		if ( is_null( $this->current_quiz_question_ids ) && $this->current_quiz ) {
+			$questions = $this->current_quiz->questions;
+			if ( $questions ) {
+				$this->current_quiz_question_ids = wp_list_pluck( $questions, 'question_id' );
+			}
+		}
+
+		if ( is_null( $this->current_quiz_answer_ids ) && $this->current_quiz ) {
+			$quiz_details = $this->current_quiz->questions;
+
+			$quiz_question_answer          = wp_list_pluck( $quiz_details, 'question_answers' );
+			$this->current_quiz_answer_ids = wp_list_pluck( array_merge( ...$quiz_question_answer ), 'answer_id' );
+		}
+	}
+
+	/**
+	 * Validate all the questions & answers are belongs to the provided quiz
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $payload Array of question answer payload.
+	 *
+	 * @throws \Exception If discrepancy found in the payload.
+	 *
+	 * @return bool true True if everything is fine
+	 */
+	public function is_valid_quiz_question_answer_payload( array $payload ): bool {
+		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
+		$payload_question_answers = wp_list_pluck( $payload, 'question_answers', 'question_id' );
+		$is_cb_question           = wp_list_pluck( $payload, 'is_cb_question', 'question_id' );
+
+		// Remove content bank answers.
+		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => ! $is_cb_question[ $question_id ], ARRAY_FILTER_USE_KEY );
+		$payload_question_answers = array_filter( array_values( $payload_question_answers ) ); // Filter out empty array.
+		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
+
+		// Remove the hash id.
+		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && ! $is_cb_question[ $id ] );
+		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
+
+		// For the new quiz current_quiz is null, in this there should not be any numeric question or answer id.
+		if ( is_null( $this->current_quiz ) && ( count( $payload_question_ids ) || count( $payload_answer_ids ) ) ) {
+			throw new \Exception( esc_html__( 'Invalid question or answer id found', 'tutor' ), 1 );
+		}
+
+		if ( $this->current_quiz_question_ids ) {
+			$has_question_diff = array_diff( $payload_question_ids, $this->current_quiz_question_ids );
+			if ( $has_question_diff ) {
+				throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
+			}
+		}
+
+		if ( $this->current_quiz_answer_ids ) {
+			$has_answer_diff = array_diff( $payload_answer_ids, $this->current_quiz_answer_ids );
+			if ( $has_answer_diff ) {
+				throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
+			}
+		}
+
+		return true;
 	}
 }

@@ -1,9 +1,11 @@
+import { useState } from 'react';
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
-import { useState } from 'react';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Molecules/ThreeDots',

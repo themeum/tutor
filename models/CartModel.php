@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -45,7 +46,7 @@ class CartModel {
 	 * @param string $item_type Cart item type.
 	 * @param mixed  $item_details Cart item details.
 	 *
-	 * @return array Array containing the result of the insert operation.
+	 * @return int Inserted row ID on success, 0 otherwise.
 	 */
 	public function add_course_to_cart( $user_id, $course_id, $item_type = '', $item_details = '' ) {
 		global $wpdb;
@@ -73,13 +74,19 @@ class CartModel {
 			);
 		}
 
+		if ( 'gift' === $item_type ) {
+			$item_details = wp_json_encode( $item_details, JSON_UNESCAPED_UNICODE );
+		} else {
+			$item_details = wp_json_encode( $item_details );
+		}
+
 		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
 				'cart_id'      => $user_cart_id,
 				'course_id'    => $course_id,
 				'item_type'    => $item_type,
-				'item_details' => $item_details ? wp_json_encode( $item_details ) : null,
+				'item_details' => $item_details,
 			)
 		);
 	}
@@ -95,7 +102,12 @@ class CartModel {
 	 * @return array Array containing the cart items and their total count.
 	 */
 	public function get_cart_items( $user_id, $is_details = true ) {
-		global $wpdb;
+		$cache_key = "tutor_get_cart_items_{$user_id}_{$is_details}";
+		$cached    = TutorCache::get( $cache_key );
+
+		if ( $cached ) {
+			return $cached;
+		}
 
 		$cart_data = array(
 			'cart'    => null,
@@ -106,7 +118,7 @@ class CartModel {
 		);
 
 		$user_cart = QueryHelper::get_row(
-			"{$wpdb->prefix}tutor_carts",
+			'tutor_carts',
 			array(
 				'user_id' => $user_id,
 			),
@@ -116,15 +128,18 @@ class CartModel {
 		if ( $user_cart ) {
 			$cart_data['cart'] = $user_cart;
 
-			$primary_table        = "{$wpdb->prefix}tutor_cart_items AS item";
+			$primary_table        = 'tutor_cart_items AS item';
 			$joining_tables       = array(
 				array(
 					'type'  => 'LEFT',
-					'table' => "{$wpdb->prefix}posts AS post",
+					'table' => 'posts AS post',
 					'on'    => 'item.course_id = post.ID',
 				),
 			);
-			$where                = array( 'item.cart_id' => $user_cart->id );
+			$where                = array(
+				'item.cart_id'     => $user_cart->id,
+				'post.post_status' => 'publish',
+			);
 			$select_columns       = array( 'post.*' );
 			$cart_data['courses'] = QueryHelper::get_joined_data(
 				$primary_table,
@@ -132,11 +147,15 @@ class CartModel {
 				$select_columns,
 				$where,
 				array(),
-				'item.id'
+				'item.id',
+				-1
 			);
 		}
 
-		return $is_details ? $cart_data : $cart_data['courses']['results'];
+		$result = $is_details ? $cart_data : $cart_data['courses']['results'];
+		TutorCache::set( $cache_key, $result );
+
+		return $result;
 	}
 
 	/**
@@ -261,5 +280,4 @@ class CartModel {
 			)
 		);
 	}
-
 }

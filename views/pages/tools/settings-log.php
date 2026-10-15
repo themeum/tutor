@@ -66,18 +66,18 @@
 						<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php esc_attr_e( 'Yes, Restore Settings', 'tutor' ); ?>" data-heading="<?php esc_attr_e( 'Restore Previous Settings?', 'tutor' ); ?>" data-message="<?php esc_attr_e( 'WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor' ); ?>" data-id="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
 						<div class="tutor-dropdown-parent tutor-ml-16">
 							<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-								<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+								<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 							</button>
 							<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 								<li>
 									<a href="javascript:;" class="tutor-dropdown-item export_single_settings" data-id="<?php echo esc_attr( $key ); ?>">
-										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
+										<span class="tutor-icon-archive tutor-mr-8" aria-hidden="true"></span>
 										<span><?php esc_html_e( 'Download', 'tutor' ); ?></span>
 									</a>
 								</li>
 								<li>
 									<a href="javascript:;" class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php esc_attr_e( 'Yes, Delete Settings', 'tutor' ); ?>" data-heading="<?php esc_attr_e( 'Delete This Settings?', 'tutor' ); ?>" data-message="<?php esc_attr_e( 'WARNING! This will remove the settings history data from your system, please proceed with caution.', 'tutor' ); ?>" data-id="<?php echo esc_attr( $key ); ?>">
-										<span class="icon tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+										<span class="icon tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></span>
 										<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 									</a>
 								</li>

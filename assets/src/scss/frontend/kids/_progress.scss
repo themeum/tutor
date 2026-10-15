@@ -1,0 +1,15 @@
+@use '@Core/scss/tokens' as *;
+
+:root {
+  --tutor-progress-height: #{$tutor-spacing-4};
+  --tutor-progress-indicator-top: 2px;
+  --tutor-progress-indicator-height: 1.5px;
+  --tutor-progress-indicator-secondary-display: none;
+}
+
+[data-tutor-ui='kids'] {
+  --tutor-progress-height: 12px;
+  --tutor-progress-indicator-top: 3px;
+  --tutor-progress-indicator-height: 2px;
+  --tutor-progress-indicator-secondary-display: block;
+}

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Course Settings Tabls Class
+ * Course Settings Tabs Class
  *
  * @since 2.0.0
  */

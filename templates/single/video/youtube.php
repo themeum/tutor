@@ -23,7 +23,7 @@ do_action( 'tutor_lesson/single/before/video/youtube' );
 
 <?php if ( $youtube_video_id ) : ?>
 	<div class="tutor-video-player">
-		<div class="loading-spinner" area-hidden="true"></div>
+		<div class="loading-spinner" aria-hidden="true"></div>
 		<div class="<?php echo $disable_default_player_youtube ? 'plyr__video-embed tutorPlayer' : 'tutor-ratio tutor-ratio-16x9'; ?>">
 			<?php if ( ! $disable_default_player_youtube ) : ?>
 				<iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_video_id ); ?>" frameborder="0" allowfullscreen allowtransparency allow="autoplay"></iframe>

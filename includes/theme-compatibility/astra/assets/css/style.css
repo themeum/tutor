@@ -1,18 +1,34 @@
 .tutor-wrap-parent {
-    width: 100%;
-    padding-top: 80px;
-    padding-bottom: 80px;
+	width: 100%;
+	padding-top: 80px;
+	padding-bottom: 80px;
+}
+
+.tutor-modal-close:focus,
+.tutor-modal-close:hover,
+.tutor-tabs-tab:focus,
+.tutor-tabs-tab:hover {
+	color: var(--tutor-text-brand) !important;
+	background-color: var(--tutor-tab-l3-active) !important;
+	box-shadow: var(--tutor-tab-active-shadow, none);
+}
+
+.tutor-cart-empty-state a {
+	text-decoration: none !important;
 }
 
 .plyr input[type=range]::-webkit-slider-runnable-track {
-    box-shadow: none !important;
+	box-shadow: none !important;
 }
+
 .plyr input[type=range]::-moz-range-track {
-    box-shadow: none !important;
+	box-shadow: none !important;
 }
+
 .plyr input[type=range]::-ms-fill-lower {
-    box-shadow: none !important;
+	box-shadow: none !important;
 }
+
 .plyr input[type=range]::-ms-fill-upper {
-    box-shadow: none !important;
+	box-shadow: none !important;
 }

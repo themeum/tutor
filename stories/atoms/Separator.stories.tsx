@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { Separator } from '@TutorShared/atoms/Separator';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import { Separator } from '@TutorShared/atoms/Separator';
 
 const meta = {
   title: 'Atoms/Separator',

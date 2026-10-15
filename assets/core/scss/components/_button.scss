@@ -1,0 +1,160 @@
+// Button Component
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+button.tutor-btn,
+a.tutor-btn,
+.tutor-btn {
+  @include tutor-button-base;
+  @include tutor-button-size(medium);
+}
+
+// Button variants
+button.tutor-btn-primary,
+a.tutor-btn-primary,
+.tutor-btn-primary {
+  @include tutor-button-variant(primary);
+}
+
+button.tutor-btn-primary-soft,
+a.tutor-btn-primary-soft,
+.tutor-btn-primary-soft {
+  @include tutor-button-variant(primary-soft);
+}
+
+button.tutor-btn-destructive,
+a.tutor-btn-destructive,
+.tutor-btn-destructive {
+  @include tutor-button-variant(destructive);
+}
+
+button.tutor-btn-destructive-soft,
+a.tutor-btn-destructive-soft,
+.tutor-btn-destructive-soft {
+  @include tutor-button-variant(destructive-soft);
+}
+
+button.tutor-btn-secondary,
+a.tutor-btn-secondary,
+.tutor-btn-secondary {
+  @include tutor-button-variant(secondary);
+}
+
+button.tutor-btn-outline,
+a.tutor-btn-outline,
+.tutor-btn-outline {
+  @include tutor-button-variant(outline);
+}
+
+button.tutor-btn-ghost,
+a.tutor-btn-ghost,
+.tutor-btn-ghost {
+  @include tutor-button-variant(ghost);
+}
+
+button.tutor-btn-ghost-brand,
+a.tutor-btn-ghost-brand,
+.tutor-btn-ghost-brand {
+  @include tutor-button-variant(ghost-brand);
+}
+
+button.tutor-btn-link,
+a.tutor-btn-link,
+.tutor-btn-link {
+  @include tutor-button-variant(link);
+  box-shadow: none
+}
+
+button.tutor-btn-link-gray,
+a.tutor-btn-link-gray,
+.tutor-btn-link-gray {
+  @include tutor-button-variant(link-gray);
+}
+
+button.tutor-btn-link-destructive,
+a.tutor-btn-link-destructive,
+.tutor-btn-link-destructive {
+  @include tutor-button-variant(link-destructive);
+}
+
+// Button sizes
+button.tutor-btn-x-small,
+a.tutor-btn-x-small,
+.tutor-btn-x-small {
+  @include tutor-button-size(x-small);
+
+  &.tutor-btn-loading::before {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+button.tutor-btn-small,
+a.tutor-btn-small,
+.tutor-btn-small {
+  @include tutor-button-size(small);
+
+  &.tutor-btn-loading::before {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+button.tutor-btn-medium,
+a.tutor-btn-medium,
+.tutor-btn-medium {
+  @include tutor-button-size(medium);
+}
+
+button.tutor-btn-large,
+a.tutor-btn-large,
+.tutor-btn-large {
+  @include tutor-button-size(large);
+
+  &.tutor-btn-loading::before {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Button states
+.tutor-btn-loading {
+  @include tutor-button-loading;
+}
+
+// Button with full width
+button.tutor-btn-block,
+a.tutor-btn-block,
+.tutor-btn-block {
+  @include tutor-button-block();
+}
+
+// Button group
+.tutor-btn-group {
+  @include tutor-button-group(horizontal);
+}
+
+// Button group vertical
+.tutor-btn-group-vertical {
+  @include tutor-button-group(vertical);
+}
+
+// Icon-only button
+button.tutor-btn-icon,
+a.tutor-btn-icon,
+.tutor-btn-icon {
+  flex-shrink: 0;
+  @include tutor-button-icon-size(medium);
+
+  &.tutor-btn-x-small {
+    @include tutor-button-icon-size(x-small);
+  }
+
+  &.tutor-btn-small {
+    @include tutor-button-icon-size(small);
+  }
+
+  &.tutor-btn-large {
+    @include tutor-button-icon-size(large);
+  }
+}

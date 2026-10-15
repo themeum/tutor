@@ -25,7 +25,7 @@ if ( ! $is_completed_lesson ) {
 		<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
 		<button type="submit" class="tutor-topbar-mark-btn tutor-btn tutor-btn-primary tutor-ws-nowrap"
 			name="complete_lesson_btn" value="complete_lesson">
-			<span class="tutor-icon-circle-mark-line tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-circle-mark-line tutor-mr-8" aria-hidden="true"></span>
 			<span><?php esc_html_e( 'Mark as Complete', 'tutor' ); ?></span>
 		</button>
 	</form>

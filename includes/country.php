@@ -4,13 +4,11 @@
  *
  * @package Tutor\Includes
  * @author Themeum <support@themeum.com>
- * @link https=>//themeum.com
+ * @link https://themeum.com
  * @since 3.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'tutor_get_country_list' ) ) {
 	/**

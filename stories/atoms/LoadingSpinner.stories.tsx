@@ -1,10 +1,11 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import LoadingSpinner, {
   FullscreenLoadingSpinner,
   GradientLoadingSpinner,
   LoadingOverlay,
   LoadingSection,
 } from '@TutorShared/atoms/LoadingSpinner';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Atoms/LoadingSpinner',

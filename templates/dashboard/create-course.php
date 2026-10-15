@@ -9,9 +9,7 @@
  * @since 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
 

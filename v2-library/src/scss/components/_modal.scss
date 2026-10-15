@@ -352,18 +352,6 @@
 		}
 	} // end of /.tutor-modal-ins-approval
 
-	@include breakpoint-max(mobile) {
-		.tutor-btn:not(.tutor-is-icon-btn) {
-			padding: 6px 20px !important;
-			width: max-content;
-			max-width: max-content;
-			height: auto !important;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 2;
-		}
-	}
-
 	// .tutor-modal.tutor-login-modal {}
 	&.tutor-login-modal {
 		.tutor-modal-root {

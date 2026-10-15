@@ -9,24 +9,26 @@
  * @since 2.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
-use TUTOR\Instructors_List;
 use Tutor\Models\CourseModel;
 
 $allowed_subpage = array();
 
 if ( Input::has( 'sub_page' ) ) {
 	$sub_page = Input::get( 'sub_page' );
-	if ( in_array( $sub_page, $allowed, true ) ) {
+	if ( in_array( $sub_page, $allowed_subpage, true ) ) {
 		include_once tutor()->path . "views/pages/{$sub_page}.php";
 		return;
 	}
 }
 
+/**
+ * Instance of Instructors_List class
+ *
+ * @var TUTOR\Instructors_List
+ */
 $instructors = tutor_lms()->instructor_list;
 
 /**
@@ -74,19 +76,19 @@ $total            = $instructors::count_total_instructors( $instructor_status, $
 /**
  * Navbar data to make nav menu
  */
-$url               = get_pagenum_link();
-$add_insructor_url = $url . '&sub_page=add_new_instructor';
-$navbar_data       = array(
+$url                = get_pagenum_link();
+$add_instructor_url = $url . '&sub_page=add_new_instructor';
+$navbar_data        = array(
 	'page_title'   => $instructors->page_title,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_insructor_url,
+	'button_url'   => $add_instructor_url,
 	'modal_target' => 'tutor-instructor-add-new',
 );
 
 $filters = array(
 	'bulk_action'  => $instructors->bulk_action,
-	'bulk_actions' => $instructors->prpare_bulk_actions(),
+	'bulk_actions' => $instructors->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_instructor_bulk_action',
 	'filters'      => array(
 		array(
@@ -140,15 +142,15 @@ $filters = array(
 						</th>
 						<th class="tutor-table-rows-sorting" width="25%">
 							<?php esc_html_e( 'Name', 'tutor' ); ?>
-							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
+							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon" aria-hidden="true"></span>
 						</th>
 						<th class="tutor-table-rows-sorting" width="30%">
 							<?php esc_html_e( 'Email', 'tutor' ); ?>
-							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
+							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon" aria-hidden="true"></span>
 						</th>
 						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Total Courses', 'tutor' ); ?>
-							<span class="tutor-icon-order-down up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon" aria-hidden="true"></span>
 						</th>
 						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
@@ -158,9 +160,8 @@ $filters = array(
 
 						<th class="tutor-table-rows-sorting" width="10%">
 							<?php esc_html_e( 'Status', 'tutor' ); ?>
-							<span class="tutor-icon-order-down up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon" aria-hidden="true"></span>
 						</th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -184,8 +185,8 @@ $filters = array(
 									);
 									?>
 									<?php echo esc_html( tutils()->get_user_name( $user_data ) ); ?>
-									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
-										<span class="tutor-icon-external-link"></span>
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank" aria-label="<?php esc_attr_e( 'View profile', 'tutor' ); ?>">
+										<span class="tutor-icon-external-link" aria-hidden="true"></span>
 									</a>
 								</div>
 							</td>
@@ -213,38 +214,40 @@ $filters = array(
 							<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
 
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<span style="display:block; width:0; height:0; overflow:hidden;">
+								<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
+									<span style="display:block; width:0; height:0; overflow:hidden;">
+										<?php
+											// Render for frontend sorting.
+											echo esc_html( $available_status[ $list->status ][0] );
+										?>
+									</span>
+									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
+										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
+											<?php foreach ( $available_status as $key => $status_name ) : ?>
+												<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+													<?php echo esc_html( $available_status[ $key ][0] ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+										<i class="icon1 tutor-icon-eye-bold" aria-hidden="true"></i>
+										<i class="icon2 tutor-icon-angle-down" aria-hidden="true"></i>
+									</div>
+
 									<?php
-										// Render for frontend sorting.
-										echo esc_html( $available_status[ $list->status ][0] );
+									ob_start();
+									$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
 									?>
-								</span>
-								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
-									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-										<?php foreach ( $available_status as $key => $status_name ) : ?>
-											<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
-												<?php echo esc_html( $available_status[ $key ][0] ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-									<i class="icon1 tutor-icon-eye-bold"></i>
-									<i class="icon2 tutor-icon-angle-down"></i>
+										<a href="<?php echo esc_url( $profile_url ); ?>" 
+											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
+										</a>
+									<?php
+									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+									//phpcs:ignore -- already escaped.
+									echo $edit_button;
+									?>
+									<?php do_action( 'tutor_render_consent_logs_button', $list ); ?>
 								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<?php
-								ob_start();
-								$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
-								?>
-								<a href="<?php echo esc_url( $profile_url ); ?>" 
-									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-									<?php esc_html_e( 'Edit', 'tutor' ); ?>
-								</a>
-								<?php
-								$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
-								//phpcs:ignore -- already escaped.
-								echo $edit_button;
-								?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -274,16 +277,16 @@ $filters = array(
 	</div>
 </div>
 
-<div id="tutor-instructor-add-new" class="tutor-modal tutor-modal-scrollable">
+<div id="tutor-instructor-add-new" class="tutor-modal tutor-modal-scrollable" role="dialog" aria-modal="true" aria-labelledby="tutor-instructor-add-new-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<form id="tutor-new-instructor-form" class="tutor-modal-content" autocomplete="off" method="post">
 				<div class="tutor-modal-header">
-					<div class="tutor-modal-title">
+					<div class="tutor-modal-title" id="tutor-instructor-add-new-title">
 						<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 					</div>
-					<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-						<span class="tutor-icon-times" area-hidden="true"></span>
+					<button type="button" class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 				</div>
 
@@ -347,7 +350,7 @@ $filters = array(
 								<?php esc_html_e( 'Password', 'tutor' ); ?>
 							</label>
 							<div class="tutor-form-wrap tutor-mb-16">
-								<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
+								<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal" aria-hidden="true"></span>
 								<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 							</div>
 						</div>
@@ -356,7 +359,7 @@ $filters = array(
 								<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 							</label>
 							<div class="tutor-form-wrap tutor-mb-16">
-								<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
+								<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal" aria-hidden="true"></span>
 								<input type="password" name="password_confirmation"  class="tutor-form-control" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 							</div>
 						</div>
@@ -406,17 +409,17 @@ $instructor_data = get_userdata( $instructor_id );
 if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) ) :
 	?>
 	<?php $instructor_status = tutor_utils()->instructor_status( $instructor_data->ID, false ); ?>
-	<div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-ins-approval tutor-is-active">
+	<div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-ins-approval tutor-is-active" role="dialog" aria-modal="true" aria-labelledby="tutor-ins-approval-title" aria-hidden="false">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window tutor-modal-window-sm">
 			<div class="tutor-modal-content tutor-modal-content-white">
-				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+				<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-py-lg-64">
 						<?php if ( $instructor_data ) : ?>
-							<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-8">
+							<div id="tutor-ins-approval-title" class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-8">
 								<?php esc_html_e( 'A New Instructor Just Signed Up', 'tutor' ); ?>
 							</div>
 							<div class="tutor-fs-6 tutor-color-muted">
@@ -499,8 +502,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	</div>
 <?php endif; ?>
 
+<?php do_action( 'tutor_render_consent_logs_modal' ); ?>
+
 <style>
 	.table-instructors .woocommerce-Price-amount{
 		font-size: 0.875rem;
 	}
 </style>
+

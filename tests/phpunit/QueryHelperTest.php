@@ -68,6 +68,53 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
+	public function test_prepare_where_clause() {
+
+		$test1   = array(
+			'age'     => 18,
+			'height'  => array( '>=', '5feet7inch' ),
+			'hobbies' => array( 'coding', 'biking', 'swimming' ),
+		);
+		$expect1 = "age = 18 AND height >= '5feet7inch' AND hobbies IN ('coding','biking','swimming')";
+		$actual1 = QueryHelper::prepare_where_clause( $test1 );
+
+		$test2 = array(
+			'salary' => array( 'BETWEEN', array( 10, 20 ) ),
+			'name'   => array( 'NOT BETWEEN', array( 'b', 'c' ) ),
+		);
+
+		$expect2 = "salary BETWEEN 10 AND 20 AND name NOT BETWEEN 'b' AND 'c'";
+		$actual2 = QueryHelper::prepare_where_clause( $test2 );
+
+		$test3 = array(
+			'name' => array( 'LIKE', 'test' ),
+			'age'  => array( 'NOT IN', array( 18, 19, 20 ) ),
+		);
+
+		$expect3 = "name LIKE 'test' AND age NOT IN (18,19,20)";
+		$actual3 = QueryHelper::prepare_where_clause( $test3 );
+
+		$test4 = array(
+			'name' => 'NULL',
+			'age'  => array( 'IS NOT', 'NULL' ),
+		);
+
+		$expect4 = 'name IS NULL AND age IS NOT NULL';
+		$actual4 = QueryHelper::prepare_where_clause( $test4 );
+
+		$this->assertEquals( $expect1, trim( $actual1 ) );
+		$this->assertEquals( $expect2, trim( $actual2 ) );
+		$this->assertEquals( $expect3, trim( $actual3 ) );
+		$this->assertEquals( $expect4, trim( $actual4 ) );
+	}
+
+	/**
+	 * Test QueryHelper Raw query.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return void
+	 */
 	public function test_prepare_raw_query() {
 		$case_1 = array(
 			"username = '%s'" => array(
@@ -88,7 +135,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		);
 
 		$case_3 = array(
-			'id'          => array(
+			'id' => array(
 				'BETWEEN',
 				array( 10, 20 ),
 			),

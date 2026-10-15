@@ -26,6 +26,6 @@ $field_id = 'field_' . $field['key'];
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 		<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-sm"><?php esc_html_e( 'Edit', 'tutor' ); ?></button>
-		<span class="icon-trash-can-line" area-hidden="true"></span>
+		<span class="icon-trash-can-line" aria-hidden="true"></span>
 	</div>
 </div>

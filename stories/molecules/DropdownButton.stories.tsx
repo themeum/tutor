@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import DropdownButton from '@TutorShared/molecules/DropdownButton';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Molecules/DropdownButton',
@@ -64,11 +66,24 @@ const meta = {
       description: 'Disable the dropdown trigger.',
       defaultValue: false,
     },
-    arrowPosition: {
+    placement: {
       control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-      description: 'Arrow position for dropdown.',
-      defaultValue: 'top',
+      options: [
+        'top',
+        'topLeft',
+        'topRight',
+        'bottom',
+        'bottomLeft',
+        'bottomRight',
+        'left',
+        'leftTop',
+        'leftBottom',
+        'right',
+        'rightTop',
+        'rightBottom',
+      ],
+      description: 'Placement of the dropdown popover.',
+      defaultValue: 'bottomRight',
     },
     animationType: {
       control: 'select',
@@ -100,7 +115,7 @@ const meta = {
     loading: false,
     dropdownMaxWidth: '140px',
     disabledDropdown: false,
-    arrowPosition: 'top',
+    placement: 'bottomRight',
     animationType: AnimationType.slideUp,
     tabIndex: 0,
     children: (
@@ -145,7 +160,7 @@ export const Default = {} satisfies Story;
 
 export const WithIcon = {
   args: {
-    icon: <SVGIcon name="star" width={18} height={18} />,
+    icon: <SVGIcon name="starFill" width={18} height={18} />,
     text: 'Starred',
   },
 } satisfies Story;

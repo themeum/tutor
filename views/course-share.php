@@ -21,26 +21,26 @@ $share_config = array(
 ?>
 
 <a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn tutor-btn-ghost tutor-course-share-btn">
-	<span class="tutor-icon-share tutor-mr-8"></span> <?php esc_html_e( 'Share', 'tutor' ); ?>
+	<span class="tutor-icon-share tutor-mr-8" aria-hidden="true"></span> <?php esc_html_e( 'Share', 'tutor' ); ?>
 </a>
-<div id="tutor-course-share-opener" class="tutor-modal">
+<div id="tutor-course-share-opener" class="tutor-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-course-share-title" aria-hidden="true">
 	<span class="tutor-modal-overlay"></span>
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
-			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-				<span class="tutor-icon-times" area-hidden="true"></span>
+			<button type="button" class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close aria-label="<?php esc_attr_e( 'Close', 'tutor' ); ?>">
+				<span class="tutor-icon-times" aria-hidden="true"></span>
 			</button>
 			<div class="tutor-modal-body">
-				<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
+				<div id="tutor-course-share-title" class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
 					<?php esc_html_e( 'Share Course', 'tutor' ); ?>
 				</div>
 				<div class="tutor-fs-7 tutor-color-secondary tutor-mb-12">
 					<?php esc_html_e( 'Page Link', 'tutor' ); ?>
 				</div>
 				<div class="tutor-mb-32 tutor-position-relative">
-					<input class="tutor-form-control" value="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" />
-					<button class="tutor-btn tutro-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>">
-						<span class="icon tutor-icon-copy"></span>
+					<input class="tutor-form-control" value="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Course Link', 'tutor' ); ?>" readonly />
+					<button class="tutor-btn tutor-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Copy link', 'tutor' ); ?>">
+						<span class="icon tutor-icon-copy" aria-hidden="true"></span>
 					</button>
 				</div>
 				<div>

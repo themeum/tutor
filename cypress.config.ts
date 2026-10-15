@@ -1,6 +1,7 @@
 import { defineConfig } from 'cypress';
-import 'dotenv/config';
 import fs from 'fs';
+
+import 'dotenv/config';
 
 export default defineConfig({
   projectId: process.env.CYPRESS_PROJECT_ID,

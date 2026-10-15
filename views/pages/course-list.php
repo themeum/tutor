@@ -438,18 +438,18 @@ if ( 0 === $total_courses_count ) {
 											</a>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+													<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 												</button>
 												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 													<a class="tutor-dropdown-item" href="<?php echo esc_url( $edit_link ); ?>">
-														<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+														<i class="tutor-icon-edit tutor-mr-8" aria-hidden="true"></i>
 														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 													<?php if ( $show_course_delete ) : ?>
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
-														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 														<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
 													</a>
 													<?php endif; ?>

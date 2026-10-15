@@ -123,6 +123,17 @@ final class DateTimeHelper {
 	}
 
 	/**
+	 * Get DateTime obj.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return DateTime
+	 */
+	public function get() {
+		return $this->datetime;
+	}
+
+	/**
 	 * Check date time is past
 	 *
 	 * @return boolean
@@ -195,7 +206,7 @@ final class DateTimeHelper {
 
 		// Handle past or future tense.
 		return ( $interval > 0 )
-				/* translators: %s: time difference */
+				/* translators: %s human-readable time difference. */
 				? sprintf( __( '%s ago', 'tutor' ), $time_diff )
 				/* translators: %s: time difference */
 				: sprintf( __( '%s from now', 'tutor' ), $time_diff );
@@ -273,5 +284,22 @@ final class DateTimeHelper {
 		return self::create( $datetime, $timezone )
 				->set_timezone( 'UTC' )
 				->format( self::FORMAT_MYSQL );
+	}
+
+	/**
+	 * Format seconds into an associative array of hours, minutes, and seconds.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $seconds Total seconds.
+	 *
+	 * @return array{hours: int, minutes: int, seconds: int}
+	 */
+	public static function split_seconds_into_time_units( int $seconds ): array {
+		return array(
+			'hours'   => intdiv( $seconds, HOUR_IN_SECONDS ),
+			'minutes' => intdiv( $seconds % HOUR_IN_SECONDS, MINUTE_IN_SECONDS ),
+			'seconds' => $seconds % MINUTE_IN_SECONDS,
+		);
 	}
 }

@@ -1,0 +1,10 @@
+@use './borders' as *;
+@use './shadows' as *;
+
+$tutor-modal-shadow: var(--tutor-modal-shadow, #{$tutor-shadow-modal});
+$tutor-modal-radius: var(--tutor-modal-radius, #{$tutor-radius-3xl});
+
+$tutor-modal: (
+  shadow: $tutor-modal-shadow,
+  radius: $tutor-modal-radius,
+);

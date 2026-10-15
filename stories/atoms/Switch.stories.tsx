@@ -1,7 +1,8 @@
-import { css } from '@emotion/react';
-import Switch from '@TutorShared/atoms/Switch';
 import { useState } from 'react';
+import { css } from '@emotion/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import Switch from '@TutorShared/atoms/Switch';
 
 const meta = {
   title: 'Atoms/Switch',

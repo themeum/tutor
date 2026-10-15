@@ -1,7 +1,8 @@
-import { css } from '@emotion/react';
-import FileUploader from '@TutorShared/molecules/FileUploader';
 import { useState } from 'react';
+import { css } from '@emotion/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import FileUploader from '@TutorShared/molecules/FileUploader';
 
 const meta = {
   title: 'Molecules/FileUploader',

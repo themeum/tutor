@@ -4,16 +4,25 @@
  *
  * Containing all translate able strings
  *
+ * @package Tutor\Includes
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 1.9.7
  */
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( '_WP_Editors' ) ) {
 	require ABSPATH . WPINC . '/class-wp-editor.php';
 }
 
+/**
+ * Get tinyMCE plugin translation strings
+ *
+ * @since 1.9.7
+ *
+ * @return string
+ */
 function tutor_tinymce_plugin_translation() {
 	$strings = array(
 		'tutor_shortcode'              => __( 'Tutor ShortCode', 'tutor' ),

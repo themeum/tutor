@@ -1,0 +1,71 @@
+@use '../mixins' as *;
+@use '../tokens' as *;
+
+.tutor-accordion {
+  overflow: visible;
+  background-color: transparent;
+  @include tutor-flex(column, stretch, start);
+  gap: $tutor-spacing-6;
+
+  &-item {
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+    overflow: hidden;
+  }
+
+  &-header {
+    @include tutor-flex(row, start, space-between);
+    width: 100%;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    @include tutor-transition(background-color);
+
+    &:hover,
+    &:focus {
+      background-color: $tutor-surface-l2;
+      outline: none;
+    }
+  }
+
+  &-title {
+    margin: 0;
+    @include tutor-typography('medium', 'medium', 'primary', 'heading');
+  }
+
+  &-icon {
+    @include tutor-flex-center();
+    flex-shrink: 0;
+    color: $tutor-icon-idle;
+    @include tutor-transition(transform);
+
+    .tutor-accordion-header[aria-expanded='true'] & {
+      transform: rotate(180deg);
+      color: $tutor-text-primary;
+    }
+
+    // RTL support for icon rotation
+    [dir='rtl'] .tutor-accordion-header[aria-expanded='true'] & {
+      transform: rotate(180deg) scaleX(-1);
+    }
+  }
+
+  &-content {
+    overflow: hidden;
+  }
+
+  &-body {
+    padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-5;
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

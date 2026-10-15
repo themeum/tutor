@@ -1,0 +1,31 @@
+// Dashboard styles index
+// Import all dashboard-related styles
+
+// Layout components
+@forward 'layout/layout';
+@forward 'layout/sidebar';
+@forward 'layout/header';
+@forward 'layout/nav-mobile';
+@forward 'layout/profile-header';
+@forward 'layout/account';
+
+// Dashboard components
+@forward 'profile-completion';
+@forward 'stat-card';
+@forward 'progress-card';
+@forward 'course-card';
+
+// Page components
+@forward 'pages/my-courses';
+@forward 'pages/courses';
+@forward 'pages/announcements';
+@forward 'pages/wishlist';
+@forward 'pages/student-dashboard';
+@forward 'pages/instructor-dashboard';
+
+// Account Pages
+@forward 'reviews';
+@forward 'profile';
+@forward 'billing';
+@forward 'withdrawals';
+@forward 'settings';

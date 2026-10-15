@@ -57,7 +57,7 @@ $border_color  = ! empty( $data['border'] ) ? $data['border'] : '#eff1f7';
 			</div>
 
 			<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-mt-16 tutor-thumbnail-upload-button">
-				<span class="tutor-icon-image-landscape tutor-mr-8" area-hidden="true"></span>
+				<span class="tutor-icon-image-landscape tutor-mr-8" aria-hidden="true"></span>
 				<span><?php esc_html_e( 'Upload Image', 'tutor' ); ?></span>
 			</button>
 		</div>

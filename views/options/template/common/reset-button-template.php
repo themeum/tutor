@@ -19,7 +19,7 @@ $section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_
 			data-reset="<?php echo esc_attr( $section_slug ); ?>"
 			data-heading="<?php esc_html_e( 'Reset to Default Settings?', 'tutor' ); ?>"
 			data-message="<?php esc_html_e( 'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.', 'tutor' ); ?>" disabled>
-			<i class="btn-icon tutor-icon-refresh tutor-mr-8" area-hidden="true"></i>
+			<i class="btn-icon tutor-icon-refresh tutor-mr-8" aria-hidden="true"></i>
 			<?php esc_html_e( 'Reset to Default', 'tutor' ); ?>
 	</button>
 </div>

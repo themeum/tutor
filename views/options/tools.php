@@ -29,7 +29,7 @@
 						?>
 							<li class="tutor-nav-item">
 								<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $page_url ); ?>">
-									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+									<span class="<?php echo esc_attr( $section['icon'] ); ?>" aria-hidden="true"></span>
 									<span class="tutor-ml-12 tutor-d-sm-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
 								</a>
 							</li>

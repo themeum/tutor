@@ -28,7 +28,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.tslint": "always",
-    "source.organizeImports": "explicit"
+    "source.organizeImports": "never"
   },
   "prettier.enable": true,
   "eslint.enable": true,

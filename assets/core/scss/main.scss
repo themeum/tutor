@@ -1,0 +1,139 @@
+// Tutor Design System - Main Entry Point
+// Single CSS file with all themes and RTL support
+
+// Import design tokens
+@use 'tokens' as *;
+
+// Import themes
+@use 'themes';
+
+// Import mixins
+@use 'mixins' as *;
+
+// Import base components
+@use 'components';
+
+// Import utilities
+@use 'utilities';
+
+// Base styles
+// CSS Reset
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  font-family: $tutor-font-family-body;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+[data-tutor-theme] body,
+body {
+  margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+  background-color: $tutor-surface-base;
+  color: $tutor-text-primary;
+  @include tutor-transition((background-color, color));
+}
+
+form {
+  margin: $tutor-spacing-none;
+}
+
+.tutor-dashboard-layout,
+.tutor-learning-area,
+.tutor-account-page-wrapper {
+  min-height: 100vh;
+  background-color: $tutor-surface-base;
+
+  body:has(#wpadminbar) & {
+    min-height: calc(100vh - 32px);
+  }
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/**
+ * Flips directional icons in RTL layouts.
+ * Use only for icons whose meaning depends on reading direction,
+ * such as arrows, chevrons, previous/next pagination controls, etc.
+ */
+[dir='rtl'] .tutor-icon-flip-rtl {
+  transform: scaleX(-1);
+}
+
+// Alpine.js cloak utility
+[x-cloak] {
+  display: none !important;
+}
+
+::view-transition-new(root) {
+  animation: tutor-theme-fade-in 220ms ease-out both;
+}
+
+::view-transition-old(root) {
+  animation: tutor-theme-fade-out 220ms ease-out both;
+}
+
+@keyframes tutor-theme-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-theme-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+// Reduce Motion
+[data-tutor-motion='reduce'] *,
+[data-tutor-motion='reduce'] *::before,
+[data-tutor-motion='reduce'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+[data-tutor-motion='reduce']::view-transition-new(root),
+[data-tutor-motion='reduce']::view-transition-old(root) {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tutor-motion='auto'] *,
+  [data-tutor-motion='auto'] *::before,
+  [data-tutor-motion='auto'] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-tutor-motion='auto']::view-transition-new(root),
+  [data-tutor-motion='auto']::view-transition-old(root) {
+    animation: none !important;
+  }
+}

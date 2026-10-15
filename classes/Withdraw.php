@@ -10,7 +10,9 @@
 
 namespace TUTOR;
 
+use Exception;
 use Tutor\Models\WithdrawModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Withdraw {
+	use JsonResponse;
 
 	/**
 	 * Withdraw method
@@ -62,25 +65,35 @@ class Withdraw {
 				'desc'        => __( 'Get your payment directly into your bank account', 'tutor' ),
 
 				'form_fields' => array(
+					// SWIFT MT103 beneficiary name allows up to 140 chars; 100 is a safe practical limit.
 					'account_name'   => array(
-						'type'  => 'text',
-						'label' => __( 'Account Name', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Account Name', 'tutor' ),
+						'max_length' => 140,
 					),
+					// Longest national account number (US) is 17 digits; SEPA IBAN max is 34.
 					'account_number' => array(
-						'type'  => 'text',
-						'label' => __( 'Account Number', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Account Number', 'tutor' ),
+						'max_length' => 34,
 					),
+					// No international hard limit; practical bank names fit within 100 characters.
 					'bank_name'      => array(
-						'type'  => 'text',
-						'label' => __( 'Bank Name', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'Bank Name', 'tutor' ),
+						'max_length' => 140,
 					),
+					// ISO 13616: IBAN hard maximum is 34 alphanumeric characters.
 					'iban'           => array(
-						'type'  => 'text',
-						'label' => __( 'IBAN', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'IBAN', 'tutor' ),
+						'max_length' => 34,
 					),
+					// ISO 9362: BIC is exactly 8 or 11 characters (BIC8 / BIC11).
 					'swift'          => array(
-						'type'  => 'text',
-						'label' => __( 'BIC / SWIFT', 'tutor' ),
+						'type'       => 'text',
+						'label'      => __( 'BIC / SWIFT', 'tutor' ),
+						'max_length' => 11,
 					),
 
 				),
@@ -90,10 +103,12 @@ class Withdraw {
 				'method_name' => __( 'E-Check', 'tutor' ),
 				'image'       => tutor()->url . 'assets/images/payment-echeck.png',
 				'form_fields' => array(
+					// USPS postal standard: 4 lines x ~35 chars each; 250 adds safe headroom.
 					'physical_address' => array(
-						'type'  => 'text',
-						'label' => __( 'Your Physical Address', 'tutor' ),
-						'desc'  => __( 'We will send you an E-Check to this address directly.', 'tutor' ),
+						'type'       => 'textarea',
+						'label'      => __( 'Your Physical Address', 'tutor' ),
+						'desc'       => __( 'We will send you an E-Check to this address directly.', 'tutor' ),
+						'max_length' => 500,
 					),
 				),
 			),
@@ -102,10 +117,12 @@ class Withdraw {
 				'method_name' => __( 'PayPal', 'tutor' ),
 				'image'       => tutor()->url . 'assets/images/payment-paypal.png',
 				'form_fields' => array(
+					// RFC 5321: email max is 254 chars; 100 covers all practical PayPal addresses.
 					'paypal_email' => array(
-						'type'  => 'email',
-						'label' => __( 'PayPal E-Mail Address', 'tutor' ),
-						'desc'  => __( 'We will use this email address to send the money to your Paypal account', 'tutor' ),
+						'type'       => 'email',
+						'label'      => __( 'PayPal E-Mail Address', 'tutor' ),
+						'desc'       => __( 'We will use this email address to send the money to your Paypal account', 'tutor' ),
+						'max_length' => 254,
 					),
 
 				),
@@ -181,143 +198,359 @@ class Withdraw {
 	}
 
 	/**
-	 * Save Withdraw Method Data
+	 * Check whether a string looks like a file path or a JSON string.
 	 *
-	 * @since 1.2.0
+	 * Rejected patterns:
+	 *  - Escape HTML
+	 *  - Strings that start with / or ./ or ../ (absolute / relative paths).
+	 *  - Path-traversal sequences anywhere in the value.
+	 *  - Values that end with a file extension (e.g. .php, .js, .sh).
+	 *  - PHP / script open tags embedded in the value.
+	 *  - JSON objects or arrays (starts with { or [).
 	 *
-	 * @return void send wp_json response
+	 * @since 4.1.1
+	 *
+	 * @param string $value Sanitized field value.
+	 * @return bool True when the value must be rejected.
 	 */
-	public function tutor_save_withdraw_account() {
-		// Checking nonce.
-		tutor_utils()->checking_nonce();
+	private function is_dangerous_value( string $value ): bool {
 
-		//phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce already verified
-		$user_id = get_current_user_id();
-		$method  = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
-		if ( ! $method ) {
-			wp_send_json_error();
+		$decoded = html_entity_decode( $value );
+
+		// Check for PHP / script tags on the DECODED string.
+		if ( preg_match( '/<\?(?:php)?|<script/i', $decoded ) ) {
+			return true;
 		}
 
-		$method_data               = tutor_utils()->avalue_dot( 'withdraw_method_field.' . $method, $_POST );
-		$available_withdraw_method = $this->withdraw_methods_all();
+		// Strip any remaining HTML / tag-like content after the tag checks.
+		$clean   = wp_kses( $decoded, array() );
+		$trimmed = trim( $clean );
 
-		if ( tutor_utils()->count( $method_data ) ) {
-			$saved_data                         = array();
-			$saved_data['withdraw_method_key']  = $method;
-			$saved_data['withdraw_method_name'] = tutor_utils()->avalue_dot( $method . '.method_name', $available_withdraw_method );
-
-			foreach ( $method_data as $input_name => $value ) {
-				$saved_data[ $input_name ]['value'] = esc_sql( sanitize_text_field( $value ) );
-				$saved_data[ $input_name ]['label'] = tutor_utils()->avalue_dot( $method . ".form_fields.{$input_name}.label", $available_withdraw_method );
-			}
-
-			update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
-			update_user_meta( $user_id, '_tutor_withdraw_selected_method', $method );
-			update_user_meta( $user_id, '_tutor_withdraw_method_data_' . $method, $saved_data );
+		// Treat a value that is entirely HTML tags (nothing left after stripping)
+		// as dangerous — it means the input was purely markup with no real content.
+		if ( empty( $trimmed ) ) {
+			return true;
 		}
 
-		$msg = apply_filters( 'tutor_withdraw_method_set_success_msg', __( 'Withdrawal information saved!', 'tutor' ) );
-		wp_send_json_success( array( 'msg' => $msg ) );
+		// Reject JSON objects or arrays.
+		if ( str_starts_with( $trimmed, '{' ) || str_starts_with( $trimmed, '[' ) ) {
+			return true;
+		}
+
+		// Reject file-path patterns (absolute, relative, Windows-style).
+		if ( preg_match( '#(^[/\\\\]|\.{1,2}[/\\\\]|[/\\\\]\.\.)#', $trimmed ) ) {
+			return true;
+		}
+
+		// Reject values that end with a known dangerous file extension.
+		if ( preg_match( '/\.(php\d*|phtml|js|sh|py|rb|pl|cgi|asp|aspx|exe|bat|cmd)$/i', $trimmed ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
-	 * Handle withdraw request form submit
+	 * Validate a single field value against its declared type and max_length.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @param array  $field Field definition from withdraw_methods_all().
+	 * @param string $value Sanitized field value.
+	 *
+	 * @return bool True when the value passes validation.
+	 */
+	private function is_valid_field_value( array $field, string $value ): bool {
+		// Empty values are handled by the required-field check; skip type validation.
+		if ( '' === $value ) {
+			return true;
+		}
+
+		$type       = $field['type'] ?? 'text';
+		$max_length = isset( $field['max_length'] ) ? (int) $field['max_length'] : 500;
+
+		switch ( $type ) {
+			case 'email':
+				// Validate format and enforce max_length.
+				return (bool) is_email( $value ) && strlen( $value ) <= $max_length;
+
+			case 'number':
+				// Numbers have no meaningful character length limit from banking standards,
+				// but we still apply max_length as a sanity cap.
+				return is_numeric( $value ) && strlen( $value ) <= $max_length;
+
+			case 'text':
+			case 'textarea':
+			default:
+				// Must not exceed max_length and must not be purely whitespace.
+				return strlen( $value ) <= $max_length && '' !== trim( $value );
+		}
+	}
+
+	/**
+	 * Save Withdraw Method Data
+	 *
+	 * Hardening checklist (4.0.10):
+	 *  1. Method key must exist in withdraw_methods_all() (full registry).
+	 *  2. Method key must also be currently available (enabled by the admin).
+	 *  3. Submitted field keys must match the fields declared in withdraw_methods_all().
+	 *     Any unrecognised field is rejected with an error message.
+	 *  4. Values containing file paths, JSON strings, or PHP/script tags are rejected.
+	 *  5. Each value is validated against the field's declared type.
+	 *
+	 * @since 1.2.0
+	 * @since 4.1.1 Reject file paths / JSON; unknown-field check; per-type validation.
+	 *
+	 * @return void Sends a JSON response and exits.
+	 */
+	public function tutor_save_withdraw_account() {
+		// Verify nonce.
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+
+		// Withdraw account settings are for instructors only.
+		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+		}
+
+		//phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce already verified
+		$method      = sanitize_key( tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $_POST ) );
+		$all_methods = $this->withdraw_methods_all();
+
+		if ( ! $method || ! isset( $all_methods[ $method ] ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'Invalid withdrawal method.', 'tutor' ) )
+			);
+		}
+
+		$available_methods = $this->withdraw_methods_available();
+		if ( ! isset( $available_methods[ $method ] ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'This withdrawal method is not currently available.', 'tutor' ) )
+			);
+		}
+
+		$form_fields = $all_methods[ $method ]['form_fields'] ?? array();
+		if ( ! is_array( $form_fields ) || empty( $form_fields ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'No form fields defined for this withdrawal method.', 'tutor' ) )
+			);
+		}
+
+		$method_data = tutor_utils()->avalue_dot( 'withdraw_method_field.' . $method, $_POST );
+		if ( ! is_array( $method_data ) || ! tutor_utils()->count( $method_data ) ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'No withdrawal data submitted.', 'tutor' ) )
+			);
+		}
+
+		$saved_data                         = array();
+		$saved_data['withdraw_method_key']  = $method;
+		$saved_data['withdraw_method_name'] = $all_methods[ $method ]['method_name'] ?? '';
+		$errors                             = array();
+
+		foreach ( $method_data as $submitted_key => $raw_value ) {
+			$submitted_key = sanitize_key( $submitted_key );
+
+			if ( ! array_key_exists( $submitted_key, $form_fields ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: submitted field key */
+					__( 'Unknown field submitted: "%s".', 'tutor' ),
+					$submitted_key
+				);
+				continue;
+			}
+
+			if ( is_array( $raw_value ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: field label */
+					__( 'Field "%s" must not be an array.', 'tutor' ),
+					$form_fields[ $submitted_key ]['label'] ?? $submitted_key
+				);
+				continue;
+			}
+
+			$field      = $form_fields[ $submitted_key ];
+			$field_type = $field['type'] ?? 'text';
+			$label      = $field['label'] ?? $submitted_key;
+
+			$value = ( 'email' === $field_type )
+				? sanitize_email( wp_unslash( $raw_value ) )
+				: sanitize_text_field( wp_unslash( $raw_value ) );
+
+			if ( $this->is_dangerous_value( $value ) ) {
+				$errors[] = sprintf(
+					/* translators: %s: field label */
+					__( 'Field "%s" contains an invalid value.', 'tutor' ),
+					$label
+				);
+				continue;
+			}
+
+			if ( ! $this->is_valid_field_value( $field, $value ) ) {
+				$errors[] = sprintf(
+					/* translators: 1: field label, 2: expected field type */
+					__( 'Field "%1$s" has an invalid value".', 'tutor' ),
+					$label,
+					$field_type
+				);
+				continue;
+			}
+
+			$saved_data[ $submitted_key ] = array(
+				'value' => $value,
+				'label' => $label,
+			);
+		}
+
+		// Return all validation errors at once.
+		if ( ! empty( $errors ) ) {
+			wp_send_json_error( array( 'message' => implode( ' ', $errors ) ) );
+		}
+
+		// $saved_data always starts with 2 internal keys (method_key, method_name).
+		if ( count( $saved_data ) <= 2 ) {
+			wp_send_json_error(
+				array( 'msg' => __( 'Please fill in the required withdrawal fields.', 'tutor' ) )
+			);
+		}
+
+		update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
+		update_user_meta( $user_id, '_tutor_withdraw_selected_method', $method );
+		update_user_meta( $user_id, '_tutor_withdraw_method_data_' . $method, $saved_data );
+
+		$msg = apply_filters( 'tutor_withdraw_method_set_success_msg', __( 'Withdrawal information saved!', 'tutor' ) );
+		wp_send_json_success( array( 'message' => $msg ) );
+	}
+
+	/**
+	 * Handle withdraw request form submit.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
+	 *
+	 * @throws Exception If any validation fails.
 	 */
 	public function tutor_make_an_withdraw() {
 		global $wpdb;
 
 		tutor_utils()->checking_nonce();
 
-		$user_id         = get_current_user_id();
-		$withdraw_amount = Input::post( 'tutor_withdraw_amount' );
+		$user_id = get_current_user_id();
+		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+		}
 
-		$earning_summary = WithdrawModel::get_withdraw_summary( $user_id );
-		$min_withdraw    = tutor_utils()->get_option( 'min_withdraw_amount' );
+		$lock_name = 'tutor_withdraw_lock_' . $user_id;
+		$locked    = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 10)', $lock_name ) );
 
-		if ( ( $earning_summary->total_pending + $withdraw_amount ) > $earning_summary->available_for_withdraw ) {
+		if ( 1 !== (int) $locked ) {
 			wp_send_json_error(
 				array(
-					'msg' => wp_sprintf(
-						/* translators: 1: total pending withdraw request 2: available for withdraw */
-						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
-						$earning_summary->total_pending,
-						$earning_summary->available_for_withdraw
-					),
+					'message' => __( 'Another withdrawal request is in progress. Please try again.', 'tutor' ),
 				)
 			);
 		}
 
-		$saved_withdraw_account        = WithdrawModel::get_user_withdraw_method();
-		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
+		try {
+			$withdraw_amount = (float) Input::post( 'amount' );
+			$earning_summary = WithdrawModel::get_withdraw_summary( $user_id );
+			$min_withdraw    = (float) tutor_utils()->get_option( 'min_withdraw_amount' );
 
-		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
-			$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
-			wp_send_json_error( array( 'msg' => $no_withdraw_method ) );
-		}
+			if ( ( $earning_summary->total_pending + $withdraw_amount ) > $earning_summary->available_for_withdraw ) {
+				throw new Exception(
+					wp_sprintf(
+					/* translators: 1: total pending withdraw request 2: available for withdraw */
+						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
+						$earning_summary->total_pending,
+						$earning_summary->available_for_withdraw
+					)
+				);
+			}
 
-		if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
-			/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
-			$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
-			wp_send_json_error( array( 'msg' => $required_min_withdraw ) );
-		}
+			$saved_withdraw_account        = WithdrawModel::get_user_withdraw_method();
+			$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
-		if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
-			$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
+			if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
+				$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
+				throw new Exception( $no_withdraw_method );
+			}
 
-			wp_send_json_error( array( 'msg' => $insufficient_balence ) );
-		}
+			if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
+				/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
+				$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
+				throw new Exception( $required_min_withdraw );
+			}
 
-		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
+				$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
+				throw new Exception( $insufficient_balence );
+			}
 
-		$withdraw_data = apply_filters(
-			'tutor_pre_withdraw_data',
-			array(
-				'user_id'     => $user_id,
-				'amount'      => $withdraw_amount,
-				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
-				'created_at'  => $date,
-			)
-		);
+			$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
 
-		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
+			$withdraw_data = apply_filters(
+				'tutor_pre_withdraw_data',
+				array(
+					'user_id'     => $user_id,
+					'amount'      => $withdraw_amount,
+					'method_data' => maybe_serialize( $saved_withdraw_account ),
+					'status'      => 'pending',
+					'created_at'  => $date,
+				)
+			);
 
-		$withdraw_data = apply_filters(
-			'tutor_pre_withdraw_data',
-			array(
-				'user_id'     => $user_id,
-				'amount'      => $withdraw_amount,
-				'method_data' => maybe_serialize( $saved_withdraw_account ),
-				'status'      => 'pending',
-				'created_at'  => $date,
-			)
-		);
+			do_action( 'tutor_insert_withdraw_before', $withdraw_data );
 
-		do_action( 'tutor_insert_withdraw_before', $withdraw_data );
+			$inserted = $wpdb->insert( $wpdb->prefix . 'tutor_withdraws', $withdraw_data );
+			if ( false === $inserted ) {
+				throw new Exception( __( 'Unable to process withdrawal request. Please try again.', 'tutor' ) );
+			}
 
-		$wpdb->insert( $wpdb->prefix . 'tutor_withdraws', $withdraw_data );
-		$withdraw_id = $wpdb->insert_id;
+			$withdraw_id = $wpdb->insert_id;
 
-		do_action( 'tutor_insert_withdraw_after', $withdraw_id, $withdraw_data );
+			do_action( 'tutor_insert_withdraw_after', $withdraw_id, $withdraw_data );
 
-		/**
-		 * Getting earning and balance data again
-		 */
-		$earning               = WithdrawModel::get_withdraw_summary( $user_id );
-		$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
+			/**
+			* Getting earning and balance data again
+			*/
+			$earning               = WithdrawModel::get_withdraw_summary( $user_id );
+			$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
 
-		do_action( 'tutor_withdraw_after' );
+			do_action( 'tutor_withdraw_after' );
 
-		$withdraw_successfull_msg = apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) );
-		wp_send_json_success(
-			array(
-				'msg'               => $withdraw_successfull_msg,
+			$response = array(
+				'message'           => apply_filters( 'tutor_withdraw_successful_msg', __( 'Withdrawal Request Sent!', 'tutor' ) ),
 				'available_balance' => $new_available_balance,
-			)
-		);
+			);
+
+		} catch ( Exception $e ) {
+
+			$response = array(
+				'error'   => true,
+				'message' => $e->getMessage(),
+			);
+
+		} finally {
+
+			$wpdb->query(
+				$wpdb->prepare(
+					'SELECT RELEASE_LOCK(%s)',
+					$lock_name
+				)
+			);
+		}
+
+		if ( ! empty( $response['error'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $response['message'],
+				)
+			);
+		}
+
+		wp_send_json_success( $response );
 	}
 }

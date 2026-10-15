@@ -1,10 +1,12 @@
+import { Controller, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
 import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
+
 import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { colorTokens } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Controller, useForm } from 'react-hook-form';
-import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const presetOptions = [
   { value: '10', label: 'Ten' },
@@ -67,7 +69,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['regular', 'large'],
+      options: ['small', 'regular', 'large'],
       defaultValue: 'regular',
       description: 'Size of the input field.',
     },
@@ -175,6 +177,16 @@ export const LargeSize = {
   args: {
     size: 'large',
     label: 'Large Input',
+    content: 'USD',
+    presetOptions,
+    placeholder: 'Enter amount',
+  },
+} satisfies Story;
+
+export const SmallSize = {
+  args: {
+    size: 'small',
+    label: 'Small Input',
     content: 'USD',
     presetOptions,
     placeholder: 'Enter amount',

@@ -25,7 +25,7 @@ if ( empty( $course_benefits ) ) {
 		<ul class="tutor-course-details-widget-list tutor-color-black tutor-fs-6 tutor-m-0 tutor-mt-16">
 			<?php foreach ( $course_benefits as $benefit ) : ?>
 				<li class="tutor-d-flex tutor-mb-12">
-					<span class="tutor-icon-bullet-point tutor-color-muted tutor-mt-2 tutor-mr-8 tutor-fs-8" area-hidden="true"></span>
+					<span class="tutor-icon-bullet-point tutor-color-muted tutor-mt-2 tutor-mr-8 tutor-fs-8" aria-hidden="true"></span>
 					<span><?php echo esc_html( $benefit ); ?></span>
 				</li>
 			<?php endforeach; ?>

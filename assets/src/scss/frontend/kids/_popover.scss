@@ -1,0 +1,7 @@
+@use '@Core/scss/tokens' as *;
+
+[data-tutor-ui='kids'] {
+  --tutor-popover-shadow: 0 0 0 1px #{$tutor-border-idle}, 0 3px 0 0 #{$tutor-border-idle}, #{$tutor-shadow-lg};
+  --tutor-popover-border: none;
+  --tutor-popover-radius: #{$tutor-radius-5xl};
+}

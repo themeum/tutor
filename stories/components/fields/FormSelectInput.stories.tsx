@@ -1,10 +1,12 @@
+import { Controller, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+
 import { DEFAULT_FORM_FIELD_PROPS, DEFAULT_FORM_FILED_STATE_PROPS } from '@TutorShared/config/constants';
 import { colorTokens } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Controller, useForm } from 'react-hook-form';
-import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const selectOptionsWithoutDescription = [
   { label: 'ReactJS', value: 'react' },
@@ -27,6 +29,7 @@ const meta = {
   component: FormSelectInput,
   args: {
     label: 'Select Framework',
+    size: 'regular',
     options: selectOptionsWithoutDescription,
     placeholder: '',
     disabled: false,
@@ -56,6 +59,11 @@ const meta = {
     label: {
       control: 'text',
       description: 'Label for the select input. Can be a string or ReactNode.',
+    },
+    size: {
+      control: 'select',
+      options: ['regular', 'small'],
+      description: 'Controls input density.',
     },
     options: {
       control: false,
@@ -172,6 +180,13 @@ export const Default = {} satisfies Story;
 export const WithPlaceholder = {
   args: {
     placeholder: 'Search frameworks...',
+  },
+} satisfies Story;
+
+export const Small = {
+  args: {
+    size: 'small',
+    placeholder: 'Compact select',
   },
 } satisfies Story;
 

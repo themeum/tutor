@@ -1,0 +1,53 @@
+import { css, type SerializedStyles } from '@emotion/react';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import LogoSvg from '@SharedImages/logo.svg';
+
+interface LogoProps {
+  wrapperCss?: SerializedStyles;
+}
+
+const Logo = ({ wrapperCss }: LogoProps) => {
+  return (
+    <button tabIndex={-1} type="button" css={[styleUtils.resetButton, styles.logo, wrapperCss]}>
+      <Show when={tutorConfig.settings?.brand_logo_light} fallback={<LogoSvg width={108} height={24} />}>
+        {(logo) => <img src={logo} alt={tutorConfig.site_title} />}
+      </Show>
+    </button>
+  );
+};
+
+const styles = {
+  logo: css`
+    padding-left: ${spacing[32]};
+    cursor: default;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
+    img {
+      max-height: 24px;
+      width: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    ${Breakpoint.smallTablet} {
+      padding-left: ${spacing[24]};
+    }
+
+    ${Breakpoint.smallMobile} {
+      grid-area: logo;
+      padding-left: ${spacing[16]};
+    }
+  `,
+};
+
+export default Logo;

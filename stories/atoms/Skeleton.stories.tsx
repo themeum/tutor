@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import Skeleton from '@TutorShared/atoms/Skeleton';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import Skeleton from '@TutorShared/atoms/Skeleton';
 
 const meta = {
   title: 'Atoms/Skeleton',

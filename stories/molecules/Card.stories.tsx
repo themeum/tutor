@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Card from '@TutorShared/molecules/Card';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import Card from '@TutorShared/molecules/Card';
 
 const meta = {
   title: 'Molecules/Card',
@@ -157,7 +159,7 @@ export const CustomContent = {
         `}
       >
         <span>
-          <SVGIcon name="star" width={20} height={20} /> Custom content with icon.
+          <SVGIcon name="starFill" width={20} height={20} /> Custom content with icon.
         </span>
         <span>
           <strong>More content:</strong> You can put any ReactNode here, including lists, images, or forms.

@@ -10,16 +10,19 @@
  */
 
 use TUTOR\Input;
+use TUTOR\Quiz;
 
-$previous_attempts = tutor_utils()->quiz_attempts();
-$attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
-$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
-$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
+$previous_attempts           = tutor_utils()->quiz_attempts();
+$attempted_count             = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
+$limit_attempts_allowed      = '1' === (string) tutor_utils()->get_quiz_option( $quiz_id, 'limit_attempts_allowed', '0' );
+$configured_attempts_allowed = (int) tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
+$attempts_allowed            = Quiz::get_effective_attempts_allowed( $limit_attempts_allowed, $configured_attempts_allowed );
+$attempt_remaining           = (int) $attempts_allowed - (int) $attempted_count;
+$can_retry_quiz              = Quiz::can_retry_quiz( $limit_attempts_allowed, $configured_attempts_allowed, $attempted_count );
 
-if ( Input::has( 'view_quiz_attempt_id' ) ) {
+if ( Input::has( 'attempt_id' ) ) {
 	// Load single attempt details if ID provided.
-	$attempt_id = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
+	$attempt_id = Input::get( 'attempt_id', 0, Input::TYPE_INT );
 	if ( $attempt_id ) {
 		$user_id      = get_current_user_id();
 		$attempt_data = tutils()->get_attempt( $attempt_id );
@@ -46,7 +49,7 @@ tutor_load_template_from_custom_path(
 	)
 );
 
-if ( 'retry' == $feedback_mode && ( ( $attempt_remaining > 0 || 0 == $attempts_allowed ) && $previous_attempts ) ) {
+if ( $can_retry_quiz && $previous_attempts ) {
 	do_action( 'tutor_quiz/start_form/before', $quiz_id );
 	?>
 	<div class="tutor-quiz-btn-grp tutor-mt-32">

@@ -16,8 +16,9 @@ if ( isset( $field['default'] ) && empty( $value ) ) {
 	$value = $field['default'];
 }
 $if_other_color = isset( $field['preset_name'] ) && 'other' == $field['preset_name'] ? ' other_color' : '';
+$wrapper_class  = isset( $field['class'] ) ? $field['class'] : '';
 ?>
-<div class="tutor-option-field-row">
+<div class="tutor-option-field-row <?php echo esc_attr( $wrapper_class ); ?>">
 	<div class="tutor-option-field-label">
 		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_attr( $field['label'] ); ?></div>
 		<div class="tutor-fs-7 tutor-color-muted"><?php echo esc_attr( $field['desc'] ); ?></div>

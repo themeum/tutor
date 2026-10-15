@@ -9,13 +9,12 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
+use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 global $post;
 
@@ -31,7 +30,7 @@ $course_id    = tutor_utils()->get_course_id_by_subcontent( $post->ID );
 $user_id                      = get_current_user_id();
 $enable_qa_for_this_course    = get_post_meta( $course_id, '_tutor_enable_qa', true ) == 'yes';
 $enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $enable_qa_for_this_course;
-$is_enrolled                  = tutor_utils()->is_enrolled( $course_id );
+$is_enrolled                  = EnrollmentModel::is_enrolled( $course_id );
 $is_instructor_of_this_course = tutor_utils()->has_user_course_content_access( $user_id, $course_id );
 $is_user_admin                = current_user_can( 'administrator' );
 $is_public_course             = \TUTOR\Course_List::is_public( $course_id );
@@ -42,7 +41,7 @@ $is_public_course             = \TUTOR\Course_List::is_public( $course_id );
 	<span class="tutor-fs-6 tutor-fw-medium tutor-color-secondary"><?php esc_html_e( 'Course Content', 'tutor' ); ?></span>
 	<span class="tutor-d-block tutor-d-xl-none">
 		<a href="#" class="tutor-iconic-btn" tutor-hide-course-single-sidebar>
-			<span class="tutor-icon-times" area-hidden="true"></span>
+			<span class="tutor-icon-times" aria-hidden="true"></span>
 		</a>
 	</span>
 </div>
@@ -117,7 +116,7 @@ if ( $topics->have_posts() ) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ( get_the_ID() == $current_post->ID ) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $quiz->ID ) ) : '#'; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8 tutor-mt-2" aria-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo esc_html( $quiz->post_title ); ?>
 									</span>
@@ -178,7 +177,7 @@ if ( $topics->have_posts() ) {
 												readonly="readonly" 
 												<?php echo esc_attr( $attempt_ended ? 'checked="checked"' : '' ); ?> />
 									<?php else : ?>
-										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
+										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" aria-hidden="true"></i>
 									<?php endif; ?>
 								</div>
 							</a>
@@ -187,7 +186,7 @@ if ( $topics->have_posts() ) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" aria-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo esc_html( $post->post_title ); ?>
 									</span>
@@ -196,7 +195,7 @@ if ( $topics->have_posts() ) {
 									<?php if ( $show_permalink ) : ?>
 										<?php do_action( 'tutor/assignment/right_icon_area', $post, $lock_icon ); ?>
 									<?php else : ?>
-										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
+										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" aria-hidden="true"></i>
 									<?php endif; ?>
 								</div>
 							</a>
@@ -205,7 +204,7 @@ if ( $topics->have_posts() ) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( ( get_the_ID() == $current_post->ID ) ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8 tutor-mt-2" aria-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo esc_html( $post->post_title ); ?>
 									</span>
@@ -214,7 +213,7 @@ if ( $topics->have_posts() ) {
 									<?php if ( $show_permalink ) : ?>
 										<?php do_action( 'tutor/zoom/right_icon_area', $post->ID, $lock_icon ); ?>
 									<?php else : ?>
-										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
+										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" aria-hidden="true"></i>
 									<?php endif; ?>
 								</div>
 							</a>
@@ -223,7 +222,7 @@ if ( $topics->have_posts() ) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-brand-google-meet tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-brand-google-meet tutor-mr-8 tutor-mt-2" aria-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo esc_html( $post->post_title ); ?>
 									</span>
@@ -232,7 +231,7 @@ if ( $topics->have_posts() ) {
 									<?php if ( $show_permalink ) : ?>
 										<?php do_action( 'tutor/google_meet/right_icon_area', $post->ID, false ); ?>
 									<?php else : ?>
-										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
+										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" aria-hidden="true"></i>
 									<?php endif; ?>
 								</div>
 							</a>
@@ -251,13 +250,13 @@ if ( $topics->have_posts() ) {
 								<div class="tutor-d-flex tutor-mr-32">
 									<?php
 									$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'document-text';
-									$markup                 = '<span class="tutor-course-topic-item-icon tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8 tutor-mt-2" area-hidden="true"></span>';
+									$markup                 = '<span class="tutor-course-topic-item-icon tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8 tutor-mt-2" aria-hidden="true"></span>';
 									echo wp_kses(
 										$markup,
 										array(
 											'span' => array(
 												'class' => true,
-												'area-hidden' => true,
+												'aria-hidden' => true,
 											),
 										)
 									);
@@ -296,13 +295,13 @@ if ( $topics->have_posts() ) {
 											)
 										);
 									} else {
-										$markup = '<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>';
+										$markup = '<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" aria-hidden="true"></i>';
 										echo wp_kses(
 											$markup,
 											array(
 												'i' => array(
 													'class' => true,
-													'area-hidden' => true,
+													'aria-hidden' => true,
 												),
 											)
 										);

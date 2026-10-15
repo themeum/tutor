@@ -119,6 +119,7 @@ class Post_types {
 			),
 			'menu_icon'          => 'dashicons-book-alt',
 			'capability_type'    => 'post',
+			'map_meta_cap'       => true,
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,

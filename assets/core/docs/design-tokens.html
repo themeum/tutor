@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Tokens - Tutor Design System</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <link rel="stylesheet" href="./assets/docs.css">
+    <style>
+        .token-section {
+            margin: 3rem 0;
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .token-section__header {
+            padding: 1.5rem;
+            background: var(--tutor-surface-l2);
+            border-bottom: 1px solid var(--tutor-border-idle);
+        }
+        
+        .token-section__title {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+        }
+        
+        .token-section__description {
+            margin: 0;
+            color: var(--tutor-text-secondary);
+        }
+        
+        .token-section__body {
+            padding: 1.5rem;
+        }
+        
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .token-item {
+            background: var(--tutor-surface-base);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .token-item:hover {
+            border-color: var(--tutor-border-brand);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--tutor-border-idle);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-swatch--gradient {
+            background: linear-gradient(135deg, var(--color-start), var(--color-end));
+        }
+        
+        .token-name {
+            font-weight: 500;
+            color: var(--tutor-text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .token-value {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--tutor-text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .token-sass {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--tutor-text-brand);
+            background: var(--tutor-actions-brand-tertiary);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+        }
+        
+        .spacing-demo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .spacing-box {
+            background: var(--tutor-actions-brand-primary);
+            border-radius: 2px;
+        }
+        
+        .typography-demo {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--tutor-surface-base);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+        }
+        
+        .radius-demo {
+            width: 60px;
+            height: 60px;
+            background: var(--tutor-actions-brand-primary);
+            margin: 0 auto 0.75rem;
+        }
+        
+        .copy-button {
+            background: none;
+            border: 1px solid var(--tutor-border-idle);
+            color: var(--tutor-text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+        }
+        
+        .copy-button:hover {
+            background: var(--tutor-surface-l2);
+            border-color: var(--tutor-border-brand);
+            color: var(--tutor-text-primary);
+        }
+        
+        .semantic-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .semantic-color-group {
+            background: var(--tutor-surface-base);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .semantic-color-title {
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .semantic-color-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        
+        .semantic-color-item:hover {
+            background: var(--tutor-surface-l2);
+        }
+        
+        .semantic-color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid var(--tutor-border-idle);
+            flex-shrink: 0;
+        }
+        
+        .semantic-color-info {
+            flex: 1;
+        }
+        
+        .semantic-color-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--tutor-text-primary);
+        }
+        
+        .semantic-color-token {
+            font-size: 0.75rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            color: var(--tutor-text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="tutor-container" x-data="designTokensApp()">
+        <!-- Header -->
+        <header style="text-align: center; margin: 2rem 0;">
+            <h1 class="tutor-h1">Design Tokens</h1>
+            <p class="tutor-p1 tutor-text-secondary">Complete reference for all design tokens in the Tutor Design System</p>
+            
+            <div class="tutor-flex tutor-gap-3 tutor-justify-center tutor-mt-4">
+                <button @click="toggleTheme()" class="tutor-btn tutor-btn--outline tutor-btn--small">
+                    <span x-text="theme === 'light' ? '🌙 Dark' : '☀️ Light'"></span>
+                </button>
+                <button @click="toggleRTL()" class="tutor-btn tutor-btn--outline tutor-btn--small">
+                    🔄 <span x-text="isRTL ? 'LTR' : 'RTL'"></span>
+                </button>
+                <a href="index.html" class="tutor-btn tutor-btn--ghost tutor-btn--small">
+                    ← Back to Docs
+                </a>
+            </div>
+        </header>
+
+        <!-- Token Architecture -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Token Architecture</h2>
+                <p class="token-section__description">
+                    The design system uses a hybrid approach combining SASS variables and CSS custom properties for optimal performance and flexibility.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div style="background: var(--tutor-surface-base); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 1.5rem;">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--tutor-text-primary);">SASS Variables</h3>
+                        <p style="margin: 0 0 1rem 0; color: var(--tutor-text-secondary); font-size: 0.875rem;">
+                            For static values that don't change between themes
+                        </p>
+                        <ul style="margin: 0; padding-left: 1rem; color: var(--tutor-text-secondary); font-size: 0.875rem;">
+                            <li>Typography (font sizes, line heights)</li>
+                            <li>Spacing (margins, padding)</li>
+                            <li>Border radius</li>
+                            <li>Breakpoints</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--tutor-surface-base); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 1.5rem;">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--tutor-text-primary);">CSS Custom Properties</h3>
+                        <p style="margin: 0 0 1rem 0; color: var(--tutor-text-secondary); font-size: 0.875rem;">
+                            For dynamic values that change between themes
+                        </p>
+                        <ul style="margin: 0; padding-left: 1rem; color: var(--tutor-text-secondary); font-size: 0.875rem;">
+                            <li>Colors (text, background, borders)</li>
+                            <li>Theme-dependent surfaces</li>
+                            <li>Semantic color mappings</li>
+                            <li>User customizable values</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Tokens -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Color System</h2>
+                <p class="token-section__description">
+                    Complete color scales based on Figma specifications with 10-step scales for brand, gray, and semantic colors.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <!-- Color Scale Tabs -->
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <template x-for="scale in Object.keys(colorScales)" :key="scale">
+                        <button @click="activeColorScale = scale" 
+                                :class="{ 'tutor-btn--primary': activeColorScale === scale, 'tutor-btn--outline': activeColorScale !== scale }"
+                                class="tutor-btn tutor-btn--small"
+                                x-text="scale.charAt(0).toUpperCase() + scale.slice(1)"></button>
+                    </template>
+                </div>
+
+                <!-- Color Grid -->
+                <template x-for="scale in Object.keys(colorScales)" :key="scale">
+                    <div x-show="activeColorScale === scale" class="token-grid">
+                        <template x-for="color in colorScales[scale]" :key="color.name">
+                            <div class="token-item">
+                                <div class="color-swatch" :style="`background-color: ${color.value}`"></div>
+                                <div class="token-name" x-text="color.name"></div>
+                                <div class="token-value" x-text="color.value"></div>
+                                <div class="token-sass" x-text="color.token"></div>
+                                <button @click="copyToClipboard(color.value)" class="copy-button">Copy Hex</button>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- Semantic Colors -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Semantic Color Mappings</h2>
+                <p class="token-section__description">
+                    CSS custom properties that map to different colors based on the current theme.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div class="semantic-colors">
+                    <!-- Text Colors -->
+                    <div class="semantic-color-group">
+                        <h3 class="semantic-color-title">Text Colors</h3>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-text-primary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Primary Text</div>
+                                <div class="semantic-color-token">--tutor-text-primary</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-text-secondary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Secondary Text</div>
+                                <div class="semantic-color-token">--tutor-text-secondary</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-text-disabled);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Disabled Text</div>
+                                <div class="semantic-color-token">--tutor-text-disabled</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-text-brand);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Brand Text</div>
+                                <div class="semantic-color-token">--tutor-text-brand</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Surface Colors -->
+                    <div class="semantic-color-group">
+                        <h3 class="semantic-color-title">Surface Colors</h3>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-surface-base);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Base Surface</div>
+                                <div class="semantic-color-token">--tutor-surface-base</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-surface-l1);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Level 1 Surface</div>
+                                <div class="semantic-color-token">--tutor-surface-l1</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-surface-l2);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Level 2 Surface</div>
+                                <div class="semantic-color-token">--tutor-surface-l2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Colors -->
+                    <div class="semantic-color-group">
+                        <h3 class="semantic-color-title">Action Colors</h3>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-actions-brand-primary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Brand Primary</div>
+                                <div class="semantic-color-token">--tutor-actions-brand-primary</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-actions-success-primary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Success Primary</div>
+                                <div class="semantic-color-token">--tutor-actions-success-primary</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-actions-warning-primary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Warning Primary</div>
+                                <div class="semantic-color-token">--tutor-actions-warning-primary</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-actions-critical-primary);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Critical Primary</div>
+                                <div class="semantic-color-token">--tutor-actions-critical-primary</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Border Colors -->
+                    <div class="semantic-color-group">
+                        <h3 class="semantic-color-title">Border Colors</h3>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-border-idle);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Idle Border</div>
+                                <div class="semantic-color-token">--tutor-border-idle</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-border-brand);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Brand Border</div>
+                                <div class="semantic-color-token">--tutor-border-brand</div>
+                            </div>
+                        </div>
+                        <div class="semantic-color-item">
+                            <div class="semantic-color-swatch" style="background: var(--tutor-border-critical);"></div>
+                            <div class="semantic-color-info">
+                                <div class="semantic-color-name">Critical Border</div>
+                                <div class="semantic-color-token">--tutor-border-critical</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Tokens -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Typography</h2>
+                <p class="token-section__description">
+                    Typography scale with consistent font sizes, line heights, and weights for optimal readability.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div class="token-grid">
+                    <template x-for="typo in typographyTokens" :key="typo.name">
+                        <div class="token-item">
+                            <div class="typography-demo">
+                                <div :style="`font-size: ${typo.size}; line-height: ${typo.lineHeight}; font-weight: ${typo.weight}; color: var(--tutor-text-primary);`" 
+                                     x-text="typo.sample"></div>
+                            </div>
+                            <div class="token-name" x-text="typo.name"></div>
+                            <div class="token-value" x-text="`${typo.size} / ${typo.lineHeight}`"></div>
+                            <div class="token-sass" x-text="typo.token"></div>
+                            <button @click="copyToClipboard(typo.token)" class="copy-button">Copy Token</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing Tokens -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Spacing Scale</h2>
+                <p class="token-section__description">
+                    22-step spacing scale (0-21) from 0px to 200px, matching Figma specifications exactly.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div class="token-grid">
+                    <template x-for="spacing in spacingTokens" :key="spacing.step">
+                        <div class="token-item">
+                            <div class="spacing-demo">
+                                <div class="spacing-box" :style="`width: ${spacing.value}; height: 16px;`"></div>
+                                <span class="token-value" x-text="spacing.value"></span>
+                            </div>
+                            <div class="token-name" x-text="`Step ${spacing.step}`"></div>
+                            <div class="token-sass" x-text="spacing.token"></div>
+                            <button @click="copyToClipboard(spacing.token)" class="copy-button">Copy Token</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Border Radius Tokens -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Border Radius</h2>
+                <p class="token-section__description">
+                    Border radius scale from none (0px) to full (1000px) with semantic naming.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div class="token-grid">
+                    <template x-for="radius in radiusTokens" :key="radius.name">
+                        <div class="token-item">
+                            <div class="radius-demo" :style="`border-radius: ${radius.value};`"></div>
+                            <div class="token-name" x-text="radius.name"></div>
+                            <div class="token-value" x-text="radius.value"></div>
+                            <div class="token-sass" x-text="radius.token"></div>
+                            <button @click="copyToClipboard(radius.token)" class="copy-button">Copy Token</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breakpoint Tokens -->
+        <section class="token-section">
+            <div class="token-section__header">
+                <h2 class="token-section__title">Breakpoints</h2>
+                <p class="token-section__description">
+                    Responsive breakpoints for mobile-first design approach.
+                </p>
+            </div>
+            <div class="token-section__body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <template x-for="breakpoint in breakpointTokens" :key="breakpoint.name">
+                        <div style="background: var(--tutor-surface-base); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 1.5rem;">
+                            <h3 style="margin: 0 0 0.5rem 0; color: var(--tutor-text-primary);" x-text="breakpoint.name"></h3>
+                            <p style="margin: 0 0 1rem 0; color: var(--tutor-text-secondary); font-size: 0.875rem;" x-text="breakpoint.description"></p>
+                            <div style="font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 0.875rem; color: var(--tutor-text-brand); background: var(--tutor-actions-brand-tertiary); padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem;" x-text="breakpoint.token"></div>
+                            <div style="font-size: 0.875rem; color: var(--tutor-text-secondary);" x-text="breakpoint.value"></div>
+                            <button @click="copyToClipboard(breakpoint.token)" class="copy-button">Copy Token</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+    <script>
+        function designTokensApp() {
+            return {
+                theme: 'light',
+                isRTL: false,
+                activeColorScale: 'brand',
+                
+                colorScales: {
+                    brand: [
+                        { name: 'Brand 100', value: '#f6f8fe', token: '$tutor-brand-100' },
+                        { name: 'Brand 200', value: '#e4ebfc', token: '$tutor-brand-200' },
+                        { name: 'Brand 300', value: '#dbe4fa', token: '$tutor-brand-300' },
+                        { name: 'Brand 400', value: '#a4bcf4', token: '$tutor-brand-400' },
+                        { name: 'Brand 500', value: '#4979e8', token: '$tutor-brand-500' },
+                        { name: 'Brand 600', value: '#3e64de', token: '$tutor-brand-600' },
+                        { name: 'Brand 700', value: '#2b49ca', token: '$tutor-brand-700' },
+                        { name: 'Brand 800', value: '#293da4', token: '$tutor-brand-800' },
+                        { name: 'Brand 900', value: '#263782', token: '$tutor-brand-900' },
+                        { name: 'Brand 950', value: '#1c234f', token: '$tutor-brand-950' }
+                    ],
+                    gray: [
+                        { name: 'Gray 25', value: '#fcfcfd', token: '$tutor-gray-25' },
+                        { name: 'Gray 50', value: '#f9fafb', token: '$tutor-gray-50' },
+                        { name: 'Gray 100', value: '#f2f4f7', token: '$tutor-gray-100' },
+                        { name: 'Gray 200', value: '#eaecf0', token: '$tutor-gray-200' },
+                        { name: 'Gray 300', value: '#d0d5dd', token: '$tutor-gray-300' },
+                        { name: 'Gray 400', value: '#98a2b3', token: '$tutor-gray-400' },
+                        { name: 'Gray 500', value: '#667085', token: '$tutor-gray-500' },
+                        { name: 'Gray 600', value: '#475467', token: '$tutor-gray-600' },
+                        { name: 'Gray 700', value: '#344054', token: '$tutor-gray-700' },
+                        { name: 'Gray 800', value: '#1d2939', token: '$tutor-gray-800' },
+                        { name: 'Gray 900', value: '#101828', token: '$tutor-gray-900' },
+                        { name: 'Gray 950', value: '#0c111d', token: '$tutor-gray-950' }
+                    ],
+                    success: [
+                        { name: 'Success 25', value: '#fafef5', token: '$tutor-success-25' },
+                        { name: 'Success 50', value: '#f3fee7', token: '$tutor-success-50' },
+                        { name: 'Success 100', value: '#e3fbcc', token: '$tutor-success-100' },
+                        { name: 'Success 200', value: '#d0f8ab', token: '$tutor-success-200' },
+                        { name: 'Success 300', value: '#a6ef67', token: '$tutor-success-300' },
+                        { name: 'Success 400', value: '#85e13a', token: '$tutor-success-400' },
+                        { name: 'Success 500', value: '#66c61c', token: '$tutor-success-500' },
+                        { name: 'Success 600', value: '#4ca30d', token: '$tutor-success-600' },
+                        { name: 'Success 700', value: '#3b7c0f', token: '$tutor-success-700' },
+                        { name: 'Success 800', value: '#326212', token: '$tutor-success-800' },
+                        { name: 'Success 900', value: '#2b5314', token: '$tutor-success-900' },
+                        { name: 'Success 950', value: '#15290a', token: '$tutor-success-950' }
+                    ],
+                    warning: [
+                        { name: 'Warning 25', value: '#fffcf5', token: '$tutor-warning-25' },
+                        { name: 'Warning 50', value: '#fffaeb', token: '$tutor-warning-50' },
+                        { name: 'Warning 100', value: '#fef0c7', token: '$tutor-warning-100' },
+                        { name: 'Warning 200', value: '#fedf89', token: '$tutor-warning-200' },
+                        { name: 'Warning 300', value: '#fec84b', token: '$tutor-warning-300' },
+                        { name: 'Warning 400', value: '#fdb022', token: '$tutor-warning-400' },
+                        { name: 'Warning 500', value: '#f79009', token: '$tutor-warning-500' },
+                        { name: 'Warning 600', value: '#dc6803', token: '$tutor-warning-600' },
+                        { name: 'Warning 700', value: '#b54708', token: '$tutor-warning-700' },
+                        { name: 'Warning 800', value: '#93370d', token: '$tutor-warning-800' },
+                        { name: 'Warning 900', value: '#7a2e0e', token: '$tutor-warning-900' },
+                        { name: 'Warning 950', value: '#4e1d09', token: '$tutor-warning-950' }
+                    ],
+                    error: [
+                        { name: 'Error 25', value: '#fffbfa', token: '$tutor-error-25' },
+                        { name: 'Error 50', value: '#fef3f2', token: '$tutor-error-50' },
+                        { name: 'Error 100', value: '#fee4e2', token: '$tutor-error-100' },
+                        { name: 'Error 200', value: '#fecdca', token: '$tutor-error-200' },
+                        { name: 'Error 300', value: '#fda29b', token: '$tutor-error-300' },
+                        { name: 'Error 400', value: '#f97066', token: '$tutor-error-400' },
+                        { name: 'Error 500', value: '#f04438', token: '$tutor-error-500' },
+                        { name: 'Error 600', value: '#d92d20', token: '$tutor-error-600' },
+                        { name: 'Error 700', value: '#b42318', token: '$tutor-error-700' },
+                        { name: 'Error 800', value: '#912018', token: '$tutor-error-800' },
+                        { name: 'Error 900', value: '#7a271a', token: '$tutor-error-900' },
+                        { name: 'Error 950', value: '#55160c', token: '$tutor-error-950' }
+                    ]
+                },
+
+                typographyTokens: [
+                    { name: 'Heading 1', size: '40px', lineHeight: '48px', weight: '700', token: '$tutor-font-size-h1', sample: 'The quick brown fox' },
+                    { name: 'Heading 2', size: '32px', lineHeight: '40px', weight: '600', token: '$tutor-font-size-h2', sample: 'The quick brown fox' },
+                    { name: 'Heading 3', size: '24px', lineHeight: '32px', weight: '600', token: '$tutor-font-size-h3', sample: 'The quick brown fox' },
+                    { name: 'Heading 4', size: '20px', lineHeight: '28px', weight: '600', token: '$tutor-font-size-h4', sample: 'The quick brown fox' },
+                    { name: 'Heading 5', size: '18px', lineHeight: '28px', weight: '600', token: '$tutor-font-size-h5', sample: 'The quick brown fox' },
+                    { name: 'Paragraph 1', size: '16px', lineHeight: '24px', weight: '400', token: '$tutor-font-size-p1', sample: 'The quick brown fox jumps over the lazy dog' },
+                    { name: 'Paragraph 2', size: '14px', lineHeight: '20px', weight: '400', token: '$tutor-font-size-p2', sample: 'The quick brown fox jumps over the lazy dog' },
+                    { name: 'Paragraph 3', size: '12px', lineHeight: '16px', weight: '400', token: '$tutor-font-size-p3', sample: 'The quick brown fox jumps over the lazy dog' }
+                ],
+
+                spacingTokens: [
+                    { step: 0, value: '0px', token: '$tutor-spacing-0' },
+                    { step: 1, value: '2px', token: '$tutor-spacing-1' },
+                    { step: 2, value: '4px', token: '$tutor-spacing-2' },
+                    { step: 3, value: '6px', token: '$tutor-spacing-3' },
+                    { step: 4, value: '8px', token: '$tutor-spacing-4' },
+                    { step: 5, value: '12px', token: '$tutor-spacing-5' },
+                    { step: 6, value: '16px', token: '$tutor-spacing-6' },
+                    { step: 7, value: '20px', token: '$tutor-spacing-7' },
+                    { step: 8, value: '24px', token: '$tutor-spacing-8' },
+                    { step: 9, value: '28px', token: '$tutor-spacing-9' },
+                    { step: 10, value: '32px', token: '$tutor-spacing-10' },
+                    { step: 11, value: '36px', token: '$tutor-spacing-11' },
+                    { step: 12, value: '40px', token: '$tutor-spacing-12' },
+                    { step: 13, value: '44px', token: '$tutor-spacing-13' },
+                    { step: 14, value: '48px', token: '$tutor-spacing-14' },
+                    { step: 15, value: '56px', token: '$tutor-spacing-15' },
+                    { step: 16, value: '64px', token: '$tutor-spacing-16' },
+                    { step: 17, value: '80px', token: '$tutor-spacing-17' },
+                    { step: 18, value: '96px', token: '$tutor-spacing-18' },
+                    { step: 19, value: '112px', token: '$tutor-spacing-19' },
+                    { step: 20, value: '128px', token: '$tutor-spacing-20' },
+                    { step: 21, value: '200px', token: '$tutor-spacing-21' }
+                ],
+
+                radiusTokens: [
+                    { name: 'None', value: '0px', token: '$tutor-radius-none' },
+                    { name: 'Small', value: '2px', token: '$tutor-radius-sm' },
+                    { name: 'Base', value: '4px', token: '$tutor-radius-base' },
+                    { name: 'Medium', value: '6px', token: '$tutor-radius-md' },
+                    { name: 'Large', value: '8px', token: '$tutor-radius-lg' },
+                    { name: 'Extra Large', value: '12px', token: '$tutor-radius-xl' },
+                    { name: '2X Large', value: '16px', token: '$tutor-radius-2xl' },
+                    { name: '3X Large', value: '24px', token: '$tutor-radius-3xl' },
+                    { name: 'Full', value: '1000px', token: '$tutor-radius-full' }
+                ],
+
+                breakpointTokens: [
+                    { name: 'Mobile', value: '0px - 767px', token: '$tutor-breakpoint-mobile', description: 'Mobile devices and small screens' },
+                    { name: 'Tablet', value: '768px - 1023px', token: '$tutor-breakpoint-tablet', description: 'Tablet devices and medium screens' },
+                    { name: 'Desktop', value: '1024px+', token: '$tutor-breakpoint-desktop', description: 'Desktop devices and large screens' }
+                ],
+
+                init() {
+                    this.detectTheme();
+                    this.detectRTL();
+                },
+
+                toggleTheme() {
+                    this.theme = this.theme === 'light' ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', this.theme);
+                },
+
+                toggleRTL() {
+                    this.isRTL = !this.isRTL;
+                    document.documentElement.setAttribute('dir', this.isRTL ? 'rtl' : 'ltr');
+                },
+
+                detectTheme() {
+                    this.theme = document.documentElement.getAttribute('data-theme') || 'light';
+                },
+
+                detectRTL() {
+                    this.isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+                },
+
+                copyToClipboard(text) {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            this.showCopyFeedback();
+                        });
+                    } else {
+                        // Fallback for older browsers
+                        const textarea = document.createElement('textarea');
+                        textarea.value = text;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        this.showCopyFeedback();
+                    }
+                },
+
+                showCopyFeedback() {
+                    // Simple feedback - could be enhanced with toast notifications
+                    console.log('Copied to clipboard!');
+                }
+            };
+        }
+    </script>
+</body>
+</html>

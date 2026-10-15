@@ -1,0 +1,63 @@
+meta {
+  name: course-announcement/{id}
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/course-announcement/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Course Announcements
+  
+  Retrieves all broadcast announcements published by the course instructors for a specific course.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/course-announcement/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Announcement retrieved successfully",
+    "data": [
+      {
+        "ID": 401,
+        "post_title": "Welcome to the Course & Live Q&A Session Schedule",
+        "post_content": "We will be hosting a weekly live stream every Friday at 3 PM UTC.",
+        "post_name": "welcome-live-qa-schedule"
+      }
+    ]
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Announcement not found for given ID",
+    "data": []
+  }
+  ```
+}

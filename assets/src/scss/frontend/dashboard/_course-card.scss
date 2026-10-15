@@ -1,0 +1,137 @@
+// Course Card Component
+// Dashboard course card with image, rating, title, meta, and pricing
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-course-card {
+  @include tutor-flex(column, flex-start, flex-start);
+  height: 100%;
+  background-color: $tutor-surface-l1;
+  padding: $tutor-spacing-4;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
+  @include tutor-transition(background-color);
+
+  &:hover {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &-thumbnail {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: $tutor-radius-sm;
+    margin-bottom: $tutor-spacing-4;
+
+    .tutor-ratio {
+      width: 100%;
+    }
+
+    img {
+      width: 100%;
+      border-radius: $tutor-radius-sm;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  &-badge {
+    position: absolute;
+    top: $tutor-spacing-2;
+    inset-inline-end: $tutor-spacing-2;
+    z-index: $tutor-z-positive;
+  }
+
+  &-separator {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: $tutor-text-subdued;
+    border-radius: $tutor-radius-lg;
+  }
+
+  &-rating {
+    margin-bottom: $tutor-spacing-2;
+
+    .tutor-ratings {
+      @include tutor-typography('tiny', 'regular', 'exception4');
+      @include tutor-flex(row, center, flex-start, wrap);
+      gap: $tutor-spacing-2;
+    }
+
+    .tutor-course-card-ratings-stars {
+      @include tutor-flex(row, center, flex-start);
+      gap: $tutor-spacing-2;
+
+      i[class*='tutor-icon-star'] {
+        @include tutor-typography('tiny', 'regular', 'exception4');
+        line-height: 12px;
+      }
+    }
+
+    .tutor-ratings-count {
+      @include tutor-typography('tiny', 'regular', 'subdued');
+    }
+  }
+
+  &-title {
+    @include tutor-typography('small', 'medium', 'primary');
+    margin-bottom: $tutor-spacing-2;
+
+    a {
+      color: $tutor-text-primary;
+      @include tutor-transition(color);
+
+      &:hover {
+        color: $tutor-text-brand;
+      }
+    }
+  }
+
+  &-meta {
+    @include tutor-flex(row, center, flex-start, wrap);
+    gap: $tutor-spacing-1 $tutor-spacing-3;
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+    margin-top: auto;
+
+    a {
+      color: $tutor-text-secondary;
+      @include tutor-transition(color);
+
+      &:hover {
+        color: $tutor-text-brand;
+      }
+    }
+  }
+
+  &-footer {
+    padding-top: $tutor-spacing-4;
+    @include tutor-flex(row, center, flex-start);
+    gap: $tutor-spacing-5;
+    @include tutor-typography('small', 'medium', 'primary');
+    margin-top: auto;
+
+    del {
+      @include tutor-typography('tiny', 'regular', 'subdued');
+    }
+  }
+
+  &-price {
+    @include tutor-typography('small', 'medium', 'primary');
+  }
+
+  &-price-original {
+    @include tutor-typography('tiny', 'regular', 'subdued');
+  }
+}
+
+@media (max-width: $tutor-breakpoint-sm) {
+  .tutor-dashboard-page-card-body {
+    &.tutor-dashboard-wishlist-wrapper {
+      margin-top: 10px;
+      background-color: unset;
+      border: unset;
+    }
+  }
+}

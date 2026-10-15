@@ -279,12 +279,11 @@ class Settings {
 	 *
 	 * @return boolean
 	 */
-	public static function is_active( string $gateway ) : bool {
-		$payments = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
-		$payments = json_decode( stripslashes( $payments ) );
+	public static function is_active( string $gateway ): bool {
+		$payments = self::get_payment_settings();
 
-		if ( $payments ) {
-			foreach ( $payments->payment_methods as $method ) {
+		if ( tutor_utils()->count( $payments['payment_methods'] ) ) {
+			foreach ( $payments['payment_methods'] as $method ) {
 				if ( $method->name === $gateway ) {
 					return (bool) $method->is_active;
 				}
@@ -355,13 +354,25 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public static function get_payment_settings() {
 		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+
+		// `payment_settings` is persisted as JSON, but some nested editor values contain
+		// HTML attributes. WordPress unslashes those quotes during save, so we need to
+		// re-escape attribute-bearing tags before decoding the JSON payload again.
+		$settings = preg_replace_callback(
+			'/<([a-zA-Z][\w:-]*)(\s+[^<>]*?)?>/',
+			function ( $matches ) {
+				return ! empty( $matches[2] ) ? addslashes( $matches[0] ) : $matches[0];
+			},
+			$settings
+		);
+
 		$settings = json_decode( $settings, true );
 
-		return $settings;
+		return is_array( $settings ) ? $settings : array();
 	}
 
 	/**
@@ -450,7 +461,7 @@ class Settings {
 	public static function get_paypal_config_keys() {
 		return array(
 			'environment'    => 'select',
-			'merchant_email' => 'text',
+			'merchant_email' => 'email',
 			'client_id'      => 'secret_key',
 			'secret_id'      => 'secret_key',
 			'webhook_id'     => 'secret_key',

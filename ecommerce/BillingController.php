@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+use stdClass;
+use TUTOR\Icon;
 use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -81,23 +83,34 @@ class BillingController extends BaseController {
 	 * Register billing nav menu for settings
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 update tabs order and data structure.
 	 *
 	 * @param array $tabs setting navigation tabs.
 	 *
 	 * @return array
 	 */
 	public static function register_nav( $tabs ) {
-		$billing_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/billing' );
+		$id = 'billing-address';
 
 		$new_tab = array(
-			'url'   => esc_url( $billing_url ),
-			'title' => __( 'Billing', 'tutor' ),
-			'role'  => false,
+			'id'       => $id,
+			'label'    => 'Billing Address',
+			'icon'     => Icon::BILLING,
+			'text'     => __( 'Your payment address', 'tutor' ),
+			'template' => 'ecommerce.billing',
+			'role'     => false,
 		);
 
-		$tabs['billing'] = $new_tab;
+		$position = array_search( 'social-accounts', array_keys( $tabs ), true );
 
-		return $tabs;
+		if ( false === $position ) {
+			$tabs[ $id ] = $new_tab;
+			return $tabs;
+		}
+
+		return array_slice( $tabs, 0, $position + 1, true )
+		+ array( $id => $new_tab )
+		+ array_slice( $tabs, $position + 1, null, true );
 	}
 
 	/**
@@ -157,7 +170,7 @@ class BillingController extends BaseController {
 			);
 		}
 
-		$data = $this->get_allowed_fields( $_POST );
+		$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$user_id         = get_current_user_id();
 		$data['user_id'] = $user_id;
@@ -241,5 +254,72 @@ class BillingController extends BaseController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Get country and state options for billing information.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return object An object containing country and state options.
+	 */
+	public static function get_country_state_options() {
+		$countries       = tutor_get_country_list();
+		$country_options = array();
+		$state_mapping   = array();
+
+		foreach ( $countries as $country ) {
+			array_push(
+				$country_options,
+				array(
+					'label' => $country['name'],
+					'value' => $country['name'],
+				)
+			);
+
+			if ( ! empty( $country['states'] ) ) {
+				$state_mapping[ $country['name'] ] = array_map(
+					function ( $state ) {
+						return array(
+							'label' => $state['name'],
+							'value' => $state['name'],
+						);
+					},
+					$country['states']
+				);
+			}
+		}
+
+		$obj                  = new stdClass();
+		$obj->country_options = $country_options;
+		$obj->state_options   = $state_mapping;
+
+		return $obj;
+	}
+
+	/**
+	 * Get default values for billing form.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array An array containing default values for billing information.
+	 */
+	public static function get_default_values() {
+		$billing_info    = ( new BillingController() )->get_billing_info();
+		$billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+
+		$default_values = array(
+			'billing_first_name' => $billing_info->billing_first_name ?? '',
+			'billing_last_name'  => $billing_info->billing_last_name ?? '',
+			'billing_email'      => $billing_info->billing_email ?? '',
+			'billing_country'    => $billing_country,
+			'billing_state'      => $billing_info->billing_state ?? '',
+			'billing_city'       => $billing_info->billing_city ?? '',
+			'billing_phone'      => $billing_info->billing_phone ?? '',
+			'billing_zip_code'   => $billing_info->billing_zip_code ?? '',
+			'billing_address'    => $billing_info->billing_address ?? '',
+		);
+
+		return $default_values;
 	}
 }

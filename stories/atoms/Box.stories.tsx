@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 
 const meta = {
   title: 'Atoms/Box',

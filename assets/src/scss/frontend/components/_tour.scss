@@ -1,0 +1,158 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-tour-modal {
+  &.tutor-modal-content {
+    max-width: 100%;
+    padding: $tutor-spacing-6;
+  }
+
+  .tutor-tour-images {
+    position: relative;
+    overflow: hidden;
+    min-height: 366px;
+    width: 100%;
+    border-radius: $tutor-radius-2xl;
+    background: $tutor-surface-l1-hover;
+
+    .tutor-tour-slide-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      picture,
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: $tutor-radius-2xl;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: $tutor-radius-2xl;
+        pointer-events: none;
+      }
+
+      &[class*='tutor-slide-4']::after {
+        box-shadow: inset 10px 0px 20px 0px $tutor-surface-l1-hover;
+      }
+
+      @include tutor-breakpoint-up(sm) {
+        &[class*='tutor-slide-0']::after,
+        &[class*='tutor-slide-1']::after,
+        &[class*='tutor-slide-2']::after,
+        &[class*='tutor-slide-3']::after {
+          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        &[class*='tutor-slide-0']::after,
+        &[class*='tutor-slide-2']::after,
+        &[class*='tutor-slide-3']::after {
+          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
+        }
+
+        &[class*='tutor-slide-1']::after {
+          box-shadow: inset 6px -6px 20px 0px $tutor-surface-l1-hover;
+        }
+      }
+    }
+  }
+
+  .tutor-tour-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: $tutor-radius-full;
+    background: $tutor-icon-disabled;
+    display: inline-block;
+    @include tutor-transition(background);
+
+    &.is-active {
+      background: $tutor-icon-brand;
+    }
+  }
+
+  .tutor-transition-slide-enter {
+    @include tutor-transition((transform, opacity));
+  }
+
+  .tutor-transition-slide-enter-start {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .tutor-transition-slide-enter-end {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .tutor-transition-slide-leave {
+    transition:
+      transform 0.3s ease-in,
+      opacity 0.3s ease-in;
+  }
+
+  .tutor-transition-slide-leave-start {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .tutor-transition-slide-leave-end {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  .tutor-tour-images[data-direction='back'] {
+    .tutor-transition-slide-enter-start {
+      transform: translateX(-100%);
+    }
+
+    .tutor-transition-slide-leave-end {
+      transform: translateX(100%);
+    }
+  }
+
+  [dir='rtl'] & {
+    .tutor-transition-slide-enter-start {
+      transform: translateX(-100%);
+    }
+
+    .tutor-transition-slide-leave-end {
+      transform: translateX(100%);
+    }
+
+    .tutor-tour-images[data-direction='back'] {
+      .tutor-transition-slide-enter-start {
+        transform: translateX(100%);
+      }
+
+      .tutor-transition-slide-leave-end {
+        transform: translateX(-100%);
+      }
+    }
+  }
+}
+
+.tutor-tour-skip-wrapper {
+  .tutor-tour-skip-btn {
+    color: $tutor-text-primary-inverse;
+
+    &:hover {
+      color: $tutor-text-primary;
+    }
+  }
+}
+
+.tutor-modal-content:has(.tutor-tour-modal) {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}

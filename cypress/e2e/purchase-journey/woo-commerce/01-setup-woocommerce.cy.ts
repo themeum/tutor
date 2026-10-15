@@ -1,4 +1,4 @@
-import { backendUrls } from 'cypress/config/page-urls';
+import { backendUrls } from '@Cypress/config/page-urls';
 
 describe('WooCommerce Setup', () => {
   it('should select WooCommerce as monetization engine', () => {

@@ -1,0 +1,435 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-toast-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tutor-toast-container {
+  position: fixed !important;
+  z-index: $tutor-toast-z;
+  width: min(100vw - ($tutor-toast-offset-x * 2), $tutor-toast-max-width);
+  min-width: min($tutor-toast-min-width, calc(100vw - ($tutor-toast-offset-x * 2)));
+  pointer-events: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  outline: none;
+
+  &[data-position-x='left'] {
+    left: $tutor-toast-offset-x;
+  }
+
+  &[data-position-x='right'] {
+    right: $tutor-toast-offset-x;
+  }
+
+  &[data-position-x='center'] {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &[data-position-y='top'] {
+    top: $tutor-toast-offset-y;
+  }
+
+  &[data-position-y='bottom'] {
+    bottom: $tutor-toast-offset-y;
+  }
+}
+
+[dir='rtl'] {
+  .tutor-toast-container[data-position-x='left'] {
+    left: auto;
+    right: $tutor-toast-offset-x;
+  }
+
+  .tutor-toast-container[data-position-x='right'] {
+    right: auto;
+    left: $tutor-toast-offset-x;
+  }
+}
+
+.tutor-toast-stack {
+  position: relative;
+  width: 100%;
+  height: var(--tutor-toast-front-height, 88px);
+  pointer-events: none;
+  transition: height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tutor-toast-item {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  pointer-events: none;
+  transition:
+    transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 400ms ease,
+    height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(var(--tutor-toast-y, 0px)) scale(var(--tutor-toast-scale, 1));
+  opacity: var(--tutor-toast-opacity, 1);
+
+  .tutor-toast-container[data-position-y='top'] & {
+    top: 0;
+    bottom: auto;
+  }
+
+  &[data-front='true'] {
+    pointer-events: all;
+    z-index: 10;
+  }
+}
+
+@keyframes tutor-toast-enter-from-bottom {
+  from {
+    transform: translateY(100%) scale(1);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tutor-toast-enter-from-top {
+  from {
+    transform: translateY(-100%) scale(1);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.tutor-toast-item[data-entering][data-position-y='bottom'] {
+  animation: tutor-toast-enter-from-bottom $tutor-toast-animation-enter cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+.tutor-toast-item[data-entering][data-position-y='top'] {
+  animation: tutor-toast-enter-from-top $tutor-toast-animation-enter cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+@keyframes tutor-toast-exit-to-bottom {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(calc(100% + $tutor-toast-offset-y));
+    opacity: 0;
+  }
+}
+
+@keyframes tutor-toast-exit-to-top {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(calc(-100% - $tutor-toast-offset-y));
+    opacity: 0;
+  }
+}
+
+.tutor-toast-item[data-exiting][data-position-y='bottom'] {
+  animation: tutor-toast-exit-to-bottom $tutor-toast-animation-exit ease forwards;
+  pointer-events: none;
+}
+
+.tutor-toast-item[data-exiting][data-position-y='top'] {
+  animation: tutor-toast-exit-to-top $tutor-toast-animation-exit ease forwards;
+  pointer-events: none;
+}
+
+@keyframes tutor-toast-swipe-right {
+  to {
+    transform: translateX(calc(100% + 40px));
+    opacity: 0;
+  }
+}
+
+@keyframes tutor-toast-swipe-left {
+  to {
+    transform: translateX(calc(-100% - 40px));
+    opacity: 0;
+  }
+}
+
+.tutor-toast-item[data-swipe-out='right'] {
+  animation: tutor-toast-swipe-right 240ms ease forwards;
+  pointer-events: none;
+}
+
+.tutor-toast-item[data-swipe-out='left'] {
+  animation: tutor-toast-swipe-left 240ms ease forwards;
+  pointer-events: none;
+}
+
+.tutor-toast-item[data-swiping='true'] {
+  transition: none;
+}
+
+.tutor-toast-item[data-front='false']:not([data-expanded]) > .tutor-toast-card > * {
+  opacity: 0;
+  transition: opacity 400ms;
+}
+
+.tutor-toast-item[data-front='true'] > .tutor-toast-card > *,
+.tutor-toast-item[data-expanded] > .tutor-toast-card > * {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+.tutor-toast-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $tutor-toast-gap;
+  width: 100%;
+  padding: $tutor-toast-padding;
+  border: 1px solid $tutor-toast-border;
+  border-radius: $tutor-toast-radius;
+  background: $tutor-toast-background;
+  box-shadow: $tutor-toast-shadow;
+  color: $tutor-toast-text;
+  font-family: $tutor-toast-font;
+  overflow: hidden;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &[data-type='default'] {
+    background: $tutor-toast-default-background;
+    border-color: $tutor-toast-default-border;
+    color: $tutor-toast-default-text;
+  }
+
+  &[data-type='success'] {
+    color: $tutor-toast-success-text;
+  }
+
+  &[data-type='error'] {
+    color: $tutor-toast-error-text;
+  }
+
+  &[data-type='warning'] {
+    color: $tutor-toast-warning-text;
+  }
+
+  &[data-type='info'] {
+    color: $tutor-toast-info-text;
+  }
+
+  &[data-type='loading'] {
+    color: $tutor-toast-loading-text;
+  }
+
+  &[data-rich-colors][data-type='success'] {
+    background: $tutor-toast-success-background;
+    border-color: $tutor-toast-success-border;
+  }
+
+  &[data-rich-colors][data-type='error'] {
+    background: $tutor-toast-error-background;
+    border-color: $tutor-toast-error-border;
+  }
+
+  &[data-rich-colors][data-type='warning'] {
+    background: $tutor-toast-warning-background;
+    border-color: $tutor-toast-warning-border;
+  }
+
+  &[data-rich-colors][data-type='info'] {
+    background: $tutor-toast-info-background;
+    border-color: $tutor-toast-info-border;
+  }
+
+  &[data-rich-colors][data-type='loading'] {
+    background: $tutor-toast-loading-background;
+    border-color: $tutor-toast-loading-border;
+  }
+}
+
+.tutor-toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $tutor-toast-icon-size;
+  block-size: $tutor-toast-icon-size;
+  border: 1px solid transparent;
+  border-radius: $tutor-radius-full;
+  background: $tutor-toast-default-background;
+  color: $tutor-toast-info-icon;
+
+  .tutor-toast-card[data-type='success'] & {
+    color: $tutor-toast-success-icon;
+    border-color: $tutor-toast-success-border;
+    background: $tutor-toast-success-background;
+  }
+
+  .tutor-toast-card[data-type='error'] & {
+    color: $tutor-toast-error-icon;
+    border-color: $tutor-toast-error-border;
+    background: $tutor-toast-error-background;
+  }
+
+  .tutor-toast-card[data-type='warning'] & {
+    color: $tutor-toast-warning-icon;
+    border-color: $tutor-toast-warning-border;
+    background: $tutor-toast-warning-background;
+  }
+
+  .tutor-toast-card[data-type='info'] & {
+    color: $tutor-toast-info-icon;
+    border-color: $tutor-toast-info-border;
+    background: $tutor-toast-info-background;
+  }
+
+  .tutor-toast-card[data-type='loading'] & {
+    color: $tutor-toast-loading-icon;
+    border-color: $tutor-toast-loading-border;
+    background: $tutor-toast-loading-background;
+  }
+
+  .tutor-toast-card[data-type='default'] & {
+    color: $tutor-toast-default-icon;
+    border-color: $tutor-toast-default-border;
+    background: $tutor-toast-default-background;
+  }
+}
+
+.tutor-toast-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.tutor-toast-title,
+.tutor-toast-description {
+  margin: 0;
+}
+
+.tutor-toast-title {
+  @include tutor-typography('medium', 'medium');
+  color: currentColor;
+}
+
+.tutor-toast-description {
+  @include tutor-typography('tiny');
+  color: $tutor-toast-text-muted;
+
+  .tutor-toast-card[data-type='default'] & {
+    color: $tutor-toast-default-text;
+  }
+}
+
+button.tutor-toast-close {
+  @include tutor-button-base();
+  border: 0;
+  background: transparent;
+  color: $tutor-icon-idle;
+  cursor: pointer;
+}
+
+button.tutor-toast-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: $tutor-radius-full;
+  flex-shrink: 0;
+}
+
+.tutor-toast-progress {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 3px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  overflow: hidden;
+}
+
+.tutor-toast-progress-bar {
+  block-size: 100%;
+  transform-origin: left;
+
+  .tutor-toast-card[data-type='success'] & {
+    background: $tutor-toast-success-icon;
+  }
+
+  .tutor-toast-card[data-type='error'] & {
+    background: $tutor-toast-error-icon;
+  }
+
+  .tutor-toast-card[data-type='warning'] & {
+    background: $tutor-toast-warning-icon;
+  }
+
+  .tutor-toast-card[data-type='info'] & {
+    background: $tutor-toast-info-icon;
+  }
+
+  .tutor-toast-card[data-type='loading'] & {
+    background: $tutor-toast-loading-icon;
+  }
+
+  .tutor-toast-card[data-type='default'] & {
+    background: color-mix(in srgb, $tutor-toast-default-text 30%, transparent);
+  }
+}
+
+.tutor-toast-card[data-type='loading'] .tutor-toast-progress {
+  display: none;
+}
+
+@keyframes tutor-toast-progress-shrink {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.tutor-toast-spinner {
+  inline-size: 18px;
+  block-size: 18px;
+  border: 2px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-top-color: currentColor;
+  border-radius: 999px;
+  animation: tutor-toast-spinner-rotate 800ms linear infinite;
+}
+
+@keyframes tutor-toast-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-tutor-motion='reduce'] .tutor-toast-item {
+  animation: none !important;
+  transition: opacity 120ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tutor-toast-item {
+    animation: none !important;
+    transition: opacity 120ms ease !important;
+  }
+}

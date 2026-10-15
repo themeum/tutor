@@ -1,0 +1,15 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-course-announcements {
+  @include tutor-card-base;
+  @include tutor-card-radius;
+  padding: 0;
+
+  .tutor-announcement-item {
+    padding: $tutor-spacing-6;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+  }
+}

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor CSS Utility Classes - Interactive Examples</title>
+    <style>
+        /* Basic reset and demo styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333741;
+            background-color: #fafafa;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1f242f;
+        }
+
+        .demo-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #333741;
+            border-bottom: 2px solid #e4ebfc;
+            padding-bottom: 0.5rem;
+        }
+
+        .demo-example {
+            margin: 1.5rem 0;
+            border: 1px solid #ececed;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .demo-preview {
+            padding: 1.5rem;
+            background: #fcfcfc;
+            border-bottom: 1px solid #ececed;
+        }
+
+        .demo-code {
+            background: #f5f5f6;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            color: #61646c;
+            overflow-x: auto;
+        }
+
+        .demo-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .demo-item {
+            padding: 1rem;
+            background: #f6f8fe;
+            border: 1px solid #dbe4fa;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ececed;
+        }
+
+        .spacing-demo {
+            background: #e4ebfc;
+            border: 2px dashed #4979e8;
+        }
+
+        .text-demo {
+            background: #f3fee7;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid #ececed;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            z-index: 100;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-link {
+            color: #4979e8;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #f6f8fe;
+        }
+
+        /* Utility classes simulation */
+        .tutor-flex { display: flex; }
+        .tutor-items-center { align-items: center; }
+        .tutor-justify-between { justify-content: space-between; }
+        .tutor-justify-center { justify-content: center; }
+        .tutor-flex-col { flex-direction: column; }
+        .tutor-gap-4 { gap: 8px; }
+        .tutor-gap-6 { gap: 16px; }
+        .tutor-p-4 { padding: 8px; }
+        .tutor-p-6 { padding: 16px; }
+        .tutor-p-8 { padding: 24px; }
+        .tutor-m-4 { margin: 8px; }
+        .tutor-mb-4 { margin-bottom: 8px; }
+        .tutor-mt-6 { margin-top: 16px; }
+        .tutor-bg-brand-100 { background-color: #f6f8fe; }
+        .tutor-bg-brand-500 { background-color: #4979e8; }
+        .tutor-bg-success-100 { background-color: #e3fbcc; }
+        .tutor-bg-warning-100 { background-color: #fef0c7; }
+        .tutor-bg-error-100 { background-color: #fee4e2; }
+        .tutor-text-brand-500 { color: #4979e8; }
+        .tutor-text-success-600 { color: #4ca30d; }
+        .tutor-text-warning-600 { color: #dc6803; }
+        .tutor-text-error-600 { color: #d92d20; }
+        .tutor-border { border: 1px solid #cecfd2; }
+        .tutor-border-brand-500 { border-color: #4979e8; }
+        .tutor-rounded-lg { border-radius: 8px; }
+        .tutor-rounded-full { border-radius: 9999px; }
+        .tutor-shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .tutor-shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .tutor-w-full { width: 100%; }
+        .tutor-h-16 { height: 64px; }
+        .tutor-text-sm { font-size: 0.875rem; }
+        .tutor-text-lg { font-size: 1.125rem; }
+        .tutor-font-medium { font-weight: 500; }
+        .tutor-font-semibold { font-weight: 600; }
+        .tutor-text-center { text-align: center; }
+        .tutor-grid { display: grid; }
+        .tutor-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .tutor-grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .tutor-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul class="nav-list">
+            <li><a href="#layout" class="nav-link">Layout</a></li>
+            <li><a href="#spacing" class="nav-link">Spacing</a></li>
+            <li><a href="#typography" class="nav-link">Typography</a></li>
+            <li><a href="#colors" class="nav-link">Colors</a></li>
+            <li><a href="#sizing" class="nav-link">Sizing</a></li>
+            <li><a href="#borders" class="nav-link">Borders</a></li>
+            <li><a href="#components" class="nav-link">Components</a></li>
+            <li><a href="#responsive" class="nav-link">Responsive</a></li>
+        </ul>
+    </nav>
+
+    <div class="demo-container">
+        <div class="demo-section">
+            <h1 class="demo-title">Tutor CSS Utility Classes</h1>
+            <p>Interactive examples of all utility classes available in the Tutor design system. Each example shows the visual result and the corresponding HTML code.</p>
+        </div>
+
+        <!-- Layout Utilities -->
+        <div id="layout" class="demo-section">
+            <h2 class="demo-subtitle">Layout Utilities</h2>
+            
+            <h3>Flexbox Layout</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-flex tutor-items-center tutor-justify-between tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg">
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg" style="color: white;">Item 1</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg" style="color: white;">Item 2</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg" style="color: white;">Item 3</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-flex tutor-items-center tutor-justify-between tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg"&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg"&gt;Item 1&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg"&gt;Item 2&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg"&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Flex Direction</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-flex tutor-flex-col tutor-gap-4 tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg">
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">Item 1</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">Item 2</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">Item 3</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-flex tutor-flex-col tutor-gap-4 tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg"&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;Item 1&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;Item 2&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Grid Layout</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-grid tutor-grid-cols-3 tutor-gap-4 tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg">
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">1</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">2</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">3</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">4</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">5</div>
+                        <div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center" style="color: white;">6</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-grid tutor-grid-cols-3 tutor-gap-4 tutor-p-4 tutor-bg-brand-100 tutor-rounded-lg"&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;1&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;2&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;3&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;4&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;5&lt;/div&gt;
+    &lt;div class="tutor-p-4 tutor-bg-brand-500 tutor-rounded-lg tutor-text-center"&gt;6&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Spacing Utilities -->
+        <div id="spacing" class="demo-section">
+            <h2 class="demo-subtitle">Spacing Utilities</h2>
+            
+            <h3>Padding Scale</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div class="spacing-demo tutor-p-4">tutor-p-4 (8px)</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="spacing-demo tutor-p-6">tutor-p-6 (16px)</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="spacing-demo tutor-p-8">tutor-p-8 (24px)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-p-4"&gt;Padding 8px&lt;/div&gt;
+&lt;div class="tutor-p-6"&gt;Padding 16px&lt;/div&gt;
+&lt;div class="tutor-p-8"&gt;Padding 24px&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Margin Examples</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg">
+                        <div class="tutor-bg-brand-500 tutor-p-4 tutor-m-4 tutor-rounded-lg" style="color: white;">tutor-m-4</div>
+                        <div class="tutor-bg-brand-500 tutor-p-4 tutor-mb-4 tutor-rounded-lg" style="color: white;">tutor-mb-4</div>
+                        <div class="tutor-bg-brand-500 tutor-p-4 tutor-mt-6 tutor-rounded-lg" style="color: white;">tutor-mt-6</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-m-4"&gt;All margins 8px&lt;/div&gt;
+&lt;div class="tutor-mb-4"&gt;Bottom margin 8px&lt;/div&gt;
+&lt;div class="tutor-mt-6"&gt;Top margin 16px&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Spacing Scale Reference</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item"><strong>tutor-*-1</strong><br>2px</div>
+                        <div class="demo-item"><strong>tutor-*-2</strong><br>4px</div>
+                        <div class="demo-item"><strong>tutor-*-3</strong><br>6px</div>
+                        <div class="demo-item"><strong>tutor-*-4</strong><br>8px</div>
+                        <div class="demo-item"><strong>tutor-*-5</strong><br>12px</div>
+                        <div class="demo-item"><strong>tutor-*-6</strong><br>16px</div>
+                        <div class="demo-item"><strong>tutor-*-7</strong><br>20px</div>
+                        <div class="demo-item"><strong>tutor-*-8</strong><br>24px</div>
+                        <div class="demo-item"><strong>tutor-*-9</strong><br>32px</div>
+                        <div class="demo-item"><strong>tutor-*-10</strong><br>40px</div>
+                        <div class="demo-item"><strong>tutor-*-11</strong><br>48px</div>
+                        <div class="demo-item"><strong>tutor-*-12</strong><br>56px</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+/* Available spacing values */
+tutor-p-{size}  /* padding */
+tutor-m-{size}  /* margin */
+tutor-px-{size} /* horizontal padding */
+tutor-py-{size} /* vertical padding */
+tutor-mx-{size} /* horizontal margin */
+tutor-my-{size} /* vertical margin */
+                </div>
+            </div>
+        </div>
+
+        <!-- Typography Utilities -->
+        <div id="typography" class="demo-section">
+            <h2 class="demo-subtitle">Typography Utilities</h2>
+            
+            <h3>Semantic Typography</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="text-demo">
+                        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">tutor-h1 - Main Heading (40px)</h1>
+                        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem;">tutor-h2 - Section Heading (32px)</h2>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">tutor-h3 - Subsection Heading (24px)</h3>
+                        <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">tutor-h4 - Component Heading (20px)</h4>
+                        <h5 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem;">tutor-h5 - Small Heading (18px)</h5>
+                        <p style="font-size: 1rem; margin-bottom: 0.5rem;">tutor-p1 - Body text (16px)</p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">tutor-p2 - Secondary text (14px)</p>
+                        <p style="font-size: 0.75rem;">tutor-p3 - Caption text (12px)</p>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;h1 class="tutor-h1"&gt;Main Heading&lt;/h1&gt;
+&lt;h2 class="tutor-h2"&gt;Section Heading&lt;/h2&gt;
+&lt;h3 class="tutor-h3"&gt;Subsection Heading&lt;/h3&gt;
+&lt;h4 class="tutor-h4"&gt;Component Heading&lt;/h4&gt;
+&lt;h5 class="tutor-h5"&gt;Small Heading&lt;/h5&gt;
+&lt;p class="tutor-p1"&gt;Body text&lt;/p&gt;
+&lt;p class="tutor-p2"&gt;Secondary text&lt;/p&gt;
+&lt;p class="tutor-p3"&gt;Caption text&lt;/p&gt;
+                </div>
+            </div>
+
+            <h3>Font Weights</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="text-demo">
+                        <p style="font-weight: 400; margin-bottom: 0.5rem;">tutor-font-regular (400) - Regular text</p>
+                        <p style="font-weight: 500; margin-bottom: 0.5rem;">tutor-font-medium (500) - Medium text</p>
+                        <p style="font-weight: 600; margin-bottom: 0.5rem;">tutor-font-semi-strong (600) - Semi bold text</p>
+                        <p style="font-weight: 700;">tutor-font-strong (700) - Bold text</p>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;p class="tutor-font-regular"&gt;Regular text&lt;/p&gt;
+&lt;p class="tutor-font-medium"&gt;Medium text&lt;/p&gt;
+&lt;p class="tutor-font-semi-strong"&gt;Semi bold text&lt;/p&gt;
+&lt;p class="tutor-font-strong"&gt;Bold text&lt;/p&gt;
+                </div>
+            </div>
+
+            <h3>Text Alignment</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="text-demo">
+                        <p style="text-align: left; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px;">tutor-text-left - Left aligned text</p>
+                        <p style="text-align: center; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px;">tutor-text-center - Center aligned text</p>
+                        <p style="text-align: right; padding: 0.5rem; background: white; border-radius: 4px;">tutor-text-right - Right aligned text</p>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;p class="tutor-text-left"&gt;Left aligned text&lt;/p&gt;
+&lt;p class="tutor-text-center"&gt;Center aligned text&lt;/p&gt;
+&lt;p class="tutor-text-right"&gt;Right aligned text&lt;/p&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Color Utilities -->
+        <div id="colors" class="demo-section">
+            <h2 class="demo-subtitle">Color Utilities</h2>
+            
+            <h3>Brand Colors</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #f6f8fe;"></div>
+                            <strong>brand-100</strong><br>#f6f8fe
+                        </div>
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #e4ebfc;"></div>
+                            <strong>brand-200</strong><br>#e4ebfc
+                        </div>
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #dbe4fa;"></div>
+                            <strong>brand-300</strong><br>#dbe4fa
+                        </div>
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #4979e8;"></div>
+                            <strong>brand-500</strong><br>#4979e8
+                        </div>
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #3e64de;"></div>
+                            <strong>brand-600</strong><br>#3e64de
+                        </div>
+                        <div class="demo-item">
+                            <div class="color-swatch" style="background-color: #2b49ca;"></div>
+                            <strong>brand-700</strong><br>#2b49ca
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-bg-brand-100"&gt;Light brand background&lt;/div&gt;
+&lt;div class="tutor-bg-brand-500"&gt;Default brand background&lt;/div&gt;
+&lt;div class="tutor-text-brand-500"&gt;Brand colored text&lt;/div&gt;
+&lt;div class="tutor-border-brand-500"&gt;Brand colored border&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Semantic Colors</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div class="tutor-bg-success-100 tutor-p-4 tutor-rounded-lg">
+                                <div class="tutor-text-success-600 tutor-font-medium">Success</div>
+                                <div class="tutor-text-sm">tutor-bg-success-100</div>
+                            </div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-warning-100 tutor-p-4 tutor-rounded-lg">
+                                <div class="tutor-text-warning-600 tutor-font-medium">Warning</div>
+                                <div class="tutor-text-sm">tutor-bg-warning-100</div>
+                            </div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-error-100 tutor-p-4 tutor-rounded-lg">
+                                <div class="tutor-text-error-600 tutor-font-medium">Error</div>
+                                <div class="tutor-text-sm">tutor-bg-error-100</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-bg-success-100 tutor-text-success-600"&gt;Success message&lt;/div&gt;
+&lt;div class="tutor-bg-warning-100 tutor-text-warning-600"&gt;Warning message&lt;/div&gt;
+&lt;div class="tutor-bg-error-100 tutor-text-error-600"&gt;Error message&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Text Colors</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="text-demo">
+                        <p style="color: #1f242f; margin-bottom: 0.5rem;">tutor-text-primary - Primary text color</p>
+                        <p style="color: #61646c; margin-bottom: 0.5rem;">tutor-text-secondary - Secondary text color</p>
+                        <p style="color: #94969c; margin-bottom: 0.5rem;">tutor-text-disabled - Disabled text color</p>
+                        <p class="tutor-text-brand-500" style="margin-bottom: 0.5rem;">tutor-text-brand-500 - Brand text color</p>
+                        <p class="tutor-text-success-600" style="margin-bottom: 0.5rem;">tutor-text-success-600 - Success text color</p>
+                        <p class="tutor-text-error-600">tutor-text-error-600 - Error text color</p>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;p class="tutor-text-primary"&gt;Primary text&lt;/p&gt;
+&lt;p class="tutor-text-secondary"&gt;Secondary text&lt;/p&gt;
+&lt;p class="tutor-text-disabled"&gt;Disabled text&lt;/p&gt;
+&lt;p class="tutor-text-brand-500"&gt;Brand text&lt;/p&gt;
+&lt;p class="tutor-text-success-600"&gt;Success text&lt;/p&gt;
+&lt;p class="tutor-text-error-600"&gt;Error text&lt;/p&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Sizing Utilities -->
+        <div id="sizing" class="demo-section">
+            <h2 class="demo-subtitle">Sizing Utilities</h2>
+            
+            <h3>Width Utilities</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-flex tutor-flex-col tutor-gap-4">
+                        <div style="width: 25%; background: #e4ebfc; padding: 8px; border-radius: 4px;">tutor-w-1/4 (25%)</div>
+                        <div style="width: 50%; background: #e4ebfc; padding: 8px; border-radius: 4px;">tutor-w-1/2 (50%)</div>
+                        <div style="width: 75%; background: #e4ebfc; padding: 8px; border-radius: 4px;">tutor-w-3/4 (75%)</div>
+                        <div class="tutor-w-full tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg">tutor-w-full (100%)</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-w-1/4"&gt;25% width&lt;/div&gt;
+&lt;div class="tutor-w-1/2"&gt;50% width&lt;/div&gt;
+&lt;div class="tutor-w-3/4"&gt;75% width&lt;/div&gt;
+&lt;div class="tutor-w-full"&gt;100% width&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Height Utilities</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-flex tutor-gap-4 tutor-items-end">
+                        <div style="height: 32px; width: 60px; background: #e4ebfc; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px;">h-8</div>
+                        <div class="tutor-h-16" style="width: 60px; background: #e4ebfc; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px;">h-16</div>
+                        <div style="height: 96px; width: 60px; background: #e4ebfc; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px;">h-24</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-h-8"&gt;32px height&lt;/div&gt;
+&lt;div class="tutor-h-16"&gt;64px height&lt;/div&gt;
+&lt;div class="tutor-h-24"&gt;96px height&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Border Utilities -->
+        <div id="borders" class="demo-section">
+            <h2 class="demo-subtitle">Border Utilities</h2>
+            
+            <h3>Border Styles</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div class="tutor-border tutor-p-4 tutor-rounded-lg">tutor-border</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-border tutor-border-brand-500 tutor-p-4 tutor-rounded-lg">tutor-border-brand-500</div>
+                        </div>
+                        <div class="demo-item">
+                            <div style="border: 2px dashed #4979e8; padding: 16px; border-radius: 8px;">border-dashed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-border"&gt;Default border&lt;/div&gt;
+&lt;div class="tutor-border tutor-border-brand-500"&gt;Brand colored border&lt;/div&gt;
+&lt;div class="tutor-border-dashed"&gt;Dashed border&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Border Radius</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div style="background: #e4ebfc; padding: 16px; border-radius: 4px;">tutor-rounded-sm</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg">tutor-rounded-lg</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-full tutor-text-center">tutor-rounded-full</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-rounded-sm"&gt;Small radius&lt;/div&gt;
+&lt;div class="tutor-rounded-lg"&gt;Large radius&lt;/div&gt;
+&lt;div class="tutor-rounded-full"&gt;Full radius&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Shadows</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item">
+                            <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-shadow-sm">tutor-shadow-sm</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-shadow-md">tutor-shadow-md</div>
+                        </div>
+                        <div class="demo-item">
+                            <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg" style="box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">tutor-shadow-lg</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-shadow-sm"&gt;Small shadow&lt;/div&gt;
+&lt;div class="tutor-shadow-md"&gt;Medium shadow&lt;/div&gt;
+&lt;div class="tutor-shadow-lg"&gt;Large shadow&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Examples -->
+        <div id="components" class="demo-section">
+            <h2 class="demo-subtitle">Component Examples</h2>
+            
+            <h3>Card Component</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-bg-brand-100 tutor-border tutor-rounded-lg tutor-p-6 tutor-shadow-sm" style="max-width: 300px;">
+                        <h3 class="tutor-text-lg tutor-font-semibold tutor-mb-4">Card Title</h3>
+                        <p class="tutor-text-sm" style="color: #61646c; margin-bottom: 16px;">This is a card component built entirely with utility classes. It demonstrates how utilities can be combined to create complex components.</p>
+                        <button class="tutor-bg-brand-500 tutor-p-4 tutor-rounded-lg tutor-border-0" style="color: white; cursor: pointer;">Action Button</button>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-bg-surface-l1 tutor-border tutor-rounded-lg tutor-p-6 tutor-shadow-sm"&gt;
+    &lt;h3 class="tutor-text-lg tutor-font-semibold tutor-mb-4"&gt;Card Title&lt;/h3&gt;
+    &lt;p class="tutor-text-sm tutor-text-secondary tutor-mb-4"&gt;Card content&lt;/p&gt;
+    &lt;button class="tutor-bg-brand-500 tutor-text-white tutor-p-4 tutor-rounded-lg"&gt;Action&lt;/button&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Navigation Bar</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <nav class="tutor-flex tutor-items-center tutor-justify-between tutor-p-4 tutor-bg-brand-100 tutor-border tutor-rounded-lg">
+                        <div class="tutor-text-lg tutor-font-semibold tutor-text-brand-500">Brand</div>
+                        <div class="tutor-flex tutor-gap-6">
+                            <a href="#" class="tutor-text-sm" style="color: #61646c; text-decoration: none;">Home</a>
+                            <a href="#" class="tutor-text-sm" style="color: #61646c; text-decoration: none;">About</a>
+                            <a href="#" class="tutor-text-sm" style="color: #61646c; text-decoration: none;">Contact</a>
+                        </div>
+                    </nav>
+                </div>
+                <div class="demo-code">
+&lt;nav class="tutor-flex tutor-items-center tutor-justify-between tutor-p-4 tutor-bg-surface-l1 tutor-border tutor-rounded-lg"&gt;
+    &lt;div class="tutor-text-lg tutor-font-semibold tutor-text-brand-500"&gt;Brand&lt;/div&gt;
+    &lt;div class="tutor-flex tutor-gap-6"&gt;
+        &lt;a href="#" class="tutor-text-sm tutor-text-secondary"&gt;Home&lt;/a&gt;
+        &lt;a href="#" class="tutor-text-sm tutor-text-secondary"&gt;About&lt;/a&gt;
+        &lt;a href="#" class="tutor-text-sm tutor-text-secondary"&gt;Contact&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;
+                </div>
+            </div>
+
+            <h3>Alert Messages</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-flex tutor-flex-col tutor-gap-4">
+                        <div class="tutor-bg-success-100 tutor-border tutor-rounded-lg tutor-p-4">
+                            <div class="tutor-text-success-600 tutor-font-medium tutor-text-sm">Success!</div>
+                            <div class="tutor-text-sm" style="color: #61646c;">Your changes have been saved successfully.</div>
+                        </div>
+                        <div class="tutor-bg-warning-100 tutor-border tutor-rounded-lg tutor-p-4">
+                            <div class="tutor-text-warning-600 tutor-font-medium tutor-text-sm">Warning!</div>
+                            <div class="tutor-text-sm" style="color: #61646c;">Please review your input before proceeding.</div>
+                        </div>
+                        <div class="tutor-bg-error-100 tutor-border tutor-rounded-lg tutor-p-4">
+                            <div class="tutor-text-error-600 tutor-font-medium tutor-text-sm">Error!</div>
+                            <div class="tutor-text-sm" style="color: #61646c;">Something went wrong. Please try again.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-bg-success-100 tutor-border tutor-rounded-lg tutor-p-4"&gt;
+    &lt;div class="tutor-text-success-600 tutor-font-medium"&gt;Success!&lt;/div&gt;
+    &lt;div class="tutor-text-secondary"&gt;Your changes have been saved.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="tutor-bg-warning-100 tutor-border tutor-rounded-lg tutor-p-4"&gt;
+    &lt;div class="tutor-text-warning-600 tutor-font-medium"&gt;Warning!&lt;/div&gt;
+    &lt;div class="tutor-text-secondary"&gt;Please review your input.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="tutor-bg-error-100 tutor-border tutor-rounded-lg tutor-p-4"&gt;
+    &lt;div class="tutor-text-error-600 tutor-font-medium"&gt;Error!&lt;/div&gt;
+    &lt;div class="tutor-text-secondary"&gt;Something went wrong.&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Examples -->
+        <div id="responsive" class="demo-section">
+            <h2 class="demo-subtitle">Responsive Design</h2>
+            
+            <h3>Responsive Grid</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-grid tutor-grid-cols-2 tutor-gap-4" style="grid-template-columns: repeat(1, minmax(0, 1fr));">
+                        <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-text-center">Item 1</div>
+                        <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-text-center">Item 2</div>
+                        <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-text-center">Item 3</div>
+                        <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg tutor-text-center">Item 4</div>
+                    </div>
+                    <p class="tutor-text-sm tutor-mt-6" style="color: #61646c;">
+                        <strong>Note:</strong> This grid would be 1 column on mobile, 2 columns on tablet, and 4 columns on desktop using responsive classes.
+                    </p>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-grid tutor-grid-cols-1 tutor-md-grid-cols-2 tutor-lg-grid-cols-4 tutor-gap-4"&gt;
+    &lt;div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg"&gt;Item 1&lt;/div&gt;
+    &lt;div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg"&gt;Item 2&lt;/div&gt;
+    &lt;div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg"&gt;Item 3&lt;/div&gt;
+    &lt;div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg"&gt;Item 4&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Responsive Typography</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="text-demo">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Responsive Heading</h2>
+                        <p style="font-size: 0.875rem;">This heading would be smaller on mobile (tutor-text-lg) and larger on desktop (tutor-lg-text-2xl). The text size adapts to screen size for optimal readability.</p>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;h2 class="tutor-text-lg tutor-lg-text-2xl"&gt;Responsive Heading&lt;/h2&gt;
+&lt;p class="tutor-text-sm tutor-md-text-base"&gt;Responsive paragraph text&lt;/p&gt;
+                </div>
+            </div>
+
+            <h3>Responsive Spacing</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="tutor-bg-brand-100 tutor-p-4 tutor-rounded-lg">
+                        <div class="tutor-bg-brand-500 tutor-p-4 tutor-rounded-lg" style="color: white;">
+                            Responsive padding: small on mobile, large on desktop
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+&lt;div class="tutor-p-4 tutor-lg-p-8"&gt;
+    Responsive padding
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <h3>Breakpoint Reference</h3>
+            <div class="demo-example">
+                <div class="demo-preview">
+                    <div class="demo-grid">
+                        <div class="demo-item"><strong>Default</strong><br>All screen sizes</div>
+                        <div class="demo-item"><strong>tutor-sm-*</strong><br>≥640px (Small)</div>
+                        <div class="demo-item"><strong>tutor-md-*</strong><br>≥768px (Medium)</div>
+                        <div class="demo-item"><strong>tutor-lg-*</strong><br>≥1024px (Large)</div>
+                        <div class="demo-item"><strong>tutor-xl-*</strong><br>≥1280px (XL)</div>
+                        <div class="demo-item"><strong>tutor-2xl-*</strong><br>≥1536px (2XL)</div>
+                    </div>
+                </div>
+                <div class="demo-code">
+/* Mobile-first responsive design */
+tutor-p-4           /* padding on all screens */
+tutor-md-p-6        /* padding on medium screens and up */
+tutor-lg-p-8        /* padding on large screens and up */
+
+tutor-grid-cols-1   /* 1 column on mobile */
+tutor-md-grid-cols-2 /* 2 columns on tablet */
+tutor-lg-grid-cols-3 /* 3 columns on desktop */
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="demo-section">
+            <h2 class="demo-subtitle">Quick Reference</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <strong>Layout</strong><br>
+                    tutor-flex, tutor-grid<br>
+                    tutor-items-center<br>
+                    tutor-justify-between
+                </div>
+                <div class="demo-item">
+                    <strong>Spacing</strong><br>
+                    tutor-p-{1-21}<br>
+                    tutor-m-{1-21}<br>
+                    tutor-gap-{1-21}
+                </div>
+                <div class="demo-item">
+                    <strong>Typography</strong><br>
+                    tutor-h1, tutor-h2<br>
+                    tutor-p1, tutor-p2<br>
+                    tutor-text-{size}
+                </div>
+                <div class="demo-item">
+                    <strong>Colors</strong><br>
+                    tutor-bg-brand-{100-950}<br>
+                    tutor-text-brand-{100-950}<br>
+                    tutor-border-brand-{100-950}
+                </div>
+                <div class="demo-item">
+                    <strong>Sizing</strong><br>
+                    tutor-w-{size}<br>
+                    tutor-h-{size}<br>
+                    tutor-max-w-{size}
+                </div>
+                <div class="demo-item">
+                    <strong>Borders</strong><br>
+                    tutor-border<br>
+                    tutor-rounded-{size}<br>
+                    tutor-shadow-{size}
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #f6f8fe; border-radius: 8px; text-align: center;">
+                <p><strong>💡 Pro Tip:</strong> All utilities support responsive variants (tutor-md-*, tutor-lg-*) and are RTL-aware by default!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight active navigation item
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.demo-section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.backgroundColor = '';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.backgroundColor = '#f6f8fe';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

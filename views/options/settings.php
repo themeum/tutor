@@ -22,7 +22,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 			</div>
 			<div class="tutor-col-md-5 tutor-col-xl-6 tutor-mb-24 tutor-mb-md-0">
 				<div class="tutor-options-search tutor-form-wrap">
-					<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
+					<span class="tutor-icon-search tutor-form-icon" aria-hidden="true"></span>
 					<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control tutor-form-control-lg" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
 					<div class="search-popup-opener search_result"></div>
 				</div>
@@ -52,7 +52,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 									?>
 									<li class="tutor-nav-item">
 										<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
-											<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+											<span class="<?php echo esc_attr( $section['icon'] ); ?>" aria-hidden="true"></span>
 											<span class="tutor-ml-12 tutor-d-sm-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
 										</a>
 										<?php
@@ -74,7 +74,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 												?>
 												<li class="tutor-nav-item">
 													<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
-														<span class="<?php echo esc_attr( $menu_item['icon'] ); ?> tutor-mr-12 tutor-d-lg-none" area-hidden="true"></span>
+														<span class="<?php echo esc_attr( $menu_item['icon'] ); ?> tutor-mr-12 tutor-d-lg-none" aria-hidden="true"></span>
 														<span class="tutor-d-sm-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $menu_item['label'] ); ?></span>
 													</a>
 												</li>

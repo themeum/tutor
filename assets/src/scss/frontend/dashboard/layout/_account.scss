@@ -1,0 +1,52 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-account-page-wrapper {
+  --tutor-site-header-offset: 0px;
+  --tutor-site-header-overlay-offset: 0px;
+
+  width: 100%;
+
+  .tutor-account-header {
+    position: sticky;
+    top: 0;
+    z-index: $tutor-z-header;
+    background-color: $tutor-surface-base;
+    border-bottom: 1px solid $tutor-border-idle;
+    padding-block: $tutor-spacing-5;
+
+    body:has(#wpadminbar) & {
+      top: 32px;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      body:has(#wpadminbar) & {
+        top: 0;
+      }
+    }
+
+    &-title {
+      @include tutor-typography(h4, semibold, primary, heading);
+      margin: $tutor-spacing-none;
+
+      @include tutor-breakpoint-up(sm) {
+        margin-inline-end: auto;
+        margin-inline-start: $tutor-spacing-4;
+      }
+    }
+  }
+
+  &.tutor-has-site-shell {
+    padding-top: var(--tutor-site-header-overlay-offset);
+  }
+}
+
+.tutor-account-page-wrapper.tutor-has-site-shell .tutor-account-header,
+body:has(#wpadminbar) .tutor-account-page-wrapper.tutor-has-site-shell .tutor-account-header {
+  top: var(--tutor-site-header-offset);
+}
+
+.tutor-account-container {
+  @include tutor-frontend-layout();
+  padding-inline: $tutor-spacing-6;
+}

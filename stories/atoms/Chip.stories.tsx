@@ -1,6 +1,7 @@
+import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
 import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta = {
   title: 'Atoms/Chip',
@@ -51,7 +52,7 @@ const handleClick = () => {
   alert('Chip clicked!');
 };
 
-const customIcon = <SVGIcon name="star" width={20} height={20} />;
+const customIcon = <SVGIcon name="starFill" width={20} height={20} />;
 
 export const Default = {
   args: {

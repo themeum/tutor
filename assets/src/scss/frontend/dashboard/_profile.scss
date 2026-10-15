@@ -1,0 +1,258 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-user-profile {
+  .tutor-profile-card {
+    @include tutor-card-base;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+  }
+
+  .tutor-profile-card-header {
+    @include tutor-flex(row, center, center);
+    background-color: $tutor-surface-brand-tertiary;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: $tutor-radius-lg;
+    margin-bottom: $tutor-spacing-14;
+    position: relative;
+    height: 184px;
+
+    .tutor-avatar {
+      border: 4px solid $tutor-border-inverse;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateY(50%) translateX(-50%);
+    }
+
+    .tutor-edit-profile-btn {
+      @include tutor-button-base();
+      @include tutor-button-variant(outline);
+      @include tutor-button-size(x-small);
+      outline: none;
+      gap: $tutor-spacing-2;
+      position: absolute;
+      top: $tutor-spacing-5;
+      inset-inline-end: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        padding: 0;
+        height: 40px;
+        width: 40px;
+
+        svg {
+          height: 20px;
+          width: 20px;
+        }
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .tutor-profile-card-body {
+    @include tutor-grid(2, $tutor-spacing-21);
+    position: relative;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-grid(1);
+    }
+
+    .tutor-user-profile-title {
+      @include tutor-typography(h3, semibold, primary, heading);
+      margin-top: $tutor-spacing-none;
+      margin-bottom: $tutor-spacing-2;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography(h4, semibold, primary, heading);
+      }
+    }
+
+    .tutor-user-profile-designation {
+      @include tutor-typography(small, regular, subdued);
+    }
+
+    .tutor-user-profile-social {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-6;
+      margin-top: $tutor-spacing-6;
+
+      .tutor-social-link {
+        height: 16px;
+        width: 16px;
+        outline: none;
+        box-shadow: none;
+        color: $tutor-text-primary;
+        @include tutor-transition(color);
+
+        &:hover {
+          color: $tutor-text-brand;
+        }
+      }
+    }
+
+    .tutor-user-profile-bio {
+      @include tutor-typography(p2, regular, secondary);
+      margin-bottom: $tutor-spacing-9;
+
+      p {
+        margin: 0;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
+    .tutor-bio-wrapper {
+      position: relative;
+      margin-bottom: $tutor-spacing-9;
+
+      .tutor-user-profile-bio {
+        margin-bottom: 0;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
+    .tutor-user-profile-details {
+      @include tutor-flex(column, flex-start);
+      gap: $tutor-spacing-2;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(row, flex-start, flex-start, wrap);
+      }
+
+      li {
+        white-space: nowrap;
+        margin: 0;
+
+        span {
+          @include tutor-typography(tiny, medium, primary);
+        }
+      }
+    }
+
+    &-left {
+      @include tutor-breakpoint-up(sm) {
+        min-height: 140px;
+      }
+    }
+
+    &-right {
+      @include tutor-flex(column, flex-start, space-between);
+    }
+
+    .tutor-profile-member-since {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-2;
+      @include tutor-typography(tiny, regular, subdued);
+
+      @include tutor-breakpoint-up(sm) {
+        position: absolute;
+        inset-inline-start: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  %bio-toggle-base {
+    @include tutor-typography(small);
+    appearance: none;
+    background: $tutor-surface-l1;
+    border: none;
+    padding: 0;
+    color: $tutor-text-brand;
+    cursor: pointer;
+    text-box-trim: trim-both;
+    text-edge: cap alphabetic;
+
+    &:focus-visible {
+      outline: 2px solid $tutor-text-brand;
+      outline-offset: 2px;
+      border-radius: $tutor-radius-xs;
+    }
+  }
+
+  .tutor-bio-toggle {
+    @extend %bio-toggle-base;
+  }
+
+  .tutor-bio-toggle-less {
+    @extend %bio-toggle-base;
+    display: inline;
+    margin-top: $tutor-spacing-2;
+  }
+
+  .tutor-user-profile-statistics {
+    margin-top: $tutor-spacing-8;
+
+    .tutor-statistic-title {
+      @include tutor-typography(h5, semibold, primary, heading);
+      margin-top: $tutor-spacing-none;
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-statistic-cards {
+      @include tutor-grid(2, $tutor-spacing-5);
+    }
+
+    .tutor-statistic-card {
+      @include tutor-card-base;
+      @include tutor-flex(row, flex-start);
+      gap: $tutor-spacing-5;
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-6;
+
+      @include tutor-breakpoint-down(sm) {
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-5;
+      }
+
+      &-icon {
+        padding-top: $tutor-spacing-2;
+
+        @include tutor-breakpoint-down(sm) {
+          padding-top: $tutor-spacing-1;
+
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+
+      &-content {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-1;
+      }
+
+      &-value {
+        @include tutor-typography(h3, semibold, primary, heading);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-typography(h5, semibold, primary, heading);
+        }
+      }
+
+      &-label {
+        @include tutor-typography(medium, regular, secondary);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-typography(small, regular, secondary);
+        }
+      }
+    }
+  }
+}

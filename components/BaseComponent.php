@@ -1,0 +1,208 @@
+<?php
+/**
+ * Tutor Component: BaseComponent
+ *
+ * Provides a base abstract class for all Tutor UI components.
+ * Handles attribute management and basic HTML escaping.
+ *
+ * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+namespace Tutor\Components;
+
+use TUTOR\Input;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Abstract Base Component class.
+ *
+ * Defines shared behavior for all UI components.
+ *
+ * @since 4.0.0
+ */
+abstract class BaseComponent {
+
+	/**
+	 * Keep the component as string
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $component_string = '';
+
+	/**
+	 * Create a new component instance.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return static
+	 */
+	public static function make() {
+		return new static();
+	}
+
+	/**
+	 * HTML attributes for the component.
+	 *
+	 * Example:
+	 * [
+	 *   'id'    => 'tutor-button',
+	 *   'class' => 'tutor-btn tutor-btn-primary'
+	 * ]
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $attributes = array();
+
+	/**
+	 * Set or merge multiple HTML attributes.
+	 *
+	 * This method allows components to attach
+	 * dynamic attributes such as data-* or aria-*.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attrs Key–value pairs of HTML attributes.
+	 *
+	 * @return static
+	 */
+	public function attrs( array $attrs ) {
+		$this->attributes = array_merge( $this->attributes, $attrs );
+		return $this;
+	}
+
+	/**
+	 * Set a custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return static
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = $value;
+		return $this;
+	}
+
+	/**
+	 * Compile the stored attributes into an HTML string.
+	 *
+	 * Converts attributes array into a properly escaped
+	 * string suitable for rendering in HTML tags.
+	 *
+	 * Example output:
+	 * `id="tutor-btn" class="tutor-btn tutor-btn-primary"`
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Escaped and concatenated attributes.
+	 */
+	protected function get_attributes_string(): string {
+		$compiled = array();
+
+		foreach ( $this->attributes as $key => $value ) {
+			$compiled[] = sprintf( '%s="%s"', esc_attr( $key ), esc_attr( $value ) );
+		}
+
+		return implode( ' ', $compiled );
+	}
+
+	/**
+	 * Render attributes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	protected function render_attributes(): void {
+		echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string method.
+	}
+
+	/**
+	 * Escape a value for safe HTML output.
+	 *
+	 * Wrapper for WordPress `esc_html()` function.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param mixed  $value Value to escape.
+	 * @param string $esc_fn Callable esc func.
+	 *
+	 * @return string Escaped string.
+	 */
+	protected function esc( $value, $esc_fn = 'esc_html' ): string {
+		return call_user_func( $esc_fn, $value );
+	}
+
+	/**
+	 * Retrieve the list of allowed HTML tags and attributes.
+	 *
+	 * Provides a base set of safe HTML tags and merges additional
+	 * SVG tags and any custom tags passed
+	 * through the $extra_tags parameter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array<string, array<string, bool>> $extra_tags Optional.
+	 *        Additional HTML tags and their allowed attributes
+	 *        in KSES-compatible format.
+	 *
+	 * @return array<string, array<string, bool>> Allowed HTML tags
+	 *         and attributes formatted for wp_kses().
+	 */
+	protected function get_allowed_html_tags( $extra_tags = array() ) {
+
+		$allowed_html_tags = array(
+			'div'    => array(
+				'class' => true,
+			),
+			'span'   => array(
+				'class' => true,
+			),
+			'p'      => array(
+				'class' => true,
+			),
+			'b'      => array(),
+			'strong' => array(),
+			'i'      => array(),
+		);
+
+		$allowed_html_tags = wp_parse_args( Input::allow_svg( array() ), $allowed_html_tags );
+		$allowed_html_tags = wp_parse_args( $extra_tags, $allowed_html_tags );
+
+		return $allowed_html_tags;
+	}
+
+	/**
+	 * Get the component output as an HTML string.
+	 *
+	 * Note: Child classes must implement this method and are responsible
+	 * for preparing and properly sanitizing the component’s HTML output.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string The component HTML output.
+	 */
+	abstract public function get(): string;
+
+	/**
+	 * Render the component
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function render(): void {
+		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
+		echo $this->get();
+	}
+}

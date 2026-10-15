@@ -1,8 +1,10 @@
-import { css } from '@emotion/react';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 import { useState } from 'react';
+import { css } from '@emotion/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
 type TabValue = 'active' | 'profile' | 'settings' | 'disabled';
 
