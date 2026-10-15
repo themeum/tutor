@@ -9,8 +9,13 @@
  * @since 2.0.0
  */
 
-// Extract vars media_heading,media_id,input_name,media_url.
-extract( $data );
+defined( 'ABSPATH' ) || exit;
+
+$media_heading = isset( $data['media_heading'] ) ? $data['media_heading'] : '';
+$media_id      = isset( $data['media_id'] ) ? $data['media_id'] : '';
+$input_name    = isset( $data['input_name'] ) ? $data['input_name'] : '';
+$media_url     = isset( $data['media_url'] ) ? $data['media_url'] : '';
+$button_text   = isset( $data['button_text'] ) ? $data['button_text'] : '';
 
 if ( empty( $media_url ) ) {
 	$media_url = wp_get_attachment_url( $media_id );
@@ -21,7 +26,7 @@ $placeholder   = ! empty( $data['placeholder'] ) ? $data['placeholder'] : '';
 $background    = ! empty( $data['background'] ) ? $data['background'] : '#eff1f7';
 $border_color  = ! empty( $data['border'] ) ? $data['border'] : '#eff1f7';
 ?>
-<div class="tutor-thumbnail-uploader tutor-mt-12" data-media-heading="<?php echo ! empty( $media_heading ) ? esc_attr( $media_heading ) : esc_attr__( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo esc_html( ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ) ); ?>">
+<div class="tutor-thumbnail-uploader tutor-mt-12" data-media-heading="<?php echo ! empty( $media_heading ) ? esc_attr( $media_heading ) : esc_attr__( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo esc_attr( ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ) ); ?>">
 	<div class="thumbnail-wrapper tutor-d-flex tutor-align-center <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-16'; ?>">
 		<div class="thumbnail-preview image-previewer tutor-mr-28" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
 			<span class="preview-loading"></span>

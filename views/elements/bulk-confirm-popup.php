@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-modal tutor-bulk-modal-disabled" id="tutor-bulk-confirm-popup" role="dialog" aria-modal="true" aria-labelledby="tutor-bulk-confirm-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>

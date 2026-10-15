@@ -11,6 +11,8 @@
  * @since 3.5.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 
 if ( isset( $data ) ) : ?>
@@ -59,7 +61,7 @@ if ( isset( $data ) ) : ?>
 		$filters_count = count(
 			array_filter(
 				$data['filters'],
-				function( $filter ) {
+				function ( $filter ) {
 					$value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
 					return null !== $value && '' !== $value;
 				}
@@ -152,7 +154,7 @@ if ( isset( $data ) ) : ?>
 				<form action="" method="get" id="tutor-admin-search-filter-form">
 					<div class="tutor-form-wrap">
 						<span class="tutor-form-icon"><span class="tutor-icon-search" aria-hidden="true"></span></span>
-						<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search_query ) ); ?>" />
+						<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_attr_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_attr( wp_unslash( $search_query ) ); ?>" />
 					</div>
 				</form>
 			</div>

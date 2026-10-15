@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 
 /**
@@ -227,8 +229,10 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	<?php
 }
 
-extract( $data );
-$courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$announcements = isset( $data['announcements'] ) ? $data['announcements'] : array();
+$the_query     = isset( $data['the_query'] ) ? $data['the_query'] : null;
+$current_page  = isset( $data['paged'] ) ? $data['paged'] : 1;
+$courses       = current_user_can( 'manage_options' ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 ?>
 <?php if ( is_array( $announcements ) && count( $announcements ) ) : ?>
 <div class="tutor-table-responsive tutor-dashboard-list-table">
@@ -350,7 +354,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 			$pagination_data = array(
 				'total_items' => $the_query->found_posts,
 				'per_page'    => $limit,
-				'paged'       => $paged,
+				'paged'       => $current_page,
 			);
 
 			$pagination_template = tutor()->path . 'views/elements/pagination.php';
