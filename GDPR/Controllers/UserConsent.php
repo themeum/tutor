@@ -328,7 +328,7 @@ class UserConsent extends BaseController {
 	 * trigger characters (=, +, -, @, tab, carriage-return) so that
 	 * spreadsheet applications do not execute them as formulas.
 	 *
-	 * @since 4.2.1
+	 * @since 4.1.3
 	 *
 	 * @param mixed $value Value to sanitize.
 	 * @return mixed Sanitized value.
@@ -429,7 +429,7 @@ class UserConsent extends BaseController {
 	/**
 	 * Render consent logs content (timeline + user card).
 	 *
-	 * @since 4.2.1
+	 * @since 4.1.3
 	 *
 	 * @param \WP_User $user User object.
 	 * @param array    $consents User consent records.

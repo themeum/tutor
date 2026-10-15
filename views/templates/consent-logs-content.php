@@ -3,7 +3,7 @@
  * Consent logs modal content template (timeline and user card).
  *
  * @package Tutor\Views
- * @since 4.2.1
+ * @since 4.1.3
  *
  * @var \WP_User $user
  * @var array    $consents
