@@ -607,6 +607,20 @@ class CheckoutController {
 	}
 
 	/**
+	 * Keep only the allowed keys from an array.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $data          The source array.
+	 * @param array $allowed_keys  The keys to retain.
+	 *
+	 * @return array
+	 */
+	protected function filter_allowed_keys( $data, $allowed_keys ) {
+		return array_intersect_key( $data, array_flip( $allowed_keys ) );
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -636,9 +650,7 @@ class CheckoutController {
 			}
 		}
 
-		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
-
-		$allowed_fields = array(
+		$allowed_order_fields = array(
 			'object_ids',
 			'coupon_code',
 			'payment_method',
@@ -646,8 +658,9 @@ class CheckoutController {
 			'order_type',
 		);
 
-		$request  = array_intersect_key( $request, array_flip( $allowed_fields ) );
-		$validate = $this->validate_pay_now_request( $request );
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
+		$request                 = $this->filter_allowed_keys( $request, $allowed_order_fields );
+		$validate                = $this->validate_pay_now_request( $request );
 
 		if ( ! $validate->success ) {
 			foreach ( $validate->errors as $error ) {
