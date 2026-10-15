@@ -21,7 +21,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 				</span>
 				<?php esc_html_e( 'of', 'tutor' ); ?>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-					<?php echo esc_html( ceil( 0 < $data['per_page'] ) ? ceil( $data['total_items'] / $data['per_page'] ) : '' ); ?>
+					<?php echo esc_html( (int) ( $data['per_page'] ?? 0 ) > 0 ? ceil( (int) $data['total_items'] / (int) $data['per_page'] ) : '' ); ?>
 				</span>
 			</div>
 		</div>
