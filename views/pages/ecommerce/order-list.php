@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\OrderModel;
 use TUTOR\User;
 
