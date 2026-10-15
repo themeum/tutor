@@ -572,6 +572,41 @@ class CheckoutController {
 	}
 
 	/**
+	 * Validate pay now request
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data The data array to validate.
+	 *
+	 * @return object The validation result. It returns validation object.
+	 */
+	protected function validate_pay_now_request( array $data ) {
+
+		$order_types = array(
+			OrderModel::TYPE_SINGLE_ORDER,
+			OrderModel::TYPE_SUBSCRIPTION,
+			OrderModel::TYPE_RENEWAL,
+		);
+
+		$order_types = implode( ',', $order_types );
+
+		$validation_rules = array(
+			'object_ids'     => 'required',
+			'order_type'     => "required|match_string:{$order_types}",
+			'payment_method' => 'required',
+		);
+
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
+			}
+		}
+
+		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -603,7 +638,7 @@ class CheckoutController {
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
-		$order_payment_fields = array(
+		$allowed_fields = array(
 			'object_ids',
 			'coupon_code',
 			'payment_method',
@@ -611,26 +646,12 @@ class CheckoutController {
 			'order_type',
 		);
 
-		$request = array_intersect_key( $request, array_flip( $order_payment_fields ) );
-		// Set required.
-		foreach ( $order_payment_fields as $field ) {
-			if ( ! isset( $request[ $field ] ) ) {
-				$request[ $field ] = '';
-			}
-		}
-
-		// Validate data.
-		$validate = $this->validate_pay_now_req( $request );
+		$request  = array_intersect_key( $request, array_flip( $allowed_fields ) );
+		$validate = $this->validate_pay_now_request( $request );
 
 		if ( ! $validate->success ) {
 			foreach ( $validate->errors as $error ) {
-				if ( is_array( $error ) ) {
-					foreach ( $error as $err ) {
-						array_push( $errors, $err );
-					}
-				} else {
-					array_push( $errors, $error );
-				}
+				$errors = array_merge( $errors, (array) $error );
 			}
 		}
 
@@ -1203,40 +1224,6 @@ class CheckoutController {
 		}
 	}
 
-	/**
-	 * Validate pay now request
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $data The data array to validate.
-	 *
-	 * @return object The validation result. It returns validation object.
-	 */
-	protected function validate_pay_now_req( array $data ) {
-
-		$order_types = array(
-			OrderModel::TYPE_SINGLE_ORDER,
-			OrderModel::TYPE_SUBSCRIPTION,
-			OrderModel::TYPE_RENEWAL,
-		);
-
-		$order_types = implode( ',', $order_types );
-
-		$validation_rules = array(
-			'object_ids'     => 'required',
-			'order_type'     => "required|match_string:{$order_types}",
-			'payment_method' => 'required',
-		);
-
-		// Skip validation rules for not available fields in data.
-		foreach ( $validation_rules as $key => $value ) {
-			if ( ! array_key_exists( $key, $data ) ) {
-				unset( $validation_rules[ $key ] );
-			}
-		}
-
-		return ValidationHelper::validate( $validation_rules, $data );
-	}
 
 	/**
 	 * Retrieve course data for a given set of order items.
