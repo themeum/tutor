@@ -640,7 +640,7 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = $this->resolve_checkout_user_id();
 
-		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
+		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 
 		if ( $order_id ) {
@@ -659,8 +659,8 @@ class CheckoutController {
 		);
 
 		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
-		$request                 = $this->filter_allowed_keys( $request, $allowed_order_fields );
-		$validate                = $this->validate_pay_now_request( $request );
+		$order_fields            = $this->filter_allowed_keys( $request, $allowed_order_fields );
+		$validate                = $this->validate_pay_now_request( $order_fields );
 
 		if ( ! $validate->success ) {
 			foreach ( $validate->errors as $error ) {
@@ -668,8 +668,7 @@ class CheckoutController {
 			}
 		}
 
-		//phpcs:ignore
-		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
 		}
@@ -680,11 +679,11 @@ class CheckoutController {
 			return;
 		}
 
-		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
-		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
-		$payment_method = $request['payment_method'];
-		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $request['payment_type'];
-		$order_type     = $request['order_type'];
+		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
+		$coupon_code    = isset( $order_fields['coupon_code'] ) ? $order_fields['coupon_code'] : '';
+		$payment_method = $order_fields['payment_method'];
+		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
+		$order_type     = $order_fields['order_type'];
 
 		if ( empty( $object_ids ) ) {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
