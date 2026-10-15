@@ -127,7 +127,14 @@ const initConsentLogs = () => {
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `consent-logs-${currentUserName.replace(/[^a-zA-Z0-9_\- ]/g, '_')}.csv`;
+		// Preserve Unicode letters (\p{L}), marks/vowel signs (\p{M}), and numbers (\p{N})
+		// across all languages while stripping dots, slashes, and illegal filesystem characters.
+		const safeName = (currentUserName || currentUserLogin || '')
+			.replace(/[^\p{L}\p{M}\p{N}_\- ]/gu, '')
+			.trim()
+			.replace(/\s+/g, '-') || 'user';
+
+		a.download = `consent-logs-${safeName}.csv`;
 		a.click();
 		URL.revokeObjectURL(url);
 	};
