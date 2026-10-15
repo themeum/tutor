@@ -1,3 +1,6 @@
+import ajaxHandler from '../../helper/ajax-handler';
+import tutorFormData from '../../helper/tutor-formdata';
+
 /**
  * Consent logs modal functionality for students and instructors.
  *
@@ -18,10 +21,6 @@ const initConsentLogs = () => {
 		return;
 	}
 
-	const AJAX_URL = window.ajaxurl || window._tutorobject?.ajaxurl || '';
-	const AJAX_ACTION = 'tutor_user_consents';
-	const NONCE_KEY = window._tutorobject?.nonce_key || '_tutor_nonce';
-	const NONCE_VALUE = window._tutorobject?.[NONCE_KEY] || '';
 	const { __ } = wp.i18n;
 
 	// Current open state for CSV export.
@@ -41,7 +40,7 @@ const initConsentLogs = () => {
 		if (downloadBtn) downloadBtn.style.display = 'none';
 	};
 
-	const fetchAndRender = (userId) => {
+	const fetchAndRender = async (userId) => {
 		if (!userId) {
 			showEmpty();
 			return;
@@ -50,41 +49,50 @@ const initConsentLogs = () => {
 		currentLogs = [];
 		showLoading();
 
-		const body = new FormData();
-		body.append('action', AJAX_ACTION);
-		body.append('user_action', 'all_consents_given_by_user');
-		body.append('user_id', userId);
-		body.append(NONCE_KEY, NONCE_VALUE);
+		try {
+			const formData = tutorFormData([
+				{
+					action: 'tutor_user_consents',
+					user_action: 'all_consents_given_by_user',
+					user_id: userId,
+				},
+			]);
 
-		fetch(AJAX_URL, { method: 'POST', body })
-			.then((r) => r.json())
-			.then((res) => {
-				const data = res?.data;
-				if (!data || (res.status_code && res.status_code !== 200)) {
-					showEmpty();
-					return;
+			const post = await ajaxHandler(formData);
+			if (!post || !post.ok) {
+				showEmpty();
+				return;
+			}
+
+			const res = await post.json();
+			const data = res?.data;
+
+			if (!data || (res.status_code && res.status_code !== 200)) {
+				showEmpty();
+				return;
+			}
+
+			// Render server-generated HTML directly.
+			modalBody.innerHTML = data.html || '';
+
+			if (data.has_logs && Array.isArray(data.logs) && data.logs.length) {
+				currentLogs = data.logs;
+				currentUserName = data.user?.name || '';
+				currentUserLogin = data.user?.login || '';
+				currentUserEmail = data.user?.email || '';
+				currentUserJoined = data.user?.joined || '';
+
+				if (downloadBtn) {
+					downloadBtn.style.display = '';
 				}
-
-				// Render server-generated HTML directly.
-				modalBody.innerHTML = data.html || '';
-
-				if (data.has_logs && Array.isArray(data.logs) && data.logs.length) {
-					currentLogs = data.logs;
-					currentUserName = data.user?.name || '';
-					currentUserLogin = data.user?.login || '';
-					currentUserEmail = data.user?.email || '';
-					currentUserJoined = data.user?.joined || '';
-
-					if (downloadBtn) {
-						downloadBtn.style.display = '';
-					}
-				} else {
-					if (downloadBtn) {
-						downloadBtn.style.display = 'none';
-					}
+			} else {
+				if (downloadBtn) {
+					downloadBtn.style.display = 'none';
 				}
-			})
-			.catch(() => showEmpty());
+			}
+		} catch (e) {
+			showEmpty();
+		}
 	};
 
 	const downloadCSV = () => {
