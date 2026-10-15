@@ -42,7 +42,9 @@ trait PaymentUrlsTrait {
 			'order_id'              => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_success_url_args', $args );
-		return add_query_arg( $args, home_url() );
+
+		$url = defined( 'TUTOR_ECOMMERCE_SUCCESS_URL' ) ? TUTOR_ECOMMERCE_SUCCESS_URL : home_url();
+		return add_query_arg( $args, $url );
 	}
 
 	/**

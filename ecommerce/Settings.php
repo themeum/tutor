@@ -11,7 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use Tutor\Helpers\HttpHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\Traits\JsonResponse;
 
@@ -461,7 +461,7 @@ class Settings {
 	public static function get_paypal_config_keys() {
 		return array(
 			'environment'    => 'select',
-			'merchant_email' => 'text',
+			'merchant_email' => 'email',
 			'client_id'      => 'secret_key',
 			'secret_id'      => 'secret_key',
 			'webhook_id'     => 'secret_key',

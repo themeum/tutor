@@ -523,19 +523,36 @@ const getPreviewFrameStyles = () => `
   }
 
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper,
-  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner,
-  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,
-  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-inner {
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-inner {
     width: 100%;
     height: auto;
     max-width: 100%;
   }
 
   body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-wrapper > img,
-  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-bg,
+  body[data-preview-device='mobile'] .tutor-draw-image-question .tutor-draw-image-reference-bg {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  /*
+   * Pin coords are % of the wrapper. Keep the wrapper sized to the image
+   * (same as student learning-area) so desktop/mobile preview does not shift the pin.
+   */
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-wrapper,
+  .tutor-quiz-question[data-question='pin_image'] .tutor-pin-image-reference-inner,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper,
+  body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-inner {
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
   body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-wrapper > img,
   body[data-preview-device='mobile'] .tutor-pin-image-question .tutor-pin-image-reference-bg {
-    width: 100%;
+    width: auto;
     height: auto;
     max-width: 100%;
   }

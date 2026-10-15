@@ -3180,13 +3180,12 @@ class Utils {
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter   = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
+		$course_filter   = '' !== $course_filter && absint( $course_filter ) > 0 ? ' AND umeta.meta_value = ' . absint( $course_filter ) . ' ' : '';
 
-		if ( '' != $date_filter ) {
-			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
+		if ( '' !== $date_filter ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_filter    = '' !== $formatted_date ? $wpdb->prepare( ' AND  DATE(user.user_registered) = CAST(%s AS DATE) ', $formatted_date ) : '';
 		}
-
-		$date_filter = $date_filter != '' ? " AND  DATE(user.user_registered) = CAST('$date_filter' AS DATE) " : '';
 
 		$category_join  = '';
 		$category_where = '';
@@ -3196,7 +3195,7 @@ class Utils {
 
 			$status = array_map(
 				function ( $str ) {
-					return "'{$str}'";
+					return "'" . esc_sql( $str ) . "'";
 				},
 				$status
 			);
@@ -3252,7 +3251,8 @@ class Utils {
 		} elseif ( 'popular' === $order_filter ) {
 			$order_query = ' ORDER BY rating DESC ';
 		} else {
-			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
+			$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
+			$order_query     = " ORDER BY user_meta.meta_value {$order_direction} ";
 		}
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
@@ -3349,6 +3349,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
+						   AND course.post_type = %s
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3360,6 +3361,7 @@ class Utils {
 						   AND tutor_photo.meta_key = %s
 			",
 				$course_id,
+				tutor()->course_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -4021,10 +4023,13 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
-		$status_in       = '"' . implode( '","', $status_in ) . '"';
-		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
-		$include_user_id = implode( ',', $include_user_id );
+		$start           = absint( $start );
+		$limit           = absint( $limit );
+		$limit_offset    = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
+		$status_in       = array_values( array_filter( array_map( 'sanitize_key', (array) $status_in ) ) );
+		$status_in_str   = count( $status_in ) ? QueryHelper::prepare_in_clause( $status_in ) : "''";
+		$include_user_id = array_values( array_filter( array_map( 'absint', (array) $include_user_id ) ) );
+		$user_id_in_str  = count( $include_user_id ) ? QueryHelper::prepare_in_clause( $include_user_id ) : '0';
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 		'_reviews.comment_ID,
@@ -4048,7 +4053,7 @@ class Utils {
 						ON _reviews.user_id = _reviewer.ID
 			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
-					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND (_reviews.comment_approved IN ({$status_in_str}) OR _reviews.user_id IN ({$user_id_in_str}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$object_id
@@ -4172,16 +4177,20 @@ class Utils {
 		$course_filter = '';
 		if ( $course_id ) {
 			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = implode( ',', $course_ids );
-			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
+			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			if ( ! empty( $course_ids ) ) {
+				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
+				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
+			}
 		}
 
 		$user_filter = '';
 		if ( null !== $user_id ) {
-			$user_id     = $this->get_user_id( $user_id );
+			$user_id     = absint( $this->get_user_id( $user_id ) );
 			$user_filter = ' AND _comment.user_id=' . $user_id;
 		}
 
+		$status_in     = array_map( 'esc_sql', (array) $status_in );
 		$status_in     = '"' . implode( '","', $status_in ) . '"';
 		$status_filter = ' AND _comment.comment_approved IN (' . $status_in . ')';
 
@@ -4299,12 +4308,13 @@ class Utils {
 			$extra_where_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'comment_approved' => $args['comment_approved'] ) );
 		}
 
-		if ( '' !== $course_id ) {
-			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
+		if ( '' !== $course_id && absint( $course_id ) > 0 ) {
+			$course_id_int = absint( $course_id );
+			$course_query  = " AND {$wpdb->comments}.comment_post_ID = {$course_id_int} ";
 		}
 		if ( '' !== $date_filter ) {
-			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
-			$date_query  = " AND DATE({$wpdb->comments}.comment_date) = CAST( '$date_filter' AS DATE ) ";
+			$formatted_date = \tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_query     = '' !== $formatted_date ? $wpdb->prepare( " AND DATE({$wpdb->comments}.comment_date) = CAST(%s AS DATE) ", $formatted_date ) : '';
 		}
 
 		$results = array(
@@ -4313,6 +4323,7 @@ class Utils {
 		);
 
 		$cours_ids = (array) $this->get_assigned_courses_ids_by_instructors( $instructor_id );
+		$cours_ids = array_filter( array_map( 'absint', $cours_ids ) );
 
 		if ( $this->count( $cours_ids ) ) {
 			$implode_ids = implode( ',', $cours_ids );
@@ -4338,7 +4349,8 @@ class Utils {
 				)
 			);
 
-			$order_by = $args['order_by'] ?? 'comment_ID';
+			$allowed_order_by = array( 'comment_ID', 'comment_date', 'comment_post_ID', 'user_id' );
+			$order_by         = isset( $args['order_by'] ) && in_array( $args['order_by'], $allowed_order_by, true ) ? $args['order_by'] : 'comment_ID';
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -4628,6 +4640,8 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		$params = array( $search_term );
+
 		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
 			return $count_only ? 0 : array();
 		}
@@ -4637,7 +4651,7 @@ class Utils {
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . (int) $asker_id;
+			$question_clause .= ' AND _question.user_id=' . absint( $asker_id );
 		}
 
 		if ( ! $user_id ) {
@@ -4646,31 +4660,32 @@ class Utils {
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
-			$args['course_id']   = intval( $args['course_id'] );
+			$args['course_id']   = absint( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
-			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
-			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
+			$my_course_ids       = array_filter( array_map( 'absint', (array) $this->get_course_id_by( 'instructor', $user_id ) ) );
+			$in_ids              = count( $my_course_ids ) ? QueryHelper::prepare_in_clause( $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query.
 		if ( isset( $args['course-id'] ) && is_numeric( $args['course-id'] ) ) {
-			$filter_clause .= ' AND _course.ID=' . $args['course-id'];
+			$filter_clause .= ' AND _course.ID=' . absint( $args['course-id'] );
 		}
 
-		if ( isset( $args['date'] ) ) {
-			$date           = esc_sql( $args['date'] );
-			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
+		if ( ! empty( $args['date'] ) ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $args['date'] );
+			if ( '' !== $formatted_date ) {
+				$filter_clause .= ' AND DATE(_question.comment_date) = CAST(%s AS DATE)';
+				$params[]       = $formatted_date;
+			}
 		}
 
 		if ( isset( $args['order'] ) ) {
-			$order = strtolower( $args['order'] );
-			if ( 'asc' === $order || 'desc' === $order ) {
-				$order_condition = ' ORDER BY _question.comment_ID ' . $order . ' ';
-			}
+			$order           = QueryHelper::get_valid_sort_order( $args['order'] );
+			$order_condition = " ORDER BY _question.comment_ID {$order} ";
 		}
 
 		// Meta query.
@@ -4728,7 +4743,9 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
+		$start        = absint( $start );
+		$limit        = absint( $limit );
+		$limit_offset = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}
@@ -4751,7 +4768,7 @@ class Utils {
 					{$filter_clause}
 			{$order_condition}
 			{$limit_offset}",
-			$search_term
+			$params
 		);
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
@@ -4768,7 +4785,7 @@ class Utils {
 
 		// Assign meta data.
 		if ( count( $question_ids ) ) {
-			$q_ids      = implode( ',', $question_ids );
+			$q_ids      = QueryHelper::prepare_in_clause( array_map( 'absint', $question_ids ) );
 			$meta_array = $wpdb->get_results(
 				"SELECT comment_id, meta_key, meta_value
 				FROM {$wpdb->commentmeta}
@@ -5399,7 +5416,7 @@ class Utils {
 		$total_questions = (int) $attempt->total_questions;
 		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = 'RAND()';
+		$order_by = ! empty( $attempt->attempt_id ) ? 'RAND(' . (int) $attempt->attempt_id . ')' : 'RAND()';
 		$order    = '';
 
 		if ( 'asc' === $questions_order ) {
@@ -7339,6 +7356,8 @@ class Utils {
 	 * Get students list based on course id
 	 *
 	 * @since 1.6.6
+	 * @since 4.1.0 Query refactored to use Tutor\Helpers\QueryHelper and
+	 *              `tutor_students_data_by_course_id_query_args` filter added to extend the query clause.
 	 *
 	 * @param integer $course_id course id.
 	 * @param string  $field_name field name.
@@ -7348,24 +7367,43 @@ class Utils {
 	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
-		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email
-			FROM   	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->users} student
-						    ON enrol.post_author = student.id
-			WHERE  	enrol.post_type = %s
-					AND enrol.post_parent = %d
-					AND enrol.post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				'completed'
-			)
+		$query_args = array(
+			'select' => "student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email",
+			'alias'  => 'enrol',
+			'where'  => array(
+				'enrol.post_type'   => 'tutor_enrolled',
+				'enrol.post_parent' => $course_id,
+				'enrol.post_status' => 'completed',
+			),
+			'joins'  => array(
+				array(
+					'type'  => 'INNER',
+					'table' => 'users AS student',
+					'on'    => 'enrol.post_author = student.id',
+				),
+			),
 		);
+
+		/**
+		 * Filter the QueryHelper args used to fetch students of a course.
+		 *
+		 * Addons can modify the query clause (select, joins, where, groupby)
+		 * to extend the result without running an extra query.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $query_args QueryHelper::query() arguments.
+		 * @param int   $course_id course id.
+		 */
+		$query_args = apply_filters( 'tutor_students_data_by_course_id_query_args', $query_args, $course_id );
+
+		$student_data = QueryHelper::query(
+			'posts',
+			$query_args
+		);
+
 		if ( $all ) {
 			return $student_data;
 		}
@@ -7512,7 +7550,9 @@ class Utils {
 			global $wpdb;
 			switch ( $content ) {
 				case 'course':
-					$course_id = $object_id;
+					if ( get_post_type( $object_id ) === tutor()->course_post_type ) {
+						$course_id = $object_id;
+					}
 					break;
 
 				case 'zoom_meeting':
@@ -9669,6 +9709,8 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
+	 * @since 4.2.0 Removed the total_enrollment count since no caller is using it
+	 *
 	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
@@ -9698,7 +9740,6 @@ class Utils {
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
 				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);
 
@@ -9712,7 +9753,6 @@ class Utils {
 					'tutor_quiz'        => array(),
 					'lesson'            => array(),
 					'topics'            => 0,
-					'tutor_enrolled'    => 0,
 				);
 			}
 
@@ -9739,7 +9779,6 @@ class Utils {
 			}
 		}
 
-		$course_meta = $this->assign_child_count( $course_meta, 'tutor_enrolled' );
 		$course_meta = $this->assign_child_count( $course_meta, 'topics' );
 
 		// Return single count if the course id was single.
@@ -10227,14 +10266,35 @@ class Utils {
 	 */
 	public function upload_base64_image( $base64_image_str, $filename = null, $add_to_wp_media = true ) {
 		try {
-			$arr = explode( ',', $base64_image_str, 2 );
-			if ( ! isset( $arr[1] ) ) {
+			$image_data = null;
+
+			// Handle remote URLs.
+			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				$temp_file = download_url( $base64_image_str );
+				if ( is_wp_error( $temp_file ) ) {
+					throw new \Exception( $temp_file->get_error_message() );
+				}
+				$image_data = file_get_contents( $temp_file );
+				@unlink( $temp_file );
+			} else {
+				$arr = explode( ',', $base64_image_str, 2 );
+				if ( isset( $arr[1] ) ) {
+					$image_data = base64_decode( $arr[1] );
+				} elseif ( ! empty( $base64_image_str ) && false !== base64_decode( $base64_image_str, true ) ) {
+					// Raw base64 string without data: prefix.
+					$image_data = base64_decode( $base64_image_str );
+				} else {
+					throw new \Exception( 'Invalid base64 string' );
+				}
+			}
+
+			if ( empty( $image_data ) ) {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
-			$image_data = base64_decode( $arr[1] );
-			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
 				throw new \Exception( $uploaded['error'] );

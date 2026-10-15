@@ -827,6 +827,7 @@ class QuizBuilder {
 
 			// Save quiz settings.
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
+			$quiz_option = apply_filters( 'tutor_quiz_settings', $quiz_option, $quiz_id );
 			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
 			do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
@@ -945,7 +946,7 @@ class QuizBuilder {
 
 		// Remove content bank answers.
 		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => ! $is_cb_question[ $question_id ], ARRAY_FILTER_USE_KEY );
-		$payload_question_answers = array_values( $payload_question_answers );
+		$payload_question_answers = array_filter( array_values( $payload_question_answers ) ); // Filter out empty array.
 		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
 
 		// Remove the hash id.

@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
 
@@ -31,8 +31,9 @@ if ( ! $attempt_data || ! $can_review ) {
 	return;
 }
 
-$form_id             = 'quiz-attempt-review-form';
-$form_default_values = array(
+$question_feedback_map = QuizModel::get_attempt_feedback_map( $attempt_info );
+$form_id               = 'quiz-attempt-review-form';
+$form_default_values   = array(
 	'feedback' => tutor_utils()->count( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '',
 );
 
@@ -47,6 +48,13 @@ if ( is_array( $questions ) ) {
 			$attempt_answers_map[ $question_id ] = $question;
 			$answer_status                       = QuizModel::get_attempt_answer_status( $question );
 			$form_default_values[ "review_statuses[{$question_id}]" ] = $answer_status;
+			if ( in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+				$is_unscored = 'pending' === $answer_status && ( empty( $question->achieved_mark ) || 0.0 === (float) $question->achieved_mark );
+				$form_default_values[ "manual_marks[{$question_id}]" ] = $is_unscored ? '' : (float) ( $question->achieved_mark ?? 0 );
+
+				$answer_id = (int) ( $question->attempt_answer_id ?? $question_id );
+				$form_default_values[ "question_feedback[{$answer_id}]" ] = (string) ( $question_feedback_map[ $answer_id ] ?? ( $question_feedback_map[ $question_id ] ?? '' ) );
+			}
 		}
 	}
 }
@@ -57,15 +65,15 @@ if ( is_array( $questions ) ) {
 	<?php if ( ! is_admin() ) : ?>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='(() => {
+		x-data="(() => {
 			const form = tutorForm({
-				id: "<?php echo esc_attr( $form_id ); ?>",
-				mode: "onSubmit",
-				defaultValues: <?php echo wp_json_encode( $form_default_values, JSON_HEX_APOS ); ?>
+				id: '<?php echo esc_js( $form_id ); ?>',
+				mode: 'onChange',
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $form_default_values ) ); ?>
 			});
-			const feedback =  tutorQuizAttemptFeedback({
-				attemptId: <?php echo esc_attr( $attempt_id ); ?>,
-				formId: "<?php echo esc_attr( $form_id ); ?>"
+			const feedback = tutorQuizAttemptFeedback({
+				attemptId: <?php echo (int) $attempt_id; ?>,
+				formId: '<?php echo esc_js( $form_id ); ?>'
 			});
 
 			return {
@@ -76,7 +84,7 @@ if ( is_array( $questions ) ) {
 					feedback.init?.call(this);
 				},
 			};
-		})()'
+		})()"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => handleSaveFeedback(data))($event)"
 	>

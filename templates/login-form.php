@@ -10,9 +10,6 @@
 
 use TUTOR\Ajax;
 use Tutor\Components\Alert;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\InputField;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
 
@@ -51,7 +48,7 @@ do_action( 'tutor_before_login_form' );
 		<span 
 			class="tutor-flex tutor-items-center tutor-justify-center"
 			style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-			x-show="value.length > 0"
+			x-show="value.length"
 			@click="show = !show"
 		>
 			<template x-if="!show">
@@ -116,7 +113,7 @@ if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) :
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
-		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
+		var errors = <?php echo tutor_json_encode( $login_errors ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 		if (loginModal && errors.length) {
 			loginModal.classList.add('tutor-is-active');
 		}

@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -53,7 +54,7 @@ class Instructor {
 	/**
 	 * Error message
 	 *
-	 * @var string
+	 * @var array<string, string>|string
 	 */
 	protected $error_msgs = '';
 
@@ -107,7 +108,7 @@ class Instructor {
 	 * For Register new user and mark him as instructor
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function register_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -165,8 +166,8 @@ class Instructor {
 			return;
 		}
 
-		$first_name = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name  = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
@@ -237,7 +238,7 @@ class Instructor {
 	 * for instructor applying when a user already logged in
 	 *
 	 * @since 1.0.0
-	 * @return void|null
+	 * @return void
 	 */
 	public function apply_instructor() {
 		// Here tutor_action checking required before nonce checking.
@@ -312,14 +313,14 @@ class Instructor {
 			wp_send_json_error( array( 'errors' => $validation_errors ) );
 		}
 
-		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name              = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name               = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email                   = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
+		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',
@@ -849,15 +850,12 @@ class Instructor {
 						WHERE {$earning_where_clause}
 						GROUP BY earnings.course_id";
 
-		$enrollment_sql = QueryHelper::prepare_raw_query(
-			"SELECT 
-				post_parent AS course_id, 
-				COUNT(DISTINCT post_author) AS total_student
-			FROM {$wpdb->posts}
-			WHERE {$enrollment_where_clause}
-			GROUP BY post_parent",
-			array()
-		);
+		$enrollment_sql = "SELECT 
+							post_parent AS course_id, 
+							COUNT(DISTINCT post_author) AS total_student
+						FROM {$wpdb->posts}
+						WHERE {$enrollment_where_clause}
+						GROUP BY post_parent";
 
 		//phpcs:disabled
 		$result = $wpdb->get_results(
@@ -1066,6 +1064,7 @@ class Instructor {
 				'percentage' => '',
 				'icon'       => Icon::MINUS,
 				'class'      => 'tutor-text-primary',
+				'icon_class' => '',
 			);
 		}
 

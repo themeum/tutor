@@ -345,6 +345,7 @@ class Assets {
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
+		wp_enqueue_style( 'tutor-cart-button' );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
 	}
 
@@ -922,6 +923,8 @@ class Assets {
 				wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), $version, true );
 			}
 		}
+
+		wp_enqueue_style( 'tutor-cart-button' );
 	}
 
 	/**
@@ -935,6 +938,11 @@ class Assets {
 	 * @return boolean
 	 */
 	public static function should_load_legacy_scripts(): bool {
+		// Always load in the admin panel.
+		if ( is_admin() ) {
+			return true;
+		}
+
 		$load = true;
 
 		$post_id = get_the_ID();
@@ -973,6 +981,21 @@ class Assets {
 				if ( $has_shortcode ) {
 					$load = false;
 					break;
+				}
+			}
+
+			// Ignore loading legacy scripts for these blocks on frontend.
+			if ( $load && function_exists( 'has_block' ) ) {
+				$blocks = array(
+					'tutor-gutenberg/student-registration',
+					'tutor-gutenberg/instructor-registration',
+				);
+
+				foreach ( $blocks as $block ) {
+					if ( has_block( $block, $post_id ) ) {
+						$load = false;
+						break;
+					}
 				}
 			}
 		}

@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\EnrollmentModel;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $course_id     = get_the_ID();
 $course_rating = tutor_utils()->get_course_rating( $course_id );
@@ -56,7 +56,7 @@ $is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 					</div>
 				<?php endif; ?>
 
-				<div class="tutor-course-details-tab tutor-mt-32">
+				<div id="tutor-course-details-tab-wrapper" class="tutor-course-details-tab tutor-mt-32">
 					<?php
 					$active_tab = Input::get( 'page_tab', Input::get( 'tab', 'info' ) );
 					if ( 'qna' === $active_tab ) {

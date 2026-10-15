@@ -19,7 +19,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use Tutor\Helpers\QueryHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 
@@ -178,6 +178,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 			->render();
 		?>
 	<?php endif; ?>
+	</div>
 
 	<div x-data="tutorQuizRetryAttempt()">
 		<?php

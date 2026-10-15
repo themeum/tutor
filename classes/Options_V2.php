@@ -13,7 +13,7 @@ namespace Tutor;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\User;
@@ -1722,10 +1722,10 @@ class Options_V2 {
 								'label'       => __( 'YouTube API Key', 'tutor' ),
 								'default'     => '',
 								'desc'        => __(
-									'To host live videos on your platform using YouTube, enter your YouTube API key.',
+									'Connect your YouTube API key to access additional features',
 									'tutor'
 								),
-								'placeholder' => __( 'Insert API key here', 'tutor' ),
+								'placeholder' => __( 'Enter your YouTube API key', 'tutor' ),
 							),
 						),
 					),

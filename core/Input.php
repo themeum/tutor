@@ -2,17 +2,16 @@
 /**
  * Input class for sanitize GET and POST request
  *
- * @package Tutor
+ * @package Tutor\Core
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.2
  */
 
-namespace TUTOR;
+namespace Tutor\Core;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Input class
  *
@@ -570,5 +569,18 @@ class Input {
 		);
 
 		return array_merge( $allowed_tags, $svg_tags );
+	}
+
+	/**
+	 * Sanitize a value after strip out all HTML tags
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $value Text to remove tags & sanitize.
+	 *
+	 * @return string
+	 */
+	public static function sanitize_with_strip_tags( string $value ) {
+		return sanitize_text_field( wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
 	}
 }
