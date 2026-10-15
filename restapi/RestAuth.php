@@ -12,6 +12,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -1016,8 +1017,6 @@ class RestAuth {
 	 * Prevent client-supplied user IDs from impersonating other users.
 	 *
 	 * Runs for all Tutor REST routes after permission callbacks. Auth login
-	 * routes and unauthenticated requests are skipped. Object-level checks
-	 * can plug in via the `tutor_rest_enforce_object_access` filter.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1084,20 +1083,6 @@ class RestAuth {
 					);
 				}
 			}
-		}
-
-		/**
-		 * Object-level access for extensions (Tutor Pro ObjectAccess).
-		 *
-		 * @since 4.2.0
-		 *
-		 * @param true|\WP_Error  $result  Pass-through true, or WP_Error to deny.
-		 * @param WP_REST_Request $request Request.
-		 * @param array           $handler Route handler.
-		 */
-		$object_access = apply_filters( 'tutor_rest_enforce_object_access', true, $request, $handler );
-		if ( is_wp_error( $object_access ) ) {
-			return $object_access;
 		}
 
 		return $response;
