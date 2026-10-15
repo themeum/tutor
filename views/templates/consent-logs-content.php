@@ -22,7 +22,7 @@ if ( empty( $consents ) ) {
 
 $user_name   = $user->display_name ?? '';
 $user_joined = $user->user_registered ?? '';
-$avatar_url  = get_avatar_url( $user->ID, array( 'size' => 40 ) );
+$avatar_url  = tutor_utils()->get_user_avatar_url( $user->ID );
 ?>
 <div class="tutor-consent-timeline">
 	<?php
@@ -37,7 +37,7 @@ $avatar_url  = get_avatar_url( $user->ID, array( 'size' => 40 ) );
 			$consent_title = __( 'Accepted Consent', 'tutor' );
 		}
 
-		$date = ! empty( $log->created_at_gmt ) ? $log->created_at_gmt : '';
+		$date = ! empty( $log->created_at_gmt ) ? tutor_i18n_get_formated_date( $log->created_at_gmt ) : '';
 		$ago  = ! empty( $log->time_ago ) ? $log->time_ago : '';
 
 		$meta_lines = array();
@@ -81,7 +81,7 @@ $avatar_url  = get_avatar_url( $user->ID, array( 'size' => 40 ) );
 				printf(
 					/* translators: %s: registration date */
 					esc_html__( 'Joined %s', 'tutor' ),
-					esc_html( $user_joined )
+					esc_html( tutor_i18n_get_formated_date( $user_joined, get_option( 'date_format' ) ) )
 				);
 				?>
 			</span>

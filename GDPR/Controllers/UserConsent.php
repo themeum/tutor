@@ -191,7 +191,7 @@ class UserConsent extends BaseController {
 				}
 
 				$consents = $this->get_all_consents_given_by_user( $user_id );
-				$html     = $this->render_consent_logs_content( $user, $consents );
+				$html     = $this->get_consent_logs_html( $user, $consents );
 
 				$this->json_response(
 					__( 'Consent fetched successfully', 'tutor' ),
@@ -402,7 +402,7 @@ class UserConsent extends BaseController {
 	 *
 	 * @return string Rendered HTML.
 	 */
-	public function render_consent_logs_content( \WP_User $user, array $consents ): string {
+	public function get_consent_logs_html( \WP_User $user, array $consents ): string {
 		ob_start();
 		include tutor()->path . 'views/templates/consent-logs-content.php';
 		return ob_get_clean();
