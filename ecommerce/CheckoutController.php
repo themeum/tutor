@@ -23,6 +23,7 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
+use WP_Error;
 
 /**
  * Checkout Controller class
@@ -647,6 +648,44 @@ class CheckoutController {
 	}
 
 	/**
+	 * Save billing info.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int   $user_id The user ID.
+	 * @param array $fields  The billing fields.
+	 *
+	 * @return array An array of error messages.
+	 */
+	protected function save_billing_info( $user_id, $fields ) {
+		$billing_model = new BillingModel();
+		$billing_info  = $billing_model->get_info( $user_id );
+
+		if ( $billing_info ) {
+			$update_billing = $billing_model->update( $fields, array( 'user_id' => $user_id ) );
+			if ( ! $update_billing ) {
+				return new WP_Error(
+					'billing_info_update_failed',
+					__( 'Billing information update failed!', 'tutor' )
+				);
+			}
+		} else {
+			// Save billing info.
+			$fields['user_id'] = $user_id;
+
+			$save = $billing_model->insert( $fields );
+			if ( ! $save ) {
+				return new WP_Error(
+					'billing_info_save_failed',
+					__( 'Billing info save failed!', 'tutor' )
+				);
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -725,20 +764,9 @@ class CheckoutController {
 			return;
 		}
 
-		$billing_info = $billing_model->get_info( $current_user_id );
-		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
-			if ( ! $update_billing ) {
-				array_push( $errors, __( 'Billing information update failed!', 'tutor' ) );
-			}
-		} else {
-			// Save billing info.
-			$billing_fillable_fields['user_id'] = $current_user_id;
-
-			$save = $billing_model->insert( $billing_fillable_fields );
-			if ( ! $save ) {
-				array_push( $errors, __( 'Billing info save failed!', 'tutor' ) );
-			}
+		$save_billing_info = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
+		if ( is_wp_error( $save_billing_info ) ) {
+			array_push( $errors, $save_billing_info->get_error_message() );
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
