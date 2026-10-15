@@ -10,7 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Course;
 use TUTOR\Earnings;
 use Tutor\Models\CartModel;
@@ -197,7 +197,7 @@ class HooksHandler {
 		 *
 		 * @since 3.9.7
 		 */
-		$is_valid_paid_order = OrderModel::ORDER_COMPLETED === $order_details->order_status && OrderModel::PAYMENT_PAID === $order_details->payment_status;
+		$is_valid_paid_order = $order_details && OrderModel::ORDER_COMPLETED === $order_details->order_status && OrderModel::PAYMENT_PAID === $order_details->payment_status;
 
 		if ( $order_details && ! $is_valid_paid_order ) {
 			$prev_payment_status = $order_details->payment_status;

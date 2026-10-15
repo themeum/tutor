@@ -107,9 +107,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const questionsCount = questions.length;
   const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
   const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
+  const hasCharacterLimitQuestions = hasOpenEndedQuestions || hasShortAnswerQuestions;
   const hasAttemptsLimit = form.watch('quiz_option.limit_attempts_allowed');
   const showPassRequired =
     isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && hasAttemptsLimit;
+  const showContentDripSettings =
+    isAddonEnabled(Addons.CONTENT_DRIP) &&
+    contentType !== 'tutor_h5p_quiz' &&
+    Boolean(contentDripType) &&
+    contentDripType !== 'unlock_sequentially';
   const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
   const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
   const questionsOrder = form.watch('quiz_option.questions_order');
@@ -361,55 +367,53 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
             <Show when={adminNegativeEnabled || negativeMarkingEnabled}>
               <hr />
-              <div css={styles.negativeMarkingRow}>
-                <div css={styles.negativeMarkingCheckbox}>
-                  <Controller
-                    name="quiz_option.enable_negative_marking"
-                    control={form.control}
-                    render={(controllerProps) => (
-                      <FormCheckbox
-                        {...controllerProps}
-                        disabled={!adminNegativeEnabled}
-                        label={__('Negative marking', 'tutor')}
-                        helpText={__('Applies to incorrect answers across all question types in this quiz.', 'tutor')}
-                      />
-                    )}
+              <Controller
+                name="quiz_option.enable_negative_marking"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormSwitch
+                    {...controllerProps}
+                    disabled={!adminNegativeEnabled}
+                    label={__('Negative marking', 'tutor')}
+                    helpText={__('Applies to incorrect answers across all question types in this quiz', 'tutor')}
                   />
-                </div>
-                <Show when={negativeMarkingEnabled}>
-                  <Controller
-                    name="quiz_option.negative_mark_value"
-                    control={form.control}
-                    rules={{
-                      ...requiredRule(),
-                      validate: (value) => {
-                        if (isNaN(Number(value))) return __('Must be a number', 'tutor');
-                        const numericValue = Number(value);
-                        if (numericValue <= 0) return __('Cannot be less than or equal to 0', 'tutor');
-                        if (negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT && numericValue > 100)
-                          return __('Cannot be greater than 100', 'tutor');
-                        return true;
-                      },
-                    }}
-                    render={(controllerProps) => (
-                      <FormInputWithContent
-                        {...controllerProps}
-                        type="number"
-                        size="small"
-                        isInlineLabel
-                        disabled={!adminNegativeEnabled}
-                        wrapperCss={styles.negativeMarkingInput}
-                        contentCss={styles.minWidth('fit-content')}
-                        formFieldWrapperCss={styles.negativeMarkingFieldWrapper}
-                        inputContainerCss={styles.justifyContent('flex-end')}
-                        content={negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT ? '%' : __('pts', 'tutor')}
-                        contentPosition="right"
-                        showVerticalBar={false}
-                      />
-                    )}
-                  />
-                </Show>
-              </div>
+                )}
+              />
+              <p css={styles.infoText}>
+                {__('Deduct a fixed amount for each question with any incorrect answer.', 'tutor')}
+              </p>
+
+              <Show when={negativeMarkingEnabled}>
+                <Controller
+                  name="quiz_option.negative_mark_value"
+                  control={form.control}
+                  rules={{
+                    ...requiredRule(),
+                    validate: (value) => {
+                      if (isNaN(Number(value))) return __('Must be a number', 'tutor');
+                      const numericValue = Number(value);
+                      if (numericValue <= 0) return __('Cannot be less than or equal to 0', 'tutor');
+                      if (negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT && numericValue > 100)
+                        return __('Cannot be greater than 100', 'tutor');
+                      return true;
+                    },
+                  }}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      size="small"
+                      label={__('Penalty per incorrect answer', 'tutor')}
+                      isInlineLabel
+                      disabled={!adminNegativeEnabled}
+                      wrapperCss={styles.negativeMarkingInput}
+                      content={negativeMarkType === QUIZ_NEGATIVE_MARK_TYPES.PERCENT ? '%' : __('pts', 'tutor')}
+                      contentPosition="right"
+                      showVerticalBar={false}
+                    />
+                  )}
+                />
+              </Show>
 
               <NegativeMarkTypeMismatchNotice />
             </Show>
@@ -624,7 +628,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   </Show>
                 </div>
 
-                <div css={styles.inlineForm}>
+                <div css={styles.inlineForm({ minHeight: '34px' })}>
                   <Controller
                     control={form.control}
                     name="quiz_option.enable_answer_reveal"
@@ -698,13 +702,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </div>
         </Show>
 
-        <Show
-          when={
-            (isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType) || hasOpenEndedQuestions || hasShortAnswerQuestions
-          }
-        >
+        <Show when={hasCharacterLimitQuestions || showContentDripSettings}>
           <div css={styles.card}>
-            <Show when={hasOpenEndedQuestions || hasShortAnswerQuestions}>
+            <Show when={hasCharacterLimitQuestions}>
               <h5>{__('Character Limits', 'tutor')}</h5>
 
               <div css={styles.innerCard}>
@@ -758,7 +758,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               </div>
             </Show>
 
-            <Show when={isAddonEnabled(Addons.CONTENT_DRIP) && contentType !== 'tutor_h5p_quiz'}>
+            <Show when={showContentDripSettings}>
               <Show when={contentDripType === 'unlock_by_date'}>
                 <h5 css={styles.contentDripLabel}>
                   <SVGIcon name="contentDrip" height={24} width={24} />
@@ -1080,33 +1080,6 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.surface.courseBuilder};
   `,
-  negativeMarkingRow: css`
-    ${styleUtils.display.flex('row')};
-    width: 100%;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: ${spacing[8]};
-    min-height: 34px;
-  `,
-  negativeMarkingCheckbox: css`
-    display: flex;
-    align-items: center;
-    min-height: 34px;
-    width: auto;
-
-    [data-cy='form-field-wrapper'] {
-      width: auto;
-    }
-  `,
-  negativeMarkingFieldWrapper: css`
-    width: auto;
-    align-items: flex-end;
-    margin-left: auto;
-
-    p {
-      text-align: right;
-    }
-  `,
   negativeMarkingInput: css`
     max-width: 80px;
     margin-left: auto;
@@ -1124,6 +1097,8 @@ const styles = {
 
     ${withPrefix &&
     css`
+      width: auto;
+      flex-shrink: 0;
       justify-content: flex-end;
 
       [data-prefix] {

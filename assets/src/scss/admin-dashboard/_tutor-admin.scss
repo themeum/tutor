@@ -308,7 +308,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     display: grid;
     grid-template-columns: minmax(160px, 1fr) minmax(240px, 320px);
     gap: 16px;
-    min-height: 40px;
+    min-height: 48px;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -326,16 +326,16 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
   .tutor-image-upload-control {
     position: relative;
-    max-width: 141px;
+    max-width: 170px;
     width: 100%;
+    height: 48px;
   }
 
   .tutor-image-upload-preview {
     display: flex;
     align-items: center;
     justify-content: center;
-    max-height: 40px;
-    height: 100%;
+    height: 48px;
     padding: 12px;
     background: #f7f8fa;
     border-radius: 6px;
@@ -343,7 +343,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
     img {
       max-width: 100%;
-      max-height: 40px;
+      max-height: 100%;
       height: 100%;
       object-fit: contain;
     }
@@ -359,7 +359,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     inset: 0;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     background: rgba(34, 37, 43, 0.72);
     border-radius: 6px;
 
@@ -367,11 +367,11 @@ body.tutor-backend-tutor_settings #wpbody-content {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      padding: 6px;
+      width: 32px;
+      height: 32px;
+      padding: 8px;
       border: 0;
-      border-radius: 4px;
+      border-radius: 6px;
       background: #f3f5fa;
       color: var(--tutor-color-primary);
       font-size: 20px;
@@ -398,14 +398,13 @@ body.tutor-backend-tutor_settings #wpbody-content {
     justify-content: center;
     gap: 10px;
     width: 100%;
-    height: 100%;
-    max-height: 40px;
+    height: 48px;
     padding: 12px;
     border: 1px dashed #d3d4d9;
     border-radius: 6px;
     background: #f7f8fa;
     color: #69738a;
-    font-size: 13px;
+    font-size: 15px;
 
     svg {
       color: var(--tutor-color-primary);
