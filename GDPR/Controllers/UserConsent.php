@@ -305,46 +305,12 @@ class UserConsent extends BaseController {
 					human_time_diff( $created_at, time() )
 				);
 
-				// Sanitize fields that may be written to CSV to prevent formula injection.
-				if ( isset( $record->user_agent ) ) {
-					$record->user_agent = $this->sanitize_csv_field( $record->user_agent );
-				}
-
-				if ( isset( $record->ip_address ) ) {
-					$record->ip_address = $this->sanitize_csv_field( $record->ip_address );
-				}
-
 				return $record;
 			},
 			$records
 		);
 
 		return $records;
-	}
-
-	/**
-	 * Sanitize a value for safe inclusion in a CSV cell.
-	 * Prepends a single quote to values that start with CSV formula-injection
-	 * trigger characters (=, +, -, @, tab, carriage-return) so that
-	 * spreadsheet applications do not execute them as formulas.
-	 *
-	 * @since 4.1.3
-	 *
-	 * @param mixed $value Value to sanitize.
-	 * @return mixed Sanitized value.
-	 */
-	private function sanitize_csv_field( $value ) {
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-
-		$dangerous_chars = array( '=', '+', '-', '@', "\t", "\r" );
-
-		if ( in_array( substr( $value, 0, 1 ), $dangerous_chars, true ) ) {
-			return "'" . $value;
-		}
-
-		return $value;
 	}
 
 	/**
