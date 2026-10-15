@@ -549,6 +549,29 @@ class CheckoutController {
 	}
 
 	/**
+	 * Resolve checkout user id
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return int
+	 */
+	private function resolve_checkout_user_id() {
+		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
+		$current_user_id           = get_current_user_id();
+
+		if ( ! $current_user_id ) {
+			if ( ! $is_guest_checkout_enabled ) {
+				$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+			}
+
+			// Generate a temporary identifier for the guest user.
+			$current_user_id = wp_rand();
+		}
+
+		return $current_user_id;
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -566,19 +589,7 @@ class CheckoutController {
 
 		$order_data      = null;
 		$billing_model   = new BillingModel();
-		$current_user_id = get_current_user_id();
-
-		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
-
-		// Prevent invalid request.
-		if ( ! $current_user_id ) {
-			if ( $is_guest_checkout_enabled ) {
-				// Guest user.
-				$current_user_id = wp_rand(); // A random id to uniquely identify.
-			} else {
-				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
-			}
-		}
+		$current_user_id = $this->resolve_checkout_user_id();
 
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
