@@ -846,6 +846,7 @@ class CheckoutController {
 		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = $this->resolve_checkout_user_id();
+		$is_guest_user   = ! is_user_logged_in();
 
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			return self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
@@ -854,7 +855,7 @@ class CheckoutController {
 		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 
-		if ( $order_id ) {
+		if ( ! $is_guest_user && $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
 				return self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
@@ -869,8 +870,7 @@ class CheckoutController {
 
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
 		if ( is_wp_error( $validate_consent ) ) {
-			array_push( $errors, $validate_consent->get_error_message() );
-			return $this->set_checkout_errors( $errors, $current_user_id );
+			$errors[] = $validate_consent->get_error_message();
 		}
 
 		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
@@ -888,17 +888,17 @@ class CheckoutController {
 		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
 		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
 		if ( is_wp_error( $save_billing_info ) ) {
-			array_push( $errors, $save_billing_info->get_error_message() );
+			$errors[] = $save_billing_info->get_error_message();
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 		if ( ! isset( $checkout_data->items ) || ! tutor_utils()->count( $checkout_data->items ) ) {
-			array_push( $errors, __( 'No items found for purchase', 'tutor' ) );
+			$errors[] = __( 'No items found for purchase', 'tutor' );
 		}
 
 		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
-			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
+			$errors[] = __( 'Select a payment method', 'tutor' );
 		}
 
 		if ( ! empty( $errors ) ) {
