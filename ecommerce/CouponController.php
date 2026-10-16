@@ -40,6 +40,15 @@ class CouponController extends BaseController {
 	const PAGE_SLUG = 'tutor_coupons';
 
 	/**
+	 * Cron job name
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var string
+	 */
+	const CRON_JOB = 'tutor_coupon_expiration_check';
+
+	/**
 	 * Coupon model
 	 *
 	 * @since 3.0.0
@@ -114,6 +123,21 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
 			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
+			add_action( 'init', array( $this, 'register_cron' ) );
+			add_action( self::CRON_JOB, array( $this->model, 'remove_all_reserved' ) );
+		}
+	}
+
+	/**
+	 * Register cron job for coupon expiration check
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function register_cron() {
+		if ( ! wp_next_scheduled( self::CRON_JOB ) ) {
+			wp_schedule_event( time(), 'hourly', self::CRON_JOB );
 		}
 	}
 

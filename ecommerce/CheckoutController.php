@@ -167,6 +167,13 @@ class CheckoutController {
 	public function ajax_get_checkout_html() {
 		tutor_utils()->check_nonce();
 
+		$order_id    = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$coupon_code = Input::post( 'coupon_code' );
+
+		if ( $order_id && '-1' === $coupon_code ) {
+			$this->coupon_model->remove_reserved_coupon( $order_id, get_current_user_id() );
+		}
+
 		ob_start();
 		tutor_load_template( 'ecommerce/checkout-details' );
 		$content = ob_get_clean();

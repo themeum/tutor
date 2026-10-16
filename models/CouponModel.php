@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
@@ -1086,44 +1087,37 @@ class CouponModel {
 		$total_usage_limit        = (int) $coupon->total_usage_limit;
 		$user_usage_limit         = (int) $coupon->per_user_usage_limit;
 		$reserved_coupon_meta_key = 'reserved_coupon_code_' . $user_id;
+		$coupon_usage_count       = $this->get_coupon_usage_count( $coupon->coupon_code );
+		$user_usage_count         = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 
 		if ( $order_id ) {
-			$has_reserve_coupon = QueryHelper::get_count(
-				'tutor_ordermeta',
-				array(
-					'order_id' => $order_id,
-					'meta_key' => $reserved_coupon_meta_key,
-				)
-			);
+			$has_reserve_coupon = DB::table( 'tutor_ordermeta' )
+				->where( 'order_id', $order_id )
+				->where( 'meta_key', $reserved_coupon_meta_key )
+				->count();
 			if ( $has_reserve_coupon ) {
 				return $has_limit;
 			}
 		}
 
-		$reserved_coupon_count = QueryHelper::get_count(
-			'tutor_ordermeta',
-			array(
-				'meta_value' => $coupon->coupon_code,
-			)
-		);
+		$reserved_coupon_count = DB::table( 'tutor_ordermeta' )->where( 'meta_value', $coupon->coupon_code )->count();
 
 		if ( $total_usage_limit > 0 ) {
-			if ( $reserved_coupon_count >= $total_usage_limit ) {
+			$total_usage_count = $reserved_coupon_count + $coupon_usage_count;
+			if ( $total_usage_count >= $total_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
 			}
 		}
 
-		$user_reserved_coupons = QueryHelper::get_count(
-			'tutor_ordermeta',
-			array(
-				'meta_key'   => $reserved_coupon_meta_key,
-				'meta_value' => $coupon->coupon_code,
-			)
-		);
+		$user_reserved_coupons = DB::table( 'tutor_ordermeta' )
+			->where( 'meta_key', $reserved_coupon_meta_key )
+			->where( 'meta_value', $coupon->coupon_code )
+			->count();
 
 		if ( $user_usage_limit > 0 ) {
-			if ( $user_reserved_coupons >= $user_usage_limit ) {
+			$total_user_usage = $user_reserved_coupons + $user_usage_count;
+			if ( $total_user_usage >= $user_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
 			}
@@ -1377,21 +1371,39 @@ class CouponModel {
 	 * @return void
 	 */
 	public function remove_reserved_coupon( int $order_id, int $user_id ) {
-		$reserved_coupon = QueryHelper::get_count(
-			'tutor_ordermeta',
-			array(
-				'meta_key' => 'reserved_coupon_code_' . $user_id,
-				'order_id' => $order_id,
-			)
-		);
+		$reserved_coupon = DB::table( 'tutor_ordermeta' )
+			->where( 'meta_key', 'reserved_coupon_code_' . $user_id )
+			->where( 'order_id', $order_id )
+			->count();
+
 		if ( $reserved_coupon ) {
-			QueryHelper::delete(
-				'tutor_ordermeta',
-				array(
-					'meta_key' => 'reserved_coupon_code_' . $user_id,
-					'order_id' => $order_id,
-				)
-			);
+			DB::table( 'tutor_ordermeta' )
+				->where( 'meta_key', 'reserved_coupon_code_' . $user_id )
+				->where( 'order_id', $order_id )
+				->delete();
 		}
+	}
+
+	/**
+	 * Remove all reserved coupon codes.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public static function remove_all_reserved() {
+		$reserved_coupons = DB::table( 'tutor_ordermeta' )
+			->as( 'o' )
+			->select( 'o.id' )
+			->join( 'tutor_coupons as c', 'o.meta_value', '=', 'c.coupon_code' )
+			->pluck( 'o.id' );
+
+		if ( ! tutor_utils()->count( $reserved_coupons ) ) {
+			return;
+		}
+
+		DB::table( 'tutor_ordermeta' )
+			->where_in( 'id', $reserved_coupons )
+			->delete();
 	}
 }

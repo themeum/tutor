@@ -148,7 +148,7 @@ class HooksHandler {
 				}
 			}
 
-			$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+			$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, $order_id );
 			if ( $is_valid ) {
 				$reserved_coupon_meta_key = 'reserved_coupon_code_' . $user_id;
 				$this->order_meta_model->update_meta( $order_id, $reserved_coupon_meta_key, $coupon_code );
