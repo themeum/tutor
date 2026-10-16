@@ -894,12 +894,7 @@ class CheckoutController {
 
 					// translators: wp error message.
 					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-					set_transient(
-						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
-						array(
-							'message' => $error_msg,
-						)
-					);
+					$this->set_checkout_errors( array( $error_msg ), $current_user_id );
 					return;
 				} else {
 					$current_user_id = $guest_user;
