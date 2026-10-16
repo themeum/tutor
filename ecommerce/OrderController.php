@@ -1230,6 +1230,7 @@ class OrderController {
 			'order_type'     => $order_type,
 			'coupon_code'    => $coupon_code,
 			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
+			'payment_method' => isset( $args['payment_method'] ) ? $args['payment_method'] : null,
 			'subtotal_price' => $subtotal_price,
 			'pre_tax_price'  => $total_price,
 			'total_price'    => $total_price,
