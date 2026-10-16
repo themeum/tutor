@@ -67,7 +67,17 @@ class REST_Lesson {
 			);
 		}
 
-		$topic_id      = absint( $this->post_parent );
+		$topic_id = absint( $this->post_parent );
+
+		if ( tutor()->topics_post_type !== get_post_type( $topic_id ) ) {
+			return $this->response(
+				'tutor_read_lesson',
+				__( 'Lesson not found for the given topic ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
 		$course_id     = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
 		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
 

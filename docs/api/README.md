@@ -16,14 +16,14 @@ This directory contains the complete, interactive API documentation and executab
 Tutor LMS REST API uses **JWT authentication** (since 4.2.0):
 
 1. In WordPress admin, go to **Tutor LMS → Settings → REST API**.
-2. Generate an API Key & Secret with the desired permission (`Read` in Free; Pro also offers `Write`, `Delete`, `Read/Write`, and `All`).
+2. Generate an API Key & Secret with the desired permission (`Read` in Free; Pro also offers `Write`, `Delete`, `Read/Write`, and `All`). **Copy the secret immediately and store it securely — it is shown only once and cannot be retrieved again.**
 3. Set up your local environment:
    ```bash
    cp docs/api/environments/local.bru.example docs/api/environments/local.bru
    ```
 4. In Bruno, select the **local** environment and set:
    - `base_url` — e.g. `http://yoursite.local/wp-json/tutor/v1`
-   - `api_key` / `api_secret` — from Tutor settings
+   - `api_key` / `api_secret` — from Tutor settings (use the secret copied at generation time)
    - `username` / `password` — WordPress user credentials
 5. Run **Authentication → Login**. It stores `access_token` and `refresh_token` in the environment.
 6. All other authenticated requests send `Authorization: Bearer {{access_token}}`.
@@ -130,13 +130,55 @@ When the controller passes extra error details, they appear under `data.details`
 
 WordPress may also return core codes such as `rest_missing_callback_param` (missing required args) with `data.status` and `data.params`.
 
+### Access token errors (authenticated routes)
+
+Protected Tutor routes authorize via `RestAuth::authorize_authenticated_request()` / `get_access_token_error()`. Missing or bad Bearer JWTs return explicit codes (HTTP status from `rest_authorization_required_code()` — **401** when no WP user is authenticated, **403** if a session user is already present):
+
+**Missing / empty access token**
+
+```json
+{
+  "code": "rest_missing_access_token",
+  "message": "Access token is required.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+**Invalid, expired, or revoked access token**
+
+```json
+{
+  "code": "rest_invalid_access_token",
+  "message": "Invalid access token.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+**Valid token, insufficient API key permission**
+
+```json
+{
+  "code": "rest_forbidden",
+  "message": "API key does not have permission for this request.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+Send `Authorization: Bearer {{access_token}}` (or `Tutor-User-Token`) on authenticated routes. Run **Authentication → Login** (or **Refresh Token**) when you see these errors.
+
 ### HTTP status codes
 
 - `200 OK`: Request succeeded (Tutor core read/auth routes).
 - `201 Created`: Not used by Tutor LMS **core** REST routes today (core is mostly `GET` plus auth). Pro write endpoints may return `201` where applicable.
 - `400 Bad Request`: Validation / missing required parameters.
-- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT, revoked API key, or insufficient permission.
-- `404 Not Found`: Resource does not exist for the provided ID.
+- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT (`rest_missing_access_token`, `rest_invalid_access_token`), revoked API key, or insufficient key permission (`rest_forbidden`).
+- `404 Not Found`: Resource or user does not exist for the provided ID.
 
 ### Ecommerce webhook exception
 
