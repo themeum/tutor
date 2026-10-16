@@ -6,11 +6,14 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.0.0
+ *
+ * Theses variables comes from checkout-details.php
+ * @var boolean $show_payment_methods
+ * @var string $pay_now_btn_text
+ * @var object $checkout_data
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
@@ -182,11 +185,10 @@ $is_checkout_page = true;
 						<?php endif; ?>
 						<!-- handle errors -->
 						<?php
-						$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+						$pay_now_errors    = CheckoutController::get_checkout_errors( $user_id );
 						$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
 
 						delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
-						delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 						if ( $pay_now_errors || $pay_now_alert_msg ) :
 							?>
 						<div class="tutor-break-word tutor-mt-16">

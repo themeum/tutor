@@ -729,6 +729,55 @@ class CheckoutController {
 	}
 
 	/**
+	 * Build the transient key used to store checkout errors for a user.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	protected static function prepare_checkout_error_key( int $user_id ): string {
+		return self::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id;
+	}
+
+	/**
+	 * Set checkout errors in transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $errors The errors array.
+	 * @param int   $user_id The user ID.
+	 *
+	 * @return void
+	 */
+	protected static function set_checkout_errors( array $errors, int $user_id ): void {
+		set_transient( self::prepare_checkout_error_key( $user_id ), $errors, 5 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Get checkout errors from transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id The user ID.
+	 *
+	 * @return array
+	 */
+	public static function get_checkout_errors( int $user_id ): array {
+		$key    = self::prepare_checkout_error_key( $user_id );
+		$errors = get_transient( $key );
+
+		if ( false === $errors ) {
+			return array();
+		}
+
+		delete_transient( $key );
+
+		return (array) $errors;
+	}
+
+	/**
 	 * Handle the checkout form submission.
 	 *
 	 * Creates a pending order, prepares the payment data, and proceeds to the payment gateway.
@@ -774,7 +823,7 @@ class CheckoutController {
 
 		// Return if validation failed.
 		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			$this->set_checkout_errors( $errors, $current_user_id );
 			return;
 		}
 
@@ -790,7 +839,7 @@ class CheckoutController {
 		}
 
 		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			$this->set_checkout_errors( $errors, $current_user_id );
 			return;
 		}
 
@@ -810,7 +859,7 @@ class CheckoutController {
 		}
 
 		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			$this->set_checkout_errors( $errors, $current_user_id );
 			return;
 		}
 
@@ -897,11 +946,11 @@ class CheckoutController {
 				}
 			} else {
 				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+				$this->set_checkout_errors( $errors, $current_user_id );
 				$this->set_pay_now_alert_msg( $order_data );
 			}
 		} else {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+			$this->set_checkout_errors( $errors, $current_user_id );
 			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
