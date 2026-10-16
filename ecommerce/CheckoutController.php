@@ -23,6 +23,7 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\EnrollmentModel;
+use WP_Error;
 
 /**
  * Checkout Controller class
@@ -549,152 +550,359 @@ class CheckoutController {
 	}
 
 	/**
-	 * Pay now ajax handler
-	 * Create pending order, prepare payment data & proceed to payment gateway
+	 * Resolve checkout user id
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return int
+	 */
+	private function resolve_checkout_user_id() {
+		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
+		$current_user_id           = get_current_user_id();
+
+		if ( ! $current_user_id ) {
+			if ( ! $is_guest_checkout_enabled ) {
+				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
+			}
+
+			// Generate a temporary identifier for the guest user.
+			$current_user_id = wp_rand();
+		}
+
+		return $current_user_id;
+	}
+
+	/**
+	 * Validate pay now request
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return void
+	 * @param array $data The data array to validate.
+	 *
+	 * @return array|true If validation fails return error messages array else validation passed return true.
 	 */
-	public function pay_now() {
-		$errors = array();
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
-			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
-			return;
-		}
+	protected function validate_pay_now_request( array $data ) {
 
-		global $wpdb;
-		$order_data      = null;
-		$billing_model   = new BillingModel();
-		$current_user_id = get_current_user_id();
+		$order_types = array(
+			OrderModel::TYPE_SINGLE_ORDER,
+			OrderModel::TYPE_SUBSCRIPTION,
+			OrderModel::TYPE_RENEWAL,
+		);
 
-		$is_guest_checkout_enabled = apply_filters( 'tutor_is_guest_checkout_enabled', false );
+		$order_types = implode( ',', $order_types );
 
-		// Prevent invalid request.
-		if ( ! $current_user_id ) {
-			if ( $is_guest_checkout_enabled ) {
-				// Guest user.
-				$current_user_id = wp_rand(); // A random id to uniquely identify.
-			} else {
-				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
+		$validation_rules = array(
+			'object_ids'     => 'required',
+			'order_type'     => "required|match_string:{$order_types}",
+			'payment_method' => 'required',
+		);
+
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
 			}
 		}
 
-		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
-		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$errors     = array();
+		$validation = ValidationHelper::validate( $validation_rules, $data );
 
-		if ( $order_id ) {
-			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
-			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
-				array_push( $errors, __( 'Invalid order', 'tutor' ) );
+		if ( ! $validation->success ) {
+			foreach ( $validation->errors as $error ) {
+				$errors = array_merge( $errors, (array) $error );
 			}
 		}
 
-		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
+		return empty( $errors ) ? true : $errors;
+	}
 
-		$order_payment_fields = array(
+	/**
+	 * Keep only the allowed keys from an array.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $data          The source array.
+	 * @param array $allowed_keys  The keys to retain.
+	 *
+	 * @return array
+	 */
+	protected function filter_allowed_keys( $data, $allowed_keys ) {
+		return array_intersect_key( $data, array_flip( $allowed_keys ) );
+	}
+
+	/**
+	 * Get allowed order fields.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return array
+	 */
+	protected function get_allowed_order_fields() {
+		return array(
 			'object_ids',
 			'coupon_code',
 			'payment_method',
 			'payment_type',
 			'order_type',
 		);
+	}
 
-		$request = array_intersect_key( $request, array_flip( $order_payment_fields ) );
-		// Set required.
-		foreach ( $order_payment_fields as $field ) {
-			if ( ! isset( $request[ $field ] ) ) {
-				$request[ $field ] = '';
-			}
-		}
+	/**
+	 * Save billing info.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int   $user_id The user ID.
+	 * @param array $fields  The billing fields.
+	 *
+	 * @return array An array of error messages.
+	 */
+	protected function save_billing_info( $user_id, $fields ) {
+		$billing_model = new BillingModel();
+		$billing_info  = $billing_model->get_info( $user_id );
 
-		// Validate data.
-		$validate = $this->validate_pay_now_req( $request );
-
-		if ( ! $validate->success ) {
-			foreach ( $validate->errors as $error ) {
-				if ( is_array( $error ) ) {
-					foreach ( $error as $err ) {
-						array_push( $errors, $err );
-					}
-				} else {
-					array_push( $errors, $error );
-				}
-			}
-		}
-
-		//phpcs:ignore
-		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
-		if ( is_wp_error( $validate_consent ) ) {
-			array_push( $errors, $validate_consent->get_error_message() );
-		}
-
-		// Return if validation failed.
-		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
-			return;
-		}
-
-		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
-		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
-		$payment_method = $request['payment_method'];
-		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $request['payment_type'];
-		$order_type     = $request['order_type'];
-
-		if ( empty( $object_ids ) ) {
-			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
-		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
-			foreach ( $object_ids as $object_id ) {
-				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
-				if ( is_wp_error( $can_purchase ) ) {
-					array_push( $errors, $can_purchase->get_error_message() );
-				}
-			}
-		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-			$plan_id      = absint( $object_ids[0] ?? 0 );
-			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
-			if ( is_wp_error( $can_purchase ) ) {
-				array_push( $errors, $can_purchase->get_error_message() );
-			}
-		} else {
-			array_push( $errors, __( 'Invalid order type', 'tutor' ) );
-		}
-
-		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
-			return;
-		}
-
-		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
+			$update_billing = $billing_model->update( $fields, array( 'user_id' => $user_id ) );
 			if ( ! $update_billing ) {
-				array_push( $errors, __( 'Billing information update failed!', 'tutor' ) );
+				return new WP_Error(
+					'billing_info_update_failed',
+					__( 'Billing information update failed!', 'tutor' )
+				);
 			}
 		} else {
 			// Save billing info.
-			$billing_fillable_fields['user_id'] = $current_user_id;
+			$fields['user_id'] = $user_id;
 
-			$save = $billing_model->insert( $billing_fillable_fields );
+			$save = $billing_model->insert( $fields );
 			if ( ! $save ) {
-				array_push( $errors, __( 'Billing info save failed!', 'tutor' ) );
+				return new WP_Error(
+					'billing_info_save_failed',
+					__( 'Billing info save failed!', 'tutor' )
+				);
 			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate cart items
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array  $object_ids The object IDs.
+	 * @param string $order_type The order type.
+	 *
+	 * @return true|string[] True if valid, otherwise a list of error messages.
+	 */
+	public function validate_cart_items( array $object_ids, string $order_type ) {
+		if ( empty( $object_ids ) ) {
+			return array( __( 'Invalid cart items', 'tutor' ) );
+		}
+
+		$errors = array();
+		$check  = function ( $result ) use ( &$errors ) {
+			if ( is_wp_error( $result ) ) {
+				$errors[] = $result->get_error_message();
+			}
+		};
+
+		switch ( $order_type ) {
+			case OrderModel::TYPE_SINGLE_ORDER:
+				foreach ( $object_ids as $object_id ) {
+					$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+					$check( $can_purchase );
+				}
+				break;
+
+			case OrderModel::TYPE_SUBSCRIPTION:
+				$plan_id      = absint( $object_ids[0] ?? 0 );
+				$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+				$check( $can_purchase );
+				break;
+
+			default:
+				return array( __( 'Invalid order type', 'tutor' ) );
+		}
+
+		return empty( $errors ) ? true : $errors;
+	}
+
+	/**
+	 * Build the transient key used to store checkout errors for a user.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	protected static function prepare_checkout_error_key( int $user_id ): string {
+		return self::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id;
+	}
+
+	/**
+	 * Set checkout errors in transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $errors The errors array.
+	 * @param int   $user_id The user ID.
+	 *
+	 * @return void
+	 */
+	protected static function set_checkout_errors( array $errors, int $user_id ): void {
+		set_transient( self::prepare_checkout_error_key( $user_id ), $errors, 5 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Get checkout errors from transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id The user ID.
+	 *
+	 * @return array
+	 */
+	public static function get_checkout_errors( int $user_id ): array {
+		$key    = self::prepare_checkout_error_key( $user_id );
+		$errors = get_transient( $key );
+
+		if ( false === $errors ) {
+			return array();
+		}
+
+		delete_transient( $key );
+
+		return (array) $errors;
+	}
+
+	/**
+	 * Build the transient key used to store checkout alert message for a user.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	protected static function prepare_checkout_alert_key( int $user_id ):string {
+		return self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id;
+	}
+
+	/**
+	 * Set checkout alert message in transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $type Alert type.
+	 * @param string $message Alert message.
+	 * @param int    $user_id The user ID.
+	 *
+	 * @return void
+	 */
+	protected static function set_checkout_alert( string $type, string $message, int $user_id ): void {
+		$data = array(
+			'alert'   => $type,
+			'message' => $message,
+		);
+		set_transient( self::prepare_checkout_alert_key( $user_id ), $data, 5 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Get checkout alert message from transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id The user ID.
+	 *
+	 * @return array
+	 */
+	public static function get_checkout_alert( int $user_id ): array {
+		$key   = self::prepare_checkout_alert_key( $user_id );
+		$alert = get_transient( $key );
+
+		if ( false === $alert ) {
+			return array();
+		}
+
+		delete_transient( $key );
+
+		return (array) $alert;
+	}
+
+	/**
+	 * Handle the checkout form submission.
+	 *
+	 * Creates a pending order, prepares the payment data, and proceeds to the payment gateway.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function pay_now() {
+		$errors = array();
+
+		$order_data      = null;
+		$billing_model   = new BillingModel();
+		$current_user_id = $this->resolve_checkout_user_id();
+		$is_guest_user   = ! is_user_logged_in();
+
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			return self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
+		}
+
+		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
+		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
+
+		if ( ! $is_guest_user && $order_id ) {
+			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
+			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
+				return self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
+			}
+		}
+
+		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
+		$validated    = $this->validate_pay_now_request( $order_fields );
+		if ( ! $validated ) {
+			$errors = array_merge( $errors, (array) $validated );
+		}
+
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
+		if ( is_wp_error( $validate_consent ) ) {
+			$errors[] = $validate_consent->get_error_message();
+		}
+
+		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
+		$coupon_code    = isset( $order_fields['coupon_code'] ) ? $order_fields['coupon_code'] : '';
+		$payment_method = $order_fields['payment_method'];
+		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
+		$order_type     = $order_fields['order_type'];
+
+		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
+		if ( ! $validate_cart_items ) {
+			$errors = array_merge( $errors, (array) $validate_cart_items );
+			return $this->set_checkout_errors( $errors, $current_user_id );
+		}
+
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
+		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
+		if ( is_wp_error( $save_billing_info ) ) {
+			$errors[] = $save_billing_info->get_error_message();
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 		if ( ! isset( $checkout_data->items ) || ! tutor_utils()->count( $checkout_data->items ) ) {
-			array_push( $errors, __( 'No items found for purchase', 'tutor' ) );
+			$errors[] = __( 'No items found for purchase', 'tutor' );
 		}
 
 		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
-			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
+			$errors[] = __( 'Select a payment method', 'tutor' );
 		}
 
 		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
-			return;
+			return $this->set_checkout_errors( $errors, $current_user_id );
 		}
 
 		$items = array();
@@ -722,19 +930,13 @@ class CheckoutController {
 				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
 				if ( is_wp_error( $guest_user ) ) {
 					// Delete the billing info if user registration failed.
-					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
+					QueryHelper::delete( 'tutor_customers', array( 'user_id' => $current_user_id ) );
 
 					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
 
 					// translators: wp error message.
 					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-					set_transient(
-						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
-						array(
-							'message' => $error_msg,
-						)
-					);
-					return;
+					return $this->set_checkout_errors( array( $error_msg ), $current_user_id );
 				} else {
 					$current_user_id = $guest_user;
 				}
@@ -780,12 +982,9 @@ class CheckoutController {
 				}
 			} else {
 				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
+				$this->set_checkout_errors( $errors, $current_user_id );
 				$this->set_pay_now_alert_msg( $order_data );
 			}
-		} else {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
-			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
 
@@ -1094,21 +1293,9 @@ class CheckoutController {
 	private function set_pay_now_alert_msg( $order_data ) {
 		$user_id = $order_data ? $order_data['user_id'] : get_current_user_id();
 		if ( empty( $order_data ) ) {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
-				array(
-					'alert'   => 'danger',
-					'message' => __( 'Failed to place order!', 'tutor' ),
-				),
-			);
+			self::set_checkout_alert( 'danger', __( 'Failed to place order!', 'tutor' ), $user_id );
 		} else {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
-				array(
-					'alert'   => 'success',
-					'message' => __( 'Your order has been placed successfully!', 'tutor' ),
-				),
-			);
+			self::set_checkout_alert( 'success', __( 'Your order has been placed successfully!', 'tutor' ), $user_id );
 		}
 	}
 
@@ -1193,40 +1380,6 @@ class CheckoutController {
 		}
 	}
 
-	/**
-	 * Validate pay now request
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $data The data array to validate.
-	 *
-	 * @return object The validation result. It returns validation object.
-	 */
-	protected function validate_pay_now_req( array $data ) {
-
-		$order_types = array(
-			OrderModel::TYPE_SINGLE_ORDER,
-			OrderModel::TYPE_SUBSCRIPTION,
-			OrderModel::TYPE_RENEWAL,
-		);
-
-		$order_types = implode( ',', $order_types );
-
-		$validation_rules = array(
-			'object_ids'     => 'required',
-			'order_type'     => "required|match_string:{$order_types}",
-			'payment_method' => 'required',
-		);
-
-		// Skip validation rules for not available fields in data.
-		foreach ( $validation_rules as $key => $value ) {
-			if ( ! array_key_exists( $key, $data ) ) {
-				unset( $validation_rules[ $key ] );
-			}
-		}
-
-		return ValidationHelper::validate( $validation_rules, $data );
-	}
 
 	/**
 	 * Retrieve course data for a given set of order items.
