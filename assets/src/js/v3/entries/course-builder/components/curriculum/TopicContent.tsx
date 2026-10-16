@@ -320,7 +320,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
               </button>
             </Tooltip>
           </Show>
-          <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
+          <Show when={!['tutor-google-meet', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
                 <Show

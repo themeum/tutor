@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { useEffect, useRef } from 'react';
+import { Controller, type FieldErrors } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -24,6 +24,8 @@ interface ManualPaymentModalProps extends ModalProps {
 }
 
 const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentModalProps) => {
+  const instructionsRef = useRef<HTMLDivElement>(null);
+
   const form = useFormWithGlobalError<PaymentMethod>({
     defaultValues: {
       name: '',
@@ -60,9 +62,20 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     closeModal({ action: 'CONFIRM' });
   };
 
+  const onError = (errors: FieldErrors<PaymentMethod>) => {
+    const isTitleError = !!errors.fields?.[0]?.value;
+    const isInstructionsError = !!errors.fields?.[2]?.value;
+
+    if (isInstructionsError && !isTitleError) {
+      setTimeout(() => {
+        instructionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+    }
+  };
+
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={620}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onError)}>
         <div css={styles.formBody}>
           {manualMethodFields.map((field, index) => {
             if (field.name === 'method_name') {
@@ -109,15 +122,16 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
               );
             }
             return (
-              <div key={field.name} css={styles.inputWrapper}>
+              <div key={field.name} ref={instructionsRef} css={styles.inputWrapper}>
                 <Controller
                   name={`fields.${index}.value`}
                   control={form.control}
-                  rules={{ ...requiredRule() }}
+                  rules={requiredRule()}
                   render={(controllerProps) => (
                     <FormWPEditor
                       {...controllerProps}
                       label={field.label}
+                      min_height={140}
                       toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
                       toolbar2=""
                     />
