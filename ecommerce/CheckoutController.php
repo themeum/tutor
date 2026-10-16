@@ -693,30 +693,36 @@ class CheckoutController {
 	 * @param array  $object_ids The object IDs.
 	 * @param string $order_type The order type.
 	 *
-	 * @return array|true An array of error messages if validation fails else true.
+	 * @return true|string[] True if valid, otherwise a list of error messages.
 	 */
 	public function validate_cart_items( array $object_ids, string $order_type ) {
-		$errors = array();
-
 		if ( empty( $object_ids ) ) {
-			$errors[] = __( 'Invalid cart items', 'tutor' );
-		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
-			foreach ( $object_ids as $object_id ) {
-				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+			return array( __( 'Invalid cart items', 'tutor' ) );
+		}
 
-				if ( is_wp_error( $can_purchase ) ) {
-					$errors[] = $can_purchase->get_error_message();
+		$errors = array();
+		$check  = function ( $result ) use ( &$errors ) {
+			if ( is_wp_error( $result ) ) {
+				$errors[] = $result->get_error_message();
+			}
+		};
+
+		switch ( $order_type ) {
+			case OrderModel::TYPE_SINGLE_ORDER:
+				foreach ( $object_ids as $object_id ) {
+					$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+					$check( $can_purchase );
 				}
-			}
-		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-			$plan_id      = absint( $object_ids[0] ?? 0 );
-			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+				break;
 
-			if ( is_wp_error( $can_purchase ) ) {
-				$errors[] = $can_purchase->get_error_message();
-			}
-		} else {
-			$errors[] = __( 'Invalid order type', 'tutor' );
+			case OrderModel::TYPE_SUBSCRIPTION:
+				$plan_id      = absint( $object_ids[0] ?? 0 );
+				$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+				$check( $can_purchase );
+				break;
+
+			default:
+				return array( __( 'Invalid order type', 'tutor' ) );
 		}
 
 		return empty( $errors ) ? true : $errors;
