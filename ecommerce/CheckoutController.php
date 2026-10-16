@@ -686,6 +686,43 @@ class CheckoutController {
 	}
 
 	/**
+	 * Validate cart items
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array  $object_ids The object IDs.
+	 * @param string $order_type The order type.
+	 *
+	 * @return array|true An array of error messages if validation fails else true.
+	 */
+	public function validate_cart_items( array $object_ids, string $order_type ) {
+		$errors = array();
+
+		if ( empty( $object_ids ) ) {
+			$errors[] = __( 'Invalid cart items', 'tutor' );
+		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			foreach ( $object_ids as $object_id ) {
+				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+
+				if ( is_wp_error( $can_purchase ) ) {
+					$errors[] = $can_purchase->get_error_message();
+				}
+			}
+		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			$plan_id      = absint( $object_ids[0] ?? 0 );
+			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+
+			if ( is_wp_error( $can_purchase ) ) {
+				$errors[] = $can_purchase->get_error_message();
+			}
+		} else {
+			$errors[] = __( 'Invalid order type', 'tutor' );
+		}
+
+		return empty( $errors ) ? true : $errors;
+	}
+
+	/**
 	 * Pay now ajax handler
 	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
@@ -740,23 +777,9 @@ class CheckoutController {
 		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
 		$order_type     = $order_fields['order_type'];
 
-		if ( empty( $object_ids ) ) {
-			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
-		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
-			foreach ( $object_ids as $object_id ) {
-				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
-				if ( is_wp_error( $can_purchase ) ) {
-					array_push( $errors, $can_purchase->get_error_message() );
-				}
-			}
-		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-			$plan_id      = absint( $object_ids[0] ?? 0 );
-			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
-			if ( is_wp_error( $can_purchase ) ) {
-				array_push( $errors, $can_purchase->get_error_message() );
-			}
-		} else {
-			array_push( $errors, __( 'Invalid order type', 'tutor' ) );
+		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
+		if ( ! $validate_cart_items ) {
+			$errors = array_merge( $errors, (array) $validate_cart_items );
 		}
 
 		if ( ! empty( $errors ) ) {
