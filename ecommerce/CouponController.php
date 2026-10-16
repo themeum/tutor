@@ -21,7 +21,6 @@ use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -39,6 +38,15 @@ class CouponController extends BaseController {
 	 * @var string
 	 */
 	const PAGE_SLUG = 'tutor_coupons';
+
+	/**
+	 * Cron job name
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var string
+	 */
+	const CRON_JOB = 'tutor_coupon_expiration_check';
 
 	/**
 	 * Coupon model
@@ -115,6 +123,21 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
 			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
+			add_action( 'init', array( $this, 'register_cron' ) );
+			add_action( self::CRON_JOB, array( $this->model, 'remove_all_reserved' ) );
+		}
+	}
+
+	/**
+	 * Register cron job for coupon expiration check
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function register_cron() {
+		if ( ! wp_next_scheduled( self::CRON_JOB ) ) {
+			wp_schedule_event( time(), 'hourly', self::CRON_JOB );
 		}
 	}
 
@@ -926,6 +949,10 @@ class CouponController extends BaseController {
 
 		$order = $order_model->get_order_by_id( $order_id );
 		if ( $order ) {
+			if ( in_array( $order->order_status, array( OrderModel::ORDER_CANCELLED, OrderModel::ORDER_TRASH, OrderModel::ORDER_COMPLETED ), true ) ) {
+				$this->model->remove_reserved_coupon( $order_id, $order->user_id );
+			}
+
 			if ( $order->coupon_amount > 0 && $order_model::ORDER_COMPLETED === $order->order_status ) {
 				// Store coupon usage.
 				$data = array(

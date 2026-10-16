@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
@@ -863,18 +864,20 @@ class CouponModel {
 	 * Considering start-expire time & use limit.
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 param $order_id added.
 	 *
-	 * @param object $coupon Coupon object.
+	 * @param object $coupon   Coupon object.
+	 * @param int    $order_id Order id.
 	 *
 	 * @return bool
 	 */
-	public function is_coupon_valid( object $coupon ): bool {
+	public function is_coupon_valid( object $coupon, $order_id = 0 ): bool {
 		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
 			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'invalid' ) );
 			return false;
 		}
 
-		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
+		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() ) && $this->has_reserve( $coupon, get_current_user_id(), $order_id );
 	}
 
 	/**
@@ -1064,6 +1067,63 @@ class CouponModel {
 		}
 
 		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id );
+	}
+
+
+	/**
+	 * Check whether coupon is reserved for the user
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param object $coupon coupon object.
+	 * @param int    $user_id User id.
+	 * @param int    $order_id Order id.
+	 *
+	 * @return bool true if coupon is reserved for the user otherwise false
+	 */
+	public function has_reserve( object $coupon, int $user_id, int $order_id = 0 ) {
+		$has_limit = true;
+
+		$total_usage_limit        = (int) $coupon->total_usage_limit;
+		$user_usage_limit         = (int) $coupon->per_user_usage_limit;
+		$reserved_coupon_meta_key = 'reserved_coupon_code_' . $user_id;
+		$coupon_usage_count       = $this->get_coupon_usage_count( $coupon->coupon_code );
+		$user_usage_count         = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
+
+		if ( $order_id ) {
+			$has_reserve_coupon = DB::table( 'tutor_ordermeta' )
+				->where( 'order_id', $order_id )
+				->where( 'meta_key', $reserved_coupon_meta_key )
+				->count();
+			if ( $has_reserve_coupon ) {
+				return $has_limit;
+			}
+		}
+
+		$reserved_coupon_count = DB::table( 'tutor_ordermeta' )->where( 'meta_value', $coupon->coupon_code )->count();
+
+		if ( $total_usage_limit > 0 ) {
+			$total_usage_count = $reserved_coupon_count + $coupon_usage_count;
+			if ( $total_usage_count >= $total_usage_limit ) {
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
+			}
+		}
+
+		$user_reserved_coupons = DB::table( 'tutor_ordermeta' )
+			->where( 'meta_key', $reserved_coupon_meta_key )
+			->where( 'meta_value', $coupon->coupon_code )
+			->count();
+
+		if ( $user_usage_limit > 0 ) {
+			$total_user_usage = $user_reserved_coupons + $user_usage_count;
+			if ( $total_user_usage >= $user_usage_limit ) {
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
+			}
+		}
+
+		return $has_limit;
 	}
 
 	/**
@@ -1264,7 +1324,7 @@ class CouponModel {
 
 		$coupon = $this->get_coupon_by_code( $order_data->coupon_code );
 
-		if ( ! $coupon || ! $this->is_coupon_valid( $coupon ) ) {
+		if ( ! $coupon || ! $this->is_coupon_valid( $coupon, $order_data->id ) ) {
 			return null;
 		}
 
@@ -1297,5 +1357,53 @@ class CouponModel {
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : null;
 
 		return $start_date > $now && ( ! $expire_date || $expire_date > $now );
+	}
+
+
+	/**
+	 * Remove reserved coupon code from order meta.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $order_id Order ID.
+	 * @param int $user_id User ID.
+	 *
+	 * @return void
+	 */
+	public function remove_reserved_coupon( int $order_id, int $user_id ) {
+		$reserved_coupon = DB::table( 'tutor_ordermeta' )
+			->where( 'meta_key', 'reserved_coupon_code_' . $user_id )
+			->where( 'order_id', $order_id )
+			->count();
+
+		if ( $reserved_coupon ) {
+			DB::table( 'tutor_ordermeta' )
+				->where( 'meta_key', 'reserved_coupon_code_' . $user_id )
+				->where( 'order_id', $order_id )
+				->delete();
+		}
+	}
+
+	/**
+	 * Remove all reserved coupon codes.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public static function remove_all_reserved() {
+		$reserved_coupons = DB::table( 'tutor_ordermeta' )
+			->as( 'o' )
+			->select( 'o.id' )
+			->join( 'tutor_coupons as c', 'o.meta_value', '=', 'c.coupon_code' )
+			->pluck( 'o.id' );
+
+		if ( ! tutor_utils()->count( $reserved_coupons ) ) {
+			return;
+		}
+
+		DB::table( 'tutor_ordermeta' )
+			->where_in( 'id', $reserved_coupons )
+			->delete();
 	}
 }
