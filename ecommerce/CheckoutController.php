@@ -778,6 +778,60 @@ class CheckoutController {
 	}
 
 	/**
+	 * Build the transient key used to store checkout alert message for a user.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	protected static function prepare_checkout_alert_key( int $user_id ):string {
+		return self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id;
+	}
+
+	/**
+	 * Set checkout alert message in transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $type Alert type.
+	 * @param string $message Alert message.
+	 * @param int    $user_id The user ID.
+	 *
+	 * @return void
+	 */
+	protected static function set_checkout_alert( string $type, string $message, int $user_id ): void {
+		$data = array(
+			'alert'   => $type,
+			'message' => $message,
+		);
+		set_transient( self::prepare_checkout_alert_key( $user_id ), $data, 5 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Get checkout alert message from transient.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $user_id The user ID.
+	 *
+	 * @return array
+	 */
+	public static function get_checkout_alert( int $user_id ): array {
+		$key   = self::prepare_checkout_alert_key( $user_id );
+		$alert = get_transient( $key );
+
+		if ( false === $alert ) {
+			return array();
+		}
+
+		delete_transient( $key );
+
+		return (array) $alert;
+	}
+
+	/**
 	 * Handle the checkout form submission.
 	 *
 	 * Creates a pending order, prepares the payment data, and proceeds to the payment gateway.
@@ -788,15 +842,15 @@ class CheckoutController {
 	 */
 	public function pay_now() {
 		$errors = array();
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
-			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
-			return;
-		}
 
 		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = $this->resolve_checkout_user_id();
+
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
+			return;
+		}
 
 		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
@@ -1255,21 +1309,9 @@ class CheckoutController {
 	private function set_pay_now_alert_msg( $order_data ) {
 		$user_id = $order_data ? $order_data['user_id'] : get_current_user_id();
 		if ( empty( $order_data ) ) {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
-				array(
-					'alert'   => 'danger',
-					'message' => __( 'Failed to place order!', 'tutor' ),
-				),
-			);
+			self::set_checkout_alert( 'danger', __( 'Failed to place order!', 'tutor' ), $user_id );
 		} else {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
-				array(
-					'alert'   => 'success',
-					'message' => __( 'Your order has been placed successfully!', 'tutor' ),
-				),
-			);
+			self::set_checkout_alert( 'success', __( 'Your order has been placed successfully!', 'tutor' ), $user_id );
 		}
 	}
 

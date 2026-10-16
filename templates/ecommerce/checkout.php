@@ -185,27 +185,26 @@ $is_checkout_page = true;
 						<?php endif; ?>
 						<!-- handle errors -->
 						<?php
-						$pay_now_errors    = CheckoutController::get_checkout_errors( $user_id );
-						$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+						$checkout_errors = CheckoutController::get_checkout_errors( $user_id );
+						$checkout_alert  = CheckoutController::get_checkout_alert( $user_id );
 
-						delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
-						if ( $pay_now_errors || $pay_now_alert_msg ) :
+						if ( $checkout_errors || $checkout_alert ) :
 							?>
 						<div class="tutor-break-word tutor-mt-16">
 							<?php
-							if ( ! empty( $pay_now_alert_msg ) ) :
-								list( $alert, $message ) = array_values( $pay_now_alert_msg );
+							if ( ! empty( $checkout_alert ) ) :
+								list( $alert, $message ) = array_values( $checkout_alert );
 								?>
 								<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
 									<div class="tutor-color-<?php echo esc_attr( $alert ); ?>"><?php echo esc_html( $message ); ?></div>
 								</div>
 							<?php endif; ?>
 
-							<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
+							<?php if ( tutor_utils()->count( $checkout_errors ) ) : ?>
 							<div class="tutor-alert tutor-danger">
 								<ul class="tutor-mb-0">
-									<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-										<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $pay_now_err ) ) ); ?></li>
+									<?php foreach ( $checkout_errors as $err ) : ?>
+										<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $err ) ) ); ?></li>
 									<?php endforeach; ?>
 								</ul>
 							</div>
