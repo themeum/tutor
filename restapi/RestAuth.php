@@ -1410,6 +1410,95 @@ class RestAuth {
 	}
 
 	/**
+	 * WP_Error when a REST resource ID is missing or the wrong type.
+	 *
+	 * Prefer this over returning false (which WordPress maps to rest_forbidden).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $message Optional human-readable message.
+	 *
+	 * @return \WP_Error
+	 */
+	public static function invalid_resource_error( $message = '' ) {
+		if ( '' === $message ) {
+			$message = __( 'Invalid resource.', 'tutor' );
+		}
+
+		return new \WP_Error(
+			'rest_invalid_resource',
+			$message,
+			array( 'status' => HttpHelper::STATUS_NOT_FOUND )
+		);
+	}
+
+	/**
+	 * True when $course_id is a course post type; otherwise a 404 WP_Error.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public static function require_valid_course( $course_id ) {
+		$course_id = absint( $course_id );
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return self::invalid_resource_error( __( 'Course not found.', 'tutor' ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolve the parent course from a topic id, or 404 when the topic is invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $topic_id topic post id.
+	 *
+	 * @return int|\WP_Error Course id on success.
+	 */
+	public static function require_course_from_topic( $topic_id ) {
+		$topic_id = absint( $topic_id );
+		if ( ! $topic_id || tutor()->topics_post_type !== get_post_type( $topic_id ) ) {
+			return self::invalid_resource_error( __( 'Topic not found.', 'tutor' ) );
+		}
+
+		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return $course_id;
+	}
+
+	/**
+	 * Resolve the parent course from a quiz id, or 404 when the quiz is invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $quiz_id quiz post id.
+	 *
+	 * @return int|\WP_Error Course id on success.
+	 */
+	public static function require_course_from_quiz( $quiz_id ) {
+		$quiz_id = absint( $quiz_id );
+		if ( ! $quiz_id || tutor()->quiz_post_type !== get_post_type( $quiz_id ) ) {
+			return self::invalid_resource_error( __( 'Quiz not found.', 'tutor' ) );
+		}
+
+		$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return $course_id;
+	}
+
+	/**
 	 * Whether a user's public profile layout is open (not private).
 	 *
 	 * Mirrors templates/public-profile.php layout keys.
@@ -1437,16 +1526,21 @@ class RestAuth {
 	 * Permission: author card — same gate as public-profile.php.
 	 *
 	 * Open instructor/student layout → allow (anonymous or JWT).
-	 * Private layout or unknown user → deny (JWT does not bypass).
+	 * Private layout → deny (JWT does not bypass). Unknown user → 404.
 	 *
 	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_public_author( WP_REST_Request $request ) {
-		return static::is_public_profile_layout_open( absint( $request->get_param( 'id' ) ) );
+		$user_id = absint( $request->get_param( 'id' ) );
+		if ( ! $user_id || ! get_userdata( $user_id ) ) {
+			return self::invalid_resource_error( __( 'Author not found.', 'tutor' ) );
+		}
+
+		return static::is_public_profile_layout_open( $user_id );
 	}
 
 	/**
@@ -1460,8 +1554,9 @@ class RestAuth {
 	 */
 	public static function permission_course_detail( WP_REST_Request $request ) {
 		$course_id = absint( $request->get_param( 'id' ) );
-		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
-			return false;
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
 		}
 
 		$token_error = self::get_access_token_error( false );
@@ -1496,30 +1591,6 @@ class RestAuth {
 	}
 
 	/**
-	 * Resolve course id from common REST route params.
-	 *
-	 * Prefers `id`, then `course_id`. Returns 0 unless the value is a course post type.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @param WP_REST_Request $request request.
-	 *
-	 * @return int
-	 */
-	private static function course_id_from_request( WP_REST_Request $request ) {
-		$course_id = absint( $request->get_param( 'id' ) );
-		if ( ! $course_id ) {
-			$course_id = absint( $request->get_param( 'course_id' ) );
-		}
-
-		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
-			return 0;
-		}
-
-		return $course_id;
-	}
-
-	/**
 	 * Permission: course learning content — JWT path or public course (no token).
 	 *
 	 * Used by course-contents. Announcements use permission_authenticated_course_content.
@@ -1531,7 +1602,15 @@ class RestAuth {
 	 * @return bool|\WP_Error
 	 */
 	public static function permission_course_content( WP_REST_Request $request ) {
-		$course_id = self::course_id_from_request( $request );
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id ) {
+			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
 
 		$token_error = self::get_access_token_error( false );
 		if ( is_wp_error( $token_error ) ) {
@@ -1542,7 +1621,7 @@ class RestAuth {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1564,7 +1643,17 @@ class RestAuth {
 			return false;
 		}
 
-		return static::can_view_course_content( self::course_id_from_request( $request ) );
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id ) {
+			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return static::can_view_course_content( $course_id );
 	}
 
 	/**
@@ -1584,11 +1673,16 @@ class RestAuth {
 			return $token_error;
 		}
 
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
 		if ( static::process_api_request() ) {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1601,19 +1695,21 @@ class RestAuth {
 	 * @return bool|\WP_Error
 	 */
 	public static function permission_by_topic( WP_REST_Request $request ) {
-		$topic_id  = absint( $request->get_param( 'topic_id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
-
 		$token_error = self::get_access_token_error( false );
 		if ( is_wp_error( $token_error ) ) {
 			return $token_error;
+		}
+
+		$course_id = self::require_course_from_topic( absint( $request->get_param( 'topic_id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
 		}
 
 		if ( static::process_api_request() ) {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1635,8 +1731,10 @@ class RestAuth {
 			return false;
 		}
 
-		$topic_id  = absint( $request->get_param( 'topic_id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$course_id = self::require_course_from_topic( absint( $request->get_param( 'topic_id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
+		}
 
 		return static::can_view_course_content( $course_id );
 	}
@@ -1660,8 +1758,10 @@ class RestAuth {
 			return false;
 		}
 
-		$quiz_id   = absint( $request->get_param( 'id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		$course_id = self::require_course_from_quiz( absint( $request->get_param( 'id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
+		}
 
 		return static::can_view_course_content( $course_id );
 	}

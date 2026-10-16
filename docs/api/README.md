@@ -177,8 +177,8 @@ Send `Authorization: Bearer {{access_token}}` (or `Tutor-User-Token`) on authent
 - `200 OK`: Request succeeded (Tutor core read/auth routes).
 - `201 Created`: Not used by Tutor LMS **core** REST routes today (core is mostly `GET` plus auth). Pro write endpoints may return `201` where applicable.
 - `400 Bad Request`: Validation / missing required parameters.
-- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT (`rest_missing_access_token`, `rest_invalid_access_token`), revoked API key, or insufficient key permission (`rest_forbidden`).
-- `404 Not Found`: Resource or user does not exist for the provided ID.
+- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT (`rest_missing_access_token`, `rest_invalid_access_token`), revoked API key, insufficient key permission (`rest_forbidden`), or a real resource the caller cannot access.
+- `404 Not Found`: Missing/invalid resource id (`rest_invalid_resource`), or empty result sets from controllers when the id is valid.
 
 ### Ecommerce webhook exception
 

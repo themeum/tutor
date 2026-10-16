@@ -73,6 +73,28 @@ docs {
   }
   ```
   
+  ### Invalid / non-course `course_id`
+  ```json
+  {
+    "code": "rest_invalid_resource",
+    "message": "Course not found.",
+    "data": {
+      "status": 404
+    }
+  }
+  ```
+  
+  ### Real course, no access
+  ```json
+  {
+    "code": "rest_forbidden",
+    "message": "Sorry, you are not allowed to do that.",
+    "data": {
+      "status": 401
+    }
+  }
+  ```
+  
   ### No topics
   ```json
   {
