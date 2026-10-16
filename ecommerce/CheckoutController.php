@@ -838,7 +838,7 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function pay_now() {
 		$errors = array();
@@ -848,8 +848,7 @@ class CheckoutController {
 		$current_user_id = $this->resolve_checkout_user_id();
 
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
-			return;
+			return self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
 		}
 
 		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
@@ -858,14 +857,12 @@ class CheckoutController {
 		if ( $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
-				array_push( $errors, __( 'Invalid order', 'tutor' ) );
+				return self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
 			}
 		}
 
-		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
-		$order_fields            = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
-
-		$validated = $this->validate_pay_now_request( $order_fields );
+		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
+		$validated    = $this->validate_pay_now_request( $order_fields );
 		if ( ! $validated ) {
 			$errors = array_merge( $errors, (array) $validated );
 		}
@@ -873,12 +870,7 @@ class CheckoutController {
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
-		}
-
-		// Return if validation failed.
-		if ( ! empty( $errors ) ) {
-			$this->set_checkout_errors( $errors, $current_user_id );
-			return;
+			return $this->set_checkout_errors( $errors, $current_user_id );
 		}
 
 		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
@@ -890,14 +882,11 @@ class CheckoutController {
 		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
 		if ( ! $validate_cart_items ) {
 			$errors = array_merge( $errors, (array) $validate_cart_items );
+			return $this->set_checkout_errors( $errors, $current_user_id );
 		}
 
-		if ( ! empty( $errors ) ) {
-			$this->set_checkout_errors( $errors, $current_user_id );
-			return;
-		}
-
-		$save_billing_info = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
+		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
 		if ( is_wp_error( $save_billing_info ) ) {
 			array_push( $errors, $save_billing_info->get_error_message() );
 		}
@@ -913,8 +902,7 @@ class CheckoutController {
 		}
 
 		if ( ! empty( $errors ) ) {
-			$this->set_checkout_errors( $errors, $current_user_id );
-			return;
+			return $this->set_checkout_errors( $errors, $current_user_id );
 		}
 
 		$items = array();
@@ -948,8 +936,7 @@ class CheckoutController {
 
 					// translators: wp error message.
 					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-					$this->set_checkout_errors( array( $error_msg ), $current_user_id );
-					return;
+					return $this->set_checkout_errors( array( $error_msg ), $current_user_id );
 				} else {
 					$current_user_id = $guest_user;
 				}
@@ -998,9 +985,6 @@ class CheckoutController {
 				$this->set_checkout_errors( $errors, $current_user_id );
 				$this->set_pay_now_alert_msg( $order_data );
 			}
-		} else {
-			$this->set_checkout_errors( $errors, $current_user_id );
-			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
 

@@ -48,19 +48,6 @@ $is_checkout_page = true;
 	}
 	?>
 
-	<!-- Alert if nonce failed -->
-	<?php
-	$nonce_alert = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert' );
-	if ( $nonce_alert ) {
-		?>
-		<div class="tutor-alert tutor-danger">
-			<div class="tutor-color-danger"><?php echo esc_html( $nonce_alert[0] ); ?></div>
-		</div>
-		<?php
-		delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert' );
-	}
-	?>
-
 	<form method="post" id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
