@@ -235,7 +235,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 								readonly
 								value=""
 							>
-							<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-flex-shrink-0" id="tutor-copy-generated-api-key">
+							<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-flex-shrink-0" data-tutor-clipboard-copy-target="tutor-generated-api-key">
 								<span class="tutor-icon-copy tutor-mr-8"></span>
 								<?php esc_html_e( 'Copy', 'tutor' ); ?>
 							</button>
@@ -253,7 +253,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 								readonly
 								value=""
 							>
-							<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-flex-shrink-0" id="tutor-copy-generated-api-secret">
+							<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-flex-shrink-0" data-tutor-clipboard-copy-target="tutor-generated-api-secret">
 								<span class="tutor-icon-copy tutor-mr-8"></span>
 								<?php esc_html_e( 'Copy', 'tutor' ); ?>
 							</button>

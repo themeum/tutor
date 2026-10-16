@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     const credentialsPanel = document.getElementById("tutor-generated-credentials");
     const generatedKeyInput = document.getElementById("tutor-generated-api-key");
     const generatedSecretInput = document.getElementById("tutor-generated-api-secret");
-    const copyKeyBtn = document.getElementById("tutor-copy-generated-api-key");
-    const copySecretBtn = document.getElementById("tutor-copy-generated-api-secret");
     const noRecordElem = document.getElementById("tutor-api-keys-no-record");
     const tokenSettingsForm = document.getElementById("tutor-rest-api-token-settings");
     const tokenSettingsSubmitBtn = document.querySelector("#tutor-rest-api-token-settings button[type=submit]");
@@ -31,20 +29,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     const isSuccessResponse = (res) => Number(res?.status_code) === 200;
     const getErrorMessage = (res) => res?.message || defaultErrMsg;
-
-    const copyToClipboard = async (text) => {
-        if (navigator.clipboard?.writeText) {
-            await navigator.clipboard.writeText(text);
-            return;
-        }
-
-        const temp = document.createElement("textarea");
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-    };
 
     const resetGenerateModal = () => {
         if (!apiKeysForm) {
@@ -90,24 +74,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         if (e.target.closest("[data-tutor-modal-close]")) {
             // Allow close to finish, then restore form state for next open.
             setTimeout(resetGenerateModal, 0);
-        }
-    });
-
-    copyKeyBtn?.addEventListener("click", async () => {
-        try {
-            await copyToClipboard(generatedKeyInput?.value || "");
-            tutor_toast(__("Success", "tutor"), __("API key copied to clipboard", "tutor"), "success");
-        } catch (error) {
-            tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
-        }
-    });
-
-    copySecretBtn?.addEventListener("click", async () => {
-        try {
-            await copyToClipboard(generatedSecretInput?.value || "");
-            tutor_toast(__("Success", "tutor"), __("Secret copied to clipboard", "tutor"), "success");
-        } catch (error) {
-            tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
         }
     });
 
