@@ -19,3 +19,10 @@ Stage 2: flip the four templates to declarative markup (ADR-0010).
   change goes in the release notes.
 - Re-run the ticket-04 ladder. Confirm the shim still mounts legacy markup (simulate an
   old-shape element) and that stage 2 is reversible by reverting the four templates.
+- Retarget the learning-area controller
+  (`assets/src/js/frontend/learning-area/lesson/player.ts`): it queries
+  `.tutor-lesson-video-wrapper .tutorPlayer` and calls `TutorCore.player.create(target)`.
+  Once templates declare `<tutor-video-player>`, that selector matches nothing and the
+  controller never starts (no sync, no auto-next, no fullscreen class, spinner not
+  removed). Point it at the declared element (`create()` is idempotent) and refresh its
+  stale "deferred ES module" comment (ADR-0011: classic script).

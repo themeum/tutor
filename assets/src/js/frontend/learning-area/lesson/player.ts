@@ -361,7 +361,7 @@ function createEnvironment(document: Document): LessonEnvironment {
 
 export const initializeLessonPlayer = (): void => {
   if (!window.TutorCore?.player) {
-    // The engine is a deferred ES module that loads after this IIFE bundle.
+    // The engine is a classic script that loads after this IIFE bundle.
     window.addEventListener(TUTOR_CUSTOM_EVENTS.PLAYER_ENGINE_READY, initializeLessonPlayer, { once: true });
     return;
   }
