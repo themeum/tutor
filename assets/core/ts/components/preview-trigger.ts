@@ -180,12 +180,16 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
         ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />`
         : '';
 
+      const instructorHtml = data.instructor_url
+        ? `<a href="${this.escapeHtml(data.instructor_url)}">${this.escapeHtml(data.instructor)}</a>`
+        : this.escapeHtml(data.instructor);
+
       content.innerHTML = `
         <div class="tutor-preview-card-content">
           ${data.thumbnail ? (data.url ? `<a tabindex="-1" href="${data.url}">${thumbnailHtml}</a>` : thumbnailHtml) : ''}
           <div class="tutor-preview-card-body">
             <h4 class="tutor-preview-card-title">${data.url ? `<a href="${data.url}">${this.escapeHtml(data.title)}</a>` : this.escapeHtml(data.title)}</h4>
-            ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__(`by <a href="${data.instructor_url}">%s</a>`, 'tutor'), this.escapeHtml(data.instructor))}</div>` : ''}
+            ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__('by %s', 'tutor'), instructorHtml)}</div>` : ''}
           </div>
         </div>
       `;

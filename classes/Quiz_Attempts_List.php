@@ -671,14 +671,20 @@ class Quiz_Attempts_List {
 		$static_items = array(
 			'correct'   => array(
 				'class' => 'correct',
-				/* translators: %1$s: number of correct answers, wrapped in markup. */
-				'label' => $format_count_label( $answer_counts['correct'], __( '%1$s correct', 'tutor' ) ),
+				'label' => $format_count_label(
+					$answer_counts['correct'],
+					/* translators: %1$s: number of correct answers, wrapped in markup. */
+					_n( '%1$s correct', '%1$s correct', $answer_counts['correct'], 'tutor' )
+				),
 				'count' => (int) $answer_counts['correct'],
 			),
 			'incorrect' => array(
 				'class' => 'incorrect',
-				/* translators: %1$s: number of incorrect answers, wrapped in markup. */
-				'label' => $format_count_label( $answer_counts['incorrect'], __( '%1$s incorrect', 'tutor' ) ),
+				'label' => $format_count_label(
+					$answer_counts['incorrect'],
+					/* translators: %1$s: number of incorrect answers, wrapped in markup. */
+					_n( '%1$s incorrect', '%1$s incorrect', $answer_counts['incorrect'], 'tutor' )
+				),
 				'count' => (int) $answer_counts['incorrect'],
 			),
 			'total'     => array(
@@ -734,7 +740,7 @@ class Quiz_Attempts_List {
 		} elseif ( QuizModel::RESULT_PENDING === $attempt['result'] ) {
 			Badge::make()->label( __( 'Pending', 'tutor' ) )->variant( Badge::WARNING )->rounded()->render();
 		} else {
-			Badge::make()->label( 'Failed' )->variant( Badge::ERROR )->rounded()->render();
+			Badge::make()->label( __( 'Failed', 'tutor' ) )->variant( Badge::ERROR )->rounded()->render();
 		}
 	}
 
