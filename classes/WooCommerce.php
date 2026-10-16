@@ -1071,7 +1071,7 @@ class WooCommerce extends Tutor_Base {
 		$url     = get_pagenum_link();
 		$user_id = get_current_user_id();
 
-		$statuses = array_merge( array( 'all' => 'All' ), wc_get_order_statuses() );
+		$statuses = array_merge( array( 'all' => __( 'All', 'tutor' ) ), wc_get_order_statuses() );
 		if ( isset( $statuses['wc-checkout-draft'] ) ) {
 			unset( $statuses['wc-checkout-draft'] );
 		}
