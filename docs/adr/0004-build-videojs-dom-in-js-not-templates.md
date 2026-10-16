@@ -1,6 +1,6 @@
 # Build the Video.js DOM in JS, not in the PHP templates
 
-**Status**: accepted
+**Status**: superseded by ADR-0010 (kept as the record of the mid-migration trade-off)
 
 ## Context
 

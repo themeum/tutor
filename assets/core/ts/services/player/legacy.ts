@@ -1,3 +1,4 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import type { PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
 export interface LegacyFullscreenEvent {
@@ -31,15 +32,19 @@ export function createLegacyTutorLessonPlayer(): LegacyTutorLessonPlayer {
       return;
     }
 
-    const active = getActivePlayer();
+    const service = window.TutorCore?.player;
 
-    if (!active) {
+    if (!service) {
+      // The engine is a deferred module; retry once it announces itself.
+      window.addEventListener(TUTOR_CUSTOM_EVENTS.PLAYER_ENGINE_READY, subscribe, { once: true });
       return;
     }
 
-    unsubscribe = active.on('fullscreenchange', ({ fullscreen, element }) => {
+    // The service late-binds, so handlers registered before any player exists still
+    // receive events from the first player that appears.
+    unsubscribe = service.on('fullscreenchange', ({ fullscreen, element }) => {
       const handlers = fullscreen ? enterHandlers : exitHandlers;
-      handlers.forEach((handler) => handler({ srcElement: element ?? active.element }));
+      handlers.forEach((handler) => handler({ srcElement: element }));
     });
   };
 

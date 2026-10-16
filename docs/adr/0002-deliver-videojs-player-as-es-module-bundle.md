@@ -1,6 +1,6 @@
 # Deliver the Video.js player as an ES module bundle
 
-**Status**: accepted
+**Status**: superseded by ADR-0011 (kept as the record of the module-delivery trade-off)
 
 ## Context
 

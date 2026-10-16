@@ -278,9 +278,6 @@ const createConfig = (env, options) => {
           'assets/src/',
           'assets/json/',
           'assets/core/',
-          // Emitted by the separate ES-module config; the IIFE config's clean must not race it away.
-          'assets/js/tutor-player.js',
-          'assets/js/lazy-chunks/',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -300,6 +297,7 @@ const createConfig = (env, options) => {
 const jsEntries = {
   tutor: './assets/src/js/v2/common.js',
   'tutor-core': './assets/core/ts/index.ts',
+  'tutor-player': './assets/core/ts/services/player/index.ts',
   'tutor-front': './assets/src/js/front/tutor-front.js',
   'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
@@ -354,25 +352,6 @@ const resolveAliases = {
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
 };
 
-// The player engine must be emitted and loaded as an ES module (ADR-0002), so it cannot
-// share a build with the IIFE entries: one config cannot mix `output.module`.
-const playerEntry = { 'tutor-player': './assets/core/ts/services/player/index.ts' };
-
-const createPlayerModuleConfig = (baseConfig) => ({
-  ...baseConfig,
-  name: 'tutor-player',
-  entry: playerEntry,
-  output: {
-    ...baseConfig.output,
-    filename: 'js/[name].js',
-    chunkFilename: 'js/lazy-chunks/[name].js',
-    module: true,
-    chunkFormat: 'module',
-    clean: false,
-  },
-  experiments: { outputModule: true },
-});
-
 const isScssEntry = (entry) => {
   return String(entry).includes('-scss');
 };
@@ -407,7 +386,6 @@ export default (env, options) => {
           [entryKey]: entryPath,
         },
       })),
-      createPlayerModuleConfig(baseConfig),
     ];
   }
 
@@ -423,6 +401,5 @@ export default (env, options) => {
       ...baseConfig,
       entry: allEntries,
     },
-    createPlayerModuleConfig(baseConfig),
   ];
 };

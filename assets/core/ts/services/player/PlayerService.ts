@@ -1,3 +1,4 @@
+import { type ServiceMeta } from '@Core/ts/types';
 import {
   type PlayerEvent,
   type PlayerEventMap,
@@ -6,38 +7,41 @@ import {
   type TutorPlayer,
 } from '@Core/ts/types/player';
 
-import { createPlayerElement, getStore, type VideoPlayerElement } from './elements';
-import { createTutorPlayer, type PlayerStore } from './Player';
+import { createPlayerElement, type VideoPlayerElement } from './elements';
 import { type DetectedSource, detectSource } from './providers';
 
-export type PlayerHandleFactory = (options: {
-  element: HTMLElement;
-  store: PlayerStore;
-  provider: DetectedSource['provider'];
-}) => TutorPlayer;
-
 export interface PlayerServiceDependencies {
-  createHandle?: PlayerHandleFactory;
   createElement?: (source: DetectedSource, document: Document) => VideoPlayerElement;
-  getStore?: (element: VideoPlayerElement) => PlayerStore | null;
 }
 
-const noop: PlayerUnsubscribe = () => undefined;
+type AnyHandler = (payload: never) => void;
 
 export class TutorPlayerService implements PlayerService {
   #active: TutorPlayer | null = null;
-  #createHandle: PlayerHandleFactory;
+  #waiting: Array<{ event: PlayerEvent; handler: AnyHandler }> = [];
   #createElement: (source: DetectedSource, document: Document) => VideoPlayerElement;
-  #getStore: (element: VideoPlayerElement) => PlayerStore | null;
 
   constructor(dependencies: PlayerServiceDependencies = {}) {
-    this.#createHandle = dependencies.createHandle ?? createTutorPlayer;
     this.#createElement = dependencies.createElement ?? createPlayerElement;
-    this.#getStore = dependencies.getStore ?? getStore;
   }
 
   get active(): TutorPlayer | null {
     return this.#active;
+  }
+
+  /** Marks a player booted by its own element as active (wired to the element hooks). */
+  track(player: TutorPlayer): void {
+    this.#active = player;
+
+    for (const { event, handler } of this.#waiting.splice(0)) {
+      player.on(event, handler as (payload: PlayerEventMap[PlayerEvent]) => void);
+    }
+  }
+
+  untrack(player: TutorPlayer): void {
+    if (this.#active === player) {
+      this.#active = null;
+    }
   }
 
   create(element: HTMLElement): TutorPlayer {
@@ -50,13 +54,13 @@ export class TutorPlayerService implements PlayerService {
     const host = this.#createElement(source, element.ownerDocument);
     element.replaceWith(host);
 
-    const store = this.#getStore(host);
-    if (!store) {
-      throw new Error('[tutor] player: store unavailable after init');
+    const player = host.player;
+
+    if (!player) {
+      throw new Error('[tutor] player: handle unavailable after init');
     }
 
-    const player = this.#createHandle({ element: host, store, provider: source.provider });
-    this.#active = player;
+    this.track(player);
 
     return player;
   }
@@ -74,6 +78,26 @@ export class TutorPlayerService implements PlayerService {
   }
 
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe {
-    return this.#active?.on(event, handler) ?? noop;
+    const active = this.#active;
+
+    if (active) {
+      return active.on(event, handler);
+    }
+
+    // No player yet: bind to the first one that appears (research F1).
+    const entry = { event, handler: handler as AnyHandler };
+    this.#waiting.push(entry);
+
+    return () => {
+      const index = this.#waiting.indexOf(entry);
+      if (index >= 0) {
+        this.#waiting.splice(index, 1);
+      }
+    };
   }
 }
+
+export const playerServiceMeta: ServiceMeta<TutorPlayerService> = {
+  name: 'player',
+  instance: new TutorPlayerService(),
+};

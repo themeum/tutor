@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type TutorPlayer } from '@Core/ts/types/player';
 
 import { type VideoPlayerElement } from './elements';
-import { type PlayerStore } from './Player';
 import { TutorPlayerService } from './PlayerService';
 
 function fakePlayer(): TutorPlayer {
@@ -30,12 +29,11 @@ function fakePlayer(): TutorPlayer {
 function setup() {
   const handle = fakePlayer();
   const host = document.createElement('div') as unknown as VideoPlayerElement;
-  (host as unknown as { store: PlayerStore }).store = {} as PlayerStore;
+  // As a connected element would expose it after self-boot.
+  host.player = handle;
 
   const service = new TutorPlayerService({
-    createHandle: () => handle,
     createElement: () => host,
-    getStore: (element) => element.store ?? null,
   });
 
   return { service, handle, host };
@@ -48,7 +46,7 @@ function target(): HTMLElement {
 }
 
 describe('TutorPlayerService', () => {
-  it('tracks the active player created from a target', () => {
+  it('returns the handle booted by the built element and tracks it as active', () => {
     const { service, handle } = setup();
 
     expect(service.create(target())).toBe(handle);
@@ -76,10 +74,35 @@ describe('TutorPlayerService', () => {
     expect(document.body.contains(host)).toBe(true);
   });
 
-  it('returns a noop unsubscribe and zeroed time when there is no active player', () => {
-    const { service } = setup();
+  it('binds on() to the next player when none exists yet', () => {
+    const { service, handle } = setup();
+    const onPlay = vi.fn();
 
-    expect(typeof service.on('play', () => undefined)).toBe('function');
+    service.on('play', onPlay);
+    expect(handle.on).not.toHaveBeenCalled();
+
+    service.create(target());
+
+    expect(handle.on).toHaveBeenCalledWith('play', onPlay);
+  });
+
+  it('drops a queued handler removed before a player appears', () => {
+    const { service, handle } = setup();
+    const off = service.on('play', vi.fn());
+
+    off();
+    service.create(target());
+
+    expect(handle.on).not.toHaveBeenCalled();
+  });
+
+  it('clears the active player when it is untracked', () => {
+    const { service, handle } = setup();
+    service.create(target());
+
+    service.untrack(handle);
+
+    expect(service.getActive()).toBeNull();
     expect(service.getCurrentTime()).toBe(0);
   });
 
@@ -89,6 +112,14 @@ describe('TutorPlayerService', () => {
     const empty = document.querySelector('.tutor-video-player') as HTMLElement;
 
     expect(() => service.create(empty)).toThrow();
+  });
+
+  it('throws when the built element does not boot a handle', () => {
+    const service = new TutorPlayerService({
+      createElement: () => document.createElement('div') as unknown as VideoPlayerElement,
+    });
+
+    expect(() => service.create(target())).toThrow();
   });
 });
 

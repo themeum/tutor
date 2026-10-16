@@ -45,6 +45,10 @@ import { isMobileDevice, isRTL } from '@Core/ts/utils/util';
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
 
+// Exposed at module scope so deferred engine bundles (the player) can register their
+// services before initializePlugin runs.
+window.TutorComponentRegistry = TutorComponentRegistry;
+
 const initializePlugin = async () => {
   TutorComponentRegistry.registerAll({
     components: [
@@ -116,7 +120,6 @@ const initializePlugin = async () => {
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
-  window.TutorComponentRegistry = TutorComponentRegistry;
   window.Alpine = Alpine;
 
   // Expose TutorCore with services and utilities

@@ -175,6 +175,17 @@ describe('createTutorPlayer', () => {
 
     expect(onPlay).not.toHaveBeenCalled();
   });
+
+  it('invokes onDispose once when the handle is disposed', () => {
+    const { store } = createStore();
+    const onDispose = vi.fn();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5', onDispose });
+
+    player.dispose();
+    player.dispose();
+
+    expect(onDispose).toHaveBeenCalledTimes(1);
+  });
 });
 
 afterEach(() => {

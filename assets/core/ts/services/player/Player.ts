@@ -33,13 +33,15 @@ export interface CreateTutorPlayerOptions {
   element: HTMLElement;
   store: PlayerStore;
   provider: PlayerProvider;
+  /** Called once the handle is disposed, after the store and element are released. */
+  onDispose?: () => void;
 }
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
 type AnyHandler = (payload: never) => void;
 
-export function createTutorPlayer({ element, store, provider }: CreateTutorPlayerOptions): TutorPlayer {
+export function createTutorPlayer({ element, store, provider, onDispose }: CreateTutorPlayerOptions): TutorPlayer {
   const listeners = new Map<PlayerEvent, Set<AnyHandler>>();
 
   const emit = <E extends PlayerEvent>(event: E, payload: PlayerEventMap[E]): void => {
@@ -158,6 +160,7 @@ export function createTutorPlayer({ element, store, provider }: CreateTutorPlaye
       listeners.clear();
       store.destroy();
       element.remove();
+      onDispose?.();
     },
   };
 

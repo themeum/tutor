@@ -1,8 +1,10 @@
 import { createPlayer } from '@videojs/html';
 import { videoFeatures } from '@videojs/html/video';
 
-import { type PlayerStore } from './Player';
-import { type DetectedSource, vimeoVideoId, youtubeVideoId } from './providers';
+import { type PlayerProvider, type TutorPlayer } from '@Core/ts/types/player';
+
+import { createTutorPlayer, type PlayerStore } from './Player';
+import { type DetectedSource, providerFromUrl, vimeoVideoId, youtubeVideoId } from './providers';
 
 export const VIDEO_PLAYER_TAG = 'tutor-video-player';
 const VIDEO_SKIN_TAG = 'video-skin';
@@ -34,9 +36,33 @@ function isDeferredProvider(provider: DetectedSource['provider']): provider is D
 
 export interface VideoPlayerElement extends HTMLElement {
   store: PlayerStore;
+  /** Handle created by the element itself on connect; null once disposed. */
+  player: TutorPlayer | null;
+}
+
+export interface PlayerElementHooks {
+  onMount?: (player: TutorPlayer) => void;
+  onDispose?: (player: TutorPlayer) => void;
+}
+
+let hooks: PlayerElementHooks = {};
+
+/** Wired by the engine entry so the service can track self-booted elements. */
+export function setPlayerElementHooks(next: PlayerElementHooks): void {
+  hooks = next;
 }
 
 const { PlayerElement } = createPlayer({ features: videoFeatures });
+
+// The vendor constructor type carries a `[key: string]` index signature from its config
+// typing, which rejects any subclass member; narrow it to the shape we actually use.
+interface PlayerElementBase extends HTMLElement {
+  readonly store: PlayerStore;
+  connectedCallback?(): void;
+  destroyCallback?(): void;
+}
+
+const PlayerElementBaseClass = PlayerElement as unknown as new () => PlayerElementBase;
 
 const HIDE_UNSUPPORTED_CONTROLS_CSS = `
   media-cast-button[data-availability="unavailable"],
@@ -104,9 +130,85 @@ export function patchVideoSkinStyles(): void {
   }
 }
 
+/**
+ * Resolves the provider from the declared subtree: embed tags win, then the native
+ * source URL decides between the site's own files and an external host.
+ */
+export function resolveProvider(element: Element): PlayerProvider {
+  if (element.querySelector('youtube-video')) {
+    return 'youtube';
+  }
+
+  if (element.querySelector('vimeo-video')) {
+    return 'vimeo';
+  }
+
+  const media = element.querySelector('video');
+  const src = media?.getAttribute('src') || media?.querySelector('source[src]')?.getAttribute('src') || '';
+  const host = element.ownerDocument?.defaultView?.location?.hostname;
+
+  return src ? providerFromUrl(src, host) : 'html5';
+}
+
+class TutorVideoPlayerElement extends PlayerElementBaseClass {
+  player: TutorPlayer | null = null;
+
+  connectedCallback(): void {
+    // Tutor never shows the provider's own title; the lesson controller sets the
+    // lesson title here for fullscreen via the same attribute.
+    if (!this.hasAttribute(CONTENT_TITLE_ATTRIBUTE)) {
+      this.setAttribute(CONTENT_TITLE_ATTRIBUTE, '');
+    }
+
+    // Stage-2 templates keep `controls` on the fallback media for no-JS; the skinned
+    // player owns its controls.
+    this.querySelector('video[controls]')?.removeAttribute('controls');
+
+    super.connectedCallback?.();
+
+    if (this.player) {
+      return;
+    }
+
+    const provider = resolveProvider(this);
+
+    if (isDeferredProvider(provider)) {
+      // Import after the player element is defined and connected: the adapter's media
+      // element registers itself with this element's media context on upgrade.
+      void loadProviderModule(provider);
+    }
+
+    const player = createTutorPlayer({
+      element: this,
+      store: this.store,
+      provider,
+      onDispose: () => this.#releasePlayer(),
+    });
+
+    this.player = player;
+    hooks.onMount?.(player);
+  }
+
+  // The vendor base destroys itself two frames after removal (DestroyMixin), which also
+  // releases the store; keep the service from holding on to the dead handle.
+  destroyCallback(): void {
+    super.destroyCallback?.();
+    this.#releasePlayer();
+  }
+
+  #releasePlayer(): void {
+    const player = this.player;
+    this.player = null;
+
+    if (player) {
+      hooks.onDispose?.(player);
+    }
+  }
+}
+
 export function defineVideoPlayer(tagName: string = VIDEO_PLAYER_TAG): void {
   if (!customElements.get(tagName)) {
-    customElements.define(tagName, PlayerElement);
+    customElements.define(tagName, TutorVideoPlayerElement);
   }
   patchVideoSkinStyles();
 }
@@ -150,23 +252,7 @@ export function createPlayerElement(source: DetectedSource, document: Document):
   applyUnsupportedControlsPatch(skin);
 
   host.appendChild(skin);
-
-  if (isDeferredProvider(source.provider)) {
-    // Append the media once the adapter is defined so the custom element upgrades with it present.
-    void loadProviderModule(source.provider).then(() => {
-      skin.appendChild(createMediaElement(source, document));
-    });
-  } else {
-    skin.appendChild(createMediaElement(source, document));
-  }
-
-  // Tutor never shows the provider's own title; the lesson controller sets the
-  // lesson title here for fullscreen via the same attribute.
-  host.setAttribute(CONTENT_TITLE_ATTRIBUTE, '');
+  skin.appendChild(createMediaElement(source, document));
 
   return host;
-}
-
-export function getStore(element: VideoPlayerElement): PlayerStore | null {
-  return element.store ?? null;
 }

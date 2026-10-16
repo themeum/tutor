@@ -67,7 +67,6 @@ class Assets {
 		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
 		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
-		add_filter( 'script_loader_tag', array( $this, 'mark_player_script_as_module' ), 10, 3 );
 
 		/**
 		 * Register translatable function to load
@@ -331,7 +330,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-sortable' );
         wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
-		// Video.js player engine for course-intro playback (ES module, ADR-0002).
+		// Video.js player engine for course-intro playback.
 		if ( is_single_course( true ) ) {
 			wp_enqueue_script( 'tutor-player', tutor()->url . 'assets/js/tutor-player.js', array(), TUTOR_VERSION, true );
 		}
@@ -918,36 +917,13 @@ class Assets {
 			wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
 			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n', 'wp-date' ), $version, true );
 
-			// Video.js player engine (ES module, ADR-0002).
+			// Video.js player engine.
 			if ( is_single_course( true ) ) {
 				wp_enqueue_script( 'tutor-player', tutor()->assets_url . 'js/tutor-player.js', array(), $version, true );
 			}
 		}
 
 		wp_enqueue_style( 'tutor-cart-button' );
-	}
-
-	/**
-	 * Load the Video.js player engine as an ES module.
-	 *
-	 * The plugin minimum WordPress version (5.3) predates `wp_enqueue_script_module`,
-	 * so the module type is added to the script tag directly.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @param string $tag    The script tag.
-	 * @param string $handle The script handle.
-	 * @param string $src    The script source URL.
-	 *
-	 * @return string
-	 */
-	public function mark_player_script_as_module( $tag, $handle, $src ) {
-		if ( 'tutor-player' !== $handle ) {
-			return $tag;
-		}
-
-		// Replace WP's own `type` attribute if present, otherwise add one.
-		return preg_replace( '/<script\b(\s+type=(["\'])[^"\']*\2)?/', '<script type="module"', $tag, 1 );
 	}
 
 	/**

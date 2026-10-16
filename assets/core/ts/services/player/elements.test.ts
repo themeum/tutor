@@ -1,6 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { applyUnsupportedControlsPatch, createMediaElement, createPlayerElement } from './elements';
+import {
+  applyUnsupportedControlsPatch,
+  createMediaElement,
+  createPlayerElement,
+  defineVideoPlayer,
+  resolveProvider,
+  setPlayerElementHooks,
+} from './elements';
 
 describe('elements', () => {
   it('creates video element for html5 source', () => {
@@ -54,5 +61,102 @@ describe('elements', () => {
     const video = skin?.querySelector('video');
     expect(video).not.toBeNull();
     expect(video?.getAttribute('src')).toBe('https://test.com/a.mp4');
+  });
+});
+
+describe('resolveProvider', () => {
+  const container = (html: string): HTMLElement => {
+    const host = document.createElement('div');
+    host.innerHTML = html;
+    return host;
+  };
+
+  it('reads embed providers from their tags', () => {
+    expect(resolveProvider(container('<youtube-video src="https://www.youtube.com/watch?v=a"></youtube-video>'))).toBe(
+      'youtube',
+    );
+    expect(resolveProvider(container('<vimeo-video src="https://vimeo.com/1"></vimeo-video>'))).toBe('vimeo');
+  });
+
+  it('classifies native video by source host', () => {
+    expect(resolveProvider(container('<video src="https://cdn.other.test/a.mp4"></video>'))).toBe('external');
+    expect(resolveProvider(container('<video src="/uploads/a.mp4"></video>'))).toBe('html5');
+    expect(resolveProvider(container('<video><source src="/uploads/a.mp4"></video>'))).toBe('html5');
+  });
+
+  it('falls back to html5 without media', () => {
+    expect(resolveProvider(container(''))).toBe('html5');
+  });
+});
+
+describe('tutor-video-player element', () => {
+  afterEach(() => {
+    document.body.innerHTML = '';
+    setPlayerElementHooks({});
+  });
+
+  it('boots a handle on connect and releases it on dispose', () => {
+    defineVideoPlayer();
+    const onMount = vi.fn();
+    const onDispose = vi.fn();
+    setPlayerElementHooks({ onMount, onDispose });
+
+    const host = createPlayerElement({ provider: 'html5', src: 'https://test.com/a.mp4' }, document);
+    document.body.appendChild(host);
+
+    expect(host.player).not.toBeNull();
+    expect(host.getAttribute('content-title')).toBe('');
+    expect(onMount).toHaveBeenCalledWith(host.player);
+
+    const player = host.player;
+    player?.dispose();
+
+    expect(host.player).toBeNull();
+    expect(onDispose).toHaveBeenCalledWith(player);
+  });
+
+  it('removes the no-JS controls fallback on connect', () => {
+    defineVideoPlayer();
+    const host = createPlayerElement({ provider: 'html5', src: 'https://test.com/a.mp4' }, document);
+    host.querySelector('video')?.setAttribute('controls', '');
+
+    document.body.appendChild(host);
+
+    expect(host.querySelector('video')?.hasAttribute('controls')).toBe(false);
+
+    host.player?.dispose();
+  });
+
+  it('releases the handle when the vendor base destroys the element', () => {
+    defineVideoPlayer();
+    const onDispose = vi.fn();
+    setPlayerElementHooks({ onDispose });
+
+    const host = createPlayerElement({ provider: 'html5', src: 'https://test.com/a.mp4' }, document);
+    document.body.appendChild(host);
+    const player = host.player;
+
+    (host as unknown as { destroy(): void }).destroy();
+
+    expect(host.player).toBeNull();
+    expect(onDispose).toHaveBeenCalledWith(player);
+  });
+
+  it('does not boot twice when the element reconnects', () => {
+    defineVideoPlayer();
+    const onMount = vi.fn();
+    setPlayerElementHooks({ onMount });
+
+    const host = createPlayerElement({ provider: 'html5', src: 'https://test.com/a.mp4' }, document);
+    document.body.appendChild(host);
+    const player = host.player;
+
+    document.body.removeChild(host);
+    document.body.appendChild(host);
+
+    expect(host.player).toBe(player);
+    expect(onMount).toHaveBeenCalledTimes(1);
+
+    player?.dispose();
   });
 });

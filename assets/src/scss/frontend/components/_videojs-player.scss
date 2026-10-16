@@ -2,6 +2,23 @@
 //
 // The packaged skin (`@videojs/html/video/skin`) sizes only native `<video>`/`<audio>`, so
 // embed media is sized here; and it crops YouTube's own title/overlay.
+
+// Reserve the player's box before the engine upgrades the element (ADR-0010): an
+// unupgraded element and its fallback media occupy the same 16:9 box, so nothing
+// shifts when the deferred module defines the custom element.
+tutor-video-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .tutor-video-player {
   --media-border-radius: 0;
   --media-video-border-radius: 0;
