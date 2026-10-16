@@ -169,6 +169,7 @@ const endpoints = {
   IMPORT_SETTINGS_FREE: 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+  EXPORT_ANALYTICS: 'export_analytics',
 
   // CONTENT BANK
   GET_CONTENT_BANK_COLLECTIONS: 'tutor_content_bank_collections',
