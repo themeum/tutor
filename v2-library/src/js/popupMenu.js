@@ -101,11 +101,9 @@ const showToolTip = (targetEl, text = 'Copied!') => {
 document.addEventListener('click', async (e) => {
 	const copyTargetAttr = 'data-tutor-clipboard-copy-target';
 	const pasteTargetAttr = 'data-tutor-clipboard-paste-target';
-	const copyTrigger = e.target.closest(`[${copyTargetAttr}]`);
-	const pasteTrigger = e.target.closest(`[${pasteTargetAttr}]`);
 
-	if (copyTrigger) {
-		const id = copyTrigger.getAttribute(copyTargetAttr);
+	if (e.target.hasAttribute(copyTargetAttr)) {
+		const id = e.target.getAttribute(copyTargetAttr);
 
 		/* Get the text field */
 		const text = document.getElementById(id).value;
@@ -113,19 +111,19 @@ document.addEventListener('click', async (e) => {
 		/* Copy text into clipboard */
 		if (text) {
 			await navigator.clipboard.writeText(text);
-			showToolTip(copyTrigger, 'Copied');
+			showToolTip(e.target, 'Copied');
 		}
 	}
 
-	if (pasteTrigger) {
-		const id = pasteTrigger.getAttribute(pasteTargetAttr);
+	if (e.target.hasAttribute(pasteTargetAttr)) {
+		const id = e.target.getAttribute(pasteTargetAttr);
 
 		const text = await navigator.clipboard.readText();
 
 		/* Pasting on the text field */
 		if (text) {
 			document.getElementById(id).value = text;
-			showToolTip(pasteTrigger, 'Pasted');
+			showToolTip(e.target, 'Pasted');
 		}
 	}
 });
