@@ -522,41 +522,6 @@ class Admin {
 	}
 
 	/**
-	 * Tutor tools page (OLD)
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_tools_old() {
-		$tutor_admin_tools_page = Input::get( 'tutor_admin_tools_page' );
-		if ( $tutor_admin_tools_page ) {
-			include apply_filters( 'tutor_admin_tools_page', tutor()->path . "views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page );
-		} else {
-			$pages = apply_filters(
-				'tutor_tool_pages',
-				array(
-					'tutor_pages' => array( 'title' => __( 'Tutor Pages', 'tutor' ) ),
-					'status'      => __( 'Status', 'tutor' ),
-				)
-			);
-
-			$current_page   = 'tutor_pages';
-			$requested_page = Input::get( 'sub_page' );
-			if ( $requested_page ) {
-				$current_page = $requested_page;
-			}
-
-			$current_page = str_replace( '/', '', $current_page );
-			$current_page = str_replace( '.', '', $current_page );
-			$current_page = str_replace( '\\', '', $current_page );
-			$current_page = trim( $current_page );
-
-			include tutor()->path . 'views/pages/tools.php';
-		}
-	}
-
-	/**
 	 * Show pro upgrade page
 	 *
 	 * @since 1.0.0
