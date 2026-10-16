@@ -562,7 +562,7 @@ class CheckoutController {
 
 		if ( ! $current_user_id ) {
 			if ( ! $is_guest_checkout_enabled ) {
-				$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+				wp_die( esc_html( tutor_utils()->error_message( 'invalid_req' ) ) );
 			}
 
 			// Generate a temporary identifier for the guest user.
@@ -729,8 +729,9 @@ class CheckoutController {
 	}
 
 	/**
-	 * Pay now ajax handler
-	 * Create pending order, prepare payment data & proceed to payment gateway
+	 * Handle the checkout form submission.
+	 *
+	 * Creates a pending order, prepares the payment data, and proceeds to the payment gateway.
 	 *
 	 * @since 3.0.0
 	 *
