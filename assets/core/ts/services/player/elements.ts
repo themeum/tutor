@@ -164,6 +164,14 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     // player owns its controls.
     this.querySelector('video[controls]')?.removeAttribute('controls');
 
+    // The skin class registers before this element, so a declared skin is already
+    // upgraded here: give it the same fallback the built path applies.
+    const skin = this.querySelector(VIDEO_SKIN_TAG);
+
+    if (skin) {
+      applyUnsupportedControlsPatch(skin as HTMLElement);
+    }
+
     super.connectedCallback?.();
 
     if (this.player) {

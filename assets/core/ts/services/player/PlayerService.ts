@@ -45,6 +45,15 @@ export class TutorPlayerService implements PlayerService {
   }
 
   create(element: HTMLElement): TutorPlayer {
+    // Declarative <tutor-video-player> markup boots itself on connect: adopt that handle
+    // instead of rebuilding the subtree. Legacy markup still takes the shim path below.
+    const booted = (element as Partial<VideoPlayerElement>).player;
+
+    if (booted) {
+      this.track(booted);
+      return booted;
+    }
+
     const source: DetectedSource | null = detectSource(element);
 
     if (!source) {

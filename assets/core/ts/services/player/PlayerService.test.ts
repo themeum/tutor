@@ -55,6 +55,16 @@ describe('TutorPlayerService', () => {
     expect(service.getCurrentTime()).toBe(5);
   });
 
+  it('adopts the handle of an element that booted itself', () => {
+    const { service, handle, host } = setup();
+    document.body.appendChild(host);
+
+    expect(service.create(host)).toBe(handle);
+    expect(service.getActive()).toBe(handle);
+    // The declarative subtree is kept as-is: no replacement host was built.
+    expect(document.body.contains(host)).toBe(true);
+  });
+
   it('proxies calls to the active player', () => {
     const { service, handle } = setup();
     service.create(target());

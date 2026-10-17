@@ -34,6 +34,10 @@ mergeable in the free plugin — Pro needs no changes.
   `create()` ensures a handle for legacy markup; adapter import moved into the element.
 - [03](issues/03-space-reservation-css.md): standalone `tutor-video-player` reservation
   rule; wrapper + spinner already covered; inert until 05.
+- [05](issues/05-declarative-templates.md): templates declare the player tree, both callers
+  retarget to the element (`tutor-front.js` included), `create()` adopts a self-booted
+  handle, `ready` became a latch so a late controller still bootstraps, declarative skins
+  get the unsupported-controls CSS in the element.
 
 ## Not yet specified
 

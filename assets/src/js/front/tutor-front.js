@@ -188,7 +188,7 @@ jQuery(document).ready(function($) {
 	 * Fire TUTOR video
 	 * @since v.1.0.0
 	 */
-	$('.tutorPlayer').each(function() {
+	$('tutor-video-player, .tutorPlayer').each(function() {
 		videoPlayer.init(this);
 	});
 

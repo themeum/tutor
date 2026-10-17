@@ -55,6 +55,21 @@ describe('createTutorPlayer', () => {
     expect(onReady).toHaveBeenCalledTimes(1);
   });
 
+  it('replays ready to a subscriber that arrives after the first sync', async () => {
+    const { store, emit, set } = createStore();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+
+    set({ target: { media: document.createElement('video') } });
+    emit();
+    await Promise.resolve();
+
+    const onReady = vi.fn();
+    player.on('ready', onReady);
+    await Promise.resolve();
+
+    expect(onReady).toHaveBeenCalledWith(expect.objectContaining({ player }));
+  });
+
   it('emits play/pause on paused transitions', async () => {
     const { store, emit, set } = createStore();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5' });

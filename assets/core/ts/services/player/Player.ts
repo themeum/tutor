@@ -147,6 +147,17 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
       const handlers = listeners.get(event) ?? new Set<AnyHandler>();
       listeners.set(event, handlers);
       handlers.add(handler as unknown as AnyHandler);
+
+      // `ready` is a latch, not a moment: declarative markup boots as soon as the engine
+      // loads, which can be before the lesson controller subscribes.
+      if (ready && (event as PlayerEvent) === 'ready') {
+        queueMicrotask(() => {
+          if (!disposed && handlers.has(handler as unknown as AnyHandler)) {
+            (handler as (payload: PlayerEventMap['ready']) => void)({ player: handle });
+          }
+        });
+      }
+
       return () => handlers.delete(handler as unknown as AnyHandler);
     },
 

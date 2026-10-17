@@ -115,3 +115,7 @@ No test data (unchanged): external provider, course intro, Alpine path.
 
 Test side effects (acceptable on this QA site): watch-time syncs from the playback runs on
 lessons 72099/72795 and the vimeo lesson; no completion states changed.
+
+Stage 2 landed in [05](05-declarative-templates.md) and re-ran this ladder against the
+declarative markup (html5/vimeo/youtube mounts, playback + auto-next, strict clamp, legacy
+lesson, shim back-compat). The manual items above stay open for both stages.

@@ -1,5 +1,5 @@
 Type: task
-Status: open
+Status: done
 Blocked by: 04
 
 ## Question
@@ -26,3 +26,63 @@ Stage 2: flip the four templates to declarative markup (ADR-0010).
   controller never starts (no sync, no auto-next, no fullscreen class, spinner not
   removed). Point it at the declared element (`create()` is idempotent) and refresh its
   stale "deferred ES module" comment (ADR-0011: classic script).
+
+## Result
+
+The four templates declare `<tutor-video-player><video-skin><media></video-skin>` and both
+callers adopt the self-booted element instead of rebuilding it.
+
+- `PlayerService.create()` is idempotent for declarative markup: it adopts
+  `element.player` and tracks it; the legacy replacement path (the shim) still mounts
+  `.tutorPlayer` markup for third parties.
+- `ready` became a latch in `Player.ts`: a subscriber arriving after the first store sync
+  still receives it. Declarative markup boots when the engine loads, which can precede the
+  lesson controller; without the latch the lesson bootstrap (spinner removal, resume, sync
+  timer, `TutorLessonPlayer` global) would silently not run.
+- The element applies the unsupported-controls CSS to a declared `video-skin` as well (the
+  built path did it inside `createPlayerElement`).
+- Retargets: the learning-area controller selects
+  `.tutor-lesson-video-wrapper tutor-video-player, … .tutorPlayer`; `tutor-front.js`
+  selects `tutor-video-player, .tutorPlayer`. The legacy lesson's caller lives in
+  `tutor-front.js` (not in the learning-area bundle) — it was not in the original ticket
+  scope but the legacy page needs it, verified below.
+- The opt-in branches build URLs from the IDs the templates already parse
+  (`watch?v=<id>`, `vimeo.com/<id>[/hash]`) instead of the raw user URL: that is exactly
+  what the shim's `buildMediaSource()` produced in stage 1, so the flip stays
+  behavior-identical (a raw URL would forward provider query params the old path dropped
+  and would mishandle a bare video id).
+
+Verified live on the production build with the flips reverted:
+
+- HTML5 (`course-v3` lesson1): zero `.tutorPlayer`, one host, declared `<source>` kept
+  (`controls` removed by the element), `TutorCore.player.getActive() === element.player`,
+  spinner removed, `content-title` empty, clean console; the 8.1 s video played to the end
+  and the page advanced to the next content (`assignments/heelo/`).
+- Vimeo (lesson 72100): `<vimeo-video src="https://vimeo.com/336812686">` → adapter
+  resolves `player.vimeo.com/video/336812686…`, 41 s; played to the end and advanced to the
+  next quiz.
+- YouTube (lesson 72710): `<youtube-video src="https://www.youtube.com/watch?v=I2eHUhu9ut4">`
+  → embed resolves, 57 s.
+- Strict re-run (lesson 72710, not completed): `PlayerData` carries
+  `strict/control/enrolled = true, completed = false`; `seek(60)` clamped to the lesson's
+  watched limit with the "Forward seeking is disabled" toast.
+- Legacy lesson (`learning_mode=legacy`, flipped and reverted): legacy template markers,
+  host inside `.tutor-video-player-wrapper`, player created, spinner removed,
+  `activeIsSame`, clean console.
+- Shim back-compat: an injected `<video class="tutorPlayer">` was replaced by a booted
+  declarative host through `create()` (then disposed cleanly).
+- `php -l`, `tsc --noEmit`, eslint, 68 unit tests (2 new), production build — green.
+
+Site options restored: `mode=modern`, `completion=flexible`, `control=false`, provider
+opt-ins on, `auto_play_next` on. Remaining manual pass is unchanged from ticket 04 (real
+fullscreen + Vimeo exit resync, Pro Take Note in fullscreen, mobile Vimeo mute, YouTube
+playback drive).
+
+### At release
+
+Changelog line to add with the next version bump (the repo updates version and readme
+together at release):
+
+> Update: The lesson player markup is now declarative (`<tutor-video-player>`); overrides
+> of `templates/single/video/*.php` should return that element. Legacy `.tutorPlayer`
+> markup keeps working for this cycle.

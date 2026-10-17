@@ -366,7 +366,11 @@ export const initializeLessonPlayer = (): void => {
     return;
   }
 
-  const target = document.querySelector('.tutor-lesson-video-wrapper .tutorPlayer') as HTMLElement | null;
+  // Declarative element first; `.tutorPlayer` keeps third-party legacy markup on the shim
+  // path until it is retired.
+  const target = document.querySelector(
+    '.tutor-lesson-video-wrapper tutor-video-player, .tutor-lesson-video-wrapper .tutorPlayer',
+  ) as HTMLElement | null;
 
   if (!target) {
     document.querySelector('.tutor-video-player .loading-spinner')?.remove();

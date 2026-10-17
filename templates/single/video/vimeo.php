@@ -32,18 +32,7 @@ if ( $video_hash ) {
 	$embed_url = add_query_arg( 'h', $video_hash, $embed_url );
 }
 
-$tutor_player_embed_url = add_query_arg(
-	array(
-		'loop'        => 'false',
-		'byline'      => 'false',
-		'portrait'    => 'false',
-		'title'       => 'false',
-		'speed'       => 'true',
-		'transparent' => '0',
-		'gesture'     => 'media',
-	),
-	$embed_url
-);
+$tutor_player_vimeo_url = $video_hash ? "https://vimeo.com/{$video_id}/{$video_hash}" : "https://vimeo.com/{$video_id}";
 
 do_action( 'tutor_lesson/single/before/video/vimeo' );
 ?>
@@ -51,13 +40,17 @@ do_action( 'tutor_lesson/single/before/video/vimeo' );
 <?php if ( $video_id ) : ?>
 	<div class="tutor-video-player">
 		<div class="loading-spinner" aria-hidden="true"></div>
-		<div class="<?php echo $disable_default_player_vimeo ? 'plyr__video-embed tutorPlayer' : 'tutor-ratio tutor-ratio-16x9'; ?>">
-			<?php if ( ! $disable_default_player_vimeo ) : ?>
+		<?php if ( ! $disable_default_player_vimeo ) : ?>
+			<div class="tutor-ratio tutor-ratio-16x9">
 				<iframe src="<?php echo esc_url( $embed_url ); ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-			<?php else : ?>
-				<iframe src="<?php echo esc_url( $tutor_player_embed_url ); ?>" allowfullscreen allowtransparency allow="autoplay"></iframe>
-			<?php endif; ?>
-		</div>
+			</div>
+		<?php else : ?>
+			<tutor-video-player>
+				<video-skin>
+					<vimeo-video src="<?php echo esc_url( $tutor_player_vimeo_url ); ?>"></vimeo-video>
+				</video-skin>
+			</tutor-video-player>
+		<?php endif; ?>
 	</div>
 <?php endif; ?>
 
