@@ -5,6 +5,7 @@ import {
   createMediaElement,
   createPlayerElement,
   defineVideoPlayer,
+  loadProviderModule,
   resolveProvider,
   setPlayerElementHooks,
   type VideoPlayerElement,
@@ -87,6 +88,20 @@ describe('resolveProvider', () => {
 
   it('falls back to html5 without media', () => {
     expect(resolveProvider(container(''))).toBe('html5');
+  });
+});
+
+describe('deferred provider adapters', () => {
+  it('loads a provider adapter on demand, exactly once', async () => {
+    expect(customElements.get('vimeo-video')).toBeUndefined();
+
+    const first = loadProviderModule('vimeo');
+    expect(loadProviderModule('vimeo')).toBe(first);
+
+    await first;
+
+    // The adapter element must exist before a declared `<vimeo-video>` can upgrade.
+    expect(customElements.get('vimeo-video')).toBeDefined();
   });
 });
 

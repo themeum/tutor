@@ -51,7 +51,6 @@ describe('TutorPlayerService', () => {
 
     expect(service.create(target())).toBe(handle);
     expect(service.getActive()).toBe(handle);
-    expect(service.active).toBe(handle);
     expect(service.getCurrentTime()).toBe(5);
   });
 

@@ -1,6 +1,7 @@
 import { createPlayer } from '@videojs/html';
 import { videoFeatures } from '@videojs/html/video';
 
+import { CONTENT_TITLE_ATTRIBUTE } from '@Core/ts/constant';
 import { type PlayerProvider, type TutorPlayer } from '@Core/ts/types/player';
 
 import { createTutorPlayer, type PlayerStore } from './Player';
@@ -112,18 +113,7 @@ export function patchVideoSkinStyles(): void {
 
   if (typeof CSSStyleSheet !== 'undefined' && VideoSkin.styles instanceof CSSStyleSheet) {
     try {
-      VideoSkin.styles.insertRule(
-        `media-cast-button[data-availability="unavailable"],
-         media-cast-button[data-availability="unsupported"],
-         media-airplay-button[data-availability="unavailable"],
-         media-airplay-button[data-availability="unsupported"],
-         media-pip-button[data-availability="unavailable"],
-         media-pip-button[data-availability="unsupported"],
-         [data-availability="unavailable"],
-         [data-availability="unsupported"],
-         [data-hidden] { display: none !important; }`,
-        VideoSkin.styles.cssRules.length,
-      );
+      VideoSkin.styles.insertRule(HIDE_UNSUPPORTED_CONTROLS_CSS, VideoSkin.styles.cssRules.length);
     } catch {
       // Ignored
     }
@@ -252,8 +242,6 @@ export function createMediaElement(source: DetectedSource, document: Document): 
 
   return element;
 }
-
-export const CONTENT_TITLE_ATTRIBUTE = 'content-title';
 
 export function createPlayerElement(source: DetectedSource, document: Document): VideoPlayerElement {
   const host = document.createElement(VIDEO_PLAYER_TAG) as VideoPlayerElement;

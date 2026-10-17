@@ -11,7 +11,6 @@ export const TUTOR_CUSTOM_EVENTS = {
   FORM_STATE_CHANGE: 'tutor-form-state-change',
   FORM_RESET: 'tutor-form-reset',
   WP_EDITOR_FOCUS: 'wp-editor-focus',
-  TUTOR_PLAYER_READY: 'tutor-player-ready',
   PLAYER_ENGINE_READY: 'tutor-player-engine-ready',
   COMMENT_REPLIED: 'tutor:comment:replied',
   LESSON_PLAYER_READY: 'tutorLessonPlayerReady',
@@ -22,3 +21,6 @@ export const TUTOR_CUSTOM_EVENTS = {
   DATE_FILTER_CHANGED: 'tutor:date-filter-changed',
   SORT_CHANGED: 'tutor:sort-changed',
 };
+
+/** Attribute the lesson controller sets to feed the skin's fullscreen media title. */
+export const CONTENT_TITLE_ATTRIBUTE = 'content-title';

@@ -9,7 +9,6 @@ import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
 import { passwordInputMeta } from '@Core/ts/components/password-input';
-import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { readMoreMeta } from '@Core/ts/components/read-more';
@@ -63,7 +62,6 @@ const initializePlugin = async () => {
       readMoreMeta,
       starRatingMeta,
       toastMeta,
-      playerMeta,
       passwordInputMeta,
       copyToClipboardMeta,
       wpEditorMeta,

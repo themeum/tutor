@@ -1,7 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
-import { CONTENT_TITLE_ATTRIBUTE } from '@Core/ts/services/player/elements';
+import { CONTENT_TITLE_ATTRIBUTE, TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { getLegacyTutorLessonPlayer } from '@Core/ts/services/player/legacy';
 import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 

@@ -39,7 +39,7 @@ export interface CreateTutorPlayerOptions {
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
-type AnyHandler = (payload: never) => void;
+export type AnyHandler = (payload: never) => void;
 
 export function createTutorPlayer({ element, store, provider, onDispose }: CreateTutorPlayerOptions): TutorPlayer {
   const listeners = new Map<PlayerEvent, Set<AnyHandler>>();

@@ -15,8 +15,6 @@ export interface PlayerEventMap {
 
 export type PlayerEvent = keyof PlayerEventMap;
 
-export type PlayerEventPayload<E extends PlayerEvent = PlayerEvent> = PlayerEventMap[E];
-
 export type PlayerUnsubscribe = () => void;
 
 export interface TutorPlayer {
@@ -42,8 +40,6 @@ export interface TutorPlayer {
 }
 
 export interface PlayerService {
-  readonly active: TutorPlayer | null;
-
   create(target: HTMLElement): TutorPlayer;
   getActive(): TutorPlayer | null;
 

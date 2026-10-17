@@ -145,4 +145,7 @@ class Registry {
   }
 }
 
-export const TutorComponentRegistry = new Registry();
+// The core bundle and the deferred engine bundle each instantiate this module, so the
+// instance is shared through window: whichever bundle evaluates first publishes it.
+export const TutorComponentRegistry: Registry =
+  typeof window === 'undefined' ? new Registry() : (window.TutorComponentRegistry ??= new Registry());

@@ -8,13 +8,12 @@ import {
 } from '@Core/ts/types/player';
 
 import { createPlayerElement, type VideoPlayerElement } from './elements';
+import { type AnyHandler } from './Player';
 import { type DetectedSource, detectSource } from './providers';
 
 export interface PlayerServiceDependencies {
   createElement?: (source: DetectedSource, document: Document) => VideoPlayerElement;
 }
-
-type AnyHandler = (payload: never) => void;
 
 export class TutorPlayerService implements PlayerService {
   #active: TutorPlayer | null = null;
@@ -23,10 +22,6 @@ export class TutorPlayerService implements PlayerService {
 
   constructor(dependencies: PlayerServiceDependencies = {}) {
     this.#createElement = dependencies.createElement ?? createPlayerElement;
-  }
-
-  get active(): TutorPlayer | null {
-    return this.#active;
   }
 
   /** Marks a player booted by its own element as active (wired to the element hooks). */
