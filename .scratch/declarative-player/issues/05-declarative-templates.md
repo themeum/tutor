@@ -123,6 +123,32 @@ Code review of the branch against 4.2.0, same day:
   `defineOrder.test.ts` (the host is defined when the skin module evaluates — locks the
   `boot.ts` order the post-gate fix depends on).
 
+### Review round 2
+
+A standards/spec/ponytail/architecture review pass over the branch, all findings applied:
+
+- Engine kept out of both caller bundles: `CONTENT_TITLE_ATTRIBUTE` moved to
+  `@Core/ts/constant` (shared values live there, never in the engine module), so
+  `tutor-front.js` / `tutor-learning-area.js` dropped ~100 KB raw each.
+- `ComponentRegistry` is a window-level singleton, so the core bundle and the engine bundle
+  share one registry regardless of script order (the "two registries" outcome ADR-0010
+  rejected).
+- Engine enqueue (both paths in `Assets.php`) is gated on `has_video_in_single()`; quiz and
+  video-less pages no longer download `tutor-player.js`.
+- Strict mode counts wall-clock time only while playing: throttled/background tabs stop
+  bouncing playback backwards, and a seek performed during a pause is still blocked.
+- Legacy pages get the pre-migration `tooltip-wrap` + `tooltip-txt` span when Alpine is
+  absent; the Learning Area keeps the Alpine `tutorTooltip` markup.
+- `tutor-front.js` warns and continues when the engine cannot read a legacy element instead
+  of aborting the rest of the bundle's ready handlers.
+- Templates emit the raw user URL again (params and unlisted hashes intact) — the
+  canonicalization recorded under Result is reversed per ADR-0010; bare ids were, and
+  remain, not rendered by these templates.
+- `vimeoVideoId` reads the path-form hash (`player.vimeo.com/video/{id}/{hash}`).
+- Dead surface removed: the dormant Alpine player component and its `tutor-player-ready`
+  event, the test-only `active` getter, `PlayerEventPayload`, a duplicated `AnyHandler`,
+  and the duplicated unsupported-controls CSS; ADR-0007 is amended to the shipped surface.
+
 ### At release
 
 Changelog line to add with the next version bump (the repo updates version and readme

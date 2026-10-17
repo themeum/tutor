@@ -46,6 +46,15 @@ mergeable in the free plugin — Pro needs no changes.
 - [05 review fixes](issues/05-declarative-templates.md#review-fixes-vs-420): the YouTube
   embed crop is gone (it zoomed and cut every non-16:9 video); fullscreen events only fire
   for the player's own fullscreen element; the define-order contract has a test.
+- [05 review round 2](issues/05-declarative-templates.md#review-round-2): the engine is out
+  of both caller bundles (the shared attribute moved to `@Core/ts/constant`),
+  `ComponentRegistry` is a window singleton shared by core + engine, the enqueue is gated
+  on the single having a video, strict mode tolerates throttled timers, the legacy tooltip
+  returns, templates emit raw provider URLs again (ADR-0010), and dead player surface is
+  deleted.
+- Accepted deltas outside the stage-2 tickets, recorded here: player radius/aspect
+  normalization across contexts and Take Note inside the player in fullscreen (Pro-driven),
+  and the lesson title published to the skin's fullscreen media title.
 
 ## Not yet specified
 

@@ -18,6 +18,11 @@ _Avoid_: Source, type
 The on-page player that plays a Lesson Video and owns its controls and playback state.
 _Avoid_: Video player, media element
 
+**Player Engine Names**:
+The identifiers of the Lesson Player's implementation — `<tutor-video-player>`, the
+`TutorPlayer` handle, the `TutorCore.player` service. Names for code, not for prose.
+_Avoid_: using them when "Lesson Player" is meant
+
 **Strict Mode**:
 A lesson completion mode in which forward seeking is blocked and a minimum watch
 percentage must be reached before the lesson can be completed.

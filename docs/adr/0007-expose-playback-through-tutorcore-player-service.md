@@ -108,3 +108,17 @@ emits per-entry configs and just special-cases the player entry by name).
   `event.srcElement` convention.
 - `tutor-player-ready` / `tutorLessonPlayerReady` stay as-is for one deprecation cycle,
   then are retired in favour of subscription via `TutorCore.player.on('ready', …)`.
+
+## Amendment (2026-10-17)
+
+- Delivery changed: the engine is a standard IIFE `jsEntries` entry (`tutor-player.js`)
+  enqueued as a classic script — ADR-0011 supersedes the ES-module entry and the second
+  rspack config described above.
+- The shipped service surface is smaller than sketched: `isPlaying()`, `off()`, and the
+  service-level `play()`/`pause()`/`getDuration()` are not implemented; `readonly active`
+  shipped as `getActive()`, the accessor Pro consumes.
+- `tutor-player-ready` was removed with the dormant Alpine player component (nothing
+  dispatched or listened to it); `tutorLessonPlayerReady` and the
+  `window.TutorLessonPlayer` shim remain until ticket 06.
+- The registry is a window-level singleton, so the engine's service registration lands in
+  the core bundle's registry regardless of script order.
