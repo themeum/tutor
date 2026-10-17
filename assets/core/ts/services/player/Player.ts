@@ -66,6 +66,7 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
 
   let disposed = false;
   let ready = false;
+  let ownFullscreen = false;
   let previous = snapshot();
   let unsubscribeStore: PlayerUnsubscribe = () => undefined;
 
@@ -105,11 +106,19 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
       return;
     }
     const active = (element.ownerDocument?.fullscreenElement as HTMLElement | undefined) ?? null;
-    const fullscreen = Boolean(active);
+    // Another element's fullscreen (a lightbox, a different embed) is not this player's event.
+    const mine = active !== null && (active === element || active.contains(element) || element.contains(active));
+
+    if (active !== null ? !mine : !ownFullscreen) {
+      return;
+    }
+
+    ownFullscreen = mine;
+
     const fullscreenElement = active ?? element;
 
-    emit('fullscreenchange', { player: handle, fullscreen, element: fullscreenElement });
-    emit(fullscreen ? 'enterfullscreen' : 'exitfullscreen', {
+    emit('fullscreenchange', { player: handle, fullscreen: mine, element: fullscreenElement });
+    emit(mine ? 'enterfullscreen' : 'exitfullscreen', {
       player: handle,
       srcElement: fullscreenElement,
       target: fullscreenElement,

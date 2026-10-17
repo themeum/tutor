@@ -146,6 +146,44 @@ describe('createTutorPlayer', () => {
     expect(onExit).toHaveBeenCalledWith(expect.objectContaining({ srcElement: player.element }));
   });
 
+  it('ignores fullscreen changes that belong to another element', () => {
+    const { store } = createStore();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+    const onChange = vi.fn();
+    const onEnter = vi.fn();
+    const onExit = vi.fn();
+    player.on('fullscreenchange', onChange);
+    player.on('enterfullscreen', onEnter);
+    player.on('exitfullscreen', onExit);
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: document.createElement('div') });
+    document.dispatchEvent(new Event('fullscreenchange'));
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onEnter).not.toHaveBeenCalled();
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    document.dispatchEvent(new Event('fullscreenchange'));
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onExit).not.toHaveBeenCalled();
+  });
+
+  it('treats a fullscreen ancestor of the player as its own', () => {
+    const wrapper = document.createElement('div');
+    const host = element();
+    wrapper.appendChild(host);
+    const { store } = createStore();
+    const player = createTutorPlayer({ element: host, store, provider: 'html5' });
+    const onEnter = vi.fn();
+    player.on('enterfullscreen', onEnter);
+
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: wrapper });
+    document.dispatchEvent(new Event('fullscreenchange'));
+
+    expect(onEnter).toHaveBeenCalledWith(expect.objectContaining({ srcElement: wrapper }));
+  });
+
   it('reads fullscreen state from the store', () => {
     const { store, set } = createStore();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
