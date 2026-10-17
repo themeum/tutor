@@ -56,7 +56,8 @@ export function vimeoVideoId(url: string): { id: string; hash?: string } | null 
   if (host === 'player.vimeo.com') {
     const index = parts.indexOf('video');
     const id = index >= 0 ? parts[index + 1] : parts[0];
-    return id ? { id, hash: parsed.searchParams.get('h') ?? undefined } : null;
+    const hash = parsed.searchParams.get('h') ?? (index >= 0 ? parts[index + 2] : parts[1]);
+    return id ? { id, hash } : null;
   }
 
   const index = parts[0] === 'video' ? 1 : 0;

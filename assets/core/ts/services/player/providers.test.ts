@@ -22,6 +22,7 @@ describe('vimeoVideoId', () => {
     expect(vimeoVideoId('https://vimeo.com/12345')).toEqual({ id: '12345', hash: undefined });
     expect(vimeoVideoId('https://vimeo.com/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345?h=abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
+    expect(vimeoVideoId('https://player.vimeo.com/video/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://example.com/12345')).toBeNull();
   });
 });
