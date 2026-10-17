@@ -66,20 +66,52 @@ resume, strict mode, auto-next, mobile Vimeo mute).
   (`sample-course-video.mp4`, 10.006s). HTML5 playback + resume were proven earlier on
   the saved-position lesson.
 
-### Still open before this gate closes
+### Second pass (2026-10-17) — flips + visible window
 
-- The browser window was hidden for this pass (`document.visibilityState === "hidden"`
-  even after `tabs.focus` / `tabs.open({ focus: true })`). Chrome defers programmatic
-  playback in hidden tabs, so play-through (`ended`/`timeupdate` chains), fullscreen
-  clicks and Pro Take Note must be re-run with the window visible.
-- fullscreen + Pro lesson notes/Take Note fullscreen: need real clicks (transient
-  activation) in a visible tab.
-- auto-next: needs an enrolled user — user 1 is enrolled in no courses here, so
-  `autoload_next_course_content` returns an error.
-- strict mode: Pro `control_video_lesson_completion` is false and no course runs
-  `completion_mode: strict` → no test data (`#isStrict()` also needs `is_enrolled`).
-- legacy lesson: needs `learning_mode: legacy` (site-wide) for one pass.
-- mobile Vimeo mute: needs a mobile UA/device run (`core.device.isMobileDevice()`).
-- external provider: no published lesson has `source: external`.
-- course intro: no published course has `_video` meta.
-- Alpine component path: dormant/unreferenced (ADR-0010), nothing mounts.
+Temporary site settings were flipped and reverted; final values verified:
+`learning_mode=modern`, `course_completion_process=flexible`,
+`control_video_lesson_completion=false`; user preferences untouched (`auto_play_next` was
+already on). No enrollment was created — `do_enroll()` refuses the trashed course and
+user 1 was already enrolled in published `#30666`.
+
+Passed:
+
+- Auto-next: lesson 72099 (html5, `#30666`) seeked to `duration-2` and played to the end;
+  the tab navigated to `…/quizzes/q1/` = that lesson's `next_id` (72431). `ended` →
+  `#autoloadContent()` → `autoload_next_course_content` → `openUrl` end-to-end.
+- Strict mode: lesson 72795 (`course-v3`: enrolled, not completed) with
+  `course_completion_process=strict` + `control_video_lesson_completion=true`:
+  `PlayerData` carried `strict:true, control:true, enrolled:true, completed:false`;
+  `seek(120)` was clamped back and the toast “Forward seeking is disabled” appeared. The
+  handle's `on()` delivered `play`/`timeupdate` events throughout.
+- Legacy lesson (`learning_mode=legacy`, same lesson): `.tutor-course-topic-single-body`
+  and `.tutor-video-player-wrapper` render, modern `.tutor-lesson-video-wrapper` does not;
+  element boots, player is created, media loads (8.1 s), console clean; the video played
+  to the end and the page advanced to the next content (assignment 72797). In legacy mode
+  the learning-area controller's `.tutor-lesson-video-wrapper .tutorPlayer` selector
+  matches nothing, so the player is created by the legacy path through the shim — the shim
+  working as designed.
+- `content-title` stays empty outside fullscreen (element default), as specified. The
+  fullscreen wiring (`is-fullscreen` class, title set/clear, empty-title case, Vimeo exit
+  resync) has unit coverage in `lesson/player.test.ts`.
+
+Notes:
+
+- `window.TutorLessonPlayer.on()` (legacy shim) only carries `enterfullscreen` /
+  `exitfullscreen` by design; `play`/`pause`/`ended`/`timeupdate` come from the handle
+  (`TutorCore.player.create(…)`) the controller uses. Do not test event flow via the shim.
+
+Remaining — manual pass only (cannot be driven from the harness browser):
+
+- Fullscreen at all: `document.documentElement.requestFullscreen()` never settles (stays
+  pending) even after a trusted keypress grants transient activation. The skin's
+  fullscreen button, the real `fullscreenchange` path, the Vimeo exit resync and Pro Take
+  Note fullscreen need a human run in a real browser.
+- YouTube playback: adapter mounts and resolves (`embed/YwKRJMzvQnU`, 61 s) but
+  programmatic play against the cross-origin iframe does not start — env limitation.
+- Mobile Vimeo mute: no device/UA emulation available.
+
+No test data (unchanged): external provider, course intro, Alpine path.
+
+Test side effects (acceptable on this QA site): watch-time syncs from the playback runs on
+lessons 72099/72795 and the vimeo lesson; no completion states changed.
