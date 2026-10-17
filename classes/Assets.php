@@ -331,7 +331,7 @@ class Assets {
         wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
 		// Video.js player engine for course-intro playback.
-		if ( is_single_course( true ) ) {
+		if ( is_single_course( true ) && tutor_utils()->has_video_in_single() ) {
 			wp_enqueue_script( 'tutor-player', tutor()->url . 'assets/js/tutor-player.js', array(), TUTOR_VERSION, true );
 		}
 
@@ -918,7 +918,7 @@ class Assets {
 			wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n', 'wp-date' ), $version, true );
 
 			// Video.js player engine.
-			if ( is_single_course( true ) ) {
+			if ( is_single_course( true ) && tutor_utils()->has_video_in_single() ) {
 				wp_enqueue_script( 'tutor-player', tutor()->assets_url . 'js/tutor-player.js', array(), $version, true );
 			}
 		}
