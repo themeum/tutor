@@ -134,6 +134,48 @@ describe('LessonPlaybackController strict mode', () => {
 
     expect(player.seek).not.toHaveBeenCalled();
   });
+
+  it('allows progress that arrived late while timers were throttled', () => {
+    let now = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => now);
+
+    const { player, emit } = createFakePlayer();
+    const controller = new LessonPlaybackController(player, strictData, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    emit('play');
+
+    now = 5_000;
+    emit('timeupdate', { currentTime: 6 });
+    expect(player.seek).not.toHaveBeenCalled();
+
+    now = 6_500;
+    emit('timeupdate', { currentTime: 30 });
+    expect(player.seek).toHaveBeenCalledWith(6);
+  });
+
+  it('blocks a forward seek performed while paused', () => {
+    let now = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => now);
+
+    const { player, emit } = createFakePlayer();
+    const controller = new LessonPlaybackController(player, strictData, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    emit('play');
+
+    now = 1_000;
+    emit('timeupdate', { currentTime: 1 });
+    expect(player.seek).not.toHaveBeenCalled();
+
+    emit('pause');
+
+    now = 700_000;
+    emit('timeupdate', { currentTime: 301 });
+    expect(player.seek).toHaveBeenCalledWith(1);
+  });
 });
 
 describe('LessonPlaybackController sync', () => {
@@ -194,7 +236,7 @@ describe('LessonPlaybackController resume', () => {
 });
 
 describe('LessonPlaybackController completion button', () => {
-  it('disables the button and adds a tooltip when below the required percentage', () => {
+  it('disables the button and adds the legacy tooltip when Alpine is absent', () => {
     document.body.innerHTML = '<button name="complete_lesson_btn"></button>';
     const { player, emit } = createFakePlayer();
     const controller = new LessonPlaybackController(player, strictData, createEnvironment());
@@ -204,7 +246,29 @@ describe('LessonPlaybackController completion button', () => {
 
     const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
-    expect(btn.nextElementSibling?.classList.contains('tutor-tooltip')).toBe(true);
+    expect(btn.parentElement?.classList.contains('tooltip-wrap')).toBe(true);
+    expect(btn.nextElementSibling?.classList.contains('tooltip-txt')).toBe(true);
+  });
+
+  it('uses the Alpine tooltip when Alpine is present', () => {
+    const globalWindow = window as unknown as { Alpine?: { initTree: (node: HTMLElement) => void } };
+    globalWindow.Alpine = { initTree: vi.fn() };
+
+    try {
+      document.body.innerHTML = '<button name="complete_lesson_btn"></button>';
+      const { player, emit } = createFakePlayer();
+      const controller = new LessonPlaybackController(player, strictData, createEnvironment());
+      controller.start();
+
+      emit('ready');
+
+      const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
+      expect(btn.parentElement?.classList.contains('tutor-tooltip-wrap')).toBe(true);
+      expect(btn.nextElementSibling?.classList.contains('tutor-tooltip')).toBe(true);
+      expect(globalWindow.Alpine.initTree).toHaveBeenCalledTimes(1);
+    } finally {
+      delete globalWindow.Alpine;
+    }
   });
 
   it('enables the button once the required percentage is reached', () => {

@@ -67,7 +67,9 @@ export class LessonPlaybackController {
   #env: LessonEnvironment;
   #syncTimer: ReturnType<typeof setInterval> | null = null;
   #maxSeekTime = 0;
-  #lastTime = 0;
+  #observedTime = 0;
+  #observedAt = 0;
+  #playing = false;
   #playedOnce = false;
   #unsubscribers: PlayerUnsubscribe[] = [];
 
@@ -76,7 +78,7 @@ export class LessonPlaybackController {
     this.#data = data;
     this.#env = environment;
     this.#maxSeekTime = data.best_watch_time || 0;
-    this.#lastTime = data.best_watch_time || 0;
+    this.#observedTime = data.best_watch_time || 0;
   }
 
   start(): void {
@@ -120,6 +122,9 @@ export class LessonPlaybackController {
 
   #onPlay = (): void => {
     this.#playedOnce = true;
+    this.#playing = true;
+    // A paused stretch must not count as allowed forward progress.
+    this.#observedAt = performance.now();
 
     if (this.#env.isMobile && this.#player.provider === 'vimeo') {
       this.#player.setMuted(false);
@@ -132,6 +137,7 @@ export class LessonPlaybackController {
   };
 
   #onPause = (): void => {
+    this.#playing = false;
     this.#clearSyncTimer();
 
     if (this.#env.proActive) {
@@ -140,6 +146,7 @@ export class LessonPlaybackController {
   };
 
   #onEnded = (): void => {
+    this.#playing = false;
     this.#clearSyncTimer();
     this.#syncTime({ is_ended: true });
 
@@ -149,8 +156,13 @@ export class LessonPlaybackController {
   };
 
   #onTimeUpdate = ({ currentTime }: PlayerEventMap['timeupdate']): void => {
+    const now = performance.now();
+
     if (this.#isStrict()) {
-      const limit = Math.max(this.#maxSeekTime, this.#lastTime);
+      // Throttled timers (background tabs) deliver updates late while playback
+      // continues, so allow the wall-clock time that passed while playing.
+      const elapsed = this.#playing ? (now - this.#observedAt) / 1000 : 0;
+      const limit = Math.max(this.#maxSeekTime, this.#observedTime + elapsed);
 
       if (currentTime > limit + SEEK_TOLERANCE) {
         this.#player.seek(this.#maxSeekTime);
@@ -159,7 +171,8 @@ export class LessonPlaybackController {
       }
     }
 
-    this.#lastTime = currentTime;
+    this.#observedTime = currentTime;
+    this.#observedAt = now;
 
     if (currentTime > this.#maxSeekTime) {
       this.#maxSeekTime = currentTime;
@@ -256,12 +269,16 @@ export class LessonPlaybackController {
     if (completedPercentage >= requiredPercentage) {
       btn.disabled = false;
 
-      if (btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
-        btn.nextElementSibling.remove();
+      const tooltip = btn.nextElementSibling;
+
+      if (tooltip?.classList.contains('tutor-tooltip') || tooltip?.classList.contains('tooltip-txt')) {
+        tooltip.remove();
       }
 
-      if (btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
-        btn.parentElement.replaceWith(btn);
+      const wrapper = btn.parentElement;
+
+      if (wrapper?.classList.contains('tutor-tooltip-wrap') || wrapper?.classList.contains('tooltip-wrap')) {
+        wrapper.replaceWith(btn);
       }
     }
   }
@@ -283,27 +300,47 @@ export class LessonPlaybackController {
 
     btn.disabled = true;
 
-    if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
+    // Learning Area pages run Alpine and the `tutorTooltip` component; legacy pages don't.
+    const alpine = window.Alpine;
+
+    if (
+      !btn.parentElement?.classList.contains('tutor-tooltip-wrap') &&
+      !btn.parentElement?.classList.contains('tooltip-wrap')
+    ) {
       const wrapper = document.createElement('div');
-      wrapper.className = 'tutor-tooltip-wrap';
-      wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
+      wrapper.className = alpine ? 'tutor-tooltip-wrap' : 'tooltip-wrap';
+
+      if (alpine) {
+        wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
+      }
+
       btn.parentNode?.insertBefore(wrapper, btn);
       wrapper.appendChild(btn);
-      btn.setAttribute('x-ref', 'trigger');
+
+      if (alpine) {
+        btn.setAttribute('x-ref', 'trigger');
+      }
     }
 
-    if (!btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
-      btn.insertAdjacentHTML(
-        'afterend',
-        `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${sprintf(
-          /* translators: %s is the required watch percentage (e.g., 80) */
-          __('Watch at least %s%% to complete the lesson.', 'tutor'),
-          required_percentage,
-        )}</div>`,
+    const sibling = btn.nextElementSibling;
+    const hasTooltip = sibling?.classList.contains('tutor-tooltip') || sibling?.classList.contains('tooltip-txt');
+
+    if (!hasTooltip) {
+      const message = sprintf(
+        /* translators: %s is the required watch percentage (e.g., 80) */
+        __('Watch at least %s%% to complete the lesson.', 'tutor'),
+        required_percentage,
       );
 
-      if (window.Alpine) {
-        window.Alpine.initTree(btn.parentElement as HTMLElement);
+      if (alpine) {
+        btn.insertAdjacentHTML(
+          'afterend',
+          `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${message}</div>`,
+        );
+        alpine.initTree(btn.parentElement as HTMLElement);
+      } else {
+        // Pre-migration markup: the stylesheet shows this span on hover.
+        btn.insertAdjacentHTML('afterend', `<span class="tooltip-txt tooltip-bottom">${message}</span>`);
       }
     }
   }
