@@ -32,7 +32,8 @@ if ( $video_hash ) {
 	$embed_url = add_query_arg( 'h', $video_hash, $embed_url );
 }
 
-$tutor_player_vimeo_url = $video_hash ? "https://vimeo.com/{$video_id}/{$video_hash}" : "https://vimeo.com/{$video_id}";
+// The adapter parses the URL itself (unlisted paths and params intact); ADR-0010.
+$tutor_player_vimeo_url = (string) $video_url;
 
 do_action( 'tutor_lesson/single/before/video/vimeo' );
 ?>
