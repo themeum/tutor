@@ -171,7 +171,17 @@ jQuery(document).ready(function($) {
 				}
 
 				const videoData = readPlayerData(document);
-				const player = window.TutorCore.player.create(element);
+				let player;
+
+				try {
+					player = window.TutorCore.player.create(element);
+				} catch (error) {
+					// A legacy element with nothing the engine can read must not stop the
+					// remaining ready handlers in this bundle.
+					// eslint-disable-next-line no-console
+					console.warn('[tutor] player: skipped an unplayable element', element, error);
+					return;
+				}
 
 				new LessonPlaybackController(player, videoData, createLegacyPlayerEnvironment(videoData)).start();
 			};
