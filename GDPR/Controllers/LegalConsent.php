@@ -12,7 +12,7 @@ namespace Tutor\GDPR\Controllers;
 
 use Tutor\GDPR\Models\{LegalConsents, LegalConsentLogs};
 use Tutor\Helpers\ValidationHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Traits\JsonResponse;
 use WP_Error;
 

@@ -11,7 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
-use TUTOR\Singleton;
+use Tutor\Core\Singleton;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
 

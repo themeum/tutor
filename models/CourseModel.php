@@ -19,7 +19,6 @@ use InvalidArgumentException;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
-use WP_Post;
 
 /**
  * CourseModel Class
@@ -96,25 +95,14 @@ class CourseModel {
 	 * Check if a course is available for enrollment or purchase.
 	 *
 	 * @since 4.0.0
-	 * @since 4.2.0 added args() param
 	 *
-	 * @param WP_Post|int $course the course id.
-	 * @param array       $args {
-	 *           Optional. Additional arguments.
-	 *           @type string[] $status Extra post statuses to accept in addition to 'publish'.
-	 *           Must be an array, e.g. array( CourseModel::STATUS_PRIVATE ).
-	 * }
+	 * @param integer $course_id the course id.
 	 *
 	 * @return bool
 	 */
-	public static function is_course_accessible( $course, $args = array() ) {
-		$requested_status = array();
-
-		if ( is_numeric( $course ) ) {
-			$course = $course > 0 ? get_post( $course ) : null;
-		}
-
-		if ( ! $course || ! $course instanceof WP_Post ) {
+	public static function is_course_accessible( $course_id = 0 ) {
+		$course = get_post( $course_id );
+		if ( ! $course || ! is_object( $course ) ) {
 			return false;
 		}
 
@@ -122,12 +110,7 @@ class CourseModel {
 			return false;
 		}
 
-		if ( tutils()->count( $args ) && isset( $args['status'] ) ) {
-			$requested_status = array_intersect( $args['status'], Course::course_status_list() );
-		}
-
-		$allowed_statuses = array_merge( array( self::STATUS_PUBLISH ), $requested_status );
-		if ( ! in_array( $course->post_status, $allowed_statuses, true ) ) {
+		if ( ! in_array( $course->post_status, array( self::STATUS_PUBLISH, self::STATUS_PRIVATE ), true ) ) {
 			return false;
 		}
 
@@ -600,8 +583,8 @@ class CourseModel {
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
 							$in_clause = QueryHelper::prepare_in_clause( $questions_ids );
-							//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-							$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_clause}) " ) );
+							//phpcs:ignore --safely prepared in clauses.
+							$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE 1=%d AND belongs_question_id IN({$in_clause})", 1 ) );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
 
