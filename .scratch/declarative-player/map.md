@@ -43,6 +43,9 @@ mergeable in the free plugin — Pro needs no changes.
   the host class now registers before the skin class (`boot.ts` imported by `index.ts`) —
   declaring the skin first left every control unbound (one-shot store context at upgrade),
   visible as inert buttons plus dev-only `media-*` warnings.
+- [05 review fixes](issues/05-declarative-templates.md#review-fixes-vs-420): the YouTube
+  embed crop is gone (it zoomed and cut every non-16:9 video); fullscreen events only fire
+  for the player's own fullscreen element; the define-order contract has a test.
 
 ## Not yet specified
 

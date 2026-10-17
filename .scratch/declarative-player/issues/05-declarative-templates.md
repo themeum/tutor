@@ -107,6 +107,22 @@ button binding read directly (`mediaState.value` on play/mute/fullscreen), `0` f
 warnings, `content-title` set, tracked by the service, spinner removed. `tsc`, eslint,
 vitest and the production build — green.
 
+### Review fixes (vs 4.2.0)
+
+Code review of the branch against 4.2.0, same day:
+
+- `_videojs-player.scss`: dropped the YouTube iframe crop (`height: 200% / top: -50%`). It
+  assumed a 16:9 video, so portrait lessons (including the repo's own `portrait-lesson`)
+  rendered zoomed 2× with their top and bottom quarters cut. `pointer-events: none` stays,
+  so the embed chrome is still unclickable; what returns is YouTube's own title/overlay.
+- `Player.ts`: `fullscreenchange` only counts when the fullscreen element contains the
+  player or is contained by it, and an exit fires only after our own enter. Another
+  element going fullscreen no longer emits `enterfullscreen` (Pro's Take Note) or publishes
+  the lesson title to the player.
+- Tests: `Player.test.ts` (unrelated fullscreen ignored, a fullscreen ancestor counts) and
+  `defineOrder.test.ts` (the host is defined when the skin module evaluates — locks the
+  `boot.ts` order the post-gate fix depends on).
+
 ### At release
 
 Changelog line to add with the next version bump (the repo updates version and readme
