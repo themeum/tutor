@@ -78,6 +78,35 @@ opt-ins on, `auto_play_next` on. Remaining manual pass is unchanged from ticket 
 fullscreen + Vimeo exit resync, Pro Take Note in fullscreen, mobile Vimeo mute, YouTube
 playback drive).
 
+### Post-gate fix: define order (user report, same day)
+
+Symptom after the flip: no control in any player responded (play/mute/fullscreen rendered
+normally but were inert) and dev builds logged one `media-* requires … feature` warning per
+skin control (~20). Production builds were silent, which is why the gate missed it — it
+drove playback through the handle, never through the UI.
+
+Cause: the host class registered in `index.ts` **after** `@videojs/html/video/skin`, so a
+declared `<video-skin>` upgraded first. The vendor's controls resolve the player store
+context once, when they upgrade (lit `ContextConsumer`), found no provider and stayed
+unbound. The vendor's packaged-skin snippet imports the player module before the skin
+module for the same reason (`docs/guides/skins.md`).
+
+Fix:
+
+- `boot.ts` (new) sets the service hooks and calls `defineVideoPlayer()`; `index.ts`
+  imports it before the skin import, so the host class registers first. The repo's eslint
+  import sort keeps side-effect imports in their own group ahead of the skin package
+  import, so the order is stable under autofix.
+- `elements.ts`: a declared skin has no shadow root while the engine script itself is still
+  evaluating, so the unsupported-controls fallback patch now waits one microtask.
+
+Verified on both the watcher dev build and the production build: html5 (lesson1), vimeo
+(lesson 72100 → played to the end → `quizzes/prova-nivel-2/`), youtube (72710, `t: 18.7`
+after one trusted Enter on Play), legacy shim (injected `.tutorPlayer` → built host bound),
+button binding read directly (`mediaState.value` on play/mute/fullscreen), `0` feature
+warnings, `content-title` set, tracked by the service, spinner removed. `tsc`, eslint,
+vitest and the production build — green.
+
 ### At release
 
 Changelog line to add with the next version bump (the repo updates version and readme

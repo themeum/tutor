@@ -7,6 +7,7 @@ import {
   defineVideoPlayer,
   resolveProvider,
   setPlayerElementHooks,
+  type VideoPlayerElement,
 } from './elements';
 
 describe('elements', () => {
@@ -158,5 +159,34 @@ describe('tutor-video-player element', () => {
     expect(onMount).toHaveBeenCalledTimes(1);
 
     player?.dispose();
+  });
+
+  // Defines `video-skin`, so keep this test last in the file.
+  it('patches a declared skin whose class registers after the host', async () => {
+    defineVideoPlayer();
+
+    const host = document.createElement('tutor-video-player') as unknown as VideoPlayerElement;
+    host.innerHTML = '<video-skin></video-skin>';
+    document.body.appendChild(host);
+
+    const skin = host.querySelector('video-skin') as HTMLElement;
+    expect(skin.shadowRoot).toBeNull();
+
+    customElements.define(
+      'video-skin',
+      class extends HTMLElement {
+        connectedCallback(): void {
+          this.attachShadow({ mode: 'open' });
+        }
+      },
+    );
+
+    await Promise.resolve();
+
+    const root = skin.shadowRoot;
+    const patched = Boolean(root?.querySelector('style')) || (root?.adoptedStyleSheets?.length ?? 0) > 0;
+    expect(patched).toBe(true);
+
+    host.player?.dispose();
   });
 });

@@ -19,6 +19,7 @@ mergeable in the free plugin — Pro needs no changes.
 - Hard contract (ADR-0010): the player element must be defined before a declared media
   adapter upgrades (one-shot context registration). Never import adapters eagerly
   before the player definition, or the store silently ends with `target.media === null`.
+  The same one-shot rule covers the packaged skin's controls (fixed in 05).
 - Stage 1 must leave every engine page behavior-identical; stage 2 must be reversible
   by reverting four templates.
 - Claim a ticket (`Status: claimed`) before working it.
@@ -38,6 +39,10 @@ mergeable in the free plugin — Pro needs no changes.
   retarget to the element (`tutor-front.js` included), `create()` adopts a self-booted
   handle, `ready` became a latch so a late controller still bootstraps, declarative skins
   get the unsupported-controls CSS in the element.
+- [05 fix](issues/05-declarative-templates.md#post-gate-fix-define-order-user-report-same-day):
+  the host class now registers before the skin class (`boot.ts` imported by `index.ts`) —
+  declaring the skin first left every control unbound (one-shot store context at upgrade),
+  visible as inert buttons plus dev-only `media-*` warnings.
 
 ## Not yet specified
 

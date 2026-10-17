@@ -1,17 +1,14 @@
 import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 
-import { defineVideoPlayer, setPlayerElementHooks } from './elements';
+import { patchVideoSkinStyles } from './elements';
 import { playerServiceMeta } from './PlayerService';
 
+import './boot'; // defines the host before the skin import below; see boot.ts
 import '@videojs/html/video/skin';
 
-setPlayerElementHooks({
-  onMount: (player) => playerServiceMeta.instance.track(player),
-  onDispose: (player) => playerServiceMeta.instance.untrack(player),
-});
-
-defineVideoPlayer();
+// Requires the skin class, so it runs after the import above.
+patchVideoSkinStyles();
 
 // Register with the core bundle's registry when it is already loaded; otherwise fall back to
 // the imported instance (load order varies by page). Either way window.TutorCore.player is set.
