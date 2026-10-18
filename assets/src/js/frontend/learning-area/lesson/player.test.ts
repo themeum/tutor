@@ -106,6 +106,10 @@ describe('readPlayerData', () => {
     document.body.append(input);
 
     expect(readPlayerData(document)).toEqual({});
+
+    input.value = 'null';
+
+    expect(readPlayerData(document)).toEqual({});
   });
 });
 

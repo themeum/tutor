@@ -55,7 +55,9 @@ export function readPlayerData(document: Document): PlayerData {
   }
 
   try {
-    return JSON.parse(element.value) as PlayerData;
+    const data = JSON.parse(element.value) as PlayerData | null;
+    // Video templates have shipped value="null" since before the migration; treat it as absent.
+    return data && typeof data === 'object' ? data : {};
   } catch {
     return {};
   }
