@@ -68,4 +68,6 @@ mergeable in the free plugin — Pro needs no changes.
   (migration Q3/Q4 stay decided).
 - Pro template changes (none needed).
 - Bundle/perf work (research F9: a budget, not a backlog).
+- Post-migration size follow-up (2026-10-18): scoped player minifier shipped
+  (`minify-videojs.mjs`); the global `compress: false` is unchanged (report §3.1).
 - Research findings F2 (JS CI), F3, F4, F6, F8 — separate workstreams, not this map.

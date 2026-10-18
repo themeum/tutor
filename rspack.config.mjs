@@ -8,6 +8,7 @@ import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { rspack } from '@rspack/core';
 import nodeExternals from 'webpack-node-externals';
 
+import { MinifyVideojsAssetsPlugin } from './minify-videojs.mjs';
 import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -198,6 +199,7 @@ const createConfig = (env, options) => {
         __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
+      mode === 'production' && !isMakePot && new MinifyVideojsAssetsPlugin(),
     ].filter(Boolean),
     externals: {
       react: 'React',

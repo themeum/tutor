@@ -30,7 +30,7 @@ Plyr was a vendored copy of 3.8.4 (`assets/lib/plyr/`). The reasons for replacin
 
 ## 3. Measured stats
 
-Measured 2026-10-17 on this checkout. Sizes are built files on disk; gzip via `gzip -c`.
+Measured 2026-10-17, player rows re-measured 2026-10-18 after the scoped minifier. Sizes are built files on disk; gzip via `gzip -c`.
 
 ### 3.1 Bundle size (per lesson page)
 
@@ -39,20 +39,22 @@ Measured 2026-10-17 on this checkout. Sizes are built files on disk; gzip via `g
 | Before: `plyr.polyfilled.min.js`             | 119,657 B     | 35,038 B   | enqueued on lesson pages                                                                           |
 | Before: `plyr.css`                           | 32,455 B      | 5,179 B    | enqueued on lesson pages                                                                           |
 | **Before total**                             | **152,112 B** | **~40 KB** |                                                                                                    |
-| After: `tutor-player.js` (IIFE entry)         | 572,107 B     | 128,029 B  | engine + skin; provider adapters are deferred                                                      |
-| After: `lazy-chunks/tutor-player-vimeo.js`   | 96,700 B      | 27,831 B   | fetched only when a Vimeo lesson mounts                                                            |
-| After: `lazy-chunks/tutor-player-youtube.js` | 34,722 B      | 11,331 B   | fetched only when a YouTube lesson mounts                                                          |
+| After: `tutor-player.js` (IIFE entry)         | 366,777 B     | 88,039 B   | engine + skin; provider adapters are deferred; minified by `minify-videojs.mjs`                    |
+| After: `lazy-chunks/tutor-player-vimeo.js`   | 44,370 B      | 14,729 B   | fetched only when a Vimeo lesson mounts; minified                                                |
+| After: `lazy-chunks/tutor-player-youtube.js` | 21,924 B      | 8,035 B    | fetched only when a YouTube lesson mounts; minified                                              |
 | After: player CSS                            | ~1 KB         | —          | `_videojs-player.scss` folds into the already-loaded `tutor-front` / `tutor-learning-area` bundles |
 
 Per-lesson gzip and net delta vs Plyr:
 
 | Lesson provider          | After gzip | Net delta     |
 | ------------------------ | ---------- | ------------- |
-| HTML5 / external / embed | 128,029 B  | +~86 KB gzip  |
-| YouTube                  | 139,360 B  | +~97 KB gzip  |
-| Vimeo                    | 155,860 B  | +~113 KB gzip |
+| HTML5 / external / embed | 88,039 B   | +~46 KB gzip  |
+| YouTube                  | 96,074 B   | +~54 KB gzip  |
+| Vimeo                    | 102,768 B  | +~60 KB gzip  |
 
-The engine is still ~3.2–3.9× the old player over the wire; the skin and Video.js core are the remaining bulk (the Vimeo SDK alone accounts for most of the Vimeo-lesson delta). It is enqueued only on single course/lesson/quiz pages that actually have a video (`is_single_course(true) && has_video_in_single()`), and it is no longer compiled into `tutor-front.js` or `tutor-learning-area.js` — each caller bundle dropped ~100 KB raw by taking the shared `content-title` attribute from `@Core/ts/constant` instead of the engine module (review round 2, 2026-10-17).
+The engine is still ~2.2–2.6× the old player over the wire; the skin and Video.js core are the remaining bulk (the Vimeo SDK alone accounts for most of the Vimeo-lesson delta). It is enqueued only on single course/lesson/quiz pages that actually have a video (`is_single_course(true) && has_video_in_single()`), and it is no longer compiled into `tutor-front.js` or `tutor-learning-area.js` — each caller bundle dropped ~100 KB raw by taking the shared `content-title` attribute from `@Core/ts/constant` instead of the engine module (review round 2, 2026-10-17).
+
+Since 2026-10-18 the production build minifies only the player assets: `minify-videojs.mjs` sends the engine, its two adapter chunks and the 53 vendor i18n locale packs through esbuild after the shared SWC minimizer. `compress: false` is untouched and every other bundle is byte-identical (checksum diff: 56 of 1,787 assets changed). Release zip: 8,280,851 B → 8,222,213 B deflated (−58,638 B).
 
 ### 3.2 Mount performance
 
@@ -72,6 +74,7 @@ First mount pays custom-element definition/upgrade; steady-state mounts are sing
 | Vitest unit                                                                     | 77 passed / 8 files (engine, handle, service, providers, compat, controller, registry, define order)                                                      |
 | `tsc --noEmit`                                                                  | clean                                                                                                                             |
 | `rspack --mode=production` (single invocation; standard IIFE entries, ADR-0011) | green                                                                                                                             |
+| Player minify (2026-10-18)                                                      | engine + adapter chunks byte-identical to an independent esbuild CLI minify of the pre-plugin build; 53/53 locale chunks execute in a VM sandbox; boot smoke unchanged; checksum diff shows only the 56 player assets changed |
 | Cypress `lesson-video-player.cy.ts`                                             | authored (mount, ready, fullscreen payload, Strict Mode, resume, auto-next); not executed here — suite targets a remote `baseUrl` |
 | `cdn.plyr.io` / vendored Plyr references at runtime                             | none remaining                                                                                                                    |
 | ADR-0009 spike gate                                                             | `document.fullscreenElement` is the player container, never the iframe; no YouTube chrome in fullscreen                           |
@@ -80,7 +83,7 @@ First mount pays custom-element definition/upgrade; steady-state mounts are sing
 
 | Gain                                                                                                                                                        | Cost                                                                                                                                                                                                              |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Consistent skinned controls for every provider: captions, playback rate, quality/audio tracks, PiP, remote playback; unsupported controls hidden per-device | +~82 KB gzip JS on HTML5/external lessons, +~93 KB YouTube, +~109 KB Vimeo (§3.1)                                                                                                                                 |
+| Consistent skinned controls for every provider: captions, playback rate, quality/audio tracks, PiP, remote playback; unsupported controls hidden per-device | +~46 KB gzip JS on HTML5/external lessons, +~54 KB YouTube, +~60 KB Vimeo (§3.1)                                                                                                                                 |
 | Container-first fullscreen for **all** providers — YouTube chrome is gone without vendoring the skin (ADR-0009)                                             | Vimeo's SDK relays container fullscreen into the embed and echoes back asynchronously; its flag could stick and brick the toggle — corrected at our layer with an exit-time flag reset + store re-sync (see §5.4) |
 | One typed API (`TutorCore.player`) for free, Pro, and future callers; fake-able handle with full unit coverage                                              | A hard rule no IIFE bundle may import the engine stays (ADR-0002's ESM split is superseded by ADR-0011): shared values live in `@Core/ts/constant`                                                |
 | Lesson behaviours preserved: Strict Mode, resume, Watch Progress Sync, auto-next, mobile Vimeo mute, `is-fullscreen` class, `TutorLessonPlayer` compat shim | Hard cutover, no feature flag; rollback is re-enqueueing Plyr (engine is inert until `create()` is called)                                                                                                        |
@@ -175,6 +178,7 @@ flowchart TD
 ## 6. Verification status and follow-ups
 
 - Done: unit/type/build gates (§3.3), Plyr removal, Pro migration, Take Note positioning, radius/aspect fixes, fullscreen title + toggle fixes, zips rebuilt (`tutor-4.1.1.zip`, `tutor-pro-4.1.1.zip`).
+- Size follow-up (2026-10-18): the player assets minify in the production build via `minify-videojs.mjs` (engine + adapter chunks + i18n locale packs); `compress: false` untouched, other bundles byte-identical, release zip −58,638 B deflated (report sections 3.1, 3.3).
 - Review round 2 (2026-10-17): engine cut from the caller bundles and the registry shared through `window`; enqueue gated on `has_video_in_single()`; strict mode tolerates throttled timers; legacy tooltip and init guard restored; raw provider URLs; path-form Vimeo hashes; dead player surface removed (details in the issue 05 record).
 - Still human-gated: the manual provider matrix (Chrome, Firefox, Safari, iOS Safari × all providers, plan §Layer 3) and the final merge approval.
 - After one release cycle: remove the deprecated `window.TutorLessonPlayer` adapter and `tutorLessonPlayerReady`.
