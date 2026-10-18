@@ -594,17 +594,18 @@ const bindCard = (card) => {
 	});
 
 	deleteButton?.addEventListener('click', () => {
-		if (!consentId) {
-			card.remove();
-			syncEmptyState(container);
-			markSettingsAsChanged();
-			return;
-		}
-
 		const modal = document.getElementById('tutor-legal-consent-delete-modal');
 		const confirmBtn = document.getElementById('tutor-legal-consent-confirm-delete');
 
 		if (!modal || !confirmBtn) {
+			if (!consentId) {
+				card.remove();
+				showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
+				syncEmptyState(container);
+				markSettingsAsChanged();
+				return;
+			}
+
 			deleteConsent({
 				card,
 				consentId,
@@ -621,6 +622,16 @@ const bindCard = (card) => {
 
 		newConfirmBtn.addEventListener('click', () => {
 			const closeBtn = modal.querySelector('[data-tutor-modal-close]');
+
+			if (!consentId) {
+				closeBtn?.click();
+				card.remove();
+				showToast(__('Success', 'tutor'), __('Legal consent removed.', 'tutor'), 'success');
+				syncEmptyState(container);
+				markSettingsAsChanged();
+				return;
+			}
+
 			deleteConsent({
 				card,
 				consentId,
