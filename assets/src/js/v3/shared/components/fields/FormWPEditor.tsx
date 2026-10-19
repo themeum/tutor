@@ -295,7 +295,7 @@ const FormWPEditor = ({
         }
 
         return (
-          <div css={styles.wrapper({ isOverlayVisible })}>
+          <div css={styles.wrapper({ isOverlayVisible, hasError: !!fieldState?.error })}>
             <Show when={isOverlayVisible}>
               <CustomEditorOverlay
                 editorUsed={editorUsed}
@@ -332,13 +332,20 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
-  wrapper: ({ isOverlayVisible = false }) => css`
+  wrapper: ({ isOverlayVisible = false, hasError = false }: { isOverlayVisible?: boolean; hasError?: boolean }) => css`
     position: relative;
 
     ${isOverlayVisible &&
     css`
       overflow: hidden;
       border-radius: ${borderRadius[6]};
+    `}
+
+    ${hasError &&
+    css`
+      .wp-editor-container {
+        border-color: ${colorTokens.stroke.danger} !important;
+      }
     `}
   `,
   editorLabel: css`
