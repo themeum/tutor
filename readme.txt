@@ -360,6 +360,10 @@ Fix: Fixed unauthorized REST API access to course contents, lessons, topics, ann
 Fix: API returns 200 OK with empty course data for a non-existent Course ID
 Fix: Course price returns '0' for 'Paid' courses in API response.
 
+= 4.1.3 - 15 Oct, 2026
+
+Fix: Patched a security vulnerability.
+
 = 4.1.2 - 12 Oct, 2026
 
 Fix: Resolved an issue where zoom & google meeting deleting was not working. (Pro)
