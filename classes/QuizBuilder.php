@@ -942,15 +942,21 @@ class QuizBuilder {
 	public function is_valid_quiz_question_answer_payload( array $payload ): bool {
 		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
 		$payload_question_answers = wp_list_pluck( $payload, 'question_answers', 'question_id' );
-		$is_cb_question           = wp_list_pluck( $payload, 'is_cb_question', 'question_id' );
+
+		$is_cb_question = array();
+		foreach ( $payload as $question ) {
+			if ( isset( $question['question_id'] ) ) {
+				$is_cb_question[ $question['question_id'] ] = ! empty( $question['is_cb_question'] );
+			}
+		}
 
 		// Remove content bank answers.
-		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => ! $is_cb_question[ $question_id ], ARRAY_FILTER_USE_KEY );
+		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => empty( $is_cb_question[ $question_id ] ), ARRAY_FILTER_USE_KEY );
 		$payload_question_answers = array_filter( array_values( $payload_question_answers ) ); // Filter out empty array.
 		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
 
 		// Remove the hash id.
-		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && ! $is_cb_question[ $id ] );
+		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && empty( $is_cb_question[ $id ] ) );
 		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
 
 		// For the new quiz current_quiz is null, in this there should not be any numeric question or answer id.
