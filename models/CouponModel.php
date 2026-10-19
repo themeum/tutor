@@ -1255,7 +1255,7 @@ class CouponModel {
 			// Lock the coupon row for update to prevent concurrent race conditions.
 			$coupon = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM {$this->coupons_table} WHERE coupon_code = %s FOR UPDATE",
+					"SELECT * FROM {$this->table_name} WHERE coupon_code = %s FOR UPDATE",
 					$coupon_code
 				)
 			);
@@ -1478,5 +1478,26 @@ class CouponModel {
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : null;
 
 		return $start_date > $now && ( ! $expire_date || $expire_date > $now );
+	}
+
+	/**
+	 * Check if the coupon requires reservation management
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return bool True|False
+	 */
+	public function is_reservation_required( $coupon_code ): bool {
+		$coupon = DB::table( $this->table_name )->where( 'coupon_code', $coupon_code )->first();
+		if ( $coupon ) {
+			$total_usage_limit = (int) $coupon->total_usage_limit;
+			$user_usage_limit  = (int) $coupon->per_user_usage_limit;
+
+			return $total_usage_limit || $user_usage_limit;
+		}
+
+		return false;
 	}
 }
