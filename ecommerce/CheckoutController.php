@@ -12,13 +12,13 @@ namespace Tutor\Ecommerce;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\DB;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Core\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
@@ -930,7 +930,7 @@ class CheckoutController {
 				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
 				if ( is_wp_error( $guest_user ) ) {
 					// Delete the billing info if user registration failed.
-					QueryHelper::delete( 'tutor_customers', array( 'user_id' => $current_user_id ) );
+					DB::table( 'tutor_customers' )->where( 'user_id', $current_user_id )->delete();
 
 					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
 
