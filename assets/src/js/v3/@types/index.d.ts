@@ -4,7 +4,7 @@ import { type InjectionSlots } from '@TutorShared/utils/types';
 
 import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 
-export type { };
+export type {};
 
 interface Tutor {
   readonly CourseBuilder: {
@@ -101,6 +101,7 @@ declare global {
       coupon_main_content_locales: LocaleData;
       course_builder_basic_locales: LocaleData;
       course_builder_curriculum_locales: LocaleData;
+      course_builder_quiz_modal_locales?: LocaleData;
       course_builder_additional_locales: LocaleData;
       course_slug: string;
       lesson_slug: string;

@@ -1631,6 +1631,7 @@ class Course extends Tutor_Base {
 		if ( 'en_US' !== $data['local'] ) {
 			$data['course_builder_basic_locales']      = tutils()->get_script_locale_data( 'tutor-course-builder-basic', $data['local'] );
 			$data['course_builder_curriculum_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-curriculum', $data['local'] );
+			$data['course_builder_quiz_modal_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-quiz-modal', $data['local'] );
 			$data['course_builder_additional_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-additional', $data['local'] );
 		}
 

@@ -30,7 +30,7 @@ import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMe
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import QuizModal, { prefetchQuizModal } from '@CourseBuilderComponents/modals/QuizModalWrapper';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import {
@@ -265,7 +265,12 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           <div data-bar-icon>
             <SVGIcon name="bars" width={24} height={24} />
           </div>
-          <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
+          <p
+            css={styles.title}
+            onClick={handleShowModalOrPopover}
+            onKeyDown={noop}
+            onMouseEnter={type === 'tutor_quiz' || type === 'tutor_h5p_quiz' ? prefetchQuizModal : undefined}
+          >
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
             <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
               <span data-question-count>
@@ -315,6 +320,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
                 type="button"
                 css={styleUtils.actionButton}
                 onClick={handleShowModalOrPopover}
+                onMouseEnter={type === 'tutor_quiz' || type === 'tutor_h5p_quiz' ? prefetchQuizModal : undefined}
               >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>

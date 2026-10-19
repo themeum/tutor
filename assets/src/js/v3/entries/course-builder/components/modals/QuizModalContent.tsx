@@ -63,7 +63,7 @@ type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
 
-const QuizModal = ({
+const QuizModalContent = ({
   closeModal,
   icon,
   title,
@@ -451,7 +451,7 @@ const QuizModal = ({
   );
 };
 
-export default QuizModal;
+export default QuizModalContent;
 
 const styles = {
   wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`

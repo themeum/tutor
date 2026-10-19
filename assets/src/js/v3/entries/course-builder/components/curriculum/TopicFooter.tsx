@@ -27,7 +27,7 @@ import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMee
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import QuizModal, { prefetchQuizModal } from '@CourseBuilderComponents/modals/QuizModalWrapper';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
@@ -116,6 +116,8 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             icon={<SVGIcon name="plus" width={24} height={24} />}
             disabled={!topic.isSaved}
             buttonCss={styles.contentButton}
+            onMouseEnter={prefetchQuizModal}
+            onFocus={prefetchQuizModal}
             onClick={() => {
               showModal({
                 component: QuizModal,
@@ -145,6 +147,8 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
                   buttonCss={styles.contentButton}
+                  onMouseEnter={prefetchQuizModal}
+                  onFocus={prefetchQuizModal}
                   onClick={() => {
                     showModal({
                       component: QuizModal,
