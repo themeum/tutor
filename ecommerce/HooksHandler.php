@@ -268,8 +268,13 @@ class HooksHandler {
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
-		// Store coupon usage.
-		$this->coupon_ctrl->store_coupon_usage( $order_id );
+		if ( OrderModel::PAYMENT_PAID === $new_payment_status ) {
+			// Promote coupon usage to consumed.
+			$this->coupon_ctrl->store_coupon_usage( $order_id );
+		} elseif ( in_array( $new_payment_status, array( OrderModel::PAYMENT_FAILED, OrderModel::PAYMENT_REFUNDED ), true ) || OrderModel::ORDER_CANCELLED === $order_status ) {
+			// Release coupon reservation / mark cancelled.
+			$this->coupon_ctrl->cancel_coupon_usage( $order_id );
+		}
 	}
 
 	/**
@@ -498,9 +503,21 @@ class HooksHandler {
 	 */
 	public function handle_free_checkout( array $order_data ) {
 		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
-			$order_id = $order_data['id'];
-			$user_id  = $order_data['user_id'];
-			$items    = $order_data['items'];
+			$order_id    = $order_data['id'];
+			$user_id     = $order_data['user_id'];
+			$items       = $order_data['items'];
+			$coupon_code = $order_data['coupon_code'] ?? '';
+
+			// If a coupon brought the total to zero, reserve coupon usage before enrolling.
+			if ( ! empty( $coupon_code ) ) {
+				$reserved = $this->coupon_ctrl->reserve_coupon_usage( $order_id, $coupon_code, $user_id, 30 );
+				if ( ! $reserved ) {
+					// Limit exceeded concurrently; cancel order and prevent enrollment.
+					$this->order_model->update_order( $order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+					return $order_data;
+				}
+			}
+
 			foreach ( $items as $item ) {
 				$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
 				if ( $is_gift_item ) {
@@ -515,7 +532,7 @@ class HooksHandler {
 				}
 			}
 
-			// Store coupon usage.
+			// Promote coupon usage to consumed upon completed enrollment.
 			$this->coupon_ctrl->store_coupon_usage( $order_id );
 		}
 		return $order_data;

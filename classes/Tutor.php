@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Models\CourseModel;
+use Tutor\Models\CouponModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
 use Tutor\Helpers\QueryHelper;
@@ -994,9 +995,16 @@ final class Tutor extends Singleton {
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_code VARCHAR(50) NOT NULL,
 			user_id BIGINT(20) UNSIGNED NOT NULL,
+			order_id BIGINT(20) UNSIGNED DEFAULT NULL,
+			status VARCHAR(20) NOT NULL DEFAULT '" . CouponModel::STATUS_CONSUMED . "',
+			expires_at_gmt DATETIME DEFAULT NULL,
+			created_at_gmt DATETIME NOT NULL,
 			PRIMARY KEY (id),
+			UNIQUE KEY coupon_order (coupon_code, order_id),
 			KEY coupon_code (coupon_code),
 			KEY user_id (user_id),
+			KEY order_id (order_id),
+			KEY status (status),
 			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
 			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
 		) $charset_collate;";

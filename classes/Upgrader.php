@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CouponModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -90,6 +91,7 @@ class Upgrader {
 			$upgrades[] = 'upgrade_to_3_7_1';
 			$upgrades[] = 'upgrade_to_3_8_0';
 			$upgrades[] = 'upgrade_to_3_8_2';
+			$upgrades[] = 'upgrade_to_4_2_0';
 		}
 
 		return $upgrades;
@@ -377,6 +379,51 @@ class Upgrader {
 				PRIMARY KEY (gradebook_result_id)
 			) {$charset_collate};";
 			dbDelta( $gradebook_results );
+		}
+	}
+
+	/**
+	 * Upgrade to version 4.2.0
+	 *
+	 * Add order_id, status, and expiration to tutor_coupon_usages.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_4_2_0() {
+		$is_coupon_table_updated = update_option( 'tutor_coupon_table_updated', false );
+		if ( $is_coupon_table_updated ) {
+			return;
+		}
+
+		if ( version_compare( TUTOR_VERSION, '4.2.0', '>=' ) ) {
+			global $wpdb;
+
+			$table_name = "{$wpdb->prefix}tutor_coupon_usages";
+			if ( QueryHelper::table_exists( $table_name ) ) {
+				$charset_collate    = $wpdb->get_charset_collate();
+				$coupon_usage_table = "CREATE TABLE {$table_name} (
+					id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+					coupon_code VARCHAR(50) NOT NULL,
+					user_id BIGINT(20) UNSIGNED NOT NULL,
+					order_id BIGINT(20) UNSIGNED DEFAULT NULL,
+					status VARCHAR(20) NOT NULL DEFAULT '" . CouponModel::STATUS_CONSUMED . "',
+					expires_at_gmt DATETIME DEFAULT NULL,
+					created_at_gmt DATETIME NOT NULL,
+					PRIMARY KEY (id),
+					UNIQUE KEY coupon_order (coupon_code, order_id),
+					KEY coupon_code (coupon_code),
+					KEY user_id (user_id),
+					KEY order_id (order_id),
+					KEY status (status)
+				) $charset_collate;";
+
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				dbDelta( $coupon_usage_table );
+
+				update_option( 'tutor_coupon_table_updated', true, false );
+			}
 		}
 	}
 
