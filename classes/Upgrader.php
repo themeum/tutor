@@ -392,7 +392,7 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_4_2_0() {
-		$is_coupon_table_updated = update_option( 'tutor_coupon_table_updated', false );
+		$is_coupon_table_updated = get_option( 'tutor_coupon_table_updated', false );
 		if ( $is_coupon_table_updated ) {
 			return;
 		}
