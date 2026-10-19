@@ -926,7 +926,7 @@ class CheckoutController {
 		);
 
 		if ( empty( $errors ) ) {
-			if ( ! is_user_logged_in() ) {
+			if ( $is_guest_user ) {
 				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
 				if ( is_wp_error( $guest_user ) ) {
 					// Delete the billing info if user registration failed.
