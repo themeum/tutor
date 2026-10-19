@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
 defined( 'ABSPATH' ) || exit;
@@ -50,6 +51,16 @@ class REST_Course_Announcement {
 	 */
 	public function course_announcement( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'id' );
+		$course_id         = absint( $this->post_parent );
+
+		if ( ! CourseModel::get_post_types( $course_id ) ) {
+			return $this->response(
+				'tutor_read_announcement',
+				__( 'Announcement not found for given ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
 
 		$result = REST_Posts::get_published_child_posts(
 			$this->post_type,
