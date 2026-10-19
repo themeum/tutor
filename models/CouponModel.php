@@ -1237,11 +1237,11 @@ class CouponModel {
 	 * @param int    $order_id Order id.
 	 * @param string $coupon_code Coupon code.
 	 * @param int    $user_id User id.
-	 * @param int    $ttl_minutes Hold duration in minutes. Default 30.
+	 * @param int    $reserve_duration Hold duration in minutes. Default 30.
 	 *
 	 * @return bool True on success, false on limit exceeded or failure.
 	 */
-	public function reserve_coupon_usage( int $order_id, string $coupon_code, int $user_id, int $ttl_minutes = 30 ): bool {
+	public function reserve_coupon_usage( int $order_id, string $coupon_code, int $user_id, int $reserve_duration = 30 ): bool {
 		global $wpdb;
 
 		if ( ! $order_id || empty( $coupon_code ) || ! $user_id ) {
@@ -1266,7 +1266,7 @@ class CouponModel {
 			}
 
 			$now_gmt     = current_time( 'mysql', true );
-			$expires_gmt = gmdate( 'Y-m-d H:i:s', strtotime( "+{$ttl_minutes} minutes", strtotime( $now_gmt ) ) );
+			$expires_gmt = gmdate( 'Y-m-d H:i:s', strtotime( "+{$reserve_duration} minutes", strtotime( $now_gmt ) ) );
 
 			// Check if reservation record already exists for this order.
 			$existing = DB::table( $this->coupon_usage_table )

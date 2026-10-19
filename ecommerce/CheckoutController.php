@@ -764,7 +764,7 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
-				$placed_order_id = is_array( $order_data ) ? (int) ( $order_data['id'] ?? 0 ) : (int) $order_data;
+				$placed_order_id = is_array( $order_data ) && isset( $order_data['id'] ) ? (int) ( $order_data['id'] ?? 0 ) : 0;
 
 				if ( ! empty( $checkout_data->coupon_code ) && $placed_order_id ) {
 					$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $checkout_data->coupon_code, (int) $current_user_id, 30 );
