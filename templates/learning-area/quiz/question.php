@@ -49,12 +49,11 @@ $attempt_id         = (int) ( $tutor_is_started_quiz->attempt_id ?? 0 );
 $question_id        = (int) ( $question->question_id ?? 0 );
 $field_name_base    = sprintf( 'attempt[%d][quiz_question][%d]', $attempt_id, $question_id );
 
-$answer_is_required = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
+$committed_answer   = $committed_answer ?? ( $question->committed_answer ?? null );
+$is_revealed        = ! empty( $committed_answer );
+$answer_is_required = ! $is_revealed && isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
 $required_message   = __( 'The answer for this question is required', 'tutor' );
-
-$committed_answer = $committed_answer ?? ( $question->committed_answer ?? null );
-$is_revealed      = ! empty( $committed_answer );
-$reveal_result    = '';
+$reveal_result      = '';
 if ( $is_revealed ) {
 	if ( '1' === (string) $committed_answer->is_correct ) {
 		$reveal_result = 'correct';
