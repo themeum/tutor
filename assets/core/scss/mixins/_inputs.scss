@@ -106,6 +106,7 @@
     content: '';
     position: absolute;
     top: 50%;
+    /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the box centered in RTL */
     left: 50%;
     width: $svg-size;
     height: $svg-size;
@@ -191,6 +192,7 @@
       content: '';
       position: absolute;
       top: 50%;
+      /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the box centered in RTL */
       left: 50%;
       width: $inner-circle;
       height: $inner-circle;
@@ -242,7 +244,7 @@
     content: '';
     position: absolute;
     top: $gap;
-    left: $gap;
+    inset-inline-start: $gap;
     width: $thumb;
     height: $thumb;
     border-radius: 50%;
