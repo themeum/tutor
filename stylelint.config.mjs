@@ -21,7 +21,10 @@
 const directionNeutralProperties =
   /^(top|bottom|width|height|min-(width|height)|max-(width|height)|contain-intrinsic-(width|height)|margin-(top|bottom)|padding-(top|bottom)|border-(top|bottom)(-(width|style|color))?|overflow-[xy]|overscroll-behavior-[xy]|scroll-(margin|padding)-(top|bottom))$/;
 
+/** @type {import('stylelint').Config} */
 export default {
+  // Stylelint's documented SCSS parser. Used directly instead of extending
+  // stylelint-config-standard-scss, which also turns on unrelated style rules.
   customSyntax: 'postcss-scss',
   languageOptions: {
     directionality: { block: 'top-to-bottom', inline: 'left-to-right' },
