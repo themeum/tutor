@@ -12,7 +12,7 @@
   width: 100%;
   min-width: 0;
 
-  &:has(:focus-visible:not(input):not(textarea):not(select)) {
+  &:has(:focus-visible:not(input, textarea, select)) {
     @include tutor-focus-ring(#{$tutor-border-idle2}, true);
 
     outline-offset: $tutor-spacing-2;
@@ -240,7 +240,7 @@
 
       &:focus,
       &:focus-within {
-        &:not(:has(:checked)):not(:has(:disabled)) {
+        &:not(:has(:checked), :has(:disabled)) {
           border-color: $tutor-border-hover;
           background-color: $tutor-quiz-hover;
         }
@@ -325,9 +325,7 @@
       border: none;
       line-height: 2.5;
 
-      &:hover:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
-          [data-option='incorrect']
-        ):not([data-option='draggable']) {
+      &:hover:not(:has(:checked), :has(:disabled), [data-readonly='true'], [data-option='correct'], [data-option='incorrect'], [data-option='draggable']) {
         background-color: transparent;
         cursor: default;
       }

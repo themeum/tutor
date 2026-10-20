@@ -31,8 +31,8 @@
 
   .tutor-my-courses-card {
     @include tutor-flex(column);
-    @include tutor-card-base();
-    @include tutor-card-radius();
+    @include tutor-card-base;
+    @include tutor-card-radius;
 
     position: relative;
 
@@ -62,7 +62,7 @@
     }
 
     &-actions {
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       gap: $tutor-spacing-4;
       position: absolute;

@@ -195,7 +195,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-progress {
     @include tutor-flex(column);
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
 
     padding-inline: 0;
     padding-block: $tutor-spacing-5;
@@ -434,7 +434,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-questions {
     @include tutor-flex(column);
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
 
     padding-inline: 0;
     width: 100%;
@@ -478,7 +478,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   }
 
   &-question-meta {
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
     @include tutor-flex(row, center, space-between);
 
     width: 100%;
@@ -547,7 +547,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &[data-pagination-style='shape'],
     &[data-pagination-style='radio'],
     &[data-pagination-style='number'] {
-      @include tutor-frontend-layout();
+      @include tutor-frontend-layout;
 
       width: calc(100dvw - #{$tutor-spacing-8});
       justify-content: flex-start;
@@ -938,9 +938,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &:hover,
       &:focus {
-        &:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
-            [data-option='incorrect']
-          ):not([data-option='draggable']) {
+        &:not(:has(:checked), :has(:disabled), [data-readonly='true'], [data-option='correct'], [data-option='incorrect'], [data-option='draggable']) {
           border-color: $tutor-border-hover;
           background-color: $tutor-quiz-hover;
         }
@@ -1428,7 +1426,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-inner {
       @include tutor-flex(row, center, flex-start);
-      @include tutor-frontend-layout();
+      @include tutor-frontend-layout;
 
       gap: $tutor-spacing-4;
       width: 100%;

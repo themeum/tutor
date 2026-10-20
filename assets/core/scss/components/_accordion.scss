@@ -42,7 +42,7 @@
   }
 
   &-icon {
-    @include tutor-flex-center();
+    @include tutor-flex-center;
 
     flex-shrink: 0;
     color: $tutor-icon-idle;

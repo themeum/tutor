@@ -80,7 +80,6 @@ const createConfig = (env, options) => {
       implementation: 'sass',
       sassOptions: {
         outputStyle: isDevelopment ? 'expanded' : 'compressed',
-        silenceDeprecations: ['import'],
       },
     },
   };

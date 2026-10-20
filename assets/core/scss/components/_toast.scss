@@ -329,7 +329,7 @@
 }
 
 button.tutor-toast-close {
-  @include tutor-button-base();
+  @include tutor-button-base;
 
   border: 0;
   background: transparent;

@@ -109,7 +109,7 @@
       }
 
       .tutor-billing-card-payment-method {
-        @include tutor-flex();
+        @include tutor-flex;
       }
     }
 
@@ -124,7 +124,7 @@
     &-title {
       @include tutor-flex(row, start, flex-start);
       @include tutor-typography('small', 'medium');
-      @include tutor-text-truncate();
+      @include tutor-text-truncate;
 
       min-width: 0;
       width: 100%;

@@ -33,7 +33,7 @@
   }
 
   &:focus-visible {
-    @include tutor-focus-ring();
+    @include tutor-focus-ring;
   }
 
   &-header {
@@ -47,7 +47,7 @@
   }
 
   &-icon {
-    @include tutor-flex();
+    @include tutor-flex;
   }
 
   &-value {

@@ -142,7 +142,7 @@
 
           &-title {
             @include tutor-typography(small, medium, secondary);
-            @include tutor-text-truncate();
+            @include tutor-text-truncate;
           }
 
           &-actions {
@@ -157,11 +157,11 @@
           }
 
           &-summary {
-            @include tutor-flex-center();
+            @include tutor-flex-center;
           }
 
           &-arrow {
-            @include tutor-flex-center();
+            @include tutor-flex-center;
 
             color: $tutor-icon-secondary;
 
@@ -215,7 +215,7 @@
       }
 
       .tutor-learning-nav-item {
-        @include tutor-button-reset();
+        @include tutor-button-reset;
         @include tutor-typography(small, medium, secondary);
         @include tutor-flex(row, flex-start);
 
@@ -306,7 +306,7 @@
       height: 12px;
       cursor: ns-resize;
 
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       z-index: $tutor-z-sidebar;
 
@@ -338,7 +338,7 @@
       bottom: 100%;
 
       button {
-        @include tutor-button-reset();
+        @include tutor-button-reset;
         @include tutor-flex(row, center, center);
 
         background-color: $tutor-surface-l1;
@@ -378,7 +378,7 @@
         }
 
         &:focus-visible {
-          @include tutor-focus-ring();
+          @include tutor-focus-ring;
 
           &::before,
           &::after {
@@ -416,7 +416,7 @@
       }
 
       &-item {
-        @include tutor-button-reset();
+        @include tutor-button-reset;
         @include tutor-typography(small);
         @include tutor-flex(row, center);
 

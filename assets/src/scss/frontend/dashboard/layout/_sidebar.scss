@@ -53,7 +53,7 @@
     padding: $tutor-spacing-8 $tutor-spacing-6;
 
     ul {
-      @include tutor-flex-column();
+      @include tutor-flex-column;
 
       gap: $tutor-spacing-2;
       list-style: none;
