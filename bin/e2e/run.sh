@@ -33,8 +33,16 @@ if [[ "${E2E_PRO:-0}" == "1" ]]; then
     fs.writeFileSync(".wp-env.pro.json", `${JSON.stringify(config, null, 2)}\n`);
   '
 
+  # Stop core environment if it's holding port 8888
+  pnpm exec wp-env stop >/dev/null 2>&1 || true
+
   export E2E_WP_ENV_CONFIG=".wp-env.pro.json"
   WP_ENV_ARGS+=(--config "$E2E_WP_ENV_CONFIG")
+else
+  # Stop pro environment if it's holding port 8888
+  if [[ -f ".wp-env.pro.json" ]]; then
+    pnpm exec wp-env --config=.wp-env.pro.json stop >/dev/null 2>&1 || true
+  fi
 fi
 
 RESOLVED_WP="${WP_VERSION:-${WP_ENV_CORE:-7.1.3}}"
