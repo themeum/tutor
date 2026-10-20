@@ -109,7 +109,7 @@ function e2e_factory_course( array $input ): array {
 			'post_type'    => tutor()->lesson_post_type,
 			'post_status'  => 'publish',
 			'post_author'  => $author->ID,
-			'post_parent'  => $course_id,
+			'post_parent'  => $topic_id,
 		)
 	);
 
@@ -122,6 +122,7 @@ function e2e_factory_course( array $input ): array {
 
 	return array(
 		'courseId'   => (int) $course_id,
+		'url'        => get_permalink( $course_id ),
 		'courseUrl'  => get_permalink( $course_id ),
 		'courseSlug' => get_post_field( 'post_name', $course_id ),
 		'topicId'    => (int) $topic_id,
