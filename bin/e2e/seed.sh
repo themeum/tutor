@@ -12,3 +12,7 @@ fi
 
 pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp rewrite structure '/%postname%/' --hard
 pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed.php"
+
+if [[ -f "bin/e2e/seed-admin.php" ]]; then
+  pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed-admin.php"
+fi
