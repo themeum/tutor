@@ -11,33 +11,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) || ! class_exists( 'WP_CLI' ) ) {
-	fwrite( STDERR, "This script must run through WP-CLI.\n" );
 	exit( 1 );
-}
-
-if ( false ) {
-	/**
-	 * Stub for static analysis when WP-CLI is not present in autoload.
-	 */
-	class WP_CLI {
-		/**
-		 * @param string $message Error message.
-		 * @return void
-		 */
-		public static function error( $message ) {}
-
-		/**
-		 * @param string $message Success message.
-		 * @return void
-		 */
-		public static function success( $message ) {}
-
-		/**
-		 * @param string $message Line message.
-		 * @return void
-		 */
-		public static function line( $message ) {}
-	}
 }
 
 /**

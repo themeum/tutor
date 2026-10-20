@@ -9,37 +9,11 @@
  */
 
 if ( ! defined( 'ABSPATH' ) || ! class_exists( 'WP_CLI' ) ) {
-	fwrite( STDERR, "This script must run through WP-CLI.\n" );
 	exit( 1 );
 }
 
-if ( false ) {
-	/**
-	 * Stub for static analysis when WP-CLI is not present in autoload.
-	 */
-	class WP_CLI {
-		/**
-		 * @param string $message Error message.
-		 * @return void
-		 */
-		public static function error( $message ) {}
-
-		/**
-		 * @param string $message Success message.
-		 * @return void
-		 */
-		public static function success( $message ) {}
-
-		/**
-		 * @param string $message Line message.
-		 * @return void
-		 */
-		public static function line( $message ) {}
-	}
-}
-
 $args    = $args ?? array();
-$payload = json_decode( base64_decode( $args[0] ?? '' ), true );
+$payload = json_decode( base64_decode( $args[0] ?? '' ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 
 if ( ! is_array( $payload ) ) {
 	WP_CLI::error( 'Invalid factory payload.' );
@@ -93,11 +67,11 @@ function e2e_factory_course( array $input ): array {
 
 	$topic_id = wp_insert_post(
 		array(
-			'post_title'   => 'First Topic',
-			'post_type'    => 'topics',
-			'post_status'  => 'publish',
-			'post_author'  => $author->ID,
-			'post_parent'  => $course_id,
+			'post_title'  => 'First Topic',
+			'post_type'   => 'topics',
+			'post_status' => 'publish',
+			'post_author' => $author->ID,
+			'post_parent' => $course_id,
 		)
 	);
 
@@ -151,7 +125,7 @@ function e2e_factory_enrollment( array $input ): array {
 	}
 
 	$course = get_post( $course_id );
-	if ( ! $course || $course->post_type !== tutor()->course_post_type ) {
+	if ( ! $course || tutor()->course_post_type !== $course->post_type ) {
 		WP_CLI::error( sprintf( 'Course ID %d not found.', $course_id ) );
 	}
 
@@ -183,6 +157,7 @@ switch ( $factory ) {
 $result_dir = WP_CONTENT_DIR . '/e2e';
 wp_mkdir_p( $result_dir );
 
+// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 $written = file_put_contents( $result_dir . '/' . $result_file, wp_json_encode( $result ) );
 if ( false === $written ) {
 	WP_CLI::error( 'Could not write the factory result.' );
