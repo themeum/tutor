@@ -1,41 +1,47 @@
-import { expect, test } from '../support/test';
-import { backendUrls } from '../support/urls';
+import { assertNoPhpErrors } from '@e2e/support/admin';
+import { expect, test } from '@e2e/support/test';
+import { backendUrls } from '@e2e/support/urls';
 
 test.describe('Admin Settings Management @feature', () => {
-  test('navigates settings tabs and saves configuration', async ({ adminPage }) => {
+  test('navigates settings tabs and verifies tab content', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.settings);
-    await expect(
-      adminPage.locator('.tutor-admin-wrap, .tutor-option-wrapper, #tutor-option-form').first(),
-    ).toBeVisible();
 
-    // Verify main settings navigation tabs
-    await expect(adminPage.locator('text=General').first()).toBeVisible();
-    await expect(adminPage.locator('text=Course').first()).toBeVisible();
-    await expect(adminPage.locator('text=Monetization').first()).toBeVisible();
+    const form = adminPage.locator('#tutor-option-form, form[action*="tutor_option"]');
+    await expect(form).toBeVisible();
+    const navTabs = adminPage.locator('.tutor-backend-settings-nav a, .tutor-nav a');
+    await expect(navTabs.filter({ hasText: 'General' }).first()).toBeVisible();
+    await expect(navTabs.filter({ hasText: 'Course' }).first()).toBeVisible();
+    await expect(navTabs.filter({ hasText: 'Monetization' }).first()).toBeVisible();
 
     // Switch to Course Settings tab
-    const courseTab = adminPage
-      .locator('.tutor-option-tabs a[data-tab="course"], .tutor-nav-link:has-text("Course")')
+    const courseTab = navTabs.filter({ hasText: 'Course' }).first();
+    await courseTab.click();
+    await adminPage.waitForLoadState('domcontentloaded');
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('toggles configuration and saves settings with feedback confirmation', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.settings);
+
+    const saveButton = adminPage.locator('#save_tutor_option, button[name="tutor_option_save_btn"]');
+    await expect(saveButton).toBeAttached();
+
+    // Toggle a setting checkbox to trigger form modification
+    const firstCheckbox = adminPage
+      .locator('#tutor-option-form, form[action*="tutor_option"]')
+      .locator('input[type="checkbox"]')
       .first();
-    if (await courseTab.isVisible()) {
-      await courseTab.click();
-      await expect(adminPage.locator('body')).not.toContainText('Fatal error');
-    }
-
-    // Verify Save Changes button exists in header
-    const saveBtn = adminPage.locator('#save_tutor_option');
-    await expect(saveBtn).toBeAttached();
-
-    // Toggle a checkbox to enable save button and save
-    const firstCheckbox = adminPage.locator('#tutor-option-form input[type="checkbox"]').first();
     if (await firstCheckbox.isVisible()) {
       await firstCheckbox.click();
-      await expect(saveBtn).toBeEnabled();
-      await saveBtn.click();
-      // Verify toast / notification or saved indicator appears
-      await expect(
-        adminPage.locator('.tutor-toast, .tutor-alert, .tutor-notification, text=saved, text=Success').first(),
-      ).toBeVisible();
+      await expect(saveButton).toBeEnabled();
+
+      // Save changes
+      await saveButton.click();
+      await expect(adminPage.locator('.tutor-toast, .tutor-alert, .notice-success')).toBeVisible({
+        timeout: 10000,
+      });
+      await expect(adminPage.locator('.tutor-toast, .tutor-alert, .notice-success')).toContainText(/Saved|Success/i);
     }
+    await assertNoPhpErrors(adminPage);
   });
 });

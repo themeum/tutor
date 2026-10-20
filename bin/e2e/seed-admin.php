@@ -227,7 +227,12 @@ if ( ! $quiz ) {
 // 6. Student Enrollment.
 $existing_enrollment = \Tutor\Models\EnrollmentModel::is_enrolled( $main_course_id, $student->ID );
 if ( ! $existing_enrollment ) {
-	\Tutor\Models\EnrollmentModel::do_enroll( $main_course_id, 0, $student->ID );
+	$enrollment_id = \Tutor\Models\EnrollmentModel::do_enroll( $main_course_id, 0, $student->ID );
+	if ( $enrollment_id ) {
+		wp_update_post( array( "ID" => $enrollment_id, "post_status" => "completed" ) );
+	}
+} else {
+	wp_update_post( array( "ID" => $existing_enrollment, "post_status" => "completed" ) );
 }
 
 // 7. Orders.

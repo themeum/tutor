@@ -1,4 +1,4 @@
-import { type Browser, expect, type Page, test as base } from '@playwright/test';
+import { type Browser, expect, type Locator, type Page, test as base } from '@playwright/test';
 
 import { storageState } from './auth';
 import { baseURL, type Role } from './env';
@@ -36,3 +36,4 @@ export const test = base.extend<RoleFixtures>({
 });
 
 export { expect };
+export type { Browser, Locator, Page };

@@ -1,30 +1,36 @@
-import { expect, test } from '../support/test';
-import { backendUrls } from '../support/urls';
+import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import { expect, test } from '@e2e/support/test';
+import { backendUrls } from '@e2e/support/urls';
 
 test.describe('Admin Orders and Students Management @feature', () => {
   test('views orders table and asserts order details', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.orders);
-    await expect(adminPage.locator('.tutor-wp-dashboard-header-title, .wrap h1').first()).toContainText('Orders');
 
-    // Verify seeded order row exists with amount or student name
-    const orderRow = adminPage.locator('.tutor-table tr, .wp-list-table tr').filter({ hasText: 'student' }).first();
-    await expect(orderRow).toBeVisible();
-    await expect(orderRow).toContainText(/completed|incomplete|unpaid|\$49/i);
+    await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Orders');
+    const table = adminPage.locator('table.tutor-table');
+    await expect(table).toContainText(/student|E2E Student/i);
+    await expect(table).toContainText(/completed|incomplete|unpaid|\$49/i);
+    await assertNoPhpErrors(adminPage);
   });
 
-  test('lists enrolled students with search', async ({ adminPage }) => {
+  test('lists enrolled students with search, handles empty search edge case, and restores', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.students);
-    await expect(adminPage.locator('.tutor-wp-dashboard-header-title, .wrap h1').first()).toContainText('Students');
 
-    // Verify student is listed
-    await expect(adminPage.locator('.tutor-table tr, tbody tr').filter({ hasText: 'student' }).first()).toBeVisible();
+    await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Students');
+    const table = adminPage.locator('table.tutor-table');
+    await expect(table).toContainText(/student|E2E Student/i);
 
-    // Search student
-    const searchInput = adminPage.locator('input[name="search"], input[type="search"]').first();
-    if (await searchInput.isVisible()) {
-      await searchInput.fill('student');
-      await searchInput.press('Enter');
-      await expect(adminPage.locator('.tutor-table tr, tbody tr').filter({ hasText: 'student' }).first()).toBeVisible();
-    }
+    // Positive search
+    await searchAdminTable(adminPage, 'Student');
+    await expect(table).toContainText(/student|E2E Student/i);
+
+    // Negative search edge case
+    await searchAdminTable(adminPage, '__non_existent_student_xyz__');
+    await expect(adminPage.locator('body')).toContainText(/No Data Found|No Record Found|No Data Available/i);
+
+    // Clear search restores list
+    await clearAdminSearch(adminPage);
+    await expect(table).toContainText(/student|E2E Student/i);
+    await assertNoPhpErrors(adminPage);
   });
 });

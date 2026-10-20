@@ -1,38 +1,56 @@
-import { expect, test } from '../support/test';
-import { backendUrls } from '../support/urls';
+import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import { expect, test } from '@e2e/support/test';
+import { backendUrls } from '@e2e/support/urls';
 
 test.describe('Admin Course Management @feature', () => {
-  test('lists courses with status filtering, search, and navigation to builder', async ({ adminPage }) => {
+  test('lists seeded courses with dashboard header and action button', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.courses);
 
-    // Verify course header & Create Course button
-    await expect(adminPage.locator('.tutor-wp-dashboard-header-title, .wrap h1').first()).toContainText('Courses');
-    const createBtn = adminPage
-      .locator('.tutor-wp-dashboard-header-inner a, .tutor-wp-dashboard-header-inner button')
-      .filter({ hasText: /Course/i })
-      .first();
-    await expect(createBtn).toBeVisible();
-
-    // Verify table displays seeded course
+    await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText(/Courses/i);
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
     await expect(
-      adminPage.locator('.tutor-table, tbody').getByText('Mastering Modern JavaScript').first(),
+      adminPage.locator('a.tutor-create-new-course, .tutor-wp-dashboard-header-inner a.tutor-btn'),
     ).toBeVisible();
+    await assertNoPhpErrors(adminPage);
+  });
 
-    // Test search filter
-    await adminPage.goto(`${backendUrls.courses}&search=Modern+JavaScript`);
-    await expect(
-      adminPage.locator('.tutor-table, tbody').getByText('Mastering Modern JavaScript').first(),
-    ).toBeVisible();
+  test('filters courses by search query, handles empty search edge case, and restores on clear', async ({
+    adminPage,
+  }) => {
+    await adminPage.goto(backendUrls.courses);
 
-    // Test status tab filter (Draft)
+    // Positive search query
+    await searchAdminTable(adminPage, 'JavaScript');
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
+
+    // Negative search edge case (non-existent item)
+    await searchAdminTable(adminPage, '__non_existent_course_xyz__');
+    await expect(adminPage.locator('body')).toContainText(/No Courses Found\./i);
+
+    // Clear search and verify restoration of original table rows
+    await clearAdminSearch(adminPage);
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('filters courses by status and asserts status specific courses', async ({ adminPage }) => {
+    // Filter by draft status
     await adminPage.goto(`${backendUrls.courses}&data=draft`);
-    await expect(
-      adminPage.locator('.tutor-table, tbody').getByText('Draft UI/UX Prototyping Essentials').first(),
-    ).toBeVisible();
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Draft UI\/UX Prototyping Essentials/i);
 
-    // Verify Course Builder loads when navigating
-    await adminPage.goto(backendUrls.courseBuilder);
-    await expect(adminPage).toHaveURL(/page=create-course/);
-    await expect(adminPage.locator('body')).not.toContainText('Fatal error');
+    // Filter by publish status
+    await adminPage.goto(`${backendUrls.courses}&data=publish`);
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('navigates to course builder without PHP errors', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.courses);
+
+    await adminPage.locator('a.tutor-create-new-course, .tutor-wp-dashboard-header-inner a.tutor-btn').first().click();
+    await adminPage.waitForLoadState('domcontentloaded');
+
+    await expect(adminPage).toHaveURL(/page=create-course|post_type=courses/);
+    await assertNoPhpErrors(adminPage);
   });
 });

@@ -1,37 +1,41 @@
-import { expect, test } from '../support/test';
-import { backendUrls } from '../support/urls';
+import { assertNoPhpErrors } from '@e2e/support/admin';
+import { expect, test } from '@e2e/support/test';
+import { backendUrls } from '@e2e/support/urls';
 
 test.describe('Admin Taxonomy Management @feature', () => {
-  test('manages course categories and course tags', async ({ adminPage }) => {
-    // 1. Categories
+  test('manages course categories with creation and search filtering', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.categories);
-    await expect(adminPage.locator('h1.wp-heading-inline, .wrap h1').first()).toContainText(/Categories/i);
 
-    // Verify seeded categories in the taxonomy table
-    const categoryTable = adminPage.locator('#the-list');
-    await expect(categoryTable.locator('text=Web Development').first()).toBeVisible();
+    await expect(adminPage.locator('.wp-heading-inline, h1')).toContainText(/Categories/i);
+    await expect(adminPage.locator('#the-list')).toContainText('Web Development');
 
     // Add new Category
-    const catNameInput = adminPage.locator('#tag-name');
-    await catNameInput.fill('Cloud & DevOps');
+    await adminPage.locator('#tag-name').fill('Cloud & DevOps');
+    await adminPage.locator('#tag-slug').fill('cloud-devops');
     await adminPage.locator('#submit').click();
+    await adminPage.waitForLoadState('domcontentloaded');
+    await expect(adminPage.locator('#the-list')).toContainText('Cloud & DevOps');
 
-    // Wait for AJAX insertion or table refresh
-    await expect(categoryTable.locator('text=Cloud & DevOps').first()).toBeVisible();
+    // Search Category
+    await adminPage.locator('#tag-search-input').fill('Cloud');
+    await adminPage.locator('#search-submit').click();
+    await adminPage.waitForLoadState('domcontentloaded');
+    await expect(adminPage.locator('#the-list')).toContainText('Cloud & DevOps');
+    await assertNoPhpErrors(adminPage);
+  });
 
-    // 2. Tags
+  test('manages course tags with creation and verification', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.tags);
-    await expect(adminPage.locator('h1.wp-heading-inline, .wrap h1').first()).toContainText(/Tags/i);
 
-    // Verify seeded tag in the tags table
-    const tagsTable = adminPage.locator('#the-list');
-    await expect(tagsTable.locator('text=JavaScript').first()).toBeVisible();
+    await expect(adminPage.locator('.wp-heading-inline, h1')).toContainText(/Tags/i);
+    await expect(adminPage.locator('#the-list')).toContainText('JavaScript');
 
     // Add new Tag
-    const tagNameInput = adminPage.locator('#tag-name');
-    await tagNameInput.fill('TypeScript');
+    await adminPage.locator('#tag-name').fill('TypeScript');
+    await adminPage.locator('#tag-slug').fill('typescript');
     await adminPage.locator('#submit').click();
-
-    await expect(tagsTable.locator('text=TypeScript').first()).toBeVisible();
+    await adminPage.waitForLoadState('domcontentloaded');
+    await expect(adminPage.locator('#the-list')).toContainText('TypeScript');
+    await assertNoPhpErrors(adminPage);
   });
 });
