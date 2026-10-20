@@ -1,3 +1,4 @@
+@use 'sass:color';
 
 // Tab -> #certificate
 .tutor-option-nav-page, .tutor-cb-templates-table {
@@ -190,7 +191,7 @@
 				inset-inline-end: -12px;
 
 				&:hover {
-					background-color: darken($color: $color-danger, $amount: 6);
+					background-color: color.adjust($color-danger, $lightness: -6%);
 				}
 			}
 
