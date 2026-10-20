@@ -59,10 +59,12 @@ if ( ! preg_match( '/^[a-f0-9-]{36}\.json$/', $result_file ) ) {
  * @return array
  */
 function e2e_factory_course( array $input ): array {
-	$title       = $input['title'] ?? ( 'E2E Course ' . wp_generate_password( 6, false ) );
-	$price       = $input['price'] ?? 0;
-	$price_type  = $input['price_type'] ?? ( ! empty( $price ) ? 'paid' : 'free' );
-	$author_user = $input['author'] ?? 'instructor';
+	$title          = $input['title'] ?? ( 'E2E Course ' . wp_generate_password( 6, false ) );
+	$price          = $input['price'] ?? 0;
+	$price_type     = $input['price_type'] ?? ( ! empty( $price ) ? 'paid' : 'free' );
+	$author_user    = $input['author'] ?? 'instructor';
+	$lesson_title   = $input['lessonTitle'] ?? ( $input['lesson_title'] ?? 'First Lesson' );
+	$lesson_content = $input['lessonContent'] ?? ( $input['lesson_content'] ?? ( '<p>Secret lesson text for ' . $title . '</p>' ) );
 
 	$author = get_user_by( 'login', $author_user );
 	if ( ! $author ) {
@@ -85,6 +87,7 @@ function e2e_factory_course( array $input ): array {
 
 	update_post_meta( $course_id, '_tutor_course_price_type', $price_type );
 	if ( 'paid' === $price_type ) {
+		update_post_meta( $course_id, 'tutor_course_price', (float) $price );
 		update_post_meta( $course_id, '_tutor_course_price', (float) $price );
 	}
 
@@ -104,8 +107,8 @@ function e2e_factory_course( array $input ): array {
 
 	$lesson_id = wp_insert_post(
 		array(
-			'post_title'   => 'First Lesson',
-			'post_content' => '<p>Secret lesson text for ' . $title . '</p>',
+			'post_title'   => $lesson_title,
+			'post_content' => $lesson_content,
 			'post_type'    => tutor()->lesson_post_type,
 			'post_status'  => 'publish',
 			'post_author'  => $author->ID,
