@@ -5,18 +5,15 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SLUG="$(basename "$ROOT")"
 cd "$ROOT"
 
-WP_ENV_ARGS=()
-if [[ -n "${E2E_WP_ENV_CONFIG:-}" ]]; then
-  WP_ENV_ARGS+=(--config "$E2E_WP_ENV_CONFIG")
-fi
-
-pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp rewrite structure '/%postname%/' --hard
-pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed.php"
+pnpm exec wp-env run cli -- wp rewrite structure '/%postname%/' --hard
+pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed.php"
 
 if [[ -f "bin/e2e/seed-admin.php" ]]; then
-  pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed-admin.php"
+  pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed-admin.php"
 fi
 
-if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]] && pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- test -f "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php" &>/dev/null; then
-  pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php"
+if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]] && pnpm exec wp-env run cli -- test -f "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php" &>/dev/null; then
+  if pnpm exec wp-env run cli -- wp plugin is-active tutor-pro &>/dev/null; then
+    pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php"
+  fi
 fi

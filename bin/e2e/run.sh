@@ -9,7 +9,6 @@ bash bin/e2e/ensure-docker.sh
 WP_VERSION=""
 PHP_VERSION=""
 PLAYWRIGHT_ARGS=()
-WP_ENV_ARGS=()
 
 for arg in "$@"; do
   case "$arg" in
@@ -19,29 +18,10 @@ for arg in "$@"; do
   esac
 done
 
-if [[ "${E2E_PRO:-0}" == "1" ]]; then
-  if [[ ! -d ../tutor-pro ]]; then
-    echo "E2E: E2E_PRO=1 but ../tutor-pro does not exist." >&2
-    exit 1
-  fi
-
-  node -e '
-    const fs = require("fs");
-    const config = JSON.parse(fs.readFileSync(".wp-env.json", "utf8"));
-    const plugins = config.plugins ?? ["."];
-    config.plugins = [plugins[0], "../tutor-pro", ...plugins.slice(1)];
-    fs.writeFileSync(".wp-env.pro.json", `${JSON.stringify(config, null, 2)}\n`);
-  '
-
-  # Stop core environment if it's holding port 8888
-  pnpm exec wp-env stop >/dev/null 2>&1 || true
-
-  export E2E_WP_ENV_CONFIG=".wp-env.pro.json"
-  WP_ENV_ARGS+=(--config "$E2E_WP_ENV_CONFIG")
-else
-  # Stop pro environment if it's holding port 8888
-  if [[ -f ".wp-env.pro.json" ]]; then
-    pnpm exec wp-env --config=.wp-env.pro.json stop >/dev/null 2>&1 || true
+# If tutor-pro exists locally, ensure it is mapped in .wp-env.override.json
+if [[ -d "../tutor-pro" ]]; then
+  if [[ ! -f ".wp-env.override.json" ]]; then
+    printf '{\n  "mappings": {\n    "wp-content/plugins/tutor-pro": "../tutor-pro"\n  }\n}\n' > .wp-env.override.json
   fi
 fi
 
@@ -67,14 +47,28 @@ fi
 
 if [[ -f "$VERSION_FILE" && "$(cat "$VERSION_FILE")" != "$CURRENT_VERSIONS" ]]; then
   echo "E2E: WordPress/PHP changed; recreating wp-env."
-  pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} destroy || true
+  pnpm exec wp-env destroy || true
 fi
 printf '%s\n' "$CURRENT_VERSIONS" > "$VERSION_FILE"
 
 echo "E2E: WordPress ${RESOLVED_WP}, PHP ${RESOLVED_PHP}"
 
-pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} start
-pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} reset all
-pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} start
+pnpm exec wp-env start
+
+# Toggle Tutor Pro activation in the single unified environment
+if [[ "${E2E_PRO:-0}" == "1" ]]; then
+  if [[ ! -d ../tutor-pro ]]; then
+    echo "E2E: E2E_PRO=1 but ../tutor-pro does not exist." >&2
+    exit 1
+  fi
+  pnpm exec wp-env run cli -- wp plugin activate tutor-pro >/dev/null 2>&1 || true
+  if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]]; then
+    pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php" >/dev/null 2>&1 || true
+  fi
+else
+  # Ensure Pro is deactivated for clean Core/Free testing
+  pnpm exec wp-env run cli -- wp plugin deactivate tutor-pro >/dev/null 2>&1 || true
+fi
+
 pnpm exec playwright install chromium
 pnpm exec playwright test ${PLAYWRIGHT_ARGS[@]+"${PLAYWRIGHT_ARGS[@]}"}

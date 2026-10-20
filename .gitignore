@@ -58,19 +58,11 @@ launch.json
 #rspack
 .swc
 assets/.rsdoctor
-*.ignore
 
-*storybook.log
-storybook-static
-
-# Bruno Local Environment
-docs/api/environments/local.bru
-
-# Playwright / wp-env
-.env.e2e
-.e2e/
+# wp-env overrides and e2e test artifacts
+.wp-env.override.json
 .wp-env.pro.json
-tests/e2e/.auth/
-test-results/
+.e2e/
 playwright-report/
-blob-report/
+test-results/
+tests/e2e/.auth/
