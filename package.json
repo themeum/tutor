@@ -17,7 +17,7 @@
     "tutor-kirki": "cd includes/kirki && npm run build && cp -r dist/* ../../includes/kirki",
     "test": "pnpm e2e",
     "e2e": "bash bin/e2e/run.sh --grep @smoke",
-    "e2e:full": "bash bin/e2e/run.sh --grep @feature",
+    "e2e:full": "bash bin/e2e/run.sh",
     "e2e:journey": "bash bin/e2e/run.sh --grep @journey",
     "e2e:open": "pnpm exec playwright test --ui",
     "e2e:env": "bash bin/e2e/ensure-docker.sh && pnpm exec wp-env start",

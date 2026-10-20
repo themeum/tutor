@@ -6,7 +6,7 @@ The browser suite runs against a disposable wp-env site. Core tests are always r
 
 ```bash
 pnpm e2e            # smoke tests (@smoke)
-pnpm e2e:full       # feature specs (@feature)
+pnpm e2e:full       # full test suite (core + pro)
 pnpm e2e:journey    # serial end-to-end journeys (@journey)
 pnpm e2e:open       # Playwright interactive UI; run pnpm e2e:env first
 pnpm e2e:env        # start wp-env environment
