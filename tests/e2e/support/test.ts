@@ -20,7 +20,12 @@ const rolePage =
     const page = await context.newPage();
 
     await use(page);
-    await context.close();
+    try {
+      await page.close();
+      await context.close();
+    } catch {
+      // Ignore context close artifacts cleanup race condition
+    }
   };
 
 export const test = base.extend<RoleFixtures>({

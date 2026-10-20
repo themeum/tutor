@@ -6,9 +6,10 @@ test.describe('Admin Addons and Tools @feature', () => {
     await adminPage.goto(backendUrls.addons);
     await expect(adminPage.getByText(/Available Addons|Addons/i).first()).toBeVisible();
 
-    // Verify key addon items are listed
-    await expect(adminPage.getByText('Course Bundle').first()).toBeVisible();
-    await expect(adminPage.getByText('Content Bank').first()).toBeVisible();
+    // Verify key addon items are listed within main addons area
+    const content = adminPage.locator('.tutor-admin-wrap, #wpbody-content');
+    await expect(content.getByText('Course Bundle').first()).toBeVisible();
+    await expect(content.getByText('Content Bank').first()).toBeVisible();
   });
 
   test('loads tools page with system status and environment info', async ({ adminPage }) => {
