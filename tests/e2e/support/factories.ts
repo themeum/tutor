@@ -53,36 +53,77 @@ function runFactory<T>(factory: string, input: FactoryInput = {}): T {
 }
 
 export interface CourseFactoryResult {
-  id: number;
+  id?: number;
   courseId: number;
   title: string;
-  slug: string;
+  slug?: string;
   courseSlug: string;
   url: string;
   courseUrl: string;
   topicId: number;
   lessonId: number;
   lessonUrl: string;
+  quizId?: number;
+  quizUrl?: string;
+  assignmentId?: number;
+  assignmentUrl?: string;
+  planId?: number;
   priceType?: 'free' | 'paid';
   price?: number;
 }
 
-export function createCourse(input: {
-  title: string;
+export interface CourseFactoryInput {
+  title?: string;
   price?: number;
   price_type?: 'free' | 'paid';
   instructor?: string;
   lessonTitle?: string;
   lessonContent?: string;
   status?: 'publish' | 'draft';
-}): CourseFactoryResult {
-  return runFactory<CourseFactoryResult>('course', input);
+  is_public?: boolean;
+  password?: string;
+  product_id?: number;
+  prerequisites?: number[];
+  selling_option?: 'one_time' | 'subscription' | 'both';
+  content_drip?: Record<string, unknown>;
+  content_drip_type?: string;
+  subscription_plan?: boolean | Record<string, unknown>;
+  add_quiz?: boolean;
+  quiz_title?: string;
+  add_assignment?: boolean;
+  assignment_title?: string;
 }
 
-export function enrollStudent(input: { courseId: number; username: string; status?: 'completed' | 'pending' }): {
+export function createCourse(input: CourseFactoryInput = {}): CourseFactoryResult {
+  return runFactory<CourseFactoryResult>('course', input as FactoryInput);
+}
+
+export function enrollStudent(input: {
+  courseId: number;
+  user?: string;
+  username?: string;
+  status?: 'completed' | 'pending';
+}): {
   enrollmentId: number;
   userId: number;
   courseId: number;
 } {
-  return runFactory('enrollment', input);
+  return runFactory('enrollment', {
+    ...input,
+    user: input.user ?? input.username ?? 'student',
+  });
+}
+
+export interface WcProductFactoryResult {
+  productId: number;
+  title: string;
+  price: number;
+}
+
+export function createWcProduct(input: { title?: string; price?: number } = {}): WcProductFactoryResult {
+  return runFactory<WcProductFactoryResult>('wc_product', input as FactoryInput);
+}
+
+export function setTutorOption(key: string, value: unknown): { success: boolean; previous_value: unknown } {
+  return runFactory('set_option', { option_name: 'tutor_option', key, value });
 }
