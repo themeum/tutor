@@ -17,6 +17,6 @@ if [[ -f "bin/e2e/seed-admin.php" ]]; then
   pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/${SLUG}/bin/e2e/seed-admin.php"
 fi
 
-if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]]; then
+if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]] && pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- test -f "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php" &>/dev/null; then
   pnpm exec wp-env ${WP_ENV_ARGS[@]+"${WP_ENV_ARGS[@]}"} run cli -- wp eval-file "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php"
 fi
