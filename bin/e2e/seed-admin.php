@@ -119,6 +119,21 @@ $course_defs = array(
 	),
 );
 
+// Clean up stale transient courses created in builder journey tests.
+$stale_courses = get_posts(
+	array(
+		'post_type'      => tutor()->course_post_type,
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		's'              => 'New Course',
+	)
+);
+foreach ( $stale_courses as $stale ) {
+	if ( 'New Course' === $stale->post_title ) {
+		wp_delete_post( $stale->ID, true );
+	}
+}
+
 $seeded_courses = array();
 
 foreach ( $course_defs as $def ) {
@@ -229,10 +244,20 @@ $existing_enrollment = \Tutor\Models\EnrollmentModel::is_enrolled( $main_course_
 if ( ! $existing_enrollment ) {
 	$enrollment_id = \Tutor\Models\EnrollmentModel::do_enroll( $main_course_id, 0, $student->ID );
 	if ( $enrollment_id ) {
-		wp_update_post( array( "ID" => $enrollment_id, "post_status" => "completed" ) );
+		wp_update_post(
+			array(
+				'ID'          => $enrollment_id,
+				'post_status' => 'completed',
+			)
+		);
 	}
 } else {
-	wp_update_post( array( "ID" => $existing_enrollment, "post_status" => "completed" ) );
+	wp_update_post(
+		array(
+			'ID'          => $existing_enrollment,
+			'post_status' => 'completed',
+		)
+	);
 }
 
 // 7. Orders.

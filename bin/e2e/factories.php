@@ -185,7 +185,7 @@ function e2e_factory_course( array $input ): array {
 			),
 			$plan_opts
 		);
-		$plan_id = $plan_model->create_subscription_plan( $course_id, $plan_data );
+		$plan_id    = $plan_model->create_subscription_plan( $course_id, $plan_data );
 		update_post_meta( $course_id, 'tutor_course_selling_option', 'subscription' );
 		update_post_meta( $course_id, '_tutor_course_selling_option', 'subscription' );
 		update_post_meta( $course_id, '_tutor_course_price_type', 'paid' );
@@ -270,6 +270,30 @@ function e2e_factory_wc_product( array $input ): array {
 	);
 }
 
+/**
+ * Enable a Tutor Pro add-on in tutor_addons_config option.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_enable_addon( array $input ): array {
+	$addon_name    = (string) ( $input['name'] ?? '' );
+	$addons_config = maybe_unserialize( get_option( 'tutor_addons_config', array() ) );
+	if ( ! is_array( $addons_config ) ) {
+		$addons_config = array();
+	}
+	$key                   = "tutor-pro/addons/{$addon_name}/{$addon_name}.php";
+	$addons_config[ $key ] = array( 'is_enable' => 1 );
+	update_option( 'tutor_addons_config', $addons_config );
+	return array( 'success' => true );
+}
+
+/**
+ * Set an option or update an item within the tutor_option array.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
 function e2e_factory_set_option( array $input ): array {
 	$option_name = (string) ( $input['option_name'] ?? 'tutor_option' );
 	$key         = (string) ( $input['key'] ?? '' );
@@ -280,12 +304,18 @@ function e2e_factory_set_option( array $input ): array {
 		$previous_value  = $options[ $key ] ?? null;
 		$options[ $key ] = $value;
 		update_option( 'tutor_option', $options );
-		return array( 'success' => true, 'previous_value' => $previous_value );
+		return array(
+			'success'        => true,
+			'previous_value' => $previous_value,
+		);
 	}
 
 	$previous_value = get_option( $option_name );
 	update_option( $option_name, $value );
-	return array( 'success' => true, 'previous_value' => $previous_value );
+	return array(
+		'success'        => true,
+		'previous_value' => $previous_value,
+	);
 }
 
 $result = array();
@@ -303,11 +333,15 @@ switch ( $factory ) {
 	case 'set_option':
 		$result = e2e_factory_set_option( $payload );
 		break;
+	case 'enable_addon':
+		$result = e2e_factory_enable_addon( $payload );
+		break;
 	default:
 		WP_CLI::error( sprintf( 'Unknown factory "%s".', $factory ) );
 }
 
 $result_dir = WP_CONTENT_DIR . '/e2e';
 wp_mkdir_p( $result_dir );
+// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 file_put_contents( $result_dir . '/' . $result_file, wp_json_encode( $result ) );
 WP_CLI::success( sprintf( 'Factory %s completed.', $factory ) );

@@ -66,5 +66,9 @@ else
   pnpm exec wp-env run cli -- wp plugin deactivate tutor-pro >/dev/null 2>&1 || true
 fi
 
+if [[ -f "bin/e2e/seed-admin.php" ]]; then
+  pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/tutor/bin/e2e/seed-admin.php" >/dev/null 2>&1 || true
+fi
+
 pnpm exec playwright install chromium
 pnpm exec playwright test ${PLAYWRIGHT_ARGS[@]+"${PLAYWRIGHT_ARGS[@]}"}

@@ -127,3 +127,7 @@ export function createWcProduct(input: { title?: string; price?: number } = {}):
 export function setTutorOption(key: string, value: unknown): { success: boolean; previous_value: unknown } {
   return runFactory('set_option', { option_name: 'tutor_option', key, value });
 }
+
+export function enableAddon(name: string): { success: boolean } {
+  return runFactory('enable_addon', { name });
+}

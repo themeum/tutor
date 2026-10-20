@@ -3,7 +3,7 @@ import { expect } from '@playwright/test';
 import { createCourse } from '../support/factories';
 import { test } from '../support/test';
 
-test('student buys a paid course with the native manual payment method @smoke', async ({ studentPage: page }) => {
+test('student buys a paid course with the native manual payment method @smoke', async ({ student2Page: page }) => {
   const stamp = Date.now();
   const course = createCourse({
     title: `E2E Paid Course ${stamp}`,
@@ -14,7 +14,13 @@ test('student buys a paid course with the native manual payment method @smoke', 
   });
 
   await page.goto(course.url);
-  await page.getByTestId('tutor-buy-now').click();
+  const buyNowBtn = page
+    .locator(
+      '[data-testid="tutor-buy-now"], [data-cy="tutor-buy-now"], a:has-text("Buy Now"):visible, button:has-text("Buy Now"):visible',
+    )
+    .first();
+  await expect(buyNowBtn).toBeVisible();
+  await buyNowBtn.click();
   await expect(page).toHaveURL(/course_id=\d+/);
 
   await page.locator('input[name="billing_first_name"]').fill('E2E');

@@ -1,4 +1,4 @@
-import { createCourse, createWcProduct, setTutorOption } from '@e2e/support/factories';
+import { createCourse, createWcProduct, enableAddon, setTutorOption } from '@e2e/support/factories';
 import { backendUrls } from '@e2e/support/urls';
 
 import { expect, test } from '../support/test';
@@ -237,7 +237,7 @@ test.describe('Course Creation Journey: Core Authoring & Variations', () => {
     // 2. Student visits single course page: Displays pricing and "Buy Now" button
     await student2Page.goto(course.url);
     const buyNowBtn = student2Page
-      .locator('[data-testid="tutor-buy-now"], [data-cy="tutor-buy-now"], a:has-text("Buy Now")')
+      .locator('[data-testid="tutor-buy-now"], a:has-text("Buy Now"):visible, button:has-text("Buy Now"):visible')
       .first();
     await expect(buyNowBtn).toBeVisible();
     await buyNowBtn.click();
@@ -314,6 +314,7 @@ test.describe('Course Creation Journey: Core Authoring & Variations', () => {
     } finally {
       // Restore default native monetization
       setTutorOption('monetize_by', 'tutor');
+      enableAddon('subscription');
     }
   });
 });
