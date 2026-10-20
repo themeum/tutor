@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { defineConfig, type Project } from '@playwright/test';
 import { config as loadEnv } from 'dotenv';
 
@@ -7,12 +10,18 @@ loadEnv({ path: process.env.E2E_ENV_FILE ?? '.env.e2e' });
 
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:8888';
 
+const proTestDir = resolve(__dirname, '../tutor-pro/tests/e2e');
+const externalTestDir = resolve(__dirname, './tests/e2e/external');
+
+const hasExternal = existsSync(externalTestDir) && process.env.E2E_EXTERNAL !== '0';
+const hasPro = existsSync(proTestDir) && process.env.E2E_PRO !== '0';
+
 const projects: Project[] = [
   {
     name: 'core',
     testIgnore: ['**/external/**'],
   },
-  ...(process.env.E2E_EXTERNAL === '1'
+  ...(hasExternal
     ? [
         {
           name: 'external',
@@ -20,7 +29,7 @@ const projects: Project[] = [
         },
       ]
     : []),
-  ...(process.env.E2E_PRO === '1'
+  ...(hasPro
     ? [
         {
           name: 'pro',

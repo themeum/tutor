@@ -1,17 +1,15 @@
 # Tutor LMS E2E (Playwright)
 
-The browser suite runs against a disposable wp-env site. One run covers the core
-plugin and, when `E2E_PRO=1`, the Pro checkout in `../tutor-pro/tests/e2e`.
+The browser suite runs against a disposable wp-env site. Core tests are always run, and Pro tests (`../tutor-pro/tests/e2e`) or External tests (`./tests/e2e/external`) are automatically included whenever available.
 
 ## Commands
 
 ```bash
-pnpm e2e            # smoke, fresh database
-pnpm e2e:full       # feature specs
-pnpm e2e:journey    # serial end-to-end journeys
-pnpm e2e:external   # opt-in PayPal/Zoom/Meet specs
-pnpm e2e:pro        # core + Pro; requires ../tutor-pro and generates .wp-env.pro.json
-pnpm e2e:open       # Playwright UI; run pnpm e2e:env first
+pnpm e2e            # smoke tests (@smoke)
+pnpm e2e:full       # feature specs (@feature)
+pnpm e2e:journey    # serial end-to-end journeys (@journey)
+pnpm e2e:open       # Playwright interactive UI; run pnpm e2e:env first
+pnpm e2e:env        # start wp-env environment
 pnpm e2e:reset      # reset the database and seed again
 pnpm e2e:down       # stop wp-env
 ```
@@ -33,7 +31,7 @@ tests/e2e/
   smoke/              # @smoke
   feature/            # @feature (new areas go here)
   journey/            # @journey (single serial spec per journey)
-  external/           # @external, only loaded with E2E_EXTERNAL=1
+  external/           # @external, auto-included when present
 bin/e2e/
   seed.php            # users, pages, settings, manual payment
   factories.php       # per-spec courses/lessons/enrollments
@@ -72,9 +70,7 @@ against `.env`; it points at a remote site.
   `.env.e2e.example`).
 - wp-env uses `http://localhost:8888`. The Pro license gate is bypassed on
   localhost/.local.
-- `pnpm e2e:pro` mounts `../tutor-pro`; build its Composer/npm assets there
+- Auto-mounts and detects `../tutor-pro`; build its Composer/npm assets there
   first, as the core suite does not build the Pro plugin.
-- Run `pnpm e2e:build` after changing `data-testid` attributes in TypeScript
-  components; wp-env serves the built assets.
 - CI should call the same `pnpm e2e` command. Add the GitHub Actions workflow
   only after the smoke suite has passed twice; keep it non-blocking until then.

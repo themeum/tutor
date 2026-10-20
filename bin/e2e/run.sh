@@ -55,12 +55,8 @@ echo "E2E: WordPress ${RESOLVED_WP}, PHP ${RESOLVED_PHP}"
 
 pnpm exec wp-env start
 
-# Toggle Tutor Pro activation in the single unified environment
-if [[ "${E2E_PRO:-0}" == "1" ]]; then
-  if [[ ! -d ../tutor-pro ]]; then
-    echo "E2E: E2E_PRO=1 but ../tutor-pro does not exist." >&2
-    exit 1
-  fi
+# Auto-activate Tutor Pro if available in the unified environment
+if [[ -d "../tutor-pro" && "${E2E_PRO:-1}" != "0" ]]; then
   pnpm exec wp-env run cli -- wp plugin activate tutor-pro >/dev/null 2>&1 || true
   if [[ -f "../tutor-pro/bin/e2e/seed-pro.php" ]]; then
     pnpm exec wp-env run cli -- wp eval-file "wp-content/plugins/tutor-pro/bin/e2e/seed-pro.php" >/dev/null 2>&1 || true
