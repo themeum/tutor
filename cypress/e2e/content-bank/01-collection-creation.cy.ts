@@ -25,15 +25,15 @@ describe('Content Bank - Create Collection', () => {
   });
 
   it('should create a new collection', () => {
-    cy.get('[data-cy=open-new-collection-modal]').click();
+    cy.get('[data-testid=open-new-collection-modal]').click();
 
     cy.wait(250);
 
-    cy.get('[data-cy=tutor-modal]')
+    cy.get('[data-testid=tutor-modal]')
       .should('be.visible')
       .within(() => {
         cy.get('input[name=name]').type(collectionName);
-        cy.get('button[data-cy=save-collection-button]').click();
+        cy.get('button[data-testid=save-collection-button]').click();
       });
 
     cy.waitAfterRequest('createCollection');

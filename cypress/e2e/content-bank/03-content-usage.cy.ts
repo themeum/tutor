@@ -103,21 +103,21 @@ describe('Content Bank - Usage', () => {
     cy.waitAfterRequest('getCourseDetails');
 
     cy.getByInputName('post_title').clear().type(courseData.post_title);
-    cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
+    cy.setTinyMceContent('[data-testid=tutor-tinymce]', courseData.post_content);
 
     cy.updateCourse();
-    cy.get('[data-cy=tutor-toast]').should('contain', 'Course updated successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain', 'Course updated successfully');
   });
 
   it('create new topic', () => {
     cy.visit(`${backendUrls.COURSE_BUILDER}${courseId}`);
     cy.waitAfterRequest('getCourseDetails');
 
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
 
-    cy.get('[data-cy=add-topic]').click();
+    cy.get('[data-testid=add-topic]').click();
     cy.saveTopic(topicData.title, topicData.summary);
   });
 
@@ -125,14 +125,14 @@ describe('Content Bank - Usage', () => {
     cy.visit(`${backendUrls.COURSE_BUILDER}${courseId}`);
     cy.waitAfterRequest('getCourseDetails');
 
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
 
-    cy.get('[data-cy=add-from-content-bank]').click();
+    cy.get('[data-testid=add-from-content-bank]').click();
     cy.waitAfterRequest('getContentBankCollections');
 
-    cy.get('[data-cy=tutor-modal]').within(() => {
+    cy.get('[data-testid=tutor-modal]').within(() => {
       cy.getByInputName('search').type(collectionName);
       cy.waitAfterRequest('getContentBankCollections');
 
@@ -152,28 +152,28 @@ describe('Content Bank - Usage', () => {
         addedContentNames.push(contentName);
       });
 
-      cy.get('[data-cy=add-content-button]').click();
+      cy.get('[data-testid=add-content-button]').click();
 
       cy.waitAfterRequest('addContentBankContentToCourse');
     });
     cy.waitAfterRequest('getCourseContents');
 
-    cy.get('[data-cy=add-quiz]').click();
-    cy.get('[data-cy=tutor-modal]').within(() => {
+    cy.get('[data-testid=add-quiz]').click();
+    cy.get('[data-testid=tutor-modal]').within(() => {
       cy.getByInputName('quiz_title').clear().type(quizData.quiz_title);
 
       cy.getByInputName('quiz_description').clear().type(quizData.quiz_description);
 
-      cy.get('[data-cy=save-quiz-title]').click();
+      cy.get('[data-testid=save-quiz-title]').click();
 
-      cy.get('[data-cy=add-question]').click();
+      cy.get('[data-testid=add-question]').click();
     });
 
     cy.get('.tutor-portal-popover').within(() => {
-      cy.get('[data-cy=add-from-content-bank]').click();
+      cy.get('[data-testid=add-from-content-bank]').click();
     });
 
-    cy.get('[data-cy=tutor-modal]')
+    cy.get('[data-testid=tutor-modal]')
       .last()
       .within(() => {
         cy.getByInputName('search').type(collectionName);
@@ -190,7 +190,7 @@ describe('Content Bank - Usage', () => {
             cy.get('input[type="checkbox"]').check({ force: true });
           });
 
-        cy.get('[data-cy=add-content-button]')
+        cy.get('[data-testid=add-content-button]')
           .click()
           .then(() => {
             addedContentNames.push(quizData.quiz_title);
@@ -199,9 +199,9 @@ describe('Content Bank - Usage', () => {
 
     cy.wait(250);
 
-    cy.get('[data-cy=tutor-modal]').within(() => {
-      cy.get('[data-cy=quiz-next]').click();
-      cy.get('[data-cy=save-quiz]').click();
+    cy.get('[data-testid=tutor-modal]').within(() => {
+      cy.get('[data-testid=quiz-next]').click();
+      cy.get('[data-testid=save-quiz]').click();
       cy.waitAfterRequest('saveQuiz');
     });
     cy.waitAfterRequest('getCourseContents');
@@ -220,7 +220,7 @@ describe('Content Bank - Usage', () => {
     cy.visit(`${backendUrls.CONTENT_BANK}&collection_id=${collectionId}`);
     cy.waitAfterRequest('getContentBankContents');
 
-    cy.get('[data-cy=linked-courses-popover]')
+    cy.get('[data-testid=linked-courses-popover]')
       .should('not.have.text', '0')
       .each(($el) => {
         cy.wrap($el).click();
@@ -233,20 +233,20 @@ describe('Content Bank - Usage', () => {
     cy.visit(`${backendUrls.COURSE_BUILDER}${courseId}`);
     cy.waitAfterRequest('getCourseDetails');
 
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
 
     // Duplicating for future reference
-    cy.get('[data-cy=duplicate-topic]').first().click({ force: true });
+    cy.get('[data-testid=duplicate-topic]').first().click({ force: true });
 
-    cy.get('[data-cy=delete-topic]').first().click({ force: true });
-    cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
+    cy.get('[data-testid=delete-topic]').first().click({ force: true });
+    cy.get('.tutor-portal-popover [data-testid=confirm-button]').click();
     cy.waitAfterRequest('deleteTopic');
 
     cy.visit(`${backendUrls.CONTENT_BANK}&collection_id=${collectionId}`);
     cy.waitAfterRequest('getContentBankContents');
-    cy.get('[data-cy=linked-courses-popover]').each(($el) => {
+    cy.get('[data-testid=linked-courses-popover]').each(($el) => {
       expect($el).to.contain('0');
     });
   });

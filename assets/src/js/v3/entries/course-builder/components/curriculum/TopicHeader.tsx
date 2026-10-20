@@ -184,7 +184,7 @@ const TopicHeader = ({
             <Show when={!isEdit}>
               <Tooltip content={__('Edit', 'tutor')} delay={200}>
                 <button
-                  data-cy="edit-topic"
+                  data-testid="edit-topic"
                   type="button"
                   css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
@@ -206,7 +206,7 @@ const TopicHeader = ({
                     when={!isTutorPro}
                     fallback={
                       <button
-                        data-cy="duplicate-topic"
+                        data-testid="duplicate-topic"
                         type="button"
                         css={styleUtils.actionButton}
                         disabled={!topic.isSaved}
@@ -228,7 +228,7 @@ const TopicHeader = ({
             <Show when={topic.isSaved}>
               <Tooltip content={__('Delete', 'tutor')} delay={200}>
                 <button
-                  data-cy="delete-topic"
+                  data-testid="delete-topic"
                   type="button"
                   css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
@@ -304,7 +304,7 @@ const TopicHeader = ({
               {__('Cancel', 'tutor')}
             </Button>
             <Button
-              data-cy="save-topic"
+              data-testid="save-topic"
               loading={saveTopicMutation.isPending}
               variant="secondary"
               size="small"

@@ -62,13 +62,13 @@ describe('Tutor Dashboard Zoom', () => {
     cy.url().should('include', '/create-course');
     cy.waitAfterRequest('getCourseDetails');
     cy.getByInputName('post_title').clear().type('Zoom test course');
-    cy.get('[data-cy=tutor-tracker]').contains('Additional').click();
+    cy.get('[data-testid=tutor-tracker]').contains('Additional').click();
 
     cy.wait(1000);
 
     cy.isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION).then((isEnabled) => {
       if (isEnabled) {
-        cy.get('[data-cy=create-zoom-meeting]').click().wait(500);
+        cy.get('[data-testid=create-zoom-meeting]').click().wait(500);
         cy.get('.tutor-portal-popover').within(() => {
           cy.getByInputName('meeting_name').type(zoomMeetingData.meeting_name);
           cy.getByInputName('meeting_duration').type(zoomMeetingData.meeting_duration);
@@ -82,11 +82,11 @@ describe('Tutor Dashboard Zoom', () => {
         cy.wait(500);
         cy.getByInputName('meeting_password').scrollIntoView().click().type(zoomMeetingData.meeting_password);
 
-        cy.get('[data-cy=save-zoom-meeting]').click();
+        cy.get('[data-testid=save-zoom-meeting]').click();
 
         cy.waitAfterRequest('saveZoomMeeting');
 
-        cy.get('[data-cy=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
+        cy.get('[data-testid=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
 
         return;
       }
@@ -94,7 +94,7 @@ describe('Tutor Dashboard Zoom', () => {
       cy.log('Zoom Addon is not enabled');
     });
 
-    cy.get('[data-cy=course-builder-submit-button]').click();
+    cy.get('[data-testid=course-builder-submit-button]').click();
 
     cy.url()
       .should('include', 'course_id=')

@@ -60,9 +60,9 @@ describe('Tutor Admin Subscriptions', () => {
   });
 
   it('should create a new subscription plan', () => {
-    cy.get('[data-cy=add-subscription]').click();
+    cy.get('[data-testid=add-subscription]').click();
 
-    cy.get('[data-cy=tutor-modal]').should('be.visible');
+    cy.get('[data-testid=tutor-modal]').should('be.visible');
 
     cy.get('input[name*=plan_name]').type(subscriptionData.plan_name);
     cy.get('input[name*=regular_price]').clear().type(subscriptionData.regular_price);
@@ -77,49 +77,49 @@ describe('Tutor Admin Subscriptions', () => {
 
     cy.get('input[name*=is_featured]').check({ force: true });
 
-    cy.get('[data-cy="save-subscription"]').click();
+    cy.get('[data-testid="save-subscription"]').click();
     cy.waitAfterRequest('saveSubscription');
 
-    cy.get('[data-cy="tutor-toast"]').should('contain.text', 'successfully');
+    cy.get('[data-testid="tutor-toast"]').should('contain.text', 'successfully');
   });
 
   it('should edit an existing subscription plan', () => {
-    cy.get('[data-cy=edit-subscription]').first().click({ force: true });
+    cy.get('[data-testid=edit-subscription]').first().click({ force: true });
 
-    cy.get('[data-cy=tutor-modal]').should('be.visible');
+    cy.get('[data-testid=tutor-modal]').should('be.visible');
 
     cy.get('input[name*="plan_name"]').clear().type(`${subscriptionData.plan_name} (Edited)`);
 
     const newPrice = (parseFloat(subscriptionData.regular_price) + 10).toString();
     cy.get('input[name*="regular_price"]').clear().type(newPrice);
 
-    cy.get('[data-cy=save-subscription]').click();
+    cy.get('[data-testid=save-subscription]').click();
     cy.waitAfterRequest('saveSubscription');
 
-    cy.get('[data-cy=tutor-toast]').should('contain.text', 'successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain.text', 'successfully');
   });
 
   it('should duplicate a subscription plan', () => {
-    cy.get('[data-cy=edit-subscription]').first().click({ force: true });
+    cy.get('[data-testid=edit-subscription]').first().click({ force: true });
 
-    cy.get('[data-cy=tutor-modal]').should('be.visible');
+    cy.get('[data-testid=tutor-modal]').should('be.visible');
 
-    cy.get('[data-cy=duplicate-subscription]').click();
+    cy.get('[data-testid=duplicate-subscription]').click();
 
     cy.waitAfterRequest('duplicateSubscription');
-    cy.get('[data-cy="tutor-toast"]').should('contain.text', 'successfully');
+    cy.get('[data-testid="tutor-toast"]').should('contain.text', 'successfully');
   });
 
   it('should delete a subscription plan', () => {
-    cy.get('[data-cy=edit-subscription]').first().click({ force: true });
-    cy.get('[data-cy=tutor-modal]').should('be.visible');
+    cy.get('[data-testid=edit-subscription]').first().click({ force: true });
+    cy.get('[data-testid=tutor-modal]').should('be.visible');
 
-    cy.get('[data-cy=delete-subscription]').first().click();
+    cy.get('[data-testid=delete-subscription]').first().click();
     cy.get('.tutor-portal-popover').within(() => {
-      cy.get('[data-cy=confirm-button]').click();
+      cy.get('[data-testid=confirm-button]').click();
     });
 
     cy.waitAfterRequest('deleteSubscription');
-    cy.get('[data-cy="tutor-toast"]').should('contain.text', 'successfully');
+    cy.get('[data-testid="tutor-toast"]').should('contain.text', 'successfully');
   });
 });

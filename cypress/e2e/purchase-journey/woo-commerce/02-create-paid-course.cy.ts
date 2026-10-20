@@ -67,10 +67,10 @@ describe('Paid Course Creation for WooCommerce', () => {
     cy.waitAfterRequest('getCourseDetails');
 
     cy.getByInputName('post_title').clear().type(courseData.post_title);
-    cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
+    cy.setTinyMceContent('[data-testid=tutor-tinymce]', courseData.post_content);
 
     cy.updateCourse();
-    cy.get('[data-cy=tutor-toast]').should('contain', 'Course updated successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain', 'Course updated successfully');
   });
 
   it('configures pricing', () => {
@@ -86,7 +86,7 @@ describe('Paid Course Creation for WooCommerce', () => {
     cy.getByInputName('course_price').type(courseData.course_price);
     cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
 
-    cy.get('[data-cy=course-slug]').then((slug) => {
+    cy.get('[data-testid=course-slug]').then((slug) => {
       const slugValue = slug.text();
       cy.log(`Slug: ${slugValue}`);
       cy.readFile('cypress/fixtures/course.json').then((fixture) => {

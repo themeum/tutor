@@ -509,7 +509,7 @@ const FormVideoInput = ({
                     >
                       <Show when={videoSources.includes('html5')}>
                         <Button
-                          data-cy="upload-media"
+                          data-testid="upload-media"
                           size="small"
                           variant="secondary"
                           icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
@@ -525,7 +525,7 @@ const FormVideoInput = ({
                           when={!videoSources.includes('html5')}
                           fallback={
                             <button
-                              data-cy="add-from-url"
+                              data-testid="add-from-url"
                               type="button"
                               css={styles.urlButton}
                               onClick={() => {
@@ -537,7 +537,7 @@ const FormVideoInput = ({
                           }
                         >
                           <Button
-                            data-cy="add-from-url"
+                            data-testid="add-from-url"
                             size="small"
                             variant="secondary"
                             icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
@@ -558,7 +558,7 @@ const FormVideoInput = ({
                 >
                   {() => {
                     return (
-                      <div css={styles.previewWrapper} data-cy="media-preview">
+                      <div css={styles.previewWrapper} data-testid="media-preview">
                         <div css={styles.videoInfoWrapper}>
                           <div css={styles.videoInfoCard}>
                             <SVGIcon
@@ -594,7 +594,7 @@ const FormVideoInput = ({
                               </button>
                             </Show>
                             <button
-                              data-cy="remove-video"
+                              data-testid="remove-video"
                               type="button"
                               css={styleUtils.actionButton}
                               onClick={() => {
@@ -717,7 +717,7 @@ const FormVideoInput = ({
               {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
             </Button>
             <Button
-              data-cy="submit-url"
+              data-testid="submit-url"
               variant="secondary"
               size="small"
               onClick={form.handleSubmit(handleDataFromUrl)}

@@ -48,7 +48,7 @@ describe('Course Builder - Settings', () => {
   });
 
   it('configures general settings', () => {
-    cy.get('[data-cy=course-settings]').within(() => {
+    cy.get('[data-testid=course-settings]').within(() => {
       cy.get('button[role="tab"]').contains('General').click();
     });
     cy.getSelectInput('course_level', 'Beginner');
@@ -58,7 +58,7 @@ describe('Course Builder - Settings', () => {
   });
 
   it('configures content drip settings', () => {
-    cy.get('[data-cy=course-settings]').within(($elements) => {
+    cy.get('[data-testid=course-settings]').within(($elements) => {
       cy.get('button[role="tab"]').contains('Content Drip').click();
 
       cy.isAddonEnabled(Addons.CONTENT_DRIP).then((isEnabled) => {
@@ -76,7 +76,7 @@ describe('Course Builder - Settings', () => {
   });
 
   it('configures enrollment settings', () => {
-    cy.get('[data-cy=course-settings]').within(() => {
+    cy.get('[data-testid=course-settings]').within(() => {
       cy.get('button[role="tab"]').contains('Enrollment').click();
     });
 
@@ -106,8 +106,8 @@ describe('Course Builder - Settings', () => {
   it('configures course media', () => {
     cy.getWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
     cy.get('body').then((body) => {
-      if (body.find('[data-cy=remove-video]').length > 0) {
-        cy.get('[data-cy=remove-video]').click();
+      if (body.find('[data-testid=remove-video]').length > 0) {
+        cy.get('[data-testid=remove-video]').click();
       }
     });
 
@@ -115,7 +115,7 @@ describe('Course Builder - Settings', () => {
 
     cy.updateCourse();
 
-    cy.get('[data-cy=remove-video]').click();
+    cy.get('[data-testid=remove-video]').click();
 
     cy.window().then((win) => {
       const videoSources = (
@@ -130,7 +130,7 @@ describe('Course Builder - Settings', () => {
       }
 
       for (const [index, source] of videoSources.entries()) {
-        cy.get('[data-cy=add-from-url]').click().wait(500);
+        cy.get('[data-testid=add-from-url]').click().wait(500);
         cy.getSelectInput('videoSource', source.label);
 
         switch (source.value) {
@@ -154,10 +154,10 @@ describe('Course Builder - Settings', () => {
             cy.getByInputName('videoUrl').clear().type(faker.internet.url());
             break;
         }
-        cy.get('[data-cy=submit-url]').click();
+        cy.get('[data-testid=submit-url]').click();
         cy.updateCourse();
         if (index < videoSources.length - 1) {
-          cy.get('[data-cy=remove-video]').click();
+          cy.get('[data-testid=remove-video]').click();
         }
       }
     });

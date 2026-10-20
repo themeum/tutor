@@ -2,9 +2,18 @@
 
 Status: research / proposal. Date: 2026-10-20. Branch: `research/e2e-isolated-environment`.
 
+> **Decision update (2026-10-20): Playwright replaces Cypress.** The Cypress
+> recommendation below is superseded. The new suite uses Playwright with one
+> `core` project and a conditional `pro` project, `data-testid` selectors, and
+> the wp-env isolation described here. The migration is staged: the Playwright
+> foundation and smoke suite land first; old Cypress specs stay frozen as
+> reference until their areas are ported. The parent plan
+> (`e2e-isolated-environment.md`) is intentionally left untouched per the prior
+> instruction; its "keep Cypress" non-goal no longer applies.
+
 ## TL;DR
 
-**Keep Cypress.** Isolation is an environment problem, not a runner problem. Replacing Cypress would rewrite the suite and still leave the same fresh-site work.
+**Superseded: use Playwright.** The rest of this document records the environment research that still applies (wp-env, MariaDB, seed, isolation). The runner decision is Playwright; Cypress is retired area by area.
 
 - Use **`@wordpress/env` (wp-env)** with Docker, MariaDB, the plugin mounted from `.`, and a fresh environment per CI job/shard.
 - Seed the site with **WP-CLI** on `afterStart` / `afterReset`; reset with `wp-env reset` between local runs.

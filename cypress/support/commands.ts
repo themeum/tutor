@@ -755,23 +755,25 @@ Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
 Cypress.Commands.add('getWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
   cy.get('body').then(($body) => {
     // Check if any form-field-wrapper contains the label text
-    if ($body.find('[data-cy=form-field-wrapper]').filter((i, el) => Cypress.$(el).text().includes(label)).length > 0) {
-      cy.contains('[data-cy=form-field-wrapper]', label)
+    if (
+      $body.find('[data-testid=form-field-wrapper]').filter((i, el) => Cypress.$(el).text().includes(label)).length > 0
+    ) {
+      cy.contains('[data-testid=form-field-wrapper]', label)
         .should('be.visible')
         .within(($wrapper) => {
           // Check if the upload button exists within the current wrapper
-          const $uploadMedia = $wrapper.find('[data-cy="upload-media"]');
+          const $uploadMedia = $wrapper.find('[data-testid="upload-media"]');
           if ($uploadMedia.length > 0) {
             cy.wrap($uploadMedia).contains(buttonText).click();
           } else {
-            cy.get('[data-cy=media-preview] > img').should('be.visible');
-            cy.get('[data-cy=replace-media]').contains(replaceButtonText).click();
+            cy.get('[data-testid=media-preview] > img').should('be.visible');
+            cy.get('[data-testid=replace-media]').contains(replaceButtonText).click();
           }
         })
         .then(() => cy.selectWPMedia());
     } else {
-      cy.get('[data-cy=form-field-wrapper]')
-        .find('[data-cy=upload-media]')
+      cy.get('[data-testid=form-field-wrapper]')
+        .find('[data-testid=upload-media]')
         .contains(buttonText)
         .click()
         .then(() => cy.selectWPMedia());
@@ -816,9 +818,9 @@ Cypress.Commands.add('doesElementExist', (selector) => {
 });
 
 Cypress.Commands.add('updateCourse', () => {
-  cy.get('[data-cy=course-builder-submit-button]').click();
+  cy.get('[data-testid=course-builder-submit-button]').click();
   cy.waitAfterRequest('updateCourse');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Course updated successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Course updated successfully');
 });
 
 Cypress.Commands.add('selectDate', (selector: string) => {
@@ -838,15 +840,15 @@ Cypress.Commands.add('saveTopic', (title: string, summary?: string) => {
   if (summary) {
     cy.getByInputName('summary').clear().type(summary);
   }
-  cy.get('[data-cy=save-topic]').click();
+  cy.get('[data-testid=save-topic]').click();
   cy.waitAfterRequest('saveTopic');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Topic saved successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Topic saved successfully');
 });
 
 Cypress.Commands.add('saveLesson', (lessonData) => {
-  cy.get('[data-cy=tutor-modal]').within(() => {
+  cy.get('[data-testid=tutor-modal]').within(() => {
     if (lessonData.description) {
-      cy.setTinyMceContent('[data-cy=tutor-tinymce]', lessonData.description);
+      cy.setTinyMceContent('[data-testid=tutor-tinymce]', lessonData.description);
     }
     if (lessonData.duration) {
       if (lessonData.duration.hour) {
@@ -866,16 +868,16 @@ Cypress.Commands.add('saveLesson', (lessonData) => {
   cy.getWPMedia('Video', 'Upload Video', 'Replace Thumbnail');
   cy.getWPMedia('Attachments', 'Upload Attachment', '');
 
-  cy.get('[data-cy=save-lesson]').click();
+  cy.get('[data-testid=save-lesson]').click();
   cy.waitAfterRequest('saveLesson');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Lesson saved successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Lesson saved successfully');
 });
 
 Cypress.Commands.add('saveAssignment', (assignmentData) => {
-  cy.get('[data-cy=tutor-modal]').within(() => {
+  cy.get('[data-testid=tutor-modal]').within(() => {
     cy.getByInputName('title').clear().type(assignmentData.title);
     if (assignmentData.summary) {
-      cy.setTinyMceContent('[data-cy=tutor-tinymce]', assignmentData.summary);
+      cy.setTinyMceContent('[data-testid=tutor-tinymce]', assignmentData.summary);
     }
     if (assignmentData.time_duration) {
       cy.getByInputName('time_duration.value').clear().type(assignmentData.time_duration.value);
@@ -897,35 +899,35 @@ Cypress.Commands.add('saveAssignment', (assignmentData) => {
   cy.getSelectInput('time_duration.time', 'Days');
   cy.getWPMedia('Attachments', 'Upload Attachment', '');
 
-  cy.get('[data-cy=save-assignment]').click();
+  cy.get('[data-testid=save-assignment]').click();
   cy.waitAfterRequest('saveAssignment');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Assignment created successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Assignment created successfully');
 });
 
 Cypress.Commands.add('saveQuiz', (quizData) => {
-  cy.doesElementExist('[data-cy=edit-quiz-title]').then((exists) => {
+  cy.doesElementExist('[data-testid=edit-quiz-title]').then((exists) => {
     if (exists) {
-      cy.get('[data-cy=edit-quiz-title]').click();
+      cy.get('[data-testid=edit-quiz-title]').click();
     }
   });
 
-  cy.get('[data-cy=tutor-modal]').within(() => {
+  cy.get('[data-testid=tutor-modal]').within(() => {
     cy.getByInputName('quiz_title').clear().type(quizData.quiz_title);
     if (quizData.summary) {
       cy.getByInputName('quiz_description').clear().type(quizData.quiz_description);
     }
-    cy.get('[data-cy=save-quiz-title]').click();
+    cy.get('[data-testid=save-quiz-title]').click();
 
-    cy.get('[data-cy=add-question]').click();
+    cy.get('[data-testid=add-question]').click();
   });
 
   cy.get('.tutor-portal-popover').within(() => {
     cy.get('button').contains('True/False').click();
   });
 
-  cy.doesElementExist('[data-cy=quiz-next]').then((exists) => {
+  cy.doesElementExist('[data-testid=quiz-next]').then((exists) => {
     if (exists) {
-      cy.get('[data-cy=quiz-next]').click();
+      cy.get('[data-testid=quiz-next]').click();
       cy.wait(500);
       cy.getByInputName('quiz_option.time_limit.time_value')
         .clear()
@@ -941,24 +943,24 @@ Cypress.Commands.add('saveQuiz', (quizData) => {
     }
   });
 
-  cy.get('[data-cy=save-quiz]').click();
+  cy.get('[data-testid=save-quiz]').click();
   cy.waitAfterRequest('saveQuiz');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Quiz saved successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Quiz saved successfully');
 });
 
 Cypress.Commands.add('deleteTopic', (index = 0) => {
-  cy.get('[data-cy=delete-topic]').eq(index).click();
+  cy.get('[data-testid=delete-topic]').eq(index).click();
   cy.get('.tutor-portal-popover').within(() => {
-    cy.get('[data-cy=confirm-button]').click();
+    cy.get('[data-testid=confirm-button]').click();
   });
   cy.waitAfterRequest('deleteTopic');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Topic deleted successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Topic deleted successfully');
 });
 
 Cypress.Commands.add('deleteContent', (type, index = 0) => {
-  cy.get(`[data-cy=delete-${type}]`).eq(index).click();
+  cy.get(`[data-testid=delete-${type}]`).eq(index).click();
   cy.get('.tutor-portal-popover').within(() => {
-    cy.get('[data-cy=confirm-button]').click();
+    cy.get('[data-testid=confirm-button]').click();
   });
   cy.waitAfterRequest('deleteContent');
   cy.waitAfterRequest('getCourseContents');
@@ -978,14 +980,14 @@ Cypress.Commands.add('deleteContent', (type, index = 0) => {
       successMessage = 'Content deleted successfully';
   }
 
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains(successMessage);
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains(successMessage);
 });
 
 Cypress.Commands.add('duplicateContent', (type, index = 0) => {
-  cy.get(`[data-cy=duplicate-${type}]`).eq(index).click();
+  cy.get(`[data-testid=duplicate-${type}]`).eq(index).click();
   cy.waitAfterRequest('duplicateContent');
   cy.waitAfterRequest('getCourseContents');
-  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Duplicated successfully');
+  cy.get('[data-testid=tutor-toast]').should('be.visible').contains('Duplicated successfully');
 });
 
 Cypress.Commands.add('monetizedBy', () => {
@@ -1024,9 +1026,9 @@ Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.loginAsAdmin();
 
   cy.waitAfterRequest('getCourseDetails');
-  cy.get('[data-cy=dropdown-trigger]').click();
+  cy.get('[data-testid=dropdown-trigger]').click();
   cy.get('.tutor-portal-popover').within(() => {
-    cy.get('[data-cy=move-to-trash]').click();
+    cy.get('[data-testid=move-to-trash]').click();
   });
 
   cy.waitAfterRequest('updateCourse');

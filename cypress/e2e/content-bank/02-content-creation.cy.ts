@@ -49,15 +49,15 @@ describe('Content Bank - Create Contents', () => {
     cy.waitAfterRequest('getCollections');
     cy.waitAfterRequest('getContents');
 
-    cy.get('[data-cy=question-content-modal]').click();
+    cy.get('[data-testid=question-content-modal]').click();
 
     cy.wait(250);
 
-    cy.get('[data-cy=tutor-modal]')
+    cy.get('[data-testid=tutor-modal]')
       .should('be.visible')
       .within(() => {
         cy.get('textarea[name=question_title]').type(questionTitle);
-        cy.get('button[data-cy=save-question]').click();
+        cy.get('button[data-testid=save-question]').click();
       });
 
     cy.waitAfterRequest('saveQuestion');
@@ -77,19 +77,19 @@ describe('Content Bank - Create Contents', () => {
     cy.waitAfterRequest('getCollections');
     cy.waitAfterRequest('getContents');
 
-    cy.get('[data-cy=content-create-popover]').click();
+    cy.get('[data-testid=content-create-popover]').click();
 
     cy.get('.tutor-portal-popover').within(() => {
-      cy.get('[data-cy=lesson-content-modal]').click();
+      cy.get('[data-testid=lesson-content-modal]').click();
     });
 
     cy.wait(250);
 
-    cy.get('[data-cy=tutor-modal]')
+    cy.get('[data-testid=tutor-modal]')
       .should('be.visible')
       .within(() => {
         cy.getByInputName('title').type(lessonTitle);
-        cy.get('[data-cy=save-lesson]').click();
+        cy.get('[data-testid=save-lesson]').click();
       });
 
     cy.waitAfterRequest('saveLesson');
@@ -109,19 +109,19 @@ describe('Content Bank - Create Contents', () => {
     cy.waitAfterRequest('getCollections');
     cy.waitAfterRequest('getContents');
 
-    cy.get('[data-cy=content-create-popover]').click();
+    cy.get('[data-testid=content-create-popover]').click();
 
     cy.get('.tutor-portal-popover').within(() => {
-      cy.get('[data-cy=assignment-content-modal]').click();
+      cy.get('[data-testid=assignment-content-modal]').click();
     });
 
     cy.wait(250);
 
-    cy.get('[data-cy=tutor-modal]')
+    cy.get('[data-testid=tutor-modal]')
       .should('be.visible')
       .within(() => {
         cy.getByInputName('title').type(assignmentTitle);
-        cy.get('[data-cy=save-assignment]').click();
+        cy.get('[data-testid=save-assignment]').click();
       });
 
     cy.waitAfterRequest('saveAssignment');

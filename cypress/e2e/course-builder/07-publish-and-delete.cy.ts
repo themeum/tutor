@@ -32,15 +32,15 @@ describe('Course Builder - Publish and Delete', () => {
   });
 
   it('publishes the course', () => {
-    cy.get('[data-cy="course-builder-submit-button"]').click();
+    cy.get('[data-testid="course-builder-submit-button"]').click();
     cy.waitAfterRequest('updateCourse');
-    cy.get('[data-cy=tutor-toast]').should('contain', 'Course updated successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain', 'Course updated successfully');
   });
 
   it('deletes the course', () => {
-    cy.get('[data-cy=dropdown-trigger]').click();
+    cy.get('[data-testid=dropdown-trigger]').click();
     cy.get('.tutor-portal-popover').within(() => {
-      cy.get('[data-cy=move-to-trash]').click();
+      cy.get('[data-testid=move-to-trash]').click();
     });
 
     cy.waitAfterRequest('updateCourse');

@@ -35,7 +35,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
     cy.wait(500);
     cy.get('body').then(($body) => {
       if ($body.text().includes('Select a course to enroll students')) {
-        cy.get('[data-cy=select-course-plan]').click();
+        cy.get('[data-testid=select-course-plan]').click();
       }
     });
 
@@ -43,38 +43,38 @@ describe('Tutor Admin ENROLLMENTS', () => {
       const isMembershipOnlyMode = win?._tutorobject.settings?.membership_only_mode || false;
 
       if (isMembershipOnlyMode) {
-        cy.get('[data-cy=tutor-modal]').within(($elements) => {
+        cy.get('[data-testid=tutor-modal]').within(($elements) => {
           cy.wrap($elements).should('contain.text', 'Select plan');
           cy.waitAfterRequest('getMembershipPlans');
           if ($elements.text().includes('No Data!')) {
-            cy.get('[data-cy=tutor-modal-close]').click();
+            cy.get('[data-testid=tutor-modal-close]').click();
             return;
           } else {
-            cy.get('tbody tr:first-child').find('[data-cy=select-plan]').click({ force: true });
+            cy.get('tbody tr:first-child').find('[data-testid=select-plan]').click({ force: true });
           }
         });
       } else {
-        cy.get('[data-cy=tutor-modal]').within(($elements) => {
+        cy.get('[data-testid=tutor-modal]').within(($elements) => {
           cy.wrap($elements).should('contain.text', 'Select course');
           cy.waitAfterRequest('getCourseBundleList');
           if ($elements.text().includes('No Data!')) {
-            cy.get('[data-cy=tutor-modal-close]').click();
+            cy.get('[data-testid=tutor-modal-close]').click();
             return;
           } else {
-            cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+            cy.get('tbody tr:first-child').find('[data-testid=select-course]').click({ force: true });
           }
         });
       }
     });
 
-    cy.get('[data-cy=add-students]').click();
+    cy.get('[data-testid=add-students]').click();
 
     // Add students
-    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+    cy.get('[data-testid=tutor-modal]').within(($elements) => {
       cy.wrap($elements).should('contain.text', 'Add students');
       cy.waitAfterRequest('getUnenrolledUsers');
       if ($elements.text().includes('No Data!')) {
-        cy.get('[data-cy=tutor-modal-close]').click();
+        cy.get('[data-testid=tutor-modal-close]').click();
         return;
       } else {
         cy.get('tbody tr')
@@ -95,29 +95,29 @@ describe('Tutor Admin ENROLLMENTS', () => {
             cy.get('tbody tr').find('input[type="checkbox"]:not(:disabled)').first().check({ force: true });
           }
         });
-        cy.get('[data-cy=add-students]').click();
+        cy.get('[data-testid=add-students]').click();
       }
     });
 
     cy.get('body').should('contain.text', 'Manually Added');
 
     // Upload students by CSV
-    cy.get('[data-cy=upload-csv]').click();
-    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+    cy.get('[data-testid=upload-csv]').click();
+    cy.get('[data-testid=tutor-modal]').within(($elements) => {
       cy.wrap($elements).should('contain.text', 'Import students by CSV');
-      cy.get('[data-cy=select-file] input[type="file"]').selectFile(studentCSVPath, { force: true });
-      cy.get('[data-cy=import-csv]').click();
+      cy.get('[data-testid=select-file] input[type="file"]').selectFile(studentCSVPath, { force: true });
+      cy.get('[data-testid=import-csv]').click();
     });
 
     cy.get('button[role=tab]').should('contain.text', 'Added from CSV');
-    cy.get('[data-cy=student-card] input[type=checkbox]').check({ force: true });
+    cy.get('[data-testid=student-card] input[type=checkbox]').check({ force: true });
 
     // Remove student
-    cy.get('[data-cy=remove-students]').click();
-    cy.get('[data-cy=enroll-now]').click();
+    cy.get('[data-testid=remove-students]').click();
+    cy.get('[data-testid=enroll-now]').click();
     cy.waitAfterRequest('createEnrollment');
 
-    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+    cy.get('[data-testid=tutor-modal]').within(($elements) => {
       cy.wrap($elements)
         .invoke('text')
         .should('match', /Enrollment Completed|Enrollment Failed/);
@@ -126,7 +126,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
       } else {
         cy.log('Enrollment failed');
       }
-      cy.get('[data-cy=close-modal]').click();
+      cy.get('[data-testid=close-modal]').click();
     });
   });
 

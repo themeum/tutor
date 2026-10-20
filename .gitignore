@@ -65,3 +65,12 @@ storybook-static
 
 # Bruno Local Environment
 docs/api/environments/local.bru
+
+# Playwright / wp-env
+.env.e2e
+.e2e/
+.wp-env.pro.json
+tests/e2e/.auth/
+test-results/
+playwright-report/
+blob-report/

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+  "core": "WordPress/WordPress#7.1.3",
+  "phpVersion": "8.3",
+  "testsEnvironment": false,
+  "plugins": [".", "https://downloads.wordpress.org/plugin/woocommerce.zip"],
+  "port": 8888,
+  "mappings": {
+    "wp-content/e2e": "./.e2e"
+  },
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "WP_DEBUG_DISPLAY": false
+  },
+  "lifecycleScripts": {
+    "afterStart": "bash bin/e2e/seed.sh"
+  }
+}

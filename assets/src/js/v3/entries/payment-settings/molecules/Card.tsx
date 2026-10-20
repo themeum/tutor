@@ -100,7 +100,7 @@ const Card = ({
         <div css={styles.actions}>
           <Show when={actionTray}>{actionTray}</Show>
           <button
-            data-cy="collapse-button"
+            data-testid="collapse-button"
             type="button"
             css={styles.collapseButton({ isCollapsed: collapsed })}
             onClick={toggleCollapse}

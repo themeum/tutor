@@ -92,7 +92,7 @@ describe('Course Builder - Curriculum', () => {
     cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${courseId}`);
     cy.wait(1000);
     cy.waitAfterRequest('getCourseDetails');
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
     cy.wait(1000);
@@ -100,58 +100,58 @@ describe('Course Builder - Curriculum', () => {
   });
 
   it('adds a topic', () => {
-    cy.get('[data-cy=add-topic]').click();
+    cy.get('[data-testid=add-topic]').click();
     cy.saveTopic(topicData.title, topicData.summary);
   });
 
   it('adds a lesson to a topic', () => {
-    cy.get('[data-cy=add-lesson]').first().click();
+    cy.get('[data-testid=add-lesson]').first().click();
     cy.saveLesson(lessonData);
     cy.get('body').should('contain', lessonData.title);
   });
 
   it('adds an assignment to a topic', () => {
-    cy.get('[data-cy=add-assignment]').first().click();
+    cy.get('[data-testid=add-assignment]').first().click();
     cy.saveAssignment(assignmentData);
     cy.get('body').should('contain', assignmentData.title);
   });
 
   it('duplicates and deletes curriculum content', () => {
     // Duplicate lesson
-    cy.get('[data-cy=duplicate-lesson]').eq(0).click();
+    cy.get('[data-testid=duplicate-lesson]').eq(0).click();
     cy.waitAfterRequest('duplicateContent');
     cy.waitAfterRequest('getCourseContents');
     cy.get('body').should('contain', `${lessonData.title} (copy)`);
 
     // Duplicate assignment
-    cy.get('[data-cy=duplicate-tutor_assignments]').eq(0).click();
+    cy.get('[data-testid=duplicate-tutor_assignments]').eq(0).click();
     cy.waitAfterRequest('duplicateContent');
     cy.waitAfterRequest('getCourseContents');
     cy.get('body').should('contain', `${assignmentData.title} (copy)`);
 
     // Delete lesson copy
-    cy.get('[data-cy=delete-lesson]').eq(1).click();
-    cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
+    cy.get('[data-testid=delete-lesson]').eq(1).click();
+    cy.get('.tutor-portal-popover [data-testid=confirm-button]').click();
     cy.waitAfterRequest('deleteContent');
     cy.waitAfterRequest('getCourseContents');
 
     // Delete assignment copy
-    cy.get('[data-cy=delete-tutor_assignments]').eq(1).click();
-    cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
+    cy.get('[data-testid=delete-tutor_assignments]').eq(1).click();
+    cy.get('.tutor-portal-popover [data-testid=confirm-button]').click();
     cy.waitAfterRequest('deleteContent');
     cy.waitAfterRequest('getCourseContents');
   });
 
   it('duplicates and deletes topics', () => {
     // Duplicate topic
-    cy.get('[data-cy=duplicate-topic]').eq(0).click();
+    cy.get('[data-testid=duplicate-topic]').eq(0).click();
     cy.waitAfterRequest('duplicateContent');
     cy.waitAfterRequest('getCourseContents');
     cy.get('body').should('contain', `${topicData.title} (copy)`);
 
     // Delete topic copy
-    cy.get('[data-cy=delete-topic]').eq(1).click();
-    cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
+    cy.get('[data-testid=delete-topic]').eq(1).click();
+    cy.get('.tutor-portal-popover [data-testid=confirm-button]').click();
     cy.waitAfterRequest('deleteTopic');
     cy.get('body').should('not.contain', `${topicData.title} (copy)`);
   });

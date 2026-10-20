@@ -3,4 +3,5 @@ allowBuilds:
   core-js: true
   cypress: true
   esbuild: true
+  fs-ext-extra-prebuilt: true
   unrs-resolver: true
