@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
+bash bin/e2e/ensure-docker.sh
+
 WP_VERSION=""
 PHP_VERSION=""
 PLAYWRIGHT_ARGS=()
