@@ -1,9 +1,11 @@
+@use 'sass:map';
+
 // stylelint-disable indentation
 
 // Utilities
 $utilities: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
-$utilities: map-merge(
+$utilities: map.merge(
   (
     // scss-docs-start utils-vertical-align
     "align": (
@@ -246,43 +248,43 @@ $utilities: map-merge(
       responsive: true,
       property: margin,
       class: tutor-m,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-x": (
       responsive: true,
       property: margin-inline-start margin-inline-end,
       class: tutor-mx,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-y": (
       responsive: true,
       property: margin-top margin-bottom,
       class: tutor-my,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-top": (
       responsive: true,
       property: margin-top,
       class: tutor-mt,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-end": (
       responsive: true,
       property: margin-inline-end,
       class: tutor-mr,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-bottom": (
       responsive: true,
       property: margin-bottom,
       class: tutor-mb,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
     "margin-start": (
       responsive: true,
       property: margin-inline-start,
       class: tutor-ml,
-      values: map-merge($utility-spacers, (auto: auto))
+      values: map.merge($utility-spacers, (auto: auto))
     ),
 
     // Negative margin utilities
