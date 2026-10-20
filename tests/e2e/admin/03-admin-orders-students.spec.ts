@@ -1,4 +1,4 @@
-import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import { assertNoPhpErrors, clearAdminSearch, searchAdminTable, toggleAdminSortOrder } from '@e2e/support/admin';
 import { expect, test } from '@e2e/support/test';
 import { backendUrls } from '@e2e/support/urls';
 
@@ -31,6 +31,23 @@ test.describe('Admin Orders and Students Management @feature', () => {
     // Clear search restores list
     await clearAdminSearch(adminPage);
     await expect(table).toContainText(/student|E2E Student/i);
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('applies list filters and toggles sort order on students list', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.students);
+
+    // Toggle sort order
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
+    await expect(adminPage.locator('table.tutor-table')).toBeVisible();
+
+    // Verify filter popup button opens filter controls
+    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button');
+    if (await filterBtn.isVisible()) {
+      await filterBtn.click();
+      await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
+    }
     await assertNoPhpErrors(adminPage);
   });
 });

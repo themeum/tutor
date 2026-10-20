@@ -1,4 +1,10 @@
-import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import {
+  applyAdminFilter,
+  assertNoPhpErrors,
+  clearAdminSearch,
+  searchAdminTable,
+  toggleAdminSortOrder,
+} from '@e2e/support/admin';
 import { expect, test } from '@e2e/support/test';
 import { backendUrls } from '@e2e/support/urls';
 
@@ -17,6 +23,10 @@ test.describe('Admin Course Marketplace & Instructors @feature', () => {
       await adminPage.waitForLoadState('domcontentloaded');
       await expect(adminPage.locator('table.tutor-table')).toContainText(/Pending|instructor_pending/i);
     }
+
+    // Toggle sort order
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
 
     // Open add instructor modal
     const addModal = adminPage.locator('#tutor-instructor-add-new');
@@ -37,6 +47,11 @@ test.describe('Admin Course Marketplace & Instructors @feature', () => {
     const table = adminPage.locator('table.tutor-table');
     await expect(table).toContainText('75.00');
 
+    // Filter via popup filter form for pending
+    await applyAdminFilter(adminPage, { data: 'pending' });
+    await expect(adminPage).toHaveURL(/data=pending/);
+    await expect(table).toContainText('75.00');
+
     // Negative search edge case
     await searchAdminTable(adminPage, '__non_existent_withdrawal_id__');
     await expect(adminPage.locator('body')).toContainText(/No Data Found|No Record Found/i);
@@ -44,6 +59,10 @@ test.describe('Admin Course Marketplace & Instructors @feature', () => {
     // Clear search
     await clearAdminSearch(adminPage);
     await expect(table).toContainText('75.00');
+
+    // Toggle sort order
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
     await assertNoPhpErrors(adminPage);
   });
 });

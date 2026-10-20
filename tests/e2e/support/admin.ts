@@ -8,6 +8,7 @@ export async function searchAdminTable(page: Page, query: string): Promise<void>
   await searchInput.fill(query);
   await searchInput.press('Enter');
   await page.waitForLoadState('domcontentloaded');
+  await assertNoPhpErrors(page);
 }
 
 /**
@@ -28,6 +29,44 @@ export async function clearAdminSearch(page: Page): Promise<void> {
     await searchInput.press('Enter');
   }
   await page.waitForLoadState('domcontentloaded');
+  await assertNoPhpErrors(page);
+}
+
+/**
+ * Apply filters from the admin filter popup dropdown form.
+ */
+export async function applyAdminFilter(page: Page, filters: Record<string, string>): Promise<void> {
+  const filterBtn = page.locator('.tutor-wp-dashboard-filters-button');
+  const form = page.locator('.tutor-admin-dashboard-filter-form');
+
+  if (await filterBtn.isVisible()) {
+    await filterBtn.click();
+  }
+
+  for (const [name, value] of Object.entries(filters)) {
+    const select = form.locator(`select[name="${name}"]`);
+    await select.selectOption({ value }, { force: true });
+  }
+
+  const submitBtn = form.locator('button[type="submit"]');
+  const initialUrl = page.url();
+  await submitBtn.click();
+  await page.waitForFunction((prev) => window.location.href !== prev, initialUrl, { timeout: 10_000 }).catch(() => {});
+  await page.waitForLoadState('domcontentloaded');
+  await assertNoPhpErrors(page);
+}
+
+/**
+ * Toggle the admin table sort order between ASC and DESC.
+ */
+export async function toggleAdminSortOrder(page: Page): Promise<void> {
+  const sortBtn = page.locator('.tutor-wp-dashboard-filter-order');
+  await expect(sortBtn).toBeVisible();
+  const initialUrl = page.url();
+  await sortBtn.click();
+  await page.waitForFunction((prev) => window.location.href !== prev, initialUrl, { timeout: 10_000 }).catch(() => {});
+  await page.waitForLoadState('domcontentloaded');
+  await assertNoPhpErrors(page);
 }
 
 /**

@@ -1,4 +1,4 @@
-import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import { assertNoPhpErrors, clearAdminSearch, searchAdminTable, toggleAdminSortOrder } from '@e2e/support/admin';
 import { expect, test } from '@e2e/support/test';
 import { backendUrls } from '@e2e/support/urls';
 
@@ -26,6 +26,23 @@ test.describe('Admin Q&A Management @feature', () => {
     await expect(adminPage.locator('body')).toContainText('How can I debug microtasks in the event loop?');
     await expect(adminPage.locator('.tutor-qna-reply-editor, form[action*="tutor_reply"]')).toBeVisible();
     await expect(adminPage.locator('a.tutor-btn:has-text("Back")')).toBeVisible();
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('checks Q&A list filters and sort controls if present', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.qna);
+
+    const sortBtn = adminPage.locator('.tutor-wp-dashboard-filter-order');
+    if (await sortBtn.isVisible()) {
+      await toggleAdminSortOrder(adminPage);
+      await expect(adminPage).toHaveURL(/order=/);
+    }
+
+    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button');
+    if (await filterBtn.isVisible()) {
+      await filterBtn.click();
+      await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
+    }
     await assertNoPhpErrors(adminPage);
   });
 });

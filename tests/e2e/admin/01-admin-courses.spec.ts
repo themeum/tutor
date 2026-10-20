@@ -1,4 +1,10 @@
-import { assertNoPhpErrors, clearAdminSearch, searchAdminTable } from '@e2e/support/admin';
+import {
+  applyAdminFilter,
+  assertNoPhpErrors,
+  clearAdminSearch,
+  searchAdminTable,
+  toggleAdminSortOrder,
+} from '@e2e/support/admin';
 import { expect, test } from '@e2e/support/test';
 import { backendUrls } from '@e2e/support/urls';
 
@@ -33,14 +39,22 @@ test.describe('Admin Course Management @feature', () => {
     await assertNoPhpErrors(adminPage);
   });
 
-  test('filters courses by status and asserts status specific courses', async ({ adminPage }) => {
-    // Filter by draft status
-    await adminPage.goto(`${backendUrls.courses}&data=draft`);
+  test('applies list filter popup and toggles sort order', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.courses);
+
+    // Filter via popup filter form for draft
+    await applyAdminFilter(adminPage, { data: 'draft' });
+    await expect(adminPage).toHaveURL(/data=draft/);
     await expect(adminPage.locator('table.tutor-table')).toContainText(/Draft UI\/UX Prototyping Essentials/i);
 
-    // Filter by publish status
-    await adminPage.goto(`${backendUrls.courses}&data=publish`);
+    // Filter via popup filter form for published
+    await applyAdminFilter(adminPage, { data: 'published' });
+    await expect(adminPage).toHaveURL(/data=published/);
     await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
+
+    // Toggle sort order
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
     await assertNoPhpErrors(adminPage);
   });
 
