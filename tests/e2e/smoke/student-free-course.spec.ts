@@ -16,5 +16,11 @@ test('student enrolls in a free course and opens the lesson @smoke', async ({ st
   await page.locator('.tutor-enroll-course-button').click();
 
   await page.goto(course.lessonUrl);
+
+  const skipTour = page.getByRole('button', { name: 'Skip' });
+  if (await skipTour.isVisible().catch(() => false)) {
+    await skipTour.click();
+  }
+
   await expect(page.getByText(content)).toBeVisible();
 });

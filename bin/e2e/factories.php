@@ -60,8 +60,8 @@ if ( ! preg_match( '/^[a-f0-9-]{36}\.json$/', $result_file ) ) {
  */
 function e2e_factory_course( array $input ): array {
 	$title       = $input['title'] ?? ( 'E2E Course ' . wp_generate_password( 6, false ) );
-	$price_type  = $input['price_type'] ?? 'free';
 	$price       = $input['price'] ?? 0;
+	$price_type  = $input['price_type'] ?? ( ! empty( $price ) ? 'paid' : 'free' );
 	$author_user = $input['author'] ?? 'instructor';
 
 	$author = get_user_by( 'login', $author_user );

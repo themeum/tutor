@@ -7,6 +7,7 @@ test('student buys a paid course with the native manual payment method @smoke', 
   const stamp = Date.now();
   const course = createCourse({
     title: `E2E Paid Course ${stamp}`,
+    price_type: 'paid',
     price: 49,
     lessonTitle: `E2E Paid Lesson ${stamp}`,
     lessonContent: `E2E paid lesson content ${stamp}`,

@@ -50,18 +50,23 @@ function runFactory<T>(factory: string, input: FactoryInput = {}): T {
 
 export interface CourseFactoryResult {
   id: number;
+  courseId: number;
   title: string;
   slug: string;
+  courseSlug: string;
   url: string;
+  courseUrl: string;
+  topicId: number;
   lessonId: number;
   lessonUrl: string;
-  priceType: 'free' | 'paid';
-  price: number;
+  priceType?: 'free' | 'paid';
+  price?: number;
 }
 
 export function createCourse(input: {
   title: string;
   price?: number;
+  price_type?: 'free' | 'paid';
   instructor?: string;
   lessonTitle?: string;
   lessonContent?: string;
