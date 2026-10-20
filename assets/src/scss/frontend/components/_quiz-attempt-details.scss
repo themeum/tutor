@@ -37,6 +37,7 @@
     &-inner {
       @include tutor-frontend-layout();
       @include tutor-flex(row, center, space-between);
+
       min-height: var(--tutor-quiz-summary-header-height);
       margin: 0 auto;
     }
@@ -68,6 +69,7 @@
 
   .tutor-quiz-summary-sidebar {
     @include tutor-flex(column);
+
     position: sticky;
     top: var(--tutor-quiz-summary-sidebar-top);
     align-self: start;
@@ -79,12 +81,16 @@
 
     .tutor-quiz-sidebar-questions {
       overflow-y: auto;
+
       @include tutor-scrollbar;
-      padding: 1px 1px $tutor-spacing-6 1px;
+
+      padding: 1px 1px $tutor-spacing-6;
 
       .tutor-quiz-sidebar-question-item {
         all: unset;
+
         @include tutor-flex(row);
+
         outline: none;
         box-shadow: none;
         gap: $tutor-spacing-5;
@@ -95,6 +101,7 @@
         .tutor-question-number {
           @include tutor-typography(p2, bold);
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-5;
           min-width: 46px;
           align-self: start;
@@ -112,8 +119,8 @@
 
         .tutor-question-content {
           @include tutor-typography(p2);
+
           overflow-wrap: break-word;
-          word-wrap: break-word;
           -ms-word-break: break-all;
           word-break: break-all;
           -ms-hyphens: auto;
@@ -133,6 +140,7 @@
 
         &:focus-visible {
           @include tutor-focus-ring;
+
           background-color: $tutor-surface-l2;
         }
 
@@ -162,16 +170,16 @@
   .tutor-quiz-summary-footer {
     background-color: $tutor-surface-base;
     border-top: 1px solid $tutor-border-idle;
-    box-shadow: 0px -4px 13px -2px #1018280f;
+    box-shadow: 0 -4px 13px -2px #1018280f;
     position: fixed;
     bottom: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
+    inset-inline: 0;
 
     .tutor-quiz-summary-footer-inner {
       max-width: 1220px;
       margin-inline: auto;
       padding: $tutor-spacing-7 $tutor-spacing-6;
+
       @include tutor-flex(row, center, end);
     }
 
@@ -200,6 +208,7 @@
   .tutor-quiz-questions {
     @include tutor-frontend-layout();
     @include tutor-flex(column);
+
     padding-inline: 0;
     width: 100%;
     min-width: 0;
@@ -223,6 +232,7 @@
 
   .tutor-quiz-review-dnd-grid {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-3;
 
     @include tutor-breakpoint-down(sm) {
@@ -239,9 +249,11 @@
       .tutor-quiz-review-given {
         order: 1;
       }
+
       .tutor-quiz-review-correct {
         order: 2;
       }
+
       .tutor-quiz-review-col-title.tutor-quiz-review-correct {
         margin-top: $tutor-spacing-5;
       }
@@ -260,6 +272,7 @@
 
   .tutor-quiz-review-dnd-rows {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-3;
 
     @include tutor-breakpoint-down(sm) {
@@ -280,12 +293,14 @@
 
   .tutor-quiz-review-col-title {
     @include tutor-typography(tiny, regular, subdued);
+
     margin-bottom: $tutor-spacing-3;
   }
 
   .tutor-quiz-review-item {
     @include tutor-flex(row, center, flex-start);
     @include tutor-typography(small, semibold);
+
     gap: $tutor-spacing-3;
     min-height: 38px;
     min-width: 0;
@@ -297,24 +312,25 @@
 
     &:has(.tutor-quiz-review-item-title) {
       @include tutor-flex(column, flex-start, center);
+
       gap: $tutor-spacing-none;
     }
 
     .tutor-quiz-review-item-title {
       @include tutor-typography(tiny);
+
       color: inherit;
       min-width: 0;
       overflow-wrap: break-word;
-      word-break: break-word;
     }
 
     .tutor-quiz-review-item-text,
     span {
       @include tutor-typography(small, semibold);
+
       color: inherit;
       min-width: 0;
       overflow-wrap: break-word;
-      word-break: break-word;
     }
 
     &:has(img) {
@@ -348,6 +364,7 @@
       background: $tutor-surface-warning-hover;
     }
   }
+
   .tutor-quiz-question-option {
     &[data-readonly='true'] {
       pointer-events: none;
@@ -391,6 +408,7 @@
 
       &-actions {
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-7;
         flex-shrink: 0;
 
@@ -401,6 +419,7 @@
 
       &-status {
         @include tutor-flex(row, center, flex-start, wrap);
+
         gap: $tutor-spacing-3;
       }
 
@@ -413,12 +432,14 @@
 
       &-score {
         @include tutor-typography(small, regular, subdued);
+
         white-space: nowrap;
       }
     }
 
     &-review-actions {
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-4;
 
       @include tutor-breakpoint-down(sm) {
@@ -431,6 +452,7 @@
       @include tutor-button-variant(secondary);
       @include tutor-button-icon-size(x-small);
       @include tutor-transition((background-color, color, opacity, border-color));
+
       position: relative;
       cursor: pointer;
 
@@ -454,7 +476,7 @@
       padding: 0;
       margin: -1px;
       overflow: hidden;
-      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
       white-space: nowrap;
       border: 0;
     }
@@ -477,8 +499,7 @@
   .tutor-quiz-summary-footer {
     position: sticky;
     bottom: 0;
-    inset-inline-start: auto;
-    inset-inline-end: auto;
+    inset-inline: auto;
   }
 }
 
@@ -493,6 +514,7 @@ body:has(#wpadminbar)
 
 .tutor-quiz-summary-feedback {
   @include tutor-flex(column);
+
   gap: $tutor-spacing-4;
   margin-top: $tutor-spacing-6;
   border: 1px solid $tutor-border-brand-secondary;
@@ -524,6 +546,7 @@ body:has(#wpadminbar)
 
 .tutor-quiz-review-feedback {
   @include tutor-flex(column);
+
   gap: $tutor-spacing-7;
 
   .tutor-quiz-review-feedback-button {
@@ -539,11 +562,12 @@ body:has(#wpadminbar)
 
 .tutor-quiz-open-ended-answer {
   @include tutor-typography(p2, regular, primary);
+
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
   background-color: $tutor-surface-base;
   padding: $tutor-spacing-6;
-  word-break: break-word;
+  overflow-wrap: break-word;
 
   &.is-empty {
     color: $tutor-text-subdued;
@@ -555,6 +579,7 @@ body:has(#wpadminbar)
 
   .tutor-quiz-obtained-marks-group {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-3;
   }
 
@@ -564,6 +589,7 @@ body:has(#wpadminbar)
 
   .tutor-quiz-obtained-marks-row {
     @include tutor-flex(row, baseline);
+
     gap: $tutor-spacing-3;
 
     .tutor-input-field {
@@ -578,6 +604,7 @@ body:has(#wpadminbar)
 
   .tutor-quiz-manual-review-error {
     @include tutor-typography(small, regular);
+
     color: $tutor-text-critical;
     margin-top: $tutor-spacing-1;
   }
@@ -585,6 +612,7 @@ body:has(#wpadminbar)
   .tutor-quiz-add-feedback-btn {
     @include tutor-flex(row, center);
     @include tutor-typography(p2, medium);
+
     gap: $tutor-spacing-2;
     background: none;
     border: none;
@@ -592,6 +620,7 @@ body:has(#wpadminbar)
     margin-top: $tutor-spacing-4;
     cursor: pointer;
     color: $tutor-text-brand;
+
     @include tutor-transition(color);
 
     &:hover {
@@ -616,6 +645,7 @@ body:has(#wpadminbar)
 
     &-header {
       @include tutor-flex(row, center, space-between);
+
       margin-bottom: $tutor-spacing-3;
     }
 
@@ -629,6 +659,7 @@ body:has(#wpadminbar)
 
     &-content {
       @include tutor-typography(p2, regular, primary);
+
       margin-bottom: $tutor-spacing-4;
     }
 
@@ -641,6 +672,7 @@ body:has(#wpadminbar)
 
       .tutor-quiz-feedback-actions-main {
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-3;
       }
     }
@@ -652,14 +684,16 @@ body:has(#wpadminbar)
 
   .tutor-quiz-question-feedback-title {
     @include tutor-typography(p2, semibold, primary);
+
     margin-bottom: $tutor-spacing-3;
   }
 
   .tutor-quiz-question-feedback-card {
     @include tutor-typography(p2, regular, primary);
+
     background-color: $tutor-surface-brand-tertiary;
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
 }

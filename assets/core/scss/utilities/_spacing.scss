@@ -71,7 +71,7 @@
 
 // Negative margins
 @each $key, $value in $tutor-spacing {
-  @if $key !=0 {
+  @if $key != 0 {
     .-tutor-m-#{$key} {
       margin: -$value;
     }

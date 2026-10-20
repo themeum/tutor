@@ -3,6 +3,7 @@
 
 .tutor-file-uploader {
   @include tutor-flex(column, center, center);
+
   min-height: 228px;
   background-color: $tutor-surface-brand-tertiary;
   background-image: $tutor-file-uploader-background-image;
@@ -10,6 +11,7 @@
   padding: $tutor-spacing-6;
   cursor: pointer;
   position: relative;
+
   @include tutor-transition();
 
   &.tutor-file-uploader-drag-over {
@@ -23,12 +25,14 @@
 
   &-icon {
     @include tutor-flex(row, center, center);
+
     color: $tutor-icon-hover;
     margin-bottom: $tutor-spacing-6;
   }
 
   &-content {
     @include tutor-flex(column, center, center);
+
     gap: $tutor-spacing-2;
     text-align: center;
     margin-bottom: $tutor-spacing-8;
@@ -36,11 +40,13 @@
 
   &-title {
     @include tutor-typography(small, medium, primary);
+
     margin: 0;
   }
 
   &-subtitle {
     @include tutor-typography(tiny, regular, subdued);
+
     margin: 0;
   }
 
@@ -49,7 +55,7 @@
     width: 0;
     height: 0;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
   }
@@ -57,6 +63,7 @@
 
 .tutor-file-preview {
   @include tutor-flex(row, center, center);
+
   position: relative;
   width: 100%;
   min-height: 228px;
@@ -72,12 +79,14 @@
 
   &-overlay {
     @include tutor-flex(row, center, center);
+
     position: absolute;
     inset: 0;
-    background-color: rgba($color: $tutor-surface-dark, $alpha: 0.8);
+    background-color: rgba($color: $tutor-surface-dark, $alpha: 80%);
     opacity: 0;
     pointer-events: none;
     backdrop-filter: blur(4px);
+
     @include tutor-transition(opacity);
   }
 
@@ -90,6 +99,7 @@
 
   &-actions {
     @include tutor-flex(row, center, center);
+
     gap: $tutor-spacing-3;
   }
 }

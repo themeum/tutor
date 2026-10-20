@@ -15,9 +15,10 @@
     text-underline-offset: 4px;
     color: $tutor-text-secondary;
     cursor: pointer;
-    @include tutor-transition(color);
-    padding-inline-end: $tutor-spacing-1;
 
+    @include tutor-transition(color);
+
+    padding-inline-end: $tutor-spacing-1;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
@@ -31,6 +32,7 @@
 
     &:focus-visible {
       @include tutor-focus-ring('brand', true);
+
       outline-offset: 2px;
       border-radius: $tutor-radius-sm;
     }
@@ -71,6 +73,7 @@
 
 .tutor-preview-card-title {
   @include tutor-typography(p2, medium, primary, heading);
+
   margin: 0;
   display: -webkit-box;
   line-clamp: 2;
@@ -81,6 +84,7 @@
   a {
     text-decoration: none;
     color: inherit;
+
     @include tutor-transition(color);
 
     &:hover {
@@ -89,6 +93,7 @@
 
     &:focus-visible {
       @include tutor-focus-ring('brand', true);
+
       outline-offset: 2px;
       border-radius: $tutor-radius-sm;
     }
@@ -101,6 +106,7 @@
   a {
     color: $tutor-text-secondary;
     text-decoration: none;
+
     @include tutor-transition(color);
 
     &:hover {
@@ -109,6 +115,7 @@
 
     &:focus-visible {
       @include tutor-focus-ring('brand', true);
+
       outline-offset: 2px;
       border-radius: $tutor-radius-sm;
     }
@@ -120,6 +127,7 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

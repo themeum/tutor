@@ -35,6 +35,7 @@
   &-inner {
     @include tutor-frontend-layout();
     @include tutor-flex(row, center, space-between);
+
     height: 100%;
 
     @include tutor-breakpoint-up(2xl) {
@@ -44,6 +45,7 @@
 
   &-left {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-1;
   }
 
@@ -53,9 +55,11 @@
     padding: 0;
 
     @include tutor-typography(tiny, regular);
+
     color: $tutor-text-secondary;
 
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-5;
 
     li {
@@ -87,6 +91,7 @@
 
   &-user {
     position: relative;
+
     @include tutor-flex(row, center);
   }
 
@@ -96,9 +101,11 @@
 
   &-user-avatar {
     @include tutor-button-reset();
+
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
     overflow: hidden;
+
     @include tutor-transition(border-color);
 
     &:hover,
@@ -118,6 +125,7 @@
 
     &-profile {
       @include tutor-flex(column, center, flex-start);
+
       gap: $tutor-spacing-5;
       background-color: $tutor-surface-brand-tertiary;
       padding: $tutor-spacing-6 $tutor-spacing-5;
@@ -133,7 +141,9 @@
       list-style: none;
       margin: 0;
       padding: 0;
+
       @include tutor-flex(column);
+
       gap: $tutor-spacing-2;
 
       li {
@@ -147,7 +157,9 @@
 
         a {
           width: 100%;
+
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-5;
           padding: $tutor-spacing-4 $tutor-spacing-5;
           border-radius: $tutor-radius-md;
@@ -155,6 +167,7 @@
           text-decoration: none;
           box-shadow: none;
           outline: none;
+
           @include tutor-transition(background-color);
 
           &:hover {
@@ -180,6 +193,7 @@
     .tutor-dashboard-header-user-avatar {
       @include tutor-button-base();
       @include tutor-button-variant(ghost);
+
       padding: 9px;
 
       .tutor-avatar {
@@ -188,8 +202,8 @@
     }
 
     &-user-popover {
-      top: 0px !important;
-      inset-inline-start: 0px !important;
+      top: 0 !important;
+      inset-inline-start: 0 !important;
       width: 100% !important;
       max-width: 100% !important;
       height: 100% !important;
@@ -198,6 +212,7 @@
       overflow-y: auto;
       background: $tutor-surface-base;
       padding: $tutor-spacing-none;
+
       @include tutor-flex(column);
 
       body:has(#wpadminbar) & {
@@ -214,7 +229,9 @@
 
         .tutor-profile-header-top {
           width: 100%;
+
           @include tutor-flex(row, center, space-between);
+
           background: $tutor-surface-base;
         }
 
@@ -242,6 +259,7 @@
 
       &-menu-wrapper {
         @include tutor-flex(column, stretch, space-between);
+
         height: 100%;
       }
 

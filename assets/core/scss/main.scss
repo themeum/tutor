@@ -43,6 +43,7 @@ body {
   line-height: inherit;
   background-color: $tutor-surface-base;
   color: $tutor-text-primary;
+
   @include tutor-transition((background-color, color));
 }
 
@@ -95,6 +96,7 @@ form {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -104,6 +106,7 @@ form {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }

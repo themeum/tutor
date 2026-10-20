@@ -18,11 +18,11 @@
 
   &-title {
     @include tutor-typography(h4, semibold, primary, heading);
+
     margin: $tutor-spacing-none;
 
     @include tutor-breakpoint-up(sm) {
-      margin-inline-end: auto;
-      margin-inline-start: $tutor-spacing-4;
+      margin-inline: $tutor-spacing-4 auto;
     }
   }
 

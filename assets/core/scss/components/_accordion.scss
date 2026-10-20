@@ -4,7 +4,9 @@
 .tutor-accordion {
   overflow: visible;
   background-color: transparent;
+
   @include tutor-flex(column, stretch, start);
+
   gap: $tutor-spacing-6;
 
   &-item {
@@ -16,12 +18,14 @@
 
   &-header {
     @include tutor-flex(row, start, space-between);
+
     width: 100%;
     padding: $tutor-spacing-5 $tutor-spacing-6;
     background: none;
     border: none;
     text-align: start;
     cursor: pointer;
+
     @include tutor-transition(background-color);
 
     &:hover,
@@ -33,13 +37,16 @@
 
   &-title {
     margin: 0;
+
     @include tutor-typography('medium', 'medium', 'primary', 'heading');
   }
 
   &-icon {
     @include tutor-flex-center();
+
     flex-shrink: 0;
     color: $tutor-icon-idle;
+
     @include tutor-transition(transform);
 
     .tutor-accordion-header[aria-expanded='true'] & {

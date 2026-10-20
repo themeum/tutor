@@ -18,23 +18,19 @@ $display-utils: (
   inline-grid: inline-grid,
   hidden: none,
 );
-
 $flex-direction-utils: (
   flex-row: row,
   flex-row-reverse: row-reverse,
   flex-column: column,
   flex-column-reverse: column-reverse,
 );
-
 $flex-wrap-utils: (
   wrap: wrap,
   wrap-reverse: wrap-reverse,
   nowrap: nowrap,
 );
-
 $flex-grow-utils: (0, 1);
 $flex-shrink-utils: (0, 1);
-
 $justify-utils: (
   justify-start: flex-start,
   justify-end: flex-end,
@@ -43,7 +39,6 @@ $justify-utils: (
   justify-around: space-around,
   justify-evenly: space-evenly,
 );
-
 $align-items-utils: (
   items-normal: normal,
   items-start: flex-start,
@@ -52,7 +47,6 @@ $align-items-utils: (
   items-baseline: baseline,
   items-stretch: stretch,
 );
-
 $align-content-utils: (
   start: flex-start,
   end: flex-end,
@@ -61,7 +55,6 @@ $align-content-utils: (
   around: space-around,
   evenly: space-evenly,
 );
-
 $align-self-utils: (
   auto: auto,
   start: flex-start,
@@ -70,9 +63,7 @@ $align-self-utils: (
   stretch: stretch,
   baseline: baseline,
 );
-
 $grid-cols: (1, 2, 3, 4, 5, 6, 12);
-
 $grid-split-utils: (
   '1-5-1': 1.5fr 1fr,
   '2-1': 2fr 1fr,
@@ -125,18 +116,23 @@ $grid-split-utils: (
 .tutor-flex-1 {
   flex: 1 1 0%;
 }
+
 .tutor-flex-auto {
   flex: 1 1 auto;
 }
+
 .tutor-flex-initial {
   flex: 0 1 auto;
 }
+
 .tutor-flex-none {
   flex: none;
 }
+
 .tutor-flex-center {
   @include tutor-flex(row, center, center);
 }
+
 .tutor-flex-center-col {
   @include tutor-flex(column, center, center);
 }
@@ -205,9 +201,11 @@ $grid-split-utils: (
     grid-column: span #{$i} / span #{$i};
   }
 }
+
 .tutor-col-span-full {
   grid-column: 1 / -1;
 }
+
 .tutor-col-auto {
   grid-column: auto;
 }
@@ -217,6 +215,7 @@ $grid-split-utils: (
 // ------------------------
 
 $position-values: static, fixed, absolute, relative, sticky;
+
 @each $pos in $position-values {
   .tutor-#{$pos} {
     position: $pos;
@@ -225,6 +224,7 @@ $position-values: static, fixed, absolute, relative, sticky;
 
 // Insets
 $inset-sides: top, right, bottom, left;
+
 @each $side in $inset-sides {
   .tutor-#{$side}-0 {
     @if $side == 'right' {
@@ -245,6 +245,7 @@ $inset-sides: top, right, bottom, left;
     }
   }
 }
+
 @each $key, $value in $tutor-spacing {
   @each $side in $inset-sides {
     .tutor-#{$side}-#{$key} {
@@ -261,15 +262,14 @@ $inset-sides: top, right, bottom, left;
 
 .tutor-inset-0 {
   top: 0;
-  inset-inline-start: 0;
+  inset-inline: 0;
   bottom: 0;
-  inset-inline-end: 0;
 }
+
 .tutor-inset-auto {
   top: auto;
-  inset-inline-start: auto;
+  inset-inline: auto;
   bottom: auto;
-  inset-inline-end: auto;
 }
 
 // ------------------------
@@ -277,6 +277,7 @@ $inset-sides: top, right, bottom, left;
 // ------------------------
 
 $overflow-types: auto, hidden, visible, scroll;
+
 @each $type in $overflow-types {
   .tutor-overflow-#{$type} {
     overflow: $type;
@@ -296,17 +297,21 @@ $overflow-types: auto, hidden, visible, scroll;
 .tutor-float-start {
   float: inline-start;
 }
+
 .tutor-float-end {
   float: inline-end;
 }
+
 .tutor-float-left {
   /* stylelint-disable-next-line value-keyword-layout-mappings -- physical utility; the class name promises the physical side */
   float: left;
 }
+
 .tutor-float-right {
   /* stylelint-disable-next-line value-keyword-layout-mappings -- physical utility; the class name promises the physical side */
   float: right;
 }
+
 .tutor-float-none {
   float: none;
 }
@@ -317,6 +322,7 @@ $overflow-types: auto, hidden, visible, scroll;
 
 .tutor-icon {
   @include tutor-flex(row, center, center);
+
   flex-shrink: 0;
 }
 

@@ -7,6 +7,7 @@
 
   &-header {
     @include tutor-flex(row, center, space-between);
+
     padding: $tutor-spacing-5;
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
@@ -20,6 +21,7 @@
 
   &-body {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-5;
     padding: $tutor-spacing-5 26px;
     border: 1px solid $tutor-border-idle;
@@ -27,7 +29,6 @@
     border-end-start-radius: $tutor-radius-2xl;
     border-end-end-radius: $tutor-radius-2xl;
     box-shadow: $tutor-shadow-lg;
-
     position: absolute;
     top: 100%;
     inset-inline-start: 0;
