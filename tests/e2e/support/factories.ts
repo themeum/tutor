@@ -22,8 +22,12 @@ function runFactory<T>(factory: string, input: FactoryInput = {}): T {
     }),
   ).toString('base64');
 
+  const wpEnvArgs = process.env.E2E_WP_ENV_CONFIG
+    ? ['--config', process.env.E2E_WP_ENV_CONFIG, 'run', 'cli', '--', 'wp', 'eval-file', factoryScript, payload]
+    : ['run', 'cli', '--', 'wp', 'eval-file', factoryScript, payload];
+
   try {
-    execFileSync('pnpm', ['exec', 'wp-env', 'run', 'cli', '--', 'wp', 'eval-file', factoryScript, payload], {
+    execFileSync('pnpm', ['exec', 'wp-env', ...wpEnvArgs], {
       cwd: process.cwd(),
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024,

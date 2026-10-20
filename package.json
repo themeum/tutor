@@ -21,7 +21,7 @@
     "e2e:full": "bash bin/e2e/run.sh --grep @feature",
     "e2e:journey": "bash bin/e2e/run.sh --grep @journey",
     "e2e:external": "E2E_EXTERNAL=1 bash bin/e2e/run.sh --grep @external",
-    "e2e:pro": "E2E_PRO=1 bash bin/e2e/run.sh",
+    "e2e:pro": "E2E_PRO=1 bash bin/e2e/run.sh --project=pro",
     "e2e:open": "pnpm exec playwright test --ui",
     "e2e:env": "bash bin/e2e/ensure-docker.sh && pnpm exec wp-env start",
     "e2e:reset": "bash bin/e2e/ensure-docker.sh && pnpm exec wp-env reset all && pnpm exec wp-env start",
