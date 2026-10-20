@@ -1,7 +1,8 @@
-// RTL guard for new UI styles.
+// Shared lint config for new UI styles.
 //
-// Physical direction properties (margin-left, text-align: right, left, ...) do
-// not mirror in RTL, so these trees use flow-relative properties instead:
+// The scoped trees use stylelint-config-standard-scss (style + correctness)
+// plus a guard against physical direction properties, which do not mirror in
+// RTL:
 //   assets/core/scss          design system
 //   assets/src/scss/frontend  dashboard, learning area, kids
 //
@@ -13,7 +14,6 @@
 // physical translate) gets a one-line disable with a reason:
 //   /* stylelint-disable-next-line <rule> -- reason */
 //
-// Stylelint skips --fix for any file that contains a disable comment.
 // Known gap: 4-value shorthands (margin: 0 0 0 10px) are not inspected.
 
 // Block-axis and size properties read the same in LTR and RTL, so they stay
@@ -23,8 +23,6 @@ const directionNeutralProperties =
 
 /** @type {import('stylelint').Config} */
 export default {
-  // Stylelint's documented SCSS parser. Used directly instead of extending
-  // stylelint-config-standard-scss, which also turns on unrelated style rules.
   customSyntax: 'postcss-scss',
   languageOptions: {
     directionality: { block: 'top-to-bottom', inline: 'left-to-right' },
@@ -35,7 +33,20 @@ export default {
   overrides: [
     {
       files: ['assets/core/scss/**/*.scss', 'assets/src/scss/frontend/**/*.scss'],
+      extends: ['stylelint-config-standard-scss'],
       rules: {
+        // Browser prefixes still needed for Safari/Firefox support.
+        'property-no-vendor-prefix': null,
+        // Public and third-party class names (BEM, Plyr, vanilla-calendar) are
+        // not ours to rename.
+        'selector-class-pattern': null,
+        // The codebase calls argumentless mixins with (), so keep that style.
+        'scss/at-mixin-argumentless-call-parentheses': null,
+        // Both :not() forms are used intentionally; converting changes specificity.
+        'selector-not-notation': null,
+        // Keep min-/max-width for browsers without range syntax.
+        'media-feature-range-notation': 'prefix',
+
         'property-layout-mappings': ['flow-relative', { ignoreProperties: [directionNeutralProperties] }],
         // resize does not mirror; block/inline only narrows browser support.
         'value-keyword-layout-mappings': ['flow-relative', { ignoreProperties: ['resize'] }],
