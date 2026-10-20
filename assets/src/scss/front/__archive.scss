@@ -12,7 +12,7 @@
 .tutor-error-msg {
 	margin: 10px 0;
 	padding: 10px;
-	border-radius: 3px 3px 3px 3px;
+	border-radius: 3px;
 }
 
 .tutor-info-msg {
@@ -61,7 +61,7 @@ button.tutor-profile-photo-upload-btn {
 	color: #fff;
 	display: block;
 	width: 100%;
-	text-align: CENTER;
+	text-align: center;
 	padding: 9px 0;
 }
 
@@ -74,7 +74,7 @@ button.tutor-profile-photo-upload-btn:hover {
 .tutor-profile-photo-delete-btn {
 	position: absolute;
 	color: #ff000c;
-	right: 10px;
+	inset-inline-end: 10px;
 	top: 10px;
 }
 
@@ -108,7 +108,7 @@ Instructor
 
 .single-instructor-wrap .tutor-instructor-left {
 	flex: 0 0 auto;
-	padding-right: 30px;
+	padding-inline-end: 30px;
 }
 
 @media (max-width: 767px) {
@@ -125,8 +125,8 @@ Instructor
 }
 
 .single-instructor-wrap .instructor-name {
-	float: left;
-	padding-left: 20px;
+	float: inline-start;
+	padding-inline-start: 20px;
 	max-width: 180px;
 }
 
@@ -148,10 +148,11 @@ Instructor
 
 .single-instructor-wrap .single-instructor-bottom {
 	padding: 15px 20px;
-	text-align: right;
+	text-align: end;
 	overflow: hidden;
+
 	@media (max-width: 767px) {
-		text-align: left;
+		text-align: start;
 	}
 }
 
@@ -160,24 +161,24 @@ Instructor
 }
 
 .single-instructor-wrap .single-instructor-bottom .ratings {
-	float: left;
+	float: inline-start;
 }
 
 .single-instructor-wrap .single-instructor-bottom .ratings i {
-	margin-right: 4px;
+	margin-inline-end: 4px;
 }
 
 .single-instructor-wrap .single-instructor-bottom .courses,
 .single-instructor-wrap .single-instructor-bottom .students {
 	display: inline-block;
-	margin-left: 20px;
+	margin-inline-start: 20px;
 }
 
 .single-instructor-wrap .single-instructor-bottom .courses i,
 .single-instructor-wrap .single-instructor-bottom .students i {
 	font-size: 18px;
 	display: inline-block;
-	margin-right: 2px;
+	margin-inline-end: 2px;
 	vertical-align: middle;
 }
 
@@ -207,24 +208,26 @@ Instructor
 
 /* ********************* */
 
-/*start global login form*/
+/* start global login form */
 
 /* ********************* */
 
 .tutor-login-wrap, #tutor-registration-wrap {
 	max-width: 520px;
 	margin: 0 auto;
-	padding: 40px 0 32px 0;
+	padding: 40px 0 32px;
 	border: 1px solid #ececed;
-	box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.0588235294), 0px 4px 8px -2px rgba(16, 24, 40, 0.1019607843);
+	box-shadow: 0 2px 4px -2px rgb(16 24 40 / 5.88%), 0 4px 8px -2px rgb(16 24 40 / 10.2%);
 	border-radius: 8px;
 }
 
 .tutor-login-form-wrapper, #tutor-registration-form {
-	padding: 24px 24px;
+	padding: 24px;
+
 	.tutor-password-strength-checker {
 		.show-hide-btn {
 			top: 45%;
+
 			@media (max-width: 767px) {
 				top: 42%;
 			}
@@ -239,7 +242,7 @@ Instructor
 .tutor-login-wrap,
 #tutor-login-form {
 	input.tutor-form-control {
-		background-color: #ffffff;
+		background-color: #fff;
 		border-color: #ececed !important;
 		font-size: 14px;
 		line-height: 22px;
@@ -249,7 +252,7 @@ Instructor
 		}
 
 		&:focus {
-			box-shadow: 0px 0px 0px 2px #90A0F7;
+			box-shadow: 0 0 0 2px #90A0F7;
     		border-color: #a4bcf4 !important;
 		}
 	}
@@ -263,13 +266,13 @@ Instructor
 
 .tutor-login-rememeber-wrap {
 	overflow: hidden;
-	text-align: right;
+	text-align: end;
 	margin-bottom: 30px;
 }
 
 .tutor-login-rememeber-wrap p {
 	display: inline-block;
-	float: left;
+	float: inline-start;
 }
 
 .tutor-login-rememeber-wrap p,
@@ -297,7 +300,7 @@ Instructor
 	margin-top: 15px;
 }
 
-/*course login*/
+/* course login */
 
 .tutor-course-login-wrap h4 {
 	font-size: 42px;
@@ -320,7 +323,7 @@ Instructor
 
 /* ********************* */
 
-/*start registration form*/
+/* start registration form */
 
 /* ********************* */
 
@@ -347,7 +350,7 @@ Instructor
 	box-shadow: none;
 	margin-bottom: 20px;
 	border-radius: 4px;
-	background: #ffffff;
+	background: #fff;
 	line-height: 48px;
 	padding: 0;
 	text-indent: 15px;
@@ -375,44 +378,44 @@ Instructor
 .tutor-option-field input:not([type='submit']):focus,
 .tutor-form-group textarea:focus,
 .tutor-form-group input:not([type='submit']):focus {
-	background: #ffffff;
+	background: #fff;
 	border-color: var(--tutor-color-primary) !important;
 }
 
-.tutor-option-field textarea::-webkit-input-placeholder,
-.tutor-option-field input::-webkit-input-placeholder,
-.tutor-form-group textarea::-webkit-input-placeholder,
-.tutor-form-group input::-webkit-input-placeholder {
+.tutor-option-field textarea::input-placeholder,
+.tutor-option-field input::input-placeholder,
+.tutor-form-group textarea::input-placeholder,
+.tutor-form-group input::input-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
 }
 
-.tutor-option-field textarea::-moz-placeholder,
-.tutor-option-field input::-moz-placeholder,
-.tutor-form-group textarea::-moz-placeholder,
-.tutor-form-group input::-moz-placeholder {
+.tutor-option-field textarea::placeholder,
+.tutor-option-field input::placeholder,
+.tutor-form-group textarea::placeholder,
+.tutor-form-group input::placeholder {
 	color: #b0b6c8;
 	opacity: 1;
 }
 
-.tutor-option-field textarea:-ms-input-placeholder,
-.tutor-option-field input:-ms-input-placeholder,
-.tutor-form-group textarea:-ms-input-placeholder,
-.tutor-form-group input:-ms-input-placeholder {
+.tutor-option-field textarea:input-placeholder,
+.tutor-option-field input:input-placeholder,
+.tutor-form-group textarea:input-placeholder,
+.tutor-form-group input:input-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
 }
 
-.tutor-option-field textarea:-moz-placeholder,
-.tutor-option-field input:-moz-placeholder,
-.tutor-form-group textarea:-moz-placeholder,
-.tutor-form-group input:-moz-placeholder {
+.tutor-option-field textarea:placeholder,
+.tutor-option-field input:placeholder,
+.tutor-form-group textarea:placeholder,
+.tutor-form-group input:placeholder {
 	color: #b0b6c8;
 	opacity: 1;
 }
 
 .tutor-form-group.tutor-reg-form-btn-wrap {
-	text-align: right;
+	text-align: end;
 }
 
 .tutor-option-field p.desc {
@@ -431,7 +434,7 @@ Instructor
 }
 
 .tutor-option-gorup-fields-wrap .tutor-lesson-video-runtime .tutor-option-group-field {
-	padding-right: 30px;
+	padding-inline-end: 30px;
 }
 
 /* ********************* */
@@ -462,6 +465,7 @@ Instructor
 	margin: 0 0 20px;
 	overflow: hidden;
 	line-height: 1;
+
 	.subscription-details {
 		font-size: var(--tutor-text-size);
 		display: block;
@@ -475,8 +479,8 @@ Instructor
 }
 
 .tutor-price-preview-box .price del + ins {
-	margin-left: 0;
-	float: left;
+	margin-inline-start: 0;
+	float: inline-start;
 }
 
 /* ************************ */
@@ -515,12 +519,12 @@ Instructor
 
 .tutor-review-individual-item .review-left {
 	width: 200px;
-	float: left;
+	float: inline-start;
 	overflow: hidden;
 }
 
 .tutor-review-individual-item .review-content {
-	padding-left: 200px;
+	padding-inline-start: 200px;
 }
 
 @media (max-width: 991px) {
@@ -529,14 +533,15 @@ Instructor
 		float: none;
 		margin-bottom: 25px;
 	}
+
 	.tutor-review-individual-item .review-content {
-		padding-left: 0;
+		padding-inline-start: 0;
 	}
 }
 
 .tutor-review-individual-item .review-avatar {
 	width: 50px;
-	float: left;
+	float: inline-start;
 }
 
 .tutor-review-individual-item .review-avatar img {
@@ -548,8 +553,8 @@ Instructor
 }
 
 .tutor-review-individual-item .tutor-review-user-info {
-	float: left;
-	padding-left: 20px;
+	float: inline-start;
+	padding-inline-start: 20px;
 }
 
 .tutor-review-individual-item .tutor-review-user-info p {
@@ -569,8 +574,8 @@ Instructor
 	text-align: center;
 	display: block;
 	line-height: 50px;
-	color: #ffffff;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	color: #fff;
+	text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
 }
 
 .course-avg-rating-wrap .course-avg-rating {
@@ -598,7 +603,7 @@ Instructor
 
 .individual-review-rating-wrap i,
 .course-avg-rating-html i {
-	margin-right: 4px;
+	margin-inline-end: 4px;
 	color: #f8c51c;
 }
 
@@ -666,7 +671,7 @@ Instructor
 
 .prerequisites-course-lists li:first-child > span {
 	position: absolute;
-	left: 20px;
+	inset-inline-start: 20px;
 	top: 13px;
 }
 
@@ -680,13 +685,12 @@ Instructor
 	border-radius: 2px;
 	height: auto;
 	margin: 0 !important;
-	box-shadow: 0 0 1px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 0 1px rgb(0 0 0 / 8%);
 }
 
 .prerequisites-course-lists li .prerequisites-course-title {
-	-webkit-box-flex: 1;
 	flex-grow: 1;
-	padding-left: 15px;
+	padding-inline-start: 15px;
 	-webkit-transition: 300ms;
 	transition: 300ms;
 }
@@ -712,7 +716,7 @@ Instructor
 	display: inline-block;
 	text-align: center;
 	border-radius: 2px;
-	margin-right: 3px;
+	margin-inline-end: 3px;
 }
 
 .prerequisites-course-checkmark.is-complete i {
@@ -720,79 +724,67 @@ Instructor
 	color: #fff;
 }
 
-.rtl .tutor-progress-bar .tutor-progress-filled:after {
-	left: auto;
-	right: var(--tutor-progress-left);
+.rtl .tutor-progress-bar .tutor-progress-filled::after {
+	inset-inline: auto var(--tutor-progress-left);
 	-webkit-transform: translateY(-50%) translateX(50%);
 	transform: translateY(-50%) translateX(50%);
 }
 
 .rtl .tutor-progress-percent {
-	padding-left: 0;
-	padding-right: 20px;
+	padding-inline: 0 20px;
 }
 
 .rtl .tutor-course-lesson h5 i {
-	margin-right: 0;
-	margin-left: 10px;
+	margin-inline: 10px 0;
 }
 
 .rtl .tutor-course-lesson h5 .lesson-preview-icon i {
-	margin-right: 10px;
-	margin-left: 0;
+	margin-inline: 0 10px;
 }
 
 .rtl .tutor-course-lesson h5 .tutor-lesson-duration {
-	-webkit-box-flex: 1;
 	flex-grow: 1;
-	text-align: left;
+	text-align: start;
 }
 
 .rtl .tutor-custom-list-style li {
-	padding-right: 25px;
-	padding-left: 0px;
+	padding-inline: 0 25px;
 }
 
-.rtl .tutor-custom-list-style li:before {
-	left: auto;
-	right: 0;
-}
-
-.rtl .single-instructor-wrap .instructor-name {
-	float: right;
+.rtl .tutor-custom-list-style li::before {
+	inset-inline: auto 0;
 }
 
 .rtl .single-instructor-wrap .instructor-name {
-	padding-left: 0;
-	padding-right: 20px;
+	float: inline-end;
+}
+
+.rtl .single-instructor-wrap .instructor-name {
+	padding-inline: 0 20px;
 }
 
 .rtl .single-instructor-wrap .instructor-bio {
-	padding-left: 0;
-	padding-right: 260px;
+	padding-inline: 0 260px;
 }
 
 .rtl .tutor-lessons-under-topic .tutor-lesson-right-icons {
-	right: auto;
-	left: 15px;
+	inset-inline: 15px auto;
 }
 
 .rtl .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete {
-	margin-left: 0;
-	margin-right: 8px;
+	margin-inline: 0 8px;
 }
 
 .rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
 .rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child {
-	margin-right: 0;
-	margin-left: 10px;
+	margin-inline: 10px 0;
 }
 
 .rtl .tutor-topbar-home-btn {
-	margin-left: 0;
-	margin-right: 20px;
+	margin-inline: 0 20px;
+
 	@media screen and (max-width: 546px) {
-		margin-right: 10px;
+		margin-inline-end: 10px;
 	}
 }
 
@@ -807,17 +799,17 @@ Instructor
 
 .label-status-completed {
 	background-color: #4bd863;
-	color: #ffffff;
+	color: #fff;
 }
 
 .label-status-cancelled {
 	background-color: #fd6a03;
-	color: #ffffff;
+	color: #fff;
 }
 
 .label-status-on-hold {
 	background-color: #db5382;
-	color: #ffffff;
+	color: #fff;
 }
 
 .tutor-lesson-content-area h2 {
@@ -848,7 +840,7 @@ Instructor
 	height: auto;
 }
 
-/*Assignment Information*/
+/* Assignment Information */
 
 .tutor-assignment-information {
 	font-size: 16px;
@@ -880,7 +872,7 @@ Instructor
 	padding: 15px 17px;
 	border: 1px solid #dcdfe5;
 	overflow: hidden;
-	margin-right: 15px;
+	margin-inline-end: 15px;
 	border-radius: 4px;
 	cursor: pointer;
 }
@@ -888,8 +880,8 @@ Instructor
 .tutor-assignment-attachment-upload-wrap .tutor-form-group label i {
 	font-size: 30px;
 	line-height: 30px;
-	float: left;
-	margin-right: 12px;
+	float: inline-start;
+	margin-inline-end: 12px;
 }
 
 .tutor-assignment-attachment-upload-wrap .tutor-form-group label span {
@@ -915,7 +907,7 @@ Lesson Edit Modal
  */
 
 .lesson-modal-close-wrap a {
-	background: #ffffff;
+	background: #fff;
 	width: 50px;
 	height: 59px;
 	display: inline-block;
@@ -924,7 +916,7 @@ Lesson Edit Modal
 	color: #3a3d42;
 	font-size: 15px;
 	position: absolute;
-	right: 0;
+	inset-inline-end: 0;
 	top: 0;
 }
 
@@ -958,9 +950,8 @@ Lesson Edit Modal
 	padding: 10px 20px;
 	background-color: #fff;
 	width: 100%;
-	position: sticky;
 	bottom: 0;
-	position: -webkit-sticky;
+	position: sticky;
 }
 
 .tutor-option-field .tutor-lesson-edit-feature-img {
@@ -977,9 +968,10 @@ Lesson Edit Modal
 	color: #e02424;
 }
 
-.updating-icon:before {
-	font-family: 'tutor';
-	//margin-right: 5px;
+.updating-icon::before {
+	font-family: tutor;
+
+	// margin-right: 5px;
 	content: '\e91d';
 	-webkit-animation: spin 1s linear infinite;
 	animation: spin 1s linear infinite;
@@ -992,6 +984,7 @@ Lesson Edit Modal
 	padding: 20px;
 	margin-bottom: 10px;
 }
+
 .quiz-modal-btn-cancel,
 .quiz-modal-btn-back {
 	color: #4b5981;
@@ -1024,14 +1017,11 @@ Lesson Edit Modal
 .tutor-quiz-builder-row {
 	display: flex;
 	align-items: center;
-	margin-left: -10px;
-	margin-right: -10px;
+	margin-inline: -10px;
 }
 
 .tutor-quiz-builder-col {
-	padding-left: 10px;
-	padding-right: 10px;
-	-webkit-box-flex: 1;
+	padding-inline: 10px;
 	flex-grow: 1;
 }
 
@@ -1090,7 +1080,7 @@ Lesson Edit Modal
 .question-type-pro {
 	color: #fff;
 	font-size: 9px;
-	right: 11px;
+	inset-inline-end: 11px;
 	position: absolute;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
@@ -1108,7 +1098,7 @@ Lesson Edit Modal
 }
 
 .quiz-builder-question .question-sorting {
-	margin-right: 10px;
+	margin-inline-end: 10px;
 	line-height: 22px;
 }
 
@@ -1127,7 +1117,7 @@ Lesson Edit Modal
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	margin-right: 10px;
+	margin-inline-end: 10px;
 }
 
 .quiz-builder-question .question-icon {
@@ -1138,7 +1128,7 @@ Lesson Edit Modal
 	display: block;
 	padding: 0 0 0 10px;
 	font-size: 20px;
-	color: rgba(57, 60, 64, 0.4);
+	color: rgb(57 60 64 / 40%);
 	line-height: 44px;
 }
 
@@ -1166,7 +1156,7 @@ span.tutor-quiz-answer-title {
 }
 
 .tutor-question-answer-image {
-	margin-right: 10px;
+	margin-inline-end: 10px;
 }
 
 .tutor-question-answer-image img {
@@ -1191,7 +1181,7 @@ span.tutor-quiz-answer-title {
 .tutor-video-embeded-wrap embed {
 	position: absolute;
 	top: 0;
-	left: 0;
+	inset-inline-start: 0;
 	width: 100%;
 	height: 100%;
 }
@@ -1207,14 +1197,14 @@ Video MetaBox
 .select2-selection__rendered [class^='tutor-icon-'] {
 	display: inline-block;
 	vertical-align: top;
-	margin-right: 6px;
+	margin-inline-end: 6px;
 }
 
 .select2-results__options [class^='tutor-icon-'] {
 	color: var(--tutor-color-primary);
 	display: inline-block;
 	vertical-align: top;
-	margin-right: 6px;
+	margin-inline-end: 6px;
 }
 
 .select2-results__option--highlighted [class^='tutor-icon-'] {
@@ -1249,7 +1239,7 @@ Content Drip (Pro)
 }
 
 .content-drip-wrap-flex .content-drip-left {
-	margin-right: 50px;
+	margin-inline-end: 50px;
 }
 
 .content-drip-wrap-flex ul {
@@ -1271,7 +1261,7 @@ GradeBook
 
 .gradename-bg {
 	text-align: center;
-	color: #ffffff;
+	color: #fff;
 	height: 32px;
 	min-width: 32px;
 	font-size: 16px;
@@ -1280,7 +1270,7 @@ GradeBook
 	display: inline-block;
 	border-radius: 20px;
 	font-weight: bold;
-	margin-right: 7px;
+	margin-inline-end: 7px;
 }
 
 .gradename-outline {
@@ -1293,7 +1283,7 @@ GradeBook
 	display: inline-block;
 	border-radius: 20px;
 	border: 2px solid;
-	margin-right: 7px;
+	margin-inline-end: 7px;
 }
 
 .generate-course-gradebook-btn-wrap {
@@ -1317,7 +1307,7 @@ table.course-single-gradebooks {
 
 table.course-single-gradebooks th {
 	padding: 1em 1.41575em;
-	text-align: left;
+	text-align: start;
 	vertical-align: top;
 	border-bottom: 1px solid #dcdfe5;
 }
@@ -1327,14 +1317,14 @@ table.course-single-gradebooks th {
 }
 
 table.course-single-gradebooks thead th {
-	background-color: rgba(220, 223, 229, 0.14);
+	background-color: rgb(220 223 229 / 14%);
 	padding: 1.41575em;
 	vertical-align: middle;
 }
 
 table.course-single-gradebooks tbody td {
 	border-bottom: 1px solid #dcdfe5;
-	background-color: #ffffff !important;
+	background-color: #fff !important;
 }
 
 table.course-single-gradebooks a {
@@ -1351,12 +1341,12 @@ table.course-single-gradebooks a {
 
 .text-label.submitted-assignment-grade-pass {
 	background-color: #86b223;
-	color: #ffffff;
+	color: #fff;
 }
 
 .text-label.submitted-assignment-grade-failed {
 	background-color: #d71830;
-	color: #ffffff;
+	color: #fff;
 }
 
 /**
@@ -1383,7 +1373,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-bp-message-recipient-avatar-wrap {
-	margin-right: 35px;
+	margin-inline-end: 35px;
 }
 
 .tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h3 {
@@ -1420,7 +1410,7 @@ table.course-single-gradebooks a {
 	line-height: 1.7;
 	display: block;
 	color: #54616d;
-	padding-left: 10px;
+	padding-inline-start: 10px;
 }
 
 .tutor-bp-enrolled-courses-wrap ul li a:hover {
@@ -1454,6 +1444,7 @@ table.course-single-gradebooks a {
 	ins {
 		text-decoration: none;
 	}
+
 	del {
 		font-weight: 400;
 		font-size: 15px;
@@ -1472,14 +1463,14 @@ table.course-single-gradebooks a {
 @media only screen and (min-width: 1200px) {
 	.tutor-course-list-pagination.tutor-pagination {
 		width: 80%;
-		margin: 50px auto 0px;
+		margin: 50px auto 0;
 	}
 }
 
 @media only screen and (max-width: 1199px) {
 	.tutor-course-list-pagination.tutor-pagination {
 		width: 90%;
-		margin: 50px auto 0px;
+		margin: 50px auto 0;
 	}
 }
 

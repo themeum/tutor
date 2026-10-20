@@ -22,24 +22,28 @@
 		
 		ul {
 			counter-reset: listItem;
+
 			li {
 				list-style: none;
 				display: block;
 				font-size: 15px;
 				line-height: 1.6;
 				margin-bottom: 13px;
-				&:before {
+
+				&::before {
 					counter-increment: listItem;
 					content: counter(listItem) '.';
-					margin-right: 12px;
+					margin-inline-end: 12px;
 				}
 			}
 		}
+
 		.create-certificate-btn {
 			margin-top: 28px;
 		}
+
 		.item-wrapper {
-			padding: 42px 52px 54px 52px;
+			padding: 42px 52px 54px;
 		}
 	} // end of.create-certificate-steps
 
@@ -61,19 +65,23 @@
 	.all-certificate {
 		.tutor-option-field-row {
 			grid-template-columns: 98px 1fr auto;
-			grid-gap: 20px;
+			gap: 20px;
 		}
+
 		.certificate-thumb {
 			display: inline-flex;
 			justify-self: center;
 			position: relative;
-			&:before {
+
+			&::before {
 				position: absolute;
 				content: '';
+
 				@include svg-eye-icon;
+
 				background-position: center;
 				background-repeat: no-repeat;
-				background-color: rgba(22, 22, 22, 0.5);
+				background-color: rgb(22 22 22 / 50%);
 				width: 100%;
 				height: 100%;
 				backdrop-filter: blur(2px);
@@ -81,7 +89,8 @@
 				opacity: 0;
 				transition: 0.2s linear;
 			}
-			&:hover:before {
+
+			&:hover::before {
 				opacity: 1;
 			}
 		}
@@ -90,12 +99,14 @@
 	.no-certificate {
 		.certificate-thumb {
 			text-align: center;
+
 			p {
 				font-size: 20px;
 				line-height: 1.5;
 				margin-top: 24px;
 			}
 		}
+
 		.item-wrapper {
 			padding-top: 50px;
 			padding-bottom: 50px;
@@ -106,16 +117,19 @@
 		.tutor-option-field-row {
 			border-bottom: none;
 		}
+
 		.radio-thumbnail {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-			grid-gap: 18px 16px;
+			gap: 18px 16px;
+
 			label {
 				margin: unset;
 				display: inline-flex;
 				cursor: pointer;
 			}
 		}
+
 		.radio-thumbnail input[type='radio']:checked ~ .icon-wrapper img {
 			box-shadow: 0 0 0 1px var(--tutor-color-primary);
 		}
@@ -127,15 +141,17 @@
 		}
 
 		.signature-upload-wrap {
-			text-align: left;
+			text-align: start;
 			padding-top: 7px;
 			padding-bottom: 13px;
 		}
+
 		.signature-upload {
 			display: flex;
 			align-items: center;
-			text-align: left;
+			text-align: start;
 		}
+
 		.signature-preview {
 			border: 2px solid #e8e8e8;
 			border-radius: 3px;
@@ -144,6 +160,7 @@
 			display: flex;
 			justify-content: center;
 			padding: 2px 0;
+
 			img {
 				width: 100%;
 				height: 100%;
@@ -152,7 +169,7 @@
 		}
 
 		.signature-info {
-			margin-left: 23px;
+			margin-inline-start: 23px;
 		}
 
 		// .signature-upload (delete icon)
@@ -162,13 +179,16 @@
 				width: 24px;
 				height: 24px;
 				border-radius: 50%;
+
 				@include svg-delete-icon;
+
 				background-color: $color-danger;
 				background-repeat: no-repeat;
 				background-position: 50%;
 				cursor: pointer;
 				top: -12px;
-				right: -12px;
+				inset-inline-end: -12px;
+
 				&:hover {
 					background-color: darken($color: $color-danger, $amount: 6);
 				}
@@ -182,6 +202,7 @@
 
 		.tutor-btn {
 			margin-top: 24px;
+
 			// padding: 6px 17px 6px 43px;
 			input[type='file'] {
 				appearance: none;

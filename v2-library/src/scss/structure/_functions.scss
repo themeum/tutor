@@ -7,6 +7,7 @@
 @mixin _assert-ascending($map, $map-name) {
   $prev-key: null;
   $prev-num: null;
+
   @each $key, $num in $map {
     @if $prev-num == null or unit($num) == "%" or unit($prev-num) == "%" {
       // Do nothing
@@ -15,6 +16,7 @@
     } @else if $prev-num >= $num {
       @warn "Invalid value for #{$map-name}: This map must be in ascending order, but key '#{$key}' has value #{$num} which isn't greater than #{$prev-num}, the value of the previous key '#{$prev-key}' !";
     }
+
     $prev-key: $key;
     $prev-num: $num;
   }
@@ -26,6 +28,7 @@
   @if length($map) > 0 {
     $values: map-values($map);
     $first-value: nth($values, 1);
+
     @if $first-value != 0 {
       @warn "First breakpoint in #{$map-name} must start at 0, but starts at #{$first-value}.";
     }
@@ -41,7 +44,9 @@
 @function rgba-css-var($identifier, $target) {
   @if $identifier == "body" and $target == "bg" {
     @return rgba(var(--#{$variable-prefix}#{$identifier}-bg-rgb), var(--#{$variable-prefix}#{$target}-opacity));
-  } @if $identifier == "body" and $target == "text" {
+  }
+
+@if $identifier == "body" and $target == "text" {
     @return rgba(var(--#{$variable-prefix}#{$identifier}-color-rgb), var(--#{$variable-prefix}#{$target}-opacity));
   } @else {
     @return rgba(var(--#{$variable-prefix}#{$identifier}-rgb), var(--#{$variable-prefix}#{$target}-opacity));
@@ -54,6 +59,7 @@
   @each $key, $value in $map {
     // allow to pass the $key and $value of the map as an function argument
     $_args: ();
+
     @each $arg in $args {
       $_args: append($_args, if($arg == "$key", $key, if($arg == "$value", $value, $arg)));
     }
@@ -67,9 +73,11 @@
 
 @function varify($list) {
   $result: null;
+
   @each $entry in $list {
     $result: append($result, var(--#{$variable-prefix}#{$entry}), space);
   }
+
   @return $result;
 }
 
@@ -77,22 +85,26 @@
 // It prefixes the keys with `n` and makes the value negative.
 @function negativify-map($map) {
   $result: ();
+
   @each $key, $value in $map {
     @if $key != 0 {
       $result: map-merge($result, ("n" + $key: (-$value)));
     }
   }
+
   @return $result;
 }
 
 // Get multiple keys from a sass map
 @function map-get-multiple($map, $values) {
   $result: ();
+
   @each $key, $value in $map {
-    @if (index($values, $key) != null) {
+    @if index($values, $key) != null {
       $result: map-merge($result, ($key: $value));
     }
   }
+
   @return $result;
 }
 
@@ -103,6 +115,7 @@
   @each $map in $maps {
     $merged-maps: map-merge($merged-maps, $map);
   }
+
   @return $merged-maps;
 }
 
@@ -157,6 +170,7 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
 
   @each $color in $foregrounds {
     $contrast-ratio: contrast-ratio($background, $color);
+
     @if $contrast-ratio > $min-contrast-ratio {
       @return $color;
     } @else if $contrast-ratio > $max-ratio {
@@ -166,7 +180,6 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
   }
 
   @warn "Found no color leading to #{$min-contrast-ratio}:1 contrast ratio against #{$background}...";
-
   @return $max-ratio-color;
 }
 
@@ -216,6 +229,7 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
 @function shift-color($color, $weight) {
   @return if($weight > 0, shade-color($color, $weight), tint-color($color, -$weight));
 }
+
 // scss-docs-end color-functions
 
 // Return valid calc
@@ -263,29 +277,37 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
   $sign: if($dividend > 0 and $divisor > 0 or $dividend < 0 and $divisor < 0, 1, -1);
   $dividend: abs($dividend);
   $divisor: abs($divisor);
+
   @if $dividend == 0 {
     @return 0;
   }
+
   @if $divisor == 0 {
     @error "Cannot divide by 0";
   }
+
   $remainder: $dividend;
   $result: 0;
   $factor: 10;
-  @while ($remainder > 0 and $precision >= 0) {
+
+  @while $remainder > 0 and $precision >= 0 {
     $quotient: 0;
-    @while ($remainder >= $divisor) {
+
+    @while $remainder >= $divisor {
       $remainder: $remainder - $divisor;
       $quotient: $quotient + 1;
     }
+
     $result: $result * 10 + $quotient;
     $factor: $factor * .1;
     $remainder: $remainder * 10;
     $precision: $precision - 1;
-    @if ($precision < 0 and $remainder >= $divisor * 5) {
+
+    @if $precision < 0 and $remainder >= $divisor * 5 {
       $result: $result + 1;
     }
   }
+
   $result: $result * $factor * $sign;
   $dividend-unit: unit($dividend);
   $divisor-unit: unit($divisor);
@@ -295,8 +317,10 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
     "em": 1em,
     "%": 1%
   );
-  @if ($dividend-unit != $divisor-unit and map-has-key($unit-map, $dividend-unit)) {
+
+  @if $dividend-unit != $divisor-unit and map-has-key($unit-map, $dividend-unit) {
     $result: $result * map-get($unit-map, $dividend-unit);
   }
+
   @return $result;
 }

@@ -16,9 +16,11 @@
 //    md
 @function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
   $n: index($breakpoint-names, $name);
+
   @if not $n {
     @error "breakpoint `#{$name}` not found in `#{$breakpoints}`";
   }
+
   @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
 }
 
@@ -28,6 +30,7 @@
 //    576px
 @function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
   $min: map-get($breakpoints, $name);
+
   @return if($min != 0, $min, null);
 }
 
@@ -42,6 +45,7 @@
 //    767.98px
 @function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
   $max: map-get($breakpoints, $name);
+
   @return if($max and $max > 0, $max - .02, null);
 }
 
@@ -60,6 +64,7 @@
 // Makes the @content apply to the given breakpoint and wider.
 @mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
   $min: breakpoint-min($name, $breakpoints);
+
   @if $min {
     @media (min-width: $min) {
       @content;
@@ -73,6 +78,7 @@
 // Makes the @content apply to the given breakpoint and narrower.
 @mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
   $max: breakpoint-max($name, $breakpoints);
+
   @if $max {
     @media (max-width: $max) {
       @content;
@@ -107,9 +113,9 @@
 // No minimum for the smallest breakpoint, and no maximum for the largest one.
 // Makes the @content apply only to the given breakpoint, not viewports any wider or narrower.
 @mixin media-breakpoint-only($name, $breakpoints: $grid-breakpoints) {
-  $min:  breakpoint-min($name, $breakpoints);
+  $min: breakpoint-min($name, $breakpoints);
   $next: breakpoint-next($name, $breakpoints);
-  $max:  breakpoint-max($next);
+  $max: breakpoint-max($next);
 
   @if $min != null and $max != null {
     @media (min-width: $min) and (max-width: $max) {

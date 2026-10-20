@@ -24,18 +24,17 @@
 			}
 
 			&.is-active {
-				background-color: #FFFFFF;
+				background-color: #FFF;
 				color: var(--tutor-color-primary);
 				border-color: #e8e8e8;
 			}
 		}
 
 		.tutor-option-submenu-nav {
-			margin-left: 36px;
+			margin-inline-start: 36px;
 			
 			.rtl & {
-				margin-right: 36px;
-				margin-left: 0;
+				margin-inline: 0 36px;
 			}
 
 			.tutor-nav-link {
@@ -47,20 +46,19 @@
 			}
 
 			@include breakpoint-max(desktop) {
-				margin-left: 0px;
-				margin-right: 0px;
+				margin-inline: 0;
 			}
 
 			@include breakpoint-max(mobile) {
-				margin-left: 20px;
+				margin-inline-start: 20px;
 
 				.rtl & {
-					margin-right: 20px;
-					margin-left: 0;
+					margin-inline: 0 20px;
 				}
 			}
 		}
 	}
+
 	&.tutor-is-sticky {
 		position: sticky;
     	top: 120px;

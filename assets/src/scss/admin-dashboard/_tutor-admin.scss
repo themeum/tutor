@@ -4,19 +4,17 @@
  */
 .tutor-admin {
   &-wrap {
-    margin-left: -20px;
+    margin-inline-start: -20px;
 
     .rtl & {
-      margin-left: 0px;
-      margin-right: -20px;
+      margin-inline: 0 -20px;
     }
 
     @include breakpoint-max(782) {
-      margin-left: -10px;
+      margin-inline-start: -10px;
 
       .rtl & {
-        margin-left: 0px;
-        margin-right: -10px;
+        margin-inline: 0 -10px;
       }
     }
 
@@ -48,16 +46,13 @@
   }
 
   &-body {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-inline: 20px;
   }
 
   &-container {
     max-width: 1160px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-inline: auto;
+    padding-inline: 20px;
 
     &-lg {
       max-width: 1380px;
@@ -71,7 +66,7 @@
 
   &-header {
     box-sizing: border-box;
-    background: #ffffff;
+    background: #fff;
     border-bottom: 1px solid #cdcfd5;
     padding: 12px 24px;
 
@@ -118,20 +113,18 @@
     // icon
     &-icon {
       &:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
-        padding-left: 40px !important;
+        padding-inline-start: 40px !important;
 
         .rtl & {
-          padding-left: 16px !important;
-          padding-right: 40px !important;
+          padding-inline: 16px 40px !important;
         }
       }
 
       &-reverse ~ .tutor-form-control {
-        padding-right: 40px !important;
+        padding-inline-end: 40px !important;
 
         .rtl & {
-          padding-right: 16px !important;
-          padding-left: 40px !important;
+          padding-inline: 40px 16px !important;
         }
       }
     }
@@ -140,8 +133,8 @@
   // select
   select.tutor-form-control,
   .tutor-form-select {
-    padding-right: 36px !important;
-    margin: 0px;
+    padding-inline-end: 36px !important;
+    margin: 0;
   }
 }
 
@@ -174,9 +167,9 @@ body.tutor-backend {
   background-color: #f5f5f5;
 }
 
-/*----------------------------------
+/* ----------------------------------
 	Component containers
-----------------------------------*/
+---------------------------------- */
 
 body.tutor-backend-tutor_settings #wpbody-content {
   min-height: 100vh;
@@ -184,8 +177,8 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
 .ui-datepicker-buttonpane.ui-widget-content {
   padding-top: 6px;
-  background: #ffffff;
-  color: #222222;
+  background: #fff;
+  color: #222;
   display: flex;
   gap: 10px;
 
@@ -197,20 +190,20 @@ body.tutor-backend-tutor_settings #wpbody-content {
 }
 
 .ui-widget-content a {
-  color: #222222;
+  color: #222;
 }
 
 .ui-widget-header {
-  color: #222222;
+  color: #222;
   font-weight: bold;
 
   a {
-    color: #222222;
+    color: #222;
   }
 }
 
 /* Interaction states
-  ----------------------------------*/
+  ---------------------------------- */
 
 .ui-state-default,
 .ui-widget-content .ui-state-default,
@@ -218,11 +211,11 @@ body.tutor-backend-tutor_settings #wpbody-content {
   border: 1px solid #d3d3d3;
   background: #e6e6e6;
   font-weight: normal;
-  color: #555555;
+  color: #555;
 }
 
 /* Interaction Cues
-  ----------------------------------*/
+  ---------------------------------- */
 
 .ui-state-highlight,
 .ui-widget-content .ui-state-highlight,
@@ -235,9 +228,9 @@ body.tutor-backend-tutor_settings #wpbody-content {
 .tutor-option-nav-tabs li {
   position: relative;
   display: inline-block;
-  margin-right: -1px;
+  margin-inline-end: -1px;
 
-  &:last-child:after {
+  &:last-child::after {
     content: '';
   }
 
@@ -247,7 +240,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     text-decoration: none;
     background: #fff;
     padding: 5px 10px;
-    border: 1px solid #dddddd;
+    border: 1px solid #ddd;
 
     &:focus {
       box-shadow: none;
@@ -255,7 +248,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
   }
 
   .current a {
-    color: #333333;
+    color: #333;
   }
 }
 
@@ -360,7 +353,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: rgba(34, 37, 43, 0.72);
+    background: rgb(34 37 43 / 72%);
     border-radius: 6px;
 
     .tutor-btn {
@@ -471,12 +464,13 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
     .tutor-toggle-matrix-head-icon {
       padding: 4px;
-      background-color: rgba(244, 246, 249, 1);
+      background-color: rgb(244 246 249 / 100%);
       border-radius: 50%;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+
       svg {
         color: var(--tutor-color-primary);
       }
@@ -511,6 +505,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 }
+
 .tutor-form-control[type='number'] {
   -moz-appearance: textfield;
 
@@ -527,7 +522,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
 .tutor-option-field-row input[type='password'],
 .tutor-option-field-row textarea {
   &:last-child {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 
   background-color: #fff;
@@ -570,12 +565,12 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
 .tutor-option-field-label {
   display: block;
-  float: left;
+  float: inline-start;
   width: 200px;
 }
 
 .rtl .tutor-option-field-label {
-  float: right;
+  float: inline-end;
 }
 
 .tutor_lesson_modal_form .tutor-option-field-label {
@@ -612,7 +607,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
   max-height: 100px;
   width: auto;
   padding: 5px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
 }
 
 /**
@@ -631,7 +626,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
 .tutor-option-group-field textarea,
 .tutor-option-group-field select {
   width: 100px;
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 
 .option-type-radio-wrap {
@@ -644,7 +639,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
   */
 
 p.course-empty-content {
-  padding-left: 20px;
+  padding-inline-start: 20px;
 }
 
 .ui-sortable-placeholder {
@@ -672,22 +667,22 @@ p.course-empty-content {
 
 .tutor-status-pending-context,
 .attempt_started {
-  background-color: #eeeeee;
+  background-color: #eee;
 }
 
 .tutor-status-approved-context,
 .tutor-button.button-success,
 .tutor-status-completed {
   background-color: var(--tutor-color-success);
-  color: #ffffff;
+  color: #fff;
   border-radius: 2px;
 }
 
 .tutor-status-blocked-context,
 .attempt_timeout,
 .tutor-button.button-danger {
-  background-color: #ff0000;
-  color: #ffffff;
+  background-color: #f00;
+  color: #fff;
   border-radius: 2px;
 }
 
@@ -723,20 +718,20 @@ table.tutor_status_table th mark.yes {
   text-align: center;
   display: block;
   line-height: 40px;
-  color: #ffffff;
+  color: #fff;
   font-size: 14px;
 }
 
 .tutor_original_question {
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
   margin-bottom: 5px;
   padding: 20px;
 }
 
 .tutor_original_question .question-left {
-  -webkit-box-flex: 0;
+  flex-grow: 0;
   -ms-flex: 0 0 60px;
   flex: 0 0 60px;
 }
@@ -744,8 +739,8 @@ table.tutor_status_table th mark.yes {
 .tutor_original_question .question-left img {
   max-width: 60px;
   height: auto;
-  margin-right: 10px;
-  border: 1px solid #eeee88;
+  margin-inline-end: 10px;
+  border: 1px solid #ee8;
   padding: 3px;
 }
 
@@ -754,7 +749,7 @@ table.tutor_status_table th mark.yes {
 }
 
 .tutor_admin_answers_list_wrap .tutor_original_question {
-  margin-left: 50px;
+  margin-inline-start: 50px;
 }
 
 // @todo: will be removed
@@ -766,12 +761,12 @@ table.tutor_status_table th mark.yes {
 
 .tutor-label-success {
   background-color: var(--tutor-color-success);
-  color: #ffffff;
+  color: #fff;
   padding: 3px 7px;
 }
 
 .tutor-addons .addon-regular-price {
-  color: #cccccc;
+  color: #ccc;
   padding: 3px;
 }
 
@@ -800,15 +795,15 @@ a.addon-buynow-link {
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc,
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name {
-  margin-right: 148px !important;
+  margin-inline-end: 148px !important;
 }
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc {
-  margin-left: 0 !important;
+  margin-inline-start: 0 !important;
 }
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name {
-  margin-left: 53px !important;
+  margin-inline-start: 53px !important;
 }
 
 .required-plugin-cards {
@@ -840,11 +835,11 @@ a.addon-buynow-link {
 }
 
 .tutor-flex-col:first-child {
-  margin-left: 0;
+  margin-inline-start: 0;
 }
 
 .tutor-flex-col:last-child {
-  margin-right: 0;
+  margin-inline-end: 0;
 }
 
 .tutor-add-question-wrap {
@@ -854,7 +849,7 @@ a.addon-buynow-link {
 }
 
 .question-actions-wrap {
-  padding-right: 0 !important;
+  padding-inline-end: 0 !important;
 }
 
 .question-actions-wrap a {
@@ -875,7 +870,7 @@ a.addon-buynow-link {
 .tutor-error-msg {
   margin: 10px 0;
   padding: 10px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: 3px;
 }
 
 .tutor-info-msg {
@@ -908,7 +903,7 @@ a.addon-buynow-link {
   border: 1px solid #d4dadb;
 }
 
-/*end notice*/
+/* end notice */
 
 /* .tutor-quiz-builder-group */
 
@@ -936,25 +931,21 @@ a.addon-buynow-link {
 
 .tutor-quiz-builder-row {
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
-  -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-inline: -10px;
 }
 
 .tutor-quiz-builder-col {
-  padding-left: 10px;
-  padding-right: 10px;
-  -webkit-box-flex: 1;
+  padding-inline: 10px;
   -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
 .tutor-quiz-builder-col.auto-width {
-  -webkit-box-flex: 0;
+  flex-grow: 0;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
 }
@@ -1013,7 +1004,7 @@ a.addon-buynow-link {
 .question-type-pro {
   color: #fff;
   font-size: 9px;
-  right: 11px;
+  inset-inline-end: 11px;
   position: absolute;
   top: 50%;
   -webkit-transform: translateY(-50%);
@@ -1021,11 +1012,11 @@ a.addon-buynow-link {
 }
 
 .quiz-builder-question {
-  -webkit-box-flex: 1;
+  flex-grow: 1;
   -ms-flex: 1;
   flex: 1;
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
   background: #fff;
   padding: 10px;
@@ -1035,7 +1026,7 @@ a.addon-buynow-link {
 }
 
 .quiz-builder-question .question-sorting {
-  margin-right: 10px;
+  margin-inline-end: 10px;
   line-height: 22px;
 }
 
@@ -1049,18 +1040,18 @@ a.addon-buynow-link {
 }
 
 .quiz-builder-question .question-title {
-  -webkit-box-flex: 1;
+  flex-grow: 1;
   -ms-flex: 1;
   flex: 1;
   line-height: 22px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .quiz-builder-question .question-icon {
-  -webkit-box-flex: 0;
+  flex-grow: 0;
   -ms-flex: 0 0 155px;
   flex: 0 0 155px;
 }
@@ -1069,13 +1060,13 @@ a.addon-buynow-link {
   display: block;
   padding: 0 0 0 10px;
   font-size: 20px;
-  color: rgba(57, 60, 64, 0.4);
+  color: rgb(57 60 64 / 40%);
   line-height: 44px;
 }
 
 .tutor-quiz-answer-wrap {
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
 }
 
@@ -1086,7 +1077,7 @@ a.addon-buynow-link {
 }
 
 span.tutor-quiz-answer-title {
-  -webkit-box-flex: 1;
+  flex-grow: 1;
   -ms-flex: 1;
   flex: 1;
 }
@@ -1101,7 +1092,7 @@ span.tutor-quiz-answer-title {
 }
 
 .tutor-question-answer-image {
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .tutor-question-answer-image img {
@@ -1118,20 +1109,19 @@ span.tutor-quiz-answer-title {
   padding: 10px;
   margin-bottom: 2px;
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
 }
 
 .tutor-available-quizzes .added-quiz-item .quiz-name {
   -ms-flex-preferred-size: 0;
   flex-basis: 0;
-  -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
 .tutor-quiz-delete-btn {
-  color: #ff0000;
+  color: #f00;
 }
 
 p.quiz-search-suggest-text {
@@ -1148,7 +1138,7 @@ span.result-pass {
 }
 
 span.result-fail {
-  color: #ff0000;
+  color: #f00;
 }
 
 span.result-review-required {
@@ -1159,7 +1149,7 @@ span.result-review-required {
 }
 
 .tutor-emails-lists-wrap {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 20px;
 }
 
@@ -1168,10 +1158,10 @@ span.result-review-required {
 }
 
 .image-matching-item {
-  -webkit-box-flex: 0;
+  flex-grow: 0;
   -ms-flex: 0 0 50px;
   flex: 0 0 50px;
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .image-matching-item p {
@@ -1215,9 +1205,8 @@ span.filled_dash_unser {
   padding: 10px 20px;
   background-color: #fff;
   width: 100%;
-  position: sticky;
   bottom: 0;
-  position: -webkit-sticky;
+  position: sticky;
 }
 
 .tutor-option-field .tutor-lesson-edit-feature-img {
@@ -1246,9 +1235,9 @@ a:has(> span.tutor-get-pro-text) {
   color: orange;
 }
 
-.updating-icon:before {
-  font-family: 'tutor';
-  margin-right: 5px;
+.updating-icon::before {
+  font-family: tutor;
+  margin-inline-end: 5px;
   content: '\e91d';
   -webkit-animation: spin 1s steps(8) infinite;
   animation: spin 1s steps(8) infinite;
@@ -1267,7 +1256,7 @@ a:has(> span.tutor-get-pro-text) {
    */
 
 .tnotice {
-  text-align: left;
+  text-align: start;
   padding: 10px 0;
   background-color: #fff;
   border-radius: 4px;
@@ -1275,21 +1264,21 @@ a:has(> span.tutor-get-pro-text) {
   margin-bottom: 10px;
 }
 
-.tnotice:before {
+.tnotice::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 4px;
   height: 100%;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
 }
 
 .tnotice__icon {
   position: absolute;
   top: 50%;
-  left: 22px;
+  inset-inline-start: 22px;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
   width: 14px;
@@ -1317,13 +1306,12 @@ a:has(> span.tutor-get-pro-text) {
 }
 
 .tnotice__content {
-  padding-left: 70px;
-  padding-right: 60px;
+  padding-inline: 70px 60px;
 }
 
 .tnotice__close {
   position: absolute;
-  right: 22px;
+  inset-inline-end: 22px;
   top: 50%;
   width: 14px;
   cursor: pointer;
@@ -1337,7 +1325,7 @@ a:has(> span.tutor-get-pro-text) {
   background-color: #2bde3f;
 }
 
-.tnotice--success:before {
+.tnotice--success::before {
   background-color: #2bde3f;
 }
 
@@ -1345,7 +1333,7 @@ a:has(> span.tutor-get-pro-text) {
   background-color: #1d72f3;
 }
 
-.tnotice--blue:before {
+.tnotice--blue::before {
   background-color: #1d72f3;
 }
 
@@ -1353,7 +1341,7 @@ a:has(> span.tutor-get-pro-text) {
   background-color: #f31e1c;
 }
 
-.tnotice--danger:before {
+.tnotice--danger::before {
   background-color: #f31e1c;
 }
 
@@ -1365,7 +1353,7 @@ a:has(> span.tutor-get-pro-text) {
   .attempt-view-bottom,
   .attempt-view-top {
     display: -webkit-box;
-    display: -ms-flexbox;
+    display: flexbox;
     display: flex;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
@@ -1375,7 +1363,6 @@ a:has(> span.tutor-get-pro-text) {
       display: -webkit-inline-box;
       display: -ms-inline-flexbox;
       display: inline-flex;
-      -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
       max-width: 30%;
@@ -1392,7 +1379,6 @@ a:has(> span.tutor-get-pro-text) {
     margin-bottom: 60px;
 
     .attempt-info-col {
-      -webkit-box-align: start;
       -ms-flex-align: start;
       align-items: flex-start;
     }
@@ -1400,14 +1386,13 @@ a:has(> span.tutor-get-pro-text) {
 
   .attempt-user-details {
     display: -webkit-box;
-    display: -ms-flexbox;
+    display: flexbox;
     display: flex;
-    -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
 
     .attempt-user-avatar {
-      padding-right: 20px;
+      padding-inline-end: 20px;
 
       img {
         display: block;
@@ -1431,7 +1416,7 @@ a:has(> span.tutor-get-pro-text) {
         font-weight: 400;
         color: #fff;
         padding: 1px 4px;
-        margin-right: 13px;
+        margin-inline-end: 13px;
         border-radius: 2px;
       }
 
@@ -1462,7 +1447,7 @@ a:has(> span.tutor-get-pro-text) {
 
 .attempt-review-notice-wrap {
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
   margin-bottom: 60px;
   -webkit-box-pack: justify;
@@ -1475,7 +1460,6 @@ a:has(> span.tutor-get-pro-text) {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
@@ -1483,18 +1467,18 @@ a:has(> span.tutor-get-pro-text) {
 .attempt-review-notice-wrap p.attempt-review-notice i {
   font-size: 16px;
   color: #f5c813;
-  margin-right: 9px;
+  margin-inline-end: 9px;
 }
 
 .attempt-review-notice-wrap p.attempt-review-at > span {
   color: var(--tutor-color-primary);
-  margin-right: 7px;
+  margin-inline-end: 7px;
   font-size: 16px;
 }
 
 .attempt-review-notice-wrap p > strong {
   font-weight: 400;
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 
 .quiz-attempt-answers-wrap {
@@ -1515,7 +1499,7 @@ a:has(> span.tutor-get-pro-text) {
       border-top: 1px solid #eaeaea;
       border-bottom: 1px solid #eaeaea;
       vertical-align: middle;
-      text-align: left;
+      text-align: start;
 
       p {
         margin: 0;
@@ -1551,7 +1535,7 @@ a:has(> span.tutor-get-pro-text) {
       }
 
       &:not(:last-child) {
-        margin-right: 17px;
+        margin-inline-end: 17px;
       }
     }
 
@@ -1567,7 +1551,7 @@ a:has(> span.tutor-get-pro-text) {
         color: #fff;
         display: inline-block;
         border-radius: 2px;
-        margin-right: 6px;
+        margin-inline-end: 6px;
       }
     }
 
@@ -1593,7 +1577,7 @@ a:has(> span.tutor-get-pro-text) {
 #tutor-update .tutor_plugin_update_notice {
   font-weight: 400;
   background: #fff8e5 !important;
-  border-left: 4px solid #ffb900;
+  border-inline-start: 4px solid #ffb900;
   border-top: 1px solid #ffb900;
   padding: 9px 0 9px 12px !important;
   margin: 0 -12px 0 -16px !important;
@@ -1631,7 +1615,7 @@ a:has(> span.tutor-get-pro-text) {
    */
 
 h2.tutor-page-heading {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 30px !important;
   margin: 0 !important;
   border-bottom: 1px solid #ecedef;
@@ -1649,11 +1633,11 @@ h2.tutor-page-heading {
 
 .date-range-input {
   position: relative;
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .date-range-input:last-child {
-  margin-right: 0;
+  margin-inline-end: 0;
 }
 
 .date-range-input input {
@@ -1662,18 +1646,18 @@ h2.tutor-page-heading {
   box-shadow: none;
   line-height: 32px;
   margin: 0;
-  padding-right: 30px;
+  padding-inline-end: 30px;
 }
 
 .date-range-input i.tutor-icon-calendar {
   position: absolute;
-  right: 10px;
+  inset-inline-end: 10px;
   top: 13px;
 }
 
 .date-range-input button {
   background-color: #3057d5;
-  color: #ffffff;
+  color: #fff;
   border: none;
   line-height: 39px;
   padding: 0 15px;
@@ -1694,10 +1678,10 @@ h2.tutor-page-heading {
 }
 
 .nav-tab-item {
-  float: left;
+  float: inline-start;
   border: 1px solid #ccc;
   border-bottom: none;
-  margin-left: 0.5em;
+  margin-inline-start: 0.5em;
   padding: 10px 14px;
   font-size: 14px;
   line-height: 1.33;
@@ -1709,7 +1693,7 @@ h2.tutor-page-heading {
 }
 
 .nav-tab-item:first-child {
-  margin-left: 0;
+  margin-inline-start: 0;
 }
 
 .nav-tab-item:focus,
@@ -1773,7 +1757,7 @@ h2.tutor-page-heading {
 
 .instructor-layout-templates-fields {
   display: -webkit-box;
-  display: -ms-flexbox;
+  display: flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
@@ -1799,11 +1783,11 @@ h2.tutor-page-heading {
   border: 6px solid #3057d6;
 }
 
-/*override default modal on announcement*/
+/* override default modal on announcement */
 
 .tutor-accouncement-update-modal .modal-header,
 .tutor-announcement-create-modal .modal-header {
-  padding-right: 15px !important;
+  padding-inline-end: 15px !important;
 }
 
 .tutor-accouncement-update-modal .tutor-modal-content,
@@ -1825,7 +1809,7 @@ h2.tutor-page-heading {
 }
 
 .tutor-admin-search-box-container > div:nth-child(1) {
-  margin-right: 40px;
+  margin-inline-end: 40px;
   position: relative;
 }
 
@@ -1840,7 +1824,7 @@ h2.tutor-page-heading {
 }
 
 .tutor-admin-search-box-container > div:not(:last-child) {
-  margin-right: 30px;
+  margin-inline-end: 30px;
 }
 
 .tutor-admin-search-box-container .tutor-report-search-btn {
@@ -1848,7 +1832,7 @@ h2.tutor-page-heading {
   width: 40px;
   height: 40px;
   bottom: 0;
-  right: 0;
+  inset-inline-end: 0;
   border: 0;
   background: transparent;
   color: #3e64de;
@@ -1859,7 +1843,7 @@ h2.tutor-page-heading {
 
 .tutor-admin-search-box-container > div:nth-child(1) input {
   /* height: 50px; */
-  padding-right: 45px;
+  padding-inline-end: 45px;
 }
 
 .tutor-admin-search-box-container input[type='text'],
@@ -1868,7 +1852,7 @@ h2.tutor-page-heading {
   height: 40px;
   border-radius: 3px;
   border: solid 1px #dcdce1;
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 0 14px;
   transition: 0.2s;
 }
@@ -1877,7 +1861,7 @@ h2.tutor-page-heading {
   position: absolute;
   width: 42px;
   height: 40px;
-  right: 0;
+  inset-inline-end: 0;
   top: 0;
   color: #3e64de;
   font-size: 18px;
@@ -1892,12 +1876,12 @@ h2.tutor-page-heading {
   margin-bottom: 7px;
 }
 
-.tutor-admin-search-box-container > div:nth-child(4) input::-webkit-input-placeholder {
+.tutor-admin-search-box-container > div:nth-child(4) input::input-placeholder {
   color: #3f435b;
   font-size: 15px;
 }
 
-.tutor-admin-search-box-container > div:nth-child(1) input::-webkit-input-placeholder {
+.tutor-admin-search-box-container > div:nth-child(1) input::input-placeholder {
   font-size: 16px;
   font-weight: 400;
   color: #737787;
@@ -1918,11 +1902,11 @@ h2.tutor-page-heading {
   .tutor-admin-search-box-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 15px;
+    gap: 15px;
   }
 
   .tutor-admin-search-box-container > div {
-    margin-right: 0 !important;
+    margin-inline-end: 0 !important;
   }
 }
 
@@ -1941,7 +1925,7 @@ h2.tutor-page-heading {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0px 0px 30px 0px;
+  padding: 0 0 30px;
 }
 
 .tutor-sorting-bulk-action-wrapper .tutor-admin-search-box-container {
@@ -1957,8 +1941,8 @@ h2.tutor-page-heading {
   font-weight: 300;
   line-height: 1;
   color: #737787;
-  margin-left: 25px;
-  padding-left: 14px;
+  margin-inline-start: 25px;
+  padding-inline-start: 14px;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -1971,12 +1955,12 @@ h2.tutor-page-heading {
   height: 8px;
   background: #b9bac3;
   border-radius: 50%;
-  left: 0;
+  inset-inline-start: 0;
 }
 
 .report-course-list-wrap .detail .status span {
-  margin-left: 0;
-  padding-left: 16px;
+  margin-inline-start: 0;
+  padding-inline-start: 16px;
 }
 
 .report-course-list-wrap .detail .status span::before {
@@ -2001,7 +1985,7 @@ h2.tutor-page-heading {
 
 .report-course-list-wrap .detail {
   padding: unset !important;
-  text-align: left !important;
+  text-align: start !important;
   font-size: 14px !important;
   font-weight: 400 !important;
 }
@@ -2010,17 +1994,17 @@ h2.tutor-page-heading {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  grid-gap: 20px;
+  gap: 20px;
   grid-template-columns: repeat(3, 1fr);
 }
 
 .tutor-list-wrap .no-data-found {
   display: flex;
   align-items: center;
-  padding: 0 0 30px 0;
+  padding: 0 0 30px;
 }
 
-//a-to-z-sorting icon
+// a-to-z-sorting icon
 .tutor-table-rows-sorting {
   cursor: pointer;
 }
@@ -2036,7 +2020,7 @@ h2.tutor-page-heading {
 
   p:not(:last-child) {
     padding-bottom: 20px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
@@ -2081,7 +2065,7 @@ h2.tutor-page-heading {
   color: #fff;
   border: 1px solid #596369;
   border-radius: 11px;
-  padding: 0px 6px;
+  padding: 0 6px;
 }
 
 .wp-submenu li a[href='admin.php?page=create-course'] {
@@ -2108,30 +2092,30 @@ h2.tutor-page-heading {
       border-bottom: 1px solid #f5f5f5;
       font-weight: 400;
       color: #636363;
-      background-color: #ffffff;
+      background-color: #fff;
       padding: 14px 12px;
 
       &:first-child {
-        border-left: 1px solid #e6e6e6;
+        border-inline-start: 1px solid #e6e6e6;
         padding: 16px;
 
         .rtl & {
-          border-left: none;
-          border-right: 1px solid #e6e6e6;
+          border-inline-start: none;
+          border-inline-end: 1px solid #e6e6e6;
         }
       }
 
       &:last-child {
-        border-right: 1px solid #e6e6e6;
+        border-inline-end: 1px solid #e6e6e6;
 
         .rtl & {
-          border-right: none;
-          border-left: 1px solid #e6e6e6;
+          border-inline-end: none;
+          border-inline-start: 1px solid #e6e6e6;
         }
       }
 
       &:nth-child(2) {
-        padding-left: 0px;
+        padding-inline-start: 0;
       }
     }
 
@@ -2140,26 +2124,26 @@ h2.tutor-page-heading {
       padding: 16px 12px;
 
       &:first-child {
-        border-left: 1px solid #e6e6e6;
+        border-inline-start: 1px solid #e6e6e6;
         padding: 16px;
 
         .rtl & {
-          border-left: none;
-          border-right: 1px solid #e6e6e6;
+          border-inline-start: none;
+          border-inline-end: 1px solid #e6e6e6;
         }
       }
 
       &:last-child {
-        border-right: 1px solid #e6e6e6;
+        border-inline-end: 1px solid #e6e6e6;
 
         .rtl & {
-          border-right: none;
-          border-left: 1px solid #e6e6e6;
+          border-inline-end: none;
+          border-inline-start: 1px solid #e6e6e6;
         }
       }
 
       &:nth-child(2) {
-        padding-left: 0px;
+        padding-inline-start: 0;
       }
     }
 
@@ -2178,14 +2162,12 @@ h2.tutor-page-heading {
 }
 
 .tutor-backend .notice {
-  margin-left: 0px;
-  margin-right: 20px;
+  margin-inline: 0 20px;
 }
 
 .tutor-offer-notice {
   height: 140px;
   background: #000001 url('../images/offer-notice-bg.svg') center/cover no-repeat;
-  overflow: hidden;
   margin-inline-start: -20px;
   position: relative;
   overflow: hidden;
@@ -2201,7 +2183,7 @@ h2.tutor-page-heading {
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: rgba(115, 118, 125, 1);
+    color: rgb(115 118 125 / 100%);
     width: 36px;
     height: 36px;
     display: flex;
@@ -2212,7 +2194,7 @@ h2.tutor-page-heading {
     font-size: 16px;
 
     &:hover {
-      background: rgba(115, 118, 125, 0.6);
+      background: rgb(115 118 125 / 60%);
     }
   }
 
@@ -2224,8 +2206,7 @@ h2.tutor-page-heading {
     max-width: 1200px;
     margin: 0 auto;
     padding-block: 24px;
-    padding-inline-start: 24px;
-    padding-inline-end: 56px;
+    padding-inline: 24px 56px;
 
     .tutor-offer-notice-left {
       display: flex;
@@ -2239,7 +2220,7 @@ h2.tutor-page-heading {
         line-height: 24px;
         letter-spacing: 1%;
         font-weight: 500;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgb(255 255 255 / 80%);
       }
 
       [data-header] {
@@ -2248,12 +2229,12 @@ h2.tutor-page-heading {
         line-height: 38px;
         letter-spacing: 0%;
         font-weight: 700;
-        color: rgba(255, 245, 58, 1);
+        color: rgb(255 245 58 / 100%);
         margin-top: 10px;
       }
 
       [data-subtext] {
-        color: rgba(133, 198, 255, 1);
+        color: rgb(133 198 255 / 100%);
         margin-top: 2px;
       }
     }
@@ -2267,7 +2248,7 @@ h2.tutor-page-heading {
         font-size: 16px;
         line-height: 32px;
         font-weight: 500;
-        color: rgba(160, 160, 160, 1);
+        color: rgb(160 160 160 / 100%);
       }
 
       .tutor-offer-notice-timer {
@@ -2276,16 +2257,16 @@ h2.tutor-page-heading {
         line-height: 100%;
         letter-spacing: 8%;
         font-weight: 600;
-        color: rgba(255, 255, 255, 1);
+        color: rgb(255 255 255 / 100%);
         font-variant-numeric: tabular-nums;
-        margin-left: 12px;
+        margin-inline-start: 12px;
       }
 
       .tutor-offer-notice-cta {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(62, 100, 222, 1);
+        background: rgb(62 100 222 / 100%);
         border-radius: 5px;
         padding: 8px 16px;
         font-family: 'SF Pro Display', sans-serif;
@@ -2293,17 +2274,17 @@ h2.tutor-page-heading {
         line-height: 23px;
         letter-spacing: 0%;
         font-weight: 500;
-        color: rgba(255, 255, 255, 1);
-        box-shadow: 0px 0px 14px 0px rgba(59, 87, 255, 1);
+        color: rgb(255 255 255 / 100%);
+        box-shadow: 0 0 14px 0 rgb(59 87 255 / 100%);
         text-decoration: none;
-        margin-left: 36px;
+        margin-inline-start: 36px;
         position: relative;
         z-index: 1;
 
         &::before {
           position: absolute;
           top: -6px;
-          right: 98%;
+          inset-inline-end: 98%;
           bottom: -6px;
           border-radius: 6px;
           content: '';
@@ -2330,7 +2311,7 @@ h2.tutor-page-heading {
     }
 
     .tutor-offer-notice-right .tutor-offer-notice-cta {
-      margin-left: 24px;
+      margin-inline-start: 24px;
 
       &::before {
         width: 250px;
@@ -2341,7 +2322,7 @@ h2.tutor-page-heading {
   @include breakpoint-max(782) {
     height: auto;
     min-height: 140px;
-    margin-left: 0;
+    margin-inline-start: 0;
 
     .auto-fold & {
       margin-inline-start: -10px;
@@ -2367,11 +2348,11 @@ h2.tutor-page-heading {
         }
 
         .tutor-offer-notice-timer {
-          margin-left: 0;
+          margin-inline-start: 0;
         }
 
         .tutor-offer-notice-cta {
-          margin-left: 0;
+          margin-inline-start: 0;
         }
       }
     }
@@ -2403,6 +2384,7 @@ h2.tutor-page-heading {
 
     .tutor-offer-notice-right {
       align-items: center;
+
       .tutor-offer-notice-text {
         font-size: 14px;
         line-height: 24px;

@@ -5,25 +5,28 @@
 @mixin make-row($gutter: $grid-gutter-width) {
   --#{$variable-prefix}gutter-x: #{$gutter};
   --#{$variable-prefix}gutter-y: 0;
+
   display: flex;
   flex-wrap: wrap;
+
   // TODO: Revisit calc order after https://github.com/react-bootstrap/react-bootstrap/issues/6039 is fixed
   margin-top: calc(-1 * var(--#{$variable-prefix}gutter-y)); // stylelint-disable-line function-disallowed-list
-  margin-right: calc(-.5 * var(--#{$variable-prefix}gutter-x)); // stylelint-disable-line function-disallowed-list
-  margin-left: calc(-.5 * var(--#{$variable-prefix}gutter-x)); // stylelint-disable-line function-disallowed-list
+  margin-inline-end: calc(-.5 * var(--#{$variable-prefix}gutter-x)); // stylelint-disable-line function-disallowed-list
+  margin-inline-start: calc(-.5 * var(--#{$variable-prefix}gutter-x)); // stylelint-disable-line function-disallowed-list
 }
 
 @mixin make-col-ready($gutter: $grid-gutter-width) {
   // Add box sizing if only the grid is loaded
   box-sizing: if(variable-exists(include-column-box-sizing) and $include-column-box-sizing, border-box, null);
+
   // Prevent columns from becoming too narrow when at smaller grid tiers by
   // always setting `width: 100%;`. This works because we set the width
   // later on to override this initial width.
   flex-shrink: 0;
   width: 100%;
   max-width: 100%; // Prevent `.col-auto`, `.col` (& responsive variants) from breaking out the grid
-  padding-right: calc(var(--#{$variable-prefix}gutter-x) * .5); // stylelint-disable-line function-disallowed-list
-  padding-left: calc(var(--#{$variable-prefix}gutter-x) * .5); // stylelint-disable-line function-disallowed-list
+  padding-inline-end: calc(var(--#{$variable-prefix}gutter-x) * .5); // stylelint-disable-line function-disallowed-list
+  padding-inline-start: calc(var(--#{$variable-prefix}gutter-x) * .5); // stylelint-disable-line function-disallowed-list
   margin-top: var(--#{$variable-prefix}gutter-y);
 }
 
@@ -45,7 +48,8 @@
 
 @mixin make-col-offset($size, $columns: $grid-columns) {
   $num: divide($size, $columns);
-  margin-left: if($num == 0, 0, percentage($num));
+
+  margin-inline-start: if($num == 0, 0, percentage($num));
 }
 
 // Row columns

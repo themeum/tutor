@@ -15,8 +15,8 @@
 		body.wp-admin {
 			.tutor-qna-single-wrapper {
 				.tutor-qa-reply {
-					border-top-left-radius: 6px;
-					border-top-right-radius: 6px;
+					border-start-start-radius: 6px;
+					border-start-end-radius: 6px;
 					overflow: hidden;
 				}
 			}
@@ -43,6 +43,7 @@
 			height: 80px !important;
 			width: 100%;
 			border: none;
+
 			// border-bottom: 1px solid #cdcfd5;
 			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
@@ -62,7 +63,7 @@
 	.tutor-qna-badges {
 		.tutor-btn {
 			&:not(:last-child) {
-				margin-right: 18px;
+				margin-inline-end: 18px;
 			}
 		}
 	}
@@ -109,7 +110,7 @@
 				position: relative;
 				max-width: max-content;
 
-				&:before {
+				&::before {
 					content: '';
 					position: absolute;
 					width: 20px;
@@ -124,8 +125,8 @@
 
 			&.tutor-qna-left {
 				.tutor-qna-text {
-					&:before {
-						left: 15px;
+					&::before {
+						inset-inline-start: 15px;
 					}
 				}
 			}
@@ -138,8 +139,8 @@
 				}
 
 				.tutor-qna-text {
-					&:before {
-						right: 15px;
+					&::before {
+						inset-inline-end: 15px;
 					}
 				}
 			}
@@ -149,7 +150,7 @@
 			}
 
 			ul {
-				padding-left: 2rem;
+				padding-inline-start: 2rem;
 
 				li {
 					list-style-type: disc;
@@ -176,7 +177,8 @@
 	}
 
 	.tutor-toggle-reply {
-		text-align: right;
+		text-align: end;
+
 		span {
 			cursor: pointer;
 
@@ -192,7 +194,7 @@
 	@at-root {
 		body.wp-admin {
 			.tutor-qa-chatlist {
-				margin-right: 16px;
+				margin-inline-end: 16px;
 				margin-top: 16px;
 			}
 		}
@@ -229,8 +231,8 @@ table.qna-list-table {
 	.tutor-qna-question-col {
 		i {
 			font-size: 24px !important;
-			margin-right: 13px;
-			left: -6px;
+			margin-inline-end: 13px;
+			inset-inline-start: -6px;
 			top: 2px;
 		}
 
@@ -257,7 +259,7 @@ table.qna-list-table {
 				color: var(--tutor-body-color);
 
 				ul {
-					padding-left: 2rem;
+					padding-inline-start: 2rem;
 
 					li {
 						list-style-type: disc;
@@ -279,7 +281,7 @@ table.qna-list-table {
 				color: #212327;
 
 				ul {
-					padding-left: 2rem;
+					padding-inline-start: 2rem;
 					
 					li {
 						list-style-type: disc;
@@ -333,7 +335,7 @@ table.qna-list-table {
 	}
 
 	.tutor-qna-single-question .tutor-qa-reply div {
-		padding: 10px 0px 0px 0px;
+		padding: 10px 0 0;
 	}
 
 	.tutor-qa-new {
@@ -367,8 +369,9 @@ body.wp-admin {
 		& > * {
 			padding: 20px !important;
 		}
+
 		.tutor-qa-reply {
-			border-radius: 0px;
+			border-radius: 0;
 		}
 	}
 
@@ -383,36 +386,46 @@ body.wp-admin {
 		.wp-editor-container {
 			border: none;
 		}
+
 		.mce-tinymce.mce-panel {
 			background: #fff;
 			border: none;
+
 			> .mce-container-body {
 				border: 1px solid #dcdfe6;
 				border-radius: 6px;
 			}
+
 			box-shadow: none;
 		}
+
 		.mce-toolbar-grp {
 			border-bottom: none;
 			background: transparent;
 		}
+
 		.mce-top-part::before {
-			box-shadow: 0 1px 0px #cdcfd5;
+			box-shadow: 0 1px 0 #cdcfd5;
 		}
 
 		.mce-statusbar {
 			border-top: none;
+
 			> .mce-container-body .mce-path {
 				visibility: hidden;
 			}
+
 			&.mce-last {
 				background-color: transparent;
 			}
 		}
+
 		.mce-toolbar {
 			.mce-ico {
 				color: #767c8e;
+
 				--size: 22px;
+
 				width: var(--size);
 				height: var(--size);
 				display: flex;

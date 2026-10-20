@@ -1,15 +1,17 @@
-@import './datepicker-range-nav.scss';
+@import './datepicker-range-nav';
 
 .tutor-react-datepicker {
 	.react-datepicker-popper {
 		z-index: 99999;
 	}
+
 	.datepicker-header-custom {
 		display: flex;
 		gap: 2px;
 		justify-content: space-between;
 		margin: 0;
 	}
+
 	.dropdown-container {
 		position: relative;
 
@@ -23,14 +25,17 @@
 			border-radius: 8px;
 			padding: 8px 10px;
 			cursor: pointer;
+
 			&:hover {
 				color: var(--tutor-color-primary);
-				background: rgba(var(--tutor-color-primary-rgb), 0.15);
+				background: rgb(var(--tutor-color-primary-rgb), 0.15);
+
 				> svg path {
 					stroke: var(--tutor-color-primary);
 				}
 			}
 		}
+
 		> ul {
 			padding: 0;
 			margin: 0;
@@ -38,37 +43,40 @@
 		}
 
 		.dropdown-list {
-			text-align: left;
+			text-align: start;
 			position: absolute;
-			left: 50%;
+			inset-inline-start: 50%;
 			top: calc(100% - 8px);
 			transform: translateX(-50%) translateY(-4px);
 			min-width: 71px;
 			max-width: 112px;
 			min-height: 200px;
-			max-height: 322px;
 			max-height: 258px;
 			overflow-y: auto;
-			background: #ffffff;
+			background: #fff;
 			border: 1px solid #e0e2ea;
 			box-sizing: border-box;
-			box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+			box-shadow: 0 10px 14px rgb(0 0 0 / 12%);
 			border-radius: 6px;
 			z-index: 9;
 			transition: 200ms ease-out;
 			opacity: 0;
 			visibility: hidden;
 
-			--scrollbarBG: rgba(205, 207, 213, 0);
+			--scrollbarBG: rgb(205 207 213 / 0%);
 			--thumbBG: #d2dbf5;
+
 			scrollbar-width: thin;
 			scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+
 			&::-webkit-scrollbar {
 				width: 4px;
 			}
+
 			&::-webkit-scrollbar-track {
 				background: var(--scrollbarBG);
 			}
+
 			&::-webkit-scrollbar-thumb {
 				background-color: var(--thumbBG);
 				border-radius: 30px;
@@ -103,13 +111,15 @@
 		// dropdown-label active
 		&.is-active {
 			.dropdown-list {
-				transform: translateX(-50%) translateY(0px);
+				transform: translateX(-50%) translateY(0);
 				opacity: 1;
 				visibility: visible;
 			}
+
 			.dropdown-label {
 				color: var(--tutor-color-primary);
-				background: rgba(var(--tutor-color-primary-rgb), 0.15);
+				background: rgb(var(--tutor-color-primary-rgb), 0.15);
+
 				> svg path {
 					stroke: var(--tutor-color-primary);
 				}
@@ -119,8 +129,10 @@
 
 	.navigation-icon {
 		display: flex;
+
 		// align-items: center;
 		gap: 2px;
+
 		button {
 			position: relative;
 			width: 36px;
@@ -142,10 +154,10 @@
 	}
 
 	.react-datepicker {
-		background: #ffffff;
+		background: #fff;
 		border: 1px solid var(--tutor-border-color);
 		box-sizing: border-box;
-		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+		box-shadow: 0 6px 20px rgb(28 49 104 / 10%);
 		border-radius: 6px;
 		min-width: 350px;
 		display: flex;
@@ -204,13 +216,13 @@
 			transition: 100ms;
 
 			&:not(.react-datepicker__day--keyboard-selected, .react-datepicker__day--selected, .react-datepicker__day--range-start, .react-datepicker__day--in-range):hover {
-				color: var(--tutor-color-primary);
-				background: #e9edfb;
 
 				/* text/title */
 				color: #41454f;
+
 				/* color/primary/fill/30 */
 				background: #f6f8fd;
+
 				/* color/primary/fill/50 */
 				box-shadow: 0 0 0 1px #d2dbf5;
 			}
@@ -222,7 +234,7 @@
 		}
 
 		&__day--keyboard-selected {
-			background: rgba(var(--tutor-color-primary-rgb), 0.8);
+			background: rgb(var(--tutor-color-primary-rgb), 0.8);
 			color: #fff;
 		}
 
@@ -230,6 +242,7 @@
 			margin: 0;
 			margin-top: 26px;
 		}
+
 		&__day--outside-month,
 		&__day--disabled {
 			color: #b4b7c0;
@@ -254,19 +267,21 @@
 		&__time-container {
 			float: unset;
 			width: unset;
-			border-left: 1px solid #c0c3cb;
+			border-inline-start: 1px solid #c0c3cb;
 
 			.rtl & {
-				border-left: 0;
-				border-right: 1px solid #c0c3cb;
+				border-inline-start: 0;
+				border-inline-end: 1px solid #c0c3cb;
 			}
 
 			.react-datepicker-time {
 				&__input {
-					margin-left: 0;
+					margin-inline-start: 0;
+
 					> input {
 						/* design/white */
-						background: #ffffff;
+						background: #fff;
+
 						/* stroke/gray40 */
 						border: 1px solid #c0c3cb;
 						box-sizing: border-box;
@@ -276,15 +291,14 @@
 						font-weight: normal;
 						font-size: 16px;
 						line-height: 162%;
+
 						/* identical to box height, or 162% */
 
 						/* text/primary */
 
 						color: #212327;
-
 						height: 40px;
 						padding: 4px 10px;
-
 						transition: 200ms ease-out;
 
 						&::-webkit-calendar-picker-indicator {
@@ -293,7 +307,7 @@
 							display: flex;
 							align-items: center;
 							justify-content: center;
-							margin-left: 20px;
+							margin-inline-start: 20px;
 						}
 
 						&:focus-visible {
@@ -302,6 +316,7 @@
 						}
 					}
 				}
+
 				&__caption {
 					display: none;
 				}
@@ -317,7 +332,7 @@
 			height: 40px!important;
 			padding: 11px 10px!important;
 		}
-	} //end .react-datepicker
+	} // end .react-datepicker
 }
 
 // .tutor-react-datepicker__selects-range
@@ -325,12 +340,15 @@
 	.react-datepicker {
 		&__navigation {
 			--pd: 15px;
+
 			top: 18px;
+
 			&--next {
-				right: var(--pd);
+				inset-inline-end: var(--pd);
 			}
+
 			&--previous {
-				left: var(--pd);
+				inset-inline-start: var(--pd);
 			}
 
 			&:hover *::before {
@@ -341,11 +359,12 @@
 		&__day {
 			position: relative;
 			z-index: 1;
-			&:before {
+
+			&::before {
 				content: '';
 				position: absolute;
 				inset: 1px -50%;
-				box-shadow: 0px 1px 0px 0px #d2dbf5, 0px -1px 0px 0px #d2dbf5;
+				box-shadow: 0 1px 0 0 #d2dbf5, 0 -1px 0 0 #d2dbf5;
 				background: #f6f8fd;
 				z-index: -1;
 				opacity: 0;
@@ -357,6 +376,7 @@
 			background: #f6f8fd;
 			color: #41454f;
 		}
+
 		&__day--in-selecting-range:not(.react-datepicker__day--selecting-range-start) {
 			box-shadow: 0 0 0 1px #d2dbf5;
 		}
@@ -365,11 +385,13 @@
 		&__day--range-end {
 			background: var(--tutor-color-primary);
 			color: #fff;
+
 			&::after {
 				content: '';
 				position: absolute;
 				inset: 0;
 				z-index: -1;
+
 				/* design/brand */
 				background: var(--tutor-color-primary);
 				border-radius: 6px;
@@ -380,33 +402,36 @@
 			&::before {
 				opacity: 1;
 			}
+
 			&__day--range-start,
 			&__day--range-end {
 				background: var(--tutor-color-primary);
 				color: #fff;
 			}
-			&:first-child:before {
-				left: 0;
+
+			&:first-child::before {
+				inset-inline-start: 0;
 			}
-			&:last-child:before {
-				right: 0;
+
+			&:last-child::before {
+				inset-inline-end: 0;
 			}
 		}
 
 		&__day--range-start {
-			&.react-datepicker__day--in-range:before {
-				left: 50%;
+			&.react-datepicker__day--in-range::before {
+				inset-inline-start: 50%;
 			}
 		}
 
 		&__day--range-end {
-			&.react-datepicker__day--in-range:before {
-				right: 50%;
+			&.react-datepicker__day--in-range::before {
+				inset-inline-end: 50%;
 			}
 		}
 
 		&__header {
-			padding: 20px 20px 10px 20px;
+			padding: 20px 20px 10px;
 		}
 
 		&__current-month {
@@ -416,7 +441,7 @@
 			text-align: center;
 			color: #212327;
 		}
-	} //end .react-datepicker
+	} // end .react-datepicker
 
 	.react-datepicker__custom-footer {
 		display: flex;
@@ -428,18 +453,20 @@
 		line-height: 162%;
 		color: #9ca0ac;
 		border-top: 1px solid #e3e6eb;
+
 		.tutor-btns {
 			display: flex;
 			align-items: center;
-			grid-gap: 10px;
+			gap: 10px;
 		}
+
 		.tutor-btn {
 			&:not(.tutor-btn-icon).tutor-btn-md {
 				padding: 7px 16.8px;
 			}
 		}
 	}
-} //end .tutor-react-datepicker__selects-range
+} // end .tutor-react-datepicker__selects-range
 
 .tutor-screen-frontend-dashboard {
 	.tutor-react-datepicker .react-datepicker__input-container {
@@ -459,7 +486,7 @@
 		border: none;
 		height: 20px;
 		width: 20px;
-		right: 10px;
+		inset-inline-end: 10px;
 		top: 50%;
 		transform: translateY(-50%);
 		border-radius: 50%;
@@ -467,22 +494,26 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0 !important;
-		--color: hsl(0, 0%, 70%);
+
+		--color: hsl(0deg 0% 70%);
+
 		background: var(--color) !important;
 		color: #fff;
 		border-color: var(--color) !important;
 
 		.rtl & {
-			right: auto;
-			left: 10px;
+			inset-inline-end: auto;
+			inset-inline-start: 10px;
 		}
 
 		&:hover {
-			--color: hsl(0, 0%, 50%);
+			--color: hsl(0deg 0% 50%);
+
 			background: var(--color) !important;
 			border-color: var(--color) !important;
 		}
-		&:after {
+
+		&::after {
 			content: '×';
 			margin-top: -2px;
 		}

@@ -25,13 +25,13 @@
       $extend-breakpoint: true;
 
       @each $name, $width in $grid-breakpoints {
-        @if ($extend-breakpoint) {
+        @if $extend-breakpoint {
           .tutor-container#{breakpoint-infix($name, $grid-breakpoints)} {
             @extend %responsive-container-#{$breakpoint};
           }
 
           // Once the current breakpoint is reached, stop extending
-          @if ($breakpoint == $name) {
+          @if $breakpoint == $name {
             $extend-breakpoint: false;
           }
         }

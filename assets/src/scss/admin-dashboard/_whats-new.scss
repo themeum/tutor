@@ -7,8 +7,8 @@
 
 	.tutor-update-available{
 		background: #FFF5E0;
-		border-top-left-radius: 16px;
-    	border-top-right-radius: 16px;
+		border-start-start-radius: 16px;
+    	border-start-end-radius: 16px;
 		padding: 32px;
 
 		.tutor-version-alert{
@@ -17,12 +17,13 @@
 			justify-content: center;
 			align-items: center;
 			margin-bottom: 12px;
+
 			p{
 				font-size: 14px;
 				line-height: 20px;
 				font-weight: 500;
 				margin: 0;
-				color: #000000;
+				color: #000;
 			}
 		}
 
@@ -41,16 +42,18 @@
 					font-size: 18px;
 					line-height: 24px;
 					font-weight: 500;
-					margin-top: 0px;
+					margin-top: 0;
 					margin-bottom: 4px;
 					color: #091E42;
 				}
+
 				p{
 					font-size: 14px;
 					line-height: 20px;
 					font-weight: 400;
-					margin: 0px;
+					margin: 0;
 				}
+
 				a{
 					color: #00F;
 					text-decoration: none;
@@ -67,7 +70,7 @@
 				border-radius: 6px;
 				text-decoration: none;
 				color: #fff;
-				margin-left: auto;
+				margin-inline-start: auto;
 
 				&:focus {
 					box-shadow: none;
@@ -101,8 +104,7 @@
 
 		.tutor-logo-head{
 			position: absolute;
-			left: 0;
-			right: 0;
+			inset-inline: 0;
 			width: 40px;
 			bottom: -40px;
 			margin: 0 auto;
@@ -115,24 +117,27 @@
 
 			&.tutor-symbol-left-top {
 				top: 75px;
-				left: 100px;
+				inset-inline-start: 100px;
 				height: 20px;
 				width: 20px;
 			}
+
 			&.tutor-symbol-left-bottom {
 				width: 60px;
-				left: 0;
+				inset-inline-start: 0;
 				bottom: 20px;
 			}
+
 			&.tutor-symbol-right-top {
 				top: 30px;
-				right: 0;
+				inset-inline-end: 0;
 				width: 60px;
 			}
+
 			&.tutor-symbol-right-bottom {
 				height: 30px;
 				width: 30px;
-				right: 90px;
+				inset-inline-end: 90px;
 				bottom: 60px;
 			}
 
@@ -154,7 +159,7 @@
 	.tutor-changelog-wrapper{
 		width: 75%;
 		margin: 0 auto;
-		padding: 100px 0px 80px 0px;
+		padding: 100px 0 80px;
 
 		h4{
 			font-size: 16px;
@@ -162,16 +167,16 @@
 
 		.tutor-changelog-list{
 			list-style: disc;
-			padding-left: 16px;
+			padding-inline-start: 16px;
 		}
 	}
 
 	.tutor-whats-new-pro-section{
-		padding: 80px 0px;
+		padding: 80px 0;
 		text-align: center;
 
 		&.tutor-pro-section-top {
-			background-color: rgba(204, 219, 254, 0.1);
+			background-color: rgb(204 219 254 / 10%);
 		}
 
 		& > div {
@@ -190,13 +195,14 @@
 			font-size: 18px;
 			font-weight: 500;
 			margin-top: 20px;
-			margin-bottom: 0px;
+			margin-bottom: 0;
 		}
 
 		.tutor-whats-new-pro-banner{
 			border-radius: 8px;
 			overflow: hidden;
 			display: flex;
+
 			img{
 				width: 100%;
 			}
@@ -211,13 +217,14 @@
 			text-decoration: none;
 			color: #fff;
 			margin-top: 30px;
+
 			&:hover{
 				background: #0849e1;
 			}
 
 			.tutor-icon-crown {
 				color: #ED9700;
-				margin-right: 5px;
+				margin-inline-end: 5px;
 			}
 		}
 	}

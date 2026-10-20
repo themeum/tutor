@@ -5,13 +5,15 @@
 		&:nth-child(3) {
 			position: relative;
 			cursor: not-allowed;
-			&:before {
+
+			&::before {
 				content: '';
 				position: absolute;
 				inset: 0;
 				z-index: 1;
-				background: rgba(255, 255, 255, 0.55);
+				background: rgb(255 255 255 / 55%);
 			}
+
 			textarea,
 			select,
 			input {
@@ -36,9 +38,10 @@
 	img {
 		overflow: hidden;
 		position: relative;
-		&:empty:before {
+
+		&:empty::before {
 			content: '\e93a';
-			font-family: 'tutor' !important;
+			font-family: tutor !important;
 			font-size: 2em;
 			position: absolute;
 			inset: 0;
@@ -50,6 +53,7 @@
 		}
 	}
 }
+
 .tutor-option-field-input.image-previewer {
 	img {
 		&::before {
@@ -61,7 +65,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
+
 			@include svg-image-uppoad;
+
 			background-repeat: no-repeat;
 			background-position: center;
 		}
@@ -73,6 +79,7 @@
 		background: #f3f3f3;
 		border-radius: 3px;
 		display: none;
+
 		@include spinner(#1a73aa, #e8e8e8);
 
 		&.is-loading {
@@ -88,6 +95,7 @@
 		.delete-btn {
 			visibility: visible;
 		}
+
 		img {
 			&::before {
 				visibility: hidden;
@@ -102,12 +110,13 @@
 		position: relative;
 		display: inline-flex;
 		z-index: 1;
+
 		&::before {
 			content: '';
 			position: absolute;
 			inset: 1px -6px;
-			background: rgba(var(--tutor-color-warning-rgb), 0.2);
-			border: 1px solid rgba(var(--tutor-color-warning-rgb), 0.3);
+			background: rgb(var(--tutor-color-warning-rgb), 0.2);
+			border: 1px solid rgb(var(--tutor-color-warning-rgb), 0.3);
 			box-sizing: border-box;
 			border-radius: 3px;
 			z-index: -1;
@@ -120,6 +129,7 @@
 	from {
 		opacity: 0;
 	}
+
 	to {
 		opacity: 1;
 	}

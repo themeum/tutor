@@ -1,5 +1,6 @@
 .tutor-badge {
 	@extend .d-inline-block;
+
 	padding: 0 8px;
 	line-height: 21px;
 	font-size: 13px;
@@ -11,6 +12,7 @@
 
 .tutor-badge-square {
 	@extend .tutor-badge;
+
 	line-height: 22px;
 	padding: 5px;
 	min-width: 32px;
@@ -22,18 +24,23 @@
 .tutor-profile-badge {
 	@extend .d-flex;
 	@extend .align-items-center;
+
 	box-sizing: border-box;
+
 	img {
 		@extend .d-block;
+
 		height: auto;
 		max-width: 50px;
 	}
+
 	.tutor-profile-badge-content {
-		padding-left: 20px;
+		padding-inline-start: 20px;
 		font-size: 16px;
 		line-height: 26px;
 		font-weight: 400;
 		color: var(--tutor-color-muted);
+
 		h5 {
 			margin: 0;
 			font-size: 24px;
@@ -50,16 +57,16 @@
 	justify-content: center;
 	background-color: var(--tutor-color-danger);
 	position: absolute;
-	right: -4px;
+	inset-inline-end: -4px;
 	top: -4px;
 	line-height: 1;
 	min-width: 20px;
 	min-height: 20px;
 	font-size: 12px;
 	border-radius: 40px;
-	padding: 0px 4px;
+	padding: 0 4px;
 	box-sizing: border-box;
-	color: #ffffff;
+	color: #fff;
 	font-weight: 700;
 	z-index: 1;
 }
