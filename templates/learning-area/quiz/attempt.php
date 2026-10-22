@@ -217,7 +217,8 @@ $start_index = $last_answered_index > 0
 		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id, $quiz_attempt_info );
 		foreach ( $questions as $index => $question ) {
 			$question_settings          = maybe_unserialize( $question->question_settings );
-			$answer_required            = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
+			$is_committed_question      = ! empty( $committed_attempt_answers[ (int) $question->question_id ] );
+			$answer_required            = ! $is_committed_question && isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
 			$question_index             = $index + 1;
 			$question->committed_answer = $committed_attempt_answers[ (int) $question->question_id ] ?? null;
 			?>

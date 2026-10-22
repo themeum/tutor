@@ -1,211 +1,166 @@
+import ajaxHandler from '../../helper/ajax-handler';
+import tutorFormData from '../../helper/tutor-formdata';
+
 /**
  * Consent logs modal functionality for students and instructors.
  *
  * @since 4.0.0
  */
-const AJAX_URL = window.ajaxurl || window._tutorobject?.ajaxurl || '';
-const AJAX_ACTION = 'tutor_user_consents';
-const NONCE_KEY = window._tutorobject?.nonce_key || '_tutor_nonce';
-const NONCE_VALUE = window._tutorobject?.[NONCE_KEY] || '';
-const overlay = document.getElementById('tutor-consent-logs-modal');
-const modalBody = overlay?.querySelector('.tutor-consent-logs-modal-body');
-const downloadBtn = overlay?.querySelector('[data-consent-logs-download]');
-const userNameEl = overlay?.querySelector('.tutor-consent-user-card-name');
-const userJoinedEl = overlay?.querySelector('.tutor-consent-user-card-joined');
-const userAvatarEl = overlay?.querySelector('.tutor-consent-user-card img');
+const initConsentLogs = () => {
+	const overlay = document.getElementById('tutor-consent-logs-modal');
+	const triggers = document.querySelectorAll('[data-consent-logs-trigger]');
 
-// Current open state.
-let currentUserId = 0;
-let currentUserName = '';
-let currentUserJoined = '';
-let currentUserEmail = '';
-let currentUserLogin = '';
-let currentLogs = [];
-
-const { __ } = wp.i18n;
-
-/**
- * Build a human-readable title from the consent log.
- *
- * @param log - The consent log object
- * @param includeAccepted - Whether to prefix the title with "Accepted"
- * @returns A human-readable title string
- */
-const getLogTitle = (log, includeAccepted = true) => {
-	if (log.consent_title) {
-		return includeAccepted
-			? `${__('Accepted', 'tutor')} ${log.consent_title}`
-			: log.consent_title;
+	if (!overlay || !triggers.length) {
+		return;
 	}
 
-	return includeAccepted
-		? __('Accepted Consent', 'tutor')
-		: __('Consent', 'tutor');
-};
+	const modalBody = overlay.querySelector('.tutor-consent-logs-modal-body');
+	const downloadBtn = overlay.querySelector('[data-consent-logs-download]');
 
-const renderTimeline = (logs) => {
-	const items = logs.map((log, index) => {
-		const title = getLogTitle(log);
-		const date = log.created_at_gmt || '';
-		const ago = log.timeAgo || log.time_ago || '';
-		const ip = log.ip_address ? `IP: ${log.ip_address}` : '';
-		const source = log.source ? `Source: ${log.source}` : '';
-		const agent = log.user_agent ? `Agent: ${log.user_agent}` : '';
-		const metaLines = [ip, source, agent].filter(Boolean);
-		return `
-                <div class="tutor-consent-timeline-item">
-                    <div class="tutor-consent-timeline-track">
-                        <span class="tutor-consent-timeline-dot"></span>
-                    </div>
-                    <div class="tutor-consent-timeline-content">
-                        <p class="tutor-consent-timeline-title">${title}</p>
-                        <p class="tutor-consent-timeline-date">${date}</p>
-                        ${metaLines.length ? `<div class="tutor-consent-timeline-meta">${metaLines.join('<br>')}</div>` : ''}
-                    </div>
-                    <div class="tutor-consent-timeline-ago">${ago}</div>
-                </div>
-            `;
-	});
-	return items.join('');
-};
+	if (!modalBody) {
+		return;
+	}
 
-const showLoading = () => {
-	if (!modalBody) return;
-	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
-	if (downloadBtn) downloadBtn.style.display = 'none';
-};
+	const { __ } = wp.i18n;
 
-const showEmpty = () => {
-	if (!modalBody) return;
-	modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
-	if (downloadBtn) downloadBtn.style.display = 'none';
-};
+	// Current open state for CSV export.
+	let currentUserName = '';
+	let currentUserJoined = '';
+	let currentUserEmail = '';
+	let currentUserLogin = '';
+	let currentLogs = [];
 
-const fetchAndRender = (userId, userName, userJoined, avatarSrc, userEmail, userLogin) => {
-	if (!overlay || !modalBody) return;
-	currentUserId = userId;
-	currentUserName = userName;
-	currentUserJoined = userJoined;
-	currentUserEmail = userEmail;
-	currentUserLogin = userLogin;
+	const showLoading = () => {
+		modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('Loading…', 'tutor')}</div>`;
+		if (downloadBtn) downloadBtn.style.display = 'none';
+	};
 
-	// Show loading state and hide download button.
-	showLoading();
+	const showEmpty = () => {
+		modalBody.innerHTML = `<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">${__('No consent logs found.', 'tutor')}</div>`;
+		if (downloadBtn) downloadBtn.style.display = 'none';
+	};
 
-	// Fill user card.
-	if (userNameEl) userNameEl.textContent = userName;
-	if (userJoinedEl) userJoinedEl.textContent = userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : '';
-	if (userAvatarEl && avatarSrc) userAvatarEl.src = avatarSrc;
+	const fetchAndRender = async (userId) => {
+		if (!userId) {
+			showEmpty();
+			return;
+		}
 
-	const body = new FormData();
-	body.append('action', AJAX_ACTION);
-	body.append('user_action', 'all_consents_given_by_user');
-	body.append('user_id', userId);
-	body.append(NONCE_KEY, NONCE_VALUE);
+		currentLogs = [];
+		showLoading();
 
-	fetch(AJAX_URL, { method: 'POST', body })
-		.then((r) => r.json())
-		.then((data) => {
-			const logs = data.data;
-			currentLogs = logs;
-			if (!logs.length) {
+		try {
+			const formData = tutorFormData([
+				{
+					action: 'tutor_user_consents',
+					user_action: 'all_consents_given_by_user',
+					user_id: userId,
+				},
+			]);
+
+			const post = await ajaxHandler(formData);
+			if (!post || !post.ok) {
 				showEmpty();
 				return;
 			}
-			const userCard = `
-                    <div class="tutor-consent-user-card">
-                        ${avatarSrc ? `<img src="" alt="" />` : ''}
-                        <div class="tutor-consent-user-card-info">
-                            <span class="tutor-consent-user-card-name"></span>
-                            <span class="tutor-consent-user-card-joined">${userJoined ? `${__('Joined', 'tutor')} ${userJoined}` : ''}</span>
-                        </div>
-                    </div>
-                `;
-			modalBody.innerHTML = `
-                    <div class="tutor-consent-timeline">${renderTimeline(logs)}</div>
-                    ${userCard}
-                `;
-			if (downloadBtn) downloadBtn.style.display = '';
-			userNameEl = modalBody.querySelector('.tutor-consent-user-card-name')
-			if (userNameEl) userNameEl.textContent = userName;
 
-			const userAvatarEl = modalBody.querySelector('.tutor-consent-user-card img')
-			if (userAvatarEl && avatarSrc) {
-				userAvatarEl.src = avatarSrc
-				userAvatarEl.alt = userName;
+			const res = await post.json();
+			const data = res?.data;
+
+			if (!data || (res.status_code && res.status_code !== 200)) {
+				showEmpty();
+				return;
 			}
-		})
-		.catch(() => showEmpty());
-};
 
-const downloadCSV = () => {
-	if (!currentLogs.length) return;
+			// Render server-generated HTML directly.
+			modalBody.innerHTML = data.html || '';
 
-	const studentInfo = [
-		['Name:', currentUserName],
-		['User Name:', currentUserLogin],
-		['Email:', currentUserEmail],
-		['Joined At:', currentUserJoined],
-		[],
-	];
+			if (data.has_logs && Array.isArray(data.logs) && data.logs.length) {
+				currentLogs = data.logs;
+				currentUserName = data.user?.name || '';
+				currentUserLogin = data.user?.login || '';
+				currentUserEmail = data.user?.email || '';
+				currentUserJoined = data.user?.joined || '';
 
-	const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent'];
-
-	const rows = currentLogs.map((log) => [
-		getLogTitle(log, false),
-		log.created_at_gmt || '',
-		log.ip_address || '',
-		log.source || '',
-		log.user_agent || '',
-	]);
-
-	const escape = (v) => {
-		v = String(v || '').trim();
-
-		if (
-			v.startsWith('=') ||
-			v.startsWith('+') ||
-			v.startsWith('-') ||
-			v.startsWith('@') ||
-			v.startsWith('\t') ||
-			v.startsWith('\r')
-		) {
-			v = "'" + v;
+				if (downloadBtn) {
+					downloadBtn.style.display = '';
+				}
+			} else {
+				if (downloadBtn) {
+					downloadBtn.style.display = 'none';
+				}
+			}
+		} catch (e) {
+			showEmpty();
 		}
-
-		v = `"${v.replace(/"/g, '""')}"`
-		return v;
 	};
 
-	const csv = [...studentInfo, headers, ...rows]
-		.map((row) => row.map(escape).join(','))
-		.join('\n');
+	const downloadCSV = () => {
+		if (!currentLogs.length) return;
 
-	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-	const url = URL.createObjectURL(blob);
-	const a = document.createElement('a');
-	a.href = url;
-	a.download = `consent-logs-${currentUserName}.csv`;
-	a.click();
-	URL.revokeObjectURL(url);
-};
+		const escapeCsvCell = (v) => {
+			v = String(v ?? '').trim();
 
-const initConsentLogTriggers = () => {
-	document.querySelectorAll('[data-consent-logs-trigger]').forEach((btn) => {
+			const formulaChars = ['=', '+', '-', '@', '\t', '\r'];
+			if (formulaChars.some((ch) => v.startsWith(ch))) {
+				v = "'" + v;
+			}
+
+			return `"${v.replace(/"/g, '""')}"`;
+		};
+
+		const studentInfo = [
+			['Name:', currentUserName],
+			['User Name:', currentUserLogin],
+			['Email:', currentUserEmail],
+			['Joined At:', currentUserJoined],
+			[],
+		];
+
+		const headers = ['Title', 'Date (UTC)', 'IP Address', 'Source', 'User Agent'];
+
+		const rows = currentLogs.map((log) => [
+			log.consent_title || __('Consent', 'tutor'),
+			log.created_at_gmt || '',
+			log.ip_address || '',
+			log.source || '',
+			log.user_agent || '',
+		]);
+
+		const csv = [...studentInfo, headers, ...rows]
+			.map((row) => row.map(escapeCsvCell).join(','))
+			.join('\n');
+
+		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		// Preserve Unicode letters (\p{L}), marks/vowel signs (\p{M}), and numbers (\p{N})
+		// across all languages while stripping dots, slashes, and illegal filesystem characters.
+		const safeName = (currentUserName || currentUserLogin || '')
+			.replace(/[^\p{L}\p{M}\p{N}_\- ]/gu, '')
+			.trim()
+			.replace(/\s+/g, '-') || 'user';
+
+		a.download = `consent-logs-${safeName}.csv`;
+		a.click();
+		URL.revokeObjectURL(url);
+	};
+
+	triggers.forEach((btn) => {
 		btn.addEventListener('click', () => {
-			// Hide download button immediately before modal opens.
-			if (downloadBtn) downloadBtn.style.display = 'none';
-
-			const userId = btn.dataset.userId || '';
-			const userName = btn.dataset.userName || '';
-			const userJoined = btn.dataset.userJoined || '';
-			const avatarSrc = btn.dataset.avatarSrc || '';
-			const userEmail = btn.dataset.userEmail || '';
-			const userLogin = btn.dataset.userLogin || '';
-			fetchAndRender(userId, userName, userJoined, avatarSrc, userEmail, userLogin);
+			const userId = btn.dataset.userId;
+			if (!userId) {
+				showEmpty();
+				return;
+			}
+			fetchAndRender(userId);
 		});
 	});
+
+	if (downloadBtn) {
+		downloadBtn.addEventListener('click', downloadCSV);
+	}
 };
 
-if (downloadBtn) downloadBtn.addEventListener('click', downloadCSV);
-document.addEventListener('DOMContentLoaded', initConsentLogTriggers);
+document.addEventListener('DOMContentLoaded', initConsentLogs);

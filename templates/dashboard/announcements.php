@@ -16,7 +16,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Button;
 use Tutor\Components\CourseFilter;

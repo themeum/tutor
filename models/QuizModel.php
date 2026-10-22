@@ -1867,7 +1867,10 @@ class QuizModel {
 		$answers = is_array( $answers ) ? $answers : array();
 
 		$has_pending = (bool) count(
-			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
+			array_filter(
+				$answers,
+				fn( $answer ) => null === $answer->is_correct && ! self::is_attempt_answer_skipped( $answer )
+			)
 		);
 
 		if ( $has_pending ) {
