@@ -74,6 +74,7 @@ export interface CourseFactoryResult {
 
 export interface CourseFactoryInput {
   title?: string;
+  author?: string;
   price?: number;
   price_type?: 'free' | 'paid';
   instructor?: string;
