@@ -7,78 +7,102 @@ meta {
 get {
   url: {{base_url}}/topics
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
-  ~course_id: 1
+  course_id: 1
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get Topics by Course
+  # GET /topics
   
-  Retrieves all topic modules belonging to a specific course.
+  Retrieves topic modules for a course.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/topics`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **With Bearer JWT:** user must be able to view the course (enrolled / instructor / public).
+  - **Without JWT:** allowed only when the course is **public**.
+  - Permission for JWT callers comes from the bound API key (`Read`, `Read/Write`, or `All`).
   
   ## Query Parameters
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `course_id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  | `course_id` | `integer` | **Yes** | Parent course post ID. Registered as a required REST arg; omitting it typically yields WordPress `rest_missing_callback_param` before the controller runs. |
+  
+  ## Notes — outline vs full DTO
+  
+  - **Full:** when the caller may reveal learning payloads (enrolled / instructor / public free course), each topic is a public post DTO: `ID`, `post_title`, `post_content`, `post_name`.
+  - **Outline:** otherwise topics are outline-only: `ID`, `post_title`, `post_name` (no `post_content`).
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK — full topic bodies
   ```json
   {
-    "code": "get_topic",
+    "code": "tutor_read_topic",
     "message": "Topic retrieved successfully",
     "data": [
       {
-        "ID": "201",
+        "ID": 201,
         "post_title": "Getting Started with the Environment",
         "post_content": "Detailed overview of tools, IDE plugins, and prerequisites.",
         "post_name": "getting-started-environment"
-      },
-      {
-        "ID": "202",
-        "post_title": "Core Concepts & Deep Dive",
-        "post_content": "Deep exploration of architecture and API patterns.",
-        "post_name": "core-concepts-deep-dive"
       }
     ]
   }
   ```
   
-  ### 404 / Missing Param Errors
-  
-  When `course_id` is missing:
+  ### Missing `course_id` (WordPress validation)
   ```json
   {
-    "code": "get_topic",
-    "message": "course_id is required",
-    "data": []
+    "code": "rest_missing_callback_param",
+    "message": "Missing parameter(s): course_id",
+    "data": {
+      "status": 400,
+      "params": ["course_id"]
+    }
   }
   ```
   
-  When no topics exist for the provided ID:
+  ### Invalid / non-course `course_id`
   ```json
   {
-    "code": "not_found",
+    "code": "rest_invalid_resource",
+    "message": "Course not found.",
+    "data": {
+      "status": 404
+    }
+  }
+  ```
+  
+  ### Real course, no access
+  ```json
+  {
+    "code": "rest_forbidden",
+    "message": "Sorry, you are not allowed to do that.",
+    "data": {
+      "status": 401
+    }
+  }
+  ```
+  
+  ### No topics
+  ```json
+  {
+    "code": "tutor_read_topic",
     "message": "Topic not found for given course ID",
-    "data": []
+    "data": {
+      "status": 404
+    }
   }
   ```
 }

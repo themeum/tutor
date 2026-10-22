@@ -10,8 +10,9 @@
 namespace Tutor\Helpers;
 
 /**
- * Do the common db operations through helper
- * methods
+ * Do the common db operations through helper methods.
+ *
+ * @deprecated since 4.2.0 Use \Tutor\Helpers\DB instead.
  */
 class QueryHelper {
 
@@ -33,7 +34,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table = self::prepare_table_name( $table );
-		$data  = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
+		$data  = \Tutor\Core\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,
@@ -1048,9 +1049,9 @@ class QueryHelper {
 		if ( is_int( $value ) ) {
 			$escaped_value = $wpdb->prepare( '%d', $value );
 		} elseif ( is_float( $value ) ) {
-			list( $whole, $decimal ) = explode( '.', $value );
-			$expression              = '%.' . strlen( $decimal ) . 'f';
-			$escaped_value           = $wpdb->prepare( $expression, $value );//phpcs:ignore
+			$value_parts   = explode( '.', (string) $value );
+			$expression    = '%.' . strlen( $value_parts[1] ?? '' ) . 'f';
+			$escaped_value = $wpdb->prepare( $expression, $value );//phpcs:ignore
 		} else {
 			$escaped_value = $wpdb->prepare( '%s', $value );
 		}
@@ -1508,5 +1509,4 @@ class QueryHelper {
 
 		return $result;
 	}
-
 }

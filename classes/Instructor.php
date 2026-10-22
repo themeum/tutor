@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -849,15 +850,12 @@ class Instructor {
 						WHERE {$earning_where_clause}
 						GROUP BY earnings.course_id";
 
-		$enrollment_sql = QueryHelper::prepare_raw_query(
-			"SELECT 
-				post_parent AS course_id, 
-				COUNT(DISTINCT post_author) AS total_student
-			FROM {$wpdb->posts}
-			WHERE {$enrollment_where_clause}
-			GROUP BY post_parent",
-			array()
-		);
+		$enrollment_sql = "SELECT 
+							post_parent AS course_id, 
+							COUNT(DISTINCT post_author) AS total_student
+						FROM {$wpdb->posts}
+						WHERE {$enrollment_where_clause}
+						GROUP BY post_parent";
 
 		//phpcs:disabled
 		$result = $wpdb->get_results(
