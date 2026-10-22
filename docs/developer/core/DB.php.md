@@ -159,6 +159,7 @@ class DB {
     public function to_sql(): string;
 
     // Utility & Validation Helpers
+    public static function set_db( ?\wpdb $db = null ): void;
     public static function prepare_value( $value ): string;
     public static function prepare_in_clause( array $values ): string;
     public static function prepare_table_name( string $table ): string;

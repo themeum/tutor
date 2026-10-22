@@ -38,9 +38,9 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @var \wpdb
+	 * @var \wpdb|null
 	 */
-	protected $db;
+	protected static $db = null;
 
 	/**
 	 * Table name (with prefix).
@@ -196,23 +196,37 @@ class DB {
 	);
 
 	// ─────────────────────────────────────────────
-	// Factory & Constructor
+	// Factory & Database Accessors
 	// ─────────────────────────────────────────────
 
 	/**
-	 * Constructor.
+	 * Get the database instance, falling back to the global $wpdb.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param \wpdb|null $db Optional WordPress database instance.
+	 * @return \wpdb Database instance.
 	 */
-	public function __construct( $db = null ) {
-		if ( $db instanceof \wpdb ) {
-			$this->db = $db;
-		} else {
+	protected static function get_db(): \wpdb {
+		if ( ! static::$db instanceof \wpdb ) {
 			global $wpdb;
-			$this->db = $wpdb;
+			static::$db = $wpdb;
 		}
+
+		return static::$db;
+	}
+
+	/**
+	 * Override the database instance (mainly for testing).
+	 * Pass null to reset to the global $wpdb.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param \wpdb|null $db Database instance.
+	 *
+	 * @return void
+	 */
+	public static function set_db( ?\wpdb $db = null ): void {
+		static::$db = $db;
 	}
 
 	/**
@@ -278,7 +292,7 @@ class DB {
 	public function select_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- User-provided expression with bindings.
-			$expression = $this->db->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->raw_columns[] = $expression;
@@ -926,7 +940,7 @@ class DB {
 	public function having_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $this->db->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->havings[] = $expression;
@@ -974,7 +988,7 @@ class DB {
 	public function order_by_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$expression = $this->db->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->order_by_clauses[] = $expression;
@@ -1104,7 +1118,7 @@ class DB {
 		$sql = $this->build_select_query();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- SQL built with prepare_value/prepare calls.
-		$results = $this->db->get_results( $sql, $output );
+		$results = self::get_db()->get_results( $sql, $output );
 
 		return is_array( $results ) ? $results : array();
 	}
@@ -1128,7 +1142,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $this->db->get_row( $sql, $output );
+		return self::get_db()->get_row( $sql, $output );
 	}
 
 	/**
@@ -1187,7 +1201,7 @@ class DB {
 		$this->lock             = $saved_lock;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return (int) $this->db->get_var( $sql );
+		return (int) self::get_db()->get_var( $sql );
 	}
 
 	/**
@@ -1217,10 +1231,10 @@ class DB {
 		$sql = $this->build_select_query( true );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$results = $this->db->get_results( $sql, $output );
+		$results = self::get_db()->get_results( $sql, $output );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$total_count = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
+		$total_count = (int) self::get_db()->get_var( 'SELECT FOUND_ROWS()' );
 		$total_pages = (int) ceil( $total_count / $per_page );
 
 		return array(
@@ -1264,7 +1278,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $this->db->get_var( $sql );
+		return self::get_db()->get_var( $sql );
 	}
 
 	/**
@@ -1377,14 +1391,16 @@ class DB {
 	 * @return int Inserted row ID.
 	 */
 	public function insert( array $data, array $format = array() ): int {
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$result = $this->db->insert( $this->table, $data, ! empty( $format ) ? $format : null );
+		$result = $db->insert( $this->table, $data, ! empty( $format ) ? $format : null );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $this->db->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
-		return $this->db->insert_id;
+		return $db->insert_id;
 	}
 
 	/**
@@ -1437,11 +1453,13 @@ class DB {
 
 		$sql = "INSERT INTO {$this->table} ({$column_list}) VALUES " . implode( ', ', $value_groups );
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline via prepare_value().
-		$result = $this->db->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $this->db->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return true;
@@ -1493,11 +1511,13 @@ class DB {
 			$sql .= " WHERE {$where_clause}";
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline.
-		$result = $this->db->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $this->db->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return true;
@@ -1528,11 +1548,13 @@ class DB {
 			$sql .= " WHERE {$where_clause}";
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WHERE values prepared inline.
-		$result = $this->db->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $this->db->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return (int) $result;
@@ -1554,9 +1576,10 @@ class DB {
 	 */
 	public function to_sql(): string {
 		$sql = $this->build_select_query();
+		$db  = self::get_db();
 
-		if ( isset( $this->db ) && method_exists( $this->db, 'remove_placeholder_escape' ) ) {
-			return $this->db->remove_placeholder_escape( $sql );
+		if ( isset( $db ) && method_exists( $db, 'remove_placeholder_escape' ) ) {
+			return $db->remove_placeholder_escape( $sql );
 		}
 
 		return $sql;
@@ -1695,8 +1718,10 @@ class DB {
 			return $this;
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column validated, type is hardcoded.
-		$sql = $this->db->prepare( "{$column} {$type} %s", '%' . $this->db->esc_like( $value ) . '%' );
+		$sql = $db->prepare( "{$column} {$type} %s", '%' . $db->esc_like( $value ) . '%' );
 
 		$this->wheres[] = array(
 			'sql'     => $sql,
@@ -1720,7 +1745,7 @@ class DB {
 	private function add_where_raw( string $expression, array $bindings, string $boolean ): self {
 		if ( ! empty( $bindings ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $this->db->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->wheres[] = array(
@@ -2024,18 +2049,18 @@ class DB {
 	 * @return string Escaped SQL value literal.
 	 */
 	public static function prepare_value( $value ): string {
-		global $wpdb;
-
 		if ( is_null( $value ) ) {
 			return 'NULL';
 		}
 
+		$db = self::get_db();
+
 		if ( is_bool( $value ) ) {
-			return $wpdb->prepare( '%d', $value ? 1 : 0 );
+			return $db->prepare( '%d', $value ? 1 : 0 );
 		}
 
 		if ( is_int( $value ) ) {
-			return $wpdb->prepare( '%d', $value );
+			return $db->prepare( '%d', $value );
 		}
 
 		if ( is_float( $value ) ) {
@@ -2044,12 +2069,12 @@ class DB {
 			if ( false !== $dot_pos ) {
 				$decimals = strlen( substr( $str_val, $dot_pos + 1 ) );
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				return $wpdb->prepare( '%.' . $decimals . 'f', $value );
+				return $db->prepare( '%.' . $decimals . 'f', $value );
 			}
-			return $wpdb->prepare( '%f', $value );
+			return $db->prepare( '%f', $value );
 		}
 
-		return $wpdb->prepare( '%s', $value );
+		return $db->prepare( '%s', $value );
 	}
 
 	/**
@@ -2082,9 +2107,8 @@ class DB {
 	 * @return string Prefixed table name.
 	 */
 	public static function prepare_table_name( string $table ): string {
-		global $wpdb;
-
-		$prefix = isset( $wpdb->prefix ) ? $wpdb->prefix : '';
+		$db     = self::get_db();
+		$prefix = isset( $db->prefix ) ? $db->prefix : '';
 		if ( ! empty( $prefix ) && 0 !== strpos( $table, $prefix ) ) {
 			return $prefix . $table;
 		}
@@ -2100,9 +2124,9 @@ class DB {
 	 * @return string Table prefix.
 	 */
 	public static function get_table_prefix(): string {
-		global $wpdb;
+		$db = self::get_db();
 
-		return isset( $wpdb->prefix ) ? $wpdb->prefix : '';
+		return isset( $db->prefix ) ? $db->prefix : '';
 	}
 
 	/**
@@ -2113,9 +2137,9 @@ class DB {
 	 * @return string Last executed SQL query.
 	 */
 	public static function get_last_query(): string {
-		global $wpdb;
+		$db = self::get_db();
 
-		return isset( $wpdb->last_query ) ? $wpdb->last_query : '';
+		return isset( $db->last_query ) ? $db->last_query : '';
 	}
 
 	// ─────────────────────────────────────────────
@@ -2178,10 +2202,10 @@ class DB {
 			}
 		}
 
-		global $wpdb;
+		$db = self::get_db();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$existing = $wpdb->get_col( "SHOW COLUMNS FROM `{$table_name}`" );
+		$existing = $db->get_col( "SHOW COLUMNS FROM `{$table_name}`" );
 		if ( empty( $existing ) ) {
 			return false;
 		}
@@ -2226,13 +2250,13 @@ class DB {
 	 * @return bool True if table exists in database.
 	 */
 	private static function table_exists_in_db( string $table_name ): bool {
-		global $wpdb;
+		$db = self::get_db();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$result = $wpdb->get_var(
-			$wpdb->prepare(
+		$result = $db->get_var(
+			$db->prepare(
 				'SHOW TABLES LIKE %s',
-				$wpdb->esc_like( $table_name )
+				$db->esc_like( $table_name )
 			)
 		);
 
@@ -2255,15 +2279,14 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public static function begin_transaction(): bool {
-		global $wpdb;
-
+		$db  = self::get_db();
 		$sql = 0 === self::$transaction_level
 		? 'START TRANSACTION'
 		: 'SAVEPOINT trans_' . self::$transaction_level;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		if ( false === $wpdb->query( $sql ) ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+		if ( false === $db->query( $sql ) ) {
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		++self::$transaction_level;
@@ -2284,19 +2307,18 @@ class DB {
 	 * @return bool True on success, false if no transaction is active.
 	 */
 	public static function commit(): bool {
-		global $wpdb;
-
 		if ( self::$transaction_level <= 0 ) {
 			return false;
 		}
 
+		$db  = self::get_db();
 		$sql = 1 === self::$transaction_level
 		? 'COMMIT'
 		: 'RELEASE SAVEPOINT trans_' . ( self::$transaction_level - 1 );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		if ( false === $wpdb->query( $sql ) ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+		if ( false === $db->query( $sql ) ) {
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		--self::$transaction_level;
@@ -2318,26 +2340,25 @@ class DB {
 	 * @return bool True on success, false if no transaction is active.
 	 */
 	public static function rollback(): bool {
-		global $wpdb;
-
 		if ( self::$transaction_level <= 0 ) {
 			return false;
 		}
 
+		$db           = self::get_db();
 		$is_top_level = 1 === self::$transaction_level;
 		$sql          = $is_top_level
 		? 'ROLLBACK'
 		: 'ROLLBACK TO SAVEPOINT trans_' . ( self::$transaction_level - 1 );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		$result = $wpdb->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( $is_top_level || false !== $result ) {
 			--self::$transaction_level;
 		}
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return true;

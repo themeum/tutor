@@ -1282,18 +1282,28 @@ class DBTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test DB instance constructor initializes the protected $db property.
+	 * Test DB set_db and fallback to global $wpdb.
 	 *
 	 * @return void
 	 */
-	public function test_db_property_initialized() {
+	public function test_db_set_and_get() {
 		global $wpdb;
 
-		$instance = DB::table( 'users' );
-		$ref      = new \ReflectionClass( $instance );
-		$property = $ref->getProperty( 'db' );
-		$property->setAccessible( true );
+		// Default falls back to $wpdb.
+		DB::set_db( null );
+		$ref    = new \ReflectionClass( DB::class );
+		$method = $ref->getMethod( 'get_db' );
+		$method->setAccessible( true );
 
-		$this->assertSame( $wpdb, $property->getValue( $instance ) );
+		$this->assertSame( $wpdb, $method->invoke( null ) );
+
+		// Can override with custom instance.
+		$custom = clone $wpdb;
+		DB::set_db( $custom );
+		$this->assertSame( $custom, $method->invoke( null ) );
+
+		// Reset back to null.
+		DB::set_db( null );
+		$this->assertSame( $wpdb, $method->invoke( null ) );
 	}
 }
