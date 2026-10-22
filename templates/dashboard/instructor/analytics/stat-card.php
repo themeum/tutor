@@ -9,7 +9,7 @@
  * @since 4.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Instructor;
 use Tutor\Components\SvgIcon;
 

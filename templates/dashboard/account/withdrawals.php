@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Badge;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\Button;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;

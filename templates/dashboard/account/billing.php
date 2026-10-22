@@ -16,7 +16,7 @@ use Tutor\Components\Nav;
 use TUTOR\Dashboard;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $user_id       = get_current_user_id();
 $current_tab   = Input::get( 'tab', 'order-history' );

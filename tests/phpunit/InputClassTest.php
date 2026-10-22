@@ -1,6 +1,6 @@
 <?php namespace TutorTest;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 /**
  * Input class test

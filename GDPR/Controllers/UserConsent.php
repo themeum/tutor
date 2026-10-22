@@ -12,7 +12,6 @@ namespace Tutor\GDPR\Controllers;
 
 use Exception;
 use Tutor\GDPR\Models\UserConsents;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use WP_User;
@@ -67,6 +66,7 @@ class UserConsent extends BaseController {
 		add_action( 'wp_ajax_tutor_user_consents', array( $this, 'handle_ajax_request' ) );
 		add_action( 'tutor_render_consent_logs_button', array( $this, 'render_consent_logs_button' ) );
 		add_action( 'tutor_render_consent_logs_modal', array( $this, 'render_consent_logs_modal' ) );
+		add_action( 'admin_footer-users.php', array( $this, 'render_consent_logs_modal' ) );
 		add_filter( 'manage_users_columns', array( $this, 'add_consent_logs_column' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'render_consent_logs_column' ), 10, 3 );
 	}
@@ -82,10 +82,6 @@ class UserConsent extends BaseController {
 	 */
 	public function add_consent_logs_column( $columns ) {
 		$columns['consent_logs'] = __( 'Consent Logs', 'tutor' );
-
-		ob_start();
-		$this->render_consent_logs_modal();
-		$columns['consent_logs_modal'] = ob_get_clean();
 
 		return $columns;
 	}
@@ -110,26 +106,8 @@ class UserConsent extends BaseController {
 			return $value;
 		}
 
-		$user_name   = $user->display_name ?? '';
-		$user_joined = $user->user_registered ?? '';
-		$user_email  = $user->user_email ?? '';
-		$user_login  = $user->user_login ?? '';
-		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
-
 		$value = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" data-tutor-modal-target="tutor-consent-logs-modal" data-consent-logs-trigger data-user-id="'
 		. esc_attr( $user_id ) .
-		'" data-user-name="'
-		. esc_attr( $user_name ) .
-		'" data-user-joined="'
-		. esc_attr( $user_joined ) .
-		'" data-user-email="'
-		. esc_attr( $user_email ) .
-		'" data-user-login="'
-		. esc_attr( $user_login ) .
-		'" data-avatar-src="'
-		. esc_url( $avatar_src ) .
-		'" data-avatar-alt="'
-		. esc_attr( $user_name ) .
 		'"><i class="tutor-icon-eye-line tutor-mr-8" aria-hidden="true"></i>' . esc_html__( 'View Logs', 'tutor' ) . '</button>';
 
 		return $value;
@@ -206,21 +184,29 @@ class UserConsent extends BaseController {
 		switch ( $user_action ) {
 			case 'all_consents_given_by_user':
 				$user_id = Input::post( 'user_id', 0, Input::TYPE_INT );
+				$user    = $user_id ? get_userdata( $user_id ) : false;
 
-				$validate_user = ValidationHelper::validate(
-					array( 'user_id' => 'required|user_exists' ),
-					array( 'user_id' => $user_id )
-				);
-
-				if ( ! $validate_user->success ) {
+				if ( ! $user ) {
 					$this->response_bad_request( __( 'Invalid user ID', 'tutor' ) );
 				}
 
 				$consents = $this->get_all_consents_given_by_user( $user_id );
+				$html     = $this->get_consent_logs_html( $user, $consents );
 
 				$this->json_response(
 					__( 'Consent fetched successfully', 'tutor' ),
-					$consents
+					array(
+						'html'     => $html,
+						'has_logs' => ! empty( $consents ),
+						'logs'     => $consents,
+						'user'     => array(
+							'id'     => $user->ID,
+							'name'   => $user->display_name,
+							'login'  => $user->user_login,
+							'email'  => $user->user_email,
+							'joined' => $user->user_registered,
+						),
+					)
 				);
 
 				break;
@@ -385,12 +371,6 @@ class UserConsent extends BaseController {
 		if ( ! $user_id ) {
 			return;
 		}
-
-		$user_name   = $user_data->display_name ?? '';
-		$user_joined = $user_data->user_registered ?? '';
-		$user_email  = $user_data->user_email ?? '';
-		$user_login  = $user_data->user_login ?? '';
-		$avatar_src  = get_avatar_url( $user_id, array( 'size' => 40 ) );
 		?>
 		<div class="tutor-dropdown-parent">
 			<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
@@ -403,11 +383,6 @@ class UserConsent extends BaseController {
 					data-tutor-modal-target="tutor-consent-logs-modal"
 					data-consent-logs-trigger
 					data-user-id="<?php echo esc_attr( $user_id ); ?>"
-					data-user-name="<?php echo esc_attr( $user_name ); ?>"
-					data-user-joined="<?php echo esc_attr( $user_joined ); ?>"
-					data-user-email="<?php echo esc_attr( $user_email ); ?>"
-					data-user-login="<?php echo esc_attr( $user_login ); ?>"
-					data-avatar-src="<?php echo esc_url( $avatar_src ); ?>"
 				>
 					<i class="tutor-icon-file-text tutor-mr-8" aria-hidden="true"></i>
 					<span><?php esc_html_e( 'Consent Logs', 'tutor' ); ?></span>
@@ -415,6 +390,22 @@ class UserConsent extends BaseController {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render consent logs content (timeline + user card).
+	 *
+	 * @since 4.1.3
+	 *
+	 * @param \WP_User $user User object.
+	 * @param array    $consents User consent records.
+	 *
+	 * @return string Rendered HTML.
+	 */
+	public function get_consent_logs_html( \WP_User $user, array $consents ): string {
+		ob_start();
+		include tutor()->path . 'views/templates/consent-logs-content.php';
+		return ob_get_clean();
 	}
 
 	/**

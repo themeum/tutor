@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\EnrollmentModel;
 
 $disable = ! get_tutor_option( 'enable_course_review' );

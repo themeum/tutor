@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.1.2
+Stable tag: 4.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,32 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.2.0 - 22 Oct, 2026
+
+New: Implemented REST API authentication system with personalized access token.
+New: Added authorization for each endpoints to ensure user capability wise operation.
+Update: API key permissions (Read, Write, Delete, All) are now enforced on Tutor REST routes.
+Update: Sensitive learning-content routes now require enrollment, public access, or instructor/admin access. (Pro)
+Update: Verify quiz answers server-side in reveal mode to prevent answer leakage.
+Update: Optimized course list page loading speed on the admin side.
+Update: Optimized page loading speed for the export of Analytics. (Pro)
+Update: Optimized analytics data export functionality. (Pro)
+Fix: Logout button missing on mobile devices.
+Fix: Subscription expire email trigger before each renewal email. (Pro)
+Fix: PHP warning message is displayed in the courses section after disabling the subscription plan. (Pro)
+Fix: Skipped Essay Questions Block Quiz Completion (Instructor Cannot Manual-Grade / Close Pending Attempt). (Pro)
+Fix: Audio files cannot be submitted as assignment attachments in Tutor LMS. (Pro)
+Fix: Coupon usage race Condition issue.
+Fix: "Use Points Instead of Grades" Not Working on Student Gradebook Section on learning area. (Pro)
+Fix: JS error on the checkout page when subscription is pending. (Pro)
+Fix: Fixed unauthorized REST API access to course contents, lessons, topics, announcements, quiz answers, quiz attempts, and user details.
+Fix: API returns 200 OK with empty course data for a non-existent Course ID
+Fix: Course price returns '0' for 'Paid' courses in API response.
+
+= 4.1.3 - 15 Oct, 2026
+
+Fix: Patched a security vulnerability.
 
 = 4.1.2 - 12 Oct, 2026
 
