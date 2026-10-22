@@ -34,6 +34,15 @@ use Tutor\Exceptions\DatabaseException;
 class DB {
 
 	/**
+	 * WordPress database instance.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var \wpdb
+	 */
+	protected $db;
+
+	/**
 	 * Table name (with prefix).
 	 *
 	 * @since 4.2.0
@@ -187,8 +196,24 @@ class DB {
 	);
 
 	// ─────────────────────────────────────────────
-	// Factory
+	// Factory & Constructor
 	// ─────────────────────────────────────────────
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param \wpdb|null $db Optional WordPress database instance.
+	 */
+	public function __construct( $db = null ) {
+		if ( $db instanceof \wpdb ) {
+			$this->db = $db;
+		} else {
+			global $wpdb;
+			$this->db = $wpdb;
+		}
+	}
 
 	/**
 	 * Create a new DB query instance for the given table.
@@ -252,9 +277,8 @@ class DB {
 	 */
 	public function select_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- User-provided expression with bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = $this->db->prepare( $expression, $bindings );
 		}
 
 		$this->raw_columns[] = $expression;
@@ -901,9 +925,8 @@ class DB {
 	 */
 	public function having_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = $this->db->prepare( $expression, $bindings );
 		}
 
 		$this->havings[] = $expression;
@@ -950,9 +973,8 @@ class DB {
 	 */
 	public function order_by_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = $this->db->prepare( $expression, $bindings );
 		}
 
 		$this->order_by_clauses[] = $expression;
@@ -1079,12 +1101,10 @@ class DB {
 	 * @return array Array of result rows.
 	 */
 	public function get( string $output = 'OBJECT' ): array {
-		global $wpdb;
-
 		$sql = $this->build_select_query();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- SQL built with prepare_value/prepare calls.
-		$results = $wpdb->get_results( $sql, $output );
+		$results = $this->db->get_results( $sql, $output );
 
 		return is_array( $results ) ? $results : array();
 	}
@@ -1099,8 +1119,6 @@ class DB {
 	 * @return object|array|null Single row or null if not found.
 	 */
 	public function first( string $output = 'OBJECT' ) {
-		global $wpdb;
-
 		// Temporarily set limit to 1.
 		$saved_limit       = $this->limit_value;
 		$this->limit_value = 1;
@@ -1110,7 +1128,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_row( $sql, $output );
+		return $this->db->get_row( $sql, $output );
 	}
 
 	/**
@@ -1123,8 +1141,6 @@ class DB {
 	 * @return int Total matching row count.
 	 */
 	public function count( string $column = '*' ): int {
-		global $wpdb;
-
 		if ( '*' !== $column && ! self::is_valid_column( $column ) ) {
 			$column = '*';
 		}
@@ -1171,7 +1187,7 @@ class DB {
 		$this->lock             = $saved_lock;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return (int) $wpdb->get_var( $sql );
+		return (int) $this->db->get_var( $sql );
 	}
 
 	/**
@@ -1192,8 +1208,6 @@ class DB {
 	 * }
 	 */
 	public function paginate( int $per_page, int $current_page = 1, string $output = 'OBJECT' ): array {
-		global $wpdb;
-
 		$current_page = max( 1, $current_page );
 		$per_page     = max( 1, $per_page );
 
@@ -1203,10 +1217,10 @@ class DB {
 		$sql = $this->build_select_query( true );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$results = $wpdb->get_results( $sql, $output );
+		$results = $this->db->get_results( $sql, $output );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+		$total_count = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
 		$total_pages = (int) ceil( $total_count / $per_page );
 
 		return array(
@@ -1228,8 +1242,6 @@ class DB {
 	 * @return mixed|null The column value or null if not found.
 	 */
 	public function value( string $column ) {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return null;
 		}
@@ -1252,7 +1264,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_var( $sql );
+		return $this->db->get_var( $sql );
 	}
 
 	/**
@@ -1365,16 +1377,14 @@ class DB {
 	 * @return int Inserted row ID.
 	 */
 	public function insert( array $data, array $format = array() ): int {
-		global $wpdb;
-
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$result = $wpdb->insert( $this->table, $data, ! empty( $format ) ? $format : null );
+		$result = $this->db->insert( $this->table, $data, ! empty( $format ) ? $format : null );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $this->db->last_error ) );
 		}
 
-		return $wpdb->insert_id;
+		return $this->db->insert_id;
 	}
 
 	/**
@@ -1392,8 +1402,6 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function insert_multiple( array $rows ): bool {
-		global $wpdb;
-
 		if ( empty( $rows ) ) {
 			return false;
 		}
@@ -1430,10 +1438,10 @@ class DB {
 		$sql = "INSERT INTO {$this->table} ({$column_list}) VALUES " . implode( ', ', $value_groups );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline via prepare_value().
-		$result = $wpdb->query( $sql );
+		$result = $this->db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $this->db->last_error ) );
 		}
 
 		return true;
@@ -1454,8 +1462,6 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function update( array $data ): bool {
-		global $wpdb;
-
 		if ( empty( $data ) ) {
 			return false;
 		}
@@ -1488,10 +1494,10 @@ class DB {
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline.
-		$result = $wpdb->query( $sql );
+		$result = $this->db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $this->db->last_error ) );
 		}
 
 		return true;
@@ -1510,8 +1516,6 @@ class DB {
 	 * @return int Number of affected rows.
 	 */
 	public function delete(): int {
-		global $wpdb;
-
 		$where_clause = $this->build_where_sql();
 
 		if ( ! empty( $this->alias ) ) {
@@ -1525,10 +1529,10 @@ class DB {
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WHERE values prepared inline.
-		$result = $wpdb->query( $sql );
+		$result = $this->db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $this->db->last_error ) );
 		}
 
 		return (int) $result;
@@ -1549,12 +1553,10 @@ class DB {
 	 * @return string The generated SQL string.
 	 */
 	public function to_sql(): string {
-		global $wpdb;
-
 		$sql = $this->build_select_query();
 
-		if ( isset( $wpdb ) && method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
-			return $wpdb->remove_placeholder_escape( $sql );
+		if ( isset( $this->db ) && method_exists( $this->db, 'remove_placeholder_escape' ) ) {
+			return $this->db->remove_placeholder_escape( $sql );
 		}
 
 		return $sql;
@@ -1581,8 +1583,6 @@ class DB {
 	 * @return self
 	 */
 	private function add_where( string $column, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return $this;
 		}
@@ -1691,14 +1691,12 @@ class DB {
 	 * @return self
 	 */
 	private function add_where_like( string $column, string $value, string $type, string $boolean ): self {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return $this;
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column validated, type is hardcoded.
-		$sql = $wpdb->prepare( "{$column} {$type} %s", '%' . $wpdb->esc_like( $value ) . '%' );
+		$sql = $this->db->prepare( "{$column} {$type} %s", '%' . $this->db->esc_like( $value ) . '%' );
 
 		$this->wheres[] = array(
 			'sql'     => $sql,
@@ -1721,9 +1719,8 @@ class DB {
 	 */
 	private function add_where_raw( string $expression, array $bindings, string $boolean ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = $this->db->prepare( $expression, $bindings );
 		}
 
 		$this->wheres[] = array(

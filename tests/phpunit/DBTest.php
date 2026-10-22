@@ -1280,4 +1280,20 @@ class DBTest extends \WP_UnitTestCase {
 		$this->assertIsInt( $count );
 		$this->assertTrue( $builder->is_locked() );
 	}
+
+	/**
+	 * Test DB instance constructor initializes the protected $db property.
+	 *
+	 * @return void
+	 */
+	public function test_db_property_initialized() {
+		global $wpdb;
+
+		$instance = DB::table( 'users' );
+		$ref      = new \ReflectionClass( $instance );
+		$property = $ref->getProperty( 'db' );
+		$property->setAccessible( true );
+
+		$this->assertSame( $wpdb, $property->getValue( $instance ) );
+	}
 }
