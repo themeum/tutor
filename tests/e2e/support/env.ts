@@ -17,6 +17,10 @@ export const credentials = {
     username: process.env.E2E_STUDENT2_USERNAME ?? 'student2',
     password: process.env.E2E_STUDENT2_PASSWORD ?? 'password',
   },
+  manager: {
+    username: process.env.E2E_MANAGER_USERNAME ?? 'manager',
+    password: process.env.E2E_MANAGER_PASSWORD ?? 'password',
+  },
 } as const;
 
 export type Role = keyof typeof credentials;

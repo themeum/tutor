@@ -8,6 +8,7 @@ type RoleFixtures = {
   instructorPage: Page;
   studentPage: Page;
   student2Page: Page;
+  managerPage: Page;
   guestPage: Page;
 };
 
@@ -34,6 +35,7 @@ export const test = base.extend<RoleFixtures>({
   instructorPage: rolePage('instructor'),
   studentPage: rolePage('student'),
   student2Page: rolePage('student2'),
+  managerPage: rolePage('manager'),
   guestPage: rolePage(),
 });
 

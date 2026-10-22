@@ -409,6 +409,9 @@ function e2e_factory_set_addon_state( array $input ): array {
 	);
 	update_option( 'tutor_addons_config', $config );
 
+	// Direct setup writes bypass the enable hooks that refresh rewrite rules.
+	flush_rewrite_rules();
+
 	return array(
 		'name'     => $name,
 		'key'      => $key,
@@ -453,6 +456,7 @@ function e2e_factory_set_addon_baseline( array $input ): array {
 	}
 
 	update_option( 'tutor_addons_config', $config );
+	flush_rewrite_rules();
 
 	return array(
 		'success' => true,
@@ -484,8 +488,11 @@ function e2e_factory_snapshot( array $input ): array {
 		if ( ! preg_match( '/^[a-z0-9_-]+$/', (string) $post_type ) ) {
 			continue;
 		}
-		$counts                              = wp_count_posts( $post_type );
-		$snapshot['postTypes'][ $post_type ] = array_sum( array_map( 'intval', (array) $counts ) );
+		// Count raw rows so a disabled add-on's unregistered post type still reports its data.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$snapshot['postTypes'][ $post_type ] = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = %s", $post_type )
+		);
 	}
 
 	foreach ( (array) $tables as $table ) {

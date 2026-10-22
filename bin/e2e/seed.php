@@ -52,6 +52,12 @@ $users = array(
 		'email'        => 'student2@example.test',
 		'display_name' => 'E2E Student Two',
 	),
+	// WooCommerce lets shop managers into wp-admin without granting manage_options.
+	'manager'    => array(
+		'role'         => 'shop_manager',
+		'email'        => 'manager@example.test',
+		'display_name' => 'E2E Manager',
+	),
 );
 
 // Rebuild the role on every seed so the publish capability is present even when
