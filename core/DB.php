@@ -2200,16 +2200,15 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param mixed $table Table name identifier.
+	 * @param string $table Table name identifier.
 	 *
 	 * @return string|null Resolved existing table name or null if invalid or not found.
 	 */
-	private static function resolve_existing_table( $table ): ?string {
-		if ( ! is_string( $table ) || '' === trim( $table ) ) {
+	private static function resolve_existing_table( string $table ): ?string {
+		$table = trim( $table );
+		if ( '' === $table ) {
 			return null;
 		}
-
-		$table = trim( $table );
 
 		// Check prefixed table name first.
 		$prefixed = self::prepare_table_name( $table );

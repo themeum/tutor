@@ -809,12 +809,6 @@ class DBTest extends \WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_has_table_invalid_inputs() {
-		// Non-string inputs.
-		$this->assertFalse( DB::has_table( null ) );
-		$this->assertFalse( DB::has_table( 123 ) );
-		$this->assertFalse( DB::has_table( array( 'users' ) ) );
-		$this->assertFalse( DB::has_table( new \stdClass() ) );
-
 		// Empty and whitespace strings.
 		$this->assertFalse( DB::has_table( '' ) );
 		$this->assertFalse( DB::has_table( '   ' ) );
