@@ -6,7 +6,9 @@
   "plugins": [".", "https://downloads.wordpress.org/plugin/woocommerce.zip"],
   "port": 8888,
   "mappings": {
-    "wp-content/e2e": "./.e2e"
+    "wp-content/e2e": "./.e2e",
+    "wp-content/mu-plugins/e2e-mail-log.php": "./bin/e2e/mu-plugins/e2e-mail-log.php",
+    "wp-content/mu-plugins/e2e-http-stub.php": "./bin/e2e/mu-plugins/e2e-http-stub.php"
   },
   "config": {
     "WP_DEBUG": true,

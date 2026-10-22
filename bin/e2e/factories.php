@@ -86,6 +86,12 @@ function e2e_factory_course( array $input ): array {
 		update_post_meta( $course_id, 'tutor_course_selling_option', (string) $input['selling_option'] );
 	}
 
+	if ( ! empty( $input['course_meta'] ) && is_array( $input['course_meta'] ) ) {
+		foreach ( $input['course_meta'] as $meta_key => $meta_value ) {
+			update_post_meta( $course_id, (string) $meta_key, $meta_value );
+		}
+	}
+
 	$topic_id = wp_insert_post(
 		array(
 			'post_title'  => 'First Topic',
@@ -117,6 +123,12 @@ function e2e_factory_course( array $input ): array {
 
 	update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
 	update_post_meta( $lesson_id, '_tutor_topic_id_for_lesson', $topic_id );
+
+	if ( ! empty( $input['lesson_meta'] ) && is_array( $input['lesson_meta'] ) ) {
+		foreach ( $input['lesson_meta'] as $meta_key => $meta_value ) {
+			update_post_meta( $lesson_id, (string) $meta_key, $meta_value );
+		}
+	}
 
 	if ( ! empty( $input['content_drip'] ) ) {
 		$course_settings = array(
@@ -211,6 +223,61 @@ function e2e_factory_course( array $input ): array {
 }
 
 /**
+ * Create a lesson under an existing course/topic.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_lesson( array $input ): array {
+	$course_id = (int) ( $input['course_id'] ?? 0 );
+	$topic_id  = (int) ( $input['topic_id'] ?? 0 );
+	$course    = get_post( $course_id );
+
+	if ( ! $course || tutor()->course_post_type !== $course->post_type ) {
+		WP_CLI::error( sprintf( 'Course ID %d not found.', $course_id ) );
+	}
+
+	if ( ! $topic_id ) {
+		$topic_id = (int) get_post_meta( $course_id, '_tutor_course_topic_id', true );
+	}
+
+	if ( ! $topic_id ) {
+		WP_CLI::error( 'A topic_id is required to create a lesson.' );
+	}
+
+	$title     = (string) ( $input['title'] ?? ( 'E2E Lesson ' . wp_generate_password( 6, false ) ) );
+	$lesson_id = wp_insert_post(
+		array(
+			'post_title'   => $title,
+			'post_content' => (string) ( $input['content'] ?? 'Lesson content for ' . $title ),
+			'post_type'    => tutor()->lesson_post_type,
+			'post_status'  => (string) ( $input['status'] ?? 'publish' ),
+			'post_author'  => (int) $course->post_author,
+			'post_parent'  => $topic_id,
+		)
+	);
+
+	if ( is_wp_error( $lesson_id ) || ! $lesson_id ) {
+		WP_CLI::error( 'Could not create lesson.' );
+	}
+
+	update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
+	update_post_meta( $lesson_id, '_tutor_topic_id_for_lesson', $topic_id );
+
+	if ( ! empty( $input['meta'] ) && is_array( $input['meta'] ) ) {
+		foreach ( $input['meta'] as $meta_key => $meta_value ) {
+			update_post_meta( $lesson_id, (string) $meta_key, $meta_value );
+		}
+	}
+
+	return array(
+		'lessonId'  => (int) $lesson_id,
+		'lessonUrl' => get_permalink( $lesson_id ),
+		'title'     => $title,
+	);
+}
+
+/**
  * Enroll a user into a course using Tutor's native enrollment API.
  *
  * @param array $input Factory input.
@@ -289,6 +356,517 @@ function e2e_factory_enable_addon( array $input ): array {
 }
 
 /**
+ * Return the whole add-on state map keyed by add-on basename.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_get_addon_states( array $input ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	$config = maybe_unserialize( get_option( 'tutor_addons_config', array() ) );
+	if ( ! is_array( $config ) ) {
+		$config = array();
+	}
+
+	$states = array();
+	foreach ( $config as $basename => $value ) {
+		$states[ $basename ] = ! empty( $value['is_enable'] );
+	}
+
+	return array(
+		'config' => $config,
+		'states' => $states,
+		'count'  => count( $config ),
+	);
+}
+
+/**
+ * Set one add-on state without firing enable/disable actions.
+ *
+ * This is for setup/cleanup and read-only role tests. The canonical lifecycle
+ * tests must use the real Add-ons screen/AJAX path instead.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_set_addon_state( array $input ): array {
+	$name    = (string) ( $input['name'] ?? $input['slug'] ?? '' );
+	$enabled = ! empty( $input['enabled'] );
+
+	if ( ! preg_match( '/^[a-z0-9-]+$/', $name ) ) {
+		WP_CLI::error( 'Invalid add-on slug.' );
+	}
+
+	$key    = "tutor-pro/addons/{$name}/{$name}.php";
+	$config = maybe_unserialize( get_option( 'tutor_addons_config', array() ) );
+	if ( ! is_array( $config ) ) {
+		$config = array();
+	}
+
+	$previous       = isset( $config[ $key ]['is_enable'] ) ? (int) $config[ $key ]['is_enable'] : null;
+	$config[ $key ] = array_merge(
+		is_array( $config[ $key ] ?? null ) ? $config[ $key ] : array(),
+		array( 'is_enable' => $enabled ? 1 : 0 )
+	);
+	update_option( 'tutor_addons_config', $config );
+
+	return array(
+		'name'     => $name,
+		'key'      => $key,
+		'previous' => $previous,
+		'enabled'  => $enabled ? 1 : 0,
+		'config'   => $config,
+		'count'    => count( $config ),
+	);
+}
+
+/**
+ * Set a baseline for a list of add-ons, preserving unrelated keys.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_set_addon_baseline( array $input ): array {
+	$enabled   = ! empty( $input['enabled'] );
+	$basenames = $input['basenames'] ?? array();
+	$except    = array_flip( $input['except'] ?? array() );
+
+	if ( ! is_array( $basenames ) ) {
+		WP_CLI::error( 'basenames must be an array.' );
+	}
+
+	$config = maybe_unserialize( get_option( 'tutor_addons_config', array() ) );
+	if ( ! is_array( $config ) ) {
+		$config = array();
+	}
+
+	foreach ( $basenames as $basename ) {
+		if ( ! is_string( $basename ) || ! preg_match( '#^tutor-pro/addons/[a-z0-9-]+/[a-z0-9-]+\.php$#', $basename ) ) {
+			WP_CLI::error( 'Invalid add-on basename.' );
+		}
+		if ( isset( $except[ $basename ] ) ) {
+			continue;
+		}
+		$config[ $basename ] = array_merge(
+			is_array( $config[ $basename ] ?? null ) ? $config[ $basename ] : array(),
+			array( 'is_enable' => $enabled ? 1 : 0 )
+		);
+	}
+
+	update_option( 'tutor_addons_config', $config );
+
+	return array(
+		'success' => true,
+		'count'   => count( $config ),
+	);
+}
+
+/**
+ * Capture post/comment/table/option counts used by the disable contract.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_snapshot( array $input ): array {
+	global $wpdb;
+
+	$post_types    = $input['postTypes'] ?? array();
+	$tables        = $input['tables'] ?? array();
+	$comment_types = $input['commentTypes'] ?? array();
+	$option_names  = $input['options'] ?? array();
+	$snapshot      = array(
+		'postTypes'    => array(),
+		'tables'       => array(),
+		'commentTypes' => array(),
+		'options'      => array(),
+	);
+
+	foreach ( (array) $post_types as $post_type ) {
+		if ( ! preg_match( '/^[a-z0-9_-]+$/', (string) $post_type ) ) {
+			continue;
+		}
+		$counts                              = wp_count_posts( $post_type );
+		$snapshot['postTypes'][ $post_type ] = array_sum( array_map( 'intval', (array) $counts ) );
+	}
+
+	foreach ( (array) $tables as $table ) {
+		if ( ! preg_match( '/^[a-z0-9_]+$/', (string) $table ) ) {
+			continue;
+		}
+		$table_name = $wpdb->prefix . $table;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$snapshot['tables'][ $table ] = $exists ? (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" ) : null;
+	}
+
+	foreach ( (array) $comment_types as $comment_type ) {
+		$snapshot['commentTypes'][ $comment_type ] = (int) get_comments(
+			array(
+				'type'   => $comment_type,
+				'count'  => true,
+				'status' => 'all',
+			)
+		);
+	}
+
+	foreach ( (array) $option_names as $option_name ) {
+		$snapshot['options'][ $option_name ] = get_option( $option_name );
+	}
+
+	return $snapshot;
+}
+
+/**
+ * Read the tail of debug.log so a spec can assert no new add-on warnings.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_get_debug_log( array $input ): array {
+	$limit = max( 1, min( 2000, (int) ( $input['lines'] ?? 200 ) ) );
+	$path  = WP_CONTENT_DIR . '/debug.log';
+
+	if ( ! file_exists( $path ) ) {
+		return array(
+			'path'  => $path,
+			'lines' => array(),
+			'size'  => 0,
+		);
+	}
+
+	$lines = file( $path, FILE_IGNORE_NEW_LINES ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file
+	$lines = is_array( $lines ) ? array_slice( $lines, -$limit ) : array();
+
+	return array(
+		'path'  => $path,
+		'lines' => $lines,
+		'size'  => (int) filesize( $path ),
+	);
+}
+
+/**
+ * Truncate debug.log before a lifecycle test.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_clear_debug_log( array $input ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	$path = WP_CONTENT_DIR . '/debug.log';
+	if ( file_exists( $path ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		file_put_contents( $path, '' );
+	}
+	return array( 'success' => true );
+}
+
+/**
+ * Read or clear the E2E mail log written by the mu-plugin.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_mail_log( array $input ): array {
+	$action = (string) ( $input['action'] ?? 'get' );
+
+	if ( 'clear' === $action ) {
+		delete_option( 'e2e_mail_log' );
+		return array(
+			'success'  => true,
+			'messages' => array(),
+		);
+	}
+
+	$messages = get_option( 'e2e_mail_log', array() );
+	return array(
+		'success'  => true,
+		'messages' => is_array( $messages ) ? $messages : array(),
+	);
+}
+
+/**
+ * Configure a server-side HTTP stub for an external provider.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_set_http_stub( array $input ): array {
+	$stubs = $input['stubs'] ?? array();
+	if ( ! is_array( $stubs ) ) {
+		WP_CLI::error( 'stubs must be an array.' );
+	}
+	update_option( 'e2e_http_stub', $stubs );
+	return array(
+		'success' => true,
+		'stubs'   => $stubs,
+	);
+}
+
+/**
+ * Return installed and active plugin basenames.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_get_plugins( array $input ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	return array(
+		'active'    => array_values( (array) get_option( 'active_plugins', array() ) ),
+		'installed' => array_keys( get_plugins() ),
+	);
+}
+
+/**
+ * Add a capability to a seeded user for the screen/toggle capability split.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_add_capability( array $input ): array {
+	$user = get_user_by( 'login', (string) ( $input['user'] ?? 'student2' ) );
+	$cap  = (string) ( $input['cap'] ?? 'manage_tutor' );
+
+	if ( ! $user ) {
+		WP_CLI::error( 'User not found.' );
+	}
+	$user->add_cap( $cap );
+	return array(
+		'success' => true,
+		'user'    => $user->user_login,
+		'cap'     => $cap,
+	);
+}
+
+/**
+ * Remove a capability added by add_capability.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_remove_capability( array $input ): array {
+	$user = get_user_by( 'login', (string) ( $input['user'] ?? 'student2' ) );
+	$cap  = (string) ( $input['cap'] ?? 'manage_tutor' );
+
+	if ( ! $user ) {
+		WP_CLI::error( 'User not found.' );
+	}
+	$user->remove_cap( $cap );
+	return array(
+		'success' => true,
+		'user'    => $user->user_login,
+		'cap'     => $cap,
+	);
+}
+
+/**
+ * Return cron hooks, optionally filtered by a substring.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_get_cron( array $input ): array {
+	$needle = (string) ( $input['contains'] ?? '' );
+	$cron   = _get_cron_array();
+	$hooks  = array();
+
+	foreach ( (array) $cron as $timestamp => $entries ) {
+		foreach ( (array) $entries as $hook => $events ) {
+			if ( $needle && false === strpos( $hook, $needle ) ) {
+				continue;
+			}
+			$hooks[] = array(
+				'hook'      => $hook,
+				'timestamp' => (int) $timestamp,
+				'count'     => count( (array) $events ),
+			);
+		}
+	}
+
+	return array( 'hooks' => $hooks );
+}
+
+/**
+ * Set a post meta value.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_post_meta( array $input ): array {
+	$post_id = (int) ( $input['post_id'] ?? 0 );
+	$key     = (string) ( $input['key'] ?? '' );
+
+	if ( ! $post_id || ! get_post( $post_id ) || '' === $key ) {
+		WP_CLI::error( 'A valid post_id and key are required.' );
+	}
+
+	$previous = get_post_meta( $post_id, $key, true );
+	$value    = $input['value'] ?? '';
+
+	if ( ! empty( $input['delete'] ) ) {
+		delete_post_meta( $post_id, $key );
+	} elseif ( ! empty( $input['add'] ) ) {
+		add_post_meta( $post_id, $key, $value );
+	} else {
+		update_post_meta( $post_id, $key, $value );
+	}
+
+	return array(
+		'postId'   => $post_id,
+		'key'      => $key,
+		'previous' => $previous,
+		'value'    => get_post_meta( $post_id, $key, true ),
+	);
+}
+
+/**
+ * Set a user meta value.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_user_meta( array $input ): array {
+	$user = get_user_by( 'login', (string) ( $input['user'] ?? '' ) );
+	$key  = (string) ( $input['key'] ?? '' );
+
+	if ( ! $user || '' === $key ) {
+		WP_CLI::error( 'A valid user and key are required.' );
+	}
+
+	$previous = get_user_meta( $user->ID, $key, true );
+	$value    = $input['value'] ?? '';
+
+	if ( ! empty( $input['delete'] ) ) {
+		delete_user_meta( $user->ID, $key );
+	} elseif ( ! empty( $input['add'] ) ) {
+		add_user_meta( $user->ID, $key, $value );
+	} else {
+		update_user_meta( $user->ID, $key, $value );
+	}
+
+	return array(
+		'userId'   => (int) $user->ID,
+		'key'      => $key,
+		'previous' => $previous,
+		'value'    => get_user_meta( $user->ID, $key, true ),
+	);
+}
+
+/**
+ * Create a user, or return the existing one with that login.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_user( array $input ): array {
+	$login = (string) ( $input['user'] ?? $input['login'] ?? '' );
+	$role  = (string) ( $input['role'] ?? 'subscriber' );
+
+	if ( ! preg_match( '/^[a-z0-9._-]+$/i', $login ) ) {
+		WP_CLI::error( 'A valid user login is required.' );
+	}
+
+	$existing = get_user_by( 'login', $login );
+	if ( $existing ) {
+		return array(
+			'userId'   => (int) $existing->ID,
+			'user'     => $existing->user_login,
+			'email'    => $existing->user_email,
+			'role'     => $role,
+			'existing' => true,
+		);
+	}
+
+	$user_id = wp_insert_user(
+		array(
+			'user_login'   => $login,
+			'user_pass'    => (string) ( $input['password'] ?? 'password' ),
+			'user_email'   => (string) ( $input['email'] ?? $login . '@example.com' ),
+			'display_name' => (string) ( $input['name'] ?? ucfirst( $login ) ),
+			'role'         => $role,
+		)
+	);
+
+	if ( is_wp_error( $user_id ) ) {
+		WP_CLI::error( 'Could not create user: ' . $user_id->get_error_message() );
+	}
+
+	return array(
+		'userId'   => (int) $user_id,
+		'user'     => $login,
+		'email'    => (string) ( $input['email'] ?? $login . '@example.com' ),
+		'role'     => $role,
+		'existing' => false,
+	);
+}
+
+/**
+ * Mark a course completed for a user.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_course_complete( array $input ): array {
+	$course_id = (int) ( $input['course_id'] ?? 0 );
+	$user      = get_user_by( 'login', (string) ( $input['user'] ?? 'student' ) );
+
+	if ( ! $course_id || ! $user ) {
+		WP_CLI::error( 'A valid course_id and user are required.' );
+	}
+
+	\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, $user->ID );
+
+	return array(
+		'courseId'  => $course_id,
+		'userId'    => (int) $user->ID,
+		'completed' => (bool) tutor_utils()->is_completed_course( $course_id, $user->ID, false ),
+	);
+}
+
+/**
+ * Insert one notifications row for a user.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_notification( array $input ): array {
+	$user = get_user_by( 'login', (string) ( $input['user'] ?? 'student' ) );
+
+	if ( ! $user ) {
+		WP_CLI::error( 'User not found for notification.' );
+	}
+
+	if ( ! class_exists( '\TUTOR_NOTIFICATIONS\Utils' ) ) {
+		WP_CLI::error( 'Notifications add-on is not active.' );
+	}
+
+	if ( 'delete' === ( $input['action'] ?? '' ) ) {
+		global $wpdb;
+		$notification_id = (int) ( $input['notification_id'] ?? 0 );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$deleted = $wpdb->delete( $wpdb->prefix . 'tutor_notifications', array( 'ID' => $notification_id ) );
+		return array(
+			'notificationId' => $notification_id,
+			'deleted'        => (bool) $deleted,
+		);
+	}
+
+	$notification_id = \TUTOR_NOTIFICATIONS\Utils::save_notification_data(
+		array(
+			'type'        => (string) ( $input['type'] ?? 'announcement' ),
+			'title'       => (string) ( $input['title'] ?? 'E2E notification' ),
+			'content'     => (string) ( $input['content'] ?? 'E2E notification body' ),
+			'status'      => 'UNREAD',
+			'receiver_id' => (int) $user->ID,
+			'post_id'     => (int) ( $input['post_id'] ?? 0 ),
+			'topic_url'   => (string) ( $input['topic_url'] ?? '' ),
+		)
+	);
+
+	return array(
+		'notificationId' => (int) $notification_id,
+		'userId'         => (int) $user->ID,
+	);
+}
+
+/**
  * Set an option or update an item within the tutor_option array.
  *
  * @param array $input Factory input.
@@ -324,8 +902,26 @@ switch ( $factory ) {
 	case 'course':
 		$result = e2e_factory_course( $payload );
 		break;
+	case 'lesson':
+		$result = e2e_factory_lesson( $payload );
+		break;
 	case 'enrollment':
 		$result = e2e_factory_enrollment( $payload );
+		break;
+	case 'course_complete':
+		$result = e2e_factory_course_complete( $payload );
+		break;
+	case 'notification':
+		$result = e2e_factory_notification( $payload );
+		break;
+	case 'post_meta':
+		$result = e2e_factory_post_meta( $payload );
+		break;
+	case 'user_meta':
+		$result = e2e_factory_user_meta( $payload );
+		break;
+	case 'user':
+		$result = e2e_factory_user( $payload );
 		break;
 	case 'wc_product':
 		$result = e2e_factory_wc_product( $payload );
@@ -335,6 +931,42 @@ switch ( $factory ) {
 		break;
 	case 'enable_addon':
 		$result = e2e_factory_enable_addon( $payload );
+		break;
+	case 'get_addon_states':
+		$result = e2e_factory_get_addon_states( $payload );
+		break;
+	case 'set_addon_state':
+		$result = e2e_factory_set_addon_state( $payload );
+		break;
+	case 'set_addon_baseline':
+		$result = e2e_factory_set_addon_baseline( $payload );
+		break;
+	case 'snapshot':
+		$result = e2e_factory_snapshot( $payload );
+		break;
+	case 'get_debug_log':
+		$result = e2e_factory_get_debug_log( $payload );
+		break;
+	case 'clear_debug_log':
+		$result = e2e_factory_clear_debug_log( $payload );
+		break;
+	case 'mail_log':
+		$result = e2e_factory_mail_log( $payload );
+		break;
+	case 'set_http_stub':
+		$result = e2e_factory_set_http_stub( $payload );
+		break;
+	case 'get_plugins':
+		$result = e2e_factory_get_plugins( $payload );
+		break;
+	case 'add_capability':
+		$result = e2e_factory_add_capability( $payload );
+		break;
+	case 'remove_capability':
+		$result = e2e_factory_remove_capability( $payload );
+		break;
+	case 'get_cron':
+		$result = e2e_factory_get_cron( $payload );
 		break;
 	default:
 		WP_CLI::error( sprintf( 'Unknown factory "%s".', $factory ) );

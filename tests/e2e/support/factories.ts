@@ -92,10 +92,81 @@ export interface CourseFactoryInput {
   quiz_title?: string;
   add_assignment?: boolean;
   assignment_title?: string;
+  lesson_meta?: Record<string, unknown>;
+  course_meta?: Record<string, unknown>;
 }
 
 export function createCourse(input: CourseFactoryInput = {}): CourseFactoryResult {
   return runFactory<CourseFactoryResult>('course', input as FactoryInput);
+}
+
+export interface LessonFactoryResult {
+  lessonId: number;
+  lessonUrl: string;
+  title: string;
+}
+
+export function createLesson(input: {
+  course_id: number;
+  topic_id: number;
+  title?: string;
+  content?: string;
+  status?: 'publish' | 'draft';
+  meta?: Record<string, unknown>;
+}): LessonFactoryResult {
+  return runFactory<LessonFactoryResult>('lesson', input as FactoryInput);
+}
+
+export function setPostMeta(input: {
+  post_id: number;
+  key: string;
+  value?: unknown;
+  add?: boolean;
+  delete?: boolean;
+}): { postId: number; key: string; previous: unknown; value: unknown } {
+  return runFactory('post_meta', input as FactoryInput);
+}
+
+export function setUserMeta(input: { user: string; key: string; value?: unknown; add?: boolean; delete?: boolean }): {
+  userId: number;
+  key: string;
+  previous: unknown;
+  value: unknown;
+} {
+  return runFactory('user_meta', input as FactoryInput);
+}
+
+export function createUser(input: { user: string; role?: string; email?: string; name?: string; password?: string }): {
+  userId: number;
+  user: string;
+  email: string;
+  role: string;
+  existing: boolean;
+} {
+  return runFactory('user', input as FactoryInput);
+}
+
+export function completeCourse(input: { course_id: number; user?: string }): {
+  courseId: number;
+  userId: number;
+  completed: boolean;
+} {
+  return runFactory('course_complete', input as FactoryInput);
+}
+
+export function createNotification(input: {
+  user?: string;
+  type?: string;
+  title?: string;
+  content?: string;
+  post_id?: number;
+  topic_url?: string;
+}): { notificationId: number; userId: number } {
+  return runFactory('notification', input as FactoryInput);
+}
+
+export function deleteNotification(notificationId: number): { notificationId: number; deleted: boolean } {
+  return runFactory('notification', { action: 'delete', notification_id: notificationId });
 }
 
 export function enrollStudent(input: {
@@ -130,4 +201,104 @@ export function setTutorOption(key: string, value: unknown): { success: boolean;
 
 export function enableAddon(name: string): { success: boolean } {
   return runFactory('enable_addon', { name });
+}
+
+export interface AddonStatesResult {
+  config: Record<string, { is_enable?: number } & Record<string, unknown>>;
+  states: Record<string, boolean>;
+  count: number;
+}
+
+export function getAddonStates(): AddonStatesResult {
+  return runFactory<AddonStatesResult>('get_addon_states');
+}
+
+export interface AddonStateResult {
+  name: string;
+  key: string;
+  previous: number | null;
+  enabled: 0 | 1;
+  config: Record<string, { is_enable?: number }>;
+  count: number;
+}
+
+export function setAddonState(name: string, enabled: boolean): AddonStateResult {
+  return runFactory<AddonStateResult>('set_addon_state', { name, enabled });
+}
+
+export function setAddonBaseline(
+  basenames: string[],
+  enabled: boolean,
+  except: string[] = [],
+): { success: boolean; count: number } {
+  return runFactory('set_addon_baseline', { basenames, enabled, except });
+}
+
+export interface SnapshotInput {
+  postTypes?: string[];
+  tables?: string[];
+  commentTypes?: string[];
+  options?: string[];
+}
+
+export interface SnapshotResult {
+  postTypes: Record<string, number>;
+  tables: Record<string, number | null>;
+  commentTypes: Record<string, number>;
+  options: Record<string, unknown>;
+}
+
+export function snapshot(input: SnapshotInput): SnapshotResult {
+  return runFactory<SnapshotResult>('snapshot', input as FactoryInput);
+}
+
+export interface DebugLogResult {
+  path: string;
+  lines: string[];
+  size: number;
+}
+
+export function getDebugLog(lines = 200): DebugLogResult {
+  return runFactory<DebugLogResult>('get_debug_log', { lines });
+}
+
+export function clearDebugLog(): { success: boolean } {
+  return runFactory('clear_debug_log');
+}
+
+export interface MailMessage {
+  to: string[];
+  subject: string;
+  message: string;
+  headers: string[];
+  attachments: string[];
+  time: number;
+}
+
+export function getMailLog(): { success: boolean; messages: MailMessage[] } {
+  return runFactory('mail_log', { action: 'get' });
+}
+
+export function clearMailLog(): { success: boolean } {
+  return runFactory('mail_log', { action: 'clear' });
+}
+
+export function setHttpStub(stubs: Record<string, unknown>): { success: boolean } {
+  return runFactory('set_http_stub', { stubs });
+}
+
+export function getPlugins(): { active: string[]; installed: string[] } {
+  return runFactory('get_plugins');
+}
+
+export function addCapability(user: string, cap: string): { success: boolean } {
+  return runFactory('add_capability', { user, cap });
+}
+
+export function removeCapability(user: string, cap: string): { success: boolean } {
+  return runFactory('remove_capability', { user, cap });
+}
+
+export function getCron(contains = ''): { hooks: Array<{ hook: string; timestamp: number; count: number }> } {
+  return runFactory('get_cron', { contains });
 }

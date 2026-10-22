@@ -8,14 +8,15 @@ type RoleFixtures = {
   instructorPage: Page;
   studentPage: Page;
   student2Page: Page;
+  guestPage: Page;
 };
 
 const rolePage =
-  (role: Role) =>
+  (role?: Role) =>
   async ({ browser }: { browser: Browser }, use: (page: Page) => Promise<void>) => {
     const context = await browser.newContext({
       baseURL,
-      storageState: storageState(role),
+      ...(role ? { storageState: storageState(role) } : {}),
     });
     const page = await context.newPage();
 
@@ -33,6 +34,7 @@ export const test = base.extend<RoleFixtures>({
   instructorPage: rolePage('instructor'),
   studentPage: rolePage('student'),
   student2Page: rolePage('student2'),
+  guestPage: rolePage(),
 });
 
 export { expect };
