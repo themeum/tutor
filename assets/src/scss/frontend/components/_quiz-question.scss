@@ -135,6 +135,7 @@
         content: '';
         position: absolute;
         top: 50%;
+        /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the dot centered in RTL */
         left: 50%;
         width: 6px;
         height: 6px;
@@ -180,6 +181,7 @@
         content: '';
         position: absolute;
         top: 50%;
+        /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the dot centered in RTL */
         left: 50%;
         width: 6px;
         height: 6px;
@@ -277,7 +279,7 @@
 
         [data-title] {
           padding: $tutor-spacing-3 $tutor-spacing-4;
-          text-align: left;
+          text-align: start;
         }
       }
 

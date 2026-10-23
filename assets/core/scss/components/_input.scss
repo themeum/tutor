@@ -88,8 +88,8 @@
 
     .mce-toolbar-grp,
     .quicktags-toolbar {
-      border-top-left-radius: $tutor-input-radius;
-      border-top-right-radius: $tutor-input-radius;
+      border-start-start-radius: $tutor-input-radius;
+      border-start-end-radius: $tutor-input-radius;
     }
 
     .mce-toolbar:last-of-type {
@@ -97,8 +97,8 @@
     }
 
     .mce-statusbar {
-      border-bottom-left-radius: $tutor-input-radius;
-      border-bottom-right-radius: $tutor-input-radius;
+      border-end-start-radius: $tutor-input-radius;
+      border-end-end-radius: $tutor-input-radius;
       background-color: $tutor-surface-l1;
       border-top-color: $tutor-border-idle;
     }
@@ -172,7 +172,7 @@
       &::after {
         content: '*';
         color: $tutor-text-critical;
-        margin-left: $tutor-spacing-1;
+        margin-inline-start: $tutor-spacing-1;
       }
     }
   }

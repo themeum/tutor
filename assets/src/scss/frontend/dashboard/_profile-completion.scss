@@ -13,8 +13,8 @@
     border-radius: $tutor-radius-2xl;
 
     &.tutor-expanded {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
     }
   }
 
@@ -24,13 +24,13 @@
     padding: $tutor-spacing-5 26px;
     border: 1px solid $tutor-border-idle;
     border-top: none;
-    border-bottom-left-radius: $tutor-radius-2xl;
-    border-bottom-right-radius: $tutor-radius-2xl;
+    border-end-start-radius: $tutor-radius-2xl;
+    border-end-end-radius: $tutor-radius-2xl;
     box-shadow: $tutor-shadow-lg;
 
     position: absolute;
     top: 100%;
-    left: 0;
+    inset-inline-start: 0;
     width: 100%;
     background-color: $tutor-surface-l1;
     z-index: $tutor-z-dropdown;

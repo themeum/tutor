@@ -326,8 +326,8 @@
             'marks time result'
             'buttons buttons buttons';
           padding-top: $tutor-spacing-5;
-          padding-left: $tutor-spacing-5;
-          padding-right: $tutor-spacing-5;
+          padding-inline-start: $tutor-spacing-5;
+          padding-inline-end: $tutor-spacing-5;
           padding-bottom: $tutor-spacing-2;
           row-gap: $tutor-spacing-4;
         }

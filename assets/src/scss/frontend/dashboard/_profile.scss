@@ -23,6 +23,7 @@
       border: 4px solid $tutor-border-inverse;
       position: absolute;
       bottom: 0;
+      /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the avatar centered in RTL */
       left: 50%;
       transform: translateY(50%) translateX(-50%);
     }

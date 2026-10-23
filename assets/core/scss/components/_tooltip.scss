@@ -48,8 +48,8 @@
     &.tutor-tooltip-top,
     &.tutor-tooltip-bottom {
       &::before {
+        /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the arrow centered in RTL */
         left: 50%;
-        right: auto;
         transform: translateX(-50%);
       }
     }
