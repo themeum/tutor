@@ -12,8 +12,10 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Traits\JsonResponse;
 /**
@@ -123,7 +125,12 @@ class Q_And_A {
 	/**
 	 * Check user has access to QnA.
 	 *
+	 * Matches learning-area course content rules: students may use Q&A on
+	 * publish/private courses only. Draft, pending, trash, future, etc.
+	 * require edit or IA content access — enrollment alone is not enough.
+	 *
 	 * @since 2.6.1
+	 * @since 4.2.0 Gate by course post status.
 	 *
 	 * @param int $user_id user id.
 	 * @param int $course_id course id.
@@ -131,13 +138,31 @@ class Q_And_A {
 	 * @return boolean
 	 */
 	public static function has_qna_access( $user_id, $course_id ) {
+		$course_id = absint( $course_id );
+		$user_id   = absint( $user_id );
+
+		if ( ! $course_id ) {
+			return false;
+		}
+
+		$status = get_post_status( $course_id );
+
+		// Non-publish / non-private: editors and IA content access only (not enrollment).
+		if ( ! in_array( $status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PRIVATE ), true ) ) {
+			if ( ! $user_id ) {
+				return false;
+			}
+
+			return tutor_utils()->can_user_edit_course( $user_id, $course_id )
+				|| (bool) tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+		}
+
 		$is_public_course = Course_List::is_public( $course_id );
 
-		$has_access = $is_public_course
-						|| User::is_admin()
-						|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
-						|| EnrollmentModel::is_enrolled( $course_id, $user_id );
-		return $has_access;
+		return $is_public_course
+			|| User::is_admin( $user_id )
+			|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
+			|| EnrollmentModel::is_enrolled( $course_id, $user_id );
 	}
 
 	/**

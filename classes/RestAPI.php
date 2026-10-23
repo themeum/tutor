@@ -318,7 +318,7 @@ class RestAPI {
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 
@@ -488,7 +488,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 

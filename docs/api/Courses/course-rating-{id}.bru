@@ -29,7 +29,8 @@ docs {
   - **Route:** `/wp-json/tutor/v1/course-rating/:id`
   
   ## Authentication
-  - **Public** (`__return_true`) for **published** courses. Bearer JWT optional.
+  - **Public** (`permission_optional_access_token`) for **published** courses. Bearer JWT optional.
+  - Present but invalid access token → `rest_invalid_access_token` (does not fall back to guest data).
   - **Private** courses: requires a valid access token and enrolled / course-content access (same as plugin UI). Otherwise `401`/`403` from the global course privacy gate (or `404` from the rating handler if reached without access).
   - Guests get a reduced review payload (display name, content, date, rating only).
   - Authenticated callers get the full rating object (including `rating_sum`), full approved review rows (`comment_author_email` omitted unless the caller may view private user fields), plus `my_rating` (own review with status `approved` or `hold`, or `null`).

@@ -1523,10 +1523,32 @@ class RestAuth {
 	}
 
 	/**
+	 * Permission: public route with optional access token.
+	 *
+	 * Empty token → allow (guest). Present but invalid token → reject.
+	 * Used by catalog/list routes that do not need resource-specific gates.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public static function permission_optional_access_token( WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Permission: author card — same gate as public-profile.php.
 	 *
 	 * Open instructor/student layout → allow (anonymous or JWT).
 	 * Private layout → deny (JWT does not bypass). Unknown user → 404.
+	 * Present but invalid access token → reject (optional auth).
 	 *
 	 * @since 4.2.0
 	 *
@@ -1535,6 +1557,11 @@ class RestAuth {
 	 * @return bool|\WP_Error
 	 */
 	public static function permission_public_author( WP_REST_Request $request ) {
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
 		$user_id = absint( $request->get_param( 'id' ) );
 		if ( ! $user_id || ! get_userdata( $user_id ) ) {
 			return self::invalid_resource_error( __( 'Author not found.', 'tutor' ) );
