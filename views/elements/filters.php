@@ -20,6 +20,7 @@ use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
+use Tutor\Helpers\QueryHelper;
 
 $current_page = Input::get( 'page', '' );
 
@@ -90,7 +91,7 @@ if ( isset( $data ) ) : ?>
 					</div>
 					<?php
 					$course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
-					$sort_order    = Input::get( 'order', 'DESC' );
+					$sort_order    = QueryHelper::get_valid_sort_order( Input::get( 'order', 'DESC' ) );
 					$date          = Input::get( 'date', '' );
 					$search_filter = Input::get( 'search', '' );
 					$category_slug = Input::get( 'category', '' );
