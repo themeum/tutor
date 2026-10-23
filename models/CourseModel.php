@@ -18,6 +18,7 @@ use TUTOR\Course;
 use TUTOR\Lesson;
 use Tutor\Ecommerce\Tax;
 use InvalidArgumentException;
+use Tutor\Core\DB;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
@@ -164,43 +165,21 @@ class CourseModel {
 	 * @return array|null|object
 	 */
 	public static function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
-		global $wpdb;
 
-		$excludes      = array_values( array_filter( array_map( 'intval', (array) $excludes ), fn( $id ) => $id > 0 ) );
-		$exclude_query = '';
-		$post_status   = array_intersect( $post_status, self::get_status_list() );
+		$excludes    = array_values( array_filter( array_map( 'intval', (array) $excludes ), fn( $id ) => $id > 0 ) );
+		$post_status = array_intersect( $post_status, self::get_status_list() );
 
 		if ( empty( $post_status ) ) {
 			$post_status = array( 'publish' );
 		}
 
-		if ( count( $excludes ) ) {
-			$exclude_placeholders = QueryHelper::prepare_in_clause( $excludes );
-			$exclude_query        = "AND ID NOT IN({$exclude_placeholders})";
-		}
+		$query = DB::table( 'posts' )
+				->select( 'ID', 'post_author', 'post_title', 'post_name', 'post_status', 'menu_order' )
+				->where_in( 'post_status', $post_status )
+				->where( 'post_type', self::POST_TYPE )
+				->where_not_in( 'ID', $excludes );
 
-		$post_status = QueryHelper::prepare_in_clause( $post_status );
-
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID,
-					post_author,
-					post_title,
-					post_name,
-					post_status,
-					menu_order
-			FROM 	{$wpdb->posts}
-			WHERE 	post_status IN ({$post_status})
-					{$exclude_query}
-					AND post_type = %s;
-			",
-				self::POST_TYPE
-			)
-		);
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return $query;
+		return $query->get();
 	}
 
 	/**

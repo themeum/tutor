@@ -1,5 +1,6 @@
 <?php namespace TutorTest;
 
+use TUTOR\Course;
 use Tutor\Models\CourseModel;
 
 /**
@@ -139,6 +140,41 @@ class CourseModelTest extends \WP_UnitTestCase {
 
 		$res = CourseModel::has_course_content_access( $args );
 		$this->assertTrue( $res );
+	}
 
+	/**
+	 * Get Courses test case added.
+	 *
+	 * @return void
+	 */
+	public function test_get_courses() {
+
+		$course1 = self::factory()->post->create(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Test Course',
+				'post_status' => 'publish',
+			)
+		);
+		$course2 = self::factory()->post->create(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Test Course 2',
+				'post_status' => 'draft',
+			)
+		);
+
+		$courses = CourseModel::get_courses();
+
+		$this->assertEquals( 1, count( $courses ) );
+
+		$courses = CourseModel::get_courses( array(), array( 'publish', 'draft' ) );
+
+		$this->assertEquals( 2, count( $courses ) );
+
+		$courses = CourseModel::get_courses( array( $course2 ) );
+
+		$this->assertEquals( 1, count( $courses ) );
+		$this->assertEquals( $course1, $courses[0]->ID );
 	}
 }
