@@ -513,16 +513,17 @@ class CouponModel {
 
 		$query = DB::table( $this->coupon_usage_table )
 			->where( 'coupon_code', $coupon_code )
-			->where_raw(
-				'(status IS NULL OR status = %s OR (status = %s AND (expires_at_gmt IS NULL OR expires_at_gmt > %s)))',
-				array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt )
-			);
+			->where_raw( ' ( status = %s OR ( status = %s AND expires_at_gmt > %s ) ) ', array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt ) );
 
 		if ( $exclude_order_id > 0 ) {
-			$query->where_raw( '(order_id IS NULL OR order_id != %d)', array( $exclude_order_id ) );
+			$query->where_raw( 'order_id != %d', array( $exclude_order_id ) );
 		}
 
-		return $query->count();
+		$count = $query->count();
+
+		$last_query = DB::get_last_query();
+
+		return $count;
 	}
 
 	/**
@@ -543,13 +544,10 @@ class CouponModel {
 		$query = DB::table( $this->coupon_usage_table )
 			->where( 'coupon_code', $coupon_code )
 			->where( 'user_id', $user_id )
-			->where_raw(
-				'(status IS NULL OR status = %s OR (status = %s AND (expires_at_gmt IS NULL OR expires_at_gmt > %s)))',
-				array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt )
-			);
+			->where_raw( ' ( status = %s OR ( status = %s AND expires_at_gmt > %s ) ) ', array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt ) );
 
 		if ( $exclude_order_id > 0 ) {
-			$query->where_raw( '(order_id IS NULL OR order_id != %d)', array( $exclude_order_id ) );
+			$query->where_raw( 'order_id != %d', array( $exclude_order_id ) );
 		}
 
 		return $query->count();
