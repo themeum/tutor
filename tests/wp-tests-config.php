@@ -13,16 +13,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', rtrim( $existing_wp_dir, '/\\' ) . '/' );
 }
 
-// Dedicated test database settings - shared with Playwright E2E tests.
-$test_db_name     = getenv( 'WP_TEST_DB_NAME' );
-$test_db_user     = getenv( 'WP_TEST_DB_USER' );
-$test_db_password = getenv( 'WP_TEST_DB_PASS' );
-$test_db_host     = getenv( 'WP_TEST_DB_HOST' );
+// Load optional overrides from .env
+$env_file = dirname( __DIR__ ) . '/.env';
+$env      = file_exists( $env_file ) ? parse_ini_file( $env_file ) : array();
 
-define( 'DB_NAME', false !== $test_db_name ? $test_db_name : 'local_test' );
-define( 'DB_USER', false !== $test_db_user ? $test_db_user : 'root' );
-define( 'DB_PASSWORD', false !== $test_db_password ? $test_db_password : 'root' );
-define( 'DB_HOST', false !== $test_db_host ? $test_db_host : '127.0.0.1:10003' );
+// Dedicated test database settings - shared with Playwright E2E tests.
+$test_db_name     = ! empty( $env['WP_TEST_DB_NAME'] ) ? $env['WP_TEST_DB_NAME'] : ( ! empty( $env['DB_NAME'] ) ? $env['DB_NAME'] : getenv( 'WP_TEST_DB_NAME' ) );
+$test_db_user     = ! empty( $env['WP_TEST_DB_USER'] ) ? $env['WP_TEST_DB_USER'] : ( ! empty( $env['DB_USER'] ) ? $env['DB_USER'] : getenv( 'WP_TEST_DB_USER' ) );
+$test_db_password = ! empty( $env['WP_TEST_DB_PASS'] ) ? $env['WP_TEST_DB_PASS'] : ( ! empty( $env['DB_PASSWORD'] ) ? $env['DB_PASSWORD'] : getenv( 'WP_TEST_DB_PASS' ) );
+$test_db_host     = ! empty( $env['WP_TEST_DB_HOST'] ) ? $env['WP_TEST_DB_HOST'] : ( ! empty( $env['DB_HOST'] ) ? $env['DB_HOST'] : getenv( 'WP_TEST_DB_HOST' ) );
+
+define( 'DB_NAME', false !== $test_db_name && null !== $test_db_name ? $test_db_name : 'local_test' );
+define( 'DB_USER', false !== $test_db_user && null !== $test_db_user ? $test_db_user : 'root' );
+define( 'DB_PASSWORD', false !== $test_db_password && null !== $test_db_password ? $test_db_password : 'root' );
+define( 'DB_HOST', false !== $test_db_host && null !== $test_db_host ? $test_db_host : '127.0.0.1:10003' );
 
 define( 'DB_CHARSET', 'utf8mb4' );
 define( 'DB_COLLATE', '' );
@@ -42,7 +46,16 @@ if ( 'local' === DB_NAME || 'production' === DB_NAME || ! preg_match( '/(test|te
 // Table prefix for PHPUnit tests.
 $table_prefix = 'wptests_';//phpcs:ignore
 
-define( 'WP_TESTS_DOMAIN', 'tutor-dev.local' );
+$site_url = ! empty( $env['SITE_URL'] ) ? $env['SITE_URL'] : getenv( 'SITE_URL' );
+$domain   = 'tutor-dev.local';
+if ( $site_url ) {
+	$parsed_host = parse_url( $site_url, PHP_URL_HOST );
+	if ( $parsed_host ) {
+		$domain = $parsed_host;
+	}
+}
+
+define( 'WP_TESTS_DOMAIN', $domain );
 define( 'WP_TESTS_EMAIL', 'admin@example.org' );
 define( 'WP_TESTS_TITLE', 'Tutor LMS Test Site' );
 define( 'WP_PHP_BINARY', 'php' );

@@ -1,9 +1,9 @@
 # Testing Tutor LMS
 
-This directory contains the automated test suites for Tutor LMS:
+This directory documents automated testing for Tutor LMS:
 - **`tests/phpunit/`**: PHPUnit unit and integration tests.
 - **`tests/e2e/`**: Modern E2E tests powered by Playwright.
-- **`cypress/`**: Existing Cypress test suite (preserved for legacy test cases).
+- **`tests/supports/`**: Test database reset and fixture seeding utilities.
 
 ---
 
@@ -17,7 +17,7 @@ This directory contains the automated test suites for Tutor LMS:
 3. **Dynamic Database Routing**:
    - When Playwright runs, requests carry the header `X-WP-Test-Env: playwright`.
    - WordPress automatically routes requests to `local_test`.
-   - Normal browser visits to `https://tutor-dev.local` continue to use `local`.
+   - Normal browser visits to your site continue to use `local`.
 4. **Automated Safeguards**:
    - Both PHPUnit bootstrap (`tests/wp-tests-config.php`) and the database reset tool refuse to run if the targeted database is `local` or does not contain `test` or `phpunit`.
 
@@ -35,7 +35,7 @@ composer test:db:reset
 pnpm run test:e2e:reset
 
 # Or directly via PHP
-php tests/bin/reset-test-db.php
+php tests/supports/reset-test-db.php
 ```
 
 ### 2. Run PHPUnit Tests
@@ -66,25 +66,19 @@ pnpm run test:e2e:ui
 pnpm run test:e2e:debug
 ```
 
-### 4. Run Cypress Tests (Preserved)
-```bash
-pnpm run cy:open
-pnpm run test
-```
-
 ---
 
 ## Configuration & Environment Variables
 
-Default values are automatically tailored for Local by Flywheel. You can override them in your `.env` file if needed:
+Create a `.env` file in the plugin root (or copy from `.env.example`). Values are automatically tailored for Local by Flywheel:
 
 | Variable | Default Value | Description |
 |---|---|---|
+| `SITE_URL` | `https://tutor-dev.local` | Base site URL for tests |
+| `TUTOR_CHECKOUT_URL` | `https://tutor-dev.local/checkout-21` | Checkout URL for tests |
+| `ADMIN_USERNAME` | `admin` | Admin username for E2E tests |
+| `ADMIN_PASSWORD` | `12345` | Admin password for E2E tests |
 | `WP_TEST_DB_NAME` | `local_test` | Dedicated test database (must contain `test`) |
 | `WP_TEST_DB_USER` | `root` | Database username |
 | `WP_TEST_DB_PASS` | `root` | Database password |
 | `WP_TEST_DB_HOST` | `127.0.0.1:10003` | Database host & port |
-| `WP_DEV_DB_NAME` | `local` | Source development database for reset tool |
-| `WP_BASE_URL` | `https://tutor-dev.local` | Base URL for E2E tests |
-| `ADMIN_USERNAME` | `admin` | Admin username for E2E tests |
-| `ADMIN_PASSWORD` | `12345` | Admin password for E2E tests |

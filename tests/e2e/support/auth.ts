@@ -6,8 +6,8 @@ export interface UserCredentials {
 }
 
 export const getAdminCredentials = (): UserCredentials => ( {
-	username: process.env.ADMIN_USERNAME || process.env.CYPRESS_admin_username || 'admin',
-	password: process.env.ADMIN_PASSWORD || process.env.CYPRESS_admin_password || '12345',
+	username: ( process.env.ADMIN_USERNAME || 'admin' ).trim(),
+	password: ( process.env.ADMIN_PASSWORD || '12345' ).trim(),
 } );
 
 /**

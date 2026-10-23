@@ -6,7 +6,7 @@
  * with standard users and baseline fixtures using native WordPress functions.
  *
  * Usage:
- *   php tests/bin/reset-test-db.php
+ *   php tests/supports/reset-test-db.php
  *
  * @package Tutor\Tests
  */
@@ -73,10 +73,13 @@ if ( ! empty( $tables ) ) {
 echo "==> Installing fresh WordPress core...\n";
 require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-$admin_user = getenv( 'ADMIN_USERNAME' ) ?: 'admin';
-$admin_pass = getenv( 'ADMIN_PASSWORD' ) ?: '12345';
+$env_file = dirname( __DIR__, 2 ) . '/.env';
+$env      = file_exists( $env_file ) ? parse_ini_file( $env_file ) : array();
+
+$admin_user = ! empty( $env['ADMIN_USERNAME'] ) ? trim( $env['ADMIN_USERNAME'] ) : ( getenv( 'ADMIN_USERNAME' ) ?: 'admin' );
+$admin_pass = ! empty( $env['ADMIN_PASSWORD'] ) ? trim( $env['ADMIN_PASSWORD'] ) : ( getenv( 'ADMIN_PASSWORD' ) ?: '12345' );
 $site_title = 'Tutor LMS Test Site';
-$site_url   = getenv( 'WP_BASE_URL' ) ?: ( getenv( 'CYPRESS_base_url' ) ?: 'https://tutor-dev.local' );
+$site_url   = ! empty( $env['SITE_URL'] ) ? trim( $env['SITE_URL'] ) : ( getenv( 'SITE_URL' ) ?: ( getenv( 'WP_BASE_URL' ) ?: 'https://tutor-dev.local' ) );
 
 wp_install( $site_title, $admin_user, 'admin@example.org', true, '', $admin_pass );
 

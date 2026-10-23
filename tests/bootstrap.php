@@ -15,7 +15,7 @@ define( 'WP_RUNNING_TESTS', true );
 define( 'WP_TESTS_CONFIG_FILE_PATH', __DIR__ . '/wp-tests-config.php' );
 
 $_plugin_dir = dirname( __DIR__ );
-$_tests_dir  = getenv( 'WP_TESTS_DIR' ) ? getenv( 'WP_TESTS_DIR' ) : $_plugin_dir . '/vendor/wp-phpunit/wp-phpunit';
+$_tests_dir  = $_plugin_dir . '/vendor/wp-phpunit/wp-phpunit';
 
 if ( ! file_exists( "{$_tests_dir}/includes/functions.php" ) ) {
 	echo "Could not find WordPress test suite at {$_tests_dir}. Run: composer require --dev wp-phpunit/wp-phpunit" . PHP_EOL;//phpcs:ignore

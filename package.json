@@ -21,7 +21,7 @@
     "test:e2e": "playwright test -c tests/e2e/playwright.config.ts",
     "test:e2e:ui": "playwright test -c tests/e2e/playwright.config.ts --ui",
     "test:e2e:debug": "playwright test -c tests/e2e/playwright.config.ts --debug",
-    "test:e2e:reset": "php tests/bin/reset-test-db.php",
+    "test:e2e:reset": "php tests/supports/reset-test-db.php",
     "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",

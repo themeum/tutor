@@ -5,7 +5,7 @@ import * as path from 'path';
 // Load .env from plugin root
 dotenv.config( { path: path.resolve( __dirname, '../../.env' ) } );
 
-const baseURL = process.env.WP_BASE_URL || process.env.CYPRESS_base_url || 'https://tutor-dev.local';
+const baseURL = process.env.SITE_URL || 'https://tutor-dev.local';
 
 export default defineConfig( {
 	testDir: './specs',
@@ -17,7 +17,7 @@ export default defineConfig( {
 	forbidOnly: !! process.env.CI,
 	retries: process.env.CI ? 2 : 0,
 	workers: 1,
-	reporter: [ [ 'list' ], [ 'html', { open: 'never', outputFolder: 'tests/e2e/report' } ] ],
+	reporter: [ [ 'list' ], [ 'html', { open: 'never', outputFolder: path.resolve( __dirname, 'report' ) } ] ],
 
 	use: {
 		baseURL,
