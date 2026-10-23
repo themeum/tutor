@@ -13,6 +13,7 @@ namespace Tutor\Models;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\DB;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
@@ -282,7 +283,6 @@ class EnrollmentModel {
 	 * @return object|mixed
 	 */
 	public static function get_enrolled_data( $user_id = 0, $course_id = 0, $status = self::STATUS_COMPLETED ) {
-		global $wpdb;
 		$user_id   = absint( $user_id );
 		$course_id = absint( $course_id );
 
@@ -290,34 +290,20 @@ class EnrollmentModel {
 			return null;
 		}
 
-		$status_clause = $status ? $wpdb->prepare( 'AND post_status = %s ', $status ) : '';
-
 		// If course ID provided, it will return single row data.
-		if ( $course_id > 0 && tutor()->course_post_type === get_post_type( $course_id ) ) {
-			return $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						AND post_parent = %d
-						{$status_clause}
-						AND post_author = %d;",
-					self::POST_TYPE,
-					$course_id,
-					$user_id
-				)
-			);
+		if ( $course_id > 0 && in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+			return DB::table( 'posts' )
+					->where( 'post_type', self::POST_TYPE )
+					->where( 'post_parent', $course_id )
+					->where( 'post_author', $user_id )
+					->where( 'post_status', $status ?? self::STATUS_COMPLETED )
+					->first();
 		} else {
-			// Return all enrolled data by user ID.
-			return $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						{$status_clause}
-						AND post_author = %d;",
-					self::POST_TYPE,
-					$user_id
-				)
-			);
+			return DB::table( 'posts' )
+					->where( 'post_type', self::POST_TYPE )
+					->where( 'post_author', $user_id )
+					->where( 'post_status', $status ?? self::STATUS_COMPLETED )
+					->get();
 		}
 	}
 
