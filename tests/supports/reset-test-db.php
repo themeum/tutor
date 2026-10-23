@@ -11,16 +11,18 @@
  * @package Tutor\Tests
  */
 
-// Tell wp-config.php to connect to local_test
+//@phpcs:ignoreFile
+
+// Tell wp-config.php to connect to local_test.
 putenv( 'WP_TEST_ENV=1' );
 if ( ! defined( 'WP_RUNNING_TESTS' ) ) {
 	define( 'WP_RUNNING_TESTS', true );
 }
 
-// Suppress extraneous output during bootstrap
+// Suppress extraneous output during bootstrap.
 ob_start();
 
-// Dynamically find wp-load.php by walking up directory tree
+// Dynamically find wp-load.php by walking up directory tree.
 $wp_load_path = null;
 $search_dir   = __DIR__;
 while ( $search_dir && '/' !== $search_dir ) {
@@ -64,7 +66,7 @@ $tables = $wpdb->get_col( 'SHOW TABLES' );
 if ( ! empty( $tables ) ) {
 	$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
 	foreach ( $tables as $table ) {
-		$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" );
 	}
 	$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
 }
@@ -83,7 +85,7 @@ $site_url   = ! empty( $env['SITE_URL'] ) ? trim( $env['SITE_URL'] ) : ( getenv(
 
 wp_install( $site_title, $admin_user, 'admin@example.org', true, '', $admin_pass );
 
-// Ensure correct siteurl, home, permalinks, and active plugins
+// Ensure correct siteurl, home, permalinks, and active plugins.
 update_option( 'siteurl', $site_url );
 update_option( 'home', $site_url );
 update_option( 'permalink_structure', '/%postname%/' );
@@ -102,9 +104,9 @@ if ( class_exists( 'TUTOR\Tutor' ) ) {
 	update_option( 'tutor_first_activation_time', time() );
 }
 
-// 4. Seed standard test users
+// 4. Seed standard test users.
 echo "==> Seeding test users (instructor, student)...\n";
-// Create instructor
+// Create instructor.
 $instructor_id = wp_create_user( 'instructor', '12345', 'instructor@example.org' );
 if ( ! is_wp_error( $instructor_id ) ) {
 	$instructor = new WP_User( $instructor_id );
@@ -118,7 +120,7 @@ if ( ! is_wp_error( $student_id ) ) {
 	$student->set_role( 'subscriber' );
 }
 
-// 5. Seed baseline course fixture
+// 5. Seed baseline course fixture.
 echo "==> Seeding baseline course fixture...\n";
 $admin     = get_user_by( 'login', $admin_user );
 $author_id = $admin ? $admin->ID : 1;
@@ -134,7 +136,7 @@ $course_id = wp_insert_post(
 );
 
 if ( $course_id && ! is_wp_error( $course_id ) ) {
-	// Add a topic
+	// Add a topic.
 	$topic_id = wp_insert_post(
 		array(
 			'post_title'  => 'Introduction Topic',
@@ -145,7 +147,7 @@ if ( $course_id && ! is_wp_error( $course_id ) ) {
 		)
 	);
 
-	// Add a lesson under topic
+	// Add a lesson under topic.
 	if ( $topic_id && ! is_wp_error( $topic_id ) ) {
 		wp_insert_post(
 			array(

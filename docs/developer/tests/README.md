@@ -70,6 +70,18 @@ pnpm run test:e2e:debug
 
 ## Configuration & Environment Variables
 
+Put it into `wp-config.php`
+
+```php
+/** Test database routing for Playwright E2E and CLI testing */
+$is_test_environment =
+	( defined( 'WP_RUNNING_TESTS' ) && WP_RUNNING_TESTS ) ||
+	( isset( $_SERVER['HTTP_X_WP_TEST_ENV'] ) && 'playwright' === $_SERVER['HTTP_X_WP_TEST_ENV'] ) ||
+	( isset( $_COOKIE['wp_test_env'] ) && 'test' === $_COOKIE['wp_test_env'] ) ||
+	( getenv( 'WP_TEST_ENV' ) === '1' );
+
+define( 'DB_NAME', $is_test_environment ? 'local_test' : 'local' );
+```
 Create a `.env` file in the plugin root (or copy from `.env.example`). Values are automatically tailored for Local by Flywheel:
 
 | Variable | Default Value | Description |
