@@ -13,6 +13,7 @@
 
 .tutor-tooltip {
   @include tutor-typography('tiny', 'regular', 'primary-inverse');
+
   position: fixed;
   z-index: 1070;
   max-width: 180px;
@@ -20,7 +21,7 @@
   background-color: $tutor-surface-dark;
   border-radius: $tutor-radius-sm;
   box-shadow: $tutor-shadow-md;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   text-align: center;
   pointer-events: none;
 
@@ -117,6 +118,7 @@
   &-enter-active {
     opacity: 1;
     transform: scale(1);
+
     @include tutor-transition((opacity, transform), 0.15s);
   }
 
@@ -128,6 +130,7 @@
   &-leave-active {
     opacity: 0;
     transform: scale(0.8);
+
     @include tutor-transition((opacity, transform), 0.15s);
   }
 }

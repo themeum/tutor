@@ -23,6 +23,7 @@
 .tutor-quiz-attempts {
   &-filter {
     @include tutor-flex(row, center, space-between);
+
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
   }
@@ -34,7 +35,9 @@
     background-color: $tutor-surface-l1-hover;
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-5 $tutor-spacing-6;
+
     @include tutor-typography(tiny);
+
     color: $tutor-text-secondary;
 
     @include tutor-breakpoint-down(sm) {
@@ -86,8 +89,7 @@
           'info info info'
           'marks time result'
           'buttons buttons buttons';
-        row-gap: $tutor-spacing-4;
-        column-gap: 0px;
+        gap: $tutor-spacing-4 0;
 
         &[data-learning-area='true'] {
           .tutor-quiz-item-info {
@@ -107,6 +109,7 @@
 
         &-expanded {
           @include tutor-flex(row, start);
+
           gap: $tutor-spacing-4;
           text-align: center;
           min-height: 24px;
@@ -114,8 +117,10 @@
 
         &-title {
           @include tutor-typography(medium, semibold);
+
           text-align: start;
           margin-bottom: $tutor-spacing-2;
+
           @include tutor-transition(color);
 
           &:hover {
@@ -130,7 +135,9 @@
 
         &-course {
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-2;
+
           @include tutor-typography(small, regular, secondary);
 
           @include tutor-breakpoint-down(sm) {
@@ -141,24 +148,30 @@
 
         &-student {
           @include tutor-typography(tiny, regular, secondary);
+
           margin-top: $tutor-spacing-3;
         }
 
         &-date {
           @include tutor-typography(tiny, regular, subdued);
+
           margin-top: $tutor-spacing-3;
         }
 
         .tutor-quiz-attempts-expand-btn {
           @include tutor-button-reset();
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-2;
+
           @include tutor-typography(small, medium, brand);
+
           cursor: pointer;
           white-space: nowrap;
 
           @include tutor-breakpoint-down(sm) {
             @include tutor-flex(row, center);
+
             font-size: $tutor-font-size-tiny;
             line-height: $tutor-line-height-tiny;
           }
@@ -166,6 +179,7 @@
 
         .tutor-quiz-attempts-expand-icon {
           display: flex;
+
           @include tutor-transition(transform, 0.3s);
 
           @include tutor-breakpoint-down(sm) {
@@ -178,6 +192,7 @@
 
         .tutor-student-attempt-detail {
           text-decoration: none;
+
           @include tutor-breakpoint-up(sm) {
             display: none;
           }
@@ -186,7 +201,9 @@
 
       .tutor-quiz-item-marks {
         grid-area: marks;
+
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-4;
 
         @include tutor-breakpoint-down(sm) {
@@ -199,11 +216,13 @@
 
         .tutor-quiz-marks-breakdown {
           @include tutor-flex(column, stretch, center);
+
           gap: $tutor-spacing-1;
 
           .tutor-quiz-marks-correct,
           .tutor-quiz-marks-incorrect {
             @include tutor-badge-base;
+
             width: 100%;
             border-radius: $tutor-radius-full;
 
@@ -228,13 +247,18 @@
 
       .tutor-quiz-item-time {
         grid-area: time;
+
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-3;
+
         @include tutor-typography(medium, regular, subdued);
+
         white-space: nowrap;
 
         @include tutor-breakpoint-down(sm) {
           @include tutor-typography(small, regular, subdued);
+
           height: 100%;
           background-color: $tutor-surface-l1-hover;
           padding-inline: $tutor-spacing-4;
@@ -243,6 +267,7 @@
 
       .tutor-quiz-item-result {
         grid-area: result;
+
         @include tutor-flex(column, center, center);
 
         @include tutor-breakpoint-down(sm) {
@@ -265,6 +290,7 @@
 
         @include tutor-breakpoint-down(sm) {
           @include tutor-flex(row, center, center);
+
           gap: $tutor-spacing-5;
           margin-top: $tutor-spacing-2;
 
@@ -317,6 +343,7 @@
       .tutor-quiz-attempts-item {
         grid-template-columns: 324px 180px 1.5fr 1fr;
         padding: $tutor-spacing-6;
+
         @include tutor-transition(background-color);
 
         @include tutor-breakpoint-down(sm) {
@@ -326,8 +353,7 @@
             'marks time result'
             'buttons buttons buttons';
           padding-top: $tutor-spacing-5;
-          padding-inline-start: $tutor-spacing-5;
-          padding-inline-end: $tutor-spacing-5;
+          padding-inline: $tutor-spacing-5 $tutor-spacing-5;
           padding-bottom: $tutor-spacing-2;
           row-gap: $tutor-spacing-4;
         }
@@ -353,6 +379,7 @@
       @include tutor-breakpoint-down(sm) {
         .tutor-quiz-item-actions {
           padding-bottom: $tutor-spacing-5;
+
           &:not(:last-child) {
             border-bottom: 1px solid $tutor-border-idle;
           }
@@ -376,6 +403,7 @@
 
 .tutor-quiz-item-actions {
   @include tutor-flex(row, center, space-between);
+
   gap: $tutor-spacing-5;
   padding-top: $tutor-spacing-2;
   grid-column: 1/-1;

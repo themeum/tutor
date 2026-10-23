@@ -19,6 +19,7 @@
 
     .tutor-popover-title {
       @include tutor-typography(p1, semibold, primary);
+
       margin: 0;
     }
 
@@ -34,8 +35,8 @@
       border-radius: $tutor-radius-5xl;
       color: $tutor-icon-idle;
       cursor: pointer;
-      @include tutor-transition();
 
+      @include tutor-transition();
       @include tutor-flex-center();
 
       &:hover,
@@ -49,6 +50,7 @@
 
   &-body {
     @include tutor-typography(p2, regular, primary);
+
     padding: $tutor-spacing-4;
   }
 
@@ -58,6 +60,7 @@
     margin-top: $tutor-spacing-4;
 
     @include tutor-flex(row, center, flex-end);
+
     gap: $tutor-spacing-2;
 
     [dir='rtl'] & {
@@ -72,12 +75,15 @@
   
     .tutor-popover-menu-item {
       width: 100%;
+
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
       @include tutor-typography(small);
       @include tutor-text-truncate();
+
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
+
       @include tutor-transition((color, background-color));
   
       svg {
@@ -126,8 +132,7 @@
     &-header,
     &-body,
     &-footer {
-      padding-inline-start: $tutor-spacing-3;
-      padding-inline-end: $tutor-spacing-3;
+      padding-inline: $tutor-spacing-3 $tutor-spacing-3;
     }
   }
 }

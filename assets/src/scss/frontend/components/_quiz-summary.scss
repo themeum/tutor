@@ -3,6 +3,7 @@
 
 .tutor-quiz-summary {
   @include tutor-frontend-layout();
+
   margin: 0 auto;
   padding-block: $tutor-spacing-13;
 
@@ -49,28 +50,35 @@
         @include tutor-flex(row, center, center);
       }
     }
+
     &-marks {
       @include tutor-typography(medium, regular, secondary);
       @include tutor-flex(column);
+
       gap: $tutor-spacing-6;
       grid-area: marks;
 
       @include tutor-breakpoint-down(sm) {
         @include tutor-text(small);
+
         gap: $tutor-spacing-4;
       }
     }
+
     &-statics {
       grid-area: statics;
+
       @include tutor-typography(medium, regular, secondary);
 
       @include tutor-breakpoint-down(sm) {
         @include tutor-text(small);
+
         align-self: end;
       }
 
       .tutor-quiz-result-static-item {
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-3;
 
         &::before {
@@ -99,6 +107,7 @@
         }
       }
     }
+
     &-retake {
       grid-area: retake;
       align-self: end;
@@ -113,6 +122,7 @@
     &-footer {
       @include tutor-flex(row, center, center);
       @include tutor-typography(tiny, regular, subdued);
+
       gap: $tutor-spacing-4;
       flex-wrap: wrap;
 
@@ -136,6 +146,7 @@
 
   .tutor-empty-quiz-details {
     @include tutor-flex(row, center, center);
+
     padding: $tutor-spacing-6;
     background-color: $tutor-surface-critical;
     border: 1px solid $tutor-border-error-tertiary;
@@ -145,6 +156,7 @@
 
     .error-message {
       @include tutor-typography(small, regular);
+
       color: $tutor-text-critical;
       margin-block: 0;
     }

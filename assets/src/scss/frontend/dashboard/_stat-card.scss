@@ -6,11 +6,13 @@
 
 .tutor-stat-card {
   @include tutor-flex(column, stretch, space-between);
+
   padding: $tutor-spacing-6;
   height: 146px;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
   background-color: $tutor-surface-l1;
+
   @include tutor-transition(background-color);
 
   @include tutor-breakpoint-down(sm) {
@@ -40,6 +42,7 @@
 
   &-title {
     @include tutor-typography('small');
+
     margin: 0;
   }
 
@@ -49,11 +52,13 @@
 
   &-value {
     @include tutor-typography('h2', 'bold', 'primary', 'heading');
+
     margin: 0;
   }
 
   &-change {
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+
     margin-top: $tutor-spacing-1;
     margin-bottom: 0;
   }
