@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-$lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="tutor-modal tutor-login-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-login-modal-title" aria-hidden="true">
 	<div class="tutor-modal-overlay"></div>
