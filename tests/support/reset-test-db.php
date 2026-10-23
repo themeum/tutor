@@ -20,17 +20,8 @@ putenv( 'WP_TEST_ENV=1' );
 ob_start();
 
 // Dynamically find wp-load.php by walking up directory tree.
-$wp_load_path = null;
-$search_dir   = __DIR__;
-while ( $search_dir && '/' !== $search_dir ) {
-	if ( file_exists( $search_dir . '/wp-load.php' ) ) {
-		$wp_load_path = $search_dir . '/wp-load.php';
-		break;
-	}
-	$search_dir = dirname( $search_dir );
-}
-
-if ( ! $wp_load_path ) {
+$wp_load_path = dirname( __DIR__, 5 ) . '/wp-load.php';
+if ( ! file_exists( $wp_load_path ) ) {
 	ob_end_clean();
 	fwrite( STDERR, "[FATAL ERROR] Could not find wp-load.php in parent directories!\n" );
 	exit( 1 );
