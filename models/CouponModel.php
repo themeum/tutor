@@ -519,11 +519,7 @@ class CouponModel {
 			$query->where_raw( 'order_id != %d', array( $exclude_order_id ) );
 		}
 
-		$count = $query->count();
-
-		$last_query = DB::get_last_query();
-
-		return $count;
+		return $query->count();
 	}
 
 	/**
@@ -1083,7 +1079,7 @@ class CouponModel {
 			}
 		}
 
-		if ( $user_usage_limit > 0 ) {
+		if ( $user_usage_limit > 0 && $user_id ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id, $exclude_order_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit = false;
