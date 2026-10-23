@@ -31,7 +31,7 @@
 			.tutor-is-sticky {
 				position: sticky;
 				top: 0;
-				background: rgba(255, 255, 255, 0.6);
+				background: rgb(255 255 255 / 60%);
 				backdrop-filter: blur(14px);
 				z-index: 500;
 			}
@@ -61,7 +61,8 @@
 	}
 
 	&-tags {
-		margin-left: -16px;
+		margin-inline-start: -16px;
+
 		.tutor-tag-list li {
 			a {
 				margin-bottom: 16px;
@@ -75,6 +76,7 @@
 				display: flex;
 				flex-flow: row wrap;
 				justify-content: space-between;
+
 				> li {
 					width: calc(50% - (2.4rem/2));
 				}
@@ -112,6 +114,7 @@
 		.tutor-alert-text {
 			align-items: flex-start;
 		}
+
 		.tutor-alert-icon {
 			margin-top: -4px;
 		}
@@ -119,20 +122,22 @@
 
 	// .tutor-course-sidebar-card-membership-plan
 	&-membership-plan {
-		border-color: rgba(var(--tutor-color-primary), 0.2);
+		border-color: rgb(var(--tutor-color-primary), 0.2);
+
 		&-badge {
 			position: absolute;
 			top: -1px;
-			right: 30px;
+			inset-inline-end: 30px;
 
 			&.badge-left {
-				right: unset;
-				left: 30px;
+				inset-inline-end: unset;
+				inset-inline-start: 30px;
 			}
 		}
 
 		&.badge-triangle-ribbon {
 			position: relative;
+
 			&::before {
 				@include triangleRibbonStar;
 			}
@@ -146,35 +151,41 @@
 			display: grid;
 			align-items: center;
 			position: relative;
+
 			input[type='radio'] {
 				position: absolute;
-				left: 20px;
+				inset-inline-start: 20px;
 				width: 20px;
 				height: 20px;
 				border: 2px solid var(--tutor-border-color);
 				z-index: 1;
+
 				&:checked {
 					~ .tutor-course-sidebar-card-pick-plan-input {
-						background: rgba(var(--tutor-color-primary), 0.15);
+						background: rgb(var(--tutor-color-primary), 0.15);
 						border-color: var(--tutor-color-primary);
-						&:before {
+
+						&::before {
 							opacity: 1;
 						}
 					}
 				}
 			}
 		}
+
 		&-input {
 			padding: 16px 20px;
 			display: grid;
 			align-items: center;
 			grid-template-columns: 1fr auto;
-			grid-gap: 10px;
+			gap: 10px;
 			transition: 400ms;
-			padding-left: 48px;
+			padding-inline-start: 48px;
 			position: relative;
-			&:before {
+
+			&::before {
 				@include triangleRibbonStar;
+
 				opacity: 0;
 			}
 		}
@@ -186,23 +197,27 @@
 					top: 24px;
 				}
 			}
+
 			.tutor-course-sidebar-card-pick-plan-input {
 				display: block;
-				padding-left: 16px;
+				padding-inline-start: 16px;
+
 				.input-plan {
 					padding: 0 16px;
 					display: grid;
 					align-items: center;
 					grid-template-columns: 1fr auto;
-					grid-gap: 10px;
+					gap: 10px;
 					transition: 400ms;
 					position: relative;
-					padding-left: 40px;
+					padding-inline-start: 40px;
 				}
+
 				.input-plan-details {
 					max-height: 0;
 					overflow: hidden;
 					transition: max-height 0.25s linear;
+
 					> *:first-child {
 						margin-top: 17px;
 					}
@@ -230,11 +245,12 @@
 	&-main {
 		@include breakpoint-min(desktop) {
 			display: grid;
-			grid-gap: 32px;
+			gap: 32px;
 			grid-template-columns: 8fr 4fr;
 		}
+
 		@include breakpoint-min(desktop-lg) {
-			grid-gap: 54px;
+			gap: 54px;
 		}
 	}
 } // end of .tutor-course-details-page
@@ -275,7 +291,7 @@
 		}
 
 		&-icon {
-			color: rgba(var(--tutor-body-color-rgb), 0.35);
+			color: rgb(var(--tutor-body-color-rgb), 0.35);
 		}
 	}
 }
@@ -308,43 +324,48 @@
 
 	&-commentlist {
 		list-style: none;
+
 		.commentlist-comment {
 			border-radius: 6px;
 			position: relative;
+
 			> * {
 				position: relative;
 				z-index: 1;
 			}
 
-			&:before {
+			&::before {
 				content: '';
 				position: absolute;
 				width: 20px;
 				height: 20px;
 				top: -5px;
-				left: 15px;
+				inset-inline-start: 15px;
 				background: inherit;
 				clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
 				transform: rotate(45deg);
 				border-radius: 3px;
 			}
-			&:after {
+
+			&::after {
 				content: '';
 				position: absolute;
 				inset: 0;
 				background: white;
 			}
-			&:before,
-			&:after {
+
+			&::before,
+			&::after {
 				opacity: 0.5;
 			}
 		}
+
 		&-item {
 			// background: #000;
 			&-reply {
-				.commentlist-comment:before {
-					left: unset;
-					right: 15px;
+				.commentlist-comment::before {
+					inset-inline-start: unset;
+					inset-inline-end: 15px;
 				}
 			}
 		}

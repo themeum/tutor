@@ -5,11 +5,11 @@
 		box-sizing: border-box;
 		position: absolute;
 		top: 50%;
-		left: 50%;
+		inset-inline-start: 50%;
 		width: #{$size};
 		height: #{$size};
 		margin-top: calc(-1 * #{$size} / 2);
-		margin-left: calc(-1 * #{$size} / 2);
+		margin-inline-start: calc(-1 * #{$size} / 2);
 		border-radius: 50%;
 		border: 2px solid $lineBgColor;
 		border-top-color: $lineColor;

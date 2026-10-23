@@ -1,11 +1,11 @@
 .tutor-checkout-page {
-	padding: 40px 0px;
+	padding: 40px 0;
 
 	input[type="text"],
 	input[type="email"],
 	select {
 		line-height: 36px;
-		padding: 0px 10px;
+		padding: 0 10px;
 		text-indent: 0;
 	}
 
@@ -18,34 +18,41 @@
 		.tutor-checkout-details-inner {
 			background-color: #FAFAFA;
 			border-radius: 5px;
-			padding: 24px 24px 12px 24px;
+			padding: 24px 24px 12px;
 		}
 	}
+
 	.tutor-checkout-detail-item {
-		padding: 24px 0px;
+		padding: 24px 0;
+
 		&:not(:last-child) {
 			border-bottom: 1px solid var(--tutor-border-color);
 		}
+
 		@include breakpoint-max(mobile) {
 			padding: 16px;
 		}
 	}
+
 	.tutor-checkout-courses {
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
 	}
+
 	.tutor-checkout-course-item {
 		display: flex;
 		flex-direction: column;
 		color: var(--tutor-body-color);
 	}
+
 	.tutor-checkout-course-content {
 		display: flex;
 		align-items: start;
 		justify-content: space-between;
 		gap: 24px;
 	}
+
 	.tutor-checkout-course-thumb-title {
 		display: grid;
 		grid-template-columns: 56px 1fr;
@@ -58,6 +65,7 @@
 			margin-top: 6px;
 		}
 	}
+
 	.tutor-checkout-enrollment-fee {
 		display: flex;
 		align-items: start;
@@ -65,6 +73,7 @@
 		font-size: 14px;
 		margin-top: 16px;
 	}
+
 	.tutor-checkout-course-plan-badge {
 		width: fit-content;
 		display: inline-block;
@@ -76,11 +85,12 @@
 		border-radius: 2px;
 		padding: 4px 8px;
 	}
+
 	.tutor-checkout-course-title {
 		font-weight: 500;
 		font-size: 16px;
 		line-height: 26px;
-		margin: 0px;
+		margin: 0;
 
 		a {
 			color: var(--tutor-body-color);
@@ -91,6 +101,7 @@
 			}
 		}
 	}
+
 	.tutor-checkout-coupon-badge {
 		display: flex;
 		align-items: center;
@@ -120,22 +131,26 @@
 			font-size: 14px;
 		}
 	}
+
 	.tutor-checkout-discount-price {
 		font-size: 13px;
 		color: #767c8e;
 		text-decoration: line-through;
 	}
+
 	.tutor-checkout-summary {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 	}
+
 	.tutor-checkout-summary-item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		color: var(--tutor-body-color);
 	}
+
 	.tutor-checkout-separator {
 		line-height: 18px;
 		margin-top: 16px;
@@ -159,7 +174,7 @@
 			background-color: var(--tutor-border-color);
 			position: absolute;
 			top: 8px;
-			left: 0;
+			inset-inline-start: 0;
 		}
 	}
 
@@ -173,7 +188,7 @@
 	}
 
 	.tutor-apply-coupon-form {
-		background-color: #ffffff;
+		background-color: #fff;
 		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		padding: 4px;
@@ -211,7 +226,7 @@
 	.tutor-tax-breakdown-modal {
 		position: fixed;
 		top: 0;
-		left: 0;
+		inset-inline-start: 0;
 		width: 100%;
 		height: 100%;
 		z-index: 99999;
@@ -220,18 +235,19 @@
 			position: absolute;
 			inset: 0;
 			z-index: 1;
-			background: rgba(22, 22, 22, 0.7);
+			background: rgb(22 22 22 / 70%);
 		}
+
 		&__content {
 			z-index: 2;
 			position: absolute;
 			top: 50%;
-			left: 50%;
+			inset-inline-start: 50%;
 			transform: translate(-50%, -50%);
-			background-color: #ffffff;
+			background-color: #fff;
 			border-radius: 6px;
 			padding: 24px;
-			box-shadow: 0px 8px 24px 0px rgba(17, 18, 19, 0.12);
+			box-shadow: 0 8px 24px 0 rgb(17 18 19 / 12%);
 			display: flex;
 			flex-direction: column;
 			gap: 16px;
@@ -265,7 +281,7 @@
 			}
 
 			& > span:not(:first-of-type) {
-				text-align: right;
+				text-align: end;
 				font-weight: 600;
 			}
 		}
@@ -274,8 +290,8 @@
 	.tutor-checkout-spinner {
 		position: absolute;
 		top: 12px;
-		right: 0px;
-		padding: 0px;
+		inset-inline-end: 0;
+		padding: 0;
 	}
 
 	.tutor-plan-trial-price {
@@ -299,12 +315,13 @@
 		.tutor-form-label {
 			display: none;
 		}
+
 		.tutor-mb-16 {
 			margin: 0!important;
 		}
 
 		.tutor-form-control {
-			border-radius: 0px;
+			border-radius: 0;
 			height: 40px;
 		}
 
@@ -313,43 +330,43 @@
 		}
 
 		.tutor-col-12:first-of-type .tutor-form-control {
-			border-top-left-radius: 6px;
+			border-start-start-radius: 6px;
 		}
 
 		.tutor-col-12:last-of-type .tutor-form-control {
-			border-bottom-left-radius: 6px;
-			border-bottom-right-radius: 6px;
+			border-end-start-radius: 6px;
+			border-end-end-radius: 6px;
 		}
 
 		@include breakpoint-min(desktop) {
 			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
-				border-right: none!important;
+				border-inline-end: none!important;
 			}
 
 			.tutor-col-12:nth-of-type(2) .tutor-form-control {
-				border-top-right-radius: 6px;
+				border-start-end-radius: 6px;
 			}
 		}
 
 		@include breakpoint-minmax(576, 767) {
 			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
-				border-right: none!important;
+				border-inline-end: none!important;
 			}
 
 			.tutor-col-12:nth-of-type(2) .tutor-form-control {
-				border-top-right-radius: 6px;
+				border-start-end-radius: 6px;
 			}
 		}
 
 		@include breakpoint-minmax(768, 991) {
 			.tutor-col-12:first-of-type .tutor-form-control {
-				border-top-right-radius: 6px;
+				border-start-end-radius: 6px;
 			}
 		}
 
 		@include breakpoint-max(575) {
 			.tutor-col-12:first-of-type .tutor-form-control {
-				border-top-right-radius: 6px;
+				border-start-end-radius: 6px;
 			}
 		}
 	}
@@ -360,11 +377,11 @@
 	flex-direction: column;
 	border: 1px solid var(--tutor-border-color);
 	border-radius: 6px;
-	background-color: #ffffff;
+	background-color: #fff;
 
 	.tutor-checkout-payment-item {
 		border: none;
-		margin: 0px;
+		margin: 0;
 		background-color: transparent;
 		display: flex;
 		align-items: center;
@@ -392,17 +409,17 @@
 
 		&.active {
 			background-color: #E9EDFB;
-			box-shadow: 0px 0px 0px 1px #7391f0;
+			box-shadow: 0 0 0 1px #7391f0;
 			border-color: transparent;
 
 			&:first-of-type {
-				border-top-left-radius: 6px;
-				border-top-right-radius: 6px;
+				border-start-start-radius: 6px;
+				border-start-end-radius: 6px;
 			}
 
 			&:last-of-type {
-				border-bottom-left-radius: 6px;
-				border-bottom-right-radius: 6px;
+				border-end-start-radius: 6px;
+				border-end-end-radius: 6px;
 			}
 		}
 	}

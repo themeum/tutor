@@ -1,5 +1,4 @@
 .tutor-tooltip-inside{
-    
     /* Tooltip shared base styles */
     .tooltip {
         position: absolute;
@@ -8,16 +7,9 @@
         clip: rect(0,0,0,0);
         box-sizing: border-box;
         width: 0;
-        height: 0;
-        padding: 0;
         cursor: default;
-        color: #fff;
         font-family: Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        font-size: 1.4rem;
         line-height: normal;
-        text-align: center;
-        white-space: nowrap;
         border-width: 0;
         border-style: solid;
         border-color: #6d6e71;
@@ -25,10 +17,7 @@
         background-color: #373739;
         opacity: 0;
         transition: opacity .3s ease-in .3s;
-
-
-        font-size: 13px;
-        color: #FFFFFF;   
+        color: #FFF;   
         height: auto;
         text-align: center;
         white-space: normal;
@@ -50,15 +39,17 @@
     }
 
     /* Tooltip positioning */
+
     /** Common styles: Horizontally Centered **/
     .tooltip, /*** Default is equivalent to .tip-bottom ***/
     .tooltip.tip-bottom,
     .tooltip.tip-top {
-        left: 50%;
+        inset-inline-start: 50%;
         -webkit-transform: translate(-50%, 0);
             -ms-transform: translate(-50%, 0);
                 transform: translate(-50%, 0);
     }
+
     /** Common styles: Bottom positions **/
     .tooltip, /*** Default is equivalent to .tip-bottom ***/
     .tooltip.tip-bottom,
@@ -67,6 +58,7 @@
         top: 110%;
         top: calc(100% + 13px);
     }
+
     /** Common styles: Top positions **/
     .tooltip.tip-top,
     .tooltip.tip-top-left,
@@ -75,6 +67,7 @@
         bottom: 110%;
         bottom: calc(100% + 13px);
     }
+
     /** Common styles: Corner positions **/
     .tooltip.tip-bottom-left,
     .tooltip.tip-bottom-right,
@@ -84,18 +77,20 @@
             -ms-transform: none;
                 transform: none;
     }
+
     /** Common styles: Left corner positions **/
     .tooltip.tip-bottom-left,
     .tooltip.tip-top-left {
-        right: 50%;
-        left: auto;
-        margin-right: -25px;
+        inset-inline: auto 50%;
+        margin-inline-end: -25px;
     }
+
     /** Common styles: Right corner positions **/
     .tooltip.tip-bottom-right,
     .tooltip.tip-top-right {
-        margin-left: -25px;
+        margin-inline-start: -25px;
     }
+
     /** Common styles: Vertically Centered **/
     .tooltip.tip-left,
     .tooltip.tip-right {
@@ -104,20 +99,22 @@
             -ms-transform: translate(0, -50%);
                 transform: translate(0, -50%);
     }
+
     /** Left position only **/
     .tooltip.tip-left {
-        right: 110%;
-        right: calc(100% + 13px);
-        left: auto;
+        inset-inline-end: 110%;
+        inset-inline-end: calc(100% + 13px);
+        inset-inline-start: auto;
     }
+
     /** Right position only **/
     .tooltip.tip-right {
-        left: 110%;
-        left: calc(100% + 13px);
+        inset-inline-start: 110%;
+        inset-inline-start: calc(100% + 13px);
     }
 
     /* Tooltip arrow shared base styles */
-    .tooltip:after {
+    .tooltip::after {
         content: ' ';
         display: block;
         position: absolute;
@@ -127,63 +124,70 @@
         border-style: solid;
         pointer-events: none;
     }
+
     /** Common styles: Horizontally Centered, Up/Down arrows **/
-    .tooltip:after, /*** Default is equivalent to .tip-bottom:after; ***/
-    .tooltip.tip-bottom:after,
-    .tooltip.tip-top:after {
-        left: 50%;
-        margin-left: -10px;
+    .tooltip::after, /*** Default is equivalent to .tip-bottom:after; ***/
+    .tooltip.tip-bottom::after,
+    .tooltip.tip-top::after {
+        inset-inline-start: 50%;
+        margin-inline-start: -10px;
     }
+
     /** Common styles: Up arrow **/
-    .tooltip:after, /*** Default is equivalent to .tip-bottom:after; ***/
-    .tooltip.tip-bottom:after,
-    .tooltip.tip-bottom-left:after,
-    .tooltip.tip-bottom-right:after {
+    .tooltip::after, /*** Default is equivalent to .tip-bottom:after; ***/
+    .tooltip.tip-bottom::after,
+    .tooltip.tip-bottom-left::after,
+    .tooltip.tip-bottom-right::after {
         top: -20px;
-        border-color: transparent transparent #373739 transparent;
+        border-color: transparent transparent #373739;
     }
+
     /** Common styles: Down arrow **/
-    .tooltip.tip-top:after,
-    .tooltip.tip-top-left:after,
-    .tooltip.tip-top-right:after{
+    .tooltip.tip-top::after,
+    .tooltip.tip-top-left::after,
+    .tooltip.tip-top-right::after{
         top: auto;
         bottom: -20px;
-        border-color: #373739 transparent transparent transparent;
+        border-color: #373739 transparent transparent;
     }
+
     /** Common styles: Left-/Right-aligned, Up/Down arrows **/
-    .tooltip.tip-bottom-left:after,
-    .tooltip.tip-bottom-right:after,
-    .tooltip.tip-top-left:after,
-    .tooltip.tip-top-right:after {
-        margin-left: 0;
+    .tooltip.tip-bottom-left::after,
+    .tooltip.tip-bottom-right::after,
+    .tooltip.tip-top-left::after,
+    .tooltip.tip-top-right::after {
+        margin-inline-start: 0;
     }
+
     /** Common styles: Right-aligned, Up/Down arrows **/
-    .tooltip.tip-bottom-left:after,
-    .tooltip.tip-top-left:after {
-        right: 15px;
-        left: auto;
+    .tooltip.tip-bottom-left::after,
+    .tooltip.tip-top-left::after {
+        inset-inline: auto 15px;
     }
+
     /** Common styles: Left-aligned, Up/Down arrows **/
-    .tooltip.tip-bottom-right:after,
-    .tooltip.tip-top-right:after {
-        left: 15px;
+    .tooltip.tip-bottom-right::after,
+    .tooltip.tip-top-right::after {
+        inset-inline-start: 15px;
     }
+
     /** Common styles: Vertically Centered, Left/Right arrows **/
-    .tooltip.tip-left:after,
-    .tooltip.tip-right:after {
+    .tooltip.tip-left::after,
+    .tooltip.tip-right::after {
         top: 50%;
         margin-top: -10px;
-        margin-left: auto;
+        margin-inline-start: auto;
     }
+
     /** Right arrow **/
-    .tooltip.tip-left:after {
-        right: -20px;
-        left: auto;
+    .tooltip.tip-left::after {
+        inset-inline: auto -20px;
         border-color: transparent transparent transparent #373739;
     }
+
     /** Left arrow **/
-    .tooltip.tip-right:after {
-        left: -20px;
+    .tooltip.tip-right::after {
+        inset-inline-start: -20px;
         border-color: transparent #373739 transparent transparent;
     }
 }

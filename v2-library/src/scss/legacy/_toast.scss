@@ -1,12 +1,11 @@
 .tutor-toast-parent {
 	position: fixed;
-	right: 25px;
+	inset-inline-end: 25px;
 	bottom: 25px;
-	left: auto;
+	inset-inline-start: auto;
 	max-height: 400px;
 	width: 350px;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow: hidden auto;
 	background: transparent;
 	z-index: 99999999;
 
@@ -17,14 +16,15 @@
 	&.tutor-toast-left {
 		position: fixed;
 		bottom: 25px;
-		left: 25px;
-		right: auto;
+		inset-inline-start: 25px;
+		inset-inline-end: auto;
 	}
 
 	.tutor-is-success{
 		.tutor-notification-icon {
 			color: var(--tutor-color-success);
 		}
+
 		.tutor-notification-content h5{
 			color: var(--tutor-color-success);
 		}
@@ -34,6 +34,7 @@
 		.tutor-notification-icon {
 			color: var(--tutor-color-warning);
 		}
+
 		.tutor-notification-content h5{
 			color: var(--tutor-color-warning);
 		}
@@ -43,6 +44,7 @@
 		.tutor-notification-icon {
 			color: var(--tutor-color-danger);
 		}
+
 		.tutor-notification-content h5{
 			color: var(--tutor-color-danger);
 		}
@@ -50,6 +52,6 @@
 }
 
 body.rtl .tutor-toast-parent {
-	right: auto;
-	left: 50px;
+	inset-inline-end: auto;
+	inset-inline-start: 50px;
 }

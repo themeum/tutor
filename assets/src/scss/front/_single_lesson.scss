@@ -1,5 +1,6 @@
 .tutor-quiz-questions-pagination {
     margin-top: 24px;
+
     ul {
         margin: 0;
         padding: 0!important;
@@ -7,12 +8,13 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+
         li {
             display: inline-block;
+
             a {
                 border: 1px solid var(--tutor-color-primary);
                 padding: 7px 13px;
-                display: block;
                 border-radius: 50%;
                 color: var(--tutor-color-primary);
                 font-weight: bold;
@@ -22,10 +24,12 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
                 &:hover,
                 &.active {
                     background-color: var(--tutor-color-primary);
                     color: white;
+
                     &:hover {
                         opacity: .8;
                     }

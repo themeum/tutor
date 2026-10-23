@@ -8,11 +8,12 @@ $arrow: 5px;
 	cursor: pointer;
 
 	&.tooltip-icon {
-		margin-left: 4px;
+		margin-inline-start: 4px;
 		color: var(--tutor-color-muted);
-		&:after {
+
+		&::after {
 			content: "\e99a";
-			font-family: "tutor";
+			font-family: tutor;
 		}
 	}
 
@@ -34,9 +35,9 @@ $arrow: 5px;
 		text-align: center;
 		border-radius: 10px;
 		z-index: 100;
-
 		opacity: 0;
 		visibility: hidden;
+
 		// filter: blur(2px);
 		transition: 200ms ease-in;
 
@@ -52,32 +53,34 @@ $arrow: 5px;
 	&:hover .tooltip-txt {
 		opacity: 1;
 		visibility: visible;
-		filter: blur(0px);
+		filter: blur(0);
 	}
 
 	.tooltip-top {
 		bottom: calc(100% + 8px);
+
 		&::after {
 			top: 100%;
-			left: 50%;
-			margin-left: -$arrow;
+			inset-inline-start: 50%;
+			margin-inline-start: -$arrow;
 			border-top-color: var(--tutor-body-color);
 		}
 	}
 
 	.tooltip-bottom {
 		top: calc(100% + 8px);
+
 		&::after {
 			bottom: 100%;
-			left: 50%;
-			margin-left: -$arrow;
+			inset-inline-start: 50%;
+			margin-inline-start: -$arrow;
 			border-bottom-color: var(--tutor-body-color);
 		}
 	}
 
 	.tooltip-top,
 	.tooltip-bottom {
-		left: 50%;
+		inset-inline-start: 50%;
 		transform: translateX(-50%);
 	}
 
@@ -85,6 +88,7 @@ $arrow: 5px;
 	.tooltip-right {
 		// -> arrow on top
 		top: -$arrow;
+
 		&::after {
 			top: 18px;
 			margin-top: -$arrow;
@@ -94,6 +98,7 @@ $arrow: 5px;
 		&.arrow-center {
 			top: 50%;
 			transform: translateY(-50%);
+
 			&::after {
 				top: 50%;
 				transform: translateY(-50%);
@@ -103,18 +108,20 @@ $arrow: 5px;
 	}
 
 	.tooltip-right {
-		left: calc(100% + 8px);
+		inset-inline-start: calc(100% + 8px);
+
 		&::after {
-			right: 100%;
-			border-right-color: var(--tutor-body-color);
+			inset-inline-end: 100%;
+			border-inline-end-color: var(--tutor-body-color);
 		}
 	}
 
 	.tooltip-left {
-		right: calc(100% + 8px);
+		inset-inline-end: calc(100% + 8px);
+
 		&::after {
-			left: 100%;
-			border-left-color: var(--tutor-body-color);
+			inset-inline-start: 100%;
+			border-inline-start-color: var(--tutor-body-color);
 		}
 	}
 }
@@ -124,43 +131,54 @@ $arrow: 5px;
 	.tooltip-top {
 		transform: translateX(-50%) translateY(-2px);
 	}
+
 	.tooltip-bottom {
 		transform: translateX(-50%) translateY(2px);
 	}
+
 	.tooltip-right {
 		transform: translateX(2px);
 	}
+
 	.tooltip-left {
 		transform: translateX(-2px);
 	}
+
 	&:hover {
 		.tooltip-top {
 			transform: translateX(-50%) translateY(0);
 		}
+
 		.tooltip-bottom {
 			transform: translateX(-50%) translateY(0);
 		}
+
 		.tooltip-right {
 			transform: translateX(0);
 		}
+
 		.tooltip-left {
 			transform: translateX(0);
 		}
+
 		// -> arrow on center
 		.arrow-center {
 			&.tooltip-right {
-				transform: translateY(-50%) translateX(0px);
+				transform: translateY(-50%) translateX(0);
 			}
+
 			&.tooltip-left {
-				transform: translateY(-50%) translateX(0px);
+				transform: translateY(-50%) translateX(0);
 			}
 		}
 	}
+
 	// -> arrow on center
 	.arrow-center {
 		&.tooltip-right {
 			transform: translateY(-50%) translateX(2px);
 		}
+
 		&.tooltip-left {
 			transform: translateY(-50%) translateX(-2px);
 		}

@@ -22,11 +22,7 @@
             cursor: pointer;
 
             input[type="checkbox"] {
-                @if ($is_rtl == true) {
-                    margin-left: 16px;
-                } @else {
-                    margin-right: 16px;
-                }
+                margin-inline-end: 16px;
             }
         }
    }

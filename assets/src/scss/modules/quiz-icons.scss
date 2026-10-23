@@ -3,7 +3,7 @@
         padding: 0;
         color: #fff;
         border-radius: 4px;
-        margin-right: 8px;
+        margin-inline-end: 8px;
         display: inline-block;
         width: 32px;
         height: 32px;
@@ -14,8 +14,7 @@
         background-color: var(--tutor-color-primary);
 
         .rtl & {
-            margin-left: 8px;
-            margin-right: 0px;
+            margin-inline: 8px 0;
         }
     }
 
