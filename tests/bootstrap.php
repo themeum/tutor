@@ -10,9 +10,7 @@ if ( ! session_id() ) {
 }
 
 define( 'WP_RUNNING_TESTS', true );
-
-// Use our own config (points to a separate test database on the existing WP install).
-define( 'WP_TESTS_CONFIG_FILE_PATH', __DIR__ . '/wp-tests-config.php' );
+define( 'WP_TESTS_CONFIG_FILE_PATH', __DIR__ . '/support/wp-tests-config.php' );
 
 $_plugin_dir = dirname( __DIR__ );
 $_tests_dir  = $_plugin_dir . '/vendor/wp-phpunit/wp-phpunit';

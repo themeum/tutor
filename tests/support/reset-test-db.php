@@ -15,9 +15,6 @@
 
 // Tell wp-config.php to connect to local_test.
 putenv( 'WP_TEST_ENV=1' );
-if ( ! defined( 'WP_RUNNING_TESTS' ) ) {
-	define( 'WP_RUNNING_TESTS', true );
-}
 
 // Suppress extraneous output during bootstrap.
 ob_start();
@@ -90,6 +87,10 @@ update_option( 'siteurl', $site_url );
 update_option( 'home', $site_url );
 update_option( 'permalink_structure', '/%postname%/' );
 update_option( 'active_plugins', array( 'tutor/tutor.php' ) );
+
+if ( ! function_exists( 'tutor' ) ) {
+	require_once dirname( __DIR__, 2 ) . '/tutor.php';
+}
 
 // 3. Create Tutor custom tables, default options, roles, and initial pages
 echo "==> Initializing Tutor LMS tables, default options, and pages...\n";
