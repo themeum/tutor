@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', rtrim( $existing_wp_dir, '/\\' ) . '/' );
 }
 
-// Load optional overrides from .env
+// Load optional overrides from .env.
 $env_file = dirname( __DIR__ ) . '/.env';
 $env      = file_exists( $env_file ) ? parse_ini_file( $env_file ) : array();
 
@@ -46,16 +46,11 @@ if ( 'local' === DB_NAME || 'production' === DB_NAME || ! preg_match( '/(test|te
 // Table prefix for PHPUnit tests.
 $table_prefix = 'wptests_';//phpcs:ignore
 
-$site_url = ! empty( $env['SITE_URL'] ) ? $env['SITE_URL'] : getenv( 'SITE_URL' );
-$domain   = 'tutor-dev.local';
-if ( $site_url ) {
-	$parsed_host = parse_url( $site_url, PHP_URL_HOST );
-	if ( $parsed_host ) {
-		$domain = $parsed_host;
-	}
-}
+$site_url    = $env['SITE_URL'] ?? getenv( 'SITE_URL' );
+$parsed_host = parse_url( $site_url, PHP_URL_HOST );
+$test_domain = $parsed_host ? $parsed_host : 'tutor-dev.local';
 
-define( 'WP_TESTS_DOMAIN', $domain );
+define( 'WP_TESTS_DOMAIN', $test_domain );
 define( 'WP_TESTS_EMAIL', 'admin@example.org' );
 define( 'WP_TESTS_TITLE', 'Tutor LMS Test Site' );
 define( 'WP_PHP_BINARY', 'php' );
