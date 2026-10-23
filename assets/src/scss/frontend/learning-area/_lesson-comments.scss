@@ -63,7 +63,7 @@
       }
 
       &:focus-visible {
-        @include tutor-focus-ring();
+        @include tutor-focus-ring;
       }
     }
 

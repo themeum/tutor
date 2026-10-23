@@ -1,3 +1,4 @@
+@use 'sass:color';
 // Toggle Disable -> Monitization > Monitization fees
 .monetization-fees.is-disable {
 	.tutor-option-field-row {
@@ -29,7 +30,7 @@
 .revenue-percentage {
 	input.warning {
 		border-color: var(--tutor-danger-color) !important;
-		box-shadow: 0 0 0 3px lighten(red, 45) !important;
+		box-shadow: 0 0 0 3px color.adjust(red, $lightness: 45%) !important;
 	}
 }
 

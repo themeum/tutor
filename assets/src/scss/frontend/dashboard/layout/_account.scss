@@ -47,7 +47,7 @@ body:has(#wpadminbar) .tutor-account-page-wrapper.tutor-has-site-shell .tutor-ac
 }
 
 .tutor-account-container {
-  @include tutor-frontend-layout();
+  @include tutor-frontend-layout;
 
   padding-inline: $tutor-spacing-6;
 }

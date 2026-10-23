@@ -1,4 +1,6 @@
 @use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
 
 // Grid system
 //
@@ -19,7 +21,7 @@
 
 @mixin make-col-ready($gutter: $grid-gutter-width) {
   // Add box sizing if only the grid is loaded
-  box-sizing: if(variable-exists(include-column-box-sizing) and $include-column-box-sizing, border-box, null);
+  box-sizing: if(meta.variable-exists(include-column-box-sizing) and $include-column-box-sizing, border-box, null);
 
   // Prevent columns from becoming too narrow when at smaller grid tiers by
   // always setting `width: 100%;`. This works because we set the width
@@ -35,7 +37,7 @@
 @mixin make-col($size: false, $columns: $grid-columns) {
   @if $size {
     flex: 0 0 auto;
-    width: percentage(divide($size, $columns));
+    width: math.percentage(divide($size, $columns));
 
   } @else {
     flex: 1 1 0;
@@ -51,7 +53,7 @@
 @mixin make-col-offset($size, $columns: $grid-columns) {
   $num: divide($size, $columns);
 
-  margin-inline-start: if($num == 0, 0, percentage($num));
+  margin-inline-start: if($num == 0, 0, math.percentage($num));
 }
 
 // Row columns
@@ -69,8 +71,7 @@
 // Framework grid generation
 //
 // Used only by Bootstrap to generate the correct number of grid classes given
-// any value of `$grid-columns`.
-
+// any value of `$grid-columns`.\n
 @mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter-width, $breakpoints: $grid-breakpoints) {
   @each $breakpoint in map.keys($breakpoints) {
     $infix: breakpoint-infix($breakpoint, $breakpoints);

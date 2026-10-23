@@ -127,7 +127,7 @@ a.tutor-btn-large,
 button.tutor-btn-block,
 a.tutor-btn-block,
 .tutor-btn-block {
-  @include tutor-button-block();
+  @include tutor-button-block;
 }
 
 // Button group

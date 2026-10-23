@@ -28,7 +28,7 @@
 
   .vc-months__month.vc-months__month,
   .vc-years__year.vc-years__year {
-    @include tutor-button-base();
+    @include tutor-button-base;
     @include tutor-button-variant('ghost');
 
     color: $tutor-text-primary;
@@ -136,7 +136,7 @@
     @include tutor-flex(column);
 
     button {
-      @include tutor-button-reset();
+      @include tutor-button-reset;
       @include tutor-typography(tiny, medium);
       @include tutor-flex(row, center, space-between);
 

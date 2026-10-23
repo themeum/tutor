@@ -51,7 +51,7 @@
       gap: $tutor-spacing-2;
 
       &::before {
-        @include tutor-flex-center();
+        @include tutor-flex-center;
 
         content: '';
         height: 2px;
@@ -148,13 +148,13 @@
     }
 
     &-avatar {
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       flex-shrink: 0;
     }
 
     &-icon {
-      @include tutor-flex-center();
+      @include tutor-flex-center;
       @include tutor-typography('tiny', 'regular', 'subdued');
 
       width: 16px;
@@ -177,7 +177,7 @@
 
     &-index {
       @include tutor-typography('p3', 'medium', 'secondary');
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       width: 32px;
       height: 32px;
@@ -218,7 +218,7 @@
     }
 
     &-icon {
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       width: 32px;
       height: 32px;
@@ -276,7 +276,7 @@
     padding: $tutor-spacing-5;
 
     &-avatar {
-      @include tutor-flex-center();
+      @include tutor-flex-center;
 
       flex-shrink: 0;
       align-self: flex-start;

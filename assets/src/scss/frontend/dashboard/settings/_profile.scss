@@ -19,7 +19,7 @@
       .tutor-tabs-tab {
         gap: $tutor-spacing-6;
 
-        &:hover:not(:disabled):not(.tutor-tabs-tab-active) {
+        &:hover:not(:disabled, .tutor-tabs-tab-active) {
           background: transparent;
         }
       }

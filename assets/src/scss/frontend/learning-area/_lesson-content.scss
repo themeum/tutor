@@ -10,9 +10,9 @@
   button.tutor-mark-as-complete-button,
   a.tutor-mark-as-complete-button,
   .tutor-mark-as-complete-button {
-    @include tutor-button-base();
+    @include tutor-button-base;
     @include tutor-button-variant(primary-soft);
-    @include tutor-button-size();
+    @include tutor-button-size;
 
     gap: $tutor-spacing-4;
     min-width: 160px;
@@ -25,7 +25,7 @@
       flex-shrink: 0;
     }
 
-    &:hover:not(.completed):not(:disabled) {
+    &:hover:not(.completed, :disabled) {
       background-color: $tutor-surface-l1;
 
       svg {
@@ -107,7 +107,7 @@
   }
 
   .tutor-lesson-image-wrapper {
-    @include tutor-flex-center();
+    @include tutor-flex-center;
 
     aspect-ratio: 16 / 9;
 

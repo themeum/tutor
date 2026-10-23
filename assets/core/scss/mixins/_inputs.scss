@@ -41,7 +41,7 @@
     margin: 0;
   }
 
-  &:placeholder-shown:not(:focus):not(:disabled) {
+  &:placeholder-shown:not(:focus, :disabled) {
     background-color: $tutor-surface-l3;
   }
 
@@ -50,7 +50,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring();
+    @include tutor-focus-ring;
 
     background-color: $tutor-surface-l1;
     border-color: $tutor-border-brand-tertiary;
@@ -267,7 +267,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring();
+    @include tutor-focus-ring;
 
     border-color: $tutor-border-brand-tertiary;
   }

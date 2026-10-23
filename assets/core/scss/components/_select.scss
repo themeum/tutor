@@ -26,11 +26,11 @@
     cursor: pointer;
     text-align: start;
 
-    @include tutor-transition();
+    @include tutor-transition;
 
     &:hover,
     &:focus {
-      @include tutor-focus-ring();
+      @include tutor-focus-ring;
 
       border-color: $tutor-border-brand-tertiary;
       background-color: $tutor-surface-l1;
@@ -226,7 +226,7 @@
     }
 
     .tutor-select-search-input {
-      @include tutor-input-base();
+      @include tutor-input-base;
 
       padding-block: $tutor-spacing-3;
       padding-inline-start: $tutor-spacing-9;

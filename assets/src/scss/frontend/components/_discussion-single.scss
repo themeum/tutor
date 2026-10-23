@@ -16,7 +16,7 @@
     border-bottom: 1px solid $tutor-border-idle;
 
     .tutor-discussion-avatar-list {
-      @include tutor-flex();
+      @include tutor-flex;
 
       .tutor-avatar {
         border: 1px solid $tutor-border-inverse;
@@ -39,7 +39,7 @@
   }
 
   .tutor-discussion-thumb-button {
-    @include tutor-button-reset();
+    @include tutor-button-reset;
     @include tutor-flex(0);
   }
 }

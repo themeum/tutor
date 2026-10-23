@@ -21,7 +21,7 @@
     justify-content: space-between;
 
     .tutor-has-site-shell & {
-      @include tutor-card-base();
+      @include tutor-card-base;
 
       margin-top: $tutor-spacing-6;
       border-radius: $tutor-radius-2xl;

@@ -11,7 +11,7 @@
 
   button.tutor-nav-item,
   .tutor-nav-item {
-    @include tutor-button-reset();
+    @include tutor-button-reset;
     @include tutor-typography(small, medium, secondary);
     @include tutor-flex(row, center);
 
@@ -75,7 +75,7 @@
     padding: $tutor-spacing-2 0;
 
     &-item {
-      @include tutor-button-reset();
+      @include tutor-button-reset;
       @include tutor-typography(small);
       @include tutor-flex(row, center);
 

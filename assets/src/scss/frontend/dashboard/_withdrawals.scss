@@ -169,7 +169,7 @@
 }
 
 .tutor-withdrawal-available-balance {
-  @include tutor-flex();
+  @include tutor-flex;
 
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-5 $tutor-spacing-6;
@@ -178,7 +178,7 @@
   border-radius: $tutor-radius-lg;
 
   &-icon {
-    @include tutor-flex-center();
+    @include tutor-flex-center;
 
     width: 44px;
     height: 44px;

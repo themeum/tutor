@@ -25,7 +25,7 @@
     padding: $tutor-spacing-4;
 
     .tutor-course-thumb {
-      @include tutor-flex();
+      @include tutor-flex;
 
       max-width: 106px;
     }
@@ -36,7 +36,7 @@
     margin-top: $tutor-spacing-8;
 
     a {
-      @include tutor-transition();
+      @include tutor-transition;
 
       &:hover {
         color: $tutor-text-brand;

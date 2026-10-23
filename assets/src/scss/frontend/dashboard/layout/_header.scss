@@ -33,7 +33,7 @@
   }
 
   &-inner {
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
     @include tutor-flex(row, center, space-between);
 
     height: 100%;
@@ -100,7 +100,7 @@
   }
 
   &-user-avatar {
-    @include tutor-button-reset();
+    @include tutor-button-reset;
 
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
@@ -114,7 +114,7 @@
     }
 
     &:focus-visible {
-      @include tutor-focus-ring();
+      @include tutor-focus-ring;
     }
   }
 
@@ -191,7 +191,7 @@
     height: 60px;
 
     .tutor-dashboard-header-user-avatar {
-      @include tutor-button-base();
+      @include tutor-button-base;
       @include tutor-button-variant(ghost);
 
       padding: 9px;
