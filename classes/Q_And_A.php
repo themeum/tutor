@@ -12,7 +12,6 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 use Tutor\Models\EnrollmentModel;
@@ -134,10 +133,11 @@ class Q_And_A {
 	public static function has_qna_access( $user_id, $course_id ) {
 		$is_public_course = Course_List::is_public( $course_id );
 
-		return $is_public_course
-			|| User::is_admin( $user_id )
-			|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
-			|| EnrollmentModel::is_enrolled( $course_id, $user_id );
+		$has_access = $is_public_course
+						|| User::is_admin()
+						|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
+						|| EnrollmentModel::is_enrolled( $course_id, $user_id );
+		return $has_access;
 	}
 
 	/**
