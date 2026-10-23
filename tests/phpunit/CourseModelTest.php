@@ -1,8 +1,15 @@
-<?php namespace TutorTest;
+<?php
+/**
+ * Test class for Tutor\Models\CourseModel
+ * Run test by: vendor/bin/phpunit --filter=CourseModelTest
+ *
+ * @since 2.1.0
+ * @package Tutor\Test
+ */
 
-use TUTOR\Course;
+namespace TutorTest;
+
 use Tutor\Models\CourseModel;
-
 /**
  * Input class test
  * Run test by: vendor/bin/phpunit --filter=InputClassTest
