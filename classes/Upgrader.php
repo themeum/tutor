@@ -13,7 +13,6 @@ namespace TUTOR;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CouponModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -402,25 +401,8 @@ class Upgrader {
 
 			$table_name = "{$wpdb->prefix}tutor_coupon_usages";
 			if ( QueryHelper::table_exists( $table_name ) ) {
-				$charset_collate    = $wpdb->get_charset_collate();
-				$coupon_usage_table = "CREATE TABLE {$table_name} (
-					id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-					coupon_code VARCHAR(50) NOT NULL,
-					user_id BIGINT(20) UNSIGNED NOT NULL,
-					order_id BIGINT(20) UNSIGNED DEFAULT NULL,
-					status VARCHAR(20) NOT NULL DEFAULT '" . CouponModel::STATUS_CONSUMED . "',
-					expires_at_gmt DATETIME DEFAULT NULL,
-					created_at_gmt DATETIME NOT NULL,
-					PRIMARY KEY (id),
-					UNIQUE KEY coupon_order (coupon_code, order_id),
-					KEY coupon_code (coupon_code),
-					KEY user_id (user_id),
-					KEY order_id (order_id),
-					KEY status (status)
-				) $charset_collate;";
-
 				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-				dbDelta( $coupon_usage_table );
+				dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
 
 				update_option( 'tutor_coupon_table_updated', true, false );
 			}
