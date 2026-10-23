@@ -194,8 +194,9 @@ class RestAPI {
 			);
 		}
 
-		// Prevent access to non-publish posts, only author / course managers can access.
-		if ( 'publish' !== $post->post_status && ! $can_edit ) {
+		// Non-publish: editors always; readers only when can_view_course_content allows
+		// (private + enrolled/public/IA — not draft/pending/trash via enrollment alone).
+		if ( 'publish' !== $post->post_status && ! $can_edit && ! RestAuth::can_view_course_content( $id ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
