@@ -59,7 +59,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.get('a.tutor-create-new-course.tutor-dashboard-create-course').click();
     cy.url().should('include', '/create-course');
     cy.getByInputName('post_title').clear().type('Google meet test course');
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Additional').click();
     });
 
@@ -67,7 +67,7 @@ describe('Tutor Dashboard My Courses', () => {
 
     cy.isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION).then((isEnabled) => {
       if (isEnabled) {
-        cy.get('[data-cy=create-google-meet-link]').click().wait(500);
+        cy.get('[data-testid=create-google-meet-link]').click().wait(500);
         cy.get('.tutor-portal-popover').within(() => {
           cy.getByInputName('meeting_name').type(googleMeetData.meeting_name);
         });
@@ -81,16 +81,16 @@ describe('Tutor Dashboard My Courses', () => {
         cy.getSelectInput('meeting_end_time', '11:30 PM');
 
         cy.getSelectInput('meeting_timezone', googleMeetData.meeting_timezone);
-        cy.get('[data-cy=save-google-meeting]').click();
+        cy.get('[data-testid=save-google-meeting]').click();
 
         cy.waitAfterRequest('saveGoogleMeeting');
 
-        cy.get('[data-cy=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
+        cy.get('[data-testid=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
 
         return;
       }
     });
-    cy.get('[data-cy=course-builder-submit-button]').click();
+    cy.get('[data-testid=course-builder-submit-button]').click();
 
     cy.url()
       .should('include', 'course_id=')

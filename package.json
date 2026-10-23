@@ -4,7 +4,7 @@
   "main": "index.js",
   "engines": {
     "pnpm": ">=9.0.0",
-    "node": ">=14.17.5"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "build": "rm -f *.zip && composer install --no-dev && npm run make-pot && rspack --mode=production && npm run tutor-droip && npm run tutor-kirki && gulp build",
@@ -15,8 +15,14 @@
     "eslint:fix": "pnpm exec eslint --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "tutor-kirki": "cd includes/kirki && npm run build && cp -r dist/* ../../includes/kirki",
-    "cy:open": "cypress open --e2e --browser electron",
-    "test": "cypress run",
+    "test": "pnpm e2e",
+    "e2e": "bash bin/e2e/run.sh --grep @smoke",
+    "e2e:full": "bash bin/e2e/run.sh",
+    "e2e:journey": "bash bin/e2e/run.sh --grep @journey",
+    "e2e:open": "pnpm exec playwright test --ui",
+    "e2e:env": "bash bin/e2e/ensure-docker.sh && pnpm exec wp-env start",
+    "e2e:reset": "bash bin/e2e/ensure-docker.sh && pnpm exec wp-env reset all && pnpm exec wp-env start",
+    "e2e:down": "pnpm exec wp-env stop",
     "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
@@ -40,6 +46,7 @@
     "@eslint/js": "^9.15.0",
     "@faker-js/faker": "^9.5.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
+    "@playwright/test": "^1.64.1",
     "@rsbuild/core": "^1.6.2",
     "@rsbuild/plugin-react": "^1.4.6",
     "@rsdoctor/rspack-plugin": "^1.5.12",
@@ -61,6 +68,7 @@
     "@types/react-dom": "18.3.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.8",
+    "@wordpress/env": "^11.17.0",
     "@wordpress/eslint-plugin": "^22.12.0",
     "css-loader": "^7.1.2",
     "cypress": "^14.4.0",

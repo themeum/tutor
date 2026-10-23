@@ -63,10 +63,10 @@ describe('Course Builder - Creation', () => {
       cy.waitAfterRequest('getCourseDetails');
 
       cy.getByInputName('post_title').clear().type(courseData.post_title);
-      cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
+      cy.setTinyMceContent('[data-testid=tutor-tinymce]', courseData.post_content);
 
       cy.updateCourse();
-      cy.get('[data-cy=tutor-toast]').should('contain', 'Course updated successfully');
+      cy.get('[data-testid=tutor-toast]').should('contain', 'Course updated successfully');
     });
   });
 

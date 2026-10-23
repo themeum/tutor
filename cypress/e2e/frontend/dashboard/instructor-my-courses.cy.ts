@@ -33,7 +33,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.waitAfterRequest('ajaxRequest');
     cy.waitAfterRequest('getCourseDetails');
 
-    cy.get('[data-cy=course-builder-submit-button]').click();
+    cy.get('[data-testid=course-builder-submit-button]').click();
   });
 
   it('should draft and publish again a course', () => {

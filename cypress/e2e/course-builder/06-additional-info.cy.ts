@@ -47,7 +47,7 @@ describe('Course Builder - Additional Info', () => {
     cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${courseId}`);
     cy.wait(500);
     cy.waitAfterRequest('getCourseDetails');
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Additional').click();
     });
   });

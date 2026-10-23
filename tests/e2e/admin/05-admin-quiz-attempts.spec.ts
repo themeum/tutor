@@ -1,0 +1,44 @@
+import {
+  applyAdminFilter,
+  assertNoPhpErrors,
+  clearAdminSearch,
+  searchAdminTable,
+  toggleAdminSortOrder,
+} from '@e2e/support/admin';
+import { expect, test } from '@e2e/support/test';
+import { backendUrls } from '@e2e/support/urls';
+
+test.describe('Admin Quiz Attempts Management @feature', () => {
+  test('lists quiz attempts with pass/fail badges, student names, and handles empty search', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.quizAttempts);
+
+    await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Quiz Attempts');
+    const table = adminPage.locator('table.tutor-table');
+    await expect(table).toContainText('JavaScript Engine Evaluation Quiz');
+    await expect(table).toContainText(/pass/i);
+    await expect(table).toContainText(/student|E2E Student/i);
+
+    // Negative search edge case
+    await searchAdminTable(adminPage, '__non_existent_quiz_attempt__');
+    await expect(adminPage.locator('body')).toContainText(/No Data Found|No Record Found/i);
+
+    // Clear search
+    await clearAdminSearch(adminPage);
+    await expect(table).toContainText('JavaScript Engine Evaluation Quiz');
+    await assertNoPhpErrors(adminPage);
+  });
+
+  test('applies list filters and toggles sort order on quiz attempts', async ({ adminPage }) => {
+    await adminPage.goto(backendUrls.quizAttempts);
+
+    // Filter via popup filter form for pass status
+    await applyAdminFilter(adminPage, { data: 'pass' });
+    await expect(adminPage).toHaveURL(/data=pass/);
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/pass/i);
+
+    // Toggle sort order
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
+    await assertNoPhpErrors(adminPage);
+  });
+});

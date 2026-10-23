@@ -226,7 +226,7 @@ const AssignmentModal = ({
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
-              data-cy="save-assignment"
+              data-testid="save-assignment"
               loading={saveAssignmentMutation.isPending}
               variant="primary"
               size="small"

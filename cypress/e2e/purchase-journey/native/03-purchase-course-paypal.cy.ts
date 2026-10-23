@@ -13,13 +13,13 @@ interface BillingData {
 }
 
 const SELECTORS = {
-  ADD_TO_CART: 'button[data-cy=tutor-native-add-to-cart]',
-  VIEW_CART: 'a[data-cy=tutor-native-view-cart]',
+  ADD_TO_CART: 'button[data-testid=tutor-native-add-to-cart]',
+  VIEW_CART: 'a[data-testid=tutor-native-view-cart]',
   CART_TOTAL: '.tutor-cart-summery-item',
   CHECKOUT_TOTAL: '.tutor-checkout-summary-item',
-  CHECKOUT_BUTTON: 'a[data-cy=tutor-native-checkout-button]',
+  CHECKOUT_BUTTON: 'a[data-testid=tutor-native-checkout-button]',
   PAY_NOW_BUTTON: 'button#tutor-checkout-pay-now-button',
-  ORDER_HISTORY: 'a[data-cy=tutor-native-order-history]',
+  ORDER_HISTORY: 'a[data-testid=tutor-native-order-history]',
   TERM_AND_CONDITIONS: 'agree_to_terms',
 } as const;
 

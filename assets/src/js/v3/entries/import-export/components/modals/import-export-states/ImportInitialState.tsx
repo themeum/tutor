@@ -216,7 +216,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
 
               <div>
                 <UploadButton
-                  data-cy="replace-file"
+                  data-testid="replace-file"
                   variant="tertiary"
                   size="small"
                   onUpload={handleUpload}
@@ -314,7 +314,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             {__('Cancel', 'tutor')}
           </Button>
           <Button
-            data-cy="import-csv"
+            data-testid="import-csv"
             disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasContent.settings)}
             variant="primary"
             size="small"

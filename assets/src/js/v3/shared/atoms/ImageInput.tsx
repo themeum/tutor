@@ -100,7 +100,7 @@ const ImageInput = ({
               size={sizeMap[size]}
               variant="secondary"
               buttonContentCss={styles.buttonText}
-              data-cy="upload-media"
+              data-testid="upload-media"
             >
               {buttonText}
             </Button>
@@ -120,7 +120,7 @@ const ImageInput = ({
                 }),
                 previewImageCss,
               ]}
-              data-cy="media-preview"
+              data-testid="media-preview"
             >
               <img src={url} alt={value?.title} css={styles.imagePreview} />
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
@@ -135,7 +135,7 @@ const ImageInput = ({
                     event.stopPropagation();
                     uploadHandler();
                   }}
-                  data-cy="replace-media"
+                  data-testid="replace-media"
                 >
                   {replaceButtonText || __('Replace Image', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
@@ -148,7 +148,7 @@ const ImageInput = ({
                       event.stopPropagation();
                       clearHandler();
                     }}
-                    data-cy="clear-media"
+                    data-testid="clear-media"
                   >
                     {__('Remove', __TUTOR_TEXT_DOMAIN__)}
                   </Button>

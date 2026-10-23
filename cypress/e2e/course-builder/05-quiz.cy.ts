@@ -75,7 +75,7 @@ describe('Course Builder - Quiz', () => {
     cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${courseId}`);
     cy.wait(500);
     cy.waitAfterRequest('getCourseDetails');
-    cy.get('[data-cy=tutor-tracker]').within(() => {
+    cy.get('[data-testid=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
     cy.wait(500);
@@ -83,30 +83,30 @@ describe('Course Builder - Quiz', () => {
   });
 
   it('creates a topic for quiz', () => {
-    cy.doesElementExist('[data-cy=edit-topic]').then((exists) => {
+    cy.doesElementExist('[data-testid=edit-topic]').then((exists) => {
       if (!exists) {
-        cy.get('[data-cy=add-topic]').click();
+        cy.get('[data-testid=add-topic]').click();
         cy.saveTopic(topicData.title, topicData.summary);
       }
     });
   });
 
   it('creates a quiz with settings', () => {
-    cy.get('[data-cy=add-quiz]').first().click();
+    cy.get('[data-testid=add-quiz]').first().click();
     cy.saveQuiz(quizData);
     cy.get('body').should('contain', quizData.quiz_title);
   });
 
   it('duplicates and deletes a quiz', () => {
     // Duplicate quiz
-    cy.get('[data-cy=duplicate-tutor_quiz]').first().click();
+    cy.get('[data-testid=duplicate-tutor_quiz]').first().click();
     cy.waitAfterRequest('duplicateContent');
     cy.waitAfterRequest('getCourseContents');
     cy.get('body').should('contain', `${quizData.quiz_title} (copy)`);
 
     // Delete quiz copy
-    cy.get('[data-cy=delete-tutor_quiz]').eq(1).click();
-    cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
+    cy.get('[data-testid=delete-tutor_quiz]').eq(1).click();
+    cy.get('.tutor-portal-popover [data-testid=confirm-button]').click();
     cy.waitAfterRequest('deleteQuiz');
     cy.waitAfterRequest('getCourseContents');
     cy.get('body').should('not.contain', `${quizData.quiz_title} (copy)`);

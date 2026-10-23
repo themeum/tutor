@@ -61,14 +61,14 @@ describe('Coupon Management', () => {
       cy.url().should('include', '&action=add_new');
 
       cy.getByInputName('coupon_title').type(couponData.title);
-      cy.get('[data-cy=generate-code]').click();
+      cy.get('[data-testid=generate-code]').click();
       cy.getByInputName('coupon_code').invoke('val').should('not.be.empty');
       cy.getByInputName('discount_amount').type(String(couponData.discountAmount));
 
       cy.selectDate('start_date');
       cy.getSelectInput('start_time', '12:00 AM');
 
-      cy.get('[data-cy=save-coupon]').click();
+      cy.get('[data-testid=save-coupon]').click();
       cy.waitAfterRequest('ajaxRequest');
       cy.url().should('include', backendUrls.COUPONS);
     });
@@ -83,7 +83,7 @@ describe('Coupon Management', () => {
       const newDiscountAmount = faker.number.int({ min: 1, max: 99 });
       cy.getByInputName('discount_amount').clear().type(String(newDiscountAmount));
 
-      cy.get('[data-cy=save-coupon]').click();
+      cy.get('[data-testid=save-coupon]').click();
       cy.waitAfterRequest('ajaxRequest');
       cy.url().should('include', backendUrls.COUPONS);
     });

@@ -80,10 +80,10 @@ describe('Paid Course Creation for Native E-Commerce Guest Checkout', () => {
     cy.waitAfterRequest('getCourseDetails');
 
     cy.getByInputName('post_title').clear().type(courseData.post_title);
-    cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
+    cy.setTinyMceContent('[data-testid=tutor-tinymce]', courseData.post_content);
 
     cy.updateCourse();
-    cy.get('[data-cy=tutor-toast]').should('contain', 'Course updated successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain', 'Course updated successfully');
   });
 
   it('configures pricing', () => {
@@ -108,7 +108,7 @@ describe('Paid Course Creation for Native E-Commerce Guest Checkout', () => {
 
     cy.wait(500);
 
-    cy.get('[data-cy=course-slug]').should('be.visible').invoke('text').as('slugValue');
+    cy.get('[data-testid=course-slug]').should('be.visible').invoke('text').as('slugValue');
 
     cy.get('@slugValue').then((slugValue) => {
       cy.log(`Slug: ${slugValue}`);

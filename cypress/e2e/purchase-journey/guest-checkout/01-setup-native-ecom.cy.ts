@@ -30,7 +30,7 @@ describe('Native E-Commerce Guest Checkout', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_payment`);
     cy.waitAfterRequest('paymentGateways');
     cy.waitAfterRequest('paymentSettings');
-    cy.get('[data-payment-item-paypal=true] button[data-cy=collapse-button]').click();
+    cy.get('[data-payment-item-paypal=true] button[data-testid=collapse-button]').click();
 
     cy.get('[data-payment-item-paypal=true]').within(() => {
       cy.get('input[name*="fields.1.value"]').clear().type(Cypress.env('paypal_merchant_email'));

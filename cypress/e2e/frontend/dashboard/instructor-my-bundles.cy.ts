@@ -46,46 +46,46 @@ describe('Tutor Dashboard My Bundles', () => {
 
     // Only focus on creating basic bundle information
     cy.getByInputName('post_title').clear().type(bundleData.post_title);
-    cy.setTinyMceContent('[data-cy=tutor-tinymce]', bundleData.post_content);
+    cy.setTinyMceContent('[data-testid=tutor-tinymce]', bundleData.post_content);
     cy.getByInputName('course_benefits').clear().type(bundleData.course_benefits);
 
     // Add course to bundle
-    cy.get('[data-cy=add-course]').click();
-    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+    cy.get('[data-testid=add-course]').click();
+    cy.get('[data-testid=tutor-modal]').within(($elements) => {
       cy.wrap($elements).should('contain.text', 'Select Courses');
       cy.waitAfterRequest('courseList');
       if ($elements.text().includes('No Data!')) {
-        cy.get('[data-cy=tutor-modal-close]').click();
+        cy.get('[data-testid=tutor-modal-close]').click();
         return;
       } else {
-        cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
-        cy.get('button[data-cy=add-selected-courses]').click();
+        cy.get('tbody tr:first-child').find('[data-testid=select-course]').click({ force: true });
+        cy.get('button[data-testid=add-selected-courses]').click();
       }
       cy.waitAfterRequest('addRemoveCourseToBundle');
     });
 
     // Remove course from bundle if any exists
-    cy.get('[data-cy=course-selection]').then(($elements) => {
+    cy.get('[data-testid=course-selection]').then(($elements) => {
       if ($elements.text().includes('No Courses Added Yet')) {
         cy.log('No courses to remove');
         return;
       }
 
-      cy.get('[data-cy=remove-course]').first().click({ force: true });
+      cy.get('[data-testid=remove-course]').first().click({ force: true });
       cy.waitAfterRequest('addRemoveCourseToBundle');
     });
 
-    cy.get('[data-cy=bundle-builder-submit-button]').click();
+    cy.get('[data-testid=bundle-builder-submit-button]').click();
     cy.waitAfterRequest('updateBundle');
-    cy.get('[data-cy=tutor-toast]').should('contain.text', 'Course Bundle updated successfully');
+    cy.get('[data-testid=tutor-toast]').should('contain.text', 'Course Bundle updated successfully');
 
     cy.window().then((win) => {
       const tutorObject = win._tutorobject;
       if (tutorObject.settings?.instructor_can_publish_course === 'on') {
         return;
       } else {
-        cy.get('[data-cy=tutor-modal]').within(() => {
-          cy.get('[data-cy=back-to-course-bundles]').click();
+        cy.get('[data-testid=tutor-modal]').within(() => {
+          cy.get('[data-testid=back-to-course-bundles]').click();
         });
       }
     });

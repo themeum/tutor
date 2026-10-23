@@ -15,11 +15,11 @@ interface BillingData {
 
 // Constants
 const SELECTORS = {
-  BUY_NOW: 'a[data-cy=tutor-buy-now]',
+  BUY_NOW: 'a[data-testid=tutor-buy-now]',
   CART_TOTAL: '.tutor-cart-summery-item',
   CHECKOUT_TOTAL: '.tutor-checkout-summary-item',
   PAY_NOW_BUTTON: 'button#tutor-checkout-pay-now-button',
-  ORDER_HISTORY: 'a[data-cy=tutor-native-order-history]',
+  ORDER_HISTORY: 'a[data-testid=tutor-native-order-history]',
   TERM_AND_CONDITIONS: 'agree_to_terms',
 } as const;
 
