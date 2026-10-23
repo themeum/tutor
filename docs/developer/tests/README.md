@@ -81,7 +81,19 @@ $is_test_environment =
 	( isset( $_COOKIE['wp_test_env'] ) && 'test' === $_COOKIE['wp_test_env'] ) ||
 	( getenv( 'WP_TEST_ENV' ) === '1' );
 
-define( 'DB_NAME', $is_test_environment ? 'local_test' : 'local' );
+// Load test database settings from .env when running in test mode.
+$test_env = array();
+if ( $is_test_environment ) {
+	$env_file = __DIR__ . '/wp-content/plugins/tutor/.env';
+	if ( file_exists( $env_file ) ) {
+		$test_env = parse_ini_file( $env_file );
+	}
+}
+
+define( 'DB_NAME', $is_test_environment ? ( $test_env['WP_TEST_DB_NAME'] ?? getenv( 'WP_TEST_DB_NAME' ) ?: 'local_test' ) : 'local' );
+define( 'DB_USER', $is_test_environment ? ( $test_env['WP_TEST_DB_USER'] ?? getenv( 'WP_TEST_DB_USER' ) ?: 'root' ) : 'root' );
+define( 'DB_PASSWORD', $is_test_environment ? ( $test_env['WP_TEST_DB_PASS'] ?? getenv( 'WP_TEST_DB_PASS' ) ?: 'root' ) : 'root' );
+define( 'DB_HOST', $is_test_environment ? ( $test_env['WP_TEST_DB_HOST'] ?? getenv( 'WP_TEST_DB_HOST' ) ?: '127.0.0.1:10003' ) : '127.0.0.1:10003' );
 
 // ... table_prefix and other settings ...
 
