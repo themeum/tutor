@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function(){
        for (let button of approveButton) {
             button.onclick = (e) => {
                 withdrawId = e.currentTarget.dataset.id;
-                const amount = e.currentTarget.dataset.amount;
-                const accountName = e.currentTarget.dataset.name;
+                const amount = tutor_esc_html(e.currentTarget.dataset.amount);
+                const accountName = tutor_esc_html(e.currentTarget.dataset.name);
                 const content = document.getElementById('tutor-admin-withdraw-approve-content');
                 content.innerHTML = `${
                 /* translators: %1$s is the Account name and %2$s is the Amount */
@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function(){
         for (let button of rejectButton) {
             button.onclick = (e) => {
                 withdrawId = e.currentTarget.dataset.id;
-                const amount = e.currentTarget.dataset.amount;
-                const accountName = e.currentTarget.dataset.name;
+                const amount = tutor_esc_html(e.currentTarget.dataset.amount);
+                const accountName = tutor_esc_html(e.currentTarget.dataset.name);
                 const content = document.getElementById('tutor-admin-withdraw-reject-content');
                 content.innerHTML = `${
                     /* translators: %1$s is the Account name and %2$s is the Amount */
