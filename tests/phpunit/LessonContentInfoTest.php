@@ -38,6 +38,11 @@ class LessonContentInfoTest extends \WP_UnitTestCase {
 			'source'         => 'youtube',
 			'source_youtube' => 'https://www.youtube.com/watch?v=test123',
 			'playtime'       => '00:10:36',
+			'runtime'        => array(
+				'hours'   => '00',
+				'minutes' => '10',
+				'seconds' => '36',
+			),
 		);
 		update_post_meta( $this->post->ID, '_video', $video_data );
 
