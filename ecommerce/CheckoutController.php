@@ -764,6 +764,20 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
+				$placed_order_id = is_array( $order_data ) && isset( $order_data['id'] ) ? (int) ( $order_data['id'] ?? 0 ) : 0;
+				$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
+				if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
+					$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
+					if ( ! $reserved ) {
+						// Mark order cancelled and return error so student can re-try.
+						$order_model = new OrderModel();
+						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+						$err_msg = __( 'Coupon is no longer available or usage limit exceeded!', 'tutor' );
+						set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, array( $err_msg ) );
+						return;
+					}
+				}
+
 				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
 				if ( 'automate' === $payment_type ) {
 					try {
@@ -1177,7 +1191,26 @@ class CheckoutController {
 						}
 					}
 
-					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					// Revalidate coupon before proceeding to payment.
+					if ( ! empty( $order_data->coupon_code ) ) {
+						$coupon = $this->coupon_model->get_coupon_by_code( $order_data->coupon_code );
+						if ( ! $coupon || ! $this->coupon_model->is_coupon_valid( $coupon, (int) $order_data->user_id, (int) $order_id ) ) {
+							$err_msg = __( 'The coupon applied to this order is no longer valid or its usage limit has been reached.', 'tutor' );
+							tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $err_msg );
+							return;
+						}
+
+						// Renew reservation hold for this payment attempt.
+						$reserved = $this->coupon_model->reserve_coupon_usage( (int) $order_id, $order_data->coupon_code, (int) $order_data->user_id, 30 );
+						if ( ! $reserved ) {
+							$err_msg = __( 'The coupon applied to this order is no longer available.', 'tutor' );
+							tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $err_msg );
+							return;
+						}
+					}
+
+					// $payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					$payment_data = $this->prepare_payment_data( (array) $order_data );
 					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
