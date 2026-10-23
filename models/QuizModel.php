@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
+use Tutor\Core\DB;
 use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -974,7 +975,6 @@ class QuizModel {
 	 * @return array|null|object
 	 */
 	public static function get_quiz_answers_by_attempt_id( $attempt_id, $add_index = false ) {
-		global $wpdb;
 
 		$ids = array_values( array_filter( array_map( 'intval', (array) $attempt_id ), fn( $id ) => $id > 0 ) );
 
@@ -983,22 +983,13 @@ class QuizModel {
 			return array();
 		}
 
-		$placeholders = implode( ', ', array_fill( 0, count( $ids ), '%d' ) );
-
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT answers.*,
-							question.*
-				FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
-						LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
-							ON answers.question_id = question.question_id
-				WHERE 	answers.quiz_attempt_id IN ({$placeholders})
-				ORDER BY attempt_answer_id ASC;",
-				$ids
-			)
-		);
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = DB::table( 'tutor_quiz_attempt_answers' )
+			->as( 'answers' )
+			->select( 'answers.*', 'question.*' )
+			->join( 'tutor_quiz_questions as question', 'answers.question_id', '=', 'question.question_id' )
+			->where_in( 'answers.quiz_attempt_id', $ids )
+			->order_by( 'answers.attempt_answer_id' )
+			->get();
 
 		if ( $add_index ) {
 			$new_array = array();
@@ -1501,27 +1492,23 @@ class QuizModel {
 	 * @return int
 	 */
 	public static function get_quiz_count_by_course( $course_id ) {
-		global $wpdb;
 		$course_ids = array_values( array_filter( array_map( 'intval', (array) $course_id ), fn( $id ) => $id > 0 ) );
 		if ( empty( $course_ids ) ) {
 			return 0;
 		}
 
-		$placeholders = implode( ', ', array_fill( 0, count( $course_ids ), '%d' ) );
+		$topic_subquery = DB::table( 'posts' )
+			->select( 'ID' )
+			->where( 'post_type', tutor()->topics_post_type )
+			->where_in( 'post_parent', $course_ids )
+			->where( 'post_status', 'publish' )
+			->to_sql();
 
-		//phpcs:disable
-		return (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID) FROM {$wpdb->posts}
-			    WHERE post_parent IN (
-				    SELECT ID FROM {$wpdb->posts}
-				    WHERE post_type = 'topics' AND post_parent IN ({$placeholders}) AND post_status = 'publish'
-			    )
-            AND post_type = %s AND post_status = 'publish'",
-				array( ...$course_ids, tutor()->quiz_post_type )
-			)
-		);
-		//phpcs:enable
+		return DB::table( 'posts' )
+			->where_raw( "post_parent IN ({$topic_subquery})" )
+			->where( 'post_type', tutor()->quiz_post_type )
+			->where( 'post_status', 'publish' )
+			->count( 'ID' );
 	}
 
 	/**
