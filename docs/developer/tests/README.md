@@ -70,9 +70,10 @@ pnpm run test:e2e:debug
 
 ## Configuration & Environment Variables
 
-1. Create a database for test, ex: `local_test`
+- Create a database for test, ex: `local_test`
+- Initializes a fresh test database by `composer test:db:reset`
 
-2. Put it into `wp-config.php`
+- Put it into `wp-config.php`
 
 ```php
 /** Test database routing for PHPUnit, Playwright E2E and CLI testing */
@@ -105,7 +106,7 @@ if ( ! defined( 'WP_RUNNING_TESTS' ) && ! defined( 'WP_INSTALLING' ) ) {
 }
 ```
 
-3. Create a `.env` file in the plugin root (or copy from `.env.example`).
+- Create a `.env` file in the plugin root (or copy from `.env.example`).
 
 | Variable | Default Value | Description |
 |---|---|---|

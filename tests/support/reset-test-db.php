@@ -6,7 +6,7 @@
  * with standard users and baseline fixtures using native WordPress functions.
  *
  * Usage:
- *   php tests/supports/reset-test-db.php
+ *   php tests/support/reset-test-db.php
  *
  * @package Tutor\Tests
  */
@@ -15,6 +15,7 @@
 
 // Tell wp-config.php to connect to local_test.
 putenv( 'WP_TEST_ENV=1' );
+defined( 'WP_INSTALLING' ) || define( 'WP_INSTALLING', true );
 
 // Suppress extraneous output during bootstrap.
 ob_start();
@@ -28,6 +29,10 @@ if ( ! file_exists( $wp_load_path ) ) {
 }
 
 require_once $wp_load_path;
+
+if ( ! isset( $GLOBALS['wpdb'] ) ) {
+	require_once ABSPATH . 'wp-settings.php';
+}
 ob_end_clean();
 
 global $wpdb;
