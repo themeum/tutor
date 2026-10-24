@@ -3649,8 +3649,15 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
-			$provided_content_ids[] = $content_parent['content_id'];			
+			$parents = ( isset( $content_parent[0] ) && is_array( $content_parent[0] ) ) ? $content_parent : array( $content_parent );
+			foreach ( $parents as $item ) {
+				if ( isset( $item['parent_topic_id'] ) ) {
+					$provided_topic_ids[] = (int) $item['parent_topic_id'];
+				}
+				if ( isset( $item['content_id'] ) ) {
+					$provided_content_ids[] = (int) $item['content_id'];
+				}
+			}
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );
