@@ -68,6 +68,7 @@ export interface CourseFactoryResult {
   assignmentId?: number;
   assignmentUrl?: string;
   planId?: number;
+  membershipPlanId?: number;
   priceType?: 'free' | 'paid';
   price?: number;
 }
@@ -89,6 +90,7 @@ export interface CourseFactoryInput {
   content_drip?: Record<string, unknown>;
   content_drip_type?: string;
   subscription_plan?: boolean | Record<string, unknown>;
+  membership_plan?: boolean | Record<string, unknown>;
   add_quiz?: boolean;
   quiz_title?: string;
   add_assignment?: boolean;
@@ -99,6 +101,72 @@ export interface CourseFactoryInput {
 
 export function createCourse(input: CourseFactoryInput = {}): CourseFactoryResult {
   return runFactory<CourseFactoryResult>('course', input as FactoryInput);
+}
+
+export interface CourseState {
+  courseId: number;
+  title: string;
+  content: string;
+  status: string;
+  postDate: string;
+  postDateGmt: string;
+  slug: string;
+  url: string;
+  author: { id: number; login: string; name: string } | null;
+  password: string;
+  priceType: string;
+  price: string;
+  salePrice: string;
+  productId: string;
+  sellingOption: string;
+  subscriptionPlans: Array<{
+    id: string;
+    plan_name: string;
+    regular_price: string;
+    recurring_value: string;
+    recurring_interval: string;
+    recurring_limit: string;
+    is_enabled: string;
+  }>;
+  isPublic: boolean;
+  level: string;
+  qna: string;
+  settings: Record<string, unknown> | string;
+  benefits: string;
+  requirements: string;
+  audience: string;
+  materials: string;
+  duration: { hours?: string; minutes?: string } | string;
+  attachments: number[] | string;
+  prerequisites: number[] | string;
+  certificate: string;
+  thumbnailId: number;
+  thumbnailUrl: string | false;
+  video: Record<string, unknown> | string;
+  taxOnSingle: string;
+  taxOnSubscription: string;
+  comingSoon: boolean;
+  curriculumPreview: boolean;
+  comingSoonThumbnailId: number;
+  categories: Array<{ id: number; name: string }>;
+  tags: Array<{ id: number; name: string }>;
+  contents: Array<{
+    id: number;
+    title: string;
+    summary: string;
+    children: Array<{
+      id: number;
+      type: string;
+      title: string;
+      content: string;
+      url: string;
+      meta: Record<string, unknown>;
+    }>;
+  }>;
+}
+
+export function getCourse(courseId: number): CourseState {
+  return runFactory<CourseState>('get_course', { course_id: courseId });
 }
 
 export interface LessonFactoryResult {
@@ -194,6 +262,26 @@ export interface WcProductFactoryResult {
 
 export function createWcProduct(input: { title?: string; price?: number } = {}): WcProductFactoryResult {
   return runFactory<WcProductFactoryResult>('wc_product', input as FactoryInput);
+}
+
+export function completeTutorOrder(orderId: number): {
+  orderId: number;
+  orderStatus: string;
+  paymentStatus: string;
+} {
+  return runFactory('tutor_order_complete', { order_id: orderId });
+}
+
+export function completeWcOrder(orderId: number): { orderId: number; status: string } {
+  return runFactory('wc_order_complete', { order_id: orderId });
+}
+
+export function clearWooCommerceCart(userId = 0): { success: boolean } {
+  return runFactory('wc_clear_cart', { user_id: userId });
+}
+
+export function setOption(optionName: string, value: unknown): { success: boolean; previous_value: unknown } {
+  return runFactory('set_option', { option_name: optionName, value });
 }
 
 export function setTutorOption(key: string, value: unknown): { success: boolean; previous_value: unknown } {

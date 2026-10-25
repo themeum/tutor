@@ -205,20 +205,182 @@ function e2e_factory_course( array $input ): array {
 		update_post_meta( $course_id, 'tutor_course_price', (float) $plan_data['regular_price'] );
 	}
 
+	$membership_plan_id = 0;
+	if ( ! empty( $input['membership_plan'] ) && class_exists( 'TutorPro\Subscription\Models\PlanModel' ) ) {
+		$plan_model   = new \TutorPro\Subscription\Models\PlanModel();
+		$plan_options = is_array( $input['membership_plan'] ) ? $input['membership_plan'] : array();
+		$plan_data    = array_merge(
+			array(
+				'plan_name'          => 'Pro Membership Plan ' . $title,
+				'payment_type'       => 'recurring',
+				'plan_type'          => 'full_site',
+				'regular_price'      => 49.00,
+				'recurring_value'    => 1,
+				'recurring_interval' => 'month',
+				'is_enabled'         => 1,
+			),
+			$plan_options
+		);
+
+		$membership_plan_id = $plan_model->create_subscription_plan( 0, $plan_data );
+	}
+
 	return array(
-		'courseId'      => (int) $course_id,
-		'url'           => get_permalink( $course_id ),
-		'courseUrl'     => get_permalink( $course_id ),
-		'courseSlug'    => get_post_field( 'post_name', $course_id ),
-		'topicId'       => (int) $topic_id,
-		'lessonId'      => (int) $lesson_id,
-		'lessonUrl'     => get_permalink( $lesson_id ),
-		'quizId'        => (int) $quiz_id,
-		'quizUrl'       => $quiz_id ? get_permalink( $quiz_id ) : '',
-		'assignmentId'  => (int) $assignment_id,
-		'assignmentUrl' => $assignment_id ? get_permalink( $assignment_id ) : '',
-		'planId'        => (int) $plan_id,
-		'title'         => $title,
+		'courseId'         => (int) $course_id,
+		'url'              => get_permalink( $course_id ),
+		'courseUrl'        => get_permalink( $course_id ),
+		'courseSlug'       => get_post_field( 'post_name', $course_id ),
+		'topicId'          => (int) $topic_id,
+		'lessonId'         => (int) $lesson_id,
+		'lessonUrl'        => get_permalink( $lesson_id ),
+		'quizId'           => (int) $quiz_id,
+		'quizUrl'          => $quiz_id ? get_permalink( $quiz_id ) : '',
+		'assignmentId'     => (int) $assignment_id,
+		'assignmentUrl'    => $assignment_id ? get_permalink( $assignment_id ) : '',
+		'planId'           => (int) $plan_id,
+		'membershipPlanId' => (int) $membership_plan_id,
+		'title'            => $title,
+	);
+}
+
+/**
+ * Read a course and the values the course builder persists.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_get_course( array $input ): array {
+	$course_id = (int) ( $input['course_id'] ?? $input['courseId'] ?? 0 );
+	$course    = get_post( $course_id );
+
+	if ( ! $course || tutor()->course_post_type !== $course->post_type ) {
+		WP_CLI::error( sprintf( 'Course ID %d not found.', $course_id ) );
+	}
+
+	$author = get_user_by( 'id', (int) $course->post_author );
+	$terms  = wp_get_object_terms( $course_id, array( 'course-category', 'course-tag' ), array( 'fields' => 'all_with_object_id' ) );
+	$terms  = is_wp_error( $terms ) ? array() : $terms;
+
+	$topics = get_posts(
+		array(
+			'post_type'      => 'topics',
+			'post_parent'    => $course_id,
+			'posts_per_page' => -1,
+			'orderby'        => 'menu_order',
+			'order'          => 'ASC',
+			'post_status'    => 'any',
+		)
+	);
+
+	$contents = array();
+	foreach ( $topics as $topic ) {
+		$children   = get_posts(
+			array(
+				'post_type'      => array( tutor()->lesson_post_type, tutor()->quiz_post_type, 'tutor_assignments' ),
+				'post_parent'    => $topic->ID,
+				'posts_per_page' => -1,
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'post_status'    => 'any',
+			)
+		);
+		$contents[] = array(
+			'id'       => (int) $topic->ID,
+			'title'    => $topic->post_title,
+			'summary'  => $topic->post_content,
+			'children' => array_map(
+				function ( $child ) {
+					return array(
+						'id'      => (int) $child->ID,
+						'type'    => $child->post_type,
+						'title'   => $child->post_title,
+						'content' => $child->post_content,
+						'url'     => get_permalink( $child->ID ),
+						'meta'    => array(
+							'course_duration'        => get_post_meta( $child->ID, '_course_duration', true ),
+							'video'                  => get_post_meta( $child->ID, '_video', true ),
+							'preview'                => get_post_meta( $child->ID, '_is_preview', true ),
+							'attachments'            => get_post_meta( $child->ID, 'tutor_assignments' === $child->post_type ? '_tutor_assignment_attachments' : '_tutor_attachments', true ),
+							'quiz_option'            => get_post_meta( $child->ID, 'tutor_quiz_option', true ),
+							'assignment_option'      => get_post_meta( $child->ID, 'assignment_option', true ),
+							'content_drip_settings'  => get_post_meta( $child->ID, '_content_drip_settings', true ),
+							'total_mark'             => get_post_meta( $child->ID, 'total_mark', true ),
+							'pass_mark'              => get_post_meta( $child->ID, 'pass_mark', true ),
+							'time_duration'          => get_post_meta( $child->ID, 'time_duration', true ),
+							'upload_files_limit'     => get_post_meta( $child->ID, 'upload_files_limit', true ),
+							'upload_file_size_limit' => get_post_meta( $child->ID, 'upload_file_size_limit', true ),
+							'is_retry_allowed'       => get_post_meta( $child->ID, 'is_retry_allowed', true ),
+							'attempts_allowed'       => get_post_meta( $child->ID, 'attempts_allowed', true ),
+						),
+					);
+				},
+				$children
+			),
+		);
+	}
+
+	$categories = array();
+	$tags       = array();
+	foreach ( $terms as $term ) {
+		if ( 'course-category' === $term->taxonomy ) {
+			$categories[] = array(
+				'id'   => (int) $term->term_id,
+				'name' => $term->name,
+			);
+		} else {
+			$tags[] = array(
+				'id'   => (int) $term->term_id,
+				'name' => $term->name,
+			);
+		}
+	}
+
+	return array(
+		'courseId'              => $course_id,
+		'title'                 => $course->post_title,
+		'content'               => $course->post_content,
+		'status'                => $course->post_status,
+		'postDate'              => $course->post_date,
+		'postDateGmt'           => $course->post_date_gmt,
+		'slug'                  => $course->post_name,
+		'url'                   => get_permalink( $course_id ),
+		'author'                => $author ? array(
+			'id'    => (int) $author->ID,
+			'login' => $author->user_login,
+			'name'  => $author->display_name,
+		) : null,
+		'password'              => $course->post_password,
+		'priceType'             => get_post_meta( $course_id, '_tutor_course_price_type', true ),
+		'price'                 => get_post_meta( $course_id, 'tutor_course_price', true ),
+		'salePrice'             => get_post_meta( $course_id, 'tutor_course_sale_price', true ),
+		'productId'             => get_post_meta( $course_id, '_tutor_course_product_id', true ),
+		'sellingOption'         => get_post_meta( $course_id, 'tutor_course_selling_option', true ),
+		'subscriptionPlans'     => class_exists( '\TutorPro\Subscription\Models\PlanModel' )
+			? ( new \TutorPro\Subscription\Models\PlanModel() )->get_subscription_plans( $course_id )
+			: array(),
+		'isPublic'              => 'yes' === get_post_meta( $course_id, '_tutor_is_public_course', true ),
+		'level'                 => get_post_meta( $course_id, '_tutor_course_level', true ),
+		'qna'                   => get_post_meta( $course_id, '_tutor_enable_qa', true ),
+		'settings'              => get_post_meta( $course_id, '_tutor_course_settings', true ),
+		'benefits'              => get_post_meta( $course_id, '_tutor_course_benefits', true ),
+		'requirements'          => get_post_meta( $course_id, '_tutor_course_requirements', true ),
+		'audience'              => get_post_meta( $course_id, '_tutor_course_target_audience', true ),
+		'materials'             => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
+		'duration'              => get_post_meta( $course_id, '_course_duration', true ),
+		'attachments'           => get_post_meta( $course_id, '_tutor_attachments', true ),
+		'prerequisites'         => get_post_meta( $course_id, '_tutor_course_prerequisites_ids', true ),
+		'certificate'           => get_post_meta( $course_id, 'tutor_course_certificate_template', true ),
+		'thumbnailId'           => (int) get_post_meta( $course_id, '_thumbnail_id', true ),
+		'thumbnailUrl'          => get_the_post_thumbnail_url( $course_id, 'full' ),
+		'video'                 => get_post_meta( $course_id, '_video', true ),
+		'taxOnSingle'           => get_post_meta( $course_id, 'tutor_tax_on_single', true ),
+		'taxOnSubscription'     => get_post_meta( $course_id, 'tutor_tax_on_subscription', true ),
+		'comingSoon'            => '1' === get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true ),
+		'curriculumPreview'     => '1' === get_post_meta( $course_id, '_tutor_course_enable_curriculum_preview', true ),
+		'comingSoonThumbnailId' => (int) get_post_meta( $course_id, '_tutor_course_coming_soon_thumbnail_id', true ),
+		'categories'            => $categories,
+		'tags'                  => $tags,
+		'contents'              => $contents,
 	);
 }
 
@@ -323,6 +485,7 @@ function e2e_factory_wc_product( array $input ): array {
 	$product = new \WC_Product_Simple();
 	$product->set_name( $input['title'] ?? ( 'E2E Course Product ' . wp_generate_password( 4, false ) ) );
 	$product->set_status( 'publish' );
+	$product->set_virtual( true );
 	$product->set_regular_price( (string) ( $input['price'] ?? 59 ) );
 	$product_id = $product->save();
 
@@ -335,6 +498,79 @@ function e2e_factory_wc_product( array $input ): array {
 		'title'     => $product->get_name(),
 		'price'     => (float) $product->get_price(),
 	);
+}
+
+/**
+ * Mark a native Tutor order as paid and complete it (admin approval).
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_tutor_order_complete( array $input ): array {
+	$order_id    = (int) ( $input['order_id'] ?? 0 );
+	$order_model = new \Tutor\Models\OrderModel();
+	$order       = $order_model->get_order_by_id( $order_id );
+
+	if ( ! $order ) {
+		WP_CLI::error( sprintf( 'Tutor order %d not found.', $order_id ) );
+	}
+
+	$updated = $order_model->mark_as_paid( $order_id, 'E2E payment approval.' );
+	if ( ! $updated ) {
+		WP_CLI::error( sprintf( 'Could not complete Tutor order %d.', $order_id ) );
+	}
+
+	$order = $order_model->get_order_by_id( $order_id );
+	if ( ! $order ) {
+		WP_CLI::error( sprintf( 'Could not reload Tutor order %d.', $order_id ) );
+	}
+
+	return array(
+		'orderId'       => $order_id,
+		'orderStatus'   => $order->order_status,
+		'paymentStatus' => $order->payment_status,
+	);
+}
+
+/**
+ * Mark a WooCommerce order complete so Tutor can finish enrollment.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_wc_order_complete( array $input ): array {
+	$order_id = (int) ( $input['order_id'] ?? 0 );
+	$order    = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : false;
+
+	if ( ! $order ) {
+		WP_CLI::error( sprintf( 'WooCommerce order %d not found.', $order_id ) );
+	}
+
+	$order->update_status( 'completed', 'E2E payment approval.' );
+
+	return array(
+		'orderId' => $order_id,
+		'status'  => $order->get_status(),
+	);
+}
+
+/**
+ * Empty every WooCommerce cart, including persisted customer carts.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_wc_clear_cart( array $input ): array {
+	global $wpdb;
+
+	$user_id = (int) ( $input['user_id'] ?? 0 );
+	$wpdb->query( "DELETE FROM {$wpdb->prefix}woocommerce_sessions" );
+
+	if ( $user_id ) {
+		delete_user_meta( $user_id, '_woocommerce_persistent_cart_' . get_current_blog_id() );
+	}
+
+	return array( 'success' => true );
 }
 
 /**
@@ -909,6 +1145,9 @@ switch ( $factory ) {
 	case 'course':
 		$result = e2e_factory_course( $payload );
 		break;
+	case 'get_course':
+		$result = e2e_factory_get_course( $payload );
+		break;
 	case 'lesson':
 		$result = e2e_factory_lesson( $payload );
 		break;
@@ -932,6 +1171,15 @@ switch ( $factory ) {
 		break;
 	case 'wc_product':
 		$result = e2e_factory_wc_product( $payload );
+		break;
+	case 'tutor_order_complete':
+		$result = e2e_factory_tutor_order_complete( $payload );
+		break;
+	case 'wc_order_complete':
+		$result = e2e_factory_wc_order_complete( $payload );
+		break;
+	case 'wc_clear_cart':
+		$result = e2e_factory_wc_clear_cart( $payload );
 		break;
 	case 'set_option':
 		$result = e2e_factory_set_option( $payload );

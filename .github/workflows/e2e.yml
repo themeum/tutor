@@ -1,0 +1,66 @@
+name: E2E Tests
+
+on:
+  pull_request:
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP & Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+          coverage: none
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+          composer install --no-interaction --prefer-dist --no-dev --no-scripts
+
+      - name: Build plugin assets
+        run: pnpm build-dev
+
+      - name: Install Playwright Chromium & system dependencies
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: bash bin/e2e/run.sh --reporter=./tests/e2e/support/progress-reporter.ts,html
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Test Artifacts (Screenshots & Traces)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 14
