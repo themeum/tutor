@@ -510,16 +510,41 @@ class CouponModel {
 	 */
 	public function get_coupon_usage_count( $coupon_code, int $exclude_order_id = 0 ) {
 		$now_gmt = current_time( 'mysql', true );
+		$count   = 0;
 
-		$query = DB::table( $this->coupon_usage_table )
+		$user_id = get_current_user_id();
+
+		$results = DB::table( $this->coupon_usage_table )
 			->where( 'coupon_code', $coupon_code )
-			->where_raw( ' ( status = %s OR ( status = %s AND expires_at_gmt > %s ) ) ', array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt ) );
+			->get();
 
-		if ( $exclude_order_id > 0 ) {
-			$query->where_raw( 'order_id != %d', array( $exclude_order_id ) );
+		foreach ( $results as $result ) {
+			// Check if the table schema is 4.2.0+.
+			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
+				$order_id       = (int) $result->order_id;
+				$status         = $result->status;
+				$expires_at_gmt = $result->expires_at_gmt;
+
+				// Continue for the exclude order.
+				if ( $order_id === $exclude_order_id ) {
+					continue;
+				}
+
+				// If the reserver is the current user and the reservation is not expired then continue and allow them to use the coupon.
+				if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt ) {
+					continue;
+				}
+
+				// Considering the reserved as used until not expired.
+				if ( self::STATUS_RESERVED === $status && $expires_at_gmt > $now_gmt ) {
+					++$count;
+				}
+			} else {
+				++$count;
+			}
 		}
 
-		return $query->count();
+		return $count;
 	}
 
 	/**
@@ -535,18 +560,33 @@ class CouponModel {
 	 * @return int
 	 */
 	public function get_user_usage_count( $coupon_code, $user_id, int $exclude_order_id = 0 ) {
-		$now_gmt = current_time( 'mysql', true );
+		$count = 0;
 
-		$query = DB::table( $this->coupon_usage_table )
+		$results = DB::table( $this->coupon_usage_table )
 			->where( 'coupon_code', $coupon_code )
 			->where( 'user_id', $user_id )
-			->where_raw( ' ( status = %s OR ( status = %s AND expires_at_gmt > %s ) ) ', array( self::STATUS_CONSUMED, self::STATUS_RESERVED, $now_gmt ) );
+			->get();
 
-		if ( $exclude_order_id > 0 ) {
-			$query->where_raw( 'order_id != %d', array( $exclude_order_id ) );
+		foreach ( $results as $result ) {
+			// Check if the table schema is 4.2.0+.
+			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
+				$order_id = (int) $result->order_id;
+				$status   = $result->status;
+
+				// Continue for the exclude order.
+				if ( $order_id === $exclude_order_id ) {
+					continue;
+				}
+
+				if ( self::STATUS_CONSUMED === $status ) {
+					++$count;
+				}
+			} else {
+				++$count;
+			}
 		}
 
-		return $query->count();
+		return $count;
 	}
 
 	/**
