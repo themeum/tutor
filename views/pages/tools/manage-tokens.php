@@ -9,6 +9,8 @@
  * @since 2.2.1
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use TUTOR\RestAuth;
 
@@ -57,6 +59,9 @@ $user        = get_userdata( get_current_user_id() );
 			if ( is_array( $tokens ) && count( $tokens ) ) {
 				foreach ( $tokens as $token ) {
 					$api = json_decode( $token->meta_value );
+					if ( ! is_object( $api ) || ! isset( $api->key, $api->secret, $api->permission ) ) {
+						continue;
+					}
 					echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission, $api->description ?? '' ); //phpcs:ignore
 				}
 			} else {
