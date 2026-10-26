@@ -8,6 +8,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $tutor_pages = tutor_utils()->tutor_pages();
 ?>
 
@@ -26,7 +28,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 				$page_id = $page['page_id'];
 				?>
 					<tr>
-						<td><?php echo esc_attr( $page_id ); ?></td>
+						<td><?php echo esc_html( $page_id ); ?></td>
 						<td>
 							<p>
 							<?php
@@ -63,10 +65,12 @@ $tutor_pages = tutor_utils()->tutor_pages();
 
 							<?php
 							if ( $page['page_exists'] && $page['page_visible'] ) {
-								$page = get_post( $page_id );
-								echo '<a href="' . esc_url( get_permalink( $page ) ) . '" target="_blank" style="color: green;"> 
-											<i class="dashicons dashicons-yes-alt"></i> /' . esc_attr( $page->post_name ) . ' 
+								$page_post = get_post( $page_id );
+								if ( $page_post ) {
+									echo '<a href="' . esc_url( get_permalink( $page_post ) ) . '" target="_blank" style="color: green;"> 
+											<i class="dashicons dashicons-yes-alt"></i> /' . esc_html( $page_post->post_name ) . ' 
 										</a>';
+								}
 							}
 							?>
 						</td>
@@ -74,49 +78,20 @@ $tutor_pages = tutor_utils()->tutor_pages();
 				<?php
 			}
 			?>
-			<tr>
-				<td><?php echo esc_html( $page_id ); ?></td>
-				<td>
-					<?php
-					echo '<p>';
-
-					if ( $page['page_exists'] ) {
-						$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-						echo "<a href=' " . esc_url( $edit_url ) . " ' target='_blank'>";
-					}
-					echo esc_html( $page['page_name'] );
-
-					if ( $page['page_exists'] ) {
-						echo '</a>';
-					}
-					echo '</p>';
-					?>
-				</td>
-
-				<td>
-					<?php
-					if ( ! $page_id ) {
-						echo '<p style="color: red;">';
-						echo "<i class='dashicons dashicons-warning'></i> ";
-						esc_html_e( ' Page not set', 'tutor' );
-						echo '</p>';
-					}
-					?>
-
-					<form action="" method="post">
-						<?php
-							tutor_action_field( 'regenerate_tutor_pages' );
-							tutor_nonce_field();
-						?>
-
-						<p>
-							<button class="tutor-btn" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
-						</p>
-					</form>
-				</td>
-			</tr>
 		</tbody>
 	</table>
+
+	<form action="" method="post">
+		<?php
+			tutor_action_field( 'regenerate_tutor_pages' );
+			tutor_nonce_field();
+		?>
+
+		<p>
+			<button class="tutor-btn" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
+		</p>
+	</form>
+
 	<?php
 		tutor_alert( __( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ), 'info' );
 	?>

@@ -8,13 +8,52 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+$curl_version = '';
+if ( function_exists( 'curl_version' ) ) {
+	$curl_version_data = curl_version();
+	$curl_version      = ( $curl_version_data['version'] ?? '' ) . ', ' . ( $curl_version_data['ssl_version'] ?? '' );
+}
+
+$wp_memory_limit = tutor_utils()->let_to_num( defined( 'WP_MEMORY_LIMIT' ) ? WP_MEMORY_LIMIT : '64M' );
+if ( function_exists( 'memory_get_usage' ) ) {
+	$wp_memory_limit = max( $wp_memory_limit, tutor_utils()->let_to_num( @ini_get( 'memory_limit' ) ) );
+}
+
+$database_version = tutor_utils()->get_db_version();
+
+$environment = array(
+	'home_url'                  => get_option( 'home' ),
+	'site_url'                  => get_option( 'siteurl' ),
+	'version'                   => TUTOR_VERSION,
+	'wp_version'                => get_bloginfo( 'version' ),
+	'wp_multisite'              => is_multisite(),
+	'wp_memory_limit'           => $wp_memory_limit,
+	'wp_debug_mode'             => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
+	'wp_cron'                   => ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ),
+	'language'                  => get_locale(),
+	'external_object_cache'     => wp_using_ext_object_cache(),
+	'server_info'               => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '',
+	'php_version'               => phpversion(),
+	'php_post_max_size'         => tutor_utils()->let_to_num( ini_get( 'post_max_size' ) ),
+	'php_max_execution_time'    => ini_get( 'max_execution_time' ),
+	'php_max_input_vars'        => ini_get( 'max_input_vars' ),
+	'curl_version'              => $curl_version,
+	'suhosin_installed'         => extension_loaded( 'suhosin' ),
+	'max_upload_size'           => wp_max_upload_size(),
+	'mysql_version'             => $database_version['number'],
+	'mysql_version_string'      => $database_version['string'],
+	'default_timezone'          => date_default_timezone_get(),
+	'fsockopen_or_curl_enabled' => ( function_exists( 'fsockopen' ) || function_exists( 'curl_init' ) ),
+	'soapclient_enabled'        => class_exists( 'SoapClient' ),
+	'domdocument_enabled'       => class_exists( 'DOMDocument' ),
+	'gzip_enabled'              => is_callable( 'gzopen' ),
+	'mbstring_enabled'          => extension_loaded( 'mbstring' ),
+);
 ?>
 <div class="wrap">
 	<h2><?php esc_html_e( 'Tutor Environment Status', 'tutor' ); ?></h2>
-
-	<?php
-		$environment = \TUTOR\Admin::get_environment_info();
-	?>
 
 	<table class="tutor_status_table widefat" cellspacing="0" id="status">
 		<thead>
@@ -154,7 +193,8 @@
 					if ( version_compare( $environment['php_version'], '7.2', '>=' ) ) {
 						echo '<mark class="yes">' . esc_html( $environment['php_version'] ) . '</mark>';
 					} else {
-						$class = 'error';
+						$notice = '';
+						$class  = 'error';
 
 						if ( version_compare( $environment['php_version'], '5.6', '<' ) ) {
 							$notice = '<span class="dashicons dashicons-warning"></span> ' . __( 'Tutor will run under this version of PHP, however, it has reached end of life. We recommend using PHP version 7.2 or above for greater performance and security.', 'tutor' );
@@ -213,7 +253,7 @@
 							echo '<mark class="error">
 							<span class="dashicons dashicons-warning"></span> ' .
 									/* translators: %1$s: MySQL version number, %2$s: WordPress requirements URL */
-									sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org)/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) .
+									sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) .
 								'</mark>';
 						} else {
 							echo '<mark class="yes">' . esc_html( $environment['mysql_version_string'] ) . '</mark>';
@@ -317,20 +357,20 @@
 		<thead>
 		<tr>
 			<th colspan="3" data-export-label="Templates">
-				<h2>Templates </h2>
+				<h2><?php esc_html_e( 'Templates', 'tutor' ); ?></h2>
 			</th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
-			<td data-export-label="Overrides">Overrides</td>
+			<td data-export-label="Overrides"><?php esc_html_e( 'Overrides', 'tutor' ); ?></td>
 			<td class="help">&nbsp;</td>
 			<td>
 				<?php
 				$override_files = \TUTOR\Admin::template_overridden_files();
 				if ( is_array( $override_files ) && count( $override_files ) ) {
 					foreach ( $override_files as $file ) {
-						echo esc_attr( $file ) . ',<br />';
+						echo esc_html( $file ) . ',<br />';
 					}
 				}
 				?>
