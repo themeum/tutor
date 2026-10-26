@@ -93,6 +93,7 @@ export const icon = (props: IconProps) => ({
   height: props.height || 16,
   from: props.from || 'php',
   ignoreKids: props.ignoreKids || false,
+
   async init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const $el = (this as any).$el as HTMLElement;
@@ -104,6 +105,7 @@ export const icon = (props: IconProps) => ({
     }
 
     const svg = await fetchSVG(this.name, this.width, this.height, this.from, this.ignoreKids);
+
     $el.innerHTML = svg;
   },
 
