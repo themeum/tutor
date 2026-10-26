@@ -1492,23 +1492,27 @@ class QuizModel {
 	 * @return int
 	 */
 	public static function get_quiz_count_by_course( $course_id ) {
+		global $wpdb;
 		$course_ids = array_values( array_filter( array_map( 'intval', (array) $course_id ), fn( $id ) => $id > 0 ) );
 		if ( empty( $course_ids ) ) {
 			return 0;
 		}
 
-		$topic_subquery = DB::table( 'posts' )
-			->select( 'ID' )
-			->where( 'post_type', tutor()->topics_post_type )
-			->where_in( 'post_parent', $course_ids )
-			->where( 'post_status', 'publish' )
-			->to_sql();
+		$placeholders = implode( ', ', array_fill( 0, count( $course_ids ), '%d' ) );
 
-		return DB::table( 'posts' )
-			->where_raw( "post_parent IN ({$topic_subquery})" )
-			->where( 'post_type', tutor()->quiz_post_type )
-			->where( 'post_status', 'publish' )
-			->count( 'ID' );
+		//phpcs:disable
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(ID) FROM {$wpdb->posts}
+			    WHERE post_parent IN (
+				    SELECT ID FROM {$wpdb->posts}
+				    WHERE post_type = 'topics' AND post_parent IN ({$placeholders}) AND post_status = 'publish'
+			    )
+            AND post_type = %s AND post_status = 'publish'",
+				array( ...$course_ids, tutor()->quiz_post_type )
+			)
+		);
+		//phpcs:enable
 	}
 
 	/**
