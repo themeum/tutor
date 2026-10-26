@@ -39,6 +39,7 @@ export interface LazySectionState {
   section: string;
   dateDependent: boolean;
   sortDependent: boolean;
+  period: string;
   startDate: string;
   endDate: string;
   sortType: string;
@@ -87,6 +88,7 @@ export const lazySection = ({
     section,
     dateDependent,
     sortDependent,
+    period: 'today',
     startDate: '',
     endDate: '',
     sortType: type,
@@ -141,7 +143,7 @@ export const lazySection = ({
         return;
       }
 
-      const currentKey = `${this.startDate}_${this.endDate}_${this.sortType}`;
+      const currentKey = `${this.period}_${this.startDate}_${this.endDate}_${this.sortType}`;
       if (this.lastFetchedKey !== currentKey || !this.query?.data) {
         this.lastFetchedKey = currentKey;
         this.fetchSection();
@@ -152,6 +154,7 @@ export const lazySection = ({
       const params = new URLSearchParams(window.location.search);
       this.startDate = params.get('start_date') || '';
       this.endDate = params.get('end_date') || '';
+      this.period = this.startDate && this.endDate ? '' : params.get('period') || 'today';
       this.sortType = params.get('top_performing_course') || params.get('type') || type;
 
       // Watch for content updates from QueryService and re-initialize Alpine child tree
@@ -187,15 +190,19 @@ export const lazySection = ({
       if (this.dateDependent) {
         this.dateChangeHandler = (e: Event) => {
           const detail =
-            e instanceof CustomEvent ? (e.detail as { startDate?: string; endDate?: string } | undefined) : undefined;
+            e instanceof CustomEvent
+              ? (e.detail as { period?: string; startDate?: string; endDate?: string } | undefined)
+              : undefined;
           const newStart = detail?.startDate || '';
           const newEnd = detail?.endDate || '';
+          const newPeriod = detail?.period || (newStart && newEnd ? '' : 'today');
 
-          // Guard: Avoid refetch if the filter dates have not changed
-          if (this.startDate === newStart && this.endDate === newEnd) {
+          // Guard: Avoid refetch if neither the period nor the date range has changed
+          if (this.period === newPeriod && this.startDate === newStart && this.endDate === newEnd) {
             return;
           }
 
+          this.period = newPeriod;
           this.startDate = newStart;
           this.endDate = newEnd;
 
@@ -238,7 +245,7 @@ export const lazySection = ({
     },
 
     fetchSection(this: LazySectionContext) {
-      const queryKey = ['dashboard-section', this.section, this.startDate, this.endDate, this.sortType];
+      const queryKey = ['dashboard-section', this.section, this.period, this.startDate, this.endDate, this.sortType];
       const queryService = window.TutorCore.query;
 
       if (queryService) {
@@ -247,6 +254,7 @@ export const lazySection = ({
           () =>
             wpPost<AjaxResponse<SectionResponseData>>('tutor_get_dashboard_section', {
               section: this.section,
+              period: this.period,
               start_date: this.startDate,
               end_date: this.endDate,
               top_performing_course: this.sortType,
