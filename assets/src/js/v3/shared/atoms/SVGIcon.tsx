@@ -66,7 +66,6 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
   const viewBox = icon ? icon.viewBox : `0 0 ${width} ${height}`;
   const fill = icon ? icon.fill : 'none';
 
-  // IDs inside icons are namespaced per icon at build time (see svgo.config.ts).
   const iconMarkup = icon?.icon ?? '';
 
   if (!iconMarkup && !isLoading) {
