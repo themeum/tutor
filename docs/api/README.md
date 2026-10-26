@@ -7,10 +7,12 @@ This directory contains the complete, interactive API documentation and executab
 ## 🚀 Getting Started
 
 ### 1. Open in Bruno GUI
+
 1. Download and install [Bruno](https://www.usebruno.com/downloads).
 2. Open Bruno, click **"Open Collection"**, and select the `wp-content/plugins/tutor/docs/api` directory.
 
 ### 2. Configure Environment & Authentication
+
 Tutor LMS REST API uses Basic Authentication with **API Keys** and **API Secrets**.
 
 1. In your WordPress admin dashboard, navigate to **Tutor LMS > Settings > REST API / API**.
@@ -70,6 +72,7 @@ All Tutor LMS REST API endpoints return a standardized JSON envelope:
 ```
 
 ### Common Status Codes:
+
 - `200 OK`: Request succeeded.
 - `401 Unauthorized` / `403 Forbidden`: Missing, invalid, or insufficient API keys / user capabilities.
 - `404 Not Found`: Resource (Course, Topic, Lesson, Quiz, or Instructor) does not exist for the provided ID.

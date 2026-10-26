@@ -4,7 +4,7 @@ import { type InjectionSlots } from '@TutorShared/utils/types';
 
 import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 
-export type { };
+export type {};
 
 interface Tutor {
   readonly CourseBuilder: {
