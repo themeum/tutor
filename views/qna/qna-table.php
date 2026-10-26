@@ -80,7 +80,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<?php echo esc_html( $qna->display_name ); ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
-												<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $qna->comment_date ) ); ?>
 											</div>
 										</div>
 									</div>
@@ -108,7 +108,13 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 								<?php elseif ( 'reply' == $key ) : ?>
 									<?php echo esc_html( $qna->answer_count ); ?>
 								<?php elseif ( 'waiting_since' == $key ) : ?>
-									<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+									<?php
+									if ( $is_solved || (int) $qna->answer_count > 0 ) {
+										echo '&mdash;';
+									} else {
+										echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) );
+									}
+									?>
 								<?php elseif ( 'status' == $key ) : ?>
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
