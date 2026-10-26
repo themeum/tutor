@@ -7,7 +7,7 @@ import { expect, type Locator, type Page } from './test';
 export const findCourseCard = async (page: Page, title: string, maxPages = 10): Promise<Locator> => {
   const card = page.locator('.tutor-course-card', { hasText: title });
 
-  for (let currentPage = 1; currentPage < maxPages; currentPage++) {
+  for (let currentPage = 1; currentPage <= maxPages; currentPage++) {
     if (await card.count()) {
       await expect(card.first()).toBeVisible();
       return card.first();
@@ -18,7 +18,7 @@ export const findCourseCard = async (page: Page, title: string, maxPages = 10): 
       break;
     }
     await next.first().click();
-    await page.waitForLoadState('domcontentloaded');
+    await expect(page.locator('.tutor-pagination-hints').first()).toContainText(`Page ${currentPage + 1}`);
   }
 
   await expect(card.first()).toBeVisible();

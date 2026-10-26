@@ -69,6 +69,8 @@ function e2e_factory_course( array $input ): array {
 		update_post_meta( $course_id, '_tutor_course_price', (float) $price );
 	}
 
+	add_user_meta( $author->ID, '_tutor_instructor_course_id', $course_id );
+
 	if ( ! empty( $input['is_public'] ) ) {
 		update_post_meta( $course_id, '_tutor_is_public_course', 'yes' );
 	}

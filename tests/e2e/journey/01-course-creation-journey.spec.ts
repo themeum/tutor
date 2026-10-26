@@ -11,6 +11,7 @@ import {
 } from '@e2e/support/factories';
 
 import { findCourseCard } from '../support/archive';
+import { openSettingsTab, setCourseAlias } from '../support/builder';
 import { payWithNativeCheckout, payWithWooCommerceCheckout } from '../support/checkout';
 import {
   field,
@@ -30,14 +31,12 @@ import {
   choosePricingModel,
   createCourseInBuilder,
   fillCourseDuration,
-  fixtures,
   openBuilderStep,
   openCourseBuilder,
-  openSettingsTab,
   saveCourse,
   selectCategory,
-  setCourseAlias,
 } from '../support/course-builder';
+import { fixtures } from '../support/fixtures';
 import { expect, type Page, test } from '../support/test';
 
 const fullBookedMessage =

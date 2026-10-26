@@ -1,5 +1,4 @@
-import path from 'node:path';
-
+import { openSettingsTab } from './builder';
 import {
   type AssignmentFormInput,
   chooseOption,
@@ -10,18 +9,12 @@ import {
   type LessonFormInput,
   pickDateFromNow,
   type Scope,
-  selectField,
   toggleCheckbox,
   toggleSwitch,
   uploadMedia,
 } from './content-authoring';
 import { expect, type Locator, type Page } from './test';
 import { backendUrls } from './urls';
-
-export const fixtures = {
-  image: path.resolve(process.cwd(), 'tests/e2e/fixtures/course-featured-image.png'),
-  attachment: path.resolve(process.cwd(), 'tests/e2e/fixtures/course-attachment.pdf'),
-};
 
 /** Upload a file to the course-level Attachments box on the Additional page. */
 export const uploadCourseAttachment = async (page: Page, file: string): Promise<void> => {
@@ -74,20 +67,6 @@ export const changeAuthor = async (page: Page, authorName: string): Promise<void
   await expect(authorField).toContainText(authorName);
 };
 
-/** Change the visible course permalink (slug). */
-export const setCourseAlias = async (page: Page, alias: string): Promise<void> => {
-  const wrapper = field(page, 'Course URL');
-  await wrapper.locator('button').first().click();
-  const input = wrapper.locator('input').first();
-  await expect(input).toBeVisible();
-  await input.fill(alias);
-  await expect(input).toHaveValue(alias);
-  // Let the controlled input commit before the Save handler reads its state.
-  await input.blur();
-  await wrapper.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByTestId('course-slug')).toContainText(alias);
-};
-
 /** Toggle the schedule switch and save a future date inside the schedule card. */
 export const setSchedule = async (page: Page, daysFromNow = 30): Promise<Date> => {
   await toggleSwitch(page, 'Schedule', true);
@@ -97,21 +76,6 @@ export const setSchedule = async (page: Page, daysFromNow = 30): Promise<Date> =
   await page.getByRole('button', { name: 'Ok', exact: true }).click();
   await expect(page.getByText(/Scheduled/).first()).toBeVisible();
   return date;
-};
-
-/** Fill both enrollment period date pickers and times. */
-export const setEnrollmentPeriod = async (page: Page, startDays: number, endDays: number): Promise<void> => {
-  await toggleSwitch(page, 'Course Enrollment Period', true);
-
-  await pickDateFromNow(page, page.locator('#enrollment_starts_at input[data-input]').first(), startDays);
-  await page.locator('#enrollment_starts_at input[data-input]').last().fill('09:00 AM');
-
-  const addEnd = page.getByRole('button', { name: 'Add End Date', exact: true });
-  await expect(addEnd).toBeEnabled();
-  await addEnd.click();
-
-  await pickDateFromNow(page, page.locator('#enrollment_ends_at input[data-input]').first(), endDays);
-  await page.locator('#enrollment_ends_at input[data-input]').last().fill('05:00 PM');
 };
 
 /** Fill the hour/minute pair under Total Course Duration. */
@@ -125,41 +89,6 @@ export const fillCourseDuration = async (scope: Scope, hours: number, minutes: n
 /** Choose a pricing model radio option. */
 export const choosePricingModel = async (scope: Scope, model: 'Free' | 'Paid'): Promise<void> => {
   await chooseOption(scope, 'Pricing Model', model);
-};
-
-/** Choose the purchase-options select (Pro subscription addon). */
-export const choosePurchaseOption = async (scope: Scope, option: string): Promise<void> => {
-  await selectField(scope, 'Purchase Options', option);
-};
-
-/** Create a subscription plan from the builder's Add Subscription modal. */
-export const addSubscriptionPlan = async (
-  page: Page,
-  plan: { name: string; price: number; intervalValue?: number; intervalUnit?: string; cycles?: number },
-): Promise<void> => {
-  await page.getByTestId('add-subscription').click();
-  const modal = page.locator('[data-testid="tutor-modal"]').filter({ visible: true }).last();
-  await expect(modal).toBeVisible();
-
-  await modal.locator('input[name="plan_name"]').fill(plan.name);
-  await modal.locator('input[name="regular_price"]').fill(String(plan.price));
-  await modal.locator('input[name="recurring_value"]').fill(String(plan.intervalValue ?? 1));
-
-  if (plan.intervalUnit) {
-    await modal.locator('input[data-select]').first().click();
-    const option = page
-      .locator('.tutor-portal-popover')
-      .last()
-      .getByRole('button', { name: plan.intervalUnit, exact: true })
-      .filter({ visible: true });
-    await expect(option).toBeVisible();
-    await option.click();
-  }
-
-  await modal.locator('input[name="recurring_limit"]').fill(String(plan.cycles ?? 6));
-  await page.getByTestId('save-subscription').click();
-  await expect(modal).toBeHidden();
-  await expect(page.getByText(plan.name, { exact: true }).first()).toBeVisible();
 };
 
 /** Start a new course with the builder and return its ID. */
@@ -187,11 +116,6 @@ export const openCourseBuilder = async (page: Page, courseId: number): Promise<v
 export const openBuilderStep = async (page: Page, step: 'Basics' | 'Curriculum' | 'Additional'): Promise<void> => {
   await page.locator('[data-testid="tutor-tracker"] button').filter({ hasText: step }).click();
   await expect(page.locator('[data-testid="tutor-tracker"] button').filter({ hasText: step })).toBeVisible();
-};
-
-/** Open a tab inside the course settings card (General, Content Drip, Enrollment). */
-export const openSettingsTab = async (page: Page, tab: 'General' | 'Content Drip' | 'Enrollment'): Promise<void> => {
-  await page.locator('[data-testid="course-settings"]').getByRole('tab', { name: tab }).click();
 };
 
 /** Save the course from the header and wait for the success toast. */
@@ -341,14 +265,6 @@ export const addAssignment = async (page: Page, input: AssignmentFormInput): Pro
 export const chooseContentDrip = async (page: Page, strategy: string): Promise<void> => {
   await openSettingsTab(page, 'Content Drip');
   await page.getByText(strategy, { exact: true }).click();
-};
-
-/** Select the first real certificate template (the "None" card comes first). */
-export const selectCertificate = async (page: Page): Promise<void> => {
-  const selectButtons = page.getByRole('button', { name: 'Select', exact: true }).filter({ visible: true });
-  await expect(selectButtons.first()).toBeVisible();
-  const count = await selectButtons.count();
-  await selectButtons.nth(count > 1 ? 1 : 0).click();
 };
 
 export const selectPrerequisite = async (page: Page, courseTitle: string): Promise<void> => {

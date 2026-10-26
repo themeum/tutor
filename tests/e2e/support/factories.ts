@@ -7,9 +7,9 @@ const pluginSlug = path.basename(process.cwd());
 const factoryScript = `wp-content/plugins/${pluginSlug}/bin/e2e/factories.php`;
 const resultsDir = path.join(process.cwd(), '.e2e');
 
-type FactoryInput = Record<string, unknown>;
+export type FactoryInput = Record<string, unknown>;
 
-function runFactory<T>(factory: string, input: FactoryInput = {}): T {
+export function runFactory<T>(factory: string, input: FactoryInput = {}, script = factoryScript): T {
   mkdirSync(resultsDir, { recursive: true });
 
   const resultFile = `${randomUUID()}.json`;
@@ -23,8 +23,8 @@ function runFactory<T>(factory: string, input: FactoryInput = {}): T {
   ).toString('base64');
 
   const wpEnvArgs = process.env.E2E_WP_ENV_CONFIG
-    ? ['--config', process.env.E2E_WP_ENV_CONFIG, 'run', 'cli', '--', 'wp', 'eval-file', factoryScript, payload]
-    : ['run', 'cli', '--', 'wp', 'eval-file', factoryScript, payload];
+    ? ['--config', process.env.E2E_WP_ENV_CONFIG, 'run', 'cli', '--', 'wp', 'eval-file', script, payload]
+    : ['run', 'cli', '--', 'wp', 'eval-file', script, payload];
 
   try {
     execFileSync('pnpm', ['exec', 'wp-env', ...wpEnvArgs], {

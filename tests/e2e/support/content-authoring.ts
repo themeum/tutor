@@ -250,7 +250,11 @@ export const setVideoUrl = async (
     }
   }
 
-  await popover.locator('textarea').first().fill(url);
+  const textarea = popover.locator('textarea').first();
+  await expect(async () => {
+    await textarea.fill(url);
+    await expect(textarea).toHaveValue(url);
+  }).toPass({ timeout: 5000 });
   await popover.getByTestId('submit-url').click();
   await expect(wrapper.getByTestId('media-preview')).toBeVisible();
 };
