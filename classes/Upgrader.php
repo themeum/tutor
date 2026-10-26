@@ -391,21 +391,9 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_4_2_0() {
-		$is_coupon_table_updated = get_option( 'tutor_coupon_table_updated', false );
-		if ( $is_coupon_table_updated ) {
-			return;
-		}
-
-		if ( version_compare( TUTOR_VERSION, '4.2.0', '>=' ) ) {
-			global $wpdb;
-
-			$table_name = "{$wpdb->prefix}tutor_coupon_usages";
-			if ( QueryHelper::table_exists( $table_name ) ) {
-				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-				dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
-
-				update_option( 'tutor_coupon_table_updated', true, false );
-			}
+		if ( QueryHelper::table_exists( 'tutor_coupon_usages' ) && ! QueryHelper::column_exist( 'tutor_coupon_usages', 'order_id' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
 		}
 	}
 
