@@ -1274,8 +1274,7 @@ class CouponModel {
 					->where( 'id', $existing->id )
 					->update(
 						array(
-							'status'         => $update_status,
-							'expires_at_gmt' => $expires_gmt,
+							'status' => $update_status,
 						)
 					);
 			} else {
