@@ -1,4 +1,4 @@
-import { memo, useEffect, useId, useMemo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { css, type SerializedStyles } from '@emotion/react';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -28,13 +28,6 @@ interface IconCacheEntry {
   error?: any;
 }
 
-const namespaceSvgIds = (svgContent: string, suffix: string) => {
-  return svgContent
-    .replace(/\bid="([a-zA-Z0-9_-]+)"/g, `id="$1${suffix}"`)
-    .replace(/url\(#([a-zA-Z0-9_-]+)\)/g, `url(#$1${suffix})`)
-    .replace(/(xlink:href|href)="#([a-zA-Z0-9_-]+)"/g, `$1="#$2${suffix}"`);
-};
-
 const iconCache: Record<string, IconCacheEntry> = {};
 
 const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ignoreKids, ...rest }: SVGIconProps) => {
@@ -43,8 +36,6 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
   const cacheKey = shouldIgnoreKids ? `${name}-ignoreKids` : name;
   const [icon, setIcon] = useState<Icon | null>(iconCache[cacheKey]?.icon || null);
   const [isLoading, setIsLoading] = useState(!iconCache[cacheKey]?.icon);
-  const rawId = useId(); // e.g. ":r0:"
-  const suffix = `-${rawId.replace(/[^a-zA-Z0-9]/g, '')}`;
 
   useEffect(() => {
     if (iconCache[cacheKey]?.icon) {
@@ -75,14 +66,10 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
   const viewBox = icon ? icon.viewBox : `0 0 ${width} ${height}`;
   const fill = icon ? icon.fill : 'none';
 
-  const processedIcon = useMemo(() => {
-    if (!icon) {
-      return '';
-    }
-    return namespaceSvgIds(icon.icon, suffix);
-  }, [icon, suffix]);
+  // IDs inside icons are namespaced per icon at build time (see svgo.config.ts).
+  const iconMarkup = icon?.icon ?? '';
 
-  if (!processedIcon && !isLoading) {
+  if (!iconMarkup && !isLoading) {
     return (
       <svg viewBox={viewBox}>
         <rect width={width} height={height} fill="transparent" />
@@ -99,7 +86,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
       {...additionalAttributes}
       role="presentation"
       aria-hidden={true}
-      dangerouslySetInnerHTML={{ __html: processedIcon }}
+      dangerouslySetInnerHTML={{ __html: iconMarkup }}
     />
   );
 };
