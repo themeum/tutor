@@ -89,7 +89,7 @@
     "storybook": "^10.4.2",
     "storybook-react-rsbuild": "^3.0.0",
     "style-loader": "^4.0.0",
-    "svgo": "^4.0.1",
+    "svgo": "^4.1.0",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.37.0",
     "webpack-node-externals": "^3.0.0"
