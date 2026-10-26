@@ -13,7 +13,7 @@ const CONFIG = resolve(__dirname, '../svgo.config.ts');
 let files: string[] = process.argv.slice(2);
 
 if (files.length === 0) {
-  // npm run svgo — scan the folder
+  // pnpm run svgo — scan the folder
   files = globSync('assets/icons/**/*.svg');
 }
 
