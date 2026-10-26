@@ -1,8 +1,7 @@
-import { execFileSync } from 'child_process';
-import { readFileSync } from 'fs';
-import { globSync } from 'fs';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
+import { execFileSync } from 'node:child_process';
+import { globSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SVGO_IGNORE = '<!-- svgo ignore -->';
