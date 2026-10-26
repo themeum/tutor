@@ -44,7 +44,7 @@ export type OrderSummaryItem = Prettify<OrderCourse | OrderBundle | OrderCourseP
 
 export type DiscountType = 'flat' | 'percentage';
 export type PaymentStatus = 'pending' | 'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
-export type OrderStatus = 'incomplete' | 'completed' | 'cancelled' | 'trash' | 'pending';
+export type OrderStatus = 'incomplete' | 'completed' | 'cancelled' | 'trash';
 export type ActivityType =
   | 'order-placed'
   | 'refunded'
