@@ -82,6 +82,73 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
+	/**
+	 * Initialize a reusable image upload list field.
+	 *
+	 * Wires up the select/remove buttons rendered by the `image_upload_list`
+	 * field type, so any similar field can reuse it with its own settings.
+	 *
+	 * @since 4.0.7
+	 *
+	 * @param {Object}        config
+	 * @param {string}        config.mediaTitle       Media frame title.
+	 * @param {string}        config.mediaButtonText  Media frame select button text.
+	 * @param {string[]}      [config.allowedMimeTypes] Restrict selectable attachment mime types. Empty means any image.
+	 * @return {void}
+	 */
+	function initImageUploadList({ mediaTitle, mediaButtonText, allowedMimeTypes = [] }) {
+		$(document).on('click', '.tutor-image-upload-select', function (event) {
+			event.preventDefault();
+
+			const $upload = $(this).closest('.tutor-image-upload-item');
+			const $input = $upload.find('.tutor-image-upload-input');
+			const $preview = $upload.find('.tutor-image-upload-preview');
+			const $image = $preview.find('img');
+			const $remove = $upload.find('.tutor-image-upload-remove');
+			const frame = wp.media({
+				title: mediaTitle,
+				button: { text: mediaButtonText },
+				library: { type: 'image' },
+				multiple: false,
+			});
+
+			frame.on('select', function () {
+				const attachment = frame.state().get('selection').first().toJSON();
+				if (allowedMimeTypes.length && !allowedMimeTypes.includes(attachment.mime)) {
+					tutor_toast(__('Error!', 'tutor'), __('Please select a supported image.', 'tutor'), 'error');
+					return;
+				}
+
+				$input.val(attachment.id).trigger('change');
+				$image.attr('src', attachment.url).prop('hidden', false);
+				$preview.addClass('has-image');
+				$upload.addClass('has-image');
+				$remove.prop('hidden', false);
+				$('#save_tutor_option').prop('disabled', false);
+			});
+
+			frame.open();
+		});
+
+		$(document).on('click', '.tutor-image-upload-remove', function (event) {
+			event.preventDefault();
+
+			const $upload = $(this).closest('.tutor-image-upload-item');
+			$upload.find('.tutor-image-upload-input').val('').trigger('change');
+			$upload.find('.tutor-image-upload-preview img').attr('src', '').prop('hidden', true);
+			$upload.find('.tutor-image-upload-preview').removeClass('has-image');
+			$upload.removeClass('has-image');
+			$(this).prop('hidden', true);
+			$('#save_tutor_option').prop('disabled', false);
+		});
+	}
+
+	initImageUploadList({
+		mediaTitle: __('Select a brand logo', 'tutor'),
+		mediaButtonText: __('Use this logo', 'tutor'),
+		allowedMimeTypes: ['image/jpeg', 'image/png'],
+	});
+
 	const validateEmail = (email) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
@@ -111,18 +178,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const isIntegerNumberField = (field) => ['integer', 'int'].includes(field.getAttribute('data-number-type') || 'decimal');
+
 	const checkNumberFields = (inputFields) => {
 		inputFields.forEach((numberField) => {
+			numberField.addEventListener('beforeinput', (e) => {
+				if (!e.data) {
+					return;
+				}
+				if (/[eE+-]/.test(e.data) || (isIntegerNumberField(numberField) && '.' === e.data)) {
+					e.preventDefault();
+				}
+			});
+
+			numberField.addEventListener(
+				'wheel',
+				(e) => {
+					if (document.activeElement !== numberField) {
+						return;
+					}
+					e.preventDefault();
+					window.scrollBy({ top: e.deltaY, behavior: 'instant' });
+				},
+				{ passive: false },
+			);
+
 			numberField.oninput = (e) => {
 				const { target } = e;
+				if ('' === target.value) {
+					return;
+				}
+
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
-				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
 
-				if (min !== -Infinity && value <= min) e.target.value = min;
-				if (max !== Infinity && value >= max) e.target.value = max;
-				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
+				if (min !== -Infinity && value < min) {
+					e.target.value = min;
+				}
+				if (max !== Infinity && value > max) {
+					e.target.value = max;
+				}
+				if (isIntegerNumberField(target)) {
+					e.target.value = parseInt(e.target.value);
+				}
 			};
 		});
 	};
@@ -554,12 +653,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
+		const hide_course_from_shop_page = document.querySelector("#field_hide_course_from_shop_page");
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
 		showHideOption(cart_page_field, () => monetized_by === 'tutor');
 		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
 		showHideOption(invoice_block, () => monetized_by === 'tutor');
+		showHideOption(hide_course_from_shop_page, () => monetized_by !== 'tutor');
 
 		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
 		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
@@ -573,6 +674,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(cart_page_field, () => value === 'tutor');
 			showHideOption(checkout_page_field, () => value === 'tutor');
 			showHideOption(invoice_block, () => value === 'tutor');
+			showHideOption(hide_course_from_shop_page, () => value !== 'tutor');
 
 			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
 			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
@@ -643,4 +745,209 @@ document.addEventListener('DOMContentLoaded', function () {
 			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
 		});
 	}
+
+	/**
+	 * Option change and turn-off confirmation modals.
+	 *
+	 * Intercepts user interactions on options configured in the localized
+	 * `tutorOptionConfirmations` map (keyed by field key).
+	 *
+	 * Supports:
+	 * - 'turnoff': When a toggle switch is turned OFF.
+	 * - 'change': When a field value (e.g. select dropdown) changes.
+	 *
+	 * The map is localized by Tutor Pro; Free only provides this generic,
+	 * configuration-driven mechanism.
+	 *
+	 * @since 4.1.0
+	 */
+	const optionConfirmations = window.tutorOptionConfirmations || {};
+	Object.entries(optionConfirmations).forEach(([fieldKey, config]) => {
+		const message = config.message;
+		const title = config.title;
+		const cancelText = config.cancel;
+		const confirmText = config.confirm;
+		const usageAjaxAction = config.usage_check_action;
+		const confirmationType = config.type || 'turnoff';
+
+		if (!message) {
+			return;
+		}
+
+		if (confirmationType === 'turnoff') {
+			document.querySelectorAll(`#field_${fieldKey} .tutor-form-toggle-input`).forEach((checkbox) => {
+				checkbox.addEventListener('change', function (e) {
+					if (this.checked) {
+						return;
+					}
+
+					const hiddenInput = this.previousElementSibling;
+					const syncToggleVisibility = () => {
+						const $toggle = $(this);
+						if ($toggle.data('toggle-fields')) {
+							showHideToggleChildren($toggle);
+						}
+						if ($toggle.data('toggle-blocks')) {
+							showHideToggleBlock($toggle);
+						}
+					};
+
+					const revertToggle = () => {
+						this.checked = true;
+						if (hiddenInput) {
+							hiddenInput.value = 'on';
+						}
+						syncToggleVisibility();
+					};
+
+					const proceedWithTurnoff = () => {
+						this.checked = false;
+						if (hiddenInput) {
+							hiddenInput.value = 'off';
+						}
+						syncToggleVisibility();
+					};
+
+					const confirmAndTurnoff = () => {
+						revertToggle();
+						tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
+							if (confirmed) {
+								proceedWithTurnoff();
+							}
+						});
+					};
+
+					if (!usageAjaxAction) {
+						confirmAndTurnoff();
+						return;
+					}
+
+					const formData = new FormData();
+					formData.append('action', usageAjaxAction);
+					formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+					fetch(_tutorobject.ajaxurl, { method: 'POST', body: formData })
+						.then((response) => response.json())
+						.then((result) => {
+							const hasCustomized = result?.data?.has_customized;
+							if (hasCustomized) {
+								confirmAndTurnoff();
+							} else {
+								proceedWithTurnoff();
+							}
+						})
+						.catch(() => {
+							revertToggle();
+						});
+				});
+			});
+		} else if (confirmationType === 'change') {
+			document.querySelectorAll(`#field_${fieldKey} select`).forEach((selectElement) => {
+				let previousValue = selectElement.value;
+
+				selectElement.addEventListener('change', function () {
+					const newValue = this.value;
+					if (newValue === previousValue) {
+						return;
+					}
+
+					const saveBtn = document.getElementById('save_tutor_option');
+					const wasSaveDisabled = saveBtn ? saveBtn.disabled : false;
+
+					const revertSelect = () => {
+						this.value = previousValue;
+
+						const customSelect = this.nextElementSibling;
+						if (customSelect && customSelect.classList.contains('tutor-js-form-select')) {
+							const selectLabel = customSelect.querySelector('.tutor-form-select-label');
+							const selectedOption = Array.from(this.options).find((opt) => opt.value === previousValue);
+							if (selectLabel && selectedOption) {
+								selectLabel.innerText = selectedOption.text;
+								selectLabel.dataset.value = previousValue;
+							}
+							const optionsWrap = customSelect.querySelector('.tutor-form-select-options');
+							if (optionsWrap) {
+								optionsWrap.querySelector('.is-active')?.classList.remove('is-active');
+								const prevItem = optionsWrap.querySelector(`[data-key="${previousValue}"]`);
+								if (prevItem) {
+									prevItem.classList.add('is-active');
+								}
+							}
+						}
+
+						if (saveBtn) {
+							saveBtn.disabled = wasSaveDisabled;
+						}
+					};
+
+					tutorConfirmOptionModal(message, title, cancelText, confirmText).then((confirmed) => {
+						if (confirmed) {
+							previousValue = newValue;
+							if (saveBtn) {
+								saveBtn.disabled = false;
+							}
+						} else {
+							revertSelect();
+						}
+					});
+				});
+			});
+		}
+	});
 });
+
+/**
+ * Show a confirmation modal for option changes or turn-offs.
+ *
+ * @since 4.1.0
+ *
+ * @param {string} message The confirmation message.
+ * @param {string} [title] Optional modal title.
+ * @param {string} [cancelText] Optional cancel button label.
+ * @param {string} [confirmText] Optional confirm button label.
+ * @return {Promise<boolean>} Resolves true if confirmed, false if cancelled.
+ */
+function tutorConfirmOptionModal(message, title, cancelText, confirmText) {
+	const { __ } = wp.i18n;
+
+	return new Promise((resolve) => {
+		let popup;
+		let resolved = false;
+
+		const finish = (confirmed) => {
+			if (resolved) {
+				return;
+			}
+			resolved = true;
+			resolve(confirmed);
+			popup.find('[data-tutor-modal-close]').click();
+		};
+
+		popup = new window.tutor_popup(window.jQuery, '').popup({
+			title: title || __('Confirm setting?', 'tutor'),
+			description: message,
+			buttons: {
+				cancel: {
+					title: cancelText || __('No, keep it', 'tutor'),
+					id: 'cancel',
+					class: 'tutor-btn tutor-btn-outline-primary',
+					callback: function () {
+						finish(false);
+					},
+				},
+				confirm: {
+					title: confirmText || __('Yes, turn off', 'tutor'),
+					id: 'confirm',
+					class: 'tutor-btn tutor-btn-primary tutor-ml-20',
+					callback: function () {
+						finish(true);
+					},
+				},
+			},
+		});
+
+		popup.on('click', '[data-tutor-modal-close], .tutor-modal-overlay', function () {
+			finish(false);
+		});
+	});
+}

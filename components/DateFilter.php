@@ -23,16 +23,57 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * DateFilter::make()
- *     ->type( DateFilter::TYPE_RANGE )
- *     ->placement( DateFilter::PLACEMENT_BOTTOM_START )
- *     ->render();
- * ```
- *
- * ```php
+ * // Single-date picker (bottom-start)
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_SINGLE )
+ *     ->render();
+ *
+ * // Date-range picker (bottom-start, default)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->render();
+ *
+ * // Date-range picker positioned at bottom-end
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
  *     ->placement( DateFilter::PLACEMENT_BOTTOM_END )
+ *     ->render();
+ *
+ * // With a custom button label
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->label( 'Filter by date' )
+ *     ->render();
+ *
+ * // Hide the initial label (show only icon until a range is selected)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->hide_initial_label()
+ *     ->render();
+ *
+ * // Suppress label text entirely (icon-only button)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->show_label( false )
+ *     ->render();
+ *
+ * // Custom trigger button size and icon size
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->trigger_size( Size::X_SMALL )
+ *     ->icon_size( 14 )
+ *     ->render();
+ *
+ * // Clear related query params when the filter changes (e.g. reset pagination)
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_RANGE )
+ *     ->clear_params( array( 'current_page' ) )
+ *     ->render();
+ *
+ * // Extra attributes on the wrapper
+ * DateFilter::make()
+ *     ->type( DateFilter::TYPE_SINGLE )
+ *     ->attr( 'id', 'my-date-filter' )
  *     ->render();
  * ```
  *
@@ -121,6 +162,29 @@ class DateFilter extends BaseComponent {
 	 * @var array
 	 */
 	protected $clear_params = array();
+
+	/**
+	 * Whether to operate in AJAX mode (dispatch event instead of full page reload).
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var bool
+	 */
+	protected $ajax_mode = false;
+
+	/**
+	 * Set AJAX mode.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param bool $ajax True to dispatch events without reloading.
+	 *
+	 * @return self
+	 */
+	public function ajax_mode( bool $ajax = true ): self {
+		$this->ajax_mode = $ajax;
+		return $this;
+	}
 
 	/**
 	 * Set filter type.
@@ -248,6 +312,7 @@ class DateFilter extends BaseComponent {
 		$calendar_options = array(
 			'type'        => 'default',
 			'clearParams' => $this->clear_params,
+			'ajaxMode'    => $this->ajax_mode,
 		);
 
 		$button_classes = 'tutor-btn tutor-btn-outline';
@@ -264,6 +329,7 @@ class DateFilter extends BaseComponent {
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
 				'clearParams'        => $this->clear_params,
+				'ajaxMode'           => $this->ajax_mode,
 			);
 			$popover_classes .= ' tutor-range-calendar-popover';
 		}
@@ -278,29 +344,42 @@ class DateFilter extends BaseComponent {
 
 		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->placement ] ?? 'center.top';
 
+		$default_label = $this->label;
+		$has_selection = $this->has_selection();
+
 		ob_start();
 		?>
-		<div x-data="tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' })" <?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>>
+		<div 
+			x-data="{
+				...tutorPopover({ placement: '<?php echo esc_attr( $this->placement ); ?>' }),
+				label: <?php echo esc_attr( wp_json_encode( $default_label ) ); ?>,
+				hasSelection: <?php echo $has_selection ? 'true' : 'false'; ?>
+			}"
+			<?php if ( $this->ajax_mode ) : ?>
+				@tutor:date-filter-changed.window="
+					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date );
+					label = $event.detail.label || <?php echo esc_attr( wp_json_encode( $this->hide_initial_label ? '' : __( 'All Time', 'tutor' ) ) ); ?>;
+				"
+			<?php endif; ?>
+			<?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>
+		>
 
 			<button 
 				type="button"
 				x-ref="trigger"
 				@click="toggle()"
 				class="<?php echo esc_attr( $button_classes ); ?>"
-				<?php if ( empty( $this->label ) ) : ?>
-					aria-label="<?php echo $is_range ? esc_attr__( 'Filter by date range', 'tutor' ) : esc_attr__( 'Filter by date', 'tutor' ); ?>"
-				<?php endif; ?>
+				:class="{ 'tutor-btn-icon': !label, 'tutor-gap-2': Boolean(label) }"
+				aria-label="<?php echo $is_range ? esc_attr__( 'Filter by date range', 'tutor' ) : esc_attr__( 'Filter by date', 'tutor' ); ?>"
 			>
 				<?php SvgIcon::make()->name( $icon )->size( $this->icon_size )->render(); ?>
-				<?php if ( ! empty( $this->label ) ) : ?>
-					<span><?php echo esc_html( $this->label ); ?></span>
+				<?php if ( $this->show_label ) : ?>
+					<span x-show="Boolean(label)" x-text="label"><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
 
-				<?php if ( $this->has_selection() ) : ?>
-					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
-						<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>
-					</span>
-				<?php endif; ?>
+				<span x-show="hasSelection" x-cloak <?php echo ! $has_selection ? 'style="display: none;"' : ''; ?> @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary tutor-flex tutor-align-center">
+					<?php SvgIcon::make()->name( Icon::CROSS_2 )->render(); ?>
+				</span>
 			</button>
 
 			<div 
@@ -345,7 +424,7 @@ class DateFilter extends BaseComponent {
 		}
 
 		$start_date = Input::get( 'start_date' );
-		$end_date   = Input::get( ( 'end_date' ) );
+		$end_date   = Input::get( 'end_date' );
 
 		if ( ! $start_date || ! $end_date ) {
 			return $this->hide_initial_label ? '' : __( 'All Time', 'tutor' );

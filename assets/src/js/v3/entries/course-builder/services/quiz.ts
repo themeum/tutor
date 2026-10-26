@@ -5,7 +5,13 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, DEFAULT_QUIZ_ATTEMPTS_ALLOWED } from '@TutorShared/config/constants';
+import {
+  Addons,
+  DEFAULT_QUIZ_ATTEMPTS_ALLOWED,
+  DEFAULT_QUIZ_NEGATIVE_MARK_VALUE,
+  QUIZ_NEGATIVE_MARK_TYPES,
+  type QuizNegativeMarkType,
+} from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
@@ -46,6 +52,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    enable_puzzle_answer_background?: '0' | '1';
     coordinates_axis_range?: number;
   };
 }
@@ -101,6 +108,10 @@ export interface QuizDetailsResponse {
     hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    enable_partial_marking?: '0' | '1';
+    enable_negative_marking?: '0' | '1';
+    negative_mark_type?: QuizNegativeMarkType;
+    negative_mark_value?: number;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -139,6 +150,10 @@ export interface QuizForm {
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
     pagination_type: QuizPaginationType;
+    enable_partial_marking: boolean;
+    enable_negative_marking: boolean;
+    negative_mark_type: QuizNegativeMarkType;
+    negative_mark_value: number;
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
@@ -209,6 +224,17 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
       short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
       open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
+      enable_partial_marking: quiz.quiz_option.enable_partial_marking === '1',
+      enable_negative_marking: quiz.quiz_option.enable_negative_marking === '1',
+      negative_mark_type:
+        quiz.quiz_option.negative_mark_type ??
+        (tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
+          ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
+          : QUIZ_NEGATIVE_MARK_TYPES.PERCENT),
+      negative_mark_value:
+        Number(quiz.quiz_option.negative_mark_value) > 0
+          ? Number(quiz.quiz_option.negative_mark_value)
+          : Number(tutorConfig.settings?.quiz_negative_mark_value ?? DEFAULT_QUIZ_NEGATIVE_MARK_VALUE),
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,
@@ -269,6 +295,10 @@ export const convertQuizFormDataToPayload = (
         quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
         auto_start_delay: Number(formData.quiz_option.auto_start_delay),
         short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
+        enable_partial_marking: formData.quiz_option.enable_partial_marking ? '1' : '0',
+        enable_negative_marking: formData.quiz_option.enable_negative_marking ? '1' : '0',
+        negative_mark_type: formData.quiz_option.negative_mark_type,
+        negative_mark_value: formData.quiz_option.negative_mark_value,
         time_limit: {
           time_type: formData.quiz_option.time_limit.time_type,
           time_value: formData.quiz_option.enable_time_limit ? formData.quiz_option.time_limit.time_value : 0,
@@ -335,6 +365,7 @@ export const convertQuizFormDataToPayload = (
             }),
             ...(question.question_type === 'puzzle' && {
               puzzle_grid_size: Number(question.question_settings.puzzle_grid_size ?? 4),
+              enable_puzzle_answer_background: question.question_settings.enable_puzzle_answer_background ? '1' : '0',
             }),
             ...(question.question_type === 'coordinates' && {
               coordinates_axis_range: Number(question.question_settings.coordinates_axis_range ?? 10),

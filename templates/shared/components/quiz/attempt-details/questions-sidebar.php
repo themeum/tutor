@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $quiz_id ) ) {
@@ -24,10 +25,15 @@ if ( ! $quiz_id ) {
 
 $question_status_map = array();
 $default_item_status = ( isset( $attempt_data ) && is_object( $attempt_data ) ) ? 'incorrect' : '';
-$status_priority     = array(
-	'correct'   => 1,
-	'incorrect' => 2,
-	'pending'   => 3,
+$status_priority     = apply_filters(
+	'tutor_quiz_questions_sidebar_status_priority',
+	array(
+		'correct'   => 1,
+		'incorrect' => 2,
+		'pending'   => 3,
+		'graded'    => 4,
+		'skipped'   => 5,
+	)
 );
 
 if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_data->attempt_id ) ) {
@@ -40,11 +46,13 @@ if ( isset( $attempt_data ) && is_object( $attempt_data ) && ! empty( $attempt_d
 			continue;
 		}
 
-		$answer_status = QuizModel::get_attempt_answer_status( $answer_row );
-		$item_status   = 'correct' === $answer_status ? 'correct' : ( 'pending' === $answer_status ? 'pending' : 'incorrect' );
-		$current       = $question_status_map[ $question_id ] ?? '';
+		$answer_status    = QuizModel::get_attempt_answer_status( $answer_row );
+		$item_status      = $answer_status;
+		$current          = $question_status_map[ $question_id ] ?? '';
+		$item_priority    = $status_priority[ $item_status ] ?? 0;
+		$current_priority = $status_priority[ $current ] ?? 0;
 
-		if ( ! $current || $status_priority[ $item_status ] > $status_priority[ $current ] ) {
+		if ( ! $current || $item_priority > $current_priority ) {
 			$question_status_map[ $question_id ] = $item_status;
 		}
 	}
@@ -59,7 +67,7 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 <div
 	class="tutor-quiz-summary-sidebar"
 	x-data="tutorQuizSummarySidebar({
-		firstQuestionId: '<?php echo esc_js( (string) $first_question_id ); ?>'
+		firstQuestionId: '<?php echo (int) $first_question_id ? (int) $first_question_id : ''; ?>'
 	})"
 >
 	<h3 class="tutor-h3 tutor-mb-10">
@@ -84,12 +92,12 @@ $first_question_id = $first_question_id > 0 ? $first_question_id : '';
 					href="#question-<?php echo esc_attr( $question_id ); ?>"
 					class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
 					data-question-id="<?php echo esc_attr( $question_id ); ?>"
-					:class="{ 'active': String(activeQuestionId) === '<?php echo esc_attr( $question_id ); ?>' }"
-					@click.prevent="setActiveQuestion('<?php echo esc_attr( $question_id ); ?>')"
+					:class="{ 'active': String(activeQuestionId) === '<?php echo (int) $question_id; ?>' }"
+					@click.prevent="setActiveQuestion('<?php echo (int) $question_id; ?>')"
 				>
 					<div class="tutor-question-number"><?php echo esc_html( (int) $index + 1 ); ?>.</div>
 					<div class="tutor-question-content">
-						<?php echo esc_html( wp_strip_all_tags( wp_unslash( (string) ( $question->question_title ?? '' ) ) ) ); ?>
+						<?php echo esc_html( Quiz::sanitize_quiz_content( $question->question_title ?? '' ) ); ?>
 					</div>
 				</a>
 			<?php endforeach; ?>

@@ -20,16 +20,54 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
+ * // Primary badge
  * Badge::make()
- *     ->label( 'Primary' )
+ *     ->label( 'New' )
  *     ->variant( Badge::PRIMARY )
+ *     ->render();
+ *
+ * // Badge with SVG icon markup
+ * Badge::make()
+ *     ->label( 'Certified' )
+ *     ->variant( Badge::SUCCESS )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
+ * // Badge with icon name (SvgIcon slug)
+ * Badge::make()
+ *     ->label( 'Warning' )
+ *     ->variant( Badge::WARNING )
+ *     ->icon( Icon::WARNING, 14, 14 )
+ *     ->render();
+ *
+ * // Badge with icon as URL (img tag is generated)
+ * Badge::make()
+ *     ->label( 'Verified' )
+ *     ->variant( Badge::SUCCESS_SOLID )
+ *     ->icon( 'https://example.com/check.png', 16, 16 )
+ *     ->render();
+ *
+ * // Rounded (pill) badge
  * Badge::make()
  *     ->label( 'Points: 20' )
+ *     ->variant( Badge::HIGHLIGHT )
  *     ->rounded()
  *     ->render();
+ *
+ * // Error / disabled badge without icon
+ * Badge::make()
+ *     ->label( 'Inactive' )
+ *     ->variant( Badge::DISABLED )
+ *     ->render();
+ *
+ * // Badge with no variant (default style) and extra attrs
+ * Badge::make()
+ *     ->label( 'Draft' )
+ *     ->attr( 'data-status', 'draft' )
+ *     ->render();
+ *
+ * // Retrieve HTML string without echoing
+ * $html = Badge::make()->label( 'Info' )->variant( Badge::INFO )->get();
  * ```
  *
  * @since 4.0.0

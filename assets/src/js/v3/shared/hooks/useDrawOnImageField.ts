@@ -16,8 +16,7 @@ import {
   normalizeQuizBuilderKey,
 } from '@TutorShared/utils/quizBuilderA11y';
 
-import { DEFAULT_BRUSH_SIZE, initDrawOnImage } from '@TutorProQuiz/shared/draw-on-image.js';
-
+const DEFAULT_BRUSH_SIZE = 1;
 const PREVIEW_CURSOR = 'rgba(0, 0, 255, 0.65)';
 
 type DrawOnImageInstance = {
@@ -30,6 +29,13 @@ type DrawOnImageInstance = {
   cancelStroke: () => boolean;
   renderWithOverlay: (overlayFn: (ctx: CanvasRenderingContext2D) => void) => void;
   syncCanvas: () => void;
+};
+
+const getDrawOnImageCore = () => {
+  if (typeof window !== 'undefined' && window.TutorCore?.drawOnImage) {
+    return window.TutorCore.drawOnImage;
+  }
+  return null;
 };
 
 type UseDrawOnImageFieldOptions = {
@@ -157,6 +163,11 @@ export const useDrawOnImageField = ({
       return;
     }
 
+    const drawOnImageCore = getDrawOnImageCore();
+    if (!drawOnImageCore || typeof drawOnImageCore.init !== 'function') {
+      return;
+    }
+
     mountedImageUrlRef.current = imageUrl;
 
     if (drawInstanceRef.current) {
@@ -164,10 +175,13 @@ export const useDrawOnImageField = ({
       drawInstanceRef.current = null;
     }
 
-    const drawInstance = initDrawOnImage({
+    const drawInstance = drawOnImageCore.init({
       image,
       canvas,
-      brushSize: DEFAULT_BRUSH_SIZE,
+      brushSize:
+        typeof drawOnImageCore.DEFAULT_BRUSH_SIZE === 'number'
+          ? drawOnImageCore.DEFAULT_BRUSH_SIZE
+          : DEFAULT_BRUSH_SIZE,
       strokeStyle,
       interactionRoot: interactionRoot || canvas.parentElement || undefined,
       // Builder: keep canvas interactive (avoid pointer-events hover toggling flicker).
@@ -181,7 +195,7 @@ export const useDrawOnImageField = ({
       onMaskChange: (value: string) => {
         onMaskChangeRef.current(value);
       },
-    }) as DrawOnImageInstance;
+    });
 
     drawInstanceRef.current = drawInstance;
 

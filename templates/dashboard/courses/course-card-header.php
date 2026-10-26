@@ -16,7 +16,7 @@ $category = isset( $category ) ? $category : '';
 
 <div class="tutor-progress-card-header">
 	<?php if ( ! empty( $category ) ) : ?>
-		<div class="tutor-progress-card-category">
+		<div class="tutor-progress-card-category" title="<?php echo esc_attr( $category ); ?>">
 			<?php echo esc_html( $category ); ?>
 		</div>
 	<?php endif; ?>

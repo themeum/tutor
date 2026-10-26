@@ -15,7 +15,6 @@ namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-use Tutor\Components\Constants\Color;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,13 +23,87 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
+ * // Primary button (default)
  * Button::make()
  *     ->label( 'Enroll Now' )
+ *     ->render();
+ *
+ * // Button with size and variant
+ * Button::make()
+ *     ->label( 'Save Changes' )
  *     ->size( Size::LARGE )
  *     ->variant( Variant::PRIMARY )
- *     ->icon( 'tutor-icon-play' )
- *     ->attr( 'data-id', 101 )
  *     ->render();
+ *
+ * // Button with left icon
+ * Button::make()
+ *     ->label( 'Add Course' )
+ *     ->icon( Icon::PLUS )
+ *     ->size( Size::MEDIUM )
+ *     ->variant( Variant::PRIMARY )
+ *     ->render();
+ *
+ * // Button with right icon and custom icon size/color
+ * Button::make()
+ *     ->label( 'Download' )
+ *     ->icon( Icon::DOWNLOAD_2, 'right', 18, Color::BRAND )
+ *     ->variant( Variant::OUTLINE )
+ *     ->render();
+ *
+ * // Icon-only button (no visible label, uses aria-label)
+ * Button::make()
+ *     ->label( 'Delete' )
+ *     ->icon( Icon::DELETE_2 )
+ *     ->icon_only()
+ *     ->variant( Variant::GHOST )
+ *     ->size( Size::SMALL )
+ *     ->render();
+ *
+ * // Disabled button
+ * Button::make()
+ *     ->label( 'Submit' )
+ *     ->variant( Variant::PRIMARY )
+ *     ->disabled()
+ *     ->render();
+ *
+ * // Block (full-width) button
+ * Button::make()
+ *     ->label( 'Continue' )
+ *     ->variant( Variant::PRIMARY )
+ *     ->block()
+ *     ->render();
+ *
+ * // Link-styled button rendered as <a> tag
+ * Button::make()
+ *     ->label( 'View Course' )
+ *     ->variant( Variant::LINK )
+ *     ->tag( 'a' )
+ *     ->attr( 'href', get_permalink( $course_id ) )
+ *     ->render();
+ *
+ * // Destructive button
+ * Button::make()
+ *     ->label( 'Delete Course' )
+ *     ->variant( Variant::DESTRUCTIVE )
+ *     ->size( Size::SMALL )
+ *     ->render();
+ *
+ * // Secondary/outline button with data attribute
+ * Button::make()
+ *     ->label( 'Cancel' )
+ *     ->variant( Variant::SECONDARY )
+ *     ->attr( 'data-id', $course_id )
+ *     ->render();
+ *
+ * // Button with RTL-flippable directional icon
+ * Button::make()
+ *     ->label( 'Next' )
+ *     ->icon( Icon::CHEVRON_RIGHT, 'right' )
+ *     ->flip_rtl()
+ *     ->render();
+ *
+ * // Retrieve HTML string without echoing
+ * $html = Button::make()->label( 'Get Started' )->variant( Variant::PRIMARY )->get();
  * ```
  *
  * @since 4.0.0
@@ -403,5 +476,4 @@ class Button extends BaseComponent {
 
 		return $this->component_string;
 	}
-
 }

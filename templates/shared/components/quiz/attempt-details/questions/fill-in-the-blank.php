@@ -9,6 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Quiz;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -73,7 +74,7 @@ $correct_lines      = array();
 
 <?php foreach ( $question_answers as $answer_item ) : ?>
 	<?php
-	$answer_title    = stripslashes( (string) ( $answer_item->answer_title ?? '' ) );
+	$answer_title    = Quiz::sanitize_quiz_content( $answer_item->answer_title ?? '' );
 	$dash_count      = substr_count( $answer_title, '{dash}' );
 	$correct_tokens  = array_map( 'trim', explode( '|', (string) ( $answer_item->answer_two_gap_match ?? '' ) ) );
 	$given_tokens    = array_slice( $given_values, $given_cursor, $dash_count );

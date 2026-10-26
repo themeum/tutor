@@ -16,6 +16,9 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use TUTOR\Dashboard;
 
+$dashboard_pages     = $dashboard_pages ?? array();
+$dashboard_page_slug = $dashboard_page_slug ?? '';
+
 if ( ! tutor_utils()->count( $dashboard_pages ) ) {
 	return;
 }
@@ -44,8 +47,10 @@ $visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
 				$key = '';
 			}
 
-			$menu_title = $item;
-			$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+			$menu_title       = $item;
+			$menu_link        = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+			$menu_icon_name   = '';
+			$active_icon_name = '';
 
 			if ( is_array( $item ) ) {
 				$menu_title       = tutor_utils()->array_get( 'title', $item );
@@ -121,8 +126,10 @@ $visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
 					<ul>
 						<?php
 						foreach ( $more_nav_items as $key => $item ) {
-							$menu_title = $item;
-							$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+							$menu_title       = $item;
+							$menu_link        = tutor_utils()->get_tutor_dashboard_page_permalink( $key );
+							$menu_icon_name   = '';
+							$active_icon_name = '';
 
 							if ( is_array( $item ) ) {
 								$menu_title       = tutor_utils()->array_get( 'title', $item );
@@ -144,7 +151,7 @@ $visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
 										<?php
 										SvgIcon::make()
 											->name( ( $is_active_menu && ! tutor_utils()->is_kids_mode() ) ? $active_icon_name : $menu_icon_name )
-											->size( tutor_utils()->is_kids_mode() ? Size::SIZE_24 : Size::SIZE_20 )
+											->size( tutor_utils()->is_kids_mode() ? Size::SIZE_20 : Size::SIZE_16 )
 											->render();
 										?>
 										<span class="tutor-tiny"><?php echo esc_html( $menu_title ); ?></span>
@@ -153,6 +160,17 @@ $visible_nav_items = array_slice( $visible_nav_items, 0, 1, true ) +
 							<?php
 						}
 						?>
+						<li class="tutor-dashboard-nav-mobile-more-back" role="none">
+							<a role="menuitem" href="<?php echo esc_url( home_url( '/' ) ); ?>" @click="open = false">
+								<?php
+								SvgIcon::make()
+									->name( Icon::BACK_2 )
+									->size( tutor_utils()->is_kids_mode() ? Size::SIZE_20 : Size::SIZE_16 )
+									->render();
+								?>
+								<span class="tutor-tiny"><?php esc_html_e( 'Back to Site', 'tutor' ); ?></span>
+							</a>
+						</li>
 					</nav>
 				</div>
 			</li>

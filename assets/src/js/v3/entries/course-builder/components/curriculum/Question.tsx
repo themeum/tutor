@@ -7,17 +7,18 @@ import { __ } from '@wordpress/i18n';
 
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { type IconCollection } from '@TutorShared/icons/types';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { getQuestionTypeConfig } from '@TutorShared/utils/question-type-registry';
 import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
+import { type QuizQuestion } from '@TutorShared/utils/types';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
@@ -29,23 +30,6 @@ interface QuestionProps {
   onRemoveQuestion: () => void;
   isOverlay?: boolean;
 }
-
-const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>, IconCollection> = {
-  true_false: 'quizTrueFalse',
-  multiple_choice: 'quizMultiChoice',
-  open_ended: 'quizEssay',
-  fill_in_the_blank: 'quizFillInTheBlanks',
-  short_answer: 'quizShortAnswer',
-  matching: 'quizImageMatching',
-  image_answering: 'quizImageAnswer',
-  ordering: 'quizOrdering',
-  draw_image: 'quizMarkInTheImage',
-  scale: 'quizRange',
-  pin_image: 'quizPin',
-  coordinates: 'quizGraph',
-  puzzle: 'quizPuzzle',
-  h5p: 'quizH5p',
-};
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
@@ -139,14 +123,14 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         <button data-drag-icon {...listeners} type="button" css={styles.dragButton}>
           <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
         </button>
-        <SVGIcon
-          name={
-            questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]
-          }
-          width={24}
-          height={24}
-          data-question-icon
-        />
+        <Tooltip content={getQuestionTypeConfig(question.question_type)?.label ?? ''}>
+          <SVGIcon
+            name={getQuestionTypeConfig(question.question_type)?.icon ?? 'quizTrueFalse'}
+            width={24}
+            height={24}
+            data-question-icon
+          />
+        </Tooltip>
       </div>
       <span
         css={styles.questionTitle({

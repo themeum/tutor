@@ -29,12 +29,14 @@ $comments_list_args = array(
 	'paged'   => $current_page,
 	'number'  => $item_per_page,
 	'order'   => $order_filter,
+	'status'  => 'approve',
 );
 
 $comment_count_args = array(
 	'post_id' => $lesson_id,
 	'parent'  => 0,
 	'count'   => true,
+	'status'  => 'approve',
 );
 
 $comments_count = Lesson::get_comments( $comment_count_args );
@@ -105,8 +107,8 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 	<?php
 	ConfirmationModal::make()
 		->id( 'delete-comment-modal' )
-		->title( 'Delete This Item?' )
-		->message( 'This action cannot be undone.' )
+		->title( __( 'Delete This Item?', 'tutor' ) )
+		->message( __( 'This action cannot be undone.', 'tutor' ) )
 		->icon( Icon::DELETE_2, 80 )
 		->mutation_state( 'deleteCommentMutation' )
 		->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )

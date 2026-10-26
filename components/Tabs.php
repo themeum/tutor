@@ -26,33 +26,64 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * $tabs_data = [
- *     [
- *         'id'      => 'lesson',
- *         'label'   => 'Lessons',
- *         'icon'    => 'book',
- *         'content' => '<p>Lesson content goes here.</p>',
- *     ],
- *     [
- *         'id'      => 'assignments',
- *         'label'   => 'Assignments',
- *         'icon'    => 'file',
- *         'content' => '<p>Assignment content goes here.</p>',
- *     ],
- *     [
- *         'id'      => 'quizzes',
- *         'label'   => 'Quizzes',
- *         'icon'    => 'check',
- *         'content' => '<p>Quiz content goes here.</p>',
- *     ],
- * ];
+ * // Horizontal tabs (default orientation)
+ * $tabs_data = array(
+ *     array( 'id' => 'overview',  'label' => 'Overview',  'content' => '<p>Course overview.</p>' ),
+ *     array( 'id' => 'lessons',   'label' => 'Lessons',   'content' => '<p>Lesson list here.</p>' ),
+ *     array( 'id' => 'quizzes',   'label' => 'Quizzes',   'content' => '<p>Quiz list here.</p>' ),
+ * );
+ *
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->render();
+ *
+ * // Vertical orientation
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'lessons' )
+ *     ->orientation( Tabs::TYPE_VERTICAL )
+ *     ->render();
+ *
+ * // With icons in tab buttons
+ * $tabs_data = array(
+ *     array( 'id' => 'lesson',      'label' => 'Lessons',     'icon' => Icon::BOOK,  'content' => '<p>Lesson content.</p>' ),
+ *     array( 'id' => 'assignments', 'label' => 'Assignments', 'icon' => Icon::FILE,  'content' => '<p>Assignment content.</p>' ),
+ *     array( 'id' => 'quizzes',     'label' => 'Quizzes',     'icon' => Icon::CHECK, 'content' => '<p>Quiz content.</p>' ),
+ * );
  *
  * Tabs::make()
  *     ->tabs( $tabs_data )
  *     ->default_tab( 'lesson' )
- *     ->orientation( 'horizontal' )
- *     ->url_params( [ 'enabled' => true ] )
  *     ->render();
+ *
+ * // Sync active tab to a custom URL query param (?section=...)
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->url_params( array( 'enabled' => true, 'paramName' => 'section' ) )
+ *     ->render();
+ *
+ * // Disable URL sync entirely
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'overview' )
+ *     ->url_params( array( 'enabled' => false ) )
+ *     ->render();
+ *
+ * // With a disabled tab
+ * $tabs_data = array(
+ *     array( 'id' => 'active',   'label' => 'Active',   'content' => '<p>...</p>' ),
+ *     array( 'id' => 'disabled', 'label' => 'Locked',   'content' => '', 'disabled' => true ),
+ * );
+ *
+ * Tabs::make()
+ *     ->tabs( $tabs_data )
+ *     ->default_tab( 'active' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Tabs::make()->tabs( $tabs_data )->default_tab( 'overview' )->get();
  * ```
  *
  * @since 4.0.0
@@ -180,22 +211,23 @@ class Tabs extends BaseComponent {
 	 * @return string HTML markup for the tabs component.
 	 */
 	public function get(): string {
-		$tabs_json   = wp_json_encode( $this->tabs );
-		$default     = esc_js( $this->default_tab );
-		$orientation = esc_attr( $this->orientation );
-		$url_params  = wp_json_encode( $this->url_params );
+		$tabs_json        = esc_attr( tutor_json_encode( $this->tabs ) );
+		$default          = esc_attr( tutor_json_encode( $this->default_tab ) );
+		$orientation_attr = esc_attr( $this->orientation );
+		$orientation_json = esc_attr( tutor_json_encode( $this->orientation ) );
+		$url_params       = esc_attr( tutor_json_encode( $this->url_params ) );
 
 		ob_start();
 		?>
 		<div 
-			x-data='tutorTabs({
+			x-data="tutorTabs({
 				tabs: <?php echo $tabs_json; // phpcs:ignore ?>,
-				orientation: "<?php echo $orientation; // phpcs:ignore ?>",
-				defaultTab: "<?php echo $default; // phpcs:ignore ?>",
+				orientation: <?php echo $orientation_json; // phpcs:ignore ?>,
+				defaultTab: <?php echo $default; // phpcs:ignore ?>,
 				urlParams: <?php echo $url_params; // phpcs:ignore ?>
-			})'
+			})"
 		>
-			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="<?php echo $orientation; // phpcs:ignore ?>">
+			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="<?php echo $orientation_attr; // phpcs:ignore ?>">
 				<template x-for="tab in tabs" :key="tab.id">
 					<button
 						type="button"

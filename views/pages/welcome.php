@@ -1052,7 +1052,7 @@ $a11y_feature_cards = array(
 				<div class="tutor-section-title-right">
 					<p><?php esc_html_e( 'Most LMSs treat assessment as the boring part. Tutor LMS 4.0 turns it into the part students look forward to — with five new interactive quiz types designed to keep them engaged.', 'tutor' ); ?></p>
 					<div>
-						<?php $render_action_button( $action_button_text, 'https://tutorlms.com/quizzess/' ); ?>
+						<?php $render_action_button( $action_button_text, 'https://tutorlms.com/quizzes/' ); ?>
 					</div>
 				</div>
 			</div>

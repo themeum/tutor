@@ -46,7 +46,7 @@ class CartModel {
 	 * @param string $item_type Cart item type.
 	 * @param mixed  $item_details Cart item details.
 	 *
-	 * @return array Array containing the result of the insert operation.
+	 * @return int Inserted row ID on success, 0 otherwise.
 	 */
 	public function add_course_to_cart( $user_id, $course_id, $item_type = '', $item_details = '' ) {
 		global $wpdb;
@@ -147,7 +147,8 @@ class CartModel {
 				$select_columns,
 				$where,
 				array(),
-				'item.id'
+				'item.id',
+				-1
 			);
 		}
 

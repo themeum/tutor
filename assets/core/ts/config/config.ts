@@ -86,7 +86,7 @@ const defaultTutorConfig = {
     instructor_can_change_course_author: 'off',
     instructor_can_manage_co_instructors: 'off',
     chatgpt_enable: 'off',
-    course_builder_logo_url: '',
+    brand_logo_light: '',
     chatgpt_key_exist: false,
     hide_admin_bar_for_users: 'off',
     enable_redirect_on_course_publish_from_frontend: 'off',

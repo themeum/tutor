@@ -19,12 +19,40 @@ defined( 'ABSPATH' ) || exit;
  * Class EmptyState
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Basic empty state (default icon and subtitle)
+ * EmptyState::make()
+ *     ->title( 'No Courses Found' )
+ *     ->render();
+ *
+ * // With title and subtitle
  * EmptyState::make()
  *     ->title( 'No Data' )
  *     ->subtitle( 'Please check back later.' )
- *     ->icon_path( 'path/to/icon.png' )
  *     ->render();
+ *
+ * // With an image URL as icon
+ * EmptyState::make()
+ *     ->title( 'No Announcements' )
+ *     ->subtitle( 'You have not posted any announcements yet.' )
+ *     ->icon_path( tutor()->url . 'assets/images/empty-announcements.svg' )
+ *     ->render();
+ *
+ * // With raw SVG/HTML markup as icon
+ * EmptyState::make()
+ *     ->title( 'No Results' )
+ *     ->icon( '<svg>...</svg>' )
+ *     ->render();
+ *
+ * // With extra CSS class on the wrapper
+ * EmptyState::make()
+ *     ->title( 'Nothing Here Yet' )
+ *     ->subtitle( 'Start by creating your first course.' )
+ *     ->attr( 'class', 'tutor-mt-10' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = EmptyState::make()->title( 'No Reviews' )->get();
  * ```
  *
  * @since 4.0.0

@@ -28,8 +28,7 @@ $map_field_type = function ( $field_type ) {
 
 $get_saved_method_values = function ( $method_id, $user_id ) {
 	$meta_key = '_tutor_withdraw_method_data_' . $method_id;
-	$values   = get_user_meta( $user_id, $meta_key, true );
-	$values   = maybe_unserialize( $values );
+	$values   = WithdrawModel::get_user_withdraw_method_meta( $user_id, $meta_key );
 	return is_array( $values ) ? $values : array();
 };
 
@@ -104,13 +103,13 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>",
-			mode: "onChange",
-			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
-		})'
+		x-data="tutorForm({ 
+			id: '<?php echo esc_js( $form_id ); ?>',
+			mode: 'onChange',
+			defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
+		})"
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => handleSaveWithdrawMethod(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+		@submit="handleSubmit((data) => handleSaveWithdrawMethod(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"
 	>
 		<?php

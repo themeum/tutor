@@ -9,7 +9,7 @@ const DatePicker = lazy(() => import(/* webpackChunkName: "tutor-react-datepicke
 const CalendarContainer = lazy(() => import('react-datepicker').then((module) => ({ default: module.CalendarContainer })));
 
 const TutorDateRangePicker = () => {
-	const dateFormat = 'Y-M-d';
+	const dateFormat = 'yyyy-MM-dd';
 
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);

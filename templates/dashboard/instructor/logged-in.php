@@ -18,7 +18,7 @@ $instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true )
 
 if ( 'try_again' === $instructor_status ) {
 	Alert::make()
-		->text( 'You have been rejected from being an instructor.' )
+		->text( __( 'You have been rejected from being an instructor.', 'tutor' ) )
 		->variant( Alert::WARNING )
 		->icon( Icon::WARNING )
 		->render();
@@ -34,11 +34,11 @@ if ( $is_instructor ) {
 				<?php
 				$instructor_status_text = '';
 				if ( 'pending' === $instructor_status ) {
-					$instructor_status_text = 'Your application will be reviewed and the results will be sent to you by email.';
+					$instructor_status_text = __( 'Your application will be reviewed and the results will be sent to you by email.', 'tutor' );
 				} elseif ( 'approved' === $instructor_status ) {
-					$instructor_status_text = 'Your application has been accepted. Further necessary details have been sent to your registered email account.';
+					$instructor_status_text = __( 'Your application has been accepted. Further necessary details have been sent to your registered email account.', 'tutor' );
 				} elseif ( 'blocked' === $instructor_status ) {
-					$instructor_status_text = 'You have been blocked from being an instructor.';
+					$instructor_status_text = __( 'You have been blocked from being an instructor.', 'tutor' );
 				}
 				Alert::make()
 					->text( $instructor_status_text )

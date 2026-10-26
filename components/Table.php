@@ -18,59 +18,88 @@ defined( 'ABSPATH' ) || exit;
  * Responsible for rendering table component with variable number
  * of rows and columns.
  *
- * ```
- * // Component Data Structure
+ * ```php
+ * // Minimal table with headings and rows
+ * $headings = array(
+ *     array( 'content' => __( 'Student',  'tutor' ) ),
+ *     array( 'content' => __( 'Progress', 'tutor' ) ),
+ *     array( 'content' => __( 'Score',    'tutor' ) ),
+ * );
+ *
+ * $contents = array(
+ *     array(
+ *         'columns' => array(
+ *             array( 'content' => 'Jane Doe' ),
+ *             array( 'content' => '80%' ),
+ *             array( 'content' => '92/100' ),
+ *         ),
+ *     ),
+ *     array(
+ *         'columns' => array(
+ *             array( 'content' => 'John Smith' ),
+ *             array( 'content' => '55%' ),
+ *             array( 'content' => '61/100' ),
+ *         ),
+ *     ),
+ * );
+ *
  * Table::make()
- *   ->headings(
- *      [
- *          [
- *              'content' => '',
- *          ]
- *      ]
- *   )
- *  ->contents(
- *      [
- *        [
- *          'columns' => [
- *              [
- *                  'content' => '',
- *              ]
- *           ],
- *        ]
- *      ]
- *   )
- * ->attributes('')
- * ->render();
- * ```
+ *     ->headings( $headings )
+ *     ->contents( $contents )
+ *     ->render();
  *
+ * // Table with rich HTML inside cells and column borders
+ * $headings = array(
+ *     array( 'content' => __( 'Quiz Info', 'tutor' ) ),
+ *     array( 'content' => __( 'Marks',     'tutor' ) ),
+ * );
  *
- * ```
- * // Example Usage:
- * $heading = array(
- *       array(
- *           'content' => __( 'Quiz Info', 'tutor' ),
- *       ),
- *       array(
- *           'content' => __( 'Marks', 'tutor' ),
- *       ),
- *   );
+ * $contents = array(
+ *     array(
+ *         'columns' => array(
+ *             array(
+ *                 'content' =>
+ *                     '<div class="tutor-flex tutor-gap-3 tutor-items-center">' .
+ *                     SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->size( 16 )->get() .
+ *                     esc_html__( 'Total Questions', 'tutor' ) .
+ *                     '</div>',
+ *             ),
+ *             array( 'content' => 20 ),
+ *         ),
+ *     ),
+ *     array(
+ *         'columns' => array(
+ *             array(
+ *                 'content' =>
+ *                     '<div class="tutor-flex tutor-gap-3 tutor-items-center">' .
+ *                     SvgIcon::make()->name( Icon::STAR_FILL )->size( 16 )->get() .
+ *                     esc_html__( 'Pass Mark', 'tutor' ) .
+ *                     '</div>',
+ *             ),
+ *             array( 'content' => 14 ),
+ *         ),
+ *     ),
+ * );
  *
- * $content = array(
- *       array(
- *           'columns' => array(
- *               array(
- *                   'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . SvgIcon::make()->name( Icon::QUESTION_CIRCLE )->render() . __( 'Questions', 'tutor' ) . '</div>',
- *               ),
- *               array( 'content' => 20 ),
- *           ),
- *       ),
- *  );
+ * Table::make()
+ *     ->headings( $headings )
+ *     ->contents( $contents )
+ *     ->attrs( array( 'class' => 'tutor-table-column-borders tutor-mb-6' ) )
+ *     ->render();
  *
- *   echo Table::make()
- *       ->headings( $heading )
- *       ->contents( $content )
- *       ->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
- *       ->render();
+ * // Table with a custom class on a specific heading column
+ * $headings = array(
+ *     array( 'content' => 'Name',    'class' => 'tutor-text-left' ),
+ *     array( 'content' => 'Actions', 'class' => 'tutor-text-right' ),
+ * );
+ *
+ * Table::make()
+ *     ->headings( $headings )
+ *     ->contents( $contents )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Table::make()->headings( $headings )->contents( $contents )->get();
  * ```
  *
  * @since 4.0.0

@@ -9,16 +9,11 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+$overview_chart_data = $overview_chart_data ?? array();
 ?>
 
-<!-- Overview Chart -->
-
-<div 
-	data-section-id="overview_chart"
-	class="tutor-dashboard-home-chart"
-	x-show="watch('overview_chart')"
-	x-cloak
->
+<div class="tutor-dashboard-home-chart">
 	<div class="tutor-dashboard-home-chart-header">
 		<div class="tutor-small">
 			<?php esc_html_e( 'Earnings Over Time', 'tutor' ); ?>
@@ -32,5 +27,5 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	</div>
-	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo esc_attr( wp_json_encode( $overview_chart_data ) ); ?>)' x-ref="canvas"></canvas>
+	<canvas class="tutor-dashboard-home-chart-canvas" x-data="tutorOverviewChart(<?php echo esc_attr( tutor_json_encode( $overview_chart_data ) ); ?>)" x-ref="canvas"></canvas>
 </div>

@@ -137,3 +137,63 @@ export const getAttemptedQuestionCountFromForm = (formId: string): number => {
   const values = form.getFormState(formId).values ?? {};
   return getAttemptedQuestionCount(values);
 };
+
+/**
+ * Attaches mouse drag-to-scroll behaviour to a horizontally scrollable element.
+ * Skips drag when the element has no overflow. Suppresses click events on child
+ * elements when the pointer moved enough to count as a drag (prevents accidental
+ * navigation after a drag gesture).
+ *
+ * @returns A cleanup function that removes all attached listeners.
+ */
+export const createDragScroll = (el: HTMLElement): (() => void) => {
+  let isDragging = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let hasDragged = false;
+
+  const onMouseDown = (e: MouseEvent) => {
+    if (el.scrollWidth - el.clientWidth <= 1) return;
+    isDragging = true;
+    hasDragged = false;
+    startX = e.pageX - el.offsetLeft;
+    startScrollLeft = el.scrollLeft;
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const delta = x - startX;
+    if (Math.abs(delta) > 3) hasDragged = true;
+    el.scrollLeft = startScrollLeft - delta;
+  };
+
+  const onMouseUp = () => {
+    isDragging = false;
+  };
+  const onMouseLeave = () => {
+    isDragging = false;
+  };
+
+  const onClickCapture = (e: MouseEvent) => {
+    if (hasDragged) {
+      e.stopPropagation();
+      hasDragged = false;
+    }
+  };
+
+  el.addEventListener('mousedown', onMouseDown);
+  el.addEventListener('mousemove', onMouseMove);
+  el.addEventListener('mouseup', onMouseUp);
+  el.addEventListener('mouseleave', onMouseLeave);
+  el.addEventListener('click', onClickCapture, true);
+
+  return () => {
+    el.removeEventListener('mousedown', onMouseDown);
+    el.removeEventListener('mousemove', onMouseMove);
+    el.removeEventListener('mouseup', onMouseUp);
+    el.removeEventListener('mouseleave', onMouseLeave);
+    el.removeEventListener('click', onClickCapture, true);
+  };
+};

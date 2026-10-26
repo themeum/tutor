@@ -23,9 +23,9 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
-import type { IconCollection } from '@TutorShared/icons/types';
 import Popover from '@TutorShared/molecules/Popover';
 import { useGenerateAiQuizQuestionsMutation } from '@TutorShared/services/magic-ai';
+import { aiQuestionTypes } from '@TutorShared/utils/question-type-registry';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Option, QuizDataStatus, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
@@ -54,32 +54,10 @@ interface TopicSelectForm {
   selected_topic_id: string | null;
 }
 
-const questionTypeOptions: {
-  label: string;
-  value: AiQuestionType;
-  icon: IconCollection;
-}[] = [
-  {
-    label: __('True/False', 'tutor'),
-    value: 'true_false',
-    icon: 'quizTrueFalse',
-  },
-  {
-    label: __('Multiple Choice', 'tutor'),
-    value: 'multiple_choice',
-    icon: 'quizMultiChoice',
-  },
-  {
-    label: __('Short Answer', 'tutor'),
-    value: 'short_answer',
-    icon: 'quizShortAnswer',
-  },
-  {
-    label: __('Open Ended/Essay', 'tutor'),
-    value: 'open_ended',
-    icon: 'quizEssay',
-  },
-];
+const questionTypeOptions = aiQuestionTypes.map((questionType) => ({
+  ...questionType,
+  value: questionType.value as AiQuestionType,
+}));
 
 const difficultyOptions = [
   { label: __('Easy', 'tutor'), value: 'easy', icon: 'difficultyEasy' },

@@ -625,8 +625,10 @@ class WooCommerce extends Tutor_Base {
 		 * Prevent adding earning data when order is created with WC block checkout page.
 		 *
 		 * @since 3.9.14
+		 *
+		 * @since 4.0.5 Check session before using $order->has_status
 		 */
-		if ( $order->has_status( 'checkout-draft' ) ) {
+		if ( WC()->session && $order->has_status( 'checkout-draft' ) ) {
 			return;
 		}
 
@@ -804,6 +806,7 @@ class WooCommerce extends Tutor_Base {
 	 * @return void
 	 */
 	public function course_placing_order_from_customer( $item_id, $item, $order_id ) {
+
 		if ( is_admin() ) {
 			return;
 		}
@@ -817,8 +820,10 @@ class WooCommerce extends Tutor_Base {
 		 * Prevent when order is created with WC block checkout page.
 		 *
 		 * @since 3.9.14
+		 *
+		 * @since 4.0.5 Check session before using $order->has_status
 		 */
-		if ( $order->has_status( 'checkout-draft' ) ) {
+		if ( WC()->session && $order->has_status( 'checkout-draft' ) ) {
 			return;
 		}
 

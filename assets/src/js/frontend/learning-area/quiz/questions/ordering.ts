@@ -23,7 +23,6 @@ const QUESTION_ORDERING_CONSTANTS = {
   ATTRS: {
     OPTION: 'data-option',
     ID: 'data-id',
-    GRAB_HANDLE: 'data-grab-handle',
   },
   VALUES: {
     DRAGGABLE: 'draggable',
@@ -83,7 +82,6 @@ const questionOrdering = (
     this._sortables = [];
 
     items.forEach((element, idx) => {
-      const handle = element.querySelector(`[${QUESTION_ORDERING_CONSTANTS.ATTRS.GRAB_HANDLE}]`) as HTMLElement | null;
       const id = element.dataset[QUESTION_ORDERING_CONSTANTS.DATASET.ID] ?? String(idx);
 
       const sortable = new Sortable(
@@ -91,7 +89,6 @@ const questionOrdering = (
           id,
           index: idx,
           element: element,
-          handle: handle ?? undefined,
         },
         manager,
       );

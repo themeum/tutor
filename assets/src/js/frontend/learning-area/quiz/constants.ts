@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 export type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 export const QUIZ_REVEAL_CONFIG = {
@@ -34,14 +36,20 @@ export const QuizLayoutType = {
 } as const;
 
 export const ERROR_MESSAGES = {
-  SUBMIT_FAILED: 'Failed to submit quiz',
-  ABANDON_FAILED: 'Failed to abandon quiz',
-  REQUIRED_QUESTIONS: 'Please answer all required questions before submitting.',
+  SUBMIT_FAILED: __('Failed to submit quiz', 'tutor'),
+  ABANDON_FAILED: __('Failed to abandon quiz', 'tutor'),
+  REQUIRED_QUESTIONS: __('Please answer all required questions before submitting.', 'tutor'),
 } as const;
 
 export const QUIZ_LAYOUT_SELECTORS = {
+  QUESTIONS_CONTAINER: '.tutor-quiz-questions',
   QUESTION_WRAPPER_ATTR: 'data-quiz-question-index',
   QUESTION_WRAPPER: '.tutor-quiz-question-wrapper',
+  PAGINATION: '.tutor-quiz-questions-pagination',
+  PAGINATION_ITEM_ATTR: 'data-quiz-question-index',
+  PAGINATION_ITEM: '.tutor-quiz-question-paginate-item',
+  PAGINATION_HAS_SCROLL_LEFT_ATTR: 'data-has-scroll-left',
+  PAGINATION_HAS_SCROLL_RIGHT_ATTR: 'data-has-scroll-right',
 } as const;
 
 export const QUIZ_LAYOUT_KEYS = {

@@ -147,6 +147,14 @@
         &.pending .tutor-question-number::before {
           background-color: $tutor-border-warning-tertiary;
         }
+
+        &.partial .tutor-question-number::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
+        &.graded .tutor-question-number::before {
+          background-color: $tutor-icon-exception2;
+        }
       }
     }
   }
@@ -287,7 +295,23 @@
     padding: $tutor-spacing-4;
     overflow: hidden;
 
+    &:has(.tutor-quiz-review-item-title) {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-none;
+    }
+
+    .tutor-quiz-review-item-title {
+      @include tutor-typography(tiny);
+      color: inherit;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .tutor-quiz-review-item-text,
     span {
+      @include tutor-typography(small, semibold);
+      color: inherit;
       min-width: 0;
       overflow-wrap: break-word;
       word-break: break-word;
@@ -301,7 +325,7 @@
       width: 32px;
       height: 32px;
       border-radius: $tutor-radius-xs;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
       flex-shrink: 0;
     }
@@ -326,6 +350,7 @@
   }
   .tutor-quiz-question-option {
     &[data-readonly='true'] {
+      pointer-events: none;
       cursor: default;
     }
   }
@@ -383,6 +408,12 @@
         width: 1px;
         align-self: stretch;
         background-color: $tutor-border-idle;
+        flex-shrink: 0;
+      }
+
+      &-score {
+        @include tutor-typography(small, regular, subdued);
+        white-space: nowrap;
       }
     }
 
@@ -430,6 +461,36 @@
   }
 }
 
+// The summary page is normally an isolated screen. In a Tutor page shell,
+// keep its sticky controls below the theme header and let the footer remain
+// bounded by the page so the theme footer can follow it in normal flow.
+.tutor-learning-area.tutor-has-site-shell .tutor-quiz-summary-page,
+.tutor-dashboard-layout.tutor-has-site-shell .tutor-quiz-summary-page,
+.tutor-dashboard-isolated-page-wrapper.tutor-has-site-shell .tutor-quiz-summary-page {
+  --tutor-quiz-summary-header-top: var(--tutor-site-header-offset);
+  --tutor-quiz-summary-footer-height: 0px;
+
+  .tutor-quiz-summary-body {
+    padding-bottom: $tutor-spacing-4;
+  }
+
+  .tutor-quiz-summary-footer {
+    position: sticky;
+    bottom: 0;
+    left: auto;
+    right: auto;
+  }
+}
+
+body:has(#wpadminbar)
+  :is(
+    .tutor-learning-area.tutor-has-site-shell .tutor-quiz-summary-page,
+    .tutor-dashboard-layout.tutor-has-site-shell .tutor-quiz-summary-page,
+    .tutor-dashboard-isolated-page-wrapper.tutor-has-site-shell .tutor-quiz-summary-page
+  ) {
+  --tutor-quiz-summary-header-top: var(--tutor-site-header-offset);
+}
+
 .tutor-quiz-summary-feedback {
   @include tutor-flex(column);
   gap: $tutor-spacing-4;
@@ -473,5 +534,132 @@
 .tutor-quiz-attempt-feedback {
   .tutor-wp-editor-wrapper {
     margin-bottom: $tutor-spacing-6;
+  }
+}
+
+.tutor-quiz-open-ended-answer {
+  @include tutor-typography(p2, regular, primary);
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  background-color: $tutor-surface-base;
+  padding: $tutor-spacing-6;
+  word-break: break-word;
+
+  &.is-empty {
+    color: $tutor-text-subdued;
+  }
+}
+
+.tutor-quiz-manual-review-wrap {
+  margin-top: $tutor-spacing-6;
+
+  .tutor-quiz-obtained-marks-group {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-obtained-marks-label {
+    @include tutor-typography(p2, regular, secondary);
+  }
+
+  .tutor-quiz-obtained-marks-row {
+    @include tutor-flex(row, baseline);
+    gap: $tutor-spacing-3;
+
+    .tutor-input-field {
+      width: 114px;
+      margin-bottom: 0;
+    }
+  }
+
+  .tutor-quiz-obtained-marks-total {
+    @include tutor-typography(p2, regular, secondary);
+  }
+
+  .tutor-quiz-manual-review-error {
+    @include tutor-typography(small, regular);
+    color: $tutor-text-critical;
+    margin-top: $tutor-spacing-1;
+  }
+
+  .tutor-quiz-add-feedback-btn {
+    @include tutor-flex(row, center);
+    @include tutor-typography(p2, medium);
+    gap: $tutor-spacing-2;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: $tutor-spacing-4;
+    cursor: pointer;
+    color: $tutor-text-brand;
+    @include tutor-transition(color);
+
+    &:hover {
+      color: $tutor-text-brand-hover;
+    }
+
+    svg {
+      color: $tutor-text-brand;
+      flex-shrink: 0;
+    }
+
+    &:hover svg {
+      color: $tutor-text-brand-hover;
+    }
+  }
+
+  .tutor-quiz-feedback-panel {
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+    margin-top: $tutor-spacing-4;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      margin-bottom: $tutor-spacing-3;
+    }
+
+    &-title {
+      @include tutor-typography(p2, semibold, primary);
+    }
+
+    &-status {
+      @include tutor-typography(small, regular, secondary);
+    }
+
+    &-content {
+      @include tutor-typography(p2, regular, primary);
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-input-field {
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-quiz-feedback-actions {
+      @include tutor-flex(row, center, space-between);
+
+      .tutor-quiz-feedback-actions-main {
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-3;
+      }
+    }
+  }
+}
+
+.tutor-quiz-question-feedback-wrap {
+  margin-top: $tutor-spacing-6;
+
+  .tutor-quiz-question-feedback-title {
+    @include tutor-typography(p2, semibold, primary);
+    margin-bottom: $tutor-spacing-3;
+  }
+
+  .tutor-quiz-question-feedback-card {
+    @include tutor-typography(p2, regular, primary);
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+    word-break: break-word;
   }
 }

@@ -1,0 +1,54 @@
+meta {
+  name: ecommerce-webhook/{payment-method}
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/ecommerce-webhook/paypal
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "event_type": "PAYMENT.CAPTURE.COMPLETED",
+    "resource": {
+      "id": "PAY-1234567890",
+      "status": "COMPLETED",
+      "amount": {
+        "value": "49.00",
+        "currency_code": "USD"
+      },
+      "custom_id": "order_789"
+    }
+  }
+}
+
+docs {
+  # Handle Ecommerce Payment Webhook
+  
+  Public webhook receiver endpoint for handling asynchronous transaction notifications and order status updates from integrated payment gateways (e.g., PayPal, Stripe, etc.).
+  
+  ## HTTP Method & Route
+  - **Method:** `POST` / `GET` / `PUT` / `PATCH` (`WP_REST_Server::ALLMETHODS`)
+  - **Route:** `/wp-json/tutor/v1/ecommerce-webhook/:payment_method`
+  
+  ## Authentication
+  - **Type:** Public (`__return_true`)
+  - **Verification:** Security and payload signatures are verified per gateway driver inside the handler.
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `payment_method` | `string` | No | Identifier slug of the payment gateway (e.g. `paypal`, `stripe`). |
+  
+  ## Request Body
+  Accepts raw webhook payload sent by the payment provider (JSON or form-urlencoded).
+  
+  ## Responses
+  
+  ### 200 OK (Webhook Processed)
+  Standard HTTP 200/204 response returned to notify the payment provider that the webhook event was received.
+}

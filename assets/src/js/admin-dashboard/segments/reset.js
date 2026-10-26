@@ -47,7 +47,7 @@ const resetConfirmation = () => {
 					if (xhttp.readyState === 4) {
 						let pageData = JSON.parse(xhttp.response).data;
 						pageData.forEach((item) => {
-							const field_types_associate = ['color_field', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'radio_horizontal_image', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+							const field_types_associate = ['color_field', 'upload_full', 'image_upload_list', 'toggle_matrix', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'radio_horizontal_image', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
 							if (field_types_associate.includes(item.type)) {
 								let itemName = 'tutor_option[' + item.key + ']';
@@ -84,6 +84,36 @@ const resetConfirmation = () => {
 										});
 									}
 
+								} else if (item.type == 'image_upload_list') {
+									Object.values(item.items || {}).forEach((imageItem) => {
+										const imageInput = elementByName(`tutor_option[${imageItem.key}]`)[0];
+										if (!imageInput) return;
+
+										const uploadItem = imageInput.closest('.tutor-image-upload-item');
+										const defaultValue = imageItem.default || '';
+										const defaultImageUrl = uploadItem?.dataset.defaultImageUrl || '';
+										imageInput.value = defaultValue;
+										uploadItem?.classList.toggle('has-image', !!defaultImageUrl);
+										uploadItem?.querySelector('.tutor-image-upload-preview')?.classList.toggle('has-image', !!defaultImageUrl);
+										const image = uploadItem?.querySelector('.tutor-image-upload-preview img');
+										if (image) {
+											image.src = defaultImageUrl;
+											image.hidden = !defaultImageUrl;
+										}
+									});
+								} else if (item.type == 'toggle_matrix') {
+									Object.values(item.items || {}).forEach((matrixItem) => {
+										Object.values(matrixItem).forEach((setting) => {
+											if (!setting || !setting.key) return;
+											const matrixInput = elementByName(`tutor_option[${setting.key}]`)[0];
+											if (!matrixInput) return;
+
+											const isEnabled = setting.default === 'on';
+											matrixInput.value = isEnabled ? 'on' : 'off';
+											const checkbox = matrixInput.nextElementSibling;
+											if (checkbox) checkbox.checked = isEnabled;
+										});
+									});
 								} else if (item.type == 'upload_full') {
 									elementItem.value = '';
 									elementItem.nextElementSibling.src = '';

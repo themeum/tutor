@@ -20,11 +20,47 @@ use TUTOR\Icon;
  * Class StarRating
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Display stars only (no numbers)
  * StarRating::make()
- *     ->rating(4.5)
- *     ->show_average(true)
+ *     ->rating( 4.5 )
  *     ->render();
+ *
+ * // Stars with average numeric rating shown
+ * StarRating::make()
+ *     ->rating( 4.5 )
+ *     ->show_average( true )
+ *     ->render();
+ *
+ * // Stars with review count
+ * StarRating::make()
+ *     ->rating( 3.8 )
+ *     ->count( 120 )
+ *     ->render();
+ *
+ * // Stars with average and review count
+ * StarRating::make()
+ *     ->rating( 4.2 )
+ *     ->show_average( true )
+ *     ->count( 58 )
+ *     ->render();
+ *
+ * // Larger icon size
+ * StarRating::make()
+ *     ->rating( 5.0 )
+ *     ->icon_size( 24 )
+ *     ->show_average( true )
+ *     ->render();
+ *
+ * // Zero rating (no stars filled)
+ * StarRating::make()
+ *     ->rating( 0 )
+ *     ->show_average( true )
+ *     ->count( 0 )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = StarRating::make()->rating( 4.5 )->show_average( true )->count( 30 )->get();
  * ```
  *
  * @since 4.0.0

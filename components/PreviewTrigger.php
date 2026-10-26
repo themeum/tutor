@@ -18,10 +18,19 @@ defined( 'ABSPATH' ) || exit;
  * Class PreviewTrigger
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Render a preview trigger for a course
  * PreviewTrigger::make()
- *     ->id( 123 )
+ *     ->id( $course_id )
  *     ->render();
+ *
+ * // Render a preview trigger for a lesson
+ * PreviewTrigger::make()
+ *     ->id( $lesson_id )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = PreviewTrigger::make()->id( $course_id )->get();
  * ```
  *
  * @since 1.0.0

@@ -17,13 +17,19 @@ interface PuzzlePreviewProps {
   gridSize?: number | string;
   /** Used for hidden input id parity with `puzzle.php` (`tutor-puzzle-state-{id}`). */
   questionId: ID;
+  showPuzzleAnswerBackground?: boolean;
 }
 
 /**
  * Course Builder puzzle preview — loads Tutor Pro `puzzle-question.js` in the preview iframe
  * (same pattern as {@link DrawImagePreview}, {@link PinImagePreview}, {@link ScalePreview}).
  */
-const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePreviewProps) => {
+const PuzzlePreview = ({
+  answers,
+  gridSize: gridSizeProp,
+  questionId,
+  showPuzzleAnswerBackground = true,
+}: PuzzlePreviewProps) => {
   const answer = answers[0];
   const imageUrl = answer?.image_url || answer?.answer_two_gap_match || '';
   const gridSize = clampGridSize(gridSizeProp);
@@ -91,11 +97,17 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePr
   const instructionId = `tutor-puzzle-instruction-${questionId}`;
   const statusId = `tutor-puzzle-status-${questionId}`;
   const describedByIds = `${instructionId} ${statusId}`;
+  const wrapperClassName = [
+    'quiz-question-ans-choice-area tutor-mt-40 tutor-puzzle-question question-type-puzzle',
+    showPuzzleAnswerBackground ? '' : 'tutor-puzzle-question-no-answer-background',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div
       ref={wrapperRef}
-      className="quiz-question-ans-choice-area tutor-mt-40 tutor-puzzle-question question-type-puzzle"
+      className={wrapperClassName}
       data-tutor-puzzle-defer-init="true"
       data-question-type="puzzle"
       data-question-id={String(questionId)}
@@ -113,12 +125,7 @@ const PuzzlePreview = ({ answers, gridSize: gridSizeProp, questionId }: PuzzlePr
           'tutor',
         )}
       >
-        <img
-          className="tutor-puzzle-reference-image"
-          src={imageUrl}
-          alt={__('Puzzle reference image', 'tutor')}
-          style={{ opacity: 0.3 }}
-        />
+        <img className="tutor-puzzle-reference-image" src={imageUrl} alt={__('Puzzle reference image', 'tutor')} />
         <div className="tutor-puzzle-slots" aria-hidden="true" />
       </div>
       <div

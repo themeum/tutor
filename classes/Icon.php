@@ -50,6 +50,7 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BACK_2                     = 'back-2';
 	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
@@ -109,6 +110,7 @@ final class Icon {
 	const COLOR_OPTION               = 'color-option';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
+	const COMMENT_OUTLINE            = 'comment-outline';
 	const COMMISSION                 = 'commission';
 	const COMPLETED                  = 'completed';
 	const COMPLETED_CIRCLE           = 'completed-circle';
@@ -139,6 +141,7 @@ final class Icon {
 	const CSS                        = 'css';
 	const CSV                        = 'csv';
 	const CURRENCY                   = 'currency';
+	const DARK                       = 'dark';
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
@@ -196,6 +199,7 @@ final class Icon {
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
 	const FONT                       = 'font';
+	const FOOTER                     = 'footer';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
 	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';
@@ -273,6 +277,7 @@ final class Icon {
 	const MAGIC_ERASER               = 'magic-eraser';
 	const MAGIC_VARIATION            = 'magic-variation';
 	const MAGIC_WAND                 = 'magic-wand';
+	const MAP_PIN                    = 'map-pin';
 	const MARKER_TICK                = 'marker-tick';
 	const MARKS_TOTAL                = 'marks-total';
 	const MARK_CIRCLE                = 'mark-circle';
@@ -281,6 +286,7 @@ final class Icon {
 	const MEMBER                     = 'member';
 	const MENU                       = 'menu';
 	const MINUS                      = 'minus';
+	const MINUS_CIRCLE               = 'minus-circle';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
 	const MORE                       = 'more';
@@ -297,6 +303,7 @@ final class Icon {
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
+	const PARTIAL                    = 'partial';
 	const PASSED                     = 'passed';
 	const PASSED_FILL                = 'passed-fill';
 	const PASSING                    = 'passing';
@@ -390,9 +397,9 @@ final class Icon {
 	const SHORTCODE                  = 'shortcode';
 	const SIGNATURE_UPLOAD           = 'signature-upload';
 	const SORT                       = 'sort';
-	const SORT_A_S_C                 = 'sort-a-s-c';
+	const SORT_ASC                   = 'sort-asc';
 	const SORT_BY                    = 'sort-by';
-	const SORT_D_E_S_C               = 'sort-d-e-s-c';
+	const SORT_DESC                  = 'sort-desc';
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';

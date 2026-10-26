@@ -18,38 +18,75 @@ defined( 'ABSPATH' ) || exit;
  * Modal Component Class.
  *
  * ```
- * // Example usage:
- *
+ * // Basic modal with title and body text
  * Modal::make()
  *     ->id( 'confirm-modal' )
  *     ->title( 'Confirm Submission' )
- *     ->subtitle( 'Are you sure you want to submit?' )
- *     ->body( 'This action cannot be undone.' )
- *     ->footer_buttons( '<button class="tutor-btn">Cancel</button>' )
+ *     ->body( '<p>Are you sure you want to submit this form?</p>' )
+ *     ->render();
+ *
+ * // Modal with title, subtitle and footer buttons
+ * Modal::make()
+ *     ->id( 'confirm-modal' )
+ *     ->title( 'Confirm Submission' )
+ *     ->subtitle( 'This action cannot be undone.' )
+ *     ->body( 'All data will be saved permanently.' )
+ *     ->footer_buttons(
+ *         Button::make()->label( 'Cancel' )->variant( Variant::SECONDARY )->attr( '@click', "TutorCore.modal.closeModal('confirm-modal')" )->get() .
+ *         Button::make()->label( 'Submit' )->variant( Variant::PRIMARY )->get()
+ *     )
  *     ->footer_alignment( 'right' )
  *     ->render();
  *
- * // With template path
+ * // Modal loaded from a PHP template file
  * Modal::make()
  *     ->id( 'course-modal' )
  *     ->title( 'Course Details' )
- *     ->template( 'path/to/template.php' )
+ *     ->template( get_template_directory() . '/partials/course-modal.php', array( 'course_id' => $course_id ) )
  *     ->render();
  *
- * // Headless modal (no close button)
+ * // Non-closeable (headless) modal
  * Modal::make()
  *     ->id( 'headless-modal' )
  *     ->closeable( false )
- *     ->body( '<h3>Success!</h3>' )
+ *     ->body( '<h3>Processing payment, please wait...</h3>' )
  *     ->render();
  *
- * // Open by default (state is 'closed' by default)
+ * // Modal open by default (state = 'open')
  * Modal::make()
  *     ->id( 'welcome-modal' )
- *     ->title( 'Welcome' )
- *     ->body( 'Please confirm to continue.' )
+ *     ->title( 'Welcome!' )
+ *     ->body( 'Please review the onboarding checklist to get started.' )
  *     ->state( 'open' )
  *     ->render();
+ *
+ * // Modal with custom width
+ * Modal::make()
+ *     ->id( 'wide-modal' )
+ *     ->title( 'Course Builder' )
+ *     ->body( '<div x-data="courseBuilder">...</div>' )
+ *     ->width( '800px' )
+ *     ->render();
+ *
+ * // Modal with title icon
+ * Modal::make()
+ *     ->id( 'alert-modal' )
+ *     ->title( 'Attention Required' )
+ *     ->title_icon( Icon::WARNING )
+ *     ->body( 'Your session is about to expire.' )
+ *     ->render();
+ *
+ * // Footer buttons aligned left
+ * Modal::make()
+ *     ->id( 'info-modal' )
+ *     ->title( 'How it works' )
+ *     ->body( '<p>Learn more about this feature.</p>' )
+ *     ->footer_buttons( Button::make()->label( 'Got it' )->variant( Variant::PRIMARY )->get() )
+ *     ->footer_alignment( 'left' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = Modal::make()->id( 'my-modal' )->title( 'My Modal' )->body( 'Content' )->get();
  * ```
  *
  * @since 4.0.0

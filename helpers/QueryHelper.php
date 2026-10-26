@@ -188,14 +188,20 @@ class QueryHelper {
 	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
 
+		if ( ! tutor_utils()->is_multi_dimensional_array( $request ) ) {
+			return self::insert( $table, $request );
+		}
+
 		$table         = self::prepare_table_name( $table );
 		$column_keys   = '';
-		$column_values = '';
+		$column_values = array();
 		$sql           = '';
 		$last_key      = array_key_last( $request );
 		$first_key     = array_key_first( $request );
 		foreach ( $request as $k => $value ) {
 			$keys = array_keys( $value );
+
+			$value_placeholder = array();
 
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
@@ -204,32 +210,44 @@ class QueryHelper {
 				if ( $sanitize_value && $do_sanitize ) {
 					$sanitize_value = sanitize_text_field( $sanitize_value );
 				}
-				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
+
+				$column_values[] = $sanitize_value;
+
+				$value_placeholder[] = '%s';
 			}
+
+			$value_placeholder = implode( ',', $value_placeholder );
+
 			// Trim trailing comma.
 			$column_keys   = rtrim( $column_keys, ',' );
-			$column_values = rtrim( $column_values, ',' );
+			$column_values = $wpdb->prepare( $value_placeholder, $column_values ); // Escape values.
+
 			if ( $first_key === $k ) {
-				$sql .= "INSERT INTO {$table} ($column_keys) VALUES ($column_values)";
+				$sql .= "INSERT INTO
+						{$table}
+						($column_keys) VALUES ($column_values)
+					";
+
 				if ( count( $request ) > 1 ) {
 					$sql .= ',';
 				}
 			} elseif ( $last_key == $k ) {
-				$sql .= "($column_values)";
+				$sql .= "( $column_values )";
 			} else {
-				$sql .= "($column_values),";
+				$sql .= "( $column_values ),";
+
 			}
 
 			// Reset keys & values to avoid duplication.
 			$column_keys   = '';
-			$column_values = '';
+			$column_values = array();
 		}
 
 		$wpdb->query( $sql );//phpcs:ignore
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
-			throw new \Exception( $wpdb->last_error );
+			throw new \Exception( esc_html( $wpdb->last_error ) );
 		}
 
 		if ( $return_ids ) {
@@ -1366,6 +1384,7 @@ class QueryHelper {
 		if ($wpdb->last_error) {
 			throw new \Exception($wpdb->last_error);
 		}
+
 
 		return $result;
 	}

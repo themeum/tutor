@@ -76,14 +76,14 @@ use TUTOR\Icon;
 				<input class="tutor-form-control tutor-input" type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php esc_html_e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
 			</div>
 
-			<div class="tutor-password-strength-checker tutor-mb-8" x-data="{ show: false, value: '<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>' }">
+			<div class="tutor-password-strength-checker tutor-mb-8" x-data="{ show: false, value: '' }">
 				<div class="tutor-input-field">
 					<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
 					<div class="tutor-form-wrap" style="position: relative;">
 						<span 
 							class="tutor-flex"
 							style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-							x-show="value.length > 0"
+							x-show="value.length"
 							@click="show = !show"
 						>
 						<template x-if="!show">

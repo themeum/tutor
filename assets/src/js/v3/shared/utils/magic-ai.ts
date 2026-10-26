@@ -32,7 +32,24 @@ export function base64ToBlob(base64: string) {
   return new Blob([buffer], { type: mimeString });
 }
 
-export function downloadBase64Image(src: string, filename: string) {
+export async function downloadBase64Image(src: string, filename: string) {
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    try {
+      const response = await fetch(src);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    } catch {
+      // Fallback to base64 processing if fetch fails
+    }
+  }
+
   const blob = base64ToBlob(src);
 
   const link = document.createElement('a');

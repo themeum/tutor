@@ -17,4 +17,7 @@ export const TUTOR_CUSTOM_EVENTS = {
   QUIZ_TIME_EXPIRED: 'tutor-quiz-time-expired',
   QUIZ_ABANDON_REQUESTED: 'tutor-quiz-abandon-requested',
   QUIZ_ATTEMPT_COMPLETED: 'tutor-quiz-attempt-completed',
+  CONTENT_CHANGED: 'tutor_content_changed_event',
+  DATE_FILTER_CHANGED: 'tutor:date-filter-changed',
+  SORT_CHANGED: 'tutor:sort-changed',
 };

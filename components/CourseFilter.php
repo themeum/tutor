@@ -23,11 +23,24 @@ defined( 'ABSPATH' ) || exit;
  * Class CourseFilter
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Minimal — auto-fetches courses for the current user
+ * CourseFilter::make()
+ *     ->render();
+ *
+ * // With explicit courses list and total count
  * CourseFilter::make()
  *     ->courses( $courses )
  *     ->count( $total_announcements )
  *     ->render();
+ *
+ * // Pre-populate options from a custom courses array
+ * CourseFilter::make()
+ *     ->courses( CourseModel::get_courses_by_instructor() )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = CourseFilter::make()->courses( $courses )->get();
  * ```
  *
  * @since 4.0.0
@@ -93,7 +106,7 @@ class CourseFilter extends DropdownFilter {
 		);
 
 		if ( null === $courses ) {
-			$courses = current_user_can( 'administrator' ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+			$courses = current_user_can( 'manage_options' ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 		}
 
 		if ( ! empty( $courses ) ) {

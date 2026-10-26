@@ -19,6 +19,13 @@
     z-index: $tutor-z-footer;
     justify-content: space-between;
 
+    .tutor-has-site-shell & {
+      @include tutor-card-base();
+      margin-top: $tutor-spacing-6;
+      border-radius: $tutor-radius-2xl;
+      position: sticky;
+    }
+
     form {
       width: 50%;
 
@@ -52,6 +59,11 @@
       position: fixed;
       padding-block: $tutor-spacing-5;
       width: 100%;
+
+      .tutor-has-site-shell & {
+        border: none;
+        position: sticky;
+      }
 
       form {
         width: auto;

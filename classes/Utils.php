@@ -301,6 +301,32 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
+		// Normalize legacy option keys that have been superseded by new settings.
+		// When we reach here, $key does not exist in $option (checked above).
+		if ( 'enable_spotlight_mode' === $key ) {
+			// Derive from new page-elements setting: spotlight mode = both header and footer hidden.
+			// Default to $default when new keys are absent (fresh install).
+			$show_header = $option['show_learning_site_header'] ?? null;
+			$show_footer = $option['show_learning_site_footer'] ?? null;
+
+			if ( null !== $show_header || null !== $show_footer ) {
+				$header_off   = ( null === $show_header || 'off' === $show_header || false === $show_header );
+				$footer_off   = ( null === $show_footer || 'off' === $show_footer || false === $show_footer );
+				$is_spotlight = $header_off && $footer_off;
+
+				return apply_filters( $key, $is_spotlight );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
+		if ( 'tutor_frontend_course_page_logo_id' === $key ) {
+			// Fall back to the new brand_logo_light key.
+			if ( array_key_exists( 'brand_logo_light', $option ) ) {
+				return apply_filters( $key, absint( $option['brand_logo_light'] ) );
+			}
+			return $this->get_option_default( $key, $default, $from_options );
+		}
+
 		return $this->get_option_default( $key, $default, $from_options );
 	}
 
@@ -911,6 +937,14 @@ class Utils {
 					'total_count'       => $total_contents,
 				);
 			}
+		}
+
+		if ( ! $result && $get_stats ) {
+			$result = array(
+				'completed_percent' => 0,
+				'completed_count'   => 0,
+				'total_count'       => 0,
+			);
 		}
 
 		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
@@ -1542,8 +1576,93 @@ class Utils {
 		$post_id = $this->get_post_id( $post_id );
 
 		if ( is_array( $video_data ) && count( $video_data ) ) {
-			update_post_meta( $post_id, '_video', $video_data );
+			update_post_meta( $post_id, '_video', $this->filter_video_meta( $video_data ) );
 		}
+	}
+
+	/**
+	 * Whether a scalar looks like an absolute local filesystem path.
+	 *
+	 * Used when filtering video meta so paths cannot be smuggled under another key.
+	 * Does not call file_exists() — that would allow path probing on save.
+	 *
+	 * @since 4.0.6
+	 *
+	 * @param mixed $value value to inspect.
+	 *
+	 * @return bool
+	 */
+	private function is_local_filesystem_path_value( $value ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return false;
+		}
+
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			return false;
+		}
+
+		if ( '/' === $value[0] ) {
+			return true;
+		}
+
+		if ( preg_match( '/^[a-zA-Z]:[\\\\\\/]/', $value ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Copy only trusted keys from video meta.
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $video video meta.
+	 *
+	 * @return array
+	 */
+	public function filter_video_meta( $video ) {
+		if ( ! is_array( $video ) ) {
+			return array();
+		}
+
+		$allowed_keys = apply_filters(
+			'tutor_allowed_video_meta_keys',
+			array(
+				'source',
+				'source_video_id',
+				'source_html5',
+				'source_external_url',
+				'source_youtube',
+				'source_vimeo',
+				'source_embedded',
+				'source_shortcode',
+				'source_type',
+				'poster',
+				'poster_url',
+				'runtime',
+				'duration_sec',
+				'playtime',
+			)
+		);
+
+		$filtered = array();
+		foreach ( $video as $key => $value ) {
+			if ( 'path' === $key ) {
+				continue;
+			}
+
+			if ( $this->is_local_filesystem_path_value( $value ) ) {
+				continue;
+			}
+
+			$is_source_key = is_string( $key ) && 1 === preg_match( '/^source_[a-z0-9_]+$/', $key );
+			if ( in_array( $key, $allowed_keys, true ) || $is_source_key ) {
+				$filtered[ $key ] = $value;
+			}
+		}
+
+		return $filtered;
 	}
 
 	/**
@@ -1799,7 +1918,14 @@ class Utils {
 			$info['playtime'] = "$runtime_hours:$runtime_minutes:$runtime_seconds";
 		}
 
-		$info = array_merge( $info, $video );
+		$resolved_path = isset( $info['path'] ) ? $info['path'] : null;
+		$info          = array_merge( $this->filter_video_meta( (array) $video ), $info );
+
+		if ( $resolved_path ) {
+			$info['path'] = $resolved_path;
+		} else {
+			unset( $info['path'] );
+		}
 
 		return (object) $info;
 	}
@@ -3054,13 +3180,12 @@ class Utils {
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter   = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
+		$course_filter   = '' !== $course_filter && absint( $course_filter ) > 0 ? ' AND umeta.meta_value = ' . absint( $course_filter ) . ' ' : '';
 
-		if ( '' != $date_filter ) {
-			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
+		if ( '' !== $date_filter ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_filter    = '' !== $formatted_date ? $wpdb->prepare( ' AND  DATE(user.user_registered) = CAST(%s AS DATE) ', $formatted_date ) : '';
 		}
-
-		$date_filter = $date_filter != '' ? " AND  DATE(user.user_registered) = CAST('$date_filter' AS DATE) " : '';
 
 		$category_join  = '';
 		$category_where = '';
@@ -3070,7 +3195,7 @@ class Utils {
 
 			$status = array_map(
 				function ( $str ) {
-					return "'{$str}'";
+					return "'" . esc_sql( $str ) . "'";
 				},
 				$status
 			);
@@ -3126,7 +3251,8 @@ class Utils {
 		} elseif ( 'popular' === $order_filter ) {
 			$order_query = ' ORDER BY rating DESC ';
 		} else {
-			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
+			$order_direction = QueryHelper::get_valid_sort_order( $order_filter );
+			$order_query     = " ORDER BY user_meta.meta_value {$order_direction} ";
 		}
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
@@ -3223,6 +3349,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
+						   AND course.post_type = %s
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3234,6 +3361,7 @@ class Utils {
 						   AND tutor_photo.meta_key = %s
 			",
 				$course_id,
+				tutor()->course_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -3895,10 +4023,13 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-		$status_in       = '"' . implode( '","', $status_in ) . '"';
-		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
-		$include_user_id = implode( ',', $include_user_id );
+		$start           = absint( $start );
+		$limit           = absint( $limit );
+		$limit_offset    = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
+		$status_in       = array_values( array_filter( array_map( 'sanitize_key', (array) $status_in ) ) );
+		$status_in_str   = count( $status_in ) ? QueryHelper::prepare_in_clause( $status_in ) : "''";
+		$include_user_id = array_values( array_filter( array_map( 'absint', (array) $include_user_id ) ) );
+		$user_id_in_str  = count( $include_user_id ) ? QueryHelper::prepare_in_clause( $include_user_id ) : '0';
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 		'_reviews.comment_ID,
@@ -3922,7 +4053,7 @@ class Utils {
 						ON _reviews.user_id = _reviewer.ID
 			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
-					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND (_reviews.comment_approved IN ({$status_in_str}) OR _reviews.user_id IN ({$user_id_in_str}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$object_id
@@ -4046,16 +4177,20 @@ class Utils {
 		$course_filter = '';
 		if ( $course_id ) {
 			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = implode( ',', $course_ids );
-			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
+			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			if ( ! empty( $course_ids ) ) {
+				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
+				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
+			}
 		}
 
 		$user_filter = '';
 		if ( null !== $user_id ) {
-			$user_id     = $this->get_user_id( $user_id );
+			$user_id     = absint( $this->get_user_id( $user_id ) );
 			$user_filter = ' AND _comment.user_id=' . $user_id;
 		}
 
+		$status_in     = array_map( 'esc_sql', (array) $status_in );
 		$status_in     = '"' . implode( '","', $status_in ) . '"';
 		$status_filter = ' AND _comment.comment_approved IN (' . $status_in . ')';
 
@@ -4173,12 +4308,13 @@ class Utils {
 			$extra_where_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'comment_approved' => $args['comment_approved'] ) );
 		}
 
-		if ( '' !== $course_id ) {
-			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
+		if ( '' !== $course_id && absint( $course_id ) > 0 ) {
+			$course_id_int = absint( $course_id );
+			$course_query  = " AND {$wpdb->comments}.comment_post_ID = {$course_id_int} ";
 		}
 		if ( '' !== $date_filter ) {
-			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
-			$date_query  = " AND DATE({$wpdb->comments}.comment_date) = CAST( '$date_filter' AS DATE ) ";
+			$formatted_date = \tutor_get_formated_date( 'Y-m-d', $date_filter );
+			$date_query     = '' !== $formatted_date ? $wpdb->prepare( " AND DATE({$wpdb->comments}.comment_date) = CAST(%s AS DATE) ", $formatted_date ) : '';
 		}
 
 		$results = array(
@@ -4187,6 +4323,7 @@ class Utils {
 		);
 
 		$cours_ids = (array) $this->get_assigned_courses_ids_by_instructors( $instructor_id );
+		$cours_ids = array_filter( array_map( 'absint', $cours_ids ) );
 
 		if ( $this->count( $cours_ids ) ) {
 			$implode_ids = implode( ',', $cours_ids );
@@ -4212,7 +4349,8 @@ class Utils {
 				)
 			);
 
-			$order_by = $args['order_by'] ?? 'comment_ID';
+			$allowed_order_by = array( 'comment_ID', 'comment_date', 'comment_post_ID', 'user_id' );
+			$order_by         = isset( $args['order_by'] ) && in_array( $args['order_by'], $allowed_order_by, true ) ? $args['order_by'] : 'comment_ID';
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -4492,7 +4630,7 @@ class Utils {
 		$user_id            = get_current_user_id();
 		$course_type        = tutor()->course_post_type;
 		$search_term        = '%' . $wpdb->esc_like( $search_term ) . '%';
-		$question_clause    = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
+		$question_clause    = $question_id ? ' AND _question.comment_ID=' . (int) $question_id : '';
 		$order_condition    = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause        = '';
 		$in_course_id_query = '';
@@ -4502,41 +4640,52 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		$params = array( $search_term );
+
+		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
+			return $count_only ? 0 : array();
+		}
+
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . $asker_id;
+			$question_clause .= ' AND _question.user_id=' . absint( $asker_id );
+		}
+
+		if ( ! $user_id ) {
+			$in_course_id_query .= " AND _course.post_status = 'publish' ";
 		}
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
-			$args['course_id']   = intval( $args['course_id'] );
+			$args['course_id']   = absint( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
-			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
-			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
+			$my_course_ids       = array_filter( array_map( 'absint', (array) $this->get_course_id_by( 'instructor', $user_id ) ) );
+			$in_ids              = count( $my_course_ids ) ? QueryHelper::prepare_in_clause( $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query.
 		if ( isset( $args['course-id'] ) && is_numeric( $args['course-id'] ) ) {
-			$filter_clause .= ' AND _course.ID=' . $args['course-id'];
+			$filter_clause .= ' AND _course.ID=' . absint( $args['course-id'] );
 		}
 
-		if ( isset( $args['date'] ) ) {
-			$date           = esc_sql( $args['date'] );
-			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
+		if ( ! empty( $args['date'] ) ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $args['date'] );
+			if ( '' !== $formatted_date ) {
+				$filter_clause .= ' AND DATE(_question.comment_date) = CAST(%s AS DATE)';
+				$params[]       = $formatted_date;
+			}
 		}
 
 		if ( isset( $args['order'] ) ) {
-			$order = strtolower( $args['order'] );
-			if ( 'asc' === $order || 'desc' === $order ) {
-				$order_condition = ' ORDER BY _question.comment_ID ' . $order . ' ';
-			}
+			$order           = QueryHelper::get_valid_sort_order( $args['order'] );
+			$order_condition = " ORDER BY _question.comment_ID {$order} ";
 		}
 
 		// Meta query.
@@ -4594,7 +4743,9 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$start        = absint( $start );
+		$limit        = absint( $limit );
+		$limit_offset = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}
@@ -4617,7 +4768,7 @@ class Utils {
 					{$filter_clause}
 			{$order_condition}
 			{$limit_offset}",
-			$search_term
+			$params
 		);
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
@@ -4634,7 +4785,7 @@ class Utils {
 
 		// Assign meta data.
 		if ( count( $question_ids ) ) {
-			$q_ids      = implode( ',', $question_ids );
+			$q_ids      = QueryHelper::prepare_in_clause( array_map( 'absint', $question_ids ) );
 			$meta_array = $wpdb->get_results(
 				"SELECT comment_id, meta_key, meta_value
 				FROM {$wpdb->commentmeta}
@@ -6306,27 +6457,42 @@ class Utils {
 	 * Get all courses id assigned or owned by an instructors
 	 *
 	 * @since 1.3.3
+	 * @since 4.0.5 $status param added to filter by instructor status.
 	 *
-	 * @param int $user_id user id.
+	 * @param int    $user_id user id.
+	 * @param string $status  Optional instructor status to filter by, e.g. 'approved'. Empty to skip the filter.
 	 *
 	 * @return array
 	 */
-	public function get_assigned_courses_ids_by_instructors( $user_id = 0 ) {
+	public function get_assigned_courses_ids_by_instructors( $user_id = 0, $status = '' ) {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 
-		$get_assigned_courses_ids = $wpdb->get_col(
+		$where_clause = "meta.meta_key = '_tutor_instructor_course_id' AND meta.user_id = %d";
+		$args         = array( $user_id );
+
+		if ( ! empty( $status ) ) {
+			$where_clause .= " AND EXISTS(
+						SELECT 1
+						FROM {$wpdb->usermeta} meta_status
+						WHERE meta_status.user_id = meta.user_id
+							AND meta_status.meta_key = '_tutor_instructor_status'
+							AND meta_status.meta_value = %s
+					)";
+			$args[]        = $status;
+		}
+
+		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT meta.meta_value
-			FROM {$wpdb->usermeta} meta
-				INNER JOIN {$wpdb->posts} course ON meta.meta_value=course.ID
-				WHERE meta.meta_key = '_tutor_instructor_course_id'
-					AND meta.user_id = %d GROUP BY meta_value",
-				$user_id
+				FROM {$wpdb->usermeta} meta
+					INNER JOIN {$wpdb->posts} course ON meta.meta_value = course.ID
+				WHERE {$where_clause} GROUP BY meta.meta_value", //phpcs:ignore
+				...$args
 			)
 		);
 
-		return $get_assigned_courses_ids;
+		return array_map( 'intval', $course_ids );
 	}
 
 	/**
@@ -7190,6 +7356,8 @@ class Utils {
 	 * Get students list based on course id
 	 *
 	 * @since 1.6.6
+	 * @since 4.1.0 Query refactored to use Tutor\Helpers\QueryHelper and
+	 *              `tutor_students_data_by_course_id_query_args` filter added to extend the query clause.
 	 *
 	 * @param integer $course_id course id.
 	 * @param string  $field_name field name.
@@ -7199,24 +7367,43 @@ class Utils {
 	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
-		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email
-			FROM   	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->users} student
-						    ON enrol.post_author = student.id
-			WHERE  	enrol.post_type = %s
-					AND enrol.post_parent = %d
-					AND enrol.post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				'completed'
-			)
+		$query_args = array(
+			'select' => "student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email",
+			'alias'  => 'enrol',
+			'where'  => array(
+				'enrol.post_type'   => 'tutor_enrolled',
+				'enrol.post_parent' => $course_id,
+				'enrol.post_status' => 'completed',
+			),
+			'joins'  => array(
+				array(
+					'type'  => 'INNER',
+					'table' => 'users AS student',
+					'on'    => 'enrol.post_author = student.id',
+				),
+			),
 		);
+
+		/**
+		 * Filter the QueryHelper args used to fetch students of a course.
+		 *
+		 * Addons can modify the query clause (select, joins, where, groupby)
+		 * to extend the result without running an extra query.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $query_args QueryHelper::query() arguments.
+		 * @param int   $course_id course id.
+		 */
+		$query_args = apply_filters( 'tutor_students_data_by_course_id_query_args', $query_args, $course_id );
+
+		$student_data = QueryHelper::query(
+			'posts',
+			$query_args
+		);
+
 		if ( $all ) {
 			return $student_data;
 		}
@@ -7363,7 +7550,9 @@ class Utils {
 			global $wpdb;
 			switch ( $content ) {
 				case 'course':
-					$course_id = $object_id;
+					if ( get_post_type( $object_id ) === tutor()->course_post_type ) {
+						$course_id = $object_id;
+					}
 					break;
 
 				case 'zoom_meeting':
@@ -8895,49 +9084,113 @@ class Utils {
 	/**
 	 * Tutor custom header.
 	 *
+	 * Renders the page-opening HTML. When $show is true (default) the active
+	 * theme header is included — either via get_header() for classic themes or
+	 * a block template-part for block themes. When $show is false, only the
+	 * bare standalone boilerplate (doctype / head / body) is output, with no
+	 * theme header rendered.
+	 *
+	 * All existing callers that pass no argument continue to work unchanged.
+	 *
 	 * @since 2.0.0
+	 * @since 4.0.6 Added optional $show param to suppress the theme header/footer.
+	 *
+	 * @param bool $show Whether to render the active theme header. Default true.
 	 *
 	 * @return void
 	 */
-	public function tutor_custom_header() {
+	public function tutor_custom_header( bool $show = true ) {
 		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+		$is_block_theme = version_compare( $wp_version, '5.9', '>=' )
+			&& function_exists( 'wp_is_block_theme' )
+			&& wp_is_block_theme();
+
+		if ( $show ) {
+			if ( $is_block_theme ) {
+				$theme          = wp_get_theme();
+				$theme_slug     = $theme->get( 'TextDomain' );
+				$header_content = do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+				?>
+				<!doctype html>
+					<html <?php language_attributes(); ?>>
+					<head>
+					<meta charset="<?php bloginfo( 'charset' ); ?>">
+					<?php wp_head(); ?>
+					</head>
+					<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
+						<div class="wp-site-blocks">
+				<?php
+				echo $header_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			} else {
+				get_header();
+			}
+		} else {
+			// Standalone boilerplate — no theme header rendered.
 			?>
 			<!doctype html>
-				<html <?php language_attributes(); ?>>
-				<head>
-					<meta charset="<?php bloginfo( 'charset' ); ?>">
+			<html <?php language_attributes(); ?>>
+			<head>
+				<meta charset="<?php bloginfo( 'charset' ); ?>" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<?php wp_head(); ?>
-				</head>
-				<body <?php body_class(); ?>>
-			<?php wp_body_open(); ?>
-					<div class="wp-site-blocks">
-				<?php
-					$theme      = wp_get_theme();
-					$theme_slug = $theme->get( 'TextDomain' );
-					echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
-		} else {
-			get_header();
+			</head>
+			<body <?php body_class(); ?>>
+				<?php wp_body_open(); ?>
+			<?php
 		}
 	}
 
 	/**
-	 * Tutor Custom Header
+	 * Tutor custom footer.
+	 *
+	 * Renders the page-closing HTML. When $show is true (default) the active
+	 * theme footer is included. When $show is false, only the bare standalone
+	 * close tags are output (wp_footer, </body>, </html>) with no theme footer
+	 * and no wp-site-blocks closing wrapper for block themes.
+	 *
+	 * All existing callers that pass no argument continue to work unchanged.
 	 *
 	 * @since 2.0.0
+	 * @since 4.0.6 Added optional $show param to suppress the theme header/footer.
+	 *
+	 * @param bool $show Whether to render the active theme footer. Default true.
+	 *
+	 * @return void
 	 */
-	public function tutor_custom_footer() {
+	public function tutor_custom_footer( bool $show = true ) {
 		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && true === wp_is_block_theme() ) {
-			$theme      = wp_get_theme();
-			$theme_slug = $theme->get( 'TextDomain' );
-			echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' );
-			echo '</div>';
-			wp_footer();
-			echo '</body>';
-			echo '</html>';
+		$is_block_theme = version_compare( $wp_version, '5.9', '>=' )
+			&& function_exists( 'wp_is_block_theme' )
+			&& true === wp_is_block_theme();
+
+		if ( $show ) {
+			if ( $is_block_theme ) {
+				$theme      = wp_get_theme();
+				$theme_slug = $theme->get( 'TextDomain' );
+				echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '</div>';
+
+				if ( function_exists( 'wp_style_engine_get_stylesheet_from_context' ) ) {
+					$late_styles = wp_style_engine_get_stylesheet_from_context( 'block-supports' );
+					if ( ! empty( $late_styles ) ) {
+						echo '<style id="wp-block-supports-late-inline-css">' . $late_styles . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				}
+
+				wp_footer();
+				echo '</body>';
+				echo '</html>';
+			} else {
+				get_footer();
+			}
 		} else {
-			get_footer();
+			// Standalone close — no theme footer rendered.
+			wp_footer();
+			?>
+			</body>
+			</html>
+			<?php
 		}
 	}
 
@@ -9269,7 +9522,7 @@ class Utils {
 		if ( 0 === $s ) {
 			$r = $g = $b = $l; //phpcs:ignore
 		} else {
-			$hue2rgb = function( $p, $q, $t ) {
+			$hue2rgb = function ( $p, $q, $t ) {
 				if ( $t < 0 ) {
 					++$t;
 				}
@@ -9298,9 +9551,9 @@ class Utils {
 
 	/**
 	 * Get brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_brand_color() {
@@ -9310,9 +9563,9 @@ class Utils {
 
 	/**
 	 * Get default brand color
-	 * 
+	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_default_brand_color() {
@@ -10014,14 +10267,35 @@ class Utils {
 	 */
 	public function upload_base64_image( $base64_image_str, $filename = null, $add_to_wp_media = true ) {
 		try {
-			$arr = explode( ',', $base64_image_str, 2 );
-			if ( ! isset( $arr[1] ) ) {
+			$image_data = null;
+
+			// Handle remote URLs.
+			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				$temp_file = download_url( $base64_image_str );
+				if ( is_wp_error( $temp_file ) ) {
+					throw new \Exception( $temp_file->get_error_message() );
+				}
+				$image_data = file_get_contents( $temp_file );
+				@unlink( $temp_file );
+			} else {
+				$arr = explode( ',', $base64_image_str, 2 );
+				if ( isset( $arr[1] ) ) {
+					$image_data = base64_decode( $arr[1] );
+				} elseif ( ! empty( $base64_image_str ) && false !== base64_decode( $base64_image_str, true ) ) {
+					// Raw base64 string without data: prefix.
+					$image_data = base64_decode( $base64_image_str );
+				} else {
+					throw new \Exception( 'Invalid base64 string' );
+				}
+			}
+
+			if ( empty( $image_data ) ) {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
-			$image_data = base64_decode( $arr[1] );
-			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
 				throw new \Exception( $uploaded['error'] );
@@ -10363,5 +10637,18 @@ class Utils {
 	 */
 	public function is_legacy_learning_mode(): bool {
 		return Options_V2::LEARNING_MODE_LEGACY === $this->get_option( 'learning_mode' );
+	}
+
+	/**
+	 * Check if the data is multi dimensional array
+	 *
+	 * @since 4.0.2
+	 *
+	 * @param array $data Array value to check with.
+	 *
+	 * @return bool
+	 */
+	public function is_multi_dimensional_array( array $data ): bool {
+		return isset( $data[0] ) && is_array( $data[0] );
 	}
 }

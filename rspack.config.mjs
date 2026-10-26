@@ -158,13 +158,36 @@ const createConfig = (env, options) => {
     plugins: [
       new rspack.CssExtractRspackPlugin({
         filename: (pathData) => {
-          const entryName = pathData.chunk.name.replace('-scss', '');
-          return `css/${entryName}.min.css`;
+          const entryName = pathData.chunk.name;
+          if (entryName === 'tutor-cart-button-scss') {
+            return 'blocks/cart-button/index.css';
+          }
+          return `css/${entryName.replace('-scss', '')}.min.css`;
         },
         chunkFilename: (pathData) => {
           const entryName = pathData.chunk.name.replace('-scss', '');
           return `css/lazy-chunks/${entryName}.min.css`;
         },
+      }),
+      new rspack.CopyRspackPlugin({
+        patterns: [
+          {
+            from: 'assets/src/blocks/cart-button/block.json',
+            to: 'blocks/cart-button/block.json',
+          },
+          {
+            from: 'assets/src/blocks/cart-button/render.php',
+            to: 'blocks/cart-button/render.php',
+          },
+          {
+            from: 'assets/src/blocks/student-registration/block.json',
+            to: 'blocks/student-registration/block.json',
+          },
+          {
+            from: 'assets/src/blocks/instructor-registration/block.json',
+            to: 'blocks/instructor-registration/block.json',
+          },
+        ],
       }),
       new rspack.ProvidePlugin({
         React: 'react',
@@ -180,6 +203,9 @@ const createConfig = (env, options) => {
       react: 'React',
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
+      '@wordpress/blocks': 'wp.blocks',
+      '@wordpress/block-editor': 'wp.blockEditor',
+      '@wordpress/components': 'wp.components',
     },
     devtool: isDevelopment ? 'source-map' : false,
     stats: {
@@ -233,7 +259,13 @@ const createConfig = (env, options) => {
             },
           },
         }),
-        new rspack.LightningCssMinimizerRspackPlugin(),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          minimizerOptions: {
+            exclude: {
+              logicalProperties: true,
+            },
+          },
+        }),
       ],
     };
     baseConfig.output.clean = {
@@ -269,6 +301,10 @@ const jsEntries = {
   'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/src/js/gutenberg/index.js',
+  'tutor-gutenberg-cart-button': {
+    import: './assets/src/blocks/cart-button/index.js',
+    filename: 'blocks/cart-button/index.js',
+  },
   'tutor-course-builder': './assets/src/js/v3/entries/course-builder/index.tsx',
   'tutor-order-details': './assets/src/js/v3/entries/order-details/index.tsx',
   'tutor-coupon': './assets/src/js/v3/entries/coupon-details/index.tsx',
@@ -282,6 +318,7 @@ const jsEntries = {
 
 const scssEntries = {
   'tutor-front-scss': './assets/src/scss/front/index.scss',
+  'tutor-cart-button-scss': './assets/src/blocks/cart-button/style.scss',
   'tutor-admin-scss': './assets/src/scss/admin-dashboard/index.scss',
   'tutor-setup-scss': './assets/src/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',
@@ -295,6 +332,7 @@ const scssEntries = {
 
 const resolveAliases = {
   '@Core': path.resolve(__dirname, './assets/core'),
+  '@Icons': path.resolve(__dirname, './assets/icons'),
   '@TutorShared': path.resolve(__dirname, './assets/src/js/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/src/js/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/src/js/v3/entries/course-builder/components/'),
@@ -312,7 +350,6 @@ const resolveAliases = {
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
-  '@TutorProQuiz': path.resolve(__dirname, '../tutor-pro/assets/src/js/quiz-type'),
 };
 
 const isScssEntry = (entry) => {

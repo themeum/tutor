@@ -66,10 +66,14 @@ export const useGenerateCourseContent = () => {
       const courseTitle = response.data;
       updateContents({ title: courseTitle, prompt }, pointer);
 
-      const featuredImageResponse = await fetchImageUrlAsBase64(
-        courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
-      );
-      updateContents({ featured_image: featuredImageResponse }, pointer);
+      try {
+        const featuredImageResponse = await fetchImageUrlAsBase64(
+          courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
+        );
+        updateContents({ featured_image: featuredImageResponse }, pointer);
+      } catch (e) {
+        // Skip image if fetching base64 fails
+      }
 
       try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({

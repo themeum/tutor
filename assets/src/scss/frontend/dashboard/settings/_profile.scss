@@ -13,6 +13,8 @@
   }
 
   @include tutor-breakpoint-down(md) {
+    overflow: visible;
+
     .tutor-account-container {
       .tutor-tabs-tab {
         gap: $tutor-spacing-6;
@@ -24,7 +26,7 @@
 
       .tutor-profile-settings-tab {
         background: transparent;
-        height: 100dvh;
+        height: auto;
         overflow-y: visible;
         width: 100%;
         flex-direction: column;
@@ -36,6 +38,10 @@
 
       .tutor-profile-settings-tab button {
         padding: 0px 0px;
+      }
+
+      .tutor-flex:has(.tutor-profile-tab-activated) .tutor-profile-settings-tab {
+        display: none;
       }
 
       .tutor-icon {
@@ -55,19 +61,13 @@
 
     .tutor-profile-settings-tab-content {
       background: $tutor-surface-base;
-      position: absolute;
-      top: 60px;
-      height: calc(100dvh - 60px);
+      position: static;
+      height: auto;
       display: none;
-      overflow-y: scroll;
-      padding: $tutor-spacing-6;
-
-      body:has(#wpadminbar) & {
-        height: calc(100dvh - 106px);
-      }
+      overflow: visible;
+      padding: $tutor-spacing-none;
 
       &.tutor-profile-tab-activated {
-        inset-inline-start: 0px;
         display: block;
       }
     }

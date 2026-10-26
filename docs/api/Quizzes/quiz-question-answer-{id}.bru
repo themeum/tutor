@@ -1,0 +1,77 @@
+meta {
+  name: quiz-question-answer/{id}
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/quiz-question-answer/1
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Quiz Question Answers
+  
+  Retrieves a flattened list of all questions and their configured answers for a given quiz ID.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/quiz-question-answer/:id`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Path Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `id` | `integer` | **Yes** | The WordPress Post ID of the quiz. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "success",
+    "message": "Quiz question and answer retrieved successfully",
+    "data": [
+      {
+        "question_id": 12,
+        "question_title": "Which HTTP method is idempotent?",
+        "question_description": "Select the correct answer.",
+        "question_type": "single_choice",
+        "question_mark": 1,
+        "answer_id": 45,
+        "answer_title": "GET",
+        "is_correct": 1
+      },
+      {
+        "question_id": 12,
+        "question_title": "Which HTTP method is idempotent?",
+        "question_description": "Select the correct answer.",
+        "question_type": "single_choice",
+        "question_mark": 1,
+        "answer_id": 46,
+        "answer_title": "POST",
+        "is_correct": 0
+      }
+    ]
+  }
+  ```
+  
+  ### 404 Not Found
+  ```json
+  {
+    "code": "not_found",
+    "message": "Quiz question not found for given ID",
+    "data": []
+  }
+  ```
+}

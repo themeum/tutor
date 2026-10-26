@@ -20,6 +20,8 @@ $limit_key     = 'short_answer' === $question_type ? 'short_answer_characters_li
 $characters_limit    = (int) ( $quiz_settings[ $limit_key ] ?? 0 );
 $field_name          = $question_field_name_base ?? '';
 $register_rule_parts = array();
+$answer_is_required  = $answer_is_required ?? false;
+$required_message    = $required_message ?? '';
 if ( $answer_is_required ) {
 	$register_rule_parts[] = "required: '" . esc_js( $required_message ) . "'";
 }

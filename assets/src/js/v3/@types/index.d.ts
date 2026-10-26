@@ -179,7 +179,7 @@ declare global {
         instructor_can_change_course_author: 'on' | 'off';
         instructor_can_manage_co_instructors: 'on' | 'off';
         chatgpt_enable: 'on' | 'off';
-        course_builder_logo_url: string | false;
+        brand_logo_light: string | false;
         chatgpt_key_exist: boolean;
         hide_admin_bar_for_users: 'on' | 'off';
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
@@ -191,6 +191,14 @@ declare global {
         is_tax_included_in_price: boolean;
         pagination_per_page: string | number;
         has_active_membership_plans: boolean;
+        is_wp_ai_supported?: boolean;
+        has_ai_connector?: boolean;
+        has_image_connector?: boolean;
+        connectors_admin_url?: string;
+        enable_quiz_partial_marking: 'on' | 'off';
+        enable_quiz_negative_marking: 'on' | 'off';
+        quiz_negative_mark_type: 'percent' | 'fixed';
+        quiz_negative_mark_value: string | number;
       };
       tutor_currency: {
         symbol: string;

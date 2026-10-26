@@ -7,6 +7,9 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * @var int    $discussion_id
+ * @var string $discussion_url
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +27,7 @@ use TUTOR\Input;
 use TUTOR\User;
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );
-if ( ! $question ) {
+if ( ! is_object( $question ) ) {
 	wp_safe_redirect( $discussion_url );
 	return;
 }
@@ -40,9 +43,10 @@ $is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved', $question->m
 $is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $question->meta, 0 );
 $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question->meta, 0 );
 
+$action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->comment_post_ID ) ) . '#tutor-course-details-tab-wrapper';
 ?>
 <div class="tutor-discussion-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
-	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+	<div class="tutor-flex tutor-justify-between tutor-items-center tutor-px-6 tutor-py-5 tutor-border-b">
 		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php SvgIcon::make()->name( Icon::ARROW_LEFT_2 )->flip_rtl()->render(); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
@@ -51,7 +55,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		<div class="tutor-flex tutor-gap-2">
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'solved')"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved'">
@@ -72,7 +76,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'important')"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important'">
@@ -91,6 +95,20 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				<?php esc_html_e( 'Important', 'tutor' ); ?>
 			</button>
 		</div>
+		<?php elseif ( User::is_student_view() && ! empty( $action_url ) ) : ?>
+			<?php
+			Button::make()
+				->label( __( 'Go to all Q&A', 'tutor' ) )
+				->variant( Variant::LINK )
+				->size( Size::X_SMALL )
+				->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+				->flip_rtl()
+				->tag( 'a' )
+				->attr( 'href', esc_url( $action_url ) )
+				->attr( 'target', '_blank' )
+				->attr( 'rel', 'noopener noreferrer' )
+				->render();
+			?>
 		<?php endif; ?>
 	</div>
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
@@ -138,7 +156,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 							<?php if ( User::is_instructor_view() ) : ?>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5"
-								@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'archived')"
+								@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'archived')"
 								:disabled="qnaSingleActionMutation?.isPending"
 							>
 								<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived'">
@@ -147,7 +165,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 								<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived')">
 									<?php SvgIcon::make()->name( Icon::ARCHIVE_2 )->size( 20 )->render(); ?> 
 								</template>
-								<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
+								<span x-text="isArchived ? <?php echo esc_attr( tutor_json_encode( __( 'Un-Archive', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Archive', 'tutor' ) ) ); ?>"></span>
 							</button>
 							<?php endif; ?>
 							<?php if ( $is_user_asker ) : ?>
@@ -158,7 +176,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 							<?php endif; ?>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5"
-								@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
+								@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo (int) $question->comment_ID; ?> }); hide();"
 							>
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

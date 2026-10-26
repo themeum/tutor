@@ -1,0 +1,84 @@
+meta {
+  name: topics
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/topics
+  body: none
+  auth: basic
+}
+
+params:query {
+  ~course_id: 1
+}
+
+auth:basic {
+  username: {{api_key}}
+  password: {{api_secret}}
+}
+
+docs {
+  # Get Topics by Course
+  
+  Retrieves all topic modules belonging to a specific course.
+  
+  ## HTTP Method & Route
+  - **Method:** `GET`
+  - **Route:** `/wp-json/tutor/v1/topics`
+  
+  ## Authentication
+  - **Type:** Basic Auth (`api_key` / `api_secret`)
+  - **Required Permission:** `Read` or `All`
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `course_id` | `integer` | **Yes** | The WordPress Post ID of the course. |
+  
+  ## Responses
+  
+  ### 200 OK (Success)
+  ```json
+  {
+    "code": "get_topic",
+    "message": "Topic retrieved successfully",
+    "data": [
+      {
+        "ID": "201",
+        "post_title": "Getting Started with the Environment",
+        "post_content": "Detailed overview of tools, IDE plugins, and prerequisites.",
+        "post_name": "getting-started-environment"
+      },
+      {
+        "ID": "202",
+        "post_title": "Core Concepts & Deep Dive",
+        "post_content": "Deep exploration of architecture and API patterns.",
+        "post_name": "core-concepts-deep-dive"
+      }
+    ]
+  }
+  ```
+  
+  ### 404 / Missing Param Errors
+  
+  When `course_id` is missing:
+  ```json
+  {
+    "code": "get_topic",
+    "message": "course_id is required",
+    "data": []
+  }
+  ```
+  
+  When no topics exist for the provided ID:
+  ```json
+  {
+    "code": "not_found",
+    "message": "Topic not found for given course ID",
+    "data": []
+  }
+  ```
+}

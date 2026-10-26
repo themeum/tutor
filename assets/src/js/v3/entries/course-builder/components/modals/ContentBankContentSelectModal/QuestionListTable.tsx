@@ -12,10 +12,10 @@ import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
-import { type IconCollection } from '@TutorShared/icons/types';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { useGetContentBankContents } from '@TutorShared/services/content-bank';
+import { allQuestionTypes } from '@TutorShared/utils/question-type-registry';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ContentBankContent, type QuizQuestionType } from '@TutorShared/utils/types';
 
@@ -26,104 +26,9 @@ import SearchField from './SearchField';
 
 type SortDirection = 'asc' | 'desc';
 
-type QuestionTypeOption = {
-  label: string;
-  value: QuizQuestionType;
-  icon: IconCollection;
-  isPro: boolean;
-};
-
-const ALL_QUESTION_TYPE_OPTIONS: QuestionTypeOption[] = [
-  {
-    label: __('True/False', 'tutor'),
-    value: 'true_false',
-    icon: 'quizTrueFalse',
-    isPro: false,
-  },
-  {
-    label: __('Multiple Choice', 'tutor'),
-    value: 'multiple_choice',
-    icon: 'quizMultiChoice',
-    isPro: false,
-  },
-  {
-    label: __('Open Ended/Essay', 'tutor'),
-    value: 'open_ended',
-    icon: 'quizEssay',
-    isPro: false,
-  },
-  {
-    label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill_in_the_blank',
-    icon: 'quizFillInTheBlanks',
-    isPro: false,
-  },
-  {
-    label: __('Short Answer', 'tutor'),
-    value: 'short_answer',
-    icon: 'quizShortAnswer',
-    isPro: true,
-  },
-  {
-    label: __('Matching', 'tutor'),
-    value: 'matching',
-    icon: 'quizImageMatching',
-    isPro: true,
-  },
-  {
-    label: __('Image Answering', 'tutor'),
-    value: 'image_answering',
-    icon: 'quizImageAnswer',
-    isPro: true,
-  },
-  {
-    label: __('Ordering', 'tutor'),
-    value: 'ordering',
-    icon: 'quizOrdering',
-    isPro: true,
-  },
-  {
-    label: __('Image Marking', 'tutor'),
-    value: 'draw_image',
-    icon: 'quizMarkInTheImage',
-    isPro: true,
-  },
-  {
-    label: __('Range', 'tutor'),
-    value: 'scale',
-    icon: 'quizRange',
-    isPro: true,
-  },
-  {
-    label: __('Pin', 'tutor'),
-    value: 'pin_image',
-    icon: 'quizPin',
-    isPro: true,
-  },
-  {
-    label: __('Graph', 'tutor'),
-    value: 'coordinates',
-    icon: 'quizGraph',
-    isPro: true,
-  },
-  {
-    label: __('Puzzle', 'tutor'),
-    value: 'puzzle',
-    icon: 'quizPuzzle',
-    isPro: true,
-  },
-];
-
 const questionTypeOptions = tutorConfig.is_legacy_learning_mode
-  ? ALL_QUESTION_TYPE_OPTIONS.filter(
-      (option) =>
-        option.value !== 'draw_image' &&
-        option.value !== 'pin_image' &&
-        option.value !== 'scale' &&
-        option.value !== 'coordinates' &&
-        option.value !== 'puzzle',
-    )
-  : ALL_QUESTION_TYPE_OPTIONS;
+  ? allQuestionTypes.filter((option) => !option.legacyExcluded)
+  : allQuestionTypes;
 
 const QuestionListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
@@ -232,9 +137,7 @@ const QuestionListTable = () => {
             <div css={styles.checkboxLabel}>
               <Show when={questionTypeOptions.find((option) => option.value === item.question_type)?.icon}>
                 <SVGIcon
-                  name={
-                    questionTypeOptions.find((option) => option.value === item.question_type)?.icon as IconCollection
-                  }
+                  name={questionTypeOptions.find((option) => option.value === item.question_type)!.icon}
                   height={24}
                   width={24}
                 />

@@ -10,7 +10,8 @@
   .tutor-assignment-info,
   .tutor-assignment-description,
   .tutor-assignment-attachments,
-  .tutor-assignment-form,
+  .tutor-assignment-submit-content,
+  .tutor-assignment-edit,
   .tutor-meeting,
   .tutor-certificate-wrapper .tutor-certificate-header,
   .tutor-pro-certificate-preview-container,
@@ -100,6 +101,10 @@
 
   .tutor-webinar-actions {
     gap: $tutor-spacing-3;
+  }
+
+  .tutor-assignment-form {
+    border: none;
   }
 
   .tutor-quiz-question-number,
@@ -218,8 +223,7 @@
   .tutor-quiz-intro,
   .tutor-assignment-info,
   .tutor-assignment-description,
-  .tutor-assignment-attachments,
-  .tutor-assignment-form {
+  .tutor-assignment-attachments {
     padding: $tutor-spacing-8;
 
     @include tutor-breakpoint-down(sm) {

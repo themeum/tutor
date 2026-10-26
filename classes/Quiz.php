@@ -135,6 +135,8 @@ class Quiz {
 		add_action( 'wp_ajax_review_quiz_answer', array( $this, 'review_quiz_answer' ) );
 		add_action( 'wp_ajax_tutor_review_quiz_answers', array( $this, 'review_quiz_answers' ) );
 		add_action( 'wp_ajax_tutor_instructor_feedback', array( $this, 'tutor_instructor_feedback' ) );
+		add_action( 'wp_ajax_tutor_save_question_feedback', array( $this, 'save_question_feedback' ) );
+		add_action( 'wp_ajax_tutor_delete_question_feedback', array( $this, 'delete_question_feedback' ) );
 
 		/**
 		 * New quiz builder Ajax API.
@@ -482,7 +484,7 @@ class Quiz {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return void | send json response
+	 * @return void
 	 */
 	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
@@ -492,34 +494,153 @@ class Quiz {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$attempt_details = self::attempt_details( Input::post( 'attempt_id', 0, Input::TYPE_INT ) );
+		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$feedback        = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
-		$attempt_info    = isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
+		$attempt_details = self::attempt_details( $attempt_id );
 		$course_id       = tutor_utils()->avalue_dot( 'course_id', $attempt_details, 0 );
 		$is_instructor   = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
 		if ( ! current_user_can( 'manage_options' ) && ! $is_instructor ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		if ( $attempt_info ) {
-			//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
-			$unserialized = unserialize( $attempt_details->attempt_info );
-			if ( is_array( $unserialized ) ) {
-				$unserialized['instructor_feedback'] = $feedback;
-
-				//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-				$update = self::update_attempt_info( $attempt_details->attempt_id, serialize( $unserialized ) );
-				if ( $update ) {
-					do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details->attempt_id );
-					wp_send_json_success();
-				} else {
-					wp_send_json_error();
-				}
-			} else {
-				wp_send_json_error( __( 'Invalid quiz info', 'tutor' ) );
-			}
+		if ( ! $attempt_details ) {
+			wp_send_json_error();
 		}
-		wp_send_json_error();
+
+		$this->save_instructor_feedback( $attempt_id, $feedback );
+
+		/**
+		 * Always notify on Submit — including when only answer reviews changed
+		 * and feedback text is unchanged.
+		 */
+		$this->notify_quiz_attempt_graded( $attempt_id );
+		wp_send_json_success();
+	}
+
+	/**
+	 * Read the question feedback map from an attempt's serialized info.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return array
+	 */
+	private function get_question_feedback_map( int $attempt_id ): array {
+		$attempt_row = QueryHelper::get_row(
+			'tutor_quiz_attempts',
+			array( 'attempt_id' => $attempt_id ),
+			'attempt_id'
+		);
+
+		if ( ! $attempt_row ) {
+			return array();
+		}
+
+		return QuizModel::get_attempt_feedback_map( $attempt_row->attempt_info );
+	}
+
+	/**
+	 * Persist the question feedback map into an attempt's serialized info.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $feedback_map Feedback keyed by attempt answer ID.
+	 *
+	 * @return bool
+	 */
+	private function save_question_feedback_map( int $attempt_id, array $feedback_map ): bool {
+		$attempt_row = QueryHelper::get_row(
+			'tutor_quiz_attempts',
+			array( 'attempt_id' => $attempt_id ),
+			'attempt_id'
+		);
+
+		$attempt_info = array();
+		if ( $attempt_row && ! empty( $attempt_row->attempt_info ) ) {
+			$attempt_info = maybe_unserialize( $attempt_row->attempt_info );
+			$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
+		}
+
+		$attempt_info['question_feedback'] = $feedback_map;
+
+		return QueryHelper::update(
+			'tutor_quiz_attempts',
+			array(
+				'attempt_info' => maybe_serialize( $attempt_info ),
+			),
+			array( 'attempt_id' => $attempt_id )
+		);
+	}
+
+	/**
+	 * Save, update, or delete per-question instructor feedback via AJAX.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return void
+	 */
+	public function save_question_feedback() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+		$feedback          = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
+
+		if ( ! $attempt_id || ! $attempt_answer_id ) {
+			$this->response_fail( __( 'Invalid request data', 'tutor' ), 400 );
+		}
+
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$feedback_map                       = $this->get_question_feedback_map( $attempt_id );
+		$feedback_map[ $attempt_answer_id ] = $feedback;
+
+		if ( ! $this->save_question_feedback_map( $attempt_id, $feedback_map ) ) {
+			$this->response_fail( __( 'Could not save feedback', 'tutor' ), 500 );
+		}
+
+		$this->response_success( __( 'Feedback saved successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Delete per-question instructor feedback via AJAX.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return void
+	 */
+	public function delete_question_feedback() {
+		tutor_utils()->checking_nonce();
+
+		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+
+		if ( ! $attempt_id || ! $attempt_answer_id ) {
+			$this->response_fail( __( 'Invalid request data', 'tutor' ), 400 );
+		}
+
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
+			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
+		}
+
+		$feedback_map = $this->get_question_feedback_map( $attempt_id );
+
+		if ( ! isset( $feedback_map[ $attempt_answer_id ] ) ) {
+			$this->response_success( __( 'Feedback removed', 'tutor' ) );
+			return;
+		}
+
+		unset( $feedback_map[ $attempt_answer_id ] );
+
+		if ( ! $this->save_question_feedback_map( $attempt_id, $feedback_map ) ) {
+			$this->response_fail( __( 'Could not delete feedback', 'tutor' ), 500 );
+		}
+
+		$this->response_success( __( 'Feedback deleted successfully', 'tutor' ) );
 	}
 
 	/**
@@ -537,12 +658,19 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in() ) {
-			die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
+			wp_die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
 		}
 
 		$user_id = get_current_user_id();
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$course  = CourseModel::get_course_by_quiz( $quiz_id );
+
+		if ( ! $course ) {
+			wp_die( esc_html__( 'Invalid course', 'tutor' ) );
+		}
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id, $course->id );
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
@@ -561,12 +689,15 @@ class Quiz {
 	 *
 	 * @return int inserted id|0
 	 */
-	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = 'attempt_started' ) {
+	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = QuizModel::ATTEMPT_STARTED ) {
 		global $wpdb;
 
 		if ( ! $course_id ) {
-			die( 'There is something went wrong with course, please check if quiz attached with a course' );
+			wp_die( 'There is something went wrong with course, please check if quiz attached with a course' );
 		}
+
+		// Check & die if don't have quiz access.
+		QuizModel::has_quiz_access( $quiz_id, $course_id );
 
 		do_action( 'tutor_quiz/start/before', $quiz_id, $user_id );
 
@@ -707,9 +838,8 @@ class Quiz {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
 
-		if ( QuizModel::ATTEMPT_TIMEOUT === $attempt->attempt_status ) {
-			return false;
-		}
+		// Check & die if don't have quiz access. quiz_id/course_id derive from owned attempt; no POST quiz_id needed.
+		QuizModel::has_quiz_access( (int) $attempt->quiz_id, (int) $attempt->course_id );
 
 		// Sanitize data by helper method.
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
@@ -735,7 +865,8 @@ class Quiz {
 	 * @return void
 	 */
 	public static function manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id ) {
-		if ( ! is_array( $attempt_answers ) || ! self::validate_attempt( $attempt_id, $user_id ) ) {
+		// Public entry point: assert ownership from the passed attempt rather than re-querying it.
+		if ( ! is_object( $attempt ) || (int) $attempt->user_id !== (int) $user_id || ! is_array( $attempt_answers ) || QuizModel::ATTEMPT_STARTED !== $attempt->attempt_status ) {
 			return;
 		}
 
@@ -745,13 +876,14 @@ class Quiz {
 
 		// Single quiz can have multiple question. So multiple answer should be saved.
 		foreach ( $attempt_answers as $posted_attempt_id => $attempt_answer ) {
-			if ( ! self::validate_attempt( $posted_attempt_id, $user_id ) ) {
-				continue;
+			if ( (int) $posted_attempt_id !== (int) $attempt_id ) {
+				die( 'Operation not allowed, attempt mismatch' );
 			}
 
 			// Get total marks of all question comes.
 			$question_ids = tutor_utils()->avalue_dot( 'quiz_question_ids', $attempt_answer );
 			$question_ids = array_filter( $question_ids, fn ( $id ) => is_numeric( $id ) && intval( $id ) > 0 );
+			$quiz_answers = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
 
 			// Calculate and set the total marks in attempt table for this question.
 			if ( tutor_utils()->count( $question_ids ) ) {
@@ -763,9 +895,11 @@ class Quiz {
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
 						WHERE 1 = %d
+							AND quiz_id = %d
 							AND question_id IN({$question_ids_string});
 					",
-					1
+					1,
+					$attempt->quiz_id
 				);
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
@@ -782,12 +916,14 @@ class Quiz {
 
 			$total_marks     = 0;
 			$review_required = false;
-			$quiz_answers    = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
 
 			if ( tutor_utils()->count( $quiz_answers ) ) {
 
 				foreach ( $quiz_answers as $question_id => $answers ) {
-					$question      = QuizModel::get_quiz_question_by_id( $question_id );
+					$question = QuizModel::get_quiz_question_by_id( $question_id );
+					if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
+						continue;
+					}
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -800,8 +936,10 @@ class Quiz {
 								"SELECT is_correct
 									FROM {$wpdb->prefix}tutor_quiz_question_answers
 									WHERE answer_id = %d
+										AND belongs_question_id = %d
 								",
-								$answers
+								$answers,
+								$question->question_id
 							)
 						);
 
@@ -899,42 +1037,32 @@ class Quiz {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( QuizModel::QUESTION_TYPE_IMAGE_ANSWERING === $question_type ) {
-						$image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
-						$image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
-						$given_answer          = maybe_serialize( $image_inputs );
-						$is_answer_was_correct = false;
-						/**
-						 * For the image_answering question type result
-						 * remain pending in spite of correct answer & required
-						 * review of admin/instructor. Since it's
-						 * pending we need to mark it as incorrect. Otherwise if
-						 * mark it correct then earned mark will be updated. then
-						 * again when instructor/admin review & mark it as correct
-						 * extra mark is adding. In this case, student
-						 * getting double mark for the same question.
-						 *
-						 * For now code is commenting will be removed later on
-						 *
-						 * @since 2.1.5
-						 */
+						$image_inputs = tutor_utils()->avalue_dot( 'answer_id', $answers );
+						$image_inputs = (array) array_map( 'sanitize_text_field', $image_inputs );
+						$given_answer = maybe_serialize( $image_inputs );
 
-						//phpcs:disable
+						$stored_answers = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT answer_id, answer_title
+								FROM {$wpdb->prefix}tutor_quiz_question_answers
+								WHERE belongs_question_id = %d
+									AND belongs_question_type = %s
+								ORDER BY answer_order ASC",
+								$question_id,
+								QuizModel::QUESTION_TYPE_IMAGE_ANSWERING
+							)
+						);
 
-						// $db_answer = $wpdb->get_col(
-						// 	$wpdb->prepare(
-						// 		"SELECT answer_title
-						// 			FROM {$wpdb->prefix}tutor_quiz_question_answers
-						// 			WHERE belongs_question_id = %d
-						// 				AND belongs_question_type = 'image_answering'
-						// 			ORDER BY answer_order asc ;",
-						// 		$question_id
-						// 	)
-						// );
+						$is_answer_was_correct = true;
+						foreach ( $stored_answers as $stored_answer ) {
+							$user_answer    = isset( $image_inputs[ $stored_answer->answer_id ] ) ? trim( wp_unslash( $image_inputs[ $stored_answer->answer_id ] ) ) : '';
+							$correct_answer = trim( wp_unslash( $stored_answer->answer_title ) );
 
-						// if ( is_array( $db_answer ) && count( $db_answer ) ) {
-						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
-						// }
-						//phpcs:enable
+							if ( 0 !== strcasecmp( $user_answer, $correct_answer ) ) {
+								$is_answer_was_correct = false;
+								break;
+							}
+						}
 					} else {
 						$custom_answer_data    = array(
 							'given_answer'          => $given_answer,
@@ -957,7 +1085,7 @@ class Quiz {
 						'question_mark'   => $question->question_mark,
 						'achieved_mark'   => $question_mark,
 						'minus_mark'      => 0,
-						'is_correct'      => $is_answer_was_correct ? 1 : 0,
+						'is_correct'      => $is_answer_was_correct ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT,
 					);
 
 					/**
@@ -981,13 +1109,13 @@ class Quiz {
 
 			$attempt_info = array(
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
-				'earned_marks'             => $total_marks,
-				'attempt_status'           => 'attempt_ended',
+				'earned_marks'             => max( 0.0, $total_marks ),
+				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
 
 			if ( $review_required ) {
-				$attempt_info['attempt_status'] = 'review_required';
+				$attempt_info['attempt_status'] = QuizModel::REVIEW_REQUIRED;
 			}
 
 			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
@@ -1021,14 +1149,17 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id    = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$attempt    = tutor_utils()->is_started_quiz( $quiz_id );
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$attempt = tutor_utils()->is_started_quiz( $quiz_id );
+		if ( ! is_object( $attempt ) ) {
+			wp_die( esc_html__( 'No active quiz attempt found', 'tutor' ) );
+		}
 		$attempt_id = $attempt->attempt_id;
 
 		$attempt_info = array(
 			'total_answered_questions' => 0,
 			'earned_marks'             => 0,
-			'attempt_status'           => 'attempt_ended',
+			'attempt_status'           => QuizModel::ATTEMPT_ENDED,
 			'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 		);
 
@@ -1040,7 +1171,7 @@ class Quiz {
 	}
 
 	/**
-	 * Get quiz total marks.
+	 * Get total marks for a quiz
 	 *
 	 * @since 3.0.0
 	 *
@@ -1051,16 +1182,50 @@ class Quiz {
 	public static function get_quiz_total_marks( $quiz_id ) {
 		global $wpdb;
 
+		if ( ! $quiz_id ) {
+			return 0;
+		}
+
+		$max_questions   = (int) tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
+		$questions_order = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
+
+		$order_by_map = array(
+			'asc'     => 'question_id ASC',
+			'desc'    => 'question_id DESC',
+			'sorting' => 'question_order ASC',
+		);
+		$order_by     = $order_by_map[ $questions_order ] ?? 'question_order ASC';
+
+		$limit = $max_questions > 0 ? $max_questions : PHP_INT_MAX;
+
+		// phpcs:disable
 		$total_marks = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT SUM(question_mark) total_marks 
+				"SELECT CASE
+				WHEN %s = 'rand' AND %d > 0 AND COUNT(question_id) > %d THEN 0
+				ELSE (
+					SELECT SUM(questions.question_mark) FROM (
+						SELECT question_mark
+						FROM {$wpdb->prefix}tutor_quiz_questions
+						WHERE quiz_id = %d
+						ORDER BY {$order_by}
+						LIMIT %d
+					) AS questions
+				)
+				END
 				FROM {$wpdb->prefix}tutor_quiz_questions
-				WHERE quiz_id=%d",
+				WHERE quiz_id = %d",
+				$questions_order,
+				$max_questions,
+				$max_questions,
+				$quiz_id,
+				$limit,
 				$quiz_id
 			)
 		);
+		// phpcs:enable
 
-		return floatval( $total_marks );
+		return (float) $total_marks;
 	}
 
 	/**
@@ -1078,11 +1243,11 @@ class Quiz {
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$attempt = tutor_utils()->is_started_quiz( $quiz_id );
 
-		if ( $attempt ) {
+		if ( is_object( $attempt ) ) {
 			$attempt_id = $attempt->attempt_id;
 
 			$data = array(
-				'attempt_status'   => 'attempt_timeout',
+				'attempt_status'   => QuizModel::ATTEMPT_TIMEOUT,
 				'total_marks'      => self::get_quiz_total_marks( $quiz_id ),
 				'earned_marks'     => 0,
 				'attempt_ended_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
@@ -1114,6 +1279,7 @@ class Quiz {
 		$attempt_answer_id = Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
 		$question_id       = Input::post( 'question_id', 0, Input::TYPE_INT );
 		$mark_as           = Input::post( 'mark_as' );
+		$manual_mark       = Input::post( 'manual_mark', null );
 
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -1124,10 +1290,32 @@ class Quiz {
 		}
 
 		$attempt_answer = $this->resolve_attempt_answer_for_review( $attempt_id, $attempt_answer_id, $question_id );
-		$review_data    = $attempt_answer ? $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as ) : null;
+		$review_data    = null;
+
+		if ( null !== $manual_mark && $attempt_answer ) {
+			$mark_delta = $this->apply_manual_quiz_answer_mark( $attempt_answer, $manual_mark );
+			$attempt    = tutor_utils()->get_attempt( $attempt_id );
+
+			if ( null !== $mark_delta && is_object( $attempt ) ) {
+				QueryHelper::update(
+					'tutor_quiz_attempts',
+					array(
+						'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
+						'is_manually_reviewed' => 1,
+						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+						'attempt_status'       => QuizModel::ATTEMPT_ENDED,
+					),
+					array( 'attempt_id' => $attempt_id )
+				);
+
+				$review_data = array( 'student_id' => $attempt->user_id );
+			}
+		} elseif ( $attempt_answer ) {
+			$review_data = $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+		}
 
 		if ( ! $review_data ) {
-			wp_send_json_error( array( 'message' => __( 'Review update failed', 'tutor' ) ) );
+			$this->response_fail( __( 'Review update failed', 'tutor' ) );
 		}
 
 		QuizModel::update_attempt_result( $attempt_id );
@@ -1155,27 +1343,35 @@ class Quiz {
 	public function review_quiz_answers() {
 		tutor_utils()->checking_nonce();
 
-		$attempt_id      = Input::post( 'attempt_id', 0, Input::TYPE_INT );
-		$review_statuses = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+		$attempt_id        = Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$review_statuses   = Input::post( 'review_statuses', array(), Input::TYPE_ARRAY );
+		$manual_marks      = Input::post( 'manual_marks', array(), Input::TYPE_ARRAY );
+		$question_feedback = Input::post( 'question_feedback', array(), Input::TYPE_ARRAY );
+		$feedback          = Input::has( 'feedback' ) ? Input::post( 'feedback', '', Input::TYPE_KSES_POST ) : null;
 
-		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses );
+		$this->review_quiz_answers_bulk( $attempt_id, $review_statuses, $manual_marks, $question_feedback, $feedback );
 	}
 
 	/**
 	 * Review quiz answers in bulk for v4 dashboard flow.
 	 *
 	 * @since 4.0.0
+	 * @since 4.0.0 Accepts optional instructor feedback and fires graded hook once per Update.
 	 *
-	 * @param int   $attempt_id Attempt ID.
-	 * @param array $review_statuses Review statuses keyed by question ID.
+	 * @param int         $attempt_id Attempt ID.
+	 * @param array       $review_statuses Review statuses keyed by question ID.
+	 * @param array       $manual_marks Numeric manual marks keyed by question ID.
+	 * @param array       $question_feedback Per-question feedback keyed by attempt answer ID or question ID.
+	 * @param string|null $feedback Optional instructor feedback. Null means leave unchanged.
 	 *
 	 * @return void
 	 */
-	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses ) {
+	private function review_quiz_answers_bulk( int $attempt_id, array $review_statuses, array $manual_marks = array(), array $question_feedback = array(), $feedback = null ) {
 		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			$this->response_fail( __( 'Access Denied', 'tutor' ), 403 );
 		}
 
+		$has_review_updates     = false;
 		$attempt_answers        = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 		$answers_by_question_id = array();
 
@@ -1207,12 +1403,234 @@ class Quiz {
 				continue;
 			}
 
-			$this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+			$target_is_correct = ( 'correct' === $mark_as ) ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT;
+			$prev_is_correct   = null !== $attempt_answer->is_correct ? (int) $attempt_answer->is_correct : null;
+
+			if ( $prev_is_correct === $target_is_correct ) {
+				continue;
+			}
+
+			$review_data = $this->apply_quiz_answer_review( $attempt_id, $attempt_answer, $mark_as );
+			if ( $review_data ) {
+				$has_review_updates = true;
+			}
 		}
 
-		QuizModel::update_attempt_result( $attempt_id );
+		$this->apply_manual_marks_bulk( $attempt_id, $manual_marks, $answers_by_question_id );
+		$this->apply_quiz_feedback_bulk( $attempt_id, $question_feedback, $answers_by_question_id );
+
+		if ( $has_review_updates || ! empty( $manual_marks ) || ! empty( $question_feedback ) ) {
+			QuizModel::update_attempt_result( $attempt_id );
+		}
+
+		$feedback_updated = false;
+		if ( null !== $feedback ) {
+			$feedback_updated = $this->save_instructor_feedback( $attempt_id, $feedback );
+		}
+
+		if ( ! $has_review_updates && empty( $manual_marks ) && empty( $question_feedback ) && ! $feedback_updated ) {
+			$this->response_fail( __( 'No changes to update', 'tutor' ) );
+		}
+
+		/**
+		 * Fire after instructor clicks Submit — graded email + on-site/push notifications.
+		 */
+		$this->notify_quiz_attempt_graded( $attempt_id );
 
 		$this->response_success( __( 'Review updated successfully', 'tutor' ) );
+	}
+
+	/**
+	 * Apply a numeric manual mark without assigning an auto-grading status.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param object $attempt_answer Attempt answer row.
+	 * @param mixed  $mark Requested mark.
+	 *
+	 * @return float|null Delta on success, null otherwise.
+	 */
+	private function apply_manual_quiz_answer_mark( $attempt_answer, $mark ) {
+		if ( ! is_object( $attempt_answer ) || ! is_numeric( $mark ) ) {
+			return null;
+		}
+
+		$question_type = $attempt_answer->question_type ?? '';
+		if ( empty( $question_type ) && ! empty( $attempt_answer->question_id ) ) {
+			$question                      = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+			$question_type                 = $question->question_type ?? '';
+			$attempt_answer->question_type = $question_type;
+		}
+
+		if ( ! in_array( $question_type, QuizModel::get_manual_review_types(), true ) ) {
+			return null;
+		}
+
+		$question_mark = isset( $attempt_answer->question_mark ) ? (float) $attempt_answer->question_mark : 0.0;
+		if ( $question_mark <= 0.0 && ! empty( $attempt_answer->question_id ) ) {
+			$question      = isset( $question ) && is_object( $question ) ? $question : QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+			$question_mark = (float) ( $question->question_mark ?? 0.0 );
+		}
+
+		$new_mark       = min( max( 0, (float) $mark ), $question_mark );
+		$previous_mark  = (float) ( $attempt_answer->achieved_mark ?? 0.0 );
+		$answer_updated = QueryHelper::update(
+			'tutor_quiz_attempt_answers',
+			array(
+				'achieved_mark' => $new_mark,
+				'is_correct'    => QuizModel::ATTEMPT_ANSWER_MANUAL_GRADED,
+			),
+			array( 'attempt_answer_id' => (int) $attempt_answer->attempt_answer_id )
+		);
+
+		if ( false === $answer_updated ) {
+			return null;
+		}
+
+		return $new_mark - $previous_mark;
+	}
+
+	/**
+	 * Apply numeric manual marks for multiple questions in one pass.
+	 *
+	 * Marks each manual-review question, accumulates the earned-mark delta,
+	 * and updates the attempt to completed when any mark was applied.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $manual_marks Numeric manual marks keyed by question ID.
+	 * @param array $answers_by_question_id Attempt answers keyed by question ID.
+	 *
+	 * @return void
+	 */
+	private function apply_manual_marks_bulk( int $attempt_id, array $manual_marks, array $answers_by_question_id ): void {
+		$applied = false;
+
+		foreach ( $manual_marks as $question_id => $mark ) {
+			if ( '' === $mark || null === $mark || ! is_numeric( $mark ) ) {
+				continue;
+			}
+
+			$question_id    = (int) $question_id;
+			$attempt_answer = $answers_by_question_id[ $question_id ] ?? $this->resolve_attempt_answer_for_review( $attempt_id, 0, $question_id );
+			$mark_delta     = $this->apply_manual_quiz_answer_mark( $attempt_answer, $mark );
+
+			if ( null !== $mark_delta ) {
+				$applied = true;
+			}
+		}
+
+		if ( ! $applied ) {
+			return;
+		}
+
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+		if ( is_object( $attempt ) ) {
+			QueryHelper::update(
+				'tutor_quiz_attempts',
+				array(
+					'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
+					'is_manually_reviewed' => 1,
+					'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+					'attempt_status'       => QuizModel::ATTEMPT_ENDED,
+				),
+				array( 'attempt_id' => $attempt_id )
+			);
+		}
+	}
+
+	/**
+	 * Apply per-question feedback for multiple questions in one pass.
+	 *
+	 * Builds the merged question feedback map keyed by attempt answer ID
+	 * (with a question ID fallback) and persists it to attempt info.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int   $attempt_id Attempt ID.
+	 * @param array $question_feedback Per-question feedback keyed by attempt answer ID or question ID.
+	 * @param array $answers_by_question_id Attempt answers keyed by question ID.
+	 *
+	 * @return void
+	 */
+	private function apply_quiz_feedback_bulk( int $attempt_id, array $question_feedback, array $answers_by_question_id ): void {
+		if ( count( $question_feedback ) === 0 ) {
+			return;
+		}
+
+		$feedback_map = $this->get_question_feedback_map( $attempt_id );
+
+		foreach ( $question_feedback as $key => $feedback_text ) {
+			$key       = (int) $key;
+			$target_id = $key;
+			if ( isset( $answers_by_question_id[ $key ]->attempt_answer_id ) ) {
+				$target_id = (int) $answers_by_question_id[ $key ]->attempt_answer_id;
+			}
+
+			if ( ! $target_id ) {
+				continue;
+			}
+
+			$feedback_text = is_string( $feedback_text ) ? trim( $feedback_text ) : '';
+			if ( '' === $feedback_text ) {
+				unset( $feedback_map[ $target_id ] );
+				if ( $target_id !== $key ) {
+					unset( $feedback_map[ $key ] );
+				}
+			} else {
+				$feedback_map[ $target_id ] = $feedback_text;
+			}
+		}
+
+		$this->save_question_feedback_map( $attempt_id, $feedback_map );
+	}
+
+	/**
+	 * Notify listeners that a quiz attempt was graded/submitted by instructor.
+	 *
+	 * Fires both hooks so graded email and feedback on-site/push notifications
+	 * stay in sync on every Submit.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return void
+	 */
+	private function notify_quiz_attempt_graded( int $attempt_id ): void {
+		do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
+		do_action( 'tutor_quiz/attempt/graded', $attempt_id );
+	}
+
+	/**
+	 * Save instructor feedback for a quiz attempt.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int    $attempt_id Attempt ID.
+	 * @param string $feedback Feedback content.
+	 *
+	 * @return bool
+	 */
+	private function save_instructor_feedback( int $attempt_id, string $feedback ): bool {
+		$attempt_details = self::attempt_details( $attempt_id );
+		if ( ! $attempt_details || empty( $attempt_details->attempt_info ) ) {
+			return false;
+		}
+
+		//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+		$unserialized = unserialize( $attempt_details->attempt_info );
+		if ( ! is_array( $unserialized ) ) {
+			return false;
+		}
+
+		$unserialized['instructor_feedback'] = $feedback;
+
+		//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+		$update = self::update_attempt_info( $attempt_id, serialize( $unserialized ) );
+
+		return (bool) $update;
 	}
 
 	/**
@@ -1275,12 +1693,12 @@ class Quiz {
 	 */
 	private function create_skipped_attempt_answer( int $attempt_id, int $question_id ) {
 		$attempt = tutor_utils()->get_attempt( $attempt_id );
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			return null;
 		}
 
 		$question = QuizModel::get_quiz_question_by_id( $question_id );
-		if ( ! $question || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
+		if ( ! is_object( $question ) || (int) $question->quiz_id !== (int) $attempt->quiz_id ) {
 			return null;
 		}
 
@@ -1366,68 +1784,77 @@ class Quiz {
 
 		$attempt = tutor_utils()->get_attempt( $attempt_id );
 
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			return null;
 		}
 
 		$attempt_answer_id = (int) $attempt_answer->attempt_answer_id;
 		$question          = QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
-		$course_id         = (int) $attempt->course_id;
-		$student_id        = (int) $attempt->user_id;
-		$previous_ans      = $attempt_answer->is_correct;
+		if ( ! is_object( $question ) ) {
+			return null;
+		}
+		$course_id    = (int) $attempt->course_id;
+		$student_id   = (int) $attempt->user_id;
+		$previous_ans = $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
 		$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
 
-		if ( 'correct' === $mark_as ) {
-			$attempt_update_data = array();
-			$answer_update_data  = array(
-				'achieved_mark' => $attempt_answer->question_mark,
-				'is_correct'    => 1,
-			);
+		$attempt_update_data = array();
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+		$question_mark = (float) ( $attempt_answer->question_mark ?? $question->question_mark ?? 0.0 );
+		$default_marks = array(
+			'achieved_mark' => 'correct' === $mark_as ? $question_mark : 0.00,
+			'minus_mark'    => 0,
+		);
 
-			if ( 0 == $previous_ans || null == $previous_ans ) {
-				$attempt_update_data = array(
-					'earned_marks'         => $attempt->earned_marks + $attempt_answer->question_mark,
-					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
-				);
-			}
+		$review_marks = apply_filters(
+			'tutor_quiz_review_answer_marks',
+			$default_marks,
+			$mark_as,
+			$attempt_answer,
+			$question,
+			$attempt
+		);
 
-			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
-			}
+		$new_achieved = (float) ( $review_marks['achieved_mark'] ?? $default_marks['achieved_mark'] );
+		$new_minus    = (float) ( $review_marks['minus_mark'] ?? $default_marks['minus_mark'] );
 
-			if ( ! empty( $attempt_update_data ) ) {
-				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
-			}
-		} elseif ( 'incorrect' === $mark_as ) {
-			$attempt_update_data = array();
-			$answer_update_data  = array(
-				'achieved_mark' => '0.00',
-				'is_correct'    => 0,
-			);
+		$answer_update_data = array(
+			'achieved_mark' => $new_achieved,
+			'minus_mark'    => $new_minus,
+			'is_correct'    => 'correct' === $mark_as ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT,
+		);
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+		$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
-			if ( 1 == $previous_ans ) {
-				$attempt_update_data = array(
-					'earned_marks'         => $attempt->earned_marks - $attempt_answer->question_mark,
-					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
-				);
-			}
+		$attempt_update_data = array(
+			'earned_marks'         => $this->calculate_attempt_earned_marks( $attempt_id ),
+			'is_manually_reviewed' => 1,
+			'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+		);
 
-			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
-				$attempt_update_data['attempt_status'] = 'attempt_ended';
-			}
+		if ( ! in_array( $question->question_type, QuizModel::get_manual_review_types(), true ) ) {
+			$attempt_row  = QueryHelper::get_row( 'tutor_quiz_attempts', array( 'attempt_id' => $attempt_id ), 'attempt_id' );
+			$attempt_info = is_object( $attempt_row ) && ! empty( $attempt_row->attempt_info ) ? maybe_unserialize( $attempt_row->attempt_info ) : array();
+			$attempt_info = is_array( $attempt_info ) ? $attempt_info : array();
 
-			if ( ! empty( $attempt_update_data ) ) {
-				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
-			}
+			$overrides_map                                 = QuizModel::get_manual_overrides_map( $attempt_info );
+			$overrides_map[ (int) $question->question_id ] = $mark_as;
+			$attempt_info['manual_overrides']              = $overrides_map;
+
+			$attempt_update_data['attempt_info']         = maybe_serialize( $attempt_info );
+			$attempt_update_data['is_manually_reviewed'] = 1;
+			$attempt_update_data['manually_reviewed_at'] = gmdate( 'Y-m-d H:i:s', tutor_time() );
+		}
+
+		if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
+			$attempt_update_data['attempt_status'] = QuizModel::ATTEMPT_ENDED;
+		}
+
+		if ( ! empty( $attempt_update_data ) ) {
+			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
 		}
 
 		do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
@@ -1437,6 +1864,27 @@ class Quiz {
 			'course_id'  => $course_id,
 			'student_id' => $student_id,
 		);
+	}
+
+	/**
+	 * Calculate total earned marks for an attempt from individual answer records.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return float
+	 */
+	private function calculate_attempt_earned_marks( int $attempt_id ): float {
+		$marks = QueryHelper::query(
+			'tutor_quiz_attempt_answers',
+			array(
+				'select' => 'SUM(achieved_mark) AS earned_marks',
+				'where'  => array( 'quiz_attempt_id' => $attempt_id ),
+			)
+		);
+
+		return max( 0.0, (float) ( $marks[0]->earned_marks ?? 0.0 ) );
 	}
 
 	/**
@@ -1585,7 +2033,7 @@ class Quiz {
 	 * @param mixed   $question_type type of question.
 	 * @param boolean $is_correct only correct answers or not.
 	 *
-	 * @return wpdb:get_results
+	 * @return array|object|null
 	 */
 	private function get_answers_by_q_id( $question_id, $question_type, $is_correct = false ) {
 		global $wpdb;
@@ -1668,7 +2116,7 @@ class Quiz {
 	 * @param int   $attempt_id attempt id.
 	 * @param mixed $attempt_info serialize data.
 	 *
-	 * @return bool, true on success, false on failure
+	 * @return bool
 	 */
 	public static function update_attempt_info( int $attempt_id, $attempt_info ) {
 		global $wpdb;
@@ -1693,7 +2141,7 @@ class Quiz {
 
 		$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
-		if ( ! $attempt ) {
+		if ( ! is_object( $attempt ) ) {
 			wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
 		}
 
@@ -1805,10 +2253,11 @@ class Quiz {
 	 * @param string $passing_grade Passing grade.
 	 * @param string $earned_marks Earned marks.
 	 * @param string $attempts_allowed Total Attempts allowed.
+	 * @param int    $quiz_id Quiz post ID used for Pro scoring parameters.
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $total_marks, $passing_grade, $earned_marks, $attempts_allowed, $quiz_id = 0 ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
@@ -1835,18 +2284,21 @@ class Quiz {
 			);
 		}
 
-		$quiz_summary[] = array(
-			'columns' => array(
-				array(
-					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
-						' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
-					</div>',
+		if ( ! empty( $total_marks ) ) {
+			$quiz_summary[] = array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . SvgIcon::make()->name( Icon::PRIME_CHECK_CIRCLE )->size( 20 )->get() . __( 'Total Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => (float) $total_marks ),
 				),
-				array( 'content' => $total_marks ),
-			),
-		);
+			);
+		}
 
 		$quiz_summary[] = array(
+			'key'     => 'passing_grade',
 			'columns' => array(
 				array(
 					'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
@@ -1857,7 +2309,7 @@ class Quiz {
 			),
 		);
 
-		if ( $earned_marks ) {
+		if ( null !== $earned_marks ) {
 			$quiz_summary[] = array(
 				'columns' => array(
 					array(
@@ -1878,10 +2330,22 @@ class Quiz {
 							' . SvgIcon::make()->name( Icon::TARGET )->size( 20 )->get() . __( 'Total Attempts', 'tutor' ) . '
 						</div>',
 					),
-					array( 'content' =>  0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
+					array( 'content' => 0 === $attempts_allowed ? __( 'No Limit', 'tutor' ) : $attempts_allowed ),
 				),
 			);
 		}
+
+		/**
+		 * Filter the quiz summary parameter rows.
+		 *
+		 * Allows Pro and add-ons to inject additional parameter rows (e.g. partial/negative marking).
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $quiz_summary Array of table rows for the quiz summary.
+		 * @param int   $quiz_id      Quiz post ID.
+		 */
+		$quiz_summary = apply_filters( 'tutor_quiz_summary_parameters', $quiz_summary, $quiz_id );
 
 		Table::make()->contents( $quiz_summary )->render();
 	}
@@ -1998,7 +2462,7 @@ class Quiz {
 		$current_content_id  = $tutor_current_post ? $tutor_current_post->ID : $quiz_id;
 		$course_id           = $tutor_course_id ? $tutor_course_id : tutor_utils()->get_course_id_by_subcontent( $current_content_id );
 		$contents            = tutor_utils()->get_course_prev_next_contents_by_id( $current_content_id );
-		$next_id             = $contents ? $contents->next_id : 0;
+		$next_id             = is_object( $contents ) ? $contents->next_id : 0;
 		$skip_url            = get_the_permalink( $next_id ? $next_id : $course_id );
 		$skip_modal_id       = 'tutor-quiz-skip-to-next';
 		$auto_start_modal_id = 'tutor-quiz-autostart-modal';
@@ -2239,11 +2703,6 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_sidebar_nav( WP_Post $quiz, $can_access, $tutor_current_content_id ) {
-		$quiz_title = $quiz->post_title;
-
-		$active_class   = $tutor_current_content_id === $quiz->ID ? 'active' : '';
-		$disabled_class = $can_access ? '' : 'disabled';
-
 		$quiz_status = '';
 		$icon_name   = Icon::QUIZ_2;
 		if ( ! $can_access ) {
@@ -2265,20 +2724,34 @@ class Quiz {
 				}
 			}
 		}
-		?>
 
-		<a
-			href="<?php echo esc_url( $can_access ? get_permalink( $quiz->ID ) : '#' ); ?>" 
-			title="<?php echo esc_attr( $quiz_title ); ?>"
-			class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s %s %s', $active_class, $disabled_class, $quiz_status ) ); ?>"
-			<?php echo ! $can_access ? 'aria-disabled="true"' : ''; ?>
-		>
-			<?php SvgIcon::make()->name( $icon_name )->size( 20 )->render(); ?>
-			<div class="tutor-overflow-hidden">
-				<div class="tutor-truncate"><?php echo esc_html( $quiz_title ); ?></div>
-				<div class="tutor-tiny-2 tutor-text-subdued"><?php esc_html_e( 'Quiz', 'tutor' ); ?></div>
-			</div>
-		</a>
-		<?php
+		tutor_load_template(
+			'learning-area.components.sidebar-nav-item',
+			array(
+				'item'         => $quiz,
+				'active'       => $tutor_current_content_id === $quiz->ID,
+				'can_access'   => $can_access,
+				'is_completed' => false,
+				'type_label'   => __( 'Quiz', 'tutor' ),
+				'icon'         => $icon_name,
+				'status_class' => $quiz_status,
+			)
+		);
+	}
+
+	/**
+	 * Sanitize quiz content
+	 *
+	 * @param string $content Content to sanitize.
+	 * @return string
+	 *
+	 * @since 4.0.5
+	 */
+	public static function sanitize_quiz_content( $content ) {
+		if ( null === $content || '' === $content ) {
+			return '';
+		}
+
+		return wp_strip_all_tags( wp_unslash( (string) $content ) );
 	}
 }

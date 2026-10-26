@@ -85,14 +85,14 @@ use TUTOR\Icon;
 				</div>
 			</div>
 
-			<div class="tutor-password-strength-checker" x-data="{ show: false, value: '<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>' }">
+			<div class="tutor-password-strength-checker" x-data="{ show: false, value: '' }">
 				<div class="tutor-password-field">
 					<label class="tutor-block tutor-mb-3"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
 					<div class="tutor-input-field tutor-mb-8" style="position: relative;">
 						<span 
 							class="tutor-flex tutor-items-center tutor-justify-center"
 							style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-							x-show="value.length > 0"
+							x-show="value.length"
 							@click="show = !show"
 						>
 							<template x-if="!show">

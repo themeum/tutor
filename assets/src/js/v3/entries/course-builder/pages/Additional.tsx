@@ -77,12 +77,10 @@ const Additional = () => {
   const isAttachmentsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.ATTACHMENTS);
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
-  const prerequisiteCourseIds =
-    courseDetails?.course_prerequisites?.map((prerequisite) => String(prerequisite.id)) || [];
 
   const prerequisiteCoursesQuery = useCourseListQuery({
     params: {
-      exclude: [String(courseId), ...prerequisiteCourseIds],
+      exclude: [String(courseId)],
       limit: -1,
     },
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,

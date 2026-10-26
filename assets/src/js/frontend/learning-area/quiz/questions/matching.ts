@@ -25,7 +25,6 @@ const QUESTION_MATCHING_CONSTANTS = {
   ATTRS: {
     OPTION: 'data-option',
     ID: 'data-id',
-    GRAB_HANDLE: 'data-grab-handle',
     DROP_ZONE_ID: 'data-drop-zone-id',
     DROP_PLACEHOLDER: 'data-drop-placeholder',
     DROP_PLACEHOLDER_TEXT: 'data-drop-placeholder-text',
@@ -160,14 +159,12 @@ const questionMatching = (
     );
 
     draggableEls.forEach((element, idx) => {
-      const handle = element.querySelector(`[${QUESTION_MATCHING_CONSTANTS.ATTRS.GRAB_HANDLE}]`) as HTMLElement | null;
       const id = element.dataset[QUESTION_MATCHING_CONSTANTS.DATASET.ID] ?? String(idx);
 
       const draggable = new Draggable(
         {
           id,
           element: element,
-          handle: handle ?? undefined,
           feedback: 'clone',
         },
         manager,

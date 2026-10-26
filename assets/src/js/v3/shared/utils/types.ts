@@ -343,6 +343,7 @@ export interface QuizQuestion {
     is_image_matching: boolean;
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    enable_puzzle_answer_background?: boolean;
     coordinates_axis_range?: number;
   };
   question_answers: QuizQuestionOption[];
@@ -360,6 +361,7 @@ export interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_se
     is_image_matching?: '0' | '1';
     draw_image_threshold_percent?: number;
     puzzle_grid_size?: number;
+    enable_puzzle_answer_background?: '0' | '1';
     coordinates_axis_range?: number;
   };
 }

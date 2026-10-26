@@ -20,8 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * Confirmation Modal Component Class.
  *
  * ```
- * // Example usage:
- *
+ * // Basic delete confirmation
  * ConfirmationModal::make()
  *     ->id( 'delete-course-modal' )
  *     ->title( 'Delete This Course?' )
@@ -30,13 +29,57 @@ defined( 'ABSPATH' ) || exit;
  *     ->mutation_state( 'deleteMutation' )
  *     ->render();
  *
- * // With custom icon
+ * // With custom icon (icon name from Icon class)
  * ConfirmationModal::make()
  *     ->id( 'delete-announcement-modal' )
  *     ->title( 'Delete This Announcement?' )
  *     ->message( 'This action cannot be undone.' )
- *     ->icon( Icon::DELETE_2, 80 )
+ *     ->icon( Icon::DELETE_2, 80, 80 )
  *     ->confirm_handler( 'handleDeleteAnnouncement(payload?.announcementId)' )
+ *     ->render();
+ *
+ * // With icon as URL (img will be generated)
+ * ConfirmationModal::make()
+ *     ->id( 'remove-student-modal' )
+ *     ->title( 'Remove Student?' )
+ *     ->message( 'The student will lose access to this course.' )
+ *     ->icon( 'https://example.com/icons/warning.svg', 100, 100 )
+ *     ->render();
+ *
+ * // With custom button text
+ * ConfirmationModal::make()
+ *     ->id( 'publish-course-modal' )
+ *     ->title( 'Publish Course?' )
+ *     ->message( 'The course will be visible to all students.' )
+ *     ->cancel_text( 'Not Yet' )
+ *     ->confirm_text( 'Publish Now' )
+ *     ->confirm_handler( 'publishCourse()' )
+ *     ->render();
+ *
+ * // With custom modal width
+ * ConfirmationModal::make()
+ *     ->id( 'wide-confirm-modal' )
+ *     ->title( 'Reset All Progress?' )
+ *     ->message( 'This will permanently reset all student progress records.' )
+ *     ->width( '520px' )
+ *     ->confirm_handler( 'resetProgress()' )
+ *     ->render();
+ *
+ * // With fully custom confirm / cancel buttons
+ * ConfirmationModal::make()
+ *     ->id( 'custom-btn-modal' )
+ *     ->title( 'Archive Course?' )
+ *     ->message( 'The course will be hidden from the catalog.' )
+ *     ->confirm_button( '<button class="tutor-btn tutor-btn-warning tutor-btn-small" @click="archiveCourse()">Archive</button>' )
+ *     ->cancel_button( '<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal(\'custom-btn-modal\')">Go Back</button>' )
+ *     ->render();
+ *
+ * // With inline HTML in the message (allowed tags)
+ * ConfirmationModal::make()
+ *     ->id( 'delete-review-modal' )
+ *     ->title( 'Delete Review?' )
+ *     ->message( 'You are about to delete the review by <strong x-text="payload?.author"></strong>.' )
+ *     ->confirm_handler( 'deleteReview(payload?.reviewId)' )
  *     ->render();
  * ```
  *

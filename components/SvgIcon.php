@@ -18,22 +18,62 @@ defined( 'ABSPATH' ) || exit;
  * SvgIcon Component Class.
  *
  * Example usage:
- * ```
+ * ```php
+ * // Render icon at default size (16×16)
+ * SvgIcon::make()
+ *     ->name( Icon::CHECK )
+ *     ->render();
+ *
+ * // Render with explicit size
  * SvgIcon::make()
  *     ->name( Icon::CHECK )
  *     ->size( 24 )
  *     ->render();
  *
+ * // Render with independent width and height
  * SvgIcon::make()
  *     ->name( Icon::DELETE )
- *     ->size( 16 )
- *     ->attr( 'class', 'tutor-icon-secondary' )
+ *     ->width( 20 )
+ *     ->height( 24 )
  *     ->render();
  *
+ * // Render with a design-system color token
  * SvgIcon::make()
  *     ->name( Icon::DELETE )
  *     ->size( 16 )
  *     ->color( Color::SECONDARY )
+ *     ->render();
+ *
+ * // Render with a custom CSS class
+ * SvgIcon::make()
+ *     ->name( Icon::STAR_FILL )
+ *     ->size( 20 )
+ *     ->attr( 'class', 'tutor-icon-warning' )
+ *     ->render();
+ *
+ * // Render directional icon that flips in RTL layouts
+ * SvgIcon::make()
+ *     ->name( Icon::CHEVRON_RIGHT )
+ *     ->size( 16 )
+ *     ->flip_rtl()
+ *     ->render();
+ *
+ * // Ignore kids-mode icon override (always use default icon)
+ * SvgIcon::make()
+ *     ->name( Icon::PLAY_LINE )
+ *     ->size( 24 )
+ *     ->ignore_kids()
+ *     ->render();
+ *
+ * // Retrieve HTML string without echoing
+ * $html = SvgIcon::make()->name( Icon::DELETE )->size( 16 )->color( Color::CRITICAL )->get();
+ *
+ * // Multiple attrs
+ * SvgIcon::make()
+ *     ->name( Icon::SPINNER )
+ *     ->size( 14 )
+ *     ->attr( 'class', 'tutor-animate-spin' )
+ *     ->attr( 'aria-label', 'Loading' )
  *     ->render();
  * ```
  *
@@ -193,10 +233,12 @@ class SvgIcon extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param bool $flip Whether to flip in RTL.
+	 *
 	 * @return $this
 	 */
-	public function flip_rtl(): self {
-		$this->flip_rtl = true;
+	public function flip_rtl( bool $flip = true ): self {
+		$this->flip_rtl = $flip;
 		return $this;
 	}
 

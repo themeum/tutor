@@ -178,6 +178,7 @@ if ( tutor_utils()->count( $all_quizzes ) ) {
 			->render();
 		?>
 	<?php endif; ?>
+	</div>
 
 	<div x-data="tutorQuizRetryAttempt()">
 		<?php

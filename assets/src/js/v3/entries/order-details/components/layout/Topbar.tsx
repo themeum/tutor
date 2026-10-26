@@ -28,7 +28,12 @@ function Topbar() {
     const urlParams = new URLSearchParams(window.location.search);
     const redirectUrl = urlParams.get('redirect_url');
     if (redirectUrl) {
-      window.location.href = decodeURIComponent(redirectUrl);
+      const decoded = decodeURIComponent(redirectUrl);
+      if (decoded.startsWith('http://') || decoded.startsWith('https://') || decoded.startsWith('/')) {
+        window.location.href = decoded;
+      } else {
+        window.history.back();
+      }
     } else {
       window.history.back();
     }

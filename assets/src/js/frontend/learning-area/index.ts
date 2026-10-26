@@ -4,6 +4,7 @@
 import { initializeReviews } from '@FrontendComponents/reviews';
 import { initializeTour } from '@FrontendComponents/tour';
 import { initializeCommon } from '@FrontendServices/common';
+import { initializeSiteShell } from '@FrontendServices/site-shell';
 
 import { initializeCommon as initializeLearningAreaCommon } from './common';
 import { initializeLesson } from './lesson';
@@ -21,6 +22,7 @@ const decodePathSegment = (segment: string): string => {
 };
 
 const initializeLearningArea = () => {
+  initializeSiteShell();
   initializeLearningAreaCommon();
   initializeCommon();
   initializeSidebar();

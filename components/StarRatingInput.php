@@ -21,11 +21,39 @@ use Tutor\Components\Constants\Size;
  * Class StarRatingInput
  *
  * Example Usage:
- * ```
+ * ```php
+ * // Basic star input (no initial rating)
  * StarRatingInput::make()
- *     ->field_name('rating')
- *     ->current_rating(4.5)
+ *     ->field_name( 'rating' )
  *     ->render();
+ *
+ * // With a pre-selected rating
+ * StarRatingInput::make()
+ *     ->field_name( 'rating' )
+ *     ->current_rating( 4.0 )
+ *     ->render();
+ *
+ * // With Alpine.js onChange callback
+ * StarRatingInput::make()
+ *     ->field_name( 'rating' )
+ *     ->current_rating( 3.0 )
+ *     ->on_change( 'handleRatingChange' )
+ *     ->render();
+ *
+ * // With Alpine.js form register binding (for validation)
+ * StarRatingInput::make()
+ *     ->field_name( 'rating' )
+ *     ->register( "register('rating', { required: 'Please rate this course' })" )
+ *     ->render();
+ *
+ * // Emoji view (renders emoji buttons instead of/alongside stars)
+ * StarRatingInput::make()
+ *     ->field_name( 'course_rating' )
+ *     ->view( 'emoji' )
+ *     ->render();
+ *
+ * // Retrieve HTML without echoing
+ * $html = StarRatingInput::make()->field_name( 'rating' )->current_rating( 5.0 )->get();
  * ```
  *
  * @since 4.0.0
