@@ -384,7 +384,7 @@ class DateFilter extends BaseComponent {
 			}"
 			<?php if ( $this->ajax_mode ) : ?>
 				@tutor:date-filter-changed.window="
-					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date );
+					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date || $event.detail.period === 'all-time' );
 					label = hasSelection ? ( $event.detail.label || '' ) : <?php echo esc_attr( wp_json_encode( $this->hide_initial_label ? '' : __( 'All Time', 'tutor' ) ) ); ?>;
 				"
 			<?php endif; ?>
@@ -433,7 +433,7 @@ class DateFilter extends BaseComponent {
 		if ( self::TYPE_SINGLE === $this->type ) {
 			return ! empty( Input::get( 'date' ) );
 		}
-		return ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) );
+		return ( ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) ) ) || 'all-time' === Input::get( 'period' );
 	}
 
 	/**
@@ -452,6 +452,11 @@ class DateFilter extends BaseComponent {
 
 		$start_date = Input::get( 'start_date' );
 		$end_date   = Input::get( 'end_date' );
+		$period     = Input::get( 'period' );
+
+		if ( 'all-time' === $period ) {
+			return __( 'All Time', 'tutor' );
+		}
 
 		if ( ! $start_date || ! $end_date ) {
 			return $this->hide_initial_label ? '' : __( 'All Time', 'tutor' );

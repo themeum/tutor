@@ -545,12 +545,15 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           presetTitle ||
           (startDate && endDate ? (startDate === endDate ? startDate : `${startDate} - ${endDate}`) : date || '');
 
+        const period = params.period ?? url.searchParams.get('period') ?? '';
+
         window.dispatchEvent(
           new CustomEvent(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, {
             detail: {
               startDate,
               endDate,
               date,
+              period,
               label: formattedLabel,
               preset: presetKey || '',
               presetTitle: presetTitle || '',
@@ -631,6 +634,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           {
             [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
             [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
+            ...(preset === PRESETS.ALL_TIME ? { period: PRESETS.ALL_TIME } : {}),
           },
           preset,
           presetTitle,
@@ -648,8 +652,11 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       let activePreset: Preset | '' = '';
 
       if (!startDate && !endDate) {
+        const urlPeriod = url.searchParams.get('period');
         const defaultPreset = (options as Record<string, unknown>)?.defaultPreset as Preset | undefined;
-        if (defaultPreset && (Object.values(PRESETS) as string[]).includes(defaultPreset)) {
+        if (urlPeriod === PRESETS.ALL_TIME) {
+          activePreset = PRESETS.ALL_TIME;
+        } else if (defaultPreset && (Object.values(PRESETS) as string[]).includes(defaultPreset)) {
           activePreset = defaultPreset;
         }
       } else if (startDate && endDate) {
