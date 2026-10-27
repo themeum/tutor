@@ -1078,19 +1078,6 @@ class DB {
 	}
 
 	/**
-	 * Remove any row locking clause from the query.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @return self
-	 */
-	public function unlock(): self {
-		$this->lock = '';
-
-		return $this;
-	}
-
-	/**
 	 * Check whether row locking is applied to the current query instance.
 	 *
 	 * @since 4.2.0
@@ -2154,11 +2141,11 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param mixed $table Table name to check.
+	 * @param string $table Table name to check.
 	 *
 	 * @return bool True if table exists, false otherwise.
 	 */
-	public static function has_table( $table ): bool {
+	public static function has_table( string $table ): bool {
 		return null !== self::resolve_existing_table( $table );
 	}
 

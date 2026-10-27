@@ -527,7 +527,6 @@ $query = DB::table('tutor_earnings')->where('user_id', 5);
 $query->lock_for_update();
 $query->is_locked(); // true
 
-$query->unlock();
 $query->is_locked(); // false
 ```
 

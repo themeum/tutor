@@ -926,11 +926,6 @@ class DBTest extends \WP_UnitTestCase {
 			->lock_for_update();
 
 		$this->assertSame( "SELECT * FROM {$prefix}users WHERE id = 1 LIMIT 5 OFFSET 0 FOR UPDATE", $builder_limit->to_sql() );
-
-		// Unlock removes FOR UPDATE.
-		$builder->unlock();
-		$this->assertFalse( $builder->is_locked() );
-		$this->assertSame( "SELECT * FROM {$prefix}users WHERE id = 1", $builder->to_sql() );
 	}
 
 	/**
