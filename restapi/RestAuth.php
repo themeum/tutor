@@ -12,9 +12,9 @@
 
 namespace TUTOR;
 
+use Tutor\Core\DB;
 use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Models\QuizModel;
@@ -152,6 +152,15 @@ class RestAuth {
 	const OPTION_REFRESH_TTL = 'rest_api_refresh_token_ttl';
 
 	/**
+	 * Option flag: plaintext API secrets have been migrated to HMAC hashes.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var string
+	 */
+	const OPTION_API_SECRETS_HASHED = 'tutor_api_secrets_hashed';
+
+	/**
 	 * Verified access-token claims for the current request (user_id, kid).
 	 *
 	 * @var array{user_id:int,kid:int}|null
@@ -177,11 +186,45 @@ class RestAuth {
 		add_action( 'wp_ajax_tutor_update_api_permission', array( $this, 'update_api_permission' ) );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', array( $this, 'revoke_api_keys' ) );
 		add_action( 'wp_ajax_tutor_save_rest_api_token_settings', array( $this, 'save_token_settings' ) );
+		add_action( 'admin_init', array( $this, 'maybe_migrate_plaintext_api_secrets' ) );
 		add_filter( 'determine_current_user', array( $this, 'api_auth' ) );
 		add_action( 'profile_update', array( $this, 'maybe_invalidate_tokens_on_profile_update' ), 10, 2 );
 		add_action( 'after_password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
 		add_action( 'password_reset', array( $this, 'invalidate_user_tokens' ), 10, 1 );
 		add_filter( 'rest_request_before_callbacks', array( $this, 'enforce_actor_identity' ), 20, 3 );
+	}
+
+	/**
+	 * One-time migration: hash any leftover plaintext API secrets in usermeta.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function maybe_migrate_plaintext_api_secrets() {
+		if ( get_option( static::OPTION_API_SECRETS_HASHED ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$results = DB::table( 'usermeta' )
+			->where( 'meta_key', static::KEYS_USER_META_KEY )
+			->order_by( 'umeta_id', 'DESC' )
+			->get();
+
+		if ( is_array( $results ) ) {
+			foreach ( $results as $row ) {
+				$meta = json_decode( $row->meta_value );
+				if ( is_object( $meta ) && ! empty( $meta->secret ) ) {
+					self::persist_normalized_api_key_meta( (int) $row->umeta_id, $meta );
+				}
+			}
+		}
+
+		update_option( static::OPTION_API_SECRETS_HASHED, 1, false );
 	}
 
 	/**
@@ -516,8 +559,11 @@ class RestAuth {
 	/**
 	 * Generate api keys
 	 *
+	 * Stores only a HMAC of the secret. The plaintext secret is returned once
+	 * in the AJAX response for the admin to copy; it is never persisted.
+	 *
 	 * @since 2.2.1
-	 * @since 4.2.0 Reject permissions not in available_permissions().
+	 * @since 4.2.0 Validate permissions; store secret_hash instead of plaintext.
 	 *
 	 * @return void JSON response.
 	 */
@@ -542,7 +588,7 @@ class RestAuth {
 		$info = wp_json_encode(
 			array(
 				'key'         => $api_key,
-				'secret'      => $api_secret,
+				'secret_hash' => self::hash_api_secret( $api_secret ),
 				'permission'  => $permission,
 				'description' => $description,
 			)
@@ -562,10 +608,14 @@ class RestAuth {
 			);
 		}
 
-		$response = static::prepare_response( $add, $api_key, $api_secret, $permission, $description );
+		// Plaintext secret is returned once for the modal; it is not stored in usermeta.
 		tutor_utils()->json_response(
-			__( 'API key & secret generated successfully', 'tutor' ),
-			$response
+			__( 'API key & secret generated. Copy the secret now and store it securely — it will not be shown again.', 'tutor' ),
+			array(
+				'html'   => static::prepare_response( $add, $api_key, $permission, $description ),
+				'key'    => $api_key,
+				'secret' => $api_secret,
+			)
 		);
 	}
 
@@ -573,19 +623,25 @@ class RestAuth {
 	 * Update api permission
 	 *
 	 * @since 2.5.0
-	 * @since 4.2.0 Reject permissions not in available_permissions().
+	 * @since 4.2.0 Validate permissions and meta_key; never re-expose secrets.
 	 *
 	 * @return void JSON response.
 	 */
 	public static function update_api_permission() {
-		global $wpdb;
-
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
 		$meta_id     = Input::post( 'meta_id', 0, Input::TYPE_INT );
 		$permission  = Input::post( 'permission' );
 		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
+
+		if ( ! $meta_id ) {
+			tutor_utils()->json_response(
+				__( 'Invalid meta id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
 
 		if ( ! self::is_allowed_api_permission( $permission ) ) {
 			tutor_utils()->json_response(
@@ -595,20 +651,39 @@ class RestAuth {
 			);
 		}
 
-		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
-		$meta_value = json_decode( $info->meta_value );
+		$info = DB::table( 'usermeta' )
+			->where( 'umeta_id', $meta_id )
+			->first();
+		if ( ! is_object( $info ) || static::KEYS_USER_META_KEY !== $info->meta_key ) {
+			tutor_utils()->json_response(
+				__( 'Invalid API key record.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+			return;
+		}
 
+		$meta_value = json_decode( $info->meta_value );
+		if ( ! is_object( $meta_value ) || empty( $meta_value->key ) ) {
+			tutor_utils()->json_response(
+				__( 'Invalid API key record.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$meta_value              = self::normalize_api_key_meta( $meta_value );
 		$meta_value->permission  = $permission;
 		$meta_value->description = $description;
 
 		try {
-			QueryHelper::update(
-				$wpdb->usermeta,
-				array( 'meta_value' => wp_json_encode( $meta_value ) ),
-				array( 'umeta_id' => $meta_id )
-			);
+			DB::table( 'usermeta' )
+				->where( 'umeta_id', $meta_id )
+				->where( 'meta_key', static::KEYS_USER_META_KEY )
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Primary-key update by umeta_id; writing the column, not querying by it.
+				->update( array( 'meta_value' => wp_json_encode( $meta_value ) ) );
 
-			$response = static::prepare_response( $meta_id, $meta_value->key, $meta_value->secret, $permission, $description );
+			$response = static::prepare_response( $meta_id, $meta_value->key, $permission, $description );
 			tutor_utils()->json_response(
 				__( 'API key permission updated successfully', 'tutor' ),
 				$response
@@ -636,6 +711,7 @@ class RestAuth {
 	 * Revoke api keys
 	 *
 	 * @since 2.2.1
+	 * @since 4.2.0 Require meta_key = KEYS_USER_META_KEY before delete.
 	 *
 	 * @return void JSON response.
 	 */
@@ -653,10 +729,23 @@ class RestAuth {
 			);
 		}
 
-		global $wpdb;
-		$delete = QueryHelper::delete( $wpdb->usermeta, array( 'umeta_id' => $meta_id ) );
+		$info = DB::table( 'usermeta' )
+			->where( 'umeta_id', $meta_id )
+			->first();
+		if ( ! is_object( $info ) || static::KEYS_USER_META_KEY !== $info->meta_key ) {
+			tutor_utils()->json_response(
+				__( 'Invalid API key record.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
 
-		if ( ! $delete ) {
+		$deleted = DB::table( 'usermeta' )
+			->where( 'umeta_id', $meta_id )
+			->where( 'meta_key', static::KEYS_USER_META_KEY )
+			->delete();
+
+		if ( ! $deleted ) {
 			tutor_utils()->json_response(
 				__( 'API keys revoke failed, please try again.', 'tutor' ),
 				null,
@@ -670,8 +759,13 @@ class RestAuth {
 	/**
 	 * Check if api key & secret is valid
 	 *
+	 * Looks up by public key (indexed LIKE on meta_value), then verifies the
+	 * secret against a stored HMAC with hash_equals. Legacy plaintext secrets
+	 * are accepted once and upgraded to secret_hash.
+	 *
 	 * @since 2.2.1
 	 * @since 2.7.1 $return_result param added.
+	 * @since 4.2.0 Keyed lookup; hashed secrets; constant-time compare.
 	 *
 	 * @param string $api_key api key.
 	 * @param string $api_secret api secret.
@@ -680,31 +774,178 @@ class RestAuth {
 	 * @return bool|object
 	 */
 	public static function validate_api_key_secret( $api_key, $api_secret, $return_result = false ) {
-		global $wpdb;
-		$table = $wpdb->usermeta;
+		$api_key    = is_string( $api_key ) ? $api_key : '';
+		$api_secret = is_string( $api_secret ) ? $api_secret : '';
 
-		$valid = false;
-
-		$results = QueryHelper::get_all(
-			$table,
-			array( 'meta_key' => static::KEYS_USER_META_KEY ), //phpcs:ignore
-			'umeta_id'
-		);
-
-		if ( is_array( $results ) && count( $results ) ) {
-			foreach ( $results as $result ) {
-				$obj = json_decode( $result->meta_value );
-				if ( is_object( $obj ) && isset( $obj->key, $obj->secret ) && $obj->key === $api_key && $obj->secret === $api_secret ) {
-					$valid = true;
-					if ( $return_result ) {
-						return $result;
-					}
-					break;
-				}
-			}
+		if ( '' === $api_key || '' === $api_secret ) {
+			return false;
 		}
 
-		return $valid;
+		// Generated keys are key_ + 32 hex chars; reject other shapes early.
+		if ( ! preg_match( '/^key_[a-f0-9]{32}$/', $api_key ) ) {
+			return false;
+		}
+
+		// where_like() auto-wraps with % and applies esc_like.
+		$results = DB::table( 'usermeta' )
+			->where( 'meta_key', static::KEYS_USER_META_KEY )
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Narrowed by meta_key first; public key substring match (no secret scan).
+			->where_like( 'meta_value', '"key":"' . $api_key . '"' )
+			->order_by( 'umeta_id', 'DESC' )
+			->limit( 5 )
+			->get();
+
+		if ( ! is_array( $results ) || ! count( $results ) ) {
+			return false;
+		}
+
+		foreach ( $results as $result ) {
+			$obj = json_decode( $result->meta_value );
+			if ( ! is_object( $obj ) || empty( $obj->key ) ) {
+				continue;
+			}
+
+			if ( ! hash_equals( (string) $obj->key, $api_key ) ) {
+				continue;
+			}
+
+			if ( ! self::verify_api_secret( $api_secret, $obj ) ) {
+				continue;
+			}
+
+			self::maybe_upgrade_api_secret_meta( (int) $result->umeta_id, $obj, $api_secret );
+
+			if ( $return_result ) {
+				return $result;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * HMAC-SHA256 of an API secret using the site auth salt as pepper.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $api_secret Plaintext API secret.
+	 *
+	 * @return string Hex digest.
+	 */
+	private static function hash_api_secret( $api_secret ) {
+		return hash_hmac( 'sha256', (string) $api_secret, wp_salt( 'auth' ) );
+	}
+
+	/**
+	 * Verify a plaintext secret against stored meta (hash or legacy plaintext).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $api_secret Plaintext secret from the request.
+	 * @param object $meta       Decoded API key meta object.
+	 *
+	 * @return bool
+	 */
+	private static function verify_api_secret( $api_secret, $meta ) {
+		if ( ! empty( $meta->secret_hash ) && is_string( $meta->secret_hash ) ) {
+			return hash_equals( (string) $meta->secret_hash, self::hash_api_secret( $api_secret ) );
+		}
+
+		// Legacy rows stored the secret in plaintext.
+		if ( ! empty( $meta->secret ) && is_string( $meta->secret ) ) {
+			return hash_equals( (string) $meta->secret, (string) $api_secret );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Upgrade a legacy plaintext secret to secret_hash after a successful match.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int    $umeta_id   Usermeta row id.
+	 * @param object $meta       Decoded meta object.
+	 * @param string $api_secret Verified plaintext secret.
+	 *
+	 * @return void
+	 */
+	private static function maybe_upgrade_api_secret_meta( $umeta_id, $meta, $api_secret ) {
+		$umeta_id = absint( $umeta_id );
+		if ( ! $umeta_id || ! is_object( $meta ) ) {
+			return;
+		}
+
+		$needs_upgrade = empty( $meta->secret_hash ) || ! empty( $meta->secret );
+		if ( ! $needs_upgrade ) {
+			return;
+		}
+
+		$meta->secret_hash = self::hash_api_secret( $api_secret );
+		unset( $meta->secret );
+
+		DB::table( 'usermeta' )
+			->where( 'umeta_id', $umeta_id )
+			->where( 'meta_key', static::KEYS_USER_META_KEY )
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Primary-key update by umeta_id; writing the column, not querying by it.
+			->update( array( 'meta_value' => wp_json_encode( $meta ) ) );
+	}
+
+	/**
+	 * Normalize API key meta: hash any leftover plaintext secret, drop secret field.
+	 *
+	 * Safe to call from admin list/update when the plaintext is still in the row.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param object $meta Decoded meta object.
+	 *
+	 * @return object
+	 */
+	public static function normalize_api_key_meta( $meta ) {
+		if ( ! is_object( $meta ) ) {
+			return $meta;
+		}
+
+		if ( ! empty( $meta->secret ) && is_string( $meta->secret ) ) {
+			if ( empty( $meta->secret_hash ) ) {
+				$meta->secret_hash = self::hash_api_secret( $meta->secret );
+			}
+			unset( $meta->secret );
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Persist normalization for a usermeta API key row (admin list migration).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int    $umeta_id Usermeta id.
+	 * @param object $meta     Decoded meta (may contain plaintext secret).
+	 *
+	 * @return object Normalized meta.
+	 */
+	public static function persist_normalized_api_key_meta( $umeta_id, $meta ) {
+		$umeta_id = absint( $umeta_id );
+		$before   = is_object( $meta ) ? wp_json_encode( $meta ) : '';
+		$meta     = self::normalize_api_key_meta( $meta );
+		$after    = is_object( $meta ) ? wp_json_encode( $meta ) : '';
+
+		if ( ! $umeta_id || $before === $after ) {
+			return $meta;
+		}
+
+		DB::table( 'usermeta' )
+			->where( 'umeta_id', $umeta_id )
+			->where( 'meta_key', static::KEYS_USER_META_KEY )
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Primary-key update by umeta_id; writing the column, not querying by it.
+			->update( array( 'meta_value' => $after ) );
+
+		return $meta;
 	}
 
 	/**
@@ -767,9 +1008,10 @@ class RestAuth {
 			return '';
 		}
 
-		global $wpdb;
-		$record = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $kid ), 'umeta_id' );
-		if ( ! $record || static::KEYS_USER_META_KEY !== $record->meta_key ) {
+		$record = DB::table( 'usermeta' )
+			->where( 'umeta_id', $kid )
+			->first();
+		if ( ! is_object( $record ) || static::KEYS_USER_META_KEY !== $record->meta_key ) {
 			return '';
 		}
 
@@ -904,6 +1146,85 @@ class RestAuth {
 		}
 
 		return static::process_read_request();
+	}
+
+	/**
+	 * WP_Error when the access token is missing or invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param bool $require_token When false, an empty token is allowed (returns null);
+	 *                            a present but invalid token still returns an error.
+	 *
+	 * @return \WP_Error|null Null when the token is acceptable for the given mode.
+	 */
+	public static function get_access_token_error( $require_token = true ) {
+		$token = self::get_access_token_from_request();
+
+		if ( '' === $token ) {
+			if ( ! $require_token ) {
+				return null;
+			}
+
+			return new \WP_Error(
+				'rest_missing_access_token',
+				__( 'Access token is required.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		if ( ! self::verify_access_token( $token ) ) {
+			return new \WP_Error(
+				'rest_invalid_access_token',
+				__( 'Invalid access token.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Authorize JWT + API key method scope for permission_callback use.
+	 *
+	 * Distinguishes missing/invalid access tokens from insufficient key permissions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $scope One of: read, write, delete, api.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public static function authorize_authenticated_request( $scope = 'api' ) {
+		$token_error = self::get_access_token_error();
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		switch ( $scope ) {
+			case 'read':
+				$allowed = static::process_authenticated_read_request();
+				break;
+			case 'write':
+				$allowed = static::process_authenticated_write_request();
+				break;
+			case 'delete':
+				$allowed = static::process_authenticated_delete_request();
+				break;
+			default:
+				$allowed = static::process_authenticated_api_request();
+				break;
+		}
+
+		if ( ! $allowed ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'API key does not have permission for this request.', 'tutor' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -1089,6 +1410,95 @@ class RestAuth {
 	}
 
 	/**
+	 * WP_Error when a REST resource ID is missing or the wrong type.
+	 *
+	 * Prefer this over returning false (which WordPress maps to rest_forbidden).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $message Optional human-readable message.
+	 *
+	 * @return \WP_Error
+	 */
+	public static function invalid_resource_error( $message = '' ) {
+		if ( '' === $message ) {
+			$message = __( 'Invalid resource.', 'tutor' );
+		}
+
+		return new \WP_Error(
+			'rest_invalid_resource',
+			$message,
+			array( 'status' => HttpHelper::STATUS_NOT_FOUND )
+		);
+	}
+
+	/**
+	 * True when $course_id is a course post type; otherwise a 404 WP_Error.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public static function require_valid_course( $course_id ) {
+		$course_id = absint( $course_id );
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return self::invalid_resource_error( __( 'Course not found.', 'tutor' ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolve the parent course from a topic id, or 404 when the topic is invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $topic_id topic post id.
+	 *
+	 * @return int|\WP_Error Course id on success.
+	 */
+	public static function require_course_from_topic( $topic_id ) {
+		$topic_id = absint( $topic_id );
+		if ( ! $topic_id || tutor()->topics_post_type !== get_post_type( $topic_id ) ) {
+			return self::invalid_resource_error( __( 'Topic not found.', 'tutor' ) );
+		}
+
+		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return $course_id;
+	}
+
+	/**
+	 * Resolve the parent course from a quiz id, or 404 when the quiz is invalid.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $quiz_id quiz post id.
+	 *
+	 * @return int|\WP_Error Course id on success.
+	 */
+	public static function require_course_from_quiz( $quiz_id ) {
+		$quiz_id = absint( $quiz_id );
+		if ( ! $quiz_id || tutor()->quiz_post_type !== get_post_type( $quiz_id ) ) {
+			return self::invalid_resource_error( __( 'Quiz not found.', 'tutor' ) );
+		}
+
+		$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return $course_id;
+	}
+
+	/**
 	 * Whether a user's public profile layout is open (not private).
 	 *
 	 * Mirrors templates/public-profile.php layout keys.
@@ -1113,19 +1523,51 @@ class RestAuth {
 	}
 
 	/**
-	 * Permission: author card — same gate as public-profile.php.
+	 * Permission: public route with optional access token.
 	 *
-	 * Open instructor/student layout → allow (anonymous or JWT).
-	 * Private layout or unknown user → deny (JWT does not bypass).
+	 * Empty token → allow (guest). Present but invalid token → reject.
+	 * Used by catalog/list routes that do not need resource-specific gates.
 	 *
 	 * @since 4.2.0
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return true|\WP_Error
+	 */
+	public static function permission_optional_access_token( WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Permission: author card — same gate as public-profile.php.
+	 *
+	 * Open instructor/student layout → allow (anonymous or JWT).
+	 * Private layout → deny (JWT does not bypass). Unknown user → 404.
+	 * Present but invalid access token → reject (optional auth).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_public_author( WP_REST_Request $request ) {
-		return static::is_public_profile_layout_open( absint( $request->get_param( 'id' ) ) );
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		$user_id = absint( $request->get_param( 'id' ) );
+		if ( ! $user_id || ! get_userdata( $user_id ) ) {
+			return self::invalid_resource_error( __( 'Author not found.', 'tutor' ) );
+		}
+
+		return static::is_public_profile_layout_open( $user_id );
 	}
 
 	/**
@@ -1135,15 +1577,26 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_course_detail( WP_REST_Request $request ) {
 		$course_id = absint( $request->get_param( 'id' ) );
-		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
-			return false;
+		$valid     = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
 		}
 
 		if ( 'publish' !== get_post_status( $course_id ) ) {
+			$token_error = self::get_access_token_error();
+			if ( is_wp_error( $token_error ) ) {
+				return $token_error;
+			}
+
 			if ( ! static::process_api_request() ) {
 				return false;
 			}
@@ -1165,30 +1618,6 @@ class RestAuth {
 	}
 
 	/**
-	 * Resolve course id from common REST route params.
-	 *
-	 * Prefers `id`, then `course_id`. Returns 0 unless the value is a course post type.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @param WP_REST_Request $request request.
-	 *
-	 * @return int
-	 */
-	private static function course_id_from_request( WP_REST_Request $request ) {
-		$course_id = absint( $request->get_param( 'id' ) );
-		if ( ! $course_id ) {
-			$course_id = absint( $request->get_param( 'course_id' ) );
-		}
-
-		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
-			return 0;
-		}
-
-		return $course_id;
-	}
-
-	/**
 	 * Permission: course learning content — JWT path or public course (no token).
 	 *
 	 * Used by course-contents. Announcements use permission_authenticated_course_content.
@@ -1197,16 +1626,29 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_course_content( WP_REST_Request $request ) {
-		$course_id = self::course_id_from_request( $request );
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id ) {
+			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
 
 		if ( static::process_api_request() ) {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1216,14 +1658,29 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_authenticated_course_content( WP_REST_Request $request ) {
+		$token_error = self::get_access_token_error();
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
 		if ( ! static::process_api_request() ) {
 			return false;
 		}
 
-		return static::can_view_course_content( self::course_id_from_request( $request ) );
+		$course_id = absint( $request->get_param( 'id' ) );
+		if ( ! $course_id ) {
+			$course_id = absint( $request->get_param( 'course_id' ) );
+		}
+
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
+
+		return static::can_view_course_content( $course_id );
 	}
 
 	/**
@@ -1233,16 +1690,26 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_topics( WP_REST_Request $request ) {
 		$course_id = absint( $request->get_param( 'course_id' ) );
+
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		$valid = self::require_valid_course( $course_id );
+		if ( true !== $valid ) {
+			return $valid;
+		}
 
 		if ( static::process_api_request() ) {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1252,17 +1719,24 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_by_topic( WP_REST_Request $request ) {
-		$topic_id  = absint( $request->get_param( 'topic_id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		$course_id = self::require_course_from_topic( absint( $request->get_param( 'topic_id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
+		}
 
 		if ( static::process_api_request() ) {
 			return static::can_view_course_content( $course_id );
 		}
 
-		return $course_id && Course_List::is_public( $course_id );
+		return Course_List::is_public( $course_id );
 	}
 
 	/**
@@ -1272,15 +1746,22 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_authenticated_by_topic( WP_REST_Request $request ) {
+		$token_error = self::get_access_token_error();
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
 		if ( ! static::process_api_request() ) {
 			return false;
 		}
 
-		$topic_id  = absint( $request->get_param( 'topic_id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$course_id = self::require_course_from_topic( absint( $request->get_param( 'topic_id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
+		}
 
 		return static::can_view_course_content( $course_id );
 	}
@@ -1292,21 +1773,32 @@ class RestAuth {
 	 *
 	 * @param WP_REST_Request $request request.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public static function permission_quiz( WP_REST_Request $request ) {
+		$token_error = self::get_access_token_error();
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
 		if ( ! static::process_api_request() ) {
 			return false;
 		}
 
-		$quiz_id   = absint( $request->get_param( 'id' ) );
-		$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+		$course_id = self::require_course_from_quiz( absint( $request->get_param( 'id' ) ) );
+		if ( is_wp_error( $course_id ) ) {
+			return $course_id;
+		}
 
 		return static::can_view_course_content( $course_id );
 	}
 
 	/**
 	 * Whether the user may view full course learning content.
+	 *
+	 * Matches learning-area UI: students may access publish/private only.
+	 * Draft, pending, trash, future, etc. require edit or IA content access —
+	 * enrollment alone is not enough.
 	 *
 	 * @since 4.2.0
 	 *
@@ -1321,11 +1813,23 @@ class RestAuth {
 			return false;
 		}
 
+		$user_id = tutor_utils()->get_user_id( $user_id );
+		$status  = get_post_status( $course_id );
+
+		// Non-publish / non-private: editors and IA content access only (not enrollment).
+		if ( ! in_array( $status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PRIVATE ), true ) ) {
+			if ( ! $user_id ) {
+				return false;
+			}
+
+			return tutor_utils()->can_user_edit_course( $user_id, $course_id )
+				|| (bool) tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+		}
+
 		if ( Course_List::is_public( $course_id ) ) {
 			return true;
 		}
 
-		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id ) {
 			return false;
 		}
@@ -1751,19 +2255,21 @@ class RestAuth {
 	}
 
 	/**
-	 * Prepare html response
+	 * Prepare html response for the API keys table row.
+	 *
+	 * Secrets are never included — they are shown only in the generate modal once.
 	 *
 	 * @since 2.2.1
+	 * @since 4.2.0 Drop secret column; credentials revealed only in the generate modal.
 	 *
 	 * @param int    $meta_id meta id.
 	 * @param string $key api key.
-	 * @param string $secret api secret.
 	 * @param string $permission authorization permission.
 	 * @param string $description description.
 	 *
 	 * @return string
 	 */
-	public static function prepare_response( $meta_id, $key, $secret, $permission, $description = '' ) {
+	public static function prepare_response( $meta_id, $key, $permission, $description = '' ) {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
@@ -1776,14 +2282,6 @@ class RestAuth {
 					<span class="tutor-icon-copy tutor-mr-8"></span>
 					<span class="tutor-copy-text" data-text="<?php echo esc_attr( $key ); ?>">
 						<?php echo esc_html( substr( $key, 0, 5 ) . '...' ); ?>
-					</span>
-				</a>
-			</td>
-			<td>
-				<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-					<span class="tutor-icon-copy tutor-mr-8"></span>
-					<span class="tutor-copy-text" data-text="<?php echo esc_attr( $secret ); ?>">
-						<?php echo esc_html( substr( $secret, 0, 9 ) . '...' ); ?>
 					</span>
 				</a>
 			</td>

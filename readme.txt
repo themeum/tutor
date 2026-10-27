@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.0 - 22 Oct, 2026
+= 4.2.0 - 27 Oct, 2026
 
 New: Implemented REST API authentication system with personalized access token.
 New: Added authorization for each endpoints to ensure user capability wise operation.
@@ -359,6 +359,10 @@ Fix: JS error on the checkout page when subscription is pending. (Pro)
 Fix: Fixed unauthorized REST API access to course contents, lessons, topics, announcements, quiz answers, quiz attempts, and user details.
 Fix: API returns 200 OK with empty course data for a non-existent Course ID
 Fix: Course price returns '0' for 'Paid' courses in API response.
+
+= 4.1.3 - 15 Oct, 2026
+
+Fix: Patched a security vulnerability.
 
 = 4.1.2 - 12 Oct, 2026
 

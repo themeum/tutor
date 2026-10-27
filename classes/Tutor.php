@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Singleton;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
@@ -990,16 +991,7 @@ final class Tutor extends Singleton {
 			CONSTRAINT fk_tutor_coupon_application_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE
 		) $charset_collate;";
 
-		$coupon_usage_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_usages (
-			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			coupon_code VARCHAR(50) NOT NULL,
-			user_id BIGINT(20) UNSIGNED NOT NULL,
-			PRIMARY KEY (id),
-			KEY coupon_code (coupon_code),
-			KEY user_id (user_id),
-			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
-			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
-		) $charset_collate;";
+		$coupon_usage_table = self::get_coupon_usage_table_schema( true );
 
 		$cart_table = "CREATE TABLE {$wpdb->prefix}tutor_carts (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1057,6 +1049,45 @@ final class Tutor extends Singleton {
 		dbDelta( $cart_table );
 		dbDelta( $cart_items_table );
 		dbDelta( $customer_table );
+	}
+
+	/**
+	 * Get coupon usage table schema.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param bool $include_constraints Whether to include FOREIGN KEY constraints (for fresh installs).
+	 *
+	 * @return string
+	 */
+	public static function get_coupon_usage_table_schema( bool $include_constraints = true ): string {
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+		$status_consumed = 'consumed';
+
+		$constraints = '';
+		if ( $include_constraints ) {
+			$constraints = ",
+			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
+			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE";
+		}
+
+		return "CREATE TABLE {$wpdb->prefix}tutor_coupon_usages (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			coupon_code VARCHAR(50) NOT NULL,
+			user_id BIGINT(20) UNSIGNED NOT NULL,
+			order_id BIGINT(20) UNSIGNED DEFAULT NULL,
+			status VARCHAR(20) NOT NULL DEFAULT '{$status_consumed}',
+			expires_at_gmt DATETIME DEFAULT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY coupon_order (coupon_code, order_id),
+			KEY coupon_code (coupon_code),
+			KEY user_id (user_id),
+			KEY order_id (order_id),
+			KEY status (status){$constraints}
+		) {$charset_collate};";
 	}
 
 	/**

@@ -32,8 +32,9 @@ docs {
   - **Route:** `/wp-json/tutor/v1/courses`
   
   ## Authentication
-  - **Public:** anonymous access allowed (`__return_true`).
+  - **Public:** anonymous access allowed (`permission_optional_access_token`).
   - Bearer JWT optional. Guests receive a reduced catalog-card payload; authenticated callers receive a fuller post DTO.
+  - Present but invalid access token → `rest_invalid_access_token` (does not fall back to guest data).
   - When using a JWT, permission comes from the bound API key (`Read`, `Read/Write`, or `All`).
   
   ## Query Parameters

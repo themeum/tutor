@@ -114,6 +114,16 @@ class REST_Quiz {
 	 */
 	public function quiz_with_settings( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'topic_id' );
+		$topic_id          = absint( $this->post_parent );
+
+		if ( tutor()->topics_post_type !== get_post_type( $topic_id ) ) {
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Quiz not found for given ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
 
 		$data = REST_Posts::get_published_child_posts( $this->post_type, $this->post_parent );
 
@@ -149,6 +159,16 @@ class REST_Quiz {
 		global $wpdb;
 
 		$this->post_parent = $request->get_param( 'id' );
+		$quiz_id           = absint( $this->post_parent );
+
+		if ( $this->post_type !== get_post_type( $quiz_id ) ) {
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Question not found for given ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_questions table; no WP API.
 		$quizs = $wpdb->get_results(
@@ -212,6 +232,15 @@ class REST_Quiz {
 		global $wpdb;
 
 		$quiz_id = absint( $request->get_param( 'id' ) );
+
+		if ( $this->post_type !== get_post_type( $quiz_id ) ) {
+			return $this->response(
+				'tutor_read_quiz',
+				__( 'Quiz attempts not found for given ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom tutor_quiz_attempts table; no WP API.
 		$attempts = $wpdb->get_results(
