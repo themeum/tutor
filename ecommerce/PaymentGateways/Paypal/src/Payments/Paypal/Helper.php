@@ -3,13 +3,16 @@
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use Ollyo\PaymentHub\Core\Support\Path;
-use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
-
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
+use Tutor\PaymentGateways\Utils;
 
 /**
  * Paypal Helper Class
+ *
+ * Builds PayPal request data and formats PayPal error responses.
+ *
+ * @since 3.0.0
  */
 final class Helper {
 
@@ -19,6 +22,7 @@ final class Helper {
 	 * @param  object $data The data object containing item details.
 	 * @return array        An array of formatted items.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::isTotalAmountZero() instead of System::isTotalAmountZero().
 	 */
 	public static function getItems( &$data ): array {
 		$currency       = $data->currency->code;
@@ -45,7 +49,7 @@ final class Helper {
 			(array) $data->items
 		);
 
-		$minChargeApplicable = System::isTotalAmountZero( $data );
+		$minChargeApplicable = Utils::isTotalAmountZero( $data );
 
 		if ( $minChargeApplicable ) {
 			$items[] = array(
@@ -174,16 +178,17 @@ final class Helper {
 	 * error message. It processes different parts of the error response, including issues,
 	 * details, and general error messages, and combines them into a single message string.
 	 *
-	 * @param  RequestException $errorResponse The error response from the HTTP request.
+	 * @param  HttpRequestException $errorResponse The error response from the HTTP request.
 	 * @return string|null                          The formatted error message.
 	 * @since  3.0.0
+	 * @since  4.2.0 Accepts HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public static function handleErrorResponse( $errorResponse ): ?string {
 		$message = '';
 
-		if ( ! is_null( $errorResponse->getResponse() ) ) {
+		if ( ! is_null( $errorResponse->get_response() ) ) {
 
-			$errorBody = json_decode( $errorResponse->getResponse()->getBody() );
+			$errorBody = json_decode( $errorResponse->get_response()->get_body() );
 
 			if ( ! empty( $errorBody->issues ) ) {
 				$message .= self::processIssues( $errorBody->issues );
@@ -257,9 +262,10 @@ final class Helper {
 	 * @param  object $shipping The shipping data containing the receiver's name and address.
 	 * @return array        The formatted shipping information including type, name, and address.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::splitAddress() instead of System::splitAddress().
 	 */
 	public static function getShippingInfo( $shipping ): array {
-		[$address1, $address2] = System::splitAddress( $shipping, 300 );
+		[$address1, $address2] = Utils::splitAddress( $shipping, 300 );
 
 		return array(
 			'type'    => 'SHIPPING',

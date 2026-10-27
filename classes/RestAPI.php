@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -31,7 +33,21 @@ class RestAPI {
 	 *
 	 * @var string
 	 */
-	private $namespace = 'tutor/v1';
+	private static $namespace = 'tutor/v1';
+
+	/**
+	 * Get the REST API namespace.
+	 *
+	 * Static so callers do not need the RestAPI instance (e.g. early
+	 * rest_pre_dispatch hooks where tutor()->rest_api is unavailable).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return string
+	 */
+	public static function get_namespace() {
+		return self::$namespace;
+	}
 
 	/**
 	 * Course post type
@@ -135,7 +151,12 @@ class RestAPI {
 	public function check_permission( $response, $handler, $request ) {
 		$id            = absint( $request['id'] );
 		$method        = $request->get_method();
-		$write_methods = array( 'POST', 'PUT', 'PATCH', 'DELETE' );
+		$write_methods = array(
+			HttpHelper::METHOD_POST,
+			HttpHelper::METHOD_PUT,
+			HttpHelper::METHOD_PATCH,
+			HttpHelper::METHOD_DELETE,
+		);
 		$is_write      = in_array( $method, $write_methods, true );
 
 		if ( ! $id ) {
@@ -157,8 +178,15 @@ class RestAPI {
 			return $response;
 		}
 
-		// Prevent write actions which are only allowed for author.
-		if ( $is_write && ! current_user_can( 'edit_post', $id ) ) {
+		// Prefer Tutor manage rules over raw edit_post. For another author's course,
+		// edit_post maps to edit_others_tutor_courses, which administrators may lack
+		// even though User::is_admin() / can_user_edit_course() should allow the write.
+		$can_edit = User::is_admin()
+			|| tutor_utils()->can_user_edit_course( get_current_user_id(), $id )
+			|| current_user_can( 'edit_post', $id );
+
+		// Prevent write actions which are only allowed for author / course managers.
+		if ( $is_write && ! $can_edit ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
@@ -166,8 +194,9 @@ class RestAPI {
 			);
 		}
 
-		// Prevent access to non-publish posts, only author can access.
-		if ( 'publish' !== $post->post_status && ! current_user_can( 'edit_post', $id ) ) {
+		// Non-publish: editors always; readers only when can_view_course_content allows
+		// (private + enrolled/public/IA — not draft/pending/trash via enrollment alone).
+		if ( 'publish' !== $post->post_status && ! $can_edit && ! RestAuth::can_view_course_content( $id ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
@@ -225,6 +254,22 @@ class RestAPI {
 	}
 
 	/**
+	 * Integer ID argument schema for REST routes.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return array
+	 */
+	private function get_id_arg_schema() {
+		return array(
+			'type'              => 'integer',
+			'minimum'           => 1,
+			'sanitize_callback' => 'absint',
+			'required'          => true,
+		);
+	}
+
+	/**
 	 * Initialize routes
 	 *
 	 * @since 1.5.0
@@ -232,248 +277,235 @@ class RestAPI {
 	 * @return void
 	 */
 	public function init_routes() {
+		// Auth: login / refresh / logout.
+		register_rest_route(
+			self::$namespace,
+			'/auth/login',
+			array(
+				'methods'             => HttpHelper::METHOD_POST,
+				'callback'            => array( RestAuth::class, 'login' ),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		register_rest_route(
+			self::$namespace,
+			'/auth/refresh',
+			array(
+				'methods'             => HttpHelper::METHOD_POST,
+				'callback'            => array( RestAuth::class, 'refresh' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		register_rest_route(
+			self::$namespace,
+			'/auth/logout',
+			array(
+				'methods'             => HttpHelper::METHOD_POST,
+				'callback'            => array( RestAuth::class, 'logout' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
 		// Courses.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/courses',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 
 		// Course details.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/courses/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course_detail',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_detail' ),
 			)
 		);
 
 		// Course topic.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/topics',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->topic_obj,
 					'course_topic',
 				),
 				'args'                => array(
-					'course_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'course_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_topics' ),
 			)
 		);
 
 		// Lesson by topic.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/lessons',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->lesson_obj,
 					'topic_lesson',
 				),
 				'args'                => array(
-					'topic_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'topic_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_by_topic' ),
 			)
 		);
 
 		// Course announcement by course id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-announcement/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->announcement_obj,
 					'course_announcement',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_authenticated_course_content' ),
 			)
 		);
 
 		// Quiz by topic id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quizzes',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_with_settings',
 				),
 				'args'                => array(
-					'topic_id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'topic_id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_authenticated_by_topic' ),
 			)
 		);
 
 		// Quiz by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quizzes/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'get_quiz',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
 		// Quiz question answer by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quiz-question-answer/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_question_ans',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
 		// Quiz attempt details by quiz id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/quiz-attempt-details/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_attempt_details',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_quiz' ),
 			)
 		);
 
 		// Author detail by id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/author-information/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->author_obj,
 					'author_detail',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_public_author' ),
 			)
 		);
 
 		// Reviews by course id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-rating/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->rating_obj,
 					'course_rating',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 
 		// Get course content by id.
 		register_rest_route(
-			$this->namespace,
+			self::$namespace,
 			'/course-contents/(?P<id>\d+)',
 			array(
-				'methods'             => 'GET',
+				'methods'             => HttpHelper::METHOD_GET,
 				'callback'            => array(
 					$this->course_obj,
 					'course_contents',
 				),
 				'args'                => array(
-					'id' => array(
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param );
-						},
-					),
+					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+				'permission_callback' => array( RestAuth::class, 'permission_course_content' ),
 			)
 		);
 	}

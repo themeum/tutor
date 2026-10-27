@@ -65,6 +65,7 @@ const endpoints = {
   QUIZ_ABANDON: 'tutor_quiz_abandon',
   QUIZ_TIMEOUT: 'tutor_quiz_timeout',
   QUIZ_ATTEMPT_SUBMIT: 'tutor_answering_quiz_question',
+  QUIZ_CHECK_ANSWER: 'tutor_quiz_check_answer',
   REVIEW_QUIZ_ANSWERS: 'tutor_review_quiz_answers',
   INSTRUCTOR_FEEDBACK: 'tutor_instructor_feedback',
   SAVE_QUESTION_FEEDBACK: 'tutor_save_question_feedback',
@@ -168,6 +169,7 @@ const endpoints = {
   IMPORT_SETTINGS_FREE: 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+  EXPORT_ANALYTICS: 'export_analytics',
 
   // CONTENT BANK
   GET_CONTENT_BANK_COLLECTIONS: 'tutor_content_bank_collections',

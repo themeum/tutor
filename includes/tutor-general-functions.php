@@ -17,7 +17,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 

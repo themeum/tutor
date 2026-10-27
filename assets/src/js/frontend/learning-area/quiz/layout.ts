@@ -1,4 +1,5 @@
-import type { AlpineComponentMeta } from '@Core/ts/types';
+import type { AjaxResponse, AlpineComponentMeta } from '@Core/ts/types';
+import endpoints from '@Core/ts/utils/endpoints';
 
 import { QUIZ_LAYOUT_KEYS, QUIZ_LAYOUT_SELECTORS, QUIZ_REVEAL_CONFIG, QuizLayoutType } from './constants';
 import { createDragScroll, revealQuestionWithAnswers } from './helpers';
@@ -7,12 +8,25 @@ export interface QuizLayoutConfig {
   layout: (typeof QuizLayoutType)[keyof typeof QuizLayoutType];
   formId: string;
   totalQuestions: number;
+  attemptId?: string;
+  quizId?: number;
   enableAnswerReveal?: boolean;
   revealWaitMs?: number;
+  startIndex?: number;
+}
+
+/**
+ * Provided by `tutorQuizSubmission` (`submission.ts`), merged into the
+ * same Alpine component via `attempt.php`.
+ */
+interface QuizSubmissionContext {
+  clearSubmitTimeout?: () => void;
 }
 
 const quizLayout = (config: QuizLayoutConfig) => {
-  const { form, tutorConfig } = window.TutorCore;
+  const { form } = window.TutorCore;
+  const { tutorConfig } = window.TutorCore.config;
+  const { wpPost } = window.TutorCore.api;
   let container: Element | null | undefined = null;
 
   let handleFirstTab: ((e: KeyboardEvent) => void) | null = null;
@@ -27,21 +41,24 @@ const quizLayout = (config: QuizLayoutConfig) => {
     formId: config.formId ?? '',
 
     totalQuestions: Number(config.totalQuestions) || 0,
-    currentIndex: 1,
+    currentIndex: Number(config.startIndex) > 0 ? Number(config.startIndex) : 1,
+    attemptId: config.attemptId ?? '',
+    quizId: config.quizId ?? 0,
     enableAnswerReveal: config.enableAnswerReveal ?? false,
     revealWaitMs: config.revealWaitMs ?? null,
-    revealAnswerIds: [] as number[],
     answerRequiredByIndex: {} as Record<number, boolean>,
     revealStateByIndex: {} as Record<number, 'correct' | 'incorrect'>,
     skippedByIndex: {} as Record<number, boolean>,
     revealFooterState: '' as '' | 'correct' | 'incorrect',
     isRevealing: false,
+    isVerifying: false,
     revealTimeoutId: null as number | null,
     $el: null as HTMLElement | null,
     $root: null as HTMLElement | null,
 
     init() {
       container = (this.$root ?? this.$el)?.querySelector(QUIZ_LAYOUT_SELECTORS.QUESTIONS_CONTAINER);
+      (this.$root ?? this.$el)?.style.setProperty('--reveal-wait-duration', `${this.getRevealWaitTime()}ms`);
 
       // Keyboard vs Mouse Navigation helper for focus styles
       handleFirstTab = (e: KeyboardEvent) => {
@@ -66,14 +83,15 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
       if (handleFirstTab) window.addEventListener('keydown', handleFirstTab);
 
-      this.revealAnswerIds = this.getRevealAnswerIds();
+      const initialIndex = Number(config.startIndex) > 0 ? Number(config.startIndex) : 1;
+      this.currentIndex = Math.min(Math.max(1, initialIndex), this.totalQuestions || 1);
+
       this.answerRequiredByIndex = this.getAnswerRequiredMap();
       this.revealStateByIndex = this.getRevealStateMap();
       this.skippedByIndex = this.getSkippedStateMap();
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
-      this.currentIndex = 1;
       this.syncCurrentRevealFooterState();
 
       paginationEl = (this.$root ?? this.$el)?.querySelector<HTMLElement>(QUIZ_LAYOUT_SELECTORS.PAGINATION) ?? null;
@@ -260,8 +278,12 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
+      if (this.isVerifying) {
+        return;
+      }
       if (this.currentIndex > 1) {
         this.clearRevealTimeout();
+        (this as unknown as QuizSubmissionContext).clearSubmitTimeout?.();
         this.markCurrentAsSkipped();
         this.runWithViewTransition(() => {
           this.currentIndex -= 1;
@@ -273,6 +295,10 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     async goNext({ skipValidation = false }: { skipValidation?: boolean } = {}) {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
+        return;
+      }
+
+      if (this.isVerifying) {
         return;
       }
 
@@ -303,16 +329,19 @@ const quizLayout = (config: QuizLayoutConfig) => {
           return;
         }
 
-        this.isRevealing = true;
-        this.revealQuestion(wrapper);
-        this.syncRevealFooterState(wrapper);
-        const wait = this.getRevealWaitTime();
-        this.revealTimeoutId = window.setTimeout(() => {
-          this.isRevealing = false;
-          this.revealTimeoutId = null;
-          this.moveToNextQuestion();
-        }, wait);
-        return;
+        const verified = await this.verifyAndRevealQuestion(wrapper, this.currentIndex);
+        if (verified) {
+          this.isRevealing = true;
+          const wait = this.getRevealWaitTime();
+          this.revealTimeoutId = window.setTimeout(() => {
+            this.isRevealing = false;
+            this.revealTimeoutId = null;
+            this.moveToNextQuestion();
+          }, wait);
+          return;
+        }
+
+        this.isRevealing = false;
       }
 
       this.moveToNextQuestion();
@@ -322,10 +351,14 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
         return;
       }
+      if (this.isVerifying) {
+        return;
+      }
       if (!index || index < 1 || index > this.totalQuestions) {
         return;
       }
       this.clearRevealTimeout();
+      (this as unknown as QuizSubmissionContext).clearSubmitTimeout?.();
       this.markCurrentAsSkipped();
       this.runWithViewTransition(
         () => {
@@ -366,7 +399,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!Number.isNaN(feedbackWaitMs) && feedbackWaitMs > 0) {
         return feedbackWaitMs;
       }
-      const configValue = Number(tutorConfig.quiz_answer_display_time ?? '');
+      const configValue = Number(tutorConfig?.quiz_answer_display_time ?? '');
       if (!Number.isNaN(configValue) && configValue > 0) {
         return configValue;
       }
@@ -375,31 +408,6 @@ const quizLayout = (config: QuizLayoutConfig) => {
 
     isRevealMode(): boolean {
       return this.enableAnswerReveal;
-    },
-
-    getRevealAnswerIds(): number[] {
-      const script = document.getElementById(QUIZ_REVEAL_CONFIG.ANSWER_CONTEXT_ID);
-      if (!script?.textContent) {
-        return [];
-      }
-
-      try {
-        const encoded = script.textContent.trim();
-        const decoded = encoded
-          .match(/.{1,2}/g)
-          ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
-          .join('');
-        if (!decoded) {
-          return [];
-        }
-        const parsed = JSON.parse(decoded);
-        if (!Array.isArray(parsed)) {
-          return [];
-        }
-        return parsed.map((value) => Number(value)).filter((value) => !Number.isNaN(value));
-      } catch {
-        return [];
-      }
     },
 
     getQuestionElement(wrapper: HTMLElement): HTMLElement | null {
@@ -419,42 +427,87 @@ const quizLayout = (config: QuizLayoutConfig) => {
       if (!this.isRevealMode()) {
         return false;
       }
-      if (!this.revealAnswerIds.length) {
-        return false;
-      }
       const questionType = this.getQuestionType(wrapper);
       return (QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType);
     },
 
-    revealQuestion(wrapper: HTMLElement) {
-      revealQuestionWithAnswers(wrapper, this.revealAnswerIds);
+    async verifyAndRevealQuestion(wrapper: HTMLElement, index: number): Promise<boolean> {
+      const question = this.getQuestionElement(wrapper);
+      if (!question) {
+        return false;
+      }
+
+      const questionId = Number(question.id);
+      if (!questionId) {
+        return false;
+      }
+
+      const checkedInputs = Array.from(
+        question.querySelectorAll<HTMLInputElement>('input[type="radio"]:checked, input[type="checkbox"]:checked'),
+      );
+      const answers = checkedInputs.map((input) => Number(input.value)).filter((val) => !Number.isNaN(val));
+
+      if (!answers.length) {
+        return false;
+      }
+
+      this.isVerifying = true;
+
+      try {
+        const response = await wpPost<
+          AjaxResponse<{
+            question_id: number;
+            is_correct: boolean;
+            correct_answer_ids: number[];
+            answer_explanation?: string;
+          }>
+        >(endpoints.QUIZ_CHECK_ANSWER, {
+          attempt_id: this.attemptId,
+          quiz_id: this.quizId,
+          question_id: questionId,
+          answers,
+        });
+
+        if (response?.data) {
+          const { is_correct, correct_answer_ids, answer_explanation } = response.data;
+          revealQuestionWithAnswers(wrapper, correct_answer_ids, answer_explanation);
+          this.revealStateByIndex[index] = is_correct ? 'correct' : 'incorrect';
+          this.revealFooterState = is_correct ? 'correct' : 'incorrect';
+          return true;
+        }
+      } catch {
+        // Fallback gracefully on network error
+      } finally {
+        this.isVerifying = false;
+      }
+
+      return false;
     },
 
-    revealOnSubmit(): boolean {
+    async revealOnSubmit(): Promise<number | false> {
       if (!this.isRevealMode()) {
         return false;
       }
 
       if (this.layout === QuizLayoutType.QUESTION_BELOW_EACH_OTHER) {
-        const wrappers = Array.from(
-          (this.$root ?? this.$el)?.querySelectorAll<HTMLElement>(`${QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER}`) ?? [],
-        );
-        let revealedAny = false;
-        wrappers.forEach((wrapper) => {
-          if (this.shouldReveal(wrapper)) {
-            this.revealQuestion(wrapper);
-            revealedAny = true;
-          }
-        });
-        return revealedAny;
+        return false;
       }
 
       const wrapper = this.getQuestionWrapper(this.currentIndex);
-      if (!wrapper || !this.shouldReveal(wrapper)) {
+      if (!wrapper || !this.shouldReveal(wrapper) || this.isQuestionRevealed(wrapper)) {
         return false;
       }
-      this.revealQuestion(wrapper);
-      return true;
+
+      if (!this.isQuestionAttempted(this.currentIndex)) {
+        return false;
+      }
+
+      const revealed = await this.verifyAndRevealQuestion(wrapper, this.currentIndex);
+      if (revealed) {
+        return this.getRevealWaitTime();
+      }
+
+      return false;
     },
 
     getQuestionWrapper(index: number) {
@@ -531,7 +584,7 @@ const quizLayout = (config: QuizLayoutConfig) => {
         if (Number.isNaN(index) || index < 1) {
           return;
         }
-        map[index] = false;
+        map[index] = index < this.currentIndex && !this.revealStateByIndex[index];
       });
 
       return map;

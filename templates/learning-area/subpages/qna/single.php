@@ -17,7 +17,7 @@ use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $question_id   = Input::get( 'question_id', 0, Input::TYPE_INT );
 $replies_order = Input::get( 'order', '' );
