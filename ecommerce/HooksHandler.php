@@ -296,7 +296,6 @@ class HooksHandler {
 			return;
 		}
 
-		// Only the buyer may trigger post-checkout processing.
 		$user_id = (int) $order_data->student->id;
 		( new CartModel() )->clear_user_cart( $user_id );
 	}
