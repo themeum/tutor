@@ -956,6 +956,34 @@ final class Tutor extends Singleton {
 			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
 		) $charset_collate;";
 
+		$order_item_meta_table = "CREATE TABLE {$wpdb->prefix}tutor_order_itemmeta (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			item_id BIGINT(20) UNSIGNED NOT NULL,
+			meta_key VARCHAR(255) NOT NULL,
+			meta_value LONGTEXT NOT NULL,
+			PRIMARY KEY (id),
+			KEY item_id (item_id),
+			KEY meta_key (meta_key),
+			CONSTRAINT fk_tutor_itemmeta FOREIGN KEY (item_id) REFERENCES {$wpdb->prefix}tutor_order_items(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$scheduler_table = "CREATE TABLE {$wpdb->prefix}tutor_scheduler (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			type VARCHAR(50) NOT NULL COMMENT 'Type of schedule, e.g., gift, email, reminder',
+			reference_id VARCHAR(255) NOT NULL COMMENT 'Unique reference id, token, etc',
+			scheduled_at_gmt DATETIME NOT NULL COMMENT 'When the action should be executed',
+			status VARCHAR(255) NOT NULL DEFAULT 'processing',
+			payload LONGTEXT,
+			created_at_gmt DATETIME,
+			updated_at_gmt DATETIME,
+			scheduled_by BIGINT UNSIGNED COMMENT 'User who scheduled the action',
+			scheduled_for BIGINT UNSIGNED COMMENT 'Target user of the scheduled action',
+			PRIMARY KEY (id),
+			KEY idx_context_status (type, status),
+			KEY idx_status (status),
+			KEY idx_scheduled_at_gmt (scheduled_at_gmt)
+		) $charset_collate;";
+
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_status VARCHAR(50),
@@ -1017,6 +1045,8 @@ final class Tutor extends Singleton {
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			cart_id BIGINT(20) UNSIGNED NOT NULL,
 			course_id BIGINT(20) UNSIGNED NOT NULL,
+			item_type VARCHAR(255) DEFAULT NULL,
+			item_details JSON DEFAULT NULL,
 			PRIMARY KEY (id),
 			KEY cart_id (cart_id),
 			KEY course_id (course_id),
@@ -1051,6 +1081,8 @@ final class Tutor extends Singleton {
 		dbDelta( $orders_table );
 		dbDelta( $order_meta_table );
 		dbDelta( $order_items_table );
+		dbDelta( $order_item_meta_table );
+		dbDelta( $scheduler_table );
 		dbDelta( $coupons_table );
 		dbDelta( $coupon_applications_table );
 		dbDelta( $coupon_usage_table );

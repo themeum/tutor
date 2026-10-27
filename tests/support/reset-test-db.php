@@ -82,10 +82,19 @@ wp_install( $site_title, $admin_user, 'admin@example.org', true, '', $admin_pass
 update_option( 'siteurl', $site_url );
 update_option( 'home', $site_url );
 update_option( 'permalink_structure', '/%postname%/' );
-update_option( 'active_plugins', array( 'tutor/tutor.php' ) );
+$active_plugins = array( 'tutor/tutor.php' );
+$pro_plugin_path = dirname( __DIR__, 3 ) . '/tutor-pro/tutor-pro.php';
+if ( file_exists( $pro_plugin_path ) ) {
+	$active_plugins[] = 'tutor-pro/tutor-pro.php';
+}
+update_option( 'active_plugins', $active_plugins );
+update_option( 'users_can_register', 1 );
 
 if ( ! function_exists( 'tutor' ) ) {
 	require_once dirname( __DIR__, 2 ) . '/tutor.php';
+}
+if ( file_exists( $pro_plugin_path ) && ! function_exists( 'tutor_pro' ) ) {
+	require_once $pro_plugin_path;
 }
 
 // 3. Create Tutor custom tables, default options, roles, and initial pages
@@ -94,11 +103,49 @@ if ( class_exists( 'TUTOR\Tutor' ) ) {
 	TUTOR\Tutor::create_database();
 	TUTOR\Tutor::manage_tutor_roles_and_permissions();
 	TUTOR\Tutor::save_data();
-	update_option( 'tutor_option', TUTOR\Tutor::default_options() );
+
+	// Configure default options with native monetization, preserving pages created by save_data().
+	$existing_options = (array) get_option( 'tutor_option', array() );
+	$default_options  = array_merge( TUTOR\Tutor::default_options(), $existing_options );
+	$default_options['monetize_by']              = 'tutor';
+	$default_options['is_enable_buy_now']        = 'off';
+	$default_options['is_enable_guest_checkout'] = 'on';
+	$default_options['is_coupon_applicable']     = 'on';
+
+	// Seed default active manual payment method (Bank Transfer).
+	$manual_method = array(
+		'name'                 => 'bank-transfer',
+		'label'                => 'Bank Transfer',
+		'is_active'            => true,
+		'icon'                 => '',
+		'support_subscription' => false,
+		'is_manual'            => true,
+		'fields'               => array(
+			array( 'name' => 'method_name', 'value' => 'Bank Transfer' ),
+			array( 'name' => 'icon', 'value' => '' ),
+			array( 'name' => 'payment_instructions', 'value' => 'Please transfer total payment to Bank Account: 1234-5678-9012 (SWIFT: TUTORBANK).' ),
+		),
+	);
+	$default_options['payment_settings'] = json_encode( array( 'payment_methods' => array( $manual_method ) ) );
+
+	update_option( 'tutor_option', $default_options );
 	update_option( 'tutor_welcome_page_visited', true );
 	update_option( 'tutor_wizard', true );
 	update_option( 'tutor-new-feature', defined( 'TUTOR_VERSION' ) ? TUTOR_VERSION : '4.2.0' );
 	update_option( 'tutor_first_activation_time', time() );
+
+	// Ensure Native Ecommerce Cart and Checkout pages are created.
+	if ( class_exists( '\Tutor\Ecommerce\CartController' ) ) {
+		\Tutor\Ecommerce\CartController::create_cart_page();
+	}
+	if ( class_exists( '\Tutor\Ecommerce\CheckoutController' ) ) {
+		\Tutor\Ecommerce\CheckoutController::create_checkout_page();
+	}
+
+	// Apply any schema upgrades if available.
+	if ( class_exists( '\TUTOR\Upgrader' ) ) {
+		( new \TUTOR\Upgrader() )->init_upgrader();
+	}
 }
 
 // 4. Seed standard test users.
@@ -117,50 +164,107 @@ if ( ! is_wp_error( $student_id ) ) {
 	$student->set_role( 'subscriber' );
 }
 
-// 5. Seed baseline course fixture.
-echo "==> Seeding baseline course fixture...\n";
+// 5. Seed baseline course fixtures (free + 3 paid courses).
+echo "==> Seeding baseline course fixtures (free + 3 paid courses)...\n";
 $admin     = get_user_by( 'login', $admin_user );
 $author_id = $admin ? $admin->ID : 1;
 
-$course_id = wp_insert_post(
+$courses_to_seed = array(
 	array(
-		'post_title'   => 'Sample Test Course',
-		'post_content' => 'Sample test course description for E2E testing.',
-		'post_status'  => 'publish',
-		'post_type'    => tutor()->course_post_type,
-		'post_author'  => $author_id,
-	)
+		'title'        => 'Sample Test Course',
+		'slug'         => 'sample-test-course',
+		'content'      => 'Sample test course description for E2E testing.',
+		'price_type'   => 'free',
+		'price'        => 0,
+		'sale_price'   => 0,
+	),
+	array(
+		'title'        => 'Mastering React 19',
+		'slug'         => 'mastering-react-19',
+		'content'      => 'Master modern frontend development with React 19 and Next.js.',
+		'price_type'   => 'paid',
+		'price'        => 50.00,
+		'sale_price'   => 40.00,
+	),
+	array(
+		'title'        => 'Advanced TypeScript Guide',
+		'slug'         => 'advanced-typescript-guide',
+		'content'      => 'In-depth TypeScript techniques, utility types, and modern patterns.',
+		'price_type'   => 'paid',
+		'price'        => 60.00,
+		'sale_price'   => 45.00,
+	),
+	array(
+		'title'        => 'WordPress Playwright E2E Course',
+		'slug'         => 'wordpress-playwright-e2e-course',
+		'content'      => 'Automate full-stack testing for WordPress LMS with Playwright.',
+		'price_type'   => 'paid',
+		'price'        => 75.00,
+		'sale_price'   => 0,
+	),
 );
 
-if ( $course_id && ! is_wp_error( $course_id ) ) {
-	// Add a topic.
-	$topic_id = wp_insert_post(
+foreach ( $courses_to_seed as $course_data ) {
+	$course_id = wp_insert_post(
 		array(
-			'post_title'  => 'Introduction Topic',
-			'post_status' => 'publish',
-			'post_type'   => tutor()->topics_post_type,
-			'post_parent' => $course_id,
-			'post_author' => $author_id,
+			'post_title'   => $course_data['title'],
+			'post_name'    => $course_data['slug'],
+			'post_content' => $course_data['content'],
+			'post_status'  => 'publish',
+			'post_type'    => tutor()->course_post_type,
+			'post_author'  => $author_id,
 		)
 	);
 
-	// Add a lesson under topic.
-	if ( $topic_id && ! is_wp_error( $topic_id ) ) {
-		wp_insert_post(
+	if ( $course_id && ! is_wp_error( $course_id ) ) {
+		// Pricing metadata.
+		update_post_meta( $course_id, \TUTOR\Course::COURSE_PRICE_TYPE_META, $course_data['price_type'] );
+		if ( 'paid' === $course_data['price_type'] ) {
+			update_post_meta( $course_id, \TUTOR\Course::COURSE_PRICE_META, $course_data['price'] );
+			if ( $course_data['sale_price'] > 0 ) {
+				update_post_meta( $course_id, \TUTOR\Course::COURSE_SALE_PRICE_META, $course_data['sale_price'] );
+			}
+			update_post_meta( $course_id, \TUTOR\Course::COURSE_SELLING_OPTION_META, \TUTOR\Course::SELLING_OPTION_ONE_TIME );
+		}
+
+		// Add a topic.
+		$topic_id = wp_insert_post(
 			array(
-				'post_title'  => 'Lesson 1: Getting Started',
+				'post_title'  => $course_data['title'] . ' - Introduction',
 				'post_status' => 'publish',
-				'post_type'   => tutor()->lesson_post_type,
-				'post_parent' => $topic_id,
+				'post_type'   => tutor()->topics_post_type,
+				'post_parent' => $course_id,
 				'post_author' => $author_id,
 			)
 		);
+
+		// Add a lesson under topic.
+		if ( $topic_id && ! is_wp_error( $topic_id ) ) {
+			wp_insert_post(
+				array(
+					'post_title'  => 'Lesson 1: Overview',
+					'post_status' => 'publish',
+					'post_type'   => tutor()->lesson_post_type,
+					'post_parent' => $topic_id,
+					'post_author' => $author_id,
+				)
+			);
+		}
 	}
+}
+
+// 6. Initialize rewrite rules for clean permalinks.
+do_action( 'init' );
+if ( isset( $GLOBALS['wp_rewrite'] ) && is_object( $GLOBALS['wp_rewrite'] ) ) {
+	$GLOBALS['wp_rewrite']->init();
+	$GLOBALS['wp_rewrite']->flush_rules();
 }
 
 $elapsed = round( microtime( true ) - $start_time, 2 );
 echo "==> [SUCCESS] Fresh test database '{$wpdb->dbname}' initialized in {$elapsed}s!\n";
 echo "    - WordPress core installed\n";
-echo "    - Tutor LMS tables & initial pages created\n";
+echo "    - Tutor LMS tables, initial pages (including Cart & Checkout) created\n";
+echo "    - Native Monetization enabled with Manual Payment (Bank Transfer)\n";
 echo "    - Test accounts: admin ({$admin_user}/{$admin_pass}), instructor (instructor/12345), student (student/12345)\n";
-echo "    - Fixtures: 1 published course with topic and lesson\n";
+echo "    - Fixtures: 4 published courses (1 free, 3 paid: Mastering React 19, Advanced TypeScript Guide, WordPress Playwright E2E Course)\n";
+
