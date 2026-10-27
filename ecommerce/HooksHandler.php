@@ -285,19 +285,13 @@ class HooksHandler {
 	 */
 	public function handle_order_placement_success( int $order_id ) {
 		$order_data = $this->order_model->get_order_by_id( $order_id );
-		if ( $order_data ) {
-			$user_id = $order_data->student->id;
-
-			( new CartModel() )->clear_user_cart( $user_id );
-
-			// Manage enrollment & earnings.
-			$order          = ( new OrderModel() )->get_order_by_id( $order_id );
-			$payment_status = $order->payment_status;
-
-			$order_status = $this->order_model->get_order_status_by_payment_status( $payment_status );
-
-			$this->manage_earnings_and_enrollments( $order_status, $order_id );
+		if ( ! $order_data ) {
+			return;
 		}
+
+		// Only the buyer may trigger post-checkout processing.
+		$user_id = (int) $order_data->student->id;
+		( new CartModel() )->clear_user_cart( $user_id );
 	}
 
 	/**
