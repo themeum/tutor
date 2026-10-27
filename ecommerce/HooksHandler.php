@@ -521,8 +521,12 @@ class HooksHandler {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
-				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
-					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+				if ( $enrolled_id ) {
+					do_action( 'tutor_order_enrolled', (object) $order_data, $enrolled_id );
+
+					if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
+						BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+					}
 				}
 			}
 
