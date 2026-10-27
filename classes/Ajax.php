@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
@@ -527,7 +528,9 @@ class Ajax {
 		}
 
 		if ( ! empty( $form_data['ID'] ) ) {
-			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+			$announcement_id   = (int) $form_data['ID'] ?? 0;
+			$announcement_post = get_post( $announcement_id );
+			if ( ! $announcement_post || wp_get_post_parent_id( $announcement_post ) !== $course_id || ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
 				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 		}
@@ -587,9 +590,12 @@ class Ajax {
 	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
-		$announcement_id = Input::post( 'announcement_id' );
+		$announcement_id = Input::post( 'announcement_id', 0, Input::TYPE_INT );
+		if ( ! $announcement_id ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message( 'invalid_req' ) ) );
+		}
 
-		if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
+		if ( tutor()->announcement_post_type !== get_post_type( $announcement_id ) || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
