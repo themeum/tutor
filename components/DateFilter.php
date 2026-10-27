@@ -166,7 +166,7 @@ class DateFilter extends BaseComponent {
 	/**
 	 * Default preset to activate when no date range is selected.
 	 *
-	 * @since 4.0.0
+	 * @since 4.2.1
 	 *
 	 * @var string|null
 	 */
