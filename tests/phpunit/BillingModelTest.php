@@ -28,7 +28,9 @@ class BillingModelTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function setUp(): void {
+		global $table_prefix;
+		$table_prefix = 'bivas_';
 		parent::setUp();
 		$this->billing_model = new BillingModel();
 	}
@@ -61,11 +63,54 @@ class BillingModelTest extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Test update billing info.
+	 *
+	 * @return void
+	 */
+	public function test_update_billing_info() {
+		$user_id      = 1;
+		$billing_info = array(
+			'user_id'            => $user_id,
+			'billing_first_name' => 'John',
+			'billing_last_name'  => 'Doe',
+			'billing_email'      => 'john.doe@example.com',
+			'billing_phone'      => '1234567890',
+			'billing_zip_code'   => '123456',
+			'billing_address'    => '123 Main St',
+			'billing_country'    => 'US',
+			'billing_state'      => 'CA',
+			'billing_city'       => 'Los Angeles',
+		);
+
+		$billing_id = $this->billing_model->insert( $billing_info );
+		$this->assertGreaterThan( 0, $billing_id );
+
+		$billing_info = array(
+			'billing_first_name' => 'John',
+			'billing_last_name'  => 'Snow',
+			'billing_email'      => 'john.doe@example.com',
+			'billing_phone'      => '1234567890',
+			'billing_zip_code'   => '123456',
+			'billing_address'    => '123 Main St',
+			'billing_country'    => 'US',
+			'billing_state'      => 'CA',
+			'billing_city'       => 'Dhaka',
+		);
+
+		$billing_id = $this->billing_model->update( $billing_info, array( 'user_id' => $user_id ) );
+		$this->assertGreaterThan( 0, $billing_id );
+
+		$billing_info = $this->billing_model->get_info( $user_id );
+		$this->assertEquals( 'Snow', $billing_info->billing_last_name );
+		$this->assertEquals( 'Dhaka', $billing_info->billing_city );
+	}
+
+	/**
 	 * Tear down test environment.
 
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset( $this->billing_model );
 	}

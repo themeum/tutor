@@ -10,7 +10,7 @@
 
 namespace Tutor\Models;
 
-use Tutor\Helpers\QueryHelper;
+use Tutor\Core\DB;
 
 /**
  * Billing model class for performing billing functionalities
@@ -77,12 +77,7 @@ class BillingModel {
 	 * @return int The ID of the inserted row on success, or 0 on failure.
 	 */
 	public function insert( $data ) {
-		global $wpdb;
-
-		return QueryHelper::insert(
-			"{$wpdb->prefix}tutor_customers",
-			$data,
-		);
+		return DB::table( 'tutor_customers' )->insert( $data );
 	}
 
 	/**
@@ -94,13 +89,14 @@ class BillingModel {
 	 * @return bool True on success, false on failure.
 	 */
 	public function update( $data, $where ) {
-		global $wpdb;
+		$column = '';
+		$value  = null;
+		if ( tutor_utils()->count( $where ) ) {
+			$column = array_keys( $where )[0];
+			$value  = $where[ $column ];
+		}
 
-		return QueryHelper::update(
-			"{$wpdb->prefix}tutor_customers",
-			$data,
-			$where,
-		);
+		return DB::table( 'tutor_customers' )->where( $column, $value )->update( $data );
 	}
 
 	/**
@@ -111,15 +107,7 @@ class BillingModel {
 	 * @return object|false The billing info as an object if found, or false if not found.
 	 */
 	public function get_info( $user_id ) {
-		global $wpdb;
-
-		$billing_info = QueryHelper::get_row(
-			"{$wpdb->prefix}tutor_customers",
-			array(
-				'user_id' => $user_id,
-			),
-			'id'
-		);
+		$billing_info = DB::table( 'tutor_customers' )->where( 'user_id', $user_id )->first();
 		return $billing_info;
 	}
 
