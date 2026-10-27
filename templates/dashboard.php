@@ -59,11 +59,11 @@ $is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
 $site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
 $show_dashboard_site_header = $site_shell['show_site_header'];
 $show_dashboard_site_footer = $site_shell['show_site_footer'];
-$has_dashboard_site_shell   = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $site_shell['has_site_shell'];
+$has_dashboard_site_shell   = ! $is_by_short_code && $site_shell['has_site_shell'];
 $has_dashboard_site_footer  = $has_dashboard_site_shell && $show_dashboard_site_footer;
 $theme_header_selector      = $site_shell['theme_header_selector'];
 
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
+if ( ! $is_by_short_code ) :
 	tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 endif;
 
@@ -168,6 +168,6 @@ $footer_links = array(
 <?php endif; ?>
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-<?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
+<?php if ( ! $is_by_short_code ) : ?>
 	<?php tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer ); ?>
 <?php endif; ?>
