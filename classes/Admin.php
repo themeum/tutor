@@ -128,8 +128,7 @@ class Admin {
 			$seconds
 		);
 
-		//$is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed()
-		if ( true ) {
+		if ( $is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed() ) {
 			?>
 			<div class="tutor-offer-notice">
 				<div class="tutor-offer-notice-wrapper">
