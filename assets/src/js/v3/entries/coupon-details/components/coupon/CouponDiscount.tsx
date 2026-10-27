@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -62,12 +62,12 @@ function CouponDiscount() {
   const { tutor_currency } = tutorConfig;
   const { showModal } = useModal();
 
-  const appliesTo = form.watch('applies_to');
-  const discountType = form.watch('discount_type');
-  const courses = form.watch('courses') ?? [];
-  const bundles = form.watch('bundles') ?? [];
-  const categories = form.watch('categories') ?? [];
-  const membershipPlans = form.watch('membershipPlans') ?? [];
+  const appliesTo = useWatch({ control: form.control, name: 'applies_to' });
+  const discountType = useWatch({ control: form.control, name: 'discount_type' });
+  const courses = useWatch({ control: form.control, name: 'courses' }) ?? [];
+  const bundles = useWatch({ control: form.control, name: 'bundles' }) ?? [];
+  const categories = useWatch({ control: form.control, name: 'categories' }) ?? [];
+  const membershipPlans = useWatch({ control: form.control, name: 'membershipPlans' }) ?? [];
 
   const modalType = {
     specific_courses: 'courses',
@@ -210,7 +210,7 @@ function CouponDiscount() {
 
       {appliesTo === 'specific_membership_plans' && membershipPlans.length > 0 && (
         <div css={styles.selectedWrapper}>
-          {form.watch('membershipPlans')?.map((item) => (
+          {membershipPlans?.map((item) => (
             <AppliesToItem
               key={item.id}
               type="membershipPlans"

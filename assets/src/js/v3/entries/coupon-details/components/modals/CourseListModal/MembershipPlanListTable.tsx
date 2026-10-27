@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { type UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -27,7 +27,8 @@ interface MembershipPlanListTableProps {
 }
 
 const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
-  const selectedPlans = useMemo(() => form.watch('membershipPlans') || [], [form]);
+  const watchedPlans = useWatch({ control: form.control, name: 'membershipPlans' });
+  const selectedPlans = useMemo(() => watchedPlans || [], [watchedPlans]);
   const getMembershipPlanListQuery = useMembershipPlansQuery();
   const [searchTerm, setSearchTerm] = useState<string>('');
 

@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
@@ -29,7 +29,7 @@ function CouponInfo() {
   const isEditMode = !!courseId;
 
   const form = useFormContext<Coupon>();
-  const couponType = form.watch('coupon_type');
+  const couponType = useWatch({ control: form.control, name: 'coupon_type' });
 
   function handleGenerateCouponCode() {
     const newCouponCode = generateCouponCode();

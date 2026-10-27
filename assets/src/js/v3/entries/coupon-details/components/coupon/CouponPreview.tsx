@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow, isValid } from 'date-fns';
@@ -48,17 +48,17 @@ const discountTypeText = (appliesTo: CouponAppliesTo, discountText: string) => {
 function CouponPreview() {
   const form = useFormContext<Coupon>();
 
-  const couponTitle = form.watch('coupon_title');
-  const couponType = form.watch('coupon_type');
-  const couponCode = form.watch('coupon_code');
-  const discountType = form.watch('discount_type');
-  const discountAmount = form.watch('discount_amount');
-  const startDate = form.watch('start_date');
-  const startTime = form.watch('start_time');
-  const endDate = form.watch('end_date');
-  const appliesTo = form.watch('applies_to');
-  const perUserUsageLimit = form.watch('per_user_usage_limit');
-  const couponUsedCount = form.watch('coupon_uses');
+  const couponTitle = useWatch({ control: form.control, name: 'coupon_title' });
+  const couponType = useWatch({ control: form.control, name: 'coupon_type' });
+  const couponCode = useWatch({ control: form.control, name: 'coupon_code' });
+  const discountType = useWatch({ control: form.control, name: 'discount_type' });
+  const discountAmount = useWatch({ control: form.control, name: 'discount_amount' });
+  const startDate = useWatch({ control: form.control, name: 'start_date' });
+  const startTime = useWatch({ control: form.control, name: 'start_time' });
+  const endDate = useWatch({ control: form.control, name: 'end_date' });
+  const appliesTo = useWatch({ control: form.control, name: 'applies_to' });
+  const perUserUsageLimit = useWatch({ control: form.control, name: 'per_user_usage_limit' });
+  const couponUsedCount = useWatch({ control: form.control, name: 'coupon_uses' });
 
   const startDateTime = startDate && startTime ? `${startDate} ${startTime}` : '';
   const activeFromSuffix = isValid(new Date(startDateTime))

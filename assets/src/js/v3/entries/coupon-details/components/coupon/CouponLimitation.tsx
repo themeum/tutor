@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -16,8 +16,8 @@ import type { Coupon } from '@CouponDetails/services/coupon';
 
 function CouponLimitation() {
   const form = useFormContext<Coupon>();
-  const usage_limit_status = form.watch('usage_limit_status');
-  const per_user_limit_status = form.watch('per_user_limit_status');
+  const usage_limit_status = useWatch({ control: form.control, name: 'usage_limit_status' });
+  const per_user_limit_status = useWatch({ control: form.control, name: 'per_user_limit_status' });
 
   return (
     <Box bordered css={styles.discountWrapper}>

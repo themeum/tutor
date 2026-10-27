@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 
@@ -16,7 +16,7 @@ const Tracker = () => {
   const navigate = useNavigate();
   const form = useFormContext<CourseFormData>();
 
-  const postTitle = form.watch('post_title');
+  const postTitle = useWatch({ control: form.control, name: 'post_title' });
 
   const handleClick = async (step: Step) => {
     navigate(step.path);
