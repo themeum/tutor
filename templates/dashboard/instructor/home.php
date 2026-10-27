@@ -204,7 +204,7 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 			})"
 		>
 			<!-- Skeleton Placeholder (Visible during initial load & filter changes) -->
-			<div x-show="isLoading">
+			<div x-show="isLoading" x-cloak>
 				<?php
 				Skeleton::make()
 					->type( $section['skeleton'] )
