@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.0 - 22 Oct, 2026
+= 4.2.0 - 27 Oct, 2026
 
 New: Implemented REST API authentication system with personalized access token.
 New: Added authorization for each endpoints to ensure user capability wise operation.
