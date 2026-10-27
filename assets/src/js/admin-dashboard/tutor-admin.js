@@ -20,6 +20,7 @@ import './segments/withdraw';
 import '../front/_select_dd_search';
 import './quiz-attempts';
 import './wp-events-subscriber';
+import tutorFormData from '../helper/tutor-formdata';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {
@@ -530,9 +531,8 @@ jQuery(document).ready(function ($) {
 			try {
 				const notice = document.querySelector('.tutor-offer-notice')
 				notice.remove();
-
-				const formData = new FormData();
-				formData.set('action', 'tutor_dismiss_offer_notice');
+				
+				const formData = tutorFormData([{'action': 'tutor_dismiss_offer_notice'}]);
 				const post = await ajaxHandler(formData);
 				if (!post.ok) {
 					throw new Error(__('Operation failed', 'tutor'));

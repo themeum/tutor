@@ -128,7 +128,8 @@ class Admin {
 			$seconds
 		);
 
-		if ( $is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed() ) {
+		//$is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed()
+		if ( true ) {
 			?>
 			<div class="tutor-offer-notice">
 				<div class="tutor-offer-notice-wrapper">
@@ -159,6 +160,8 @@ class Admin {
 	 * @return void JSON response.
 	 */
 	public function ajax_dismiss_offer_notice() {
+		tutor_utils()->check_nonce();
+
 		if ( ! User::is_admin() ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
