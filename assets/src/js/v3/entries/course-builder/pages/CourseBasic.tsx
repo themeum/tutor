@@ -112,8 +112,8 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={editorUsed}
                 editors={courseDetails?.editors}
-                onCustomEditorButtonClick={() => {
-                  return form.handleSubmit((data) => {
+                onCustomEditorButtonClick={async () => {
+                  await form.handleSubmit((data) => {
                     const payload = convertCourseDataToPayload(
                       data,
                       findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
