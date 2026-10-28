@@ -13,6 +13,7 @@
     @include tutor-button-base();
     @include tutor-button-variant(primary-soft);
     @include tutor-button-size();
+
     gap: $tutor-spacing-4;
     min-width: 160px;
     height: 40px;
@@ -107,6 +108,7 @@
 
   .tutor-lesson-image-wrapper {
     @include tutor-flex-center();
+
     aspect-ratio: 16 / 9;
 
     .tutor-lesson-feature-image {

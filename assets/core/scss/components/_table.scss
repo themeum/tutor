@@ -19,6 +19,7 @@
       thead th,
       tbody td {
         @include border-end(1px solid $tutor-border-idle);
+
         &:last-of-type,
         &:last-child {
           @include border-end(none);
@@ -36,8 +37,9 @@
 table.tutor-table,
 .tutor-table {
   @include tutor-typography('small', 'regular', 'secondary');
+
   width: 100%;
-  margin: 0px;
+  margin: 0;
   border: none;
   border-collapse: collapse;
   border-spacing: 0;
@@ -48,6 +50,7 @@ table.tutor-table,
 
     th {
       @include tutor-typography(tiny, regular, secondary);
+
       text-align: start;
       padding: $tutor-spacing-5;
       border: none;

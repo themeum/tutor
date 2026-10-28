@@ -4,10 +4,13 @@
 
 .tutor-attachment-card {
   @include tutor-flex(row, center, flex-start);
+
   width: 100%;
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-4 $tutor-spacing-5;
+
   @include tutor-transition(background-color);
+
   position: relative;
 
   &:hover,
@@ -17,6 +20,7 @@
 
   &-icon {
     @include tutor-flex(row, center, center);
+
     width: 48px;
     height: 48px;
     border-radius: $tutor-radius-sm;
@@ -36,6 +40,7 @@
 
   &-body {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-1;
     flex: 1 1 auto;
     min-width: 0;
@@ -53,6 +58,7 @@
   @include tutor-breakpoint-up(md) {
     &-actions {
       opacity: 0;
+
       @include tutor-transition((opacity, visibility));
     }
 

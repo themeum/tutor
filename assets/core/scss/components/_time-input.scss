@@ -24,12 +24,14 @@
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-lg;
     box-shadow: $tutor-shadow-lg;
+
     @include tutor-scrollbar;
   }
 
   &-option {
     @include tutor-button-reset;
     @include tutor-typography('small', 'regular', 'subdued');
+
     text-align: start;
     padding: $tutor-spacing-4;
     border-radius: $tutor-radius-md;

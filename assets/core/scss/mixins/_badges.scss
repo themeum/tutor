@@ -4,6 +4,7 @@
 
 @mixin tutor-badge-base() {
   @include tutor-typography('tiny', 'medium', 'secondary');
+
   border-radius: $tutor-radius-sm;
   padding-inline: $tutor-spacing-4;
   display: inline-flex;
@@ -15,6 +16,7 @@
   img,
   svg {
     @include tutor-flex-center;
+
     width: 12px;
     height: 12px;
     object-fit: contain;
@@ -31,56 +33,56 @@
 }
 
 @mixin tutor-badge-variant($variant: primary) {
-  @if $variant ==primary {
+  @if $variant == primary {
     background-color: $tutor-actions-brand-primary;
     color: $tutor-text-primary-inverse;
 
     svg {
       color: $tutor-icon-idle-inverse;
     }
-  } @else if $variant ==info {
+  } @else if $variant == info {
     background-color: $tutor-actions-brand-tertiary;
     color: $tutor-text-brand;
 
     svg {
       color: $tutor-icon-brand;
     }
-  } @else if $variant ==warning {
+  } @else if $variant == warning {
     background-color: $tutor-actions-warning-secondary;
     color: $tutor-text-warning;
 
     svg {
       color: $tutor-icon-warning;
     }
-  } @else if $variant ==success {
+  } @else if $variant == success {
     background-color: $tutor-actions-success-tertiary;
     color: $tutor-text-success;
 
     svg {
       color: $tutor-icon-success-primary;
     }
-  } @else if $variant ==success-solid {
+  } @else if $variant == success-solid {
     background-color: $tutor-actions-success-primary;
     color: $tutor-text-primary-inverse;
 
     svg {
       color: $tutor-icon-idle-inverse;
     }
-  } @else if $variant ==error {
+  } @else if $variant == error {
     background-color: $tutor-actions-critical-secondary;
     color: $tutor-text-critical;
 
     svg {
       color: $tutor-icon-critical;
     }
-  } @else if $variant ==highlight {
+  } @else if $variant == highlight {
     background-color: $tutor-surface-exception2-secondary;
     color: $tutor-text-exception2;
 
     svg {
       color: $tutor-icon-exception2;
     }
-  } @else if $variant ==disabled {
+  } @else if $variant == disabled {
     background-color: $tutor-actions-gray-secondary;
     color: $tutor-text-subdued;
 

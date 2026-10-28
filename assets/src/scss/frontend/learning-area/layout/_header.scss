@@ -44,6 +44,7 @@
 
   &-content {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-5;
     width: 100%;
 
@@ -56,6 +57,7 @@
   &-back {
     @include tutor-button-reset();
     @include tutor-flex-center();
+
     flex-shrink: 0;
     height: 48px;
     width: 48px;

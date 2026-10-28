@@ -4,11 +4,13 @@
 .tutor-social {
   &-accounts {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-4;
   }
 
   &-form {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-5;
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
@@ -18,6 +20,7 @@
 
   &-field {
     @include tutor-flex();
+
     gap: $tutor-spacing-3;
   }
 

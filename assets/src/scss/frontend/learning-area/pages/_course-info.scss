@@ -17,6 +17,7 @@
 
   .tutor-course-sticky-card {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-5;
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
@@ -25,6 +26,7 @@
 
     .tutor-course-thumb {
       @include tutor-flex();
+
       max-width: 106px;
     }
   }
@@ -44,6 +46,7 @@
 
   .tutor-course-info-cards {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-4;
   }
 
@@ -56,6 +59,7 @@
 
     &-item {
       @include tutor-flex(row);
+
       gap: $tutor-spacing-4;
 
       svg {
@@ -84,6 +88,7 @@
 
       td {
         @include tutor-typography(medium);
+
         padding: $tutor-spacing-5 $tutor-spacing-6;
         vertical-align: top;
 
@@ -138,8 +143,7 @@
         'thumb content'
         'buttons buttons';
       padding: $tutor-spacing-5;
-      row-gap: $tutor-spacing-5;
-      column-gap: $tutor-spacing-6;
+      gap: $tutor-spacing-5 $tutor-spacing-6;
     }
 
     &-thumb {
@@ -165,11 +169,14 @@
     &-buttons {
       grid-area: buttons;
       align-self: start;
+
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-5;
 
       @include tutor-breakpoint-down(sm) {
         @include tutor-flex(column-reverse);
+
         gap: $tutor-spacing-4;
 
         button {

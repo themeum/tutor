@@ -17,6 +17,7 @@
 
       .tutor-announcement-actions {
         opacity: 0;
+
         @include tutor-transition(opacity);
       }
 

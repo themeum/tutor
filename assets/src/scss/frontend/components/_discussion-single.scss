@@ -11,6 +11,7 @@
   .tutor-discussion-single-reply-count {
     @include tutor-typography(small, regular, secondary);
     @include tutor-flex(row, center, space-between);
+
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
 
@@ -27,6 +28,7 @@
   .tutor-discussion-single-reply-list {
     .tutor-discussion-reply-list-item {
       @include tutor-flex(row);
+
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-6;
 
