@@ -90,6 +90,7 @@ class Upgrader {
 			$upgrades[] = 'upgrade_to_3_7_1';
 			$upgrades[] = 'upgrade_to_3_8_0';
 			$upgrades[] = 'upgrade_to_3_8_2';
+			$upgrades[] = 'upgrade_to_4_2_0';
 		}
 
 		return $upgrades;
@@ -377,6 +378,22 @@ class Upgrader {
 				PRIMARY KEY (gradebook_result_id)
 			) {$charset_collate};";
 			dbDelta( $gradebook_results );
+		}
+	}
+
+	/**
+	 * Upgrade to version 4.2.0
+	 *
+	 * Add order_id, status, and expiration to tutor_coupon_usages.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_4_2_0() {
+		if ( QueryHelper::table_exists( 'tutor_coupon_usages' ) && ! QueryHelper::column_exist( 'tutor_coupon_usages', 'order_id' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
 		}
 	}
 

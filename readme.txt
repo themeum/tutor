@@ -338,27 +338,27 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.0 - 22 Oct, 2026
+= 4.2.0 - 27 Oct, 2026
 
-New: Implemented REST API authentication system with personalized access token.
-New: Added authorization for each endpoints to ensure user capability wise operation.
-Update: API key permissions (Read, Write, Delete, All) are now enforced on Tutor REST routes.
-Update: Sensitive learning-content routes now require enrollment, public access, or instructor/admin access. (Pro)
-Update: Verify quiz answers server-side in reveal mode to prevent answer leakage.
-Update: Optimized course list page loading speed on the admin side.
-Update: Optimized page loading speed for the export of Analytics. (Pro)
-Update: Optimized analytics data export functionality. (Pro)
-Fix: Logout button missing on mobile devices.
-Fix: Subscription expire email trigger before each renewal email. (Pro)
-Fix: PHP warning message is displayed in the courses section after disabling the subscription plan. (Pro)
-Fix: Skipped Essay Questions Block Quiz Completion (Instructor Cannot Manual-Grade / Close Pending Attempt). (Pro)
-Fix: Audio files cannot be submitted as assignment attachments in Tutor LMS. (Pro)
-Fix: Coupon usage race Condition issue.
-Fix: "Use Points Instead of Grades" Not Working on Student Gradebook Section on learning area. (Pro)
-Fix: JS error on the checkout page when subscription is pending. (Pro)
-Fix: Fixed unauthorized REST API access to course contents, lessons, topics, announcements, quiz answers, quiz attempts, and user details.
-Fix: API returns 200 OK with empty course data for a non-existent Course ID
-Fix: Course price returns '0' for 'Paid' courses in API response.
+New: Added REST API authentication with personalized access tokens.
+New: Added endpoint-level authorization to ensure REST API operations follow user roles and capabilities.
+Update: API key permissions for Read, Write, Delete, and All actions are now enforced across Tutor LMS REST API routes.
+Update: Sensitive learning content routes now require valid enrollment, public access, or instructor/admin permissions. (Pro)
+Update: Quiz answers are now verified server-side in Reveal Mode to prevent answer exposure.
+Update: Optimized loading performance for the course list page in the WordPress admin area.
+Update: Improved loading performance when exporting Analytics data. (Pro)
+Update: Optimized the overall Analytics data export process. (Pro)
+Fix: Fixed an issue where the Logout button was missing on mobile devices.
+Fix: Fixed an issue where subscription expiration emails were triggered before every renewal email. (Pro)
+Fix: Fixed a PHP warning appearing in the Courses section after disabling a subscription plan. (Pro)
+Fix: Fixed skipped Essay questions preventing quiz completion and blocking instructors from manually grading or closing pending attempts. (Pro)
+Fix: Fixed an issue preventing audio files from being submitted as assignment attachments. (Pro)
+Fix: Fixed a race condition affecting coupon usage.
+Fix: Fixed the "Use Points Instead of Grades" option not working correctly in the learner Gradebook within the Learning Area. (Pro)
+Fix: Fixed a JavaScript error on the checkout page when a subscription was pending. (Pro)
+Fix: Fixed unauthorized REST API access to course content, lessons, topics, announcements, quiz answers, quiz attempts, and user details.
+Fix: Fixed the REST API returning a 200 OK response with empty course data for non-existent course IDs.
+Fix: Fixed paid courses incorrectly returning a course price of "0" in REST API responses.
 
 = 4.1.3 - 15 Oct, 2026
 
