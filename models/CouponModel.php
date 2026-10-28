@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
@@ -22,6 +23,7 @@ class CouponModel {
 	 * Coupon status
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Reserved, consumed & cancelled status added
 	 *
 	 * @var string
 	 */
@@ -30,6 +32,9 @@ class CouponModel {
 	const STATUS_TRASH     = 'trash';
 	const STATUS_EXPIRED   = 'expired';
 	const STATUS_SCHEDULED = 'scheduled';
+	const STATUS_RESERVED  = 'reserved';
+	const STATUS_CONSUMED  = 'consumed';
+	const STATUS_CANCELLED = 'cancelled';
 
 	/**
 	 * Coupon type
@@ -496,40 +501,96 @@ class CouponModel {
 	 * Get coupon usage count
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Added exclude_order_id and active status filter.
 	 *
 	 * @param mixed $coupon_code Coupon code.
+	 * @param int   $exclude_order_id Optional order ID to exclude from count.
 	 *
 	 * @return int
 	 */
-	public function get_coupon_usage_count( $coupon_code ) {
-		return QueryHelper::get_count(
-			$this->coupon_usage_table,
-			array( 'coupon_code' => $coupon_code ),
-			array(),
-			'*'
-		);
+	public function get_coupon_usage_count( $coupon_code, int $exclude_order_id = 0 ) {
+		$now_gmt = current_time( 'mysql', true );
+		$count   = 0;
+
+		$user_id = get_current_user_id();
+
+		$results = DB::table( $this->coupon_usage_table )
+			->where( 'coupon_code', $coupon_code )
+			->get();
+
+		foreach ( $results as $result ) {
+			// Check if the table schema is 4.2.0+.
+			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
+				$order_id       = (int) $result->order_id;
+				$status         = $result->status;
+				$expires_at_gmt = $result->expires_at_gmt;
+
+				// Continue for the exclude order.
+				if ( $order_id === $exclude_order_id ) {
+					continue;
+				}
+
+				if ( self::STATUS_CONSUMED === $status ) {
+					++$count;
+				} elseif ( self::STATUS_RESERVED === $status ) {
+					// If the reserver is the current user and the reservation is not expired then continue and allow them to use the coupon.
+					if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt ) {
+						continue;
+					}
+
+					// Considering the reserved as used until not expired.
+					if ( $expires_at_gmt > $now_gmt ) {
+						++$count;
+					}
+				}
+			} else {
+				++$count;
+			}
+		}
+
+		return $count;
 	}
 
 	/**
 	 * Get coupon usage count for a user
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Added exclude_order_id and active status filter.
 	 *
 	 * @param mixed $coupon_code Coupon code.
 	 * @param int   $user_id User id.
+	 * @param int   $exclude_order_id Optional order ID to exclude from count.
 	 *
 	 * @return int
 	 */
-	public function get_user_usage_count( $coupon_code, $user_id ) {
-		return QueryHelper::get_count(
-			$this->coupon_usage_table,
-			array(
-				'coupon_code' => $coupon_code,
-				'user_id'     => $user_id,
-			),
-			array(),
-			'*'
-		);
+	public function get_user_usage_count( $coupon_code, $user_id, int $exclude_order_id = 0 ) {
+		$count = 0;
+
+		$results = DB::table( $this->coupon_usage_table )
+			->where( 'coupon_code', $coupon_code )
+			->where( 'user_id', $user_id )
+			->get();
+
+		foreach ( $results as $result ) {
+			// Check if the table schema is 4.2.0+.
+			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
+				$order_id = (int) $result->order_id;
+				$status   = $result->status;
+
+				// Continue for the exclude order.
+				if ( $order_id === $exclude_order_id ) {
+					continue;
+				}
+
+				if ( self::STATUS_CONSUMED === $status ) {
+					++$count;
+				}
+			} else {
+				++$count;
+			}
+		}
+
+		return $count;
 	}
 
 	/**
@@ -863,18 +924,23 @@ class CouponModel {
 	 * Considering start-expire time & use limit.
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Added user_id and exclude_order_id parameters.
 	 *
 	 * @param object $coupon Coupon object.
+	 * @param int    $user_id Optional user id.
+	 * @param int    $exclude_order_id Optional order ID to exclude from usage limit.
 	 *
 	 * @return bool
 	 */
-	public function is_coupon_valid( object $coupon ): bool {
+	public function is_coupon_valid( object $coupon, int $user_id = 0, int $exclude_order_id = 0 ): bool {
 		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
 			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'invalid' ) );
 			return false;
 		}
 
-		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
+		$user_id = $user_id ? $user_id : get_current_user_id();
+
+		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, $user_id, $exclude_order_id );
 	}
 
 	/**
@@ -986,7 +1052,7 @@ class CouponModel {
 
 			$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
 			if ( ! $course_price->sale_price ) {
-				$regular_price_item_count++;
+				++$regular_price_item_count;
 			}
 		}
 
@@ -1035,35 +1101,37 @@ class CouponModel {
 	 * Check coupon usage limit
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Added exclude_order_id parameter.
 	 *
 	 * @param object $coupon coupon object.
 	 * @param int    $user_id user id.
+	 * @param int    $exclude_order_id Optional order ID to exclude.
 	 *
 	 * @return bool true if has usage limit otherwise false
 	 */
-	public function has_user_usage_limit( object $coupon, int $user_id ): bool {
+	public function has_user_usage_limit( object $coupon, int $user_id, int $exclude_order_id = 0 ): bool {
 		$has_limit = true;
 
 		$total_usage_limit = (int) $coupon->total_usage_limit;
 		$user_usage_limit  = (int) $coupon->per_user_usage_limit;
 
 		if ( $total_usage_limit > 0 ) {
-			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
+			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code, $exclude_order_id );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
 			}
 		}
 
-		if ( $user_usage_limit > 0 ) {
-			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
+		if ( $user_usage_limit > 0 && $user_id ) {
+			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id, $exclude_order_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
 			}
 		}
 
-		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id );
+		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id, $exclude_order_id );
 	}
 
 	/**
@@ -1193,10 +1261,160 @@ class CouponModel {
 	 */
 	public function store_coupon_usage( array $data ) {
 		try {
-			return QueryHelper::insert( $this->coupon_usage_table, $data );
+			return DB::table( $this->coupon_usage_table )->insert( $data );
 		} catch ( \Throwable $th ) {
 			throw $th;
 		}
+	}
+
+	/**
+	 * Reserve coupon usage for an order atomically under a row lock.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int    $order_id Order id.
+	 * @param string $coupon_code Coupon code.
+	 * @param int    $user_id User id.
+	 * @param int    $reserve_duration Hold duration in minutes. Default 30.
+	 *
+	 * @return bool True on success, false on limit exceeded or failure.
+	 */
+	public function reserve_coupon_usage( int $order_id, string $coupon_code, int $user_id, int $reserve_duration = 30 ): bool {
+		global $wpdb;
+
+		if ( ! $order_id || empty( $coupon_code ) || ! $user_id ) {
+			return false;
+		}
+
+		// Begin transaction.
+		$wpdb->query( 'START TRANSACTION' );
+
+		try {
+			// Lock the coupon row for update to prevent concurrent race conditions.
+			$coupon = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$this->table_name} WHERE coupon_code = %s FOR UPDATE",
+					$coupon_code
+				)
+			);
+
+			if ( ! $coupon || ! $this->is_coupon_valid( $coupon, $user_id, $order_id ) ) {
+				$wpdb->query( 'ROLLBACK' );
+				return false;
+			}
+
+			$now_gmt     = current_time( 'mysql', true );
+			$expires_gmt = gmdate( 'Y-m-d H:i:s', strtotime( "+{$reserve_duration} minutes", strtotime( $now_gmt ) ) );
+
+			// Check if reservation record already exists for this order.
+			$existing = DB::table( $this->coupon_usage_table )
+				->where( 'coupon_code', $coupon_code )
+				->where( 'order_id', $order_id )
+				->first();
+
+			if ( $existing ) {
+				$update_status = self::STATUS_CONSUMED === $existing->status ? self::STATUS_CONSUMED : self::STATUS_RESERVED;
+				DB::table( $this->coupon_usage_table )
+					->where( 'id', $existing->id )
+					->update(
+						array(
+							'status' => $update_status,
+						)
+					);
+			} else {
+				DB::table( $this->coupon_usage_table )
+					->insert(
+						array(
+							'coupon_code'    => $coupon_code,
+							'user_id'        => $user_id,
+							'order_id'       => $order_id,
+							'status'         => self::STATUS_RESERVED,
+							'expires_at_gmt' => $expires_gmt,
+							'created_at_gmt' => $now_gmt,
+						)
+					);
+			}
+
+			$wpdb->query( 'COMMIT' );
+			return true;
+		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
+			tutor_log( $th );
+			return false;
+		}
+	}
+
+	/**
+	 * Promote reserved coupon usage to consumed on payment completion.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool
+	 */
+	public function promote_coupon_usage( int $order_id ): bool {
+		if ( ! $order_id ) {
+			return false;
+		}
+
+		try {
+			return DB::table( $this->coupon_usage_table )
+				->where( 'order_id', $order_id )
+				->update(
+					array(
+						'status'         => self::STATUS_CONSUMED,
+						'expires_at_gmt' => null,
+					)
+				);
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+			return false;
+		}
+	}
+
+	/**
+	 * Cancel coupon usage for an order (releases limit hold while preserving record).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool
+	 */
+	public function cancel_coupon_usage( int $order_id ): bool {
+		if ( ! $order_id ) {
+			return false;
+		}
+
+		try {
+			return DB::table( $this->coupon_usage_table )
+				->where( 'order_id', $order_id )
+				->update(
+					array(
+						'status'         => self::STATUS_CANCELLED,
+						'expires_at_gmt' => null,
+					)
+				);
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+			return false;
+		}
+	}
+
+	/**
+	 * Get usage count for a specific order.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return int
+	 */
+	public function get_order_usage_count( int $order_id ): int {
+		return DB::table( $this->coupon_usage_table )
+			->where( 'order_id', $order_id )
+			->count();
 	}
 
 	/**
@@ -1297,5 +1515,26 @@ class CouponModel {
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : null;
 
 		return $start_date > $now && ( ! $expire_date || $expire_date > $now );
+	}
+
+	/**
+	 * Check if the coupon requires reservation management
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return bool True|False
+	 */
+	public function is_reservation_required( $coupon_code ): bool {
+		$coupon = DB::table( $this->table_name )->where( 'coupon_code', $coupon_code )->first();
+		if ( $coupon ) {
+			$total_usage_limit = (int) $coupon->total_usage_limit;
+			$user_usage_limit  = (int) $coupon->per_user_usage_limit;
+
+			return $total_usage_limit || $user_usage_limit;
+		}
+
+		return false;
 	}
 }

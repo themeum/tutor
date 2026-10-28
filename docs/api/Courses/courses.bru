@@ -7,92 +7,140 @@ meta {
 get {
   url: {{base_url}}/courses
   body: none
-  auth: basic
+  auth: bearer
 }
 
 params:query {
   ~paged: 1
-  ~order: ASC
+  ~order: DESC
   ~orderby: title
   ~categories: design,development
   ~tags: beginner
 }
 
-auth:basic {
-  username: {{api_key}}
-  password: {{api_secret}}
+auth:bearer {
+  token: {{access_token}}
 }
 
 docs {
-  # Get All Courses
+  # GET /courses
   
-  Retrieves a paginated list of published courses along with categories, tags, author info, rating summary, price, and thumbnail.
+  Retrieves a paginated list of published courses (catalog).
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/courses`
   
   ## Authentication
-  - **Type:** Basic Auth (`api_key` / `api_secret`)
-  - **Required Permission:** `Read` or `All`
+  - **Public:** anonymous access allowed (`permission_optional_access_token`).
+  - Bearer JWT optional. Guests receive a reduced catalog-card payload; authenticated callers receive a fuller post DTO.
+  - Present but invalid access token → `rest_invalid_access_token` (does not fall back to guest data).
+  - When using a JWT, permission comes from the bound API key (`Read`, `Read/Write`, or `All`).
   
   ## Query Parameters
   
   | Parameter | Type | Default | Description |
   | :--- | :--- | :--- | :--- |
-  | `paged` | `integer` | `1` | Page number for pagination. |
-  | `order` | `string` | `ASC` | Sort order direction: `ASC` or `DESC`. |
-  | `orderby` | `string` | `title` | Sort by field: `title`, `date`, `price`, `ID`, `rand`, etc. When `orderby=price` is used, WooCommerce product prices are queried. |
-  | `categories` | `string` | _None_ | Comma-separated category names (e.g. `web-development,design`). |
-  | `tags` | `string` | _None_ | Comma-separated tag names (e.g. `javascript,beginners`). |
+  | `paged` | `integer` | `1` | Page number. |
+  | `order` | `string` | `DESC` | `ASC` or `DESC`. Invalid / omitted values fall back to **`DESC`**. |
+  | `orderby` | `string` | `title` | Whitelisted: `title`, `date`, `modified`, `ID`, `name`, `author`, `menu_order`, `price`. |
+  | `categories` | `string` | _None_ | Comma-separated category **names**. |
+  | `tags` | `string` | _None_ | Comma-separated tag **names**. |
+  
+  ## Guest vs authenticated payloads
+  
+  ### Guest catalog card
+  Each post includes: `ID`, `post_title`, `post_name`, `thumbnail_url`, `price`, `sale_price`, `post_author` (`ID`, `display_name`), `ratings` (`rating_count`, `rating_avg`), `course_category` / `course_tag` as `[{ term_id, name, slug }]`.
+  
+  ### Authenticated
+  Full WP post fields (minus `filter` / `post_password`) plus `thumbnail_url`, `sale_price`, `price`, `additional_info`, richer `post_author` (`ID`, `display_name`, `user_nicename`, and private fields when allowed), full `ratings` from `get_course_rating`, and full term objects for category/tag.
   
   ## Responses
   
-  ### 200 OK (Success)
+  ### 200 OK — guest (catalog card)
   ```json
   {
-    "code": "success",
+    "code": "tutor_read_course",
     "message": "Course retrieved successfully",
     "data": {
       "posts": [
         {
           "ID": 105,
-          "post_author": {
-            "ID": "1",
-            "user_login": "instructor_jane",
-            "user_nicename": "instructor_jane",
-            "user_email": "jane@example.com",
-            "display_name": "Jane Doe"
-          },
-          "post_date": "2026-01-15 10:00:00",
           "post_title": "Modern JavaScript from Scratch",
-          "post_content": "Course description and syllabus overview...",
-          "post_status": "publish",
           "post_name": "modern-javascript-from-scratch",
           "thumbnail_url": "http://tutor-dev.local/wp-content/uploads/course-js.jpg",
+          "price": "49.00",
+          "sale_price": "39.00",
+          "post_author": {
+            "ID": 1,
+            "display_name": "Jane Doe"
+          },
           "ratings": {
             "rating_count": 12,
             "rating_avg": 4.75
           },
           "course_category": [
             {
-              "term_id": 4,
-              "name": "Web Development",
-              "slug": "web-development"
+              "term_id": 3,
+              "name": "Development",
+              "slug": "development"
             }
           ],
           "course_tag": [
             {
-              "term_id": 9,
-              "name": "JavaScript",
-              "slug": "javascript"
+              "term_id": 8,
+              "name": "Beginner",
+              "slug": "beginner"
             }
-          ],
+          ]
+        }
+      ],
+      "total_course": 25,
+      "total_page": 3
+    }
+  }
+  ```
+  
+  ### 200 OK — authenticated (excerpt)
+  ```json
+  {
+    "code": "tutor_read_course",
+    "message": "Course retrieved successfully",
+    "data": {
+      "posts": [
+        {
+          "ID": 105,
+          "post_title": "Modern JavaScript from Scratch",
+          "post_content": "Course description...",
+          "post_status": "publish",
+          "post_name": "modern-javascript-from-scratch",
+          "thumbnail_url": "http://tutor-dev.local/wp-content/uploads/course-js.jpg",
           "price": "49.00",
+          "sale_price": "39.00",
+          "post_author": {
+            "ID": 1,
+            "display_name": "Jane Doe",
+            "user_nicename": "jane"
+          },
           "additional_info": {
-            "course_duration": "6 hours 30 mins",
-            "course_level": "beginner"
-          }
+            "course_price_type": ["paid"],
+            "course_level": ["all_levels"],
+            "disable_qa": false
+          },
+          "ratings": {
+            "rating_count": 12,
+            "rating_avg": 4.75,
+            "rating_sum": 57,
+            "count_by_value": {
+              "5": 9,
+              "4": 3,
+              "3": 0,
+              "2": 0,
+              "1": 0
+            }
+          },
+          "course_category": [],
+          "course_tag": []
         }
       ],
       "total_course": 25,
@@ -104,19 +152,10 @@ docs {
   ### 404 Not Found
   ```json
   {
-    "code": "not_found",
+    "code": "tutor_read_course",
     "message": "Course not found",
-    "data": []
-  }
-  ```
-  
-  ### 401 / 403 Forbidden
-  ```json
-  {
-    "code": "rest_forbidden",
-    "message": "Sorry, you are not allowed to do that.",
     "data": {
-      "status": 401
+      "status": 404
     }
   }
   ```

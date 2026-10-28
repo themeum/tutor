@@ -1,14 +1,8 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
 
-import {
-  ERROR_MESSAGES,
-  QuestionTimeoutAction,
-  QUIZ_ABANDON_CONFIG,
-  QUIZ_LAYOUT_SELECTORS,
-  QUIZ_REVEAL_CONFIG,
-} from './constants';
-import { getAttemptedQuestionCountFromForm, revealQuestionWithAnswers } from './helpers';
+import { ERROR_MESSAGES, QuestionTimeoutAction, QUIZ_ABANDON_CONFIG } from './constants';
+import { getAttemptedQuestionCountFromForm } from './helpers';
 
 export interface QuizSubmissionConfig {
   formId: string;
@@ -16,17 +10,15 @@ export interface QuizSubmissionConfig {
   quizId: number;
   abandonModalId: string;
   totalQuestions: number;
-  enableAnswerReveal?: boolean;
-  revealWaitMs?: number;
   submittedModalId?: string;
   timeoutModalId?: string;
+  beforeSubmit?: () => Promise<number | boolean>;
 }
 
 const quizSubmission = (config: QuizSubmissionConfig) => {
   const { query, toast, form, modal, constants, endpoints } = window.TutorCore;
   const { convertToErrorMessage } = window.TutorCore.error;
   const { wpPostForm, wpPost } = window.TutorCore.api;
-  const { tutorConfig } = window.TutorCore.config;
   const { TUTOR_CUSTOM_EVENTS } = constants;
 
   return {
@@ -35,8 +27,6 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     quizId: config.quizId,
     abandonModalId: config.abandonModalId,
     totalQuestions: Number(config.totalQuestions) || 0,
-    enableAnswerReveal: config.enableAnswerReveal ?? false,
-    revealWaitMs: config.revealWaitMs ?? null,
     submittedModalId: config.submittedModalId ?? '',
     timeoutModalId: config.timeoutModalId ?? '',
 
@@ -46,6 +36,8 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
     hasTimedOut: false,
     isRevealSubmitting: false,
+    isWaitingSubmit: false,
+    submitTimeoutId: null as number | null,
     beforeUnloadTriggered: false,
     isAbandoningNavigation: false,
     skipBeforeUnload: false,
@@ -133,102 +125,55 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       });
     },
 
-    handleQuizSubmit(data: Record<string, unknown>) {
+    clearSubmitTimeout() {
+      if (this.submitTimeoutId !== null) {
+        window.clearTimeout(this.submitTimeoutId);
+        this.submitTimeoutId = null;
+      }
+      this.isWaitingSubmit = false;
+      this.isRevealSubmitting = false;
+    },
+
+    async handleQuizSubmit(data: Record<string, unknown>) {
+      if (this.submitQuizMutation?.isPending) {
+        return;
+      }
+
+      if (this.isWaitingSubmit) {
+        this.clearSubmitTimeout();
+        const payload = this.buildSubmitPayload(data);
+        this.submitQuizMutation?.mutate(payload);
+        return;
+      }
+
       if (this.isRevealSubmitting) {
         return;
       }
 
-      if (this.isRevealMode()) {
-        const revealWait = this.getRevealWaitTime();
-        const shouldDelay = this.revealOnSubmit();
-        if (shouldDelay) {
-          this.isRevealSubmitting = true;
-          const payload = this.buildSubmitPayload(data);
-          window.setTimeout(() => {
-            this.submitQuizMutation?.mutate(payload);
-            this.isRevealSubmitting = false;
-          }, revealWait);
-          return;
-        }
-      }
+      this.isRevealSubmitting = true;
 
       const payload = this.buildSubmitPayload(data);
+
+      if (config.beforeSubmit) {
+        try {
+          const delay = await config.beforeSubmit.call(this);
+          if (typeof delay === 'number' && delay > 0) {
+            this.isRevealSubmitting = false;
+            this.isWaitingSubmit = true;
+            this.submitTimeoutId = window.setTimeout(() => {
+              this.submitTimeoutId = null;
+              this.isWaitingSubmit = false;
+              this.submitQuizMutation?.mutate(payload);
+            }, delay);
+            return;
+          }
+        } catch {
+          // Proceed with submission on reveal failure
+        }
+      }
+
+      this.isRevealSubmitting = false;
       this.submitQuizMutation?.mutate(payload);
-    },
-
-    getRevealWaitTime(): number {
-      const feedbackWaitMs = Number(this.revealWaitMs ?? '');
-      if (!Number.isNaN(feedbackWaitMs) && feedbackWaitMs > 0) {
-        return feedbackWaitMs;
-      }
-      const configValue = Number(tutorConfig.quiz_answer_display_time ?? '');
-      if (!Number.isNaN(configValue) && configValue > 0) {
-        return configValue;
-      }
-      return QUIZ_REVEAL_CONFIG.DEFAULT_WAIT_MS;
-    },
-
-    isRevealMode(): boolean {
-      return this.enableAnswerReveal;
-    },
-
-    getRevealAnswerIds(): number[] {
-      const script = document.getElementById(QUIZ_REVEAL_CONFIG.ANSWER_CONTEXT_ID);
-      if (!script?.textContent) {
-        return [];
-      }
-
-      try {
-        const encoded = script.textContent.trim();
-        const decoded = encoded
-          .match(/.{1,2}/g)
-          ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
-          .join('');
-        if (!decoded) {
-          return [];
-        }
-        const parsed = JSON.parse(decoded);
-        if (!Array.isArray(parsed)) {
-          return [];
-        }
-        return parsed.map((value) => Number(value)).filter((value) => !Number.isNaN(value));
-      } catch {
-        return [];
-      }
-    },
-
-    revealQuestion(wrapper: HTMLElement, revealAnswerIds: number[]) {
-      revealQuestionWithAnswers(wrapper, revealAnswerIds);
-    },
-
-    revealOnSubmit(): boolean {
-      const revealAnswerIds = this.getRevealAnswerIds();
-      if (!revealAnswerIds.length) {
-        return false;
-      }
-
-      const root = this.$root ?? this.$el;
-      if (!root) {
-        return false;
-      }
-
-      const wrappers = Array.from(root.querySelectorAll<HTMLElement>(QUIZ_LAYOUT_SELECTORS.QUESTION_WRAPPER));
-      let revealedAny = false;
-
-      wrappers.forEach((wrapper) => {
-        const question = wrapper.querySelector(QUIZ_REVEAL_CONFIG.QUESTION_SELECTOR) as HTMLElement | null;
-        if (!question) {
-          return;
-        }
-        const questionType = question.dataset?.question ?? '';
-        if (!(QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES as readonly string[]).includes(questionType)) {
-          return;
-        }
-        this.revealQuestion(wrapper, revealAnswerIds);
-        revealedAny = true;
-      });
-
-      return revealedAny;
     },
 
     handleQuizError() {
@@ -318,7 +263,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
       if (this.isAbandoningNavigation) {
         return false;
       }
-      if (this.hasTimedOut || this.isRevealSubmitting) {
+      if (this.hasTimedOut || this.isRevealSubmitting || this.isWaitingSubmit) {
         return false;
       }
       if (this.submitQuizMutation?.isPending || this.abandonQuizMutation?.isPending) {
@@ -523,6 +468,7 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
     },
 
     destroy() {
+      this.clearSubmitTimeout();
       if (this.beforeUnloadHandler) {
         window.removeEventListener('beforeunload', this.beforeUnloadHandler);
       }
