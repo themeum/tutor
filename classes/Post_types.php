@@ -13,6 +13,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 /**
@@ -98,7 +99,6 @@ class Post_types {
 	 * @return void
 	 */
 	public function register_course_post_types() {
-		$course_post_type = $this->course_post_type;
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -126,7 +126,7 @@ class Post_types {
 			// 'show_in_menu'              => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array(
-				'slug'       => tutor_utils()->get_option( 'course_permalink_base', $course_post_type ),
+				'slug'       => tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type ),
 				'with_front' => true,
 			),
 			'menu_icon'          => 'dashicons-book-alt',
@@ -152,7 +152,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( $course_post_type, $args );
+		register_post_type( tutor()->course_post_type, $args );
 
 		/**
 		 * Taxonomy
@@ -346,7 +346,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( 'tutor_quiz', $args );
+		register_post_type( tutor()->quiz_post_type, $args );
 	}
 
 	/**
@@ -368,7 +368,7 @@ class Post_types {
 			'hierarchical'       => false,
 			'menu_position'      => null,
 		);
-		register_post_type( 'topics', $args );
+		register_post_type( tutor()->topics_post_type, $args );
 	}
 
 	/**
@@ -425,7 +425,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( 'tutor_assignments', $args );
+		register_post_type( tutor()->assignment_post_type, $args );
 	}
 
 	/**
@@ -491,14 +491,12 @@ class Post_types {
 	 * Gutenberg can edit post filter handler
 	 *
 	 * @since 1.0.0
+	 * @since 1.3.4 Enable / Disable Gutenberg Editor.
 	 *
 	 * @param bool   $can_edit use block editor.
 	 * @param string $post_type post type.
 	 *
 	 * @return bool
-	 *
-	 * Enable / Disable Gutenberg Editor
-	 * @since v.1.3.4
 	 */
 	public function gutenberg_can_edit_post_type( $can_edit, $post_type ) {
 		$enable_gutenberg = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
@@ -522,14 +520,15 @@ class Post_types {
 			'hierarchical'       => false,
 			'menu_position'      => null,
 		);
-		register_post_type( 'tutor_enrolled', $args );
+		register_post_type( tutor()->enrollment_post_type, $args );
 	}
 
 	/**
 	 * Remove course post menu
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
-	 * @since v2.0.0
 	 */
 	public function remove_course_post_menu() {
 		remove_menu_page( 'edit.php?post_type=' . tutor()->course_post_type );
