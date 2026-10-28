@@ -300,7 +300,7 @@ if ( 0 === $total_courses_count ) {
 									$authors[ $post->post_author ] = tutils()->get_tutor_user( $post->post_author );
 								}
 
-								$author_details = (object) $authors[ $post->post_author ];
+								$author_details = ! empty( $authors[ $post->post_author ] ) ? (object) $authors[ $post->post_author ] : null;
 								$edit_link      = apply_filters( 'tutor_course_list_course_edit_link', $add_course_url . "&course_id=$post->ID", $post );
 								?>
 								<tr>
