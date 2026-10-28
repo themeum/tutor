@@ -705,12 +705,16 @@ class Assets {
 	 * @return string
 	 */
 	public function tutor_generator_tag( $gen, $type ) {
+		if ( apply_filters( 'tutor_hide_generator_tag', true ) ) {
+			return $gen;
+		}
+
 		switch ( $type ) {
 			case 'html':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS">';
 				break;
 			case 'xhtml':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '" />';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS" />';
 				break;
 		}
 		return $gen;
@@ -816,7 +820,10 @@ class Assets {
 					$to_add[] = 'tutor-screen-backend-settings ';
 				}
 				if ( ! empty( $page ) ) {
-					$to_add[] = 'tutor-backend-' . $page;
+					$sanitized_page = sanitize_html_class( $page );
+					if ( ! empty( $sanitized_page ) ) {
+						$to_add[] = 'tutor-backend-' . $sanitized_page;
+					}
 				}
 			}
 		}
