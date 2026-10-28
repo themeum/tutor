@@ -138,7 +138,6 @@ class DB {
 
     // Row Locking
     public function lock_for_update(): self;
-    public function unlock(): self;
     public function is_locked(): bool;
 
     // Transaction Management
