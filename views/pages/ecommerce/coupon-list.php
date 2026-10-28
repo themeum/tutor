@@ -26,7 +26,7 @@ $active_tab = Input::get( 'data', 'all' );
 /**
  * Pagination data
  */
-$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
+$paged_filter = max( 1, Input::get( 'paged', 1, Input::TYPE_INT ) );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
@@ -42,6 +42,7 @@ $page_slug       = $coupon_controller::PAGE_SLUG;
 $coupon_page_url = $coupon_controller::get_coupon_page_url();
 
 $navbar_data = array(
+	// @phpstan-ignore property.notFound
 	'page_title'   => $coupon_controller->page_title,
 	'tabs'         => $coupon_controller->tabs_key_value(),
 	'active'       => $active_tab,
