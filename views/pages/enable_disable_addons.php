@@ -8,6 +8,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-admin-wrap">
 	<div id="tutor-addon-list-wrapper"></div>

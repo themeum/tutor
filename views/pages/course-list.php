@@ -46,7 +46,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
  */
 $add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
-	'page_title'   => $courses->page_title,
+	'page_title'   => esc_html__( 'Courses', 'tutor' ),
 	'add_button'   => true,
 	'button_title' => __( 'New Course', 'tutor' ),
 	'button_url'   => '#',
@@ -151,7 +151,7 @@ if ( '' !== $course_id ) {
 	$args['p'] = $course_id;
 }
 // Add author param.
-if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
+if ( 'mine' === $active_tab || ! current_user_can( 'manage_options' ) ) {
 	$args['author'] = $current_user_id;
 }
 // Search filter.
@@ -183,7 +183,7 @@ $available_status = array(
 	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
 );
 
-if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'manage_options' ) ) {
 	unset( $available_status['trash'] );
 }
 
@@ -193,7 +193,7 @@ $future_list = array(
 );
 
 $show_course_delete = false;
-if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
+if ( 'trash' === $active_tab && current_user_can( 'manage_options' ) ) {
 	$show_course_delete = true;
 }
 
@@ -205,7 +205,7 @@ if ( 0 === $total_courses_count ) {
 	$list_args           = array(
 		'post_type'              => tutor()->course_post_type,
 		'post_status'            => array( 'publish', 'pending', 'draft', 'private', 'future', 'trash' ),
-		'author'                 => current_user_can( 'administrator' ) ? null : $current_user_id,
+		'author'                 => current_user_can( 'manage_options' ) ? null : $current_user_id,
 		'ignore_sticky_posts'    => true,
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false,
@@ -300,7 +300,7 @@ if ( 0 === $total_courses_count ) {
 									$authors[ $post->post_author ] = tutils()->get_tutor_user( $post->post_author );
 								}
 
-								$author_details = $authors[ $post->post_author ];
+								$author_details = (object) $authors[ $post->post_author ];
 								$edit_link      = apply_filters( 'tutor_course_list_course_edit_link', $add_course_url . "&course_id=$post->ID", $post );
 								?>
 								<tr>
@@ -315,7 +315,7 @@ if ( 0 === $total_courses_count ) {
 											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-3x2">
-														<img class="tutor-radius-3 <?php echo esc_attr( 'course-bundle' === $post->post_type ? 'tutor-bundle-list-thumb' : '' ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+														<img class="tutor-radius-3 <?php echo esc_attr( 'course-bundle' === $post->post_type ? 'tutor-bundle-list-thumb' : '' ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $post->post_title ); ?>" loading="lazy">
 													</div>
 												</div>
 											</a>

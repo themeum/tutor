@@ -8,6 +8,8 @@
  * @since 2.2.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="wrap">

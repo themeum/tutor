@@ -8,6 +8,10 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+$addons_themes_data = $addons_themes_data ?? array();
+
 $current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data( $_GET ) ); //phpcs:ignore
 $page_name    = $current_page ? $current_page : 'addons';
 ?>
@@ -72,7 +76,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 									<div class="name column-name">
 										<h3>
 											<?php
-											echo '<a href="' . esc_url( $addon->product_url ) . '" target="_blank">' . esc_attr( $addon->product_name ) . '</a>';
+											echo '<a href="' . esc_url( $addon->product_url ) . '" target="_blank">' . esc_html( $addon->product_name ) . '</a>';
 											if ( $addon->thumbnail ) {
 												echo '<img src="' . esc_url( $addon->thumbnail ) . '" class="plugin-icon" alt="">';
 											}
@@ -98,7 +102,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 										</ul>
 									</div>
 									<div class="desc column-description">
-										<?php echo $addon->short_description ? '<p>' . esc_attr( $addon->short_description ) . '</p>' : ''; ?>
+										<?php echo $addon->short_description ? '<p>' . wp_kses_post( $addon->short_description ) . '</p>' : ''; ?>
 
 										<p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
 									</div>
