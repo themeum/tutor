@@ -275,7 +275,9 @@ class Ajax {
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.2 added params user_id.
+	 *
 	 * @param int $user_id the user id.
+	 *
 	 * @return void|bool
 	 */
 	public function delete_tutor_review( $user_id = 0 ) {
@@ -283,7 +285,12 @@ class Ajax {
 			tutor_utils()->checking_nonce();
 		}
 
-		$review_id = Input::post( 'review_id' );
+		$review_id = Input::post( 'review_id', 0, Input::TYPE_INT );
+
+		$review = get_comment( $review_id );
+		if ( ! $review || 'tutor_course_rating' !== $review->comment_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid review.', 'tutor' ) ) );
+		}
 
 		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, tutils()->get_user_id( $user_id ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permissioned Denied!', 'tutor' ) ) );
