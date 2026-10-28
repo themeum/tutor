@@ -285,6 +285,7 @@ class HooksHandler {
 	 * Clear cart items, managing enrollment & earnings
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.1 removed earnings and enrollment manage functionalities.
 	 *
 	 * @param int $order_id Order id.
 	 *
