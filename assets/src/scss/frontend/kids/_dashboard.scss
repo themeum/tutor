@@ -115,8 +115,8 @@
     box-shadow:
       0 2px 0 2px $tutor-border-idle,
       0 5px 0 0 $tutor-border-idle;
-    border-bottom-left-radius: $tutor-radius-5xl;
-    border-bottom-right-radius: $tutor-radius-5xl;
+    border-end-start-radius: $tutor-radius-5xl;
+    border-end-end-radius: $tutor-radius-5xl;
   }
 
   .tutor-student-dashboard-courses {
@@ -272,11 +272,11 @@
 
       .tutor-calendar-day {
         &:first-of-type {
-          border-top-left-radius: $tutor-radius-5xl;
+          border-start-start-radius: $tutor-radius-5xl;
         }
 
         &:nth-last-of-type(7) {
-          border-bottom-left-radius: $tutor-radius-5xl;
+          border-end-start-radius: $tutor-radius-5xl;
         }
       }
     }

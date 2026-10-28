@@ -374,13 +374,13 @@
 
     .tutor-btn {
       &:not(:first-child) {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
       }
 
       &:not(:last-child) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
       }
     }
   } @else {
@@ -388,13 +388,13 @@
 
     .tutor-btn {
       &:not(:first-child) {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        border-start-start-radius: 0;
+        border-start-end-radius: 0;
       }
 
       &:not(:last-child) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
       }
     }
   }
@@ -437,6 +437,7 @@
   &::before {
     content: '';
     position: absolute;
+    /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the spinner centered in RTL */
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);

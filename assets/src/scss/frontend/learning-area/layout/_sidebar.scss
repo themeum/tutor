@@ -283,8 +283,8 @@
     .tutor-sidebar-resizer {
       position: absolute;
       top: -14px;
-      left: 0;
-      right: 0;
+      inset-inline-start: 0;
+      inset-inline-end: 0;
       height: 12px;
       cursor: ns-resize;
       @include tutor-flex-center();
@@ -320,8 +320,8 @@
         @include tutor-flex(row, center, center);
         background-color: $tutor-surface-l1;
         color: $tutor-icon-secondary;
-        border-top-left-radius: $tutor-radius-sm;
-        border-top-right-radius: $tutor-radius-sm;
+        border-start-start-radius: $tutor-radius-sm;
+        border-start-end-radius: $tutor-radius-sm;
         height: 26px;
         width: 68px;
         position: relative;
@@ -345,7 +345,7 @@
           height: 8px;
           position: absolute;
           bottom: 0;
-          right: -8px;
+          inset-inline-end: -8px;
           background: $tutor-surface-l1;
 
           mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);

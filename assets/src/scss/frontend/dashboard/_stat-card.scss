@@ -324,7 +324,7 @@
     display: none;
     position: absolute;
     top: 50%;
-    left: 100%;
+    inset-inline-start: 100%;
     min-width: 213px;
     background: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
