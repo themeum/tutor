@@ -550,9 +550,11 @@ class Post_types {
 	}
 
 	/**
-	 * 404 archives, search and feeds that target enrollment-protected post types.
-	 * Singular, non-feed requests are left alone so the existing
-	 * single-template enrollment check keeps working.
+	 * Remove enrollment-protected post types from archives, search and feeds.
+	 *
+	 * Mixed queries (e.g. ['courses', 'lesson']) keep working for the public
+	 * types. The request is only 404'd when no public post type remains.
+	 * Normal singular requests are left to the single-template enrollment check.
 	 *
 	 * @since 4.2.1
 	 *
@@ -565,13 +567,25 @@ class Post_types {
 			return;
 		}
 
-		$post_types = (array) $query->get( 'post_type' );
-		if ( empty( array_intersect( $post_types, $this->get_protected_post_types() ) ) ) {
+		$requested = array_filter( (array) $query->get( 'post_type' ) );
+		if ( empty( $requested ) ) {
+			return;
+		}
+
+		$protected = array_intersect( $requested, $this->get_protected_post_types() );
+		if ( empty( $protected ) ) {
 			return;
 		}
 
 		// Normal single lesson/quiz/assignment page: handled by the template flow.
 		if ( $query->is_singular() && ! $query->is_feed() && ! $query->is_comment_feed() ) {
+			return;
+		}
+
+		$remaining = array_values( array_diff( $requested, $protected ) );
+
+		if ( ! empty( $remaining ) ) {
+			$query->set( 'post_type', $remaining );
 			return;
 		}
 
