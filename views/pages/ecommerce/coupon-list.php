@@ -12,10 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Tutor\Ecommerce\CouponController;
-use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Settings;
 use Tutor\Core\Input;
+use Tutor\Ecommerce\CouponController;
 use Tutor\Models\CouponModel;
 
 /**
@@ -109,7 +107,6 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-mt-24 tutor-dashboard-list-table">
