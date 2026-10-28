@@ -1,6 +1,6 @@
 <?php
 /**
- * Course List Template.
+ * Coupon List Template.
  *
  * @package Tutor\Views
  * @author Themeum <support@themeum.com>
@@ -8,14 +8,10 @@
  * @since 2.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-use Tutor\Ecommerce\CouponController;
-use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Settings;
 use Tutor\Core\Input;
+use Tutor\Ecommerce\CouponController;
 use Tutor\Models\CouponModel;
 
 /**
@@ -26,22 +22,24 @@ $active_tab = Input::get( 'data', 'all' );
 /**
  * Pagination data
  */
-$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
+$paged_filter = max( 1, Input::get( 'paged', 1, Input::TYPE_INT ) );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
+$limit        = $limit > 0 ? $limit : 10;
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $coupon_controller = new CouponController( false );
 
 $get_coupons = $coupon_controller->get_coupons( $limit, $offset );
-$coupons     = $get_coupons['results'];
-$total_items = $get_coupons['total_count'];
+$coupons     = is_array( $get_coupons ) && isset( $get_coupons['results'] ) ? $get_coupons['results'] : array();
+$total_items = is_array( $get_coupons ) && isset( $get_coupons['total_count'] ) ? (int) $get_coupons['total_count'] : 0;
+
 /**
  * Navbar data to make nav menu
  */
-$page_slug       = $coupon_controller::PAGE_SLUG;
 $coupon_page_url = $coupon_controller::get_coupon_page_url();
 
 $navbar_data = array(
+	// @phpstan-ignore property.notFound
 	'page_title'   => $coupon_controller->page_title,
 	'tabs'         => $coupon_controller->tabs_key_value(),
 	'active'       => $active_tab,
@@ -108,7 +106,6 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-mt-24 tutor-dashboard-list-table">
@@ -154,25 +151,31 @@ $filters = array(
 								<tr>
 									<td>
 										<div class="td-checkbox tutor-d-flex ">
-											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $coupon->id ); ?>" />
+											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( (string) $coupon->id ); ?>" />
 										</div>
 									</td>
 
 									<td>
-										<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-table-link tutor-fs-7">
+										<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . (int) $coupon->id ); ?>" class="tutor-table-link tutor-fs-7">
 											<?php echo esc_html( $coupon->coupon_title ); ?>
 										</a>
 									</td>
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( CouponModel::get_coupon_applies_to_label( $coupon->applies_to ) ); ?>
+											<?php echo esc_html( CouponModel::get_coupon_applies_to_label( $coupon->applies_to ?? '' ) ); ?>
 										</div>
 									</td>
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo wp_kses_post( ( 'flat' === $coupon->discount_type ? tutor_utils()->tutor_price( $coupon->discount_amount ) : $coupon->discount_amount . '%' ) ); ?>
+											<?php
+											if ( 'flat' === $coupon->discount_type ) {
+												echo wp_kses_post( tutor_utils()->tutor_price( $coupon->discount_amount ) );
+											} else {
+												echo esc_html( $coupon->discount_amount . '%' );
+											}
+											?>
 										</div>
 									</td>
 									<td>
@@ -183,7 +186,7 @@ $filters = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( 'automatic' === $coupon->coupon_type ? __( 'Automatic', 'tutor' ) : $coupon->coupon_code ); ?>
+											<?php echo esc_html( 'automatic' === $coupon->coupon_type ? __( 'Automatic', 'tutor' ) : ( $coupon->coupon_code ?? '' ) ); ?>
 										</div>
 									</td>
 
@@ -195,11 +198,11 @@ $filters = array(
 									</td>
 
 									<td>
-										<?php echo esc_html( $coupon->usage_count ); ?>
+										<?php echo esc_html( (string) $coupon->usage_count ); ?>
 									</td>
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
-											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . (int) $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
 											<?php if ( 'trash' === $active_tab ) : ?>
@@ -207,9 +210,9 @@ $filters = array(
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 													<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 												</button>
-												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+												<div id="table-dashboard-coupon-list-<?php echo esc_attr( (string) $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-delete-permanently"
-														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( $coupon->id ); ?>">
+														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( (string) $coupon->id ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></i>
 														<span>
 															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
@@ -254,6 +257,6 @@ $filters = array(
 tutor_load_template_from_custom_path(
 	tutor()->path . 'views/elements/common-confirm-popup.php',
 	array(
-		'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' ),
+		'message' => __( 'Are you sure you want to delete this coupon permanently? Please confirm your choice.', 'tutor' ),
 	)
 );

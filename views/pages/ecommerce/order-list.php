@@ -8,34 +8,34 @@
  * @since 2.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
+use TUTOR\User;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
-use Tutor\Core\Input;
 use Tutor\Models\OrderModel;
-use TUTOR\User;
 
 /**
  * Determine active tab
  */
 $active_tab = Input::get( 'data', 'all' );
 
-$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
+$paged_filter = max( 1, Input::get( 'paged', 1, Input::TYPE_INT ) );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
+$limit        = $limit > 0 ? $limit : 10;
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $order_controller = new OrderController( false );
 
 $get_orders  = $order_controller->get_orders( $limit, $offset );
-$orders      = $get_orders['results'];
-$total_items = $get_orders['total_count'];
+$orders      = is_array( $get_orders ) && isset( $get_orders['results'] ) ? $get_orders['results'] : array();
+$total_items = is_array( $get_orders ) && isset( $get_orders['total_count'] ) ? (int) $get_orders['total_count'] : 0;
 
 $add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
+	// @phpstan-ignore property.notFound
 	'page_title'   => $order_controller->page_title,
 	'tabs'         => $order_controller->tabs_key_value(),
 	'active'       => $active_tab,
@@ -43,7 +43,6 @@ $navbar_data    = array(
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_course_url,
 );
-
 
 $payment_status_options = array(
 	array(
@@ -147,8 +146,8 @@ $filters = array(
 								<?php esc_html_e( 'Total', 'tutor' ); ?>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
-							<th  width="10%">
-							<?php esc_html_e( 'Action', 'tutor' ); ?>
+							<th width="10%">
+								<?php esc_html_e( 'Action', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>
@@ -162,12 +161,12 @@ $filters = array(
 								<tr>
 									<td>
 										<div class="td-checkbox tutor-d-flex ">
-											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $order->id ); ?>" />
+											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( (string) $order->id ); ?>" />
 										</div>
 									</td>
 
 									<td>
-										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-table-link tutor-fs-7">
+										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . (int) $order->id ); ?>" class="tutor-table-link tutor-fs-7">
 											<?php echo esc_html( '#' . $order->id ); ?>
 										</a>
 									</td>
@@ -175,23 +174,31 @@ $filters = array(
 									<td>
 										<div class="tutor-d-flex tutor-align-center">
 											<?php
-											echo wp_kses(
-												tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
-												tutor_utils()->allowed_avatar_tags()
-											);
-											$is_instructor = User::is_instructor( $user_data->ID, false );
-											?>
-											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, $is_instructor ) ); ?>">
-													<?php echo esc_html( $user_data ? $user_data->display_name : '' ); ?>
-												</a>
-											</div>
+											if ( $user_data ) :
+												echo wp_kses(
+													tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
+													tutor_utils()->allowed_avatar_tags()
+												);
+												$is_instructor = User::is_instructor( $user_data->ID, false );
+												?>
+												<div class="tutor-ml-12">
+													<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, $is_instructor ) ); ?>">
+														<?php echo esc_html( $user_data->display_name ); ?>
+													</a>
+												</div>
+											<?php else : ?>
+												<div class="tutor-ml-12">
+													<span class="tutor-fs-7 tutor-color-muted">
+														<?php esc_html_e( 'Deleted User', 'tutor' ); ?>
+													</span>
+												</div>
+											<?php endif; ?>
 										</div>
 									</td>
 
 									<td>
 										<span class="tutor-fw-normal tutor-fs-7">
-											<?php echo esc_attr( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
+											<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 										</span>
 									</td>
 
@@ -211,7 +218,7 @@ $filters = array(
 									</td>
 
 									<td>
-									<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->payment_status, true ) ); ?>
+										<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->payment_status, true ) ); ?>
 									</td>
 
 									<td>
@@ -222,7 +229,7 @@ $filters = array(
 									</td>
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-											<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . (int) $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
 											<?php do_action( 'tutor_after_order_edit_link', $order ); ?>
@@ -262,6 +269,6 @@ $filters = array(
 tutor_load_template_from_custom_path(
 	tutor()->path . 'views/elements/common-confirm-popup.php',
 	array(
-		'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' ),
+		'message' => __( 'Are you sure you want to delete this order permanently? Please confirm your choice.', 'tutor' ),
 	)
 );
