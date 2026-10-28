@@ -24,7 +24,7 @@ $selected = $selected ?? 'revenue';
 		placement: 'bottom-end',
 		offset: 4,
 	})"
-	x-transition.origin.top.right
+	x-transition
 >
 	<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-4">
 		<div>
@@ -39,7 +39,7 @@ $selected = $selected ?? 'revenue';
 		x-cloak
 		@click.outside="handleClickOutside()"
 		class="tutor-popover"
-		x-transition.origin.top.right
+		x-transition
 	>
 		<div class="tutor-popover-menu" style="min-width: 108px;">
 			<?php foreach ( $options as $key => $option ) : ?>

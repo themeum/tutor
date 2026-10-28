@@ -621,7 +621,7 @@ class Popover extends BaseComponent {
 					x-ref="content"
 					x-show="open"
 					x-cloak
-					x-transition.%s
+					x-transition
 					class="%s"
 					%s
 				>	
@@ -633,7 +633,6 @@ class Popover extends BaseComponent {
 			</div>',
 			$placement_position,
 			$button,
-			$origin,
 			$class,
 			$closeable_attr,
 			$header,

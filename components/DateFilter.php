@@ -386,7 +386,7 @@ class DateFilter extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
-				x-transition.origin.<?php echo esc_attr( $origin ); ?>
+				x-transition
 				@click.outside="handleClickOutside()"
 				class="<?php echo esc_attr( $popover_classes ); ?>"
 			>

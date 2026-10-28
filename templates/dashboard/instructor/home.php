@@ -156,7 +156,7 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 				x-ref="content"
 				x-show="open"
 				x-cloak
-				x-transition.origin.top.right
+				x-transition
 				@click.outside="handleClickOutside()"
 				class="tutor-popover tutor-popover-bottom"
 			>

@@ -248,7 +248,7 @@ class Sorting extends BaseComponent {
 				x-ref="content"
 				x-show="open"
 				x-cloak
-				x-transition.<?php echo esc_attr( $origin ); ?>
+				x-transition
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
 			>

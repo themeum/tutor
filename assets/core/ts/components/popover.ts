@@ -108,46 +108,18 @@ export const popover = (props: PopoverProps = {}) => ({
   show(): void {
     const content = this.$refs.content;
     if (content) {
-      content.style.visibility = 'hidden';
-      // Initialize with off-screen position to avoid flashes if visibility fails
-      content.style.left = '-9999px';
-      content.style.top = '-9999px';
+      this.updatePosition();
     }
 
     this.open = true;
 
-    const afterShow = () => {
-      if (!this.open) return;
-
-      const dimensions = this.getContentDimensions(content);
-      // If measurement failed (0 size), Safari might not have rendered it yet. Retry.
-      if (dimensions.width === 0 && dimensions.height === 0) {
-        requestAnimationFrame(afterShow);
-        return;
-      }
-
-      this.updatePosition();
-      if (content) {
-        content.style.visibility = 'visible';
-      }
-      if (props.onShow) {
-        props.onShow();
-      }
-    };
-
-    if (this.$nextTick) {
-      this.$nextTick(afterShow);
-    } else {
-      requestAnimationFrame(afterShow);
+    if (props.onShow) {
+      props.onShow();
     }
   },
 
   hide(): void {
     this.open = false;
-    const content = this.$refs.content;
-    if (content) {
-      content.style.visibility = 'hidden';
-    }
     if (props.onHide) {
       props.onHide();
     }
@@ -426,8 +398,13 @@ export const popover = (props: PopoverProps = {}) => ({
     content.classList.remove(...placementClasses);
 
     // Add current placement class
-    const basePlacement = placement.split('-')[0];
-    content.classList.add(`tutor-popover-${basePlacement}`);
+    const [side, align] = placement.split('-');
+    content.classList.add(`tutor-popover-${side}`);
+
+    // Set RTL and flip aware transform origin
+    const originY = side === 'top' ? 'bottom' : side === 'bottom' ? 'top' : align || 'center';
+    const originX = side === 'left' ? 'right' : side === 'right' ? 'left' : align || 'center';
+    content.style.transformOrigin = `${originX} ${originY}`;
   },
 });
 
