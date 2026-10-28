@@ -17,7 +17,7 @@
   }
 
   .tutor-dashboard-page {
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
 
     padding-inline: $tutor-spacing-6;
     padding-bottom: $tutor-spacing-7;

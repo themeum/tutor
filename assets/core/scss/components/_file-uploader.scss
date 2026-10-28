@@ -12,7 +12,7 @@
   cursor: pointer;
   position: relative;
 
-  @include tutor-transition();
+  @include tutor-transition;
 
   &.tutor-file-uploader-drag-over {
     background-color: $tutor-surface-brand-secondary;

@@ -159,7 +159,7 @@
         }
 
         .tutor-quiz-attempts-expand-btn {
-          @include tutor-button-reset();
+          @include tutor-button-reset;
           @include tutor-flex(row, center);
 
           gap: $tutor-spacing-2;

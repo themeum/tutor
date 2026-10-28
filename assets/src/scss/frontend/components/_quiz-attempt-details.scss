@@ -35,7 +35,7 @@
     border-bottom: 1px solid $tutor-border-idle;
 
     &-inner {
-      @include tutor-frontend-layout();
+      @include tutor-frontend-layout;
       @include tutor-flex(row, center, space-between);
 
       min-height: var(--tutor-quiz-summary-header-height);
@@ -206,7 +206,7 @@
   }
 
   .tutor-quiz-questions {
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
     @include tutor-flex(column);
 
     padding-inline: 0;
@@ -378,9 +378,7 @@
       padding: $tutor-spacing-6;
       border-radius: $tutor-radius-lg;
 
-      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
-          [data-option='draggable']
-        ) {
+      &:hover:not(:has(:checked), [data-option='correct'], [data-option='incorrect'], [data-option='draggable']) {
         background-color: $tutor-surface-base;
       }
 

@@ -78,7 +78,7 @@
   }
 
   &-vision-preview {
-    @include tutor-flex-center();
+    @include tutor-flex-center;
 
     background-color: $tutor-surface-l1-hover;
     border-radius: $tutor-radius-md;

@@ -55,8 +55,8 @@
   }
 
   &-back {
-    @include tutor-button-reset();
-    @include tutor-flex-center();
+    @include tutor-button-reset;
+    @include tutor-flex-center;
 
     flex-shrink: 0;
     height: 48px;
@@ -74,7 +74,7 @@
 
   &-title {
     @include tutor-typography(h5, semibold, primary, heading);
-    @include tutor-text-truncate();
+    @include tutor-text-truncate;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography(medium, semibold);

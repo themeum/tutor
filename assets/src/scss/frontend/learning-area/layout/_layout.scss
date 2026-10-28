@@ -114,7 +114,7 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
   }
 
   .tutor-learning-area-container {
-    @include tutor-frontend-layout();
+    @include tutor-frontend-layout;
 
     padding-bottom: $tutor-spacing-6;
 

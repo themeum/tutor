@@ -19,7 +19,7 @@
   }
 
   &-field {
-    @include tutor-flex();
+    @include tutor-flex;
 
     gap: $tutor-spacing-3;
   }

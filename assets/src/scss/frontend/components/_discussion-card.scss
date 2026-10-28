@@ -137,7 +137,7 @@
     }
 
     .tutor-discussion-card-meta-reply-button {
-      @include tutor-button-reset();
+      @include tutor-button-reset;
       @include tutor-typography(tiny, medium, subdued);
 
       margin-inline-end: auto;

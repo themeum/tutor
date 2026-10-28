@@ -28,8 +28,8 @@
 
   @include tutor-transition((color, background-color));
 
-  &:hover:not(:disabled):not(.disabled),
-  &:focus:not(:disabled):not(.disabled) {
+  &:hover:not(:disabled, .disabled),
+  &:focus:not(:disabled, .disabled) {
     background-color: transparent;
     border: none;
     outline: none;
@@ -38,7 +38,7 @@
     --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow};
   }
 
-  &:focus-visible:not(:disabled):not(.disabled) {
+  &:focus-visible:not(:disabled, .disabled) {
     @include tutor-focus-ring;
   }
 
@@ -70,14 +70,14 @@
       color: $tutor-icon-idle-inverse;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-primary-hover;
       color: $tutor-text-primary-inverse;
 
       --tutor-button-border-shadow: #{$tutor-button-primary-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-primary-focused;
       color: $tutor-text-primary-inverse;
 
@@ -105,14 +105,14 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-primary-soft-hover;
       color: $tutor-text-brand;
 
       --tutor-button-border-shadow: #{$tutor-button-primary-soft-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-primary-soft-focused;
       color: $tutor-text-brand;
 
@@ -135,14 +135,14 @@
       color: $tutor-icon-idle-inverse;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-destructive-hover;
       color: $tutor-text-primary-inverse;
 
       --tutor-button-border-shadow: #{$tutor-button-destructive-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-destructive-focused;
       color: $tutor-text-primary-inverse;
 
@@ -165,14 +165,14 @@
       color: $tutor-icon-critical;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-destructive-soft-hover;
       color: $tutor-text-critical;
 
       --tutor-button-border-shadow: #{$tutor-button-destructive-soft-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-destructive-soft-focused;
       color: $tutor-text-critical;
 
@@ -193,12 +193,12 @@
       color: $tutor-icon-idle-inverse;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-success-hover;
       color: $tutor-text-primary-inverse;
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-success-focused;
       color: $tutor-text-primary-inverse;
     }
@@ -212,14 +212,14 @@
       color: $tutor-icon-idle;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-secondary-hover;
       color: $tutor-text-primary;
 
       --tutor-button-border-shadow: #{$tutor-button-secondary-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-secondary-focused;
       color: $tutor-text-primary;
 
@@ -242,14 +242,14 @@
       color: $tutor-icon-idle;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-outline-hover;
       color: $tutor-text-primary;
 
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-hover};
     }
 
-    &:focus:not(:disabled):not(.disabled) {
+    &:focus:not(:disabled, .disabled) {
       background-color: $tutor-button-outline-focused-inverse;
       color: $tutor-text-primary;
 
@@ -272,7 +272,7 @@
       color: $tutor-icon-idle;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-ghost-hover;
       color: $tutor-text-primary;
 
@@ -295,7 +295,7 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       background-color: $tutor-button-primary-soft;
       color: $tutor-text-brand;
 
@@ -316,7 +316,7 @@
       color: $tutor-icon-brand;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       color: $tutor-text-brand-hover;
       box-shadow: none !important;
 
@@ -332,7 +332,7 @@
       color: $tutor-icon-subdued;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       color: $tutor-text-secondary;
 
       svg:not([class]) {
@@ -347,7 +347,7 @@
       color: $tutor-icon-critical;
     }
 
-    &:hover:not(:disabled):not(.disabled) {
+    &:hover:not(:disabled, .disabled) {
       color: $tutor-text-critical-hover;
 
       svg:not([class]) {

@@ -64,8 +64,8 @@ button.tutor-tabs-tab,
     height: $tutor-tab-height-sm;
   }
 
-  &:hover:not(:disabled):not(.tutor-tabs-tab-active),
-  &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
+  &:hover:not(:disabled, .tutor-tabs-tab-active),
+  &:focus:not(:disabled, .tutor-tabs-tab-active) {
     color: $tutor-text-primary;
     background-color: $tutor-tab-l3-active-hover;
     outline: none;
@@ -85,7 +85,7 @@ button.tutor-tabs-tab,
   }
 
   &:focus-visible {
-    @include tutor-focus-ring();
+    @include tutor-focus-ring;
   }
 }
 
