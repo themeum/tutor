@@ -11,11 +11,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Register Tutor's post types
  *
@@ -76,6 +75,19 @@ class Post_types {
 		 * @since v2.0.0
 		 */
 		add_action( 'admin_menu', array( $this, 'remove_course_post_menu' ) );
+
+		/**
+		 * Block public listing of protected types lesson, assignment and quiz.
+		 * Block scope: RSS, Comment feed and public query. outside single page.
+		 *
+		 * @since 4.2.1
+		 */
+		add_action( 'pre_get_posts', array( $this, 'block_public_listing_of_protected_types' ) );
+		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ) );
+		add_filter( 'the_content', array( $this, 'strip_protected_content_outside_single' ), 1 );
+		add_filter( 'the_excerpt', array( $this, 'strip_protected_content_outside_single' ), 1 );
+		add_filter( 'the_content_feed', array( $this, 'strip_protected_content_outside_single' ), 1 );
+		add_filter( 'the_excerpt_rss', array( $this, 'strip_protected_content_outside_single' ), 1 );
 	}
 
 	/**
@@ -249,7 +261,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $lesson_base_slug ),
 			'menu_icon'           => 'dashicons-list-view',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor', 'comments' ),
@@ -316,7 +328,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'           => 'dashicons-editor-help',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor' ),
@@ -395,7 +407,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'           => 'dashicons-editor-help',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor' ),
@@ -521,5 +533,104 @@ class Post_types {
 	 */
 	public function remove_course_post_menu() {
 		remove_menu_page( 'edit.php?post_type=' . tutor()->course_post_type );
+	}
+
+	/**
+	 * Post types whose content depends on course enrollment.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return string[]
+	 */
+	private function get_protected_post_types() {
+		return array(
+			tutor()->lesson_post_type,
+			tutor()->quiz_post_type,
+			tutor()->assignment_post_type,
+		);
+	}
+
+	/**
+	 * 404 archives, search and feeds that target enrollment-protected post types.
+	 * Singular, non-feed requests are left alone so the existing
+	 * single-template enrollment check keeps working.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param \WP_Query $query Query object.
+	 *
+	 * @return void
+	 */
+	public function block_public_listing_of_protected_types( $query ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+
+		$post_types = (array) $query->get( 'post_type' );
+		if ( empty( array_intersect( $post_types, $this->get_protected_post_types() ) ) ) {
+			return;
+		}
+
+		// Normal single lesson/quiz/assignment page: handled by the template flow.
+		if ( $query->is_singular() && ! $query->is_feed() && ! $query->is_comment_feed() ) {
+			return;
+		}
+
+		$query->set_404();
+		$query->set( 'post__in', array( 0 ) );
+		status_header( 404 );
+		nocache_headers();
+	}
+
+	/**
+	 * Keep comments (Q&A) on protected post types out of /comments/feed/.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string $where SQL where clause.
+	 *
+	 * @return string
+	 */
+	public function exclude_protected_types_from_comment_feed( $where ) {
+		global $wpdb;
+
+		$post_types = $this->get_protected_post_types();
+
+		if ( empty( $post_types ) ) {
+			return $where;
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
+
+		$where .= $wpdb->prepare(
+			//phpcs:ignore -- safely passed $placeholders variable.
+			" AND {$wpdb->posts}.post_type NOT IN ({$placeholders})",
+			$post_types
+		);
+
+		return $where;
+	}
+
+	/**
+	 * Defense in depth: never output protected content in feeds, archives
+	 * or search, even if some other code path reaches the_content().
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string $content Content or excerpt.
+	 *
+	 * @return string
+	 */
+	public function strip_protected_content_outside_single( $content ) {
+		$post = get_post();
+		if ( ! $post || ! in_array( $post->post_type, $this->get_protected_post_types(), true ) ) {
+			return $content;
+		}
+
+		if ( is_feed() || is_archive() || is_search() ) {
+			return '';
+		}
+
+		return $content;
 	}
 }
