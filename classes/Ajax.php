@@ -590,12 +590,15 @@ class Ajax {
 	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
+		$user_id         = get_current_user_id();
 		$announcement_id = Input::post( 'announcement_id', 0, Input::TYPE_INT );
-		if ( ! $announcement_id ) {
+		$course_id       = wp_get_post_parent_id( $announcement_id );
+
+		if ( ! $announcement_id || ! $course_id ) {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message( 'invalid_req' ) ) );
 		}
 
-		if ( tutor()->announcement_post_type !== get_post_type( $announcement_id ) || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
+		if ( ! tutor_utils()->can_user_edit_course( $user_id, $course_id ) || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
