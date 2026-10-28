@@ -84,7 +84,7 @@ class Post_types {
 		 * @since 4.2.1
 		 */
 		add_action( 'pre_get_posts', array( $this, 'block_public_listing_of_protected_types' ) );
-		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ) );
+		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ), 10, 2 );
 		add_filter( 'the_content', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'the_excerpt', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'the_content_feed', array( $this, 'strip_protected_content_outside_single' ), 1 );
@@ -586,12 +586,17 @@ class Post_types {
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param string $where SQL where clause.
+	 * @param string    $where SQL where clause.
+	 * @param \WP_Query $query Query object.
 	 *
 	 * @return string
 	 */
-	public function exclude_protected_types_from_comment_feed( $where ) {
+	public function exclude_protected_types_from_comment_feed( $where, $query ) {
 		global $wpdb;
+
+		if ( $query instanceof \WP_Query && $query->is_singular ) {
+			return $where;
+		}
 
 		$post_types = $this->get_protected_post_types();
 
