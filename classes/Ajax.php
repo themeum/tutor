@@ -632,6 +632,10 @@ class Ajax {
 			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
+		if ( ! preg_match( '/^[a-zA-Z0-9_-]{11}$/', $video_id ) ) {
+			$this->json_response( __( 'Invalid YouTube Video ID', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
 		tutor_utils()->check_current_user_capability( 'edit_tutor_courses' );
 
 		$api_key = tutor_utils()->get_option( 'lesson_video_duration_youtube_api_key', '' );
