@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Traits\JsonResponse;
 

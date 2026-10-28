@@ -19,6 +19,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Modal;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
