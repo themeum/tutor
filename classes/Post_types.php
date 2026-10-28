@@ -89,6 +89,7 @@ class Post_types {
 		add_filter( 'the_excerpt', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'the_content_feed', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'the_excerpt_rss', array( $this, 'strip_protected_content_outside_single' ), 1 );
+		add_filter( 'get_the_excerpt', array( $this, 'strip_protected_excerpt' ), 1, 2 );
 	}
 
 	/**
@@ -630,8 +631,35 @@ class Post_types {
 	}
 
 	/**
-	 * Defense in depth: never output protected content in feeds, archives
-	 * or search, even if some other code path reaches the_content().
+	 * Whether protected content of the given post may be view right now.
+	 *
+	 * True only when the post is the singular post being viewed (the
+	 * enrollment check for that view lives in the single template flow),
+	 * or when the current user can edit it (instructors, admins).
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return bool
+	 */
+	private function can_view_protected_content( $post ) {
+		if ( is_admin() ) {
+			// Course builder, admin screens and admin-ajax.
+			return true;
+		}
+
+		if ( current_user_can( 'edit_post', $post->ID ) ) {
+			return true;
+		}
+
+		return is_singular( $post->post_type )
+		&& ! is_feed()
+		&& get_queried_object_id() === (int) $post->ID;
+	}
+
+	/**
+	 * Never output protected post content or excerpts outside the single view.
 	 *
 	 * @since 4.2.1
 	 *
@@ -645,10 +673,23 @@ class Post_types {
 			return $content;
 		}
 
-		if ( is_feed() || is_archive() || is_search() ) {
-			return '';
+		return $this->can_view_protected_content( $post ) ? $content : '';
+	}
+
+	/**
+	 * Same rule for get_the_excerpt(), which block themes and Query Loop
+	 * call directly without running the the_excerpt filter.
+	 *
+	 * @param string        $excerpt Excerpt.
+	 * @param \WP_Post|null $post    Post object.
+	 * @return string
+	 */
+	public function strip_protected_excerpt( $excerpt, $post = null ) {
+		$post = get_post( $post );
+		if ( ! $post || ! in_array( $post->post_type, $this->get_protected_post_types(), true ) ) {
+			return $excerpt;
 		}
 
-		return $content;
+		return $this->can_view_protected_content( $post ) ? $excerpt : '';
 	}
 }
