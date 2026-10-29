@@ -19,6 +19,9 @@ The `DB` class provides a fluent, chainable query builder interface for WordPres
 - **Automatic Table Prefixing:** Auto-detects and prepends `$wpdb->prefix` when omitted.
 - **Self-Contained & Independent:** Zero external dependencies beyond WordPress `$wpdb`.
 - **Full Query Lifecycle:** Supports `SELECT`, `INSERT`, `UPDATE`, `DELETE`, aggregates, joins, and built-in pagination.
+- **Transaction Management:** Manual and automatic scoped transactions with full support for nested transactions via savepoints.
+- **Row-Level Locking:** Pessimistic locking support (`FOR UPDATE`) to prevent race conditions during concurrent modifications.
+- **Schema Validation:** Built-in table and column existence checks (`has_table`, `has_column`, `has_columns`) with strict identifier validation.
 
 ---
 
@@ -35,8 +38,11 @@ The `DB` class provides a fluent, chainable query builder interface for WordPres
 9. [Retrieving Data](#retrieving-data)
 10. [Pagination](#pagination)
 11. [Data Mutations (CRUD)](#data-mutations-crud)
-12. [Debugging & Raw Queries](#debugging--raw-queries)
-13. [Security Architecture](#security-architecture)
+12. [Row Locking](#row-locking)
+13. [Transactions](#transactions)
+14. [Schema Validation](#schema-validation)
+15. [Debugging & Raw Queries](#debugging--raw-queries)
+16. [Security Architecture](#security-architecture)
 
 ---
 
@@ -130,10 +136,29 @@ class DB {
     public function update( array $data ): bool;
     public function delete(): int;
 
+    // Row Locking
+    public function lock_for_update(): self;
+    public function is_locked(): bool;
+
+    // Transaction Management
+    public static function begin_transaction(): bool;
+    public static function commit(): bool;
+    public static function rollback(): bool;
+    public static function transaction( callable $callback );
+    public static function in_transaction(): bool;
+    public static function transaction_level(): int;
+    public static function reset_transaction_state(): void;
+
+    // Schema Validation
+    public static function has_table( $table ): bool;
+    public static function has_column( string $table, string $column ): bool;
+    public static function has_columns( string $table, array $columns ): bool;
+
     // Debug & Inspection
     public function to_sql(): string;
 
     // Utility & Validation Helpers
+    public static function set_db( ?\wpdb $db = null ): void;
     public static function prepare_value( $value ): string;
     public static function prepare_in_clause( array $values ): string;
     public static function prepare_table_name( string $table ): string;
@@ -467,6 +492,203 @@ $deleted_rows = DB::table('options')
 
 ---
 
+## Row Locking
+
+The query builder supports pessimistic row locking using the MySQL `FOR UPDATE` clause. Row locking prevents concurrent transactions from modifying or locking the selected rows until the current transaction completes (via commit or rollback).
+
+### Applying Locks
+
+Call `lock_for_update()` before executing a terminal retrieval method such as `get()` or `first()`:
+
+```php
+use Tutor\Core\DB;
+
+// Lock order record during checkout processing
+$order = DB::table('tutor_orders')
+    ->where('id', 101)
+    ->lock_for_update()
+    ->first();
+```
+
+The compiled SQL appends `FOR UPDATE`:
+```sql
+SELECT * FROM wp_tutor_orders WHERE id = 101 LIMIT 1 FOR UPDATE
+```
+
+### Removing & Inspecting Locks
+
+- `unlock()`: Removes any previously applied row lock on the query builder instance.
+- `is_locked()`: Checks whether row locking is currently applied.
+
+```php
+$query = DB::table('tutor_earnings')->where('user_id', 5);
+
+$query->lock_for_update();
+$query->is_locked(); // true
+
+$query->is_locked(); // false
+```
+
+> [!NOTE]
+> - Row locking is only active within a database transaction. Executing `lock_for_update()` outside of a transaction has no locking effect once the query finishes.
+> - `count()` queries intentionally omit the `FOR UPDATE` clause to adhere to SQL syntax standards while preserving the builder's lock state for subsequent queries.
+> - For storage engines that do not support row-level locking (such as MyISAM), MySQL silently falls back to standard table or shared locks.
+
+---
+
+## Transactions
+
+The `DB` class provides comprehensive database transaction management with full support for nested transactions using MySQL savepoints.
+
+### 1. Automatic Scoped Transactions (`DB::transaction`)
+
+The recommended way to handle transactions is `DB::transaction(callable $callback)`. It wraps operations in `begin_transaction()` and `commit()`. If an exception or fatal error occurs, it automatically rolls back and re-throws the error:
+
+```php
+use Tutor\Core\DB;
+
+$order_id = DB::transaction(function() {
+    $order_id = DB::table('tutor_orders')->insert([
+        'user_id'      => 42,
+        'order_status' => 'completed',
+        'total_amount' => 99.00,
+    ]);
+
+    DB::table('tutor_enrolments')->insert([
+        'user_id'   => 42,
+        'course_id' => 15,
+        'status'    => 'completed',
+    ]);
+
+    return $order_id;
+});
+```
+
+Key behaviors of `DB::transaction()`:
+- **Return Value:** Returns whatever the callback returns.
+- **Automatic Rollback:** Catches `\Throwable` (both `\Exception` and `\Error`), executes `DB::rollback()`, and re-throws the original error.
+- **Rollback Fault Tolerance:** Secondary exceptions during rollback are suppressed so the primary, root cause exception is never masked.
+
+### 2. Manual Transactions
+
+For fine-grained lifecycle management, use `begin_transaction()`, `commit()`, and `rollback()`:
+
+```php
+use Tutor\Core\DB;
+use Tutor\Exceptions\DatabaseException;
+
+try {
+    DB::begin_transaction();
+
+    $updated = DB::table('users')
+        ->where('ID', 10)
+        ->update(['display_name' => 'Alice']);
+
+    if ( ! $updated ) {
+        throw new \Exception('Failed to update user profile.');
+    }
+
+    DB::commit();
+} catch ( \Throwable $e ) {
+    DB::rollback();
+    // Handle error or log
+    error_log( $e->getMessage() );
+}
+```
+
+#### Manual Transaction API:
+
+- **`DB::begin_transaction(): bool`**
+  - Starts a new transaction (`START TRANSACTION`) when outside a transaction.
+  - When nested within an existing transaction, automatically creates a savepoint (`SAVEPOINT trans_N`).
+  - Throws `DatabaseException` if the query fails.
+
+- **`DB::commit(): bool`**
+  - Commits the outermost transaction (`COMMIT`) when at level 1.
+  - Releases the corresponding savepoint (`RELEASE SAVEPOINT trans_N`) when nested.
+  - The internal transaction level is only decremented **after** a successful query, ensuring a failed commit can still be rolled back.
+  - Returns `false` if no transaction is active.
+  - Throws `DatabaseException` if the query fails.
+
+- **`DB::rollback(): bool`**
+  - Rolls back the entire transaction (`ROLLBACK`) when at level 1.
+  - Rolls back to the last savepoint (`ROLLBACK TO SAVEPOINT trans_N`) when nested.
+  - In a top-level transaction, if `ROLLBACK` fails (e.g., lost connection), the level is still decremented so the PHP state doesn't stay permanently locked.
+  - Returns `false` if no transaction is active.
+  - Throws `DatabaseException` if the query fails.
+
+### 3. Inspection & Testing Helpers
+
+- **`DB::in_transaction(): bool`**
+  Returns `true` if a transaction is currently active (level > 0).
+
+- **`DB::transaction_level(): int`**
+  Returns the current nesting level (`0` when outside, `1` for top-level, `2+` for nested savepoints).
+
+- **`DB::reset_transaction_state(): void`**
+  Resets the PHP-side nesting counter to `0`. Useful for teardown in automated test suites (e.g. PHPUnit) to ensure isolated test runs.
+
+---
+
+## Schema Validation
+
+The `DB` class includes static schema introspection methods to check for table and column existence safely without risking SQL injection or identifier leaks.
+
+### 1. Table Existence (`has_table`)
+
+Checks whether a table exists in the database. Supports both raw WordPress table names and unprefixed convenience names (auto-prefixing with `$wpdb->prefix`):
+
+```php
+use Tutor\Core\DB;
+
+// Checks with automatic prefixing (checks for 'wp_tutor_courses')
+if ( DB::has_table('tutor_courses') ) {
+    // Table exists
+}
+
+// Checks with explicit prefix
+if ( DB::has_table('wp_users') ) {
+    // Table exists
+}
+
+// Returns false for nonexistent or invalid identifiers
+DB::has_table('invalid_table_name'); // false
+DB::has_table('table; DROP TABLE users;'); // false (rejected by identifier validation)
+```
+
+### 2. Single Column Existence (`has_column`)
+
+Checks whether a specific column exists in a database table:
+
+```php
+use Tutor\Core\DB;
+
+if ( DB::has_column('tutor_earnings', 'instructor_rate') ) {
+    // Column exists in wp_tutor_earnings
+}
+```
+
+### 3. Multiple Column Existence (`has_columns`)
+
+Checks whether **all** specified columns exist in a database table. Returns `true` only if every column is found:
+
+```php
+use Tutor\Core\DB;
+
+$columns_required = ['course_id', 'user_id', 'completed_at'];
+
+if ( DB::has_columns('tutor_course_progress', $columns_required) ) {
+    // All columns exist
+}
+```
+
+> [!NOTE]
+> - All column comparisons in `has_column` and `has_columns` are case-insensitive.
+> - Passing an empty array to `has_columns()` returns `false`.
+> - If any provided column name is not a valid SQL identifier, `has_columns()` immediately returns `false` without executing an unsafe query.
+
+---
+
 ## Debugging & Raw Queries
 
 ### Inspect Compiled SQL (`to_sql`)
@@ -510,4 +732,6 @@ DB::get_last_query();                   // Returns $wpdb->last_query
 1. **Prepared Statements:** All literal values passed into `where()`, `where_in()`, `where_between()`, `insert()`, `update()`, and raw bindings are passed through `$wpdb->prepare()`.
 2. **Identifier Validation:** Column identifiers and table names are strictly validated against `/^[A-Za-z_*][A-Za-z0-9_.*]*$/`. Column aliases in `select()` are parsed and verified against strict column and alias patterns (`is_valid_column` and `is_valid_identifier`). Join conditions (including closure-based `on()` and `or_on()` conditions) validate both columns and operators against allowlists before inclusion. Characters that could trigger SQL injection (semicolons, comments, quotes, brackets) are rejected.
 3. **LIKE-Injection Protection:** `where_like()` automatically processes input values via `$wpdb->esc_like()`, preventing wildcard abuse (`%` or `_`).
-4. **WPCS Compliance:** Follows WordPress Coding Standards (WPCS) with full escaping and cache awareness annotations.
+4. **Schema Inspection Safety:** `has_table()`, `has_column()`, and `has_columns()` validate all identifiers before running schema queries. Table lookups employ `$wpdb->esc_like()` with `SHOW TABLES LIKE`, and column queries quote validated table names within backticks.
+5. **Robust Exception & Rollback Handling:** `DB::transaction()` catches all `\Throwable` instances (both exceptions and fatal PHP errors), ensuring transactions roll back reliably. Secondary rollback failures are trapped so the original root cause exception propagates cleanly.
+6. **WPCS Compliance:** Follows WordPress Coding Standards (WPCS) with full escaping and cache awareness annotations.

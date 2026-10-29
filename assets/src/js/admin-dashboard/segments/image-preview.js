@@ -205,10 +205,10 @@ const getFilesAndUpdateDOM = (files, inputEl, dropZone) => {
 	if (files.length) {
 		inputEl.files = files;
 		dropZone.classList.add('file-attached');
-		dropZone.querySelector('.file-info').innerHTML = `File attached - ${files[0].name}`;
+		dropZone.querySelector('.file-info').textContent = `File attached - ${files[0].name}`;
 	} else {
 		dropZone.classList.remove('file-attached');
-		dropZone.querySelector('.file-info').innerHTML = '';
+		dropZone.querySelector('.file-info').textContent = '';
 	}
 };
 
