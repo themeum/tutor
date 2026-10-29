@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -30,7 +30,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const nextIndex = Math.min(steps.length, currentIndex + 1);
   const previousStep = steps[previousIndex];
   const nextStep = steps[nextIndex];
-  const postTitle = form.watch('post_title');
+  const postTitle = useWatch({ control: form.control, name: 'post_title' });
 
   const handlePreviousClick = () => {
     setSteps((previous) => {
