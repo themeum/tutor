@@ -9,14 +9,23 @@
  * @since 2.0.0
  */
 
-$field_id = 'field_' . $field['key'];
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var array $field
+ */
+
+$field_key = $field['key'] ?? '';
+$field_id  = 'field_' . $field_key;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="certificate-thumb">
 		<?php
-			$img_url = tutor()->url . 'assets/images/images-v2/' . $field['thumbs_url'];
+			$img_url = tutor()->url . 'assets/images/images-v2/' . ( $field['thumbs_url'] ?? '' );
 		?>
-		<img src="<?php echo esc_url( $img_url ); ?>>" alt="">
+		<img src="<?php echo esc_url( $img_url ); ?>" alt="">
 	</div>
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
