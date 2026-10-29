@@ -320,9 +320,22 @@ class EnrollmentModel {
 	 * @return bool
 	 */
 	public static function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {
-		$status = 'complete' === $status ? 'completed' : $status;
+		global $wpdb;
+		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
+		$status            = 'complete' === $status ? 'completed' : $status;
+		$post_table        = $wpdb->posts;
 
-		DB::table( 'posts' )->where_in( 'ID', $enrollment_ids )->update( array( 'post_status' => $status ) );
+		//phpcs:disable
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$post_table}
+				SET post_status = %s
+				WHERE ID IN ($enrollment_ids_in)
+			",
+				$status
+			)
+		);
+		//phpcs:enable
 
 		if ( $trigger_hook ) {
 			// Run action hook.
@@ -345,10 +358,13 @@ class EnrollmentModel {
 	 * @return bool
 	 */
 	public static function delete_enrollment_record( int $student_id, int $course_id ): bool {
-		return DB::table( 'posts' )
-			->where( 'post_author', $student_id )
-			->where( 'post_parent', $course_id )
-			->where( 'post_type', self::POST_TYPE )
-			->delete();
+		return QueryHelper::delete(
+			'posts',
+			array(
+				'post_author' => $student_id,
+				'post_parent' => $course_id,
+				'post_type'   => self::POST_TYPE,
+			)
+		);
 	}
 }
