@@ -3296,7 +3296,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int $course_id Course ID or Bundle ID.
 	 *
 	 * @return array|bool|null|object
 	 */
