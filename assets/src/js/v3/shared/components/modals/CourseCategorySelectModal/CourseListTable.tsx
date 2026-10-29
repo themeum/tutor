@@ -1,4 +1,4 @@
-import type { UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -23,7 +23,7 @@ interface CourseListTableProps {
 }
 
 const CourseListTable = ({ type, form }: CourseListTableProps) => {
-  const selectedCourses: Course[] = form.watch(type) || [];
+  const selectedCourses: Course[] = useWatch({ control: form.control, name: type }) || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const courseListQuery = useCourseCategoryQuery({
     applies_to: type === 'courses' ? 'specific_courses' : 'specific_bundles',
