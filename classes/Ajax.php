@@ -601,9 +601,10 @@ class Ajax {
 
 		$user_id         = get_current_user_id();
 		$announcement_id = Input::post( 'announcement_id', 0, Input::TYPE_INT );
+		$announcement    = get_post( $announcement_id );
 		$course_id       = wp_get_post_parent_id( $announcement_id );
 
-		if ( ! $announcement_id || ! $course_id ) {
+		if ( ! $announcement_id || ! $course_id || tutor()->announcement_post_type !== $announcement->post_type ) {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message( 'invalid_req' ) ) );
 		}
 
