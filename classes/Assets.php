@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CouponController;
@@ -75,8 +76,6 @@ class Assets {
 		 * @since 1.9.0
 		 */
 		add_action( 'admin_head', array( $this, 'tutor_add_mce_button' ) );
-		add_filter( 'get_the_generator_html', array( $this, 'tutor_generator_tag' ), 10, 2 );
-		add_filter( 'get_the_generator_xhtml', array( $this, 'tutor_generator_tag' ), 10, 2 );
 
 		/**
 		 * Add translation support for external tinyMCE button
@@ -692,32 +691,6 @@ class Assets {
 	public function tutor_register_mce_button( $buttons ) {
 		array_push( $buttons, 'tutor_button' );
 		return $buttons;
-	}
-
-	/**
-	 * Output generator tag to aid debugging.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $gen Generator.
-	 * @param string $type Type.
-	 *
-	 * @return string
-	 */
-	public function tutor_generator_tag( $gen, $type ) {
-		if ( apply_filters( 'tutor_hide_generator_tag', true ) ) {
-			return $gen;
-		}
-
-		switch ( $type ) {
-			case 'html':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS">';
-				break;
-			case 'xhtml':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS" />';
-				break;
-		}
-		return $gen;
 	}
 
 	/**

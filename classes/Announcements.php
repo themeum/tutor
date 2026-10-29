@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 
@@ -107,48 +108,16 @@ class Announcements {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$raw_ids = is_array( $bulk_ids ) ? $bulk_ids : explode( ',', $bulk_ids );
-
-		// Prevent instructor to delete admin announcement and verify permissions & post type.
-		$is_admin        = User::is_admin();
-		$current_user_id = get_current_user_id();
-
-		$valid_ids = array();
-		foreach ( $raw_ids as $announcement_id ) {
-			$id = (int) $announcement_id;
-			if ( $id <= 0 ) {
-				continue;
+		// prevent instructor to delete admin announcement.
+		$bulk_ids = array_filter(
+			explode( ',', $bulk_ids ),
+			function ( $announcement_id ) {
+				$announcement = get_post( $announcement_id );
+				return $announcement && tutor()->announcement_post_type === $announcement->post_type && tutor_utils()->can_user_manage( 'announcement', $announcement_id );
 			}
+		);
 
-			// Verify post type is announcement.
-			if ( get_post_type( $id ) !== tutor()->announcement_post_type ) {
-				continue;
-			}
-
-			// Verify user can manage this announcement.
-			if ( ! tutor_utils()->can_user_manage( 'announcement', $id ) ) {
-				continue;
-			}
-
-			// Non-admin instructor cannot delete announcements created by administrators.
-			if ( ! $is_admin ) {
-				$post = get_post( $id );
-				if ( ! $post ) {
-					continue;
-				}
-				if ( User::is_admin( $post->post_author ) && (int) $post->post_author !== $current_user_id ) {
-					continue;
-				}
-			}
-
-			$valid_ids[] = $id;
-		}
-
-		if ( empty( $valid_ids ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$update = self::delete_announcements( $action, $valid_ids );
+		$update = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 	}
 
@@ -163,33 +132,21 @@ class Announcements {
 	 * @return bool
 	 */
 	public static function delete_announcements( $action, $bulk_ids ): bool {
-		if ( 'delete' !== $action ) {
-			return false;
+		$ids       = array_map( 'intval', explode( ',', $bulk_ids ) );
+		$in_clause = QueryHelper::prepare_in_clause( $ids );
+
+		if ( 'delete' === $action ) {
+			global $wpdb;
+			$post_table = $wpdb->posts;
+			$delete     = $wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$post_table} WHERE ID IN ($in_clause)" //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				)
+			);
+			return false === $delete ? false : true;
 		}
 
-		if ( is_string( $bulk_ids ) ) {
-			$ids = array_filter( array_map( 'intval', explode( ',', $bulk_ids ) ) );
-		} elseif ( is_array( $bulk_ids ) ) {
-			$ids = array_filter( array_map( 'intval', $bulk_ids ) );
-		} else {
-			return false;
-		}
-
-		if ( empty( $ids ) ) {
-			return false;
-		}
-
-		$deleted_count = 0;
-		foreach ( $ids as $id ) {
-			if ( get_post_type( $id ) === tutor()->announcement_post_type ) {
-				$deleted = wp_delete_post( $id, true );
-				if ( $deleted ) {
-					$deleted_count++;
-				}
-			}
-		}
-
-		return $deleted_count > 0;
+		return false;
 	}
 
 	/**
