@@ -1,4 +1,4 @@
-import type { UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -35,13 +35,14 @@ function CourseCategorySelectModal({
     defaultValues: form.getValues(),
   });
 
-  const selectedItems = _form.watch(type) || [];
+  const selectedItems = useWatch({ control: _form.control, name: type }) || [];
 
   function handleApply() {
-    form.setValue(type, selectedItems, {
+    const currentItems = _form.getValues(type) || [];
+    form.setValue(type, currentItems, {
       shouldDirty: true,
     });
-    onSelect?.(selectedItems);
+    onSelect?.(currentItems);
     closeModal({ action: 'CONFIRM' });
   }
 
