@@ -9,17 +9,25 @@
  * @since 2.0.0
  */
 
-$value = $this->get( $field['key'] );
-if ( isset( $field['default'] ) && trim( $value ) === '' ) {
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key = $field['key'] ?? '';
+$value     = (string) $this->get( $field_key );
+if ( isset( $field['default'] ) && '' === trim( $value ) ) {
 	$value = $field['default'];
 }
 
-$field_key   = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
-$field_id    = esc_attr( 'field_' . $field_key );
-$min         = isset( $field['min'] ) ? $field['min'] : 0;
-$max         = isset( $field['max'] ) ? $field['max'] : 0;
-$number_type = isset( $field['number_type'] ) ? $field['number_type'] : 'decimal';
-
+$field_id    = 'field_' . $field_key;
+$min         = $field['min'] ?? 0;
+$max         = $field['max'] ?? 0;
+$number_type = $field['number_type'] ?? 'decimal';
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 <?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>

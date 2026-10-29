@@ -9,8 +9,17 @@
  * @since 2.0.0
  */
 
-$field_key = sanitize_key( $field['key'] );
-$field_id  = sanitize_key( 'field_' . $field_key );
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key = sanitize_key( $field['key'] ?? '' );
+$field_id  = 'field_' . $field_key;
 ?>
 <div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>"
 >
@@ -21,14 +30,14 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 			<?php
 			if ( ! empty( $field['options'] ) ) :
 				foreach ( $field['options'] as $option_key => $option ) :
-					$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
+					$option_value = $this->get( $field_key, $field['default'] ?? '' );
 					?>
 					<div class="tutor-mb-16">
 						<div class="tutor-form-check">
-							<input id="radio_<?php echo esc_attr( $option_key ); ?>" type="radio" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php esc_attr( checked( $option_value, $option_key ) ); ?> class="tutor-form-check-input" />
+							<input id="radio_<?php echo esc_attr( $option_key ); ?>" type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php checked( $option_value, $option_key ); ?> class="tutor-form-check-input" />
 							<label for="radio_<?php echo esc_attr( $option_key ); ?>">
-								<?php echo esc_attr( $option['label'] ); ?>
-								<p class="desc tutor-fw-normal tutor-fs-7 tutor-color-muted"><?php echo esc_attr( $option['desc'] ); ?></p>
+								<?php echo esc_html( $option['label'] ?? '' ); ?>
+								<p class="desc tutor-fw-normal tutor-fs-7 tutor-color-muted"><?php echo esc_html( $option['desc'] ?? '' ); ?></p>
 							</label>
 						</div>
 					</div>
