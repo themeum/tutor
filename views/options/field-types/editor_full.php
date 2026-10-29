@@ -9,8 +9,17 @@
  * @since 2.0.0
  */
 
-$field_key  = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
-$field_id   = esc_attr( 'field_' . $field_key );
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key  = $field['key'] ?? '';
+$field_id   = 'field_' . $field_key;
 $saved_data = $this->get( $field_key, array() );
 ?>
 <div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>">
