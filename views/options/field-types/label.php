@@ -9,6 +9,14 @@
  * @since 3.5.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var array $field
+ */
+
 ?>
 
 <div class="tutor-option-field-label">
