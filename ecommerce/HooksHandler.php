@@ -285,7 +285,7 @@ class HooksHandler {
 	 * Clear cart items, managing enrollment & earnings
 	 *
 	 * @since 3.0.0
-	 * @since 4.2.1 removed earnings and enrollment manage functionalities.
+	 * @since 4.2.1 manage earnings and enrollment only for the buyer's unprocessed order.
 	 *
 	 * @param int $order_id Order id.
 	 *
@@ -298,9 +298,17 @@ class HooksHandler {
 		}
 
 		$user_id = $order_data->student->id;
-		if ( get_current_user_id() === $user_id || ! isset( $order_data->enrollment ) ) {
-			( new CartModel() )->clear_user_cart( $user_id );
+		( new CartModel() )->clear_user_cart( $user_id );
 
+		/**
+		 * Skip if the order is already processed, otherwise revisiting the success URL
+		 * re-activates expired/cancelled enrollments and recalculates earnings.
+		 *
+		 * @since 4.2.1
+		 */
+		$is_processed = isset( $order_data->enrollment ) || Earnings::get_instance()->is_exist_order_earning( $order_id );
+
+		if ( get_current_user_id() === $user_id && ! $is_processed ) {
 			// Manage enrollment & earnings.
 			$payment_status = $order_data->payment_status;
 			$order_status   = $this->order_model->get_order_status_by_payment_status( $payment_status );
@@ -529,8 +537,12 @@ class HooksHandler {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
-				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
-					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+				if ( $enrolled_id ) {
+					do_action( 'tutor_order_enrolled', (object) $order_data, $enrolled_id );
+
+					if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
+						BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+					}
 				}
 			}
 
