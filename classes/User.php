@@ -10,15 +10,13 @@
 
 namespace TUTOR;
 
-use Tutor\Core\Input;
-use Tutor\Models\CourseModel;
-
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
+use Tutor\Models\CourseModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
-use TUTOR\InstructorList;
 
 /**
  * User class
@@ -508,7 +506,7 @@ class User {
 
 		$timezone                 = Input::post( 'timezone', '' );
 		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
-		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
+		$_tutor_profile_bio       = wp_kses( Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST ), tutor_utils()->allowed_profile_bio_tags() );
 		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
 
 		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );

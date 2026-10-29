@@ -661,6 +661,13 @@ class Assets {
 		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
 			return;
 		}
+
+		// Exclude for Tutor post types (course, lesson, assignment, etc.).
+		$screen = get_current_screen();
+		if ( $screen && in_array( $screen->post_type, get_tutor_post_types(), true ) ) {
+			return;
+		}
+
 		// Check if WYSIWYG is enabled.
 		if ( 'true' == get_user_option( 'rich_editing' ) ) {
 			add_filter( 'mce_external_plugins', array( $this, 'tutor_add_tinymce_js' ) );
