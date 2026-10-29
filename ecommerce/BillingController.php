@@ -234,16 +234,16 @@ class BillingController extends BaseController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'user_id'    => 'required|numeric',
-			'first_name' => 'required',
-			'last_name'  => 'required',
-			'email'      => 'required|email',
-			'phone'      => 'required',
-			'zip_code'   => 'required',
-			'address'    => 'required',
-			'country'    => 'required',
-			'state'      => 'required',
-			'city'       => 'required',
+			'user_id'            => 'required|numeric',
+			'billing_first_name' => 'required',
+			'billing_last_name'  => 'required',
+			'billing_email'      => 'required|email',
+			'billing_phone'      => 'required',
+			'billing_zip_code'   => 'required',
+			'billing_address'    => 'required',
+			'billing_country'    => 'required',
+			'billing_state'      => 'required',
+			'billing_city'       => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.

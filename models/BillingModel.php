@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -88,19 +90,36 @@ class BillingModel {
 	/**
 	 * Update billing info
 	 *
+	 * @since 4.2.1 New \Tutor\Helpers\DB used instead of the deprecated one.
+	 *
 	 * @param array $data Bulling info data.
 	 * @param array $where Where condition.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function update( $data, $where ) {
-		global $wpdb;
 
-		return QueryHelper::update(
-			"{$wpdb->prefix}tutor_customers",
-			$data,
-			$where,
-		);
+		$data = Input::sanitize_array( $data );
+
+		try {
+			DB::begin_transaction();
+
+			$updated = DB::table( 'tutor_customers' );
+			foreach ( $where as $key => $value ) {
+				$updated->where( $key, $value );
+			}
+			$updated->update( $data );
+
+			if ( ! $updated ) {
+				tutor_log( __( 'Failed to update user profile.', 'tutor' ) );
+				return false;
+			}
+
+			return DB::commit();
+		} catch ( \Throwable $e ) {
+			tutor_log( $e->getMessage() );
+			return DB::rollback();
+		}
 	}
 
 	/**
