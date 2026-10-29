@@ -9,6 +9,15 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Table contexts.
+ *
+ * @var string $page_key Table page key.
+ * @var string $context  Rendering context.
+ */
+
 $contexts = array(
 	'attempt-table'           => array(
 		'columns'  => array(
@@ -64,7 +73,7 @@ $contexts = array(
 		'columns'  => array(
 			'user'             => __( 'Attempt By', 'tutor' ),
 			'date'             => __( 'Date', 'tutor' ),
-			'qeustion_count'   => __( 'Question', 'tutor' ),
+			'question_count'   => __( 'Question', 'tutor' ),
 			'quiz_time'        => __( 'Quiz Time', 'tutor' ),
 			'attempt_time'     => __( 'Attempt Time', 'tutor' ),
 			'total_marks'      => __( 'Total Marks', 'tutor' ),
@@ -77,7 +86,7 @@ $contexts = array(
 		'contexts' => array(
 			'frontend-dashboard-my-attempts'       => array(
 				'date',
-				'qeustion_count',
+				'question_count',
 				'total_marks',
 				'pass_marks',
 				'correct_answer',

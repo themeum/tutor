@@ -9,16 +9,30 @@
  * @since 1.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\QuizModel;
 
-// Data variable contains $attempt_list, $context.
-extract( $data ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+/**
+ * Attempt table data.
+ *
+ * @var array  $data         Template data: attempt_list, context, quiz_id, user_id.
+ * @var array  $attempt_list Attempt list.
+ * @var string $context      Rendering context.
+ * @var int    $quiz_id      Quiz ID.
+ * @var int    $user_id      User ID.
+ */
+
+$attempt_list = $data['attempt_list'] ?? array();
+$context      = $data['context'] ?? '';
+$quiz_id      = $data['quiz_id'] ?? 0;
+$user_id      = $data['user_id'] ?? 0;
 
 $page_key                  = 'attempt-table';
 $table_columns             = include __DIR__ . '/contexts.php';
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 
-if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) && count( $attempt_list ) ) {
+if ( 'course-single-previous-attempts' === $context && is_array( $attempt_list ) && count( $attempt_list ) ) {
 	// Now attempt data is calculated based on the final grade calculation in settings.
 	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 	include __DIR__ . '/header.php';
@@ -42,7 +56,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 						}
 						?>
 
-						<th><?php echo $column; //phpcs:ignore -- contain safe data ?></th>
+						<th><?php echo esc_html( $column ); ?></th>
 					<?php endforeach; ?>
 				</tr>
 			</thead>
@@ -55,7 +69,11 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 			<tbody>
 				<?php foreach ( $attempt_list as $attempt ) : ?>
 					<?php
-						$course_id         = is_object( $attempt ) && property_exists( $attempt, 'course_id' ) ? $attempt->course_id : 0;
+					if ( ! is_object( $attempt ) ) {
+						continue;
+					}
+
+						$course_id         = property_exists( $attempt, 'course_id' ) ? $attempt->course_id : 0;
 						$answers           = isset( $answers_array[ $attempt->attempt_id ] ) ? $answers_array[ $attempt->attempt_id ] : array();
 						$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
@@ -80,25 +98,21 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 							}
 							?>
 							<td data-title="<?php echo esc_attr( $column ); ?>">
-								<?php if ( 'checkbox' == $key ) : ?>
+								<?php if ( 'checkbox' === $key ) : ?>
 									<div class="tutor-d-flex">
 										<input id="tutor-admin-list-<?php echo esc_attr( $attempt->attempt_id ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $attempt->attempt_id ); ?>" />
 									</div>
-								<?php elseif ( 'date' == $key ) : ?>
+								<?php elseif ( 'date' === $key ) : ?>
 									<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ) ); ?>
-								<?php elseif ( 'quiz_info' == $key ) : ?>
+								<?php elseif ( 'quiz_info' === $key ) : ?>
 									<div>
 										<div class="tutor-fs-7 tutor-fw-normal">
 											<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ) ); ?>
 										</div>
 										<div class="tutor-mt-4">
 											<?php
-												// For admin panel.
-											if ( is_admin() ) {
-												echo esc_html( get_the_title( $attempt->quiz_id ) );
-											} else {
-												// For frontend.
-												echo esc_html( get_the_title( $attempt->quiz_id ) );
+											echo esc_html( get_the_title( $attempt->quiz_id ) );
+											if ( ! is_admin() ) {
 												?>
 													<div class="tooltip-wrap tooltip-icon-custom" >
 														<i class="tutor-icon-circle-info-o tutor-color-muted tutor-ml-4 tutor-fs-7"></i>
@@ -116,23 +130,23 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 												$user_name    = $attempt_user ? $attempt_user->display_name : '';
 											?>
 											<span class="tutor-color-secondary"><?php esc_html_e( 'Student:', 'tutor' ); ?></span>
-											<span class="tutor-fw-normal tutor-color-muted"><?php echo 'backend-dashboard-students-attempts' == $context ? esc_html( $user_name ) : esc_attr( isset( $attempt->display_name ) ? $attempt->display_name : $user_name ); ?></span>
+											<span class="tutor-fw-normal tutor-color-muted"><?php echo esc_html( 'backend-dashboard-students-attempts' === $context ? $user_name : ( $attempt->display_name ?? $user_name ) ); ?></span>
 										</div>
 										<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 									</div>
-								<?php elseif ( 'course' == $key ) : ?>
+								<?php elseif ( 'course' === $key ) : ?>
 									<?php echo esc_html( get_the_title( $attempt->course_id ) ); ?>
-								<?php elseif ( 'question' == $key ) : ?>
+								<?php elseif ( 'question' === $key ) : ?>
 									<?php echo esc_html( count( $answers ) ); ?>
-								<?php elseif ( 'total_marks' == $key ) : ?>
+								<?php elseif ( 'total_marks' === $key ) : ?>
 									<?php echo esc_html( isset( $attempt->total_marks ) ? round( $attempt->total_marks ) : '0' ); ?>
-								<?php elseif ( 'correct_answer' == $key ) : ?>
+								<?php elseif ( 'correct_answer' === $key ) : ?>
 									<?php echo esc_html( $correct ); ?>
-								<?php elseif ( 'incorrect_answer' == $key ) : ?>
+								<?php elseif ( 'incorrect_answer' === $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
-								<?php elseif ( 'earned_marks' == $key ) : ?>
+								<?php elseif ( 'earned_marks' === $key ) : ?>
 									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( (float) $attempt->earned_marks, 2 ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
-								<?php elseif ( 'result' == $key ) : ?>
+								<?php elseif ( 'result' === $key ) : ?>
 									<?php
 									if ( $is_result_pending ) {
 										echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
@@ -142,15 +156,14 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 												: '<span class="tutor-badge-label label-danger">' . esc_html__( 'Fail', 'tutor' ) . '</span>';
 									}
 									?>
-								<?php elseif ( 'details' == $key ) : ?>
+								<?php elseif ( 'details' === $key ) : ?>
 									<?php
 										$url_args  = array( 'attempt_id' => $attempt->attempt_id );
 										$admin_url = add_query_arg( $url_args, admin_url( 'admin.php?page=tutor_quiz_attempts' ) );
 										$front_url = add_query_arg( $url_args, tutor()->current_url );
 										$url       = is_admin() ? $admin_url : $front_url;
-										$style     = '';
 									?>
-									<div class="tutor-d-inline-flex tutor-align-center" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
+									<div class="tutor-d-inline-flex tutor-align-center">
 										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
 											<?php
 											if ( $is_result_pending && ( 'frontend-dashboard-students-attempts' === $context || 'backend-dashboard-students-attempts' === $context ) ) {
@@ -162,7 +175,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 										</a>
 										<?php
 										$current_page = tutor_utils()->get_current_page_slug();
-										if ( ! is_admin() && $course_id && ( tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) || current_user_can( 'administrator' ) ) ) :
+										if ( ! is_admin() && $course_id && ( tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) || current_user_can( 'manage_options' ) ) ) :
 											?>
 											<!-- Don't show delete option on the spotlight section since JS not support -->
 											<?php if ( 'quiz-attempts' === $current_page || 'tutor_quiz_attempts' === $current_page ) : ?>
