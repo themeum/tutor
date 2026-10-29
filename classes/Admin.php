@@ -637,9 +637,18 @@ class Admin {
 		}
 
 		if ( ! empty( Input::get( 'post' ) ) ) {
-			$get_post_id      = Input::get( 'post', Input::TYPE_INT );
-			$get_post         = get_post( $get_post_id );
-			$tutor_post_types = array( tutor()->course_post_type, tutor()->lesson_post_type, tutor()->quiz_post_type, tutor()->assignment_post_type, tutor()->meet_post_type, tutor()->zoom_post_type, tutor()->announcement_post_type );
+			$get_post_id = Input::get( 'post', Input::TYPE_INT );
+			$get_post    = get_post( $get_post_id );
+			if ( ! $get_post ) {
+				return;
+			}
+
+			// Resolve course id.
+			if ( tutor()->course_post_type !== $get_post->post_type ) {
+				$get_post_id = tutor_utils()->get_course_id_by_subcontent( $get_post_id );
+			}
+
+			$tutor_post_types = array_values( get_tutor_post_types() );
 
 			$current_user = get_current_user_id();
 

@@ -512,7 +512,7 @@ class Ajax {
 		tutor_utils()->checking_nonce();
 
 		$error                = array();
-		$course_id            = Input::post( 'tutor_announcement_course' );
+		$course_id            = Input::post( 'tutor_announcement_course', 0, Input::TYPE_INT );
 		$announcement_title   = Input::post( 'tutor_announcement_title' );
 		$announcement_summary = Input::post( 'tutor_announcement_summary', '', Input::TYPE_TEXTAREA );
 
@@ -530,14 +530,16 @@ class Ajax {
 			'post_status'  => 'publish',
 		);
 
+		$announcement_id = 0;
+
 		if ( Input::has( 'announcement_id' ) ) {
-			$form_data['ID'] = Input::post( 'announcement_id' );
+			$form_data['ID'] = Input::post( 'announcement_id', 0, Input::TYPE_INT );
+			$announcement_id = $form_data['ID'];
 		}
 
-		if ( ! empty( $form_data['ID'] ) ) {
-			$announcement_id   = (int) $form_data['ID'] ?? 0;
+		if ( $announcement_id ) {
 			$announcement_post = get_post( $announcement_id );
-			if ( ! $announcement_post || wp_get_post_parent_id( $announcement_post ) !== $course_id || ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+			if ( ! $announcement_post || tutor()->announcement_post_type !== $announcement_post->post_type || wp_get_post_parent_id( $announcement_post ) !== $course_id || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 		}
@@ -605,7 +607,7 @@ class Ajax {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message( 'invalid_req' ) ) );
 		}
 
-		if ( ! tutor_utils()->can_user_edit_course( $user_id, $course_id ) || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
