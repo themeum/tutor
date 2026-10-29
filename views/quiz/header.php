@@ -26,11 +26,9 @@ if ( ! isset( $attempt_data ) || ! is_object( $attempt_data ) ) {
 	return;
 }
 
-$context = $context ?? '';
-
 // Load header based on context.
-$file_path = __DIR__ . '/header-context/' . $context . '.php';
-if ( $context && file_exists( $file_path ) ) {
+$file_path = __DIR__ . '/header-context/' . ( $context ?? '' ) . '.php';
+if ( ! empty( $context ) && file_exists( $file_path ) ) {
 	// Prepare header data.
 	$course_title = get_the_title( $attempt_data->course_id );
 	$course_url   = get_permalink( $attempt_data->course_id );
@@ -42,12 +40,9 @@ if ( $context && file_exists( $file_path ) ) {
 	$student_name = $user_data ? $user_data->display_name : '';
 	$student_url  = '#';
 
-	$attempt_timing         = QuizModel::get_quiz_attempt_timing( $attempt_data );
-	$attempt_duration       = $attempt_timing['attempt_duration'] ?? '';
-	$attempt_duration_taken = $attempt_timing['attempt_duration_taken'] ?? '';
-
-	$quiz_time    = $attempt_duration;
-	$attempt_time = $attempt_duration_taken;
+	$attempt_timing = QuizModel::get_quiz_attempt_timing( $attempt_data );
+	$quiz_time      = $attempt_timing['attempt_duration'] ?? '';
+	$attempt_time   = $attempt_timing['attempt_duration_taken'] ?? '';
 
 	$question_count      = $attempt_data->total_questions;
 	$total_marks         = $attempt_data->total_marks;
