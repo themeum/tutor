@@ -159,6 +159,8 @@ class Admin {
 	 * @return void JSON response.
 	 */
 	public function ajax_dismiss_offer_notice() {
+		tutor_utils()->check_nonce();
+
 		if ( ! User::is_admin() ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
@@ -522,41 +524,6 @@ class Admin {
 	}
 
 	/**
-	 * Tutor tools page (OLD)
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_tools_old() {
-		$tutor_admin_tools_page = Input::get( 'tutor_admin_tools_page' );
-		if ( $tutor_admin_tools_page ) {
-			include apply_filters( 'tutor_admin_tools_page', tutor()->path . "views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page );
-		} else {
-			$pages = apply_filters(
-				'tutor_tool_pages',
-				array(
-					'tutor_pages' => array( 'title' => __( 'Tutor Pages', 'tutor' ) ),
-					'status'      => __( 'Status', 'tutor' ),
-				)
-			);
-
-			$current_page   = 'tutor_pages';
-			$requested_page = Input::get( 'sub_page' );
-			if ( $requested_page ) {
-				$current_page = $requested_page;
-			}
-
-			$current_page = str_replace( '/', '', $current_page );
-			$current_page = str_replace( '.', '', $current_page );
-			$current_page = str_replace( '\\', '', $current_page );
-			$current_page = trim( $current_page );
-
-			include tutor()->path . 'views/pages/tools.php';
-		}
-	}
-
-	/**
 	 * Show pro upgrade page
 	 *
 	 * @since 1.0.0
@@ -672,11 +639,11 @@ class Admin {
 		if ( ! empty( Input::get( 'post' ) ) ) {
 			$get_post_id      = Input::get( 'post', Input::TYPE_INT );
 			$get_post         = get_post( $get_post_id );
-			$tutor_post_types = array( tutor()->course_post_type, tutor()->lesson_post_type );
+			$tutor_post_types = array( tutor()->course_post_type, tutor()->lesson_post_type, tutor()->quiz_post_type, tutor()->assignment_post_type, tutor()->meet_post_type, tutor()->zoom_post_type, tutor()->announcement_post_type );
 
 			$current_user = get_current_user_id();
 
-			if ( in_array( $get_post->post_type, $tutor_post_types ) && $get_post->post_author != $current_user ) {
+			if ( in_array( $get_post->post_type, $tutor_post_types, true ) && $get_post->post_author != $current_user ) {
 				global $wpdb;
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var(
