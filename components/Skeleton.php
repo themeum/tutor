@@ -418,7 +418,7 @@ class Skeleton extends BaseComponent {
 				<div class="tutor-small">
 					<span class="tutor-skeleton" style="width: 170px; height: 18px; display: inline-block;"></span>
 				</div>
-				<span class="tutor-skeleton tutor-rounded-md" style="width: 95px; height: 28px; display: inline-block;"></span>
+				<span class="tutor-skeleton tutor-rounded-md" style="width: 95px; height: 32px; display: inline-block;"></span>
 			</div>
 			<div class="tutor-dashboard-home-card-body tutor-gap-4">
 				<?php for ( $i = 0; $i < $this->count; $i++ ) : ?>
