@@ -7760,8 +7760,12 @@ class Utils {
 			case 'review':
 			case 'qa_question':
 				// Just check if own content. Instructor privilege already checked in the earlier blocks.
+				$comment_type = 'qa_question' === $content
+								? Q_And_A::COMMENT_TYPE
+								: Reviews::COURSE_RATING;
+
 				$id = DB::table( 'comments' )
-						->where( 'comment_type', Q_And_A::COMMENT_TYPE )
+						->where( 'comment_type', $comment_type )
 						->where( 'user_id', $user_id )
 						->where( 'comment_ID', $object_id )
 						->value( 'comment_ID' );

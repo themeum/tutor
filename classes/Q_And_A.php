@@ -369,15 +369,16 @@ class Q_And_A {
 						DB::table( 'comments' )->where_in( 'comment_ID', $all_ids )->delete();
 
 						clean_comment_cache( $all_ids );
+						return true;
 					}
 				}
 			);
-
-			return true;
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			tutor_log( 'Q&A Delete Error: ' . $e->getMessage() );
 			return false;
 		}
+
+		return false;
 	}
 
 	/**
