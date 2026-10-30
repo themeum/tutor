@@ -80,12 +80,12 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<?php echo esc_html( $qna->display_name ); ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
-												<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $qna->comment_date ) ); ?>
 											</div>
 										</div>
 									</div>
 								<?php elseif ( 'question' == $key ) : ?>
-									<?php $content = ( stripslashes( $qna->comment_content ) ); ?>
+									<?php $content = wp_strip_all_tags( stripslashes( $qna->comment_content ), true ); ?>
 									<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>">
 										<div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
 											<i class="tutor-icon-bullet-point tutor-form-feedback-icon" aria-hidden="true"></i>
@@ -93,9 +93,9 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
 													<?php
 														$limit   = 60;
-														$content = strlen( $content ) > $limit ? substr( $content, 0, $limit ) . '...' : $content;
+														$content = mb_strlen( $content ) > $limit ? mb_substr( $content, 0, $limit ) . '...' : $content;
 
-                                                        echo $content //phpcs:ignore
+														echo esc_html( $content );
 													?>
 												</div>
 												<div class="tutor-fs-7 tutor-color-secondary">
@@ -108,7 +108,13 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 								<?php elseif ( 'reply' == $key ) : ?>
 									<?php echo esc_html( $qna->answer_count ); ?>
 								<?php elseif ( 'waiting_since' == $key ) : ?>
-									<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+									<?php
+									if ( $is_solved || (int) $qna->answer_count > 0 ) {
+										echo '&mdash;';
+									} else {
+										echo esc_html( human_time_diff( strtotime( $qna->comment_date_gmt ) ) );
+									}
+									?>
 								<?php elseif ( 'status' == $key ) : ?>
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
