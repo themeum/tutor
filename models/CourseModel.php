@@ -10,12 +10,15 @@
 
 namespace Tutor\Models;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
 use TUTOR\Course;
 use TUTOR\Lesson;
 use Tutor\Ecommerce\Tax;
 use InvalidArgumentException;
+use Tutor\Core\DB;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
 use TUTOR_ASSIGNMENTS\Assignments;
@@ -162,45 +165,21 @@ class CourseModel {
 	 * @return array|null|object
 	 */
 	public static function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
-		global $wpdb;
 
-		$excludes      = (array) $excludes;
-		$exclude_query = '';
+		$excludes    = array_values( array_filter( array_map( 'intval', (array) $excludes ), fn( $id ) => $id > 0 ) );
+		$post_status = array_intersect( $post_status, self::get_status_list() );
 
-		if ( count( $excludes ) ) {
-			$exclude_query = implode( "','", $excludes );
+		if ( empty( $post_status ) ) {
+			$post_status = array( 'publish' );
 		}
 
-		$post_status = array_map(
-			function ( $element ) {
-				return "'" . $element . "'";
-			},
-			$post_status
-		);
+		$query = DB::table( 'posts' )
+				->select( 'ID', 'post_author', 'post_title', 'post_name', 'post_status', 'menu_order' )
+				->where_in( 'post_status', $post_status )
+				->where( 'post_type', self::POST_TYPE )
+				->where_not_in( 'ID', $excludes );
 
-		$post_status      = implode( ',', $post_status );
-		$course_post_type = tutor()->course_post_type;
-
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID,
-					post_author,
-					post_title,
-					post_name,
-					post_status,
-					menu_order
-			FROM 	{$wpdb->posts}
-			WHERE 	post_status IN ({$post_status})
-					AND ID NOT IN('$exclude_query')
-					AND post_type = %s;
-			",
-				$course_post_type
-			)
-		);
-		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return $query;
+		return $query->get();
 	}
 
 	/**
@@ -749,7 +728,7 @@ class CourseModel {
 		);
 
 		// Check if the current user is an admin.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			$args['author'] = $current_user->ID;
 		}
 
@@ -1186,7 +1165,7 @@ class CourseModel {
 			),
 		);
 
-		$courses = current_user_can( 'administrator' ) ? self::get_courses() : self::get_courses_by_instructor();
+		$courses = current_user_can( 'manage_options' ) ? self::get_courses() : self::get_courses_by_instructor();
 		if ( ! empty( $courses ) ) {
 			foreach ( $courses as $course ) {
 				$course_options[] = array(
