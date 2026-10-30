@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 
@@ -103,24 +104,30 @@ class Announcements {
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
+		if ( 'delete' !== $action || empty( $bulk_ids ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		// prevent instructor to delete admin announcement.
 		$bulk_ids = array_filter(
 			explode( ',', $bulk_ids ),
 			function ( $announcement_id ) {
-				return tutor_utils()->can_user_manage( 'announcement', $announcement_id );
+				$announcement = get_post( $announcement_id );
+				return $announcement && tutor()->announcement_post_type === $announcement->post_type && tutor_utils()->can_user_manage( 'announcement', $announcement_id );
 			}
 		);
-		$update   = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
+
+		$update = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 	}
 
 	/**
-	 * Execute bulk action for enrolments ex: complete | cancel
+	 * Execute bulk action for announcements deletion
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $action hold action.
-	 * @param string $bulk_ids comma separated ids.
+	 * @param string       $action hold action.
+	 * @param string|array $bulk_ids comma separated ids or array of ids.
 	 *
 	 * @return bool
 	 */
@@ -138,6 +145,7 @@ class Announcements {
 			);
 			return false === $delete ? false : true;
 		}
+
 		return false;
 	}
 
