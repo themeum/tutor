@@ -1,6 +1,6 @@
 <?php
 /**
- * Header
+ * Quiz Header
  *
  * @package Tutor\Views
  * @subpackage Tutor\Quiz
