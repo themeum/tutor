@@ -12,10 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Tutor\Ecommerce\CouponController;
-use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Settings;
 use Tutor\Core\Input;
+use Tutor\Ecommerce\CouponController;
 use Tutor\Models\CouponModel;
 
 /**
@@ -26,7 +24,7 @@ $active_tab = Input::get( 'data', 'all' );
 /**
  * Pagination data
  */
-$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
+$paged_filter = max( 1, Input::get( 'paged', 1, Input::TYPE_INT ) );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
@@ -42,6 +40,7 @@ $page_slug       = $coupon_controller::PAGE_SLUG;
 $coupon_page_url = $coupon_controller::get_coupon_page_url();
 
 $navbar_data = array(
+	// @phpstan-ignore property.notFound
 	'page_title'   => $coupon_controller->page_title,
 	'tabs'         => $coupon_controller->tabs_key_value(),
 	'active'       => $active_tab,
@@ -108,7 +107,6 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-mt-24 tutor-dashboard-list-table">
@@ -254,6 +252,6 @@ $filters = array(
 tutor_load_template_from_custom_path(
 	tutor()->path . 'views/elements/common-confirm-popup.php',
 	array(
-		'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' ),
+		'message' => __( 'Are you sure you want to delete this coupon permanently? Please confirm your choice.', 'tutor' ),
 	)
 );
