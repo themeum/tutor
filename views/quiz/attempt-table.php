@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Models\QuizModel;
 
 /**
+ * Attempt table data.
+ *
  * @var array $data
  */
 
