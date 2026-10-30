@@ -14,13 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Models\QuizModel;
 
 /**
- * Attempt table data.
- *
- * @var array  $data         Template data: attempt_list, context, quiz_id, user_id.
- * @var array  $attempt_list Attempt list.
- * @var string $context      Rendering context.
- * @var int    $quiz_id      Quiz ID.
- * @var int    $user_id      User ID.
+ * @var array $data
  */
 
 $attempt_list = $data['attempt_list'] ?? array();

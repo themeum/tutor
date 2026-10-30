@@ -12,10 +12,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Table contexts.
- *
- * @var string $page_key Table page key.
- * @var string $context  Rendering context.
+ * @var string $page_key
+ * @var string $context
  */
 
 $contexts = array(
