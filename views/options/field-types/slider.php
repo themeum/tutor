@@ -9,11 +9,21 @@
  * @since 2.0.0
  */
 
-$field_id = 'field_' . $field['key'];
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key = $field['key'] ?? '';
+$value     = $this->get( $field_key, $field['default'] ?? '' );
 ?>
 
 <div class="tutor-field-type-slider" data-min="<?php echo esc_attr( tutor_utils()->avalue_dot( 'options.min', $field ) ); ?>" data-max="<?php echo esc_attr( tutor_utils()->avalue_dot( 'options.max', $field ) ); ?>">
-	<p class="tutor-field-type-slider-value"><?php echo esc_html( $this->get( $field['field_key'], $field['default'] ) ); ?></p>
+	<p class="tutor-field-type-slider-value"><?php echo esc_html( $value ); ?></p>
 	<div class="tutor-field-slider"></div>
-	<input type="hidden" value="<?php echo esc_attr( $this->get( $field['field_key'], $field['default'] ) ); ?>" name="tutor_option[<?php echo esc_attr( $field['field_key'] ); ?>]" />
+	<input type="hidden" value="<?php echo esc_attr( $value ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" />
 </div>
