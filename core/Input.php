@@ -583,4 +583,25 @@ class Input {
 	public static function sanitize_with_strip_tags( string $value ) {
 		return sanitize_text_field( wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
 	}
+
+	/**
+	 * Safely unserialize data.
+	 *
+	 * @param string $data data to unserialize.
+	 * @return array
+	 */
+	public static function safe_unserialize( $data ) {
+		if ( is_array( $data ) ) {
+			return $data;
+		}
+		if ( ! is_string( $data ) || '' === trim( $data ) || ! is_serialized( $data ) ) {
+			return $data;
+		}
+		// Pre-reject any PHP serialized object tokens (O:\d+: or C:\d+:).
+		if ( preg_match( '/(^|;|{|})[OC]:\+?[0-9]+:"/', $data ) ) {
+			return array();
+		}
+		$unserialized = unserialize( $data, array( 'allowed_classes' => false ) );
+		return false === $unserialized ? array() : $unserialized;
+	}
 }

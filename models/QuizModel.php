@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Components\Badge;
+use Tutor\Core\Input;
 use TUTOR\Course_List;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -1092,7 +1093,7 @@ class QuizModel {
 			return true;
 		}
 
-		$given_answer = maybe_unserialize( $attempt_answer->given_answer ?? '' );
+		$given_answer = Input::safe_unserialize( $attempt_answer->given_answer ?? '' );
 
 		if ( is_array( $given_answer ) ) {
 			$given_answer = array_filter(
