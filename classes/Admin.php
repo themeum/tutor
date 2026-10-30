@@ -637,15 +637,10 @@ class Admin {
 		}
 
 		if ( ! empty( Input::get( 'post' ) ) ) {
-			$get_post_id = Input::get( 'post', Input::TYPE_INT );
+			$get_post_id = Input::get( 'post', 0, Input::TYPE_INT );
 			$get_post    = get_post( $get_post_id );
 			if ( ! $get_post ) {
 				return;
-			}
-
-			// Resolve course id.
-			if ( tutor()->course_post_type !== $get_post->post_type ) {
-				$get_post_id = tutor_utils()->get_course_id_by_subcontent( $get_post_id );
 			}
 
 			$tutor_post_types = array_values( get_tutor_post_types() );
@@ -654,6 +649,11 @@ class Admin {
 
 			if ( in_array( $get_post->post_type, $tutor_post_types, true ) && $get_post->post_author != $current_user ) {
 				global $wpdb;
+
+				// Resolve course id.
+				if ( tutor()->course_post_type !== $get_post->post_type ) {
+					$get_post_id = tutor_utils()->get_course_id_by_subcontent( $get_post_id );
+				}
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var(
 					$wpdb->prepare(
