@@ -86,9 +86,6 @@ class Post_types {
 		add_action( 'pre_get_posts', array( $this, 'block_public_listing_of_protected_types' ) );
 		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ), 10, 2 );
 		add_filter( 'the_content', array( $this, 'strip_protected_content_outside_single' ), 1 );
-		add_filter( 'the_excerpt', array( $this, 'strip_protected_content_outside_single' ), 1 );
-		add_filter( 'the_content_feed', array( $this, 'strip_protected_content_outside_single' ), 1 );
-		add_filter( 'the_excerpt_rss', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'get_the_excerpt', array( $this, 'strip_protected_excerpt' ), 1, 2 );
 	}
 
@@ -543,11 +540,13 @@ class Post_types {
 	 * @return string[]
 	 */
 	private function get_protected_post_types() {
-		return array(
+		$post_types = array(
 			tutor()->lesson_post_type,
 			tutor()->quiz_post_type,
 			tutor()->assignment_post_type,
 		);
+
+		return apply_filters( 'tutor_content_protected_post_types', $post_types );
 	}
 
 	/**
