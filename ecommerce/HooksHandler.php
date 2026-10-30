@@ -298,22 +298,22 @@ class HooksHandler {
 		}
 
 		$user_id = $order_data->student->id;
-		( new CartModel() )->clear_user_cart( $user_id );
+		if ( get_current_user_id() === $user_id ) {
+			( new CartModel() )->clear_user_cart( $user_id );
 
-		/**
-		 * Skip if the order is already processed, otherwise revisiting the success URL
-		 * re-activates expired/cancelled enrollments and recalculates earnings.
-		 *
-		 * @since 4.2.1
-		 */
-		$is_processed = isset( $order_data->enrollment ) || Earnings::get_instance()->is_exist_order_earning( $order_id );
+			/**
+			 * Skip if the order is already processed, otherwise revisiting the success URL re-activates expired/cancelled
+			 * enrollments and recalculates earnings.
+			 *
+			 * @since 4.2.1
+			 */
+			$is_processed = isset( $order_data->enrollment ) || Earnings::get_instance()->is_exist_order_earning( $order_id );
+			if ( ! $is_processed ) {
+				$payment_status = $order_data->payment_status;
+				$order_status   = $this->order_model->get_order_status_by_payment_status( $payment_status );
 
-		if ( get_current_user_id() === $user_id && ! $is_processed ) {
-			// Manage enrollment & earnings.
-			$payment_status = $order_data->payment_status;
-			$order_status   = $this->order_model->get_order_status_by_payment_status( $payment_status );
-
-			$this->manage_earnings_and_enrollments( $order_status, $order_id );
+				$this->manage_earnings_and_enrollments( $order_status, $order_id );
+			}
 		}
 	}
 
@@ -517,6 +517,7 @@ class HooksHandler {
 			$user_id     = $order_data['user_id'];
 			$items       = $order_data['items'];
 			$coupon_code = $order_data['coupon_code'] ?? '';
+			$order       = $this->order_model->get_order_by_id( $order_id );
 
 			// If a coupon brought the total to zero, reserve coupon usage before enrolling.
 			if ( ! empty( $coupon_code ) ) {
@@ -538,7 +539,7 @@ class HooksHandler {
 
 				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id ) {
-					do_action( 'tutor_order_enrolled', (object) $order_data, $enrolled_id );
+					do_action( 'tutor_order_enrolled', $order, $enrolled_id );
 
 					if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
 						BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
@@ -548,6 +549,11 @@ class HooksHandler {
 
 			// Promote coupon usage to consumed upon completed enrollment.
 			$this->coupon_ctrl->store_coupon_usage( $order_id );
+
+			// Free orders never get a payment webhook, so recording their (zero) earnings.
+			$earnings = Earnings::get_instance();
+			$earnings->prepare_order_earnings( $order_id );
+			$earnings->remove_before_store_earnings();
 		}
 		return $order_data;
 	}
