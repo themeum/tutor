@@ -161,47 +161,41 @@ $filters = array(
 								<td>
 									<div class="tutor-d-flex tutor-align-center tutor-gap-1 tutor-justify-end">
 										<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-										class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
+
+										<?php if ( tutor()->has_pro && tutor_utils()->is_addon_enabled( 'tutor-report' ) ) : ?>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
 											<?php esc_html_e( 'Details', 'tutor' ); ?>
 										</a>
-										<?php
-										/**
-										 * Action to render consent logs button.
-										 *
-										 * @since 4.0.0
-										 *
-										 * @param object $list User list item.
-										 */
-										do_action( 'tutor_render_consent_logs_button', $list );
-										?>
+										<?php endif; ?>
+
+										<?php do_action( 'tutor_render_consent_logs_button', $list ); ?>
 									</div>
 								</td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
+				
+				<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
+					<?php
+					/**
+					 * Prepare pagination data & load template
+					 */
+					if ( $total > $per_page ) {
+						$pagination_data     = array(
+							'total_items' => $total,
+							'per_page'    => $per_page,
+							'paged'       => $paged,
+						);
+						$pagination_template = tutor()->path . 'views/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+				</div>
 			</div>
 		<?php else : ?>
-			<?php tutils()->render_list_empty_state(); ?>
+			<?php tutor_utils()->render_list_empty_state(); ?>
 		<?php endif; ?>
-
-		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
-			<?php
-				/**
-				 * Prepare pagination data & load template
-				 */
-			if ( $total > $per_page ) {
-				$pagination_data     = array(
-					'total_items' => $total,
-					'per_page'    => $per_page,
-					'paged'       => $paged,
-				);
-				$pagination_template = tutor()->path . 'views/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
-		</div>
 	</div>
 </div>
 

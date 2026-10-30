@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 

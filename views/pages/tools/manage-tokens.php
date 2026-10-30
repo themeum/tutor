@@ -32,7 +32,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 ?>
 <div class="tutor-option-main-title">
 	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
-		<?php esc_html_e( 'Rest API', 'tutor' ); ?>
+		<?php esc_html_e( 'REST API', 'tutor' ); ?>
 	</div>
 </div>
 
@@ -54,11 +54,10 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 				<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 					<?php
 					printf(
-						/* translators: 1: min days, 2: max days, 3: default days */
-						esc_html__( 'Lifetime in days before access tokens expire. Allowed range: %1$d–%2$d. Default: %3$d day(s). Use 0 for no expiration.', 'tutor' ),
+						/* translators: 1: min days, 2: max days */
+						esc_html__( 'Set how many days an access token stays valid. Allowed range: %1$d to %2$d. Enter 0 for no expiration', 'tutor' ),
 						(int) RestAuth::MIN_TTL_DAYS,
-						(int) RestAuth::MAX_TTL_DAYS,
-						(int) $default_access_days
+						(int) RestAuth::MAX_TTL_DAYS
 					);
 					?>
 				</div>
@@ -85,11 +84,10 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 				<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 					<?php
 					printf(
-						/* translators: 1: min days, 2: max days, 3: default days */
-						esc_html__( 'Lifetime in days before refresh tokens expire. Allowed range: %1$d–%2$d. Default: %3$d day(s). Must be greater than the access token lifetime. Use 0 for no expiration.', 'tutor' ),
+						/* translators: 1: min days, 2: max days */
+						esc_html__( 'Set how many days a refresh token stays valid. Allowed range: %1$d to %2$d. Enter 0 for no expiration. It must be longer than the Access Token Lifetime.', 'tutor' ),
 						(int) RestAuth::MIN_TTL_DAYS,
-						(int) RestAuth::MAX_TTL_DAYS,
-						(int) $default_refresh_days
+						(int) RestAuth::MAX_TTL_DAYS
 					);
 					?>
 				</div>
@@ -109,7 +107,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 		</div>
 
 		<div class="tutor-fs-7 tutor-color-warning tutor-mt-12 tutor-mb-16">
-			<?php esc_html_e( 'Note: Setting a lifetime to 0 means the token never expires. Tutor LMS strongly recommends against this, because a stolen token would remain valid indefinitely.', 'tutor' ); ?>
+			<?php esc_html_e( 'Note: It\'s not recommended to set the token lifetime to 0 (no expiration). A compromised token would remain valid indefinitely and increase security risk.', 'tutor' ); ?>
 		</div>
 
 		<div class="tutor-option-field-row">
@@ -213,7 +211,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 								<textarea name="description" id="description" class="tutor-form-control" cols="30" rows="3" placeholder="<?php esc_html_e( 'Write here...', 'tutor' ); ?>"></textarea>
 							</div>
 							<div class="tutor-fs-7 tutor-color-warning">
-								<?php esc_html_e( 'The API secret will be shown only once after generation. Copy it immediately and store it in a secure location. You will not be able to view it again.', 'tutor' ); ?>
+								<?php esc_html_e( 'The API Secret will be shown only once. Copy it now and store it in a secure location. It cannot be retrieved later.', 'tutor' ); ?>
 							</div>
 						</div>
 					</div>
@@ -221,7 +219,7 @@ $default_refresh_days = RestAuth::ttl_seconds_to_days( RestAuth::REFRESH_TTL );
 
 				<div id="tutor-generated-credentials" class="tutor-d-none">
 					<div class="tutor-fs-7 tutor-color-warning tutor-mb-16">
-						<?php esc_html_e( 'Copy your API key and secret now and store them in a secure location. The secret will not be shown again.', 'tutor' ); ?>
+						<?php esc_html_e( 'Make sure to copy both your API key and Secret now. The secret cannot be retrieved later.', 'tutor' ); ?>
 					</div>
 					<div class="tutor-mb-16">
 						<label class="tutor-form-label" for="tutor-generated-api-key">

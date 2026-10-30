@@ -11,6 +11,7 @@
 namespace Tutor;
 
 use TUTOR\Admin;
+use Tutor\Core\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -327,7 +328,7 @@ class Tools_V2 {
 				),
 			),
 			'tutor_rest_api' => array(
-				'label'     => __( 'Rest API', 'tutor' ),
+				'label'     => __( 'REST API', 'tutor' ),
 				'slug'      => 'tutor_rest_api',
 				'desc'      => __( 'Token List', 'tutor' ),
 				'template'  => 'manage-tokens',

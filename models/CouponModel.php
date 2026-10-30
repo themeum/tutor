@@ -530,14 +530,18 @@ class CouponModel {
 					continue;
 				}
 
-				// If the reserver is the current user and the reservation is not expired then continue and allow them to use the coupon.
-				if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt ) {
-					continue;
-				}
-
-				// Considering the reserved as used until not expired.
-				if ( self::STATUS_RESERVED === $status && $expires_at_gmt > $now_gmt ) {
+				if ( self::STATUS_CONSUMED === $status ) {
 					++$count;
+				} elseif ( self::STATUS_RESERVED === $status ) {
+					// If the reserver is the current user and the reservation is not expired then continue and allow them to use the coupon.
+					if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt ) {
+						continue;
+					}
+
+					// Considering the reserved as used until not expired.
+					if ( $expires_at_gmt > $now_gmt ) {
+						++$count;
+					}
 				}
 			} else {
 				++$count;
