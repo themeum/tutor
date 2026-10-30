@@ -282,7 +282,7 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 			$output .= '<option value="' . $category->term_id . '" ' . selected( $has_in_term, true, false ) . '>  ' . $depth_seperator . ' ' . $category->name . '</option>';
 
 			if ( tutor_utils()->count( $childrens ) ) {
-				$depth++;
+				++$depth;
 				$output .= _generate_categories_dropdown_option( $post_ID, $childrens, $args, $depth );
 			}
 		}
@@ -700,6 +700,25 @@ if ( ! function_exists( 'tutor_flash_set' ) ) {
 			session_start();
 		}
 		$_SESSION[ $key ] = $message;
+	}
+}
+
+if ( ! function_exists( 'tutor_unserialize' ) ) {
+	/**
+	 * Unserialize data.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string $data Data to unserialize.
+	 *
+	 * @return array
+	 */
+	function tutor_unserialize( $data ) {
+		if ( is_serialized( $data ) ) {
+			return @unserialize( trim( $data ), array( 'allowed_classes' => false ) );
+		}
+
+		return $data;
 	}
 }
 
