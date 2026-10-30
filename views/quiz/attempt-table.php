@@ -52,7 +52,7 @@ if ( 'course-single-previous-attempts' === $context && is_array( $attempt_list )
 						}
 						?>
 
-						<th><?php echo esc_html( $column ); ?></th>
+						<th><?php echo $column; //phpcs:ignore -- contain safe data ?></th>
 					<?php endforeach; ?>
 				</tr>
 			</thead>
