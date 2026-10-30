@@ -375,7 +375,6 @@ class Q_And_A {
 			);
 		} catch ( \Throwable $e ) {
 			tutor_log( 'Q&A Delete Error: ' . $e->getMessage() );
-			return false;
 		}
 
 		return false;
