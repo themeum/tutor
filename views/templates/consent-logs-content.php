@@ -11,6 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! ( $user instanceof \WP_User ) ) {
+	return;
+}
+
 if ( empty( $consents ) ) {
 	?>
 	<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-py-48 tutor-color-muted tutor-fs-6">
