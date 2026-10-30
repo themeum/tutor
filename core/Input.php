@@ -583,5 +583,4 @@ class Input {
 	public static function sanitize_with_strip_tags( string $value ) {
 		return sanitize_text_field( wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
 	}
-
 }
