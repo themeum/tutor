@@ -7682,6 +7682,7 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 *
 	 * @since 1.7.9
+	 * @since 4.2.1 tutor_announcements support added.
 	 *
 	 * @param int $content_id content id.
 	 *
@@ -7689,15 +7690,16 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'tutor_gm_course'    => 'tutor_gm_course',
-			'tutor_gm_topic'     => 'tutor_gm_topic',
-			'topics'             => 'topic',
-			'cb-lesson'          => 'cb-lesson',
+			'tutor_assignments'   => 'assignment',
+			'tutor_quiz'          => 'quiz',
+			'lesson'              => 'lesson',
+			'tutor_zoom_meeting'  => 'zoom_meeting',
+			'tutor_zoom_lesson'   => 'zoom_lesson',
+			'tutor_gm_course'     => 'tutor_gm_course',
+			'tutor_gm_topic'      => 'tutor_gm_topic',
+			'topics'              => 'topic',
+			'cb-lesson'           => 'cb-lesson',
+			'tutor_announcements' => 'announcement',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
