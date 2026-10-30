@@ -98,6 +98,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
     cleanupCalendarRootListeners: null as (() => void) | null,
     calendarClearHandler: null as (() => void) | null,
     popStateHandler: null as (() => void) | null,
+    dateFilterChangedHandler: null as ((e: Event) => void) | null,
 
     parseInputValue(inputValue: string): { selectedDates: string[]; selectedTime: string } {
       const normalizedValue = inputValue.trim();
@@ -382,8 +383,22 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
 
         this.popStateHandler = () => this.updateActivePreset();
         this.calendarClearHandler = () => this.clear();
+        this.dateFilterChangedHandler = (e: Event) => {
+          const detail = (e as CustomEvent)?.detail;
+          if (!detail) return;
+
+          const startDate = detail.startDate || '';
+          const endDate = detail.endDate || '';
+          const date = detail.date || '';
+
+          const selectedDates = startDate && endDate ? [startDate, endDate] : date ? [date] : [];
+          this.calendar?.set({ selectedDates });
+          this.updateActivePreset();
+        };
+
         window.addEventListener(TUTOR_CALENDAR_EVENTS.popstate, this.popStateHandler);
         window.addEventListener(TUTOR_CALENDAR_EVENTS.calendarClear, this.calendarClearHandler);
+        window.addEventListener(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, this.dateFilterChangedHandler);
       });
     },
 
@@ -402,6 +417,11 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       if (this.calendarClearHandler) {
         window.removeEventListener(TUTOR_CALENDAR_EVENTS.calendarClear, this.calendarClearHandler);
         this.calendarClearHandler = null;
+      }
+
+      if (this.dateFilterChangedHandler) {
+        window.removeEventListener(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, this.dateFilterChangedHandler);
+        this.dateFilterChangedHandler = null;
       }
     },
 
@@ -525,12 +545,15 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           presetTitle ||
           (startDate && endDate ? (startDate === endDate ? startDate : `${startDate} - ${endDate}`) : date || '');
 
+        const period = params.period ?? url.searchParams.get('period') ?? '';
+
         window.dispatchEvent(
           new CustomEvent(TUTOR_CUSTOM_EVENTS.DATE_FILTER_CHANGED, {
             detail: {
               startDate,
               endDate,
               date,
+              period,
               label: formattedLabel,
               preset: presetKey || '',
               presetTitle: presetTitle || '',
@@ -611,6 +634,7 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
           {
             [TUTOR_CALENDAR_QUERY_PARAMS.startDate]: null,
             [TUTOR_CALENDAR_QUERY_PARAMS.endDate]: null,
+            ...(preset === PRESETS.ALL_TIME ? { period: PRESETS.ALL_TIME } : {}),
           },
           preset,
           presetTitle,
@@ -628,7 +652,13 @@ export function calendar({ options, hidePopover }: { options: Options; hidePopov
       let activePreset: Preset | '' = '';
 
       if (!startDate && !endDate) {
-        activePreset = PRESETS.ALL_TIME;
+        const urlPeriod = url.searchParams.get('period');
+        const defaultPreset = (options as Record<string, unknown>)?.defaultPreset as Preset | undefined;
+        if (urlPeriod === PRESETS.ALL_TIME) {
+          activePreset = PRESETS.ALL_TIME;
+        } else if (defaultPreset && (Object.values(PRESETS) as string[]).includes(defaultPreset)) {
+          activePreset = defaultPreset;
+        }
       } else if (startDate && endDate) {
         const presets = (Object.values(PRESETS) as Preset[]).filter((key) => key !== PRESETS.ALL_TIME);
 

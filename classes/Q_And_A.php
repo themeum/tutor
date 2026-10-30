@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\DB;
 use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
@@ -39,6 +40,15 @@ class Q_And_A {
 		'important',
 		'archived',
 	);
+
+	/**
+	 * Comment type for Q&A
+	 *
+	 * @since 4.2.1
+	 *
+	 * @var string
+	 */
+	const COMMENT_TYPE = 'tutor_q_and_a';
 
 	/**
 	 * Register hooks
@@ -298,62 +308,76 @@ class Q_And_A {
 			$this->response_bad_request( tutor_utils()->error_message( 'authorization' ) );
 		}
 
-		$this->delete_qna_permanently( array( $question_id ) );
-
-		$this->json_response( __( 'Comment deleted successfully.', 'tutor' ) );
+		if ( $this->delete_qna_permanently( array( $question_id ) ) ) {
+			$this->json_response( __( 'Question deleted successfully.', 'tutor' ) );
+		} else {
+			$this->response_bad_request( __( 'Question delete failed.', 'tutor' ) );
+		}
 	}
 
 	/**
-	 * Delete question permanently
+	 * Delete questions permanently along with their replies and meta data.
+	 *
+	 * Unlike native WordPress comments, replies are intentionally NOT re-parented
+	 * when a question is deleted. In Tutor LMS Q&A, a reply is an answer to its
+	 * parent question and has no meaning without it, so promoting replies to
+	 * top-level questions would leave orphaned, out-of-context entries.
+	 * Replies are therefore deleted together with their question.
+	 *
+	 * Type guard: only comments with `comment_type = tutor_q_and_a` are touched.
+	 * IDs are re-validated against the database, so regular post comments and
+	 * lesson comments can never be deleted through this method, even if their
+	 * IDs are passed in.
 	 *
 	 * @since 1.6.4
+	 * @since 4.2.1 Refactored and added type guard checks with comments.
 	 *
-	 * @param array $question_ids question ids.
+	 * @param array $question_ids Question comment IDs.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function delete_qna_permanently( $question_ids ) {
-		if ( is_array( $question_ids ) && count( $question_ids ) ) {
-			global $wpdb;
-			// Prepare in clause.
-			$question_ids = QueryHelper::prepare_in_clause( $question_ids );
-
-			// Deleting question (comment), child question and question meta (comment meta).
-			// phpcs:disable -- variable $question_ids is escaped.
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE
-						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_ID IN ($question_ids)
-							AND 1 = %d
-					",
-					1
-				)
-			);
-
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE
-						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_parent IN ($question_ids)
-							AND 1 = %d
-					",
-					1
-				)
-			);
-
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE
-						FROM {$wpdb->commentmeta} 
-						WHERE {$wpdb->commentmeta}.comment_id IN ($question_ids)
-							AND 1 = %d
-					",
-					1
-				)
-			);
-			// phpcs:enable
+	public function delete_qna_permanently( $question_ids ) : bool {
+		$question_ids = array_values( array_filter( array_map( 'absint', (array) $question_ids ) ) );
+		if ( empty( $question_ids ) ) {
+			return false;
 		}
+
+		try {
+			DB::transaction(
+				function () use ( $question_ids ) {
+					// Only IDs that really are Q&A questions.
+					$valid_ids = DB::table( 'comments' )
+						->select( 'comment_ID' )
+						->where( 'comment_type', self::COMMENT_TYPE )
+						->where_in( 'comment_ID', $question_ids )
+						->pluck( 'comment_ID' );
+
+					if ( empty( $valid_ids ) ) {
+						return;
+					}
+
+					$reply_ids = DB::table( 'comments' )
+						->select( 'comment_ID' )
+						->where( 'comment_type', self::COMMENT_TYPE )
+						->where_in( 'comment_parent', $valid_ids )
+						->pluck( 'comment_ID' );
+
+					$all_ids = array_map( 'intval', array_merge( $valid_ids, $reply_ids ) );
+
+					if ( tutor_utils()->count( $all_ids ) ) {
+						DB::table( 'commentmeta' )->where_in( 'comment_id', $all_ids )->delete();
+						DB::table( 'comments' )->where_in( 'comment_ID', $all_ids )->delete();
+
+						clean_comment_cache( $all_ids );
+						return true;
+					}
+				}
+			);
+		} catch ( \Throwable $e ) {
+			tutor_log( 'Q&A Delete Error: ' . $e->getMessage() );
+		}
+
+		return false;
 	}
 
 	/**

@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
@@ -274,7 +275,9 @@ class Ajax {
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.2 added params user_id.
+	 *
 	 * @param int $user_id the user id.
+	 *
 	 * @return void|bool
 	 */
 	public function delete_tutor_review( $user_id = 0 ) {
@@ -282,7 +285,12 @@ class Ajax {
 			tutor_utils()->checking_nonce();
 		}
 
-		$review_id = Input::post( 'review_id' );
+		$review_id = Input::post( 'review_id', 0, Input::TYPE_INT );
+
+		$review = get_comment( $review_id );
+		if ( ! $review || 'tutor_course_rating' !== $review->comment_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid review.', 'tutor' ) ) );
+		}
 
 		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, tutils()->get_user_id( $user_id ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permissioned Denied!', 'tutor' ) ) );
@@ -504,7 +512,7 @@ class Ajax {
 		tutor_utils()->checking_nonce();
 
 		$error                = array();
-		$course_id            = Input::post( 'tutor_announcement_course' );
+		$course_id            = Input::post( 'tutor_announcement_course', 0, Input::TYPE_INT );
 		$announcement_title   = Input::post( 'tutor_announcement_title' );
 		$announcement_summary = Input::post( 'tutor_announcement_summary', '', Input::TYPE_TEXTAREA );
 
@@ -522,12 +530,16 @@ class Ajax {
 			'post_status'  => 'publish',
 		);
 
+		$announcement_id = 0;
+
 		if ( Input::has( 'announcement_id' ) ) {
-			$form_data['ID'] = Input::post( 'announcement_id' );
+			$form_data['ID'] = Input::post( 'announcement_id', 0, Input::TYPE_INT );
+			$announcement_id = $form_data['ID'];
 		}
 
-		if ( ! empty( $form_data['ID'] ) ) {
-			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+		if ( $announcement_id ) {
+			$announcement_post = get_post( $announcement_id );
+			if ( ! $announcement_post || tutor()->announcement_post_type !== $announcement_post->post_type || wp_get_post_parent_id( $announcement_post ) !== $course_id || ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 		}
@@ -587,7 +599,14 @@ class Ajax {
 	public function delete_announcement() {
 		tutor_utils()->checking_nonce();
 
-		$announcement_id = Input::post( 'announcement_id' );
+		$user_id         = get_current_user_id();
+		$announcement_id = Input::post( 'announcement_id', 0, Input::TYPE_INT );
+		$announcement    = get_post( $announcement_id );
+		$course_id       = wp_get_post_parent_id( $announcement_id );
+
+		if ( ! $announcement_id || ! $course_id || tutor()->announcement_post_type !== $announcement->post_type ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message( 'invalid_req' ) ) );
+		}
 
 		if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -614,6 +633,10 @@ class Ajax {
 		$video_id = Input::post( 'video_id' );
 		if ( empty( $video_id ) ) {
 			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! preg_match( '/^[a-zA-Z0-9_-]{11}$/', $video_id ) ) {
+			$this->json_response( __( 'Invalid YouTube Video ID', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
 		tutor_utils()->check_current_user_capability( 'edit_tutor_courses' );

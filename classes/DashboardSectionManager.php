@@ -226,6 +226,7 @@ class DashboardSectionManager {
 		$user_id    = get_current_user_id();
 		$start_date = Input::post( 'start_date', '', Input::TYPE_STRING );
 		$end_date   = Input::post( 'end_date', '', Input::TYPE_STRING );
+		$period     = Input::post( 'period', '', Input::TYPE_STRING );
 		$type       = Input::post( 'top_performing_course', Input::post( 'type', 'revenue', Input::TYPE_STRING ), Input::TYPE_STRING );
 		$type       = in_array( $type, array( 'revenue', 'student' ), true ) ? $type : 'revenue';
 
@@ -234,6 +235,7 @@ class DashboardSectionManager {
 
 		$params = array(
 			'user_id'               => $user_id,
+			'period'                => $period,
 			'start_date'            => $start_date,
 			'end_date'              => $end_date,
 			'top_performing_course' => $type,
