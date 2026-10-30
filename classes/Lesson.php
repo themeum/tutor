@@ -346,6 +346,24 @@ class Lesson extends Tutor_Base {
 				),
 				true
 			);
+
+			$duration_sec = 0;
+			if ( isset( $video['duration_sec'] ) && '' !== $video['duration_sec'] ) {
+				$duration_sec = absint( $video['duration_sec'] );
+			}
+			if ( 0 === $duration_sec && ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
+				$hours        = isset( $video['runtime']['hours'] ) ? absint( $video['runtime']['hours'] ) : 0;
+				$minutes      = isset( $video['runtime']['minutes'] ) ? absint( $video['runtime']['minutes'] ) : 0;
+				$seconds      = isset( $video['runtime']['seconds'] ) ? absint( $video['runtime']['seconds'] ) : 0;
+				$duration_sec = $hours * 3600 + $minutes * 60 + $seconds;
+			}
+
+			if ( $duration_sec > 0 ) {
+				$video['duration_sec'] = $duration_sec;
+				$video['playtime']     = tutor_utils()->playtime_string( $duration_sec );
+				$video['runtime']      = tutor_utils()->playtime_array( $duration_sec );
+			}
+
 			update_post_meta( $post_ID, '_video', tutor_utils()->filter_video_meta( $video ) );
 		}
 

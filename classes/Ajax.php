@@ -79,25 +79,12 @@ class Ajax {
 
 		$user_id      = get_current_user_id();
 		$post_id      = Input::post( 'post_id', 0, Input::TYPE_INT );
-		$duration     = Input::post( 'duration' );
 		$current_time = Input::post( 'currentTime' );
 
 		if ( ! tutor_utils()->has_enrolled_content_access( 'lesson', $post_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 			exit;
 		}
-
-		/**
-		 * Update posts attached video
-		 */
-		$video = tutor_utils()->get_video( $post_id );
-
-		if ( $duration ) {
-			$video['duration_sec'] = $duration; // Duration in sec.
-			$video['playtime']     = tutor_utils()->playtime_string( $duration );
-			$video['runtime']      = tutor_utils()->playtime_array( $duration );
-		}
-		tutor_utils()->update_video( $post_id, $video );
 
 		/**
 		 * Sync Lesson Reading Info by Users
