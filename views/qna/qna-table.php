@@ -112,7 +112,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 									if ( $is_solved || (int) $qna->answer_count > 0 ) {
 										echo '&mdash;';
 									} else {
-										echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) );
+										echo esc_html( human_time_diff( strtotime( $qna->comment_date_gmt ) ) );
 									}
 									?>
 								<?php elseif ( 'status' == $key ) : ?>
