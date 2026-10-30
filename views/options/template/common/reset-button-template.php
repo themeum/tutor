@@ -9,11 +9,20 @@
  * @since 2.0.0
  */
 
-$section_label = isset( $section['label'] ) && ! empty( $section['label'] ) ? esc_attr( $section['label'] ) : '';
-$section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_attr( $section['slug'] ) : '';
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Options_V2::view_template().
+ *
+ * @var \Tutor\Options_V2 $this
+ * @var array            $section
+ */
+
+$section_label = isset( $section['label'] ) ? $section['label'] : '';
+$section_slug  = isset( $section['slug'] ) ? $section['slug'] : '';
 ?>
 <div class="tutor-option-main-title">
-	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black" tutor-option-title><?php echo esc_attr( $section_label ); ?></div>
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black" tutor-option-title><?php echo esc_html( $section_label ); ?></div>
 	<button type="button" data-tutor-modal-target="tutor-modal-bulk-action"
 			class="tutor-btn tutor-btn-ghost modal-reset-open"
 			data-reset="<?php echo esc_attr( $section_slug ); ?>"

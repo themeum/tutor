@@ -8,6 +8,15 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Tools_V2::template().
+ *
+ * @var \Tutor\Tools_V2 $this
+ * @var array          $section
+ */
+
 ?>
 <div class="tutor-option-main-title">
 	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Status', 'tutor' ); ?></div>

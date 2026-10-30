@@ -9,6 +9,8 @@
  * @since 3.6.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-option-main-title">
 	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">

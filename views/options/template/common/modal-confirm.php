@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation" role="dialog" aria-modal="true" aria-labelledby="tutor-modal-bulk-action-title" aria-hidden="true">
@@ -38,7 +40,7 @@
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
 						<button class="reset_to_default tutor-btn tutor-btn-primary tutor-ml-20" data-reset-for="Null" data-reset="Null">
-							<?php echo esc_attr( 'Reset' ); ?>
+							<?php esc_html_e( 'Reset', 'tutor' ); ?>
 						</button>
 					</div>
 				</div>

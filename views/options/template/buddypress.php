@@ -9,5 +9,14 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Options_V2::template().
+ *
+ * @var \Tutor\Options_V2 $this
+ * @var array            $section
+ */
+
 //phpcs:ignore -- contain safe data
 echo $this->view_template( 'common/reset-button-template.php', $section );
