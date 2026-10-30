@@ -13,6 +13,7 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
@@ -4177,8 +4178,8 @@ class Utils {
 
 		$course_filter = '';
 		if ( $course_id ) {
-			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
+			$course_ids = array_filter( array_map( 'absint', $course_ids ) );
 			if ( ! empty( $course_ids ) ) {
 				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
 				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
@@ -7760,14 +7761,15 @@ class Utils {
 			case 'review':
 			case 'qa_question':
 				// Just check if own content. Instructor privilege already checked in the earlier blocks.
-				$id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
-						$user_id,
-						$object_id
-					)
-				);
+				$comment_type = 'qa_question' === $content
+								? Q_And_A::COMMENT_TYPE
+								: Reviews::COURSE_RATING;
+
+				$id = DB::table( 'comments' )
+						->where( 'comment_type', $comment_type )
+						->where( 'user_id', $user_id )
+						->where( 'comment_ID', $object_id )
+						->value( 'comment_ID' );
 
 				return $id ? true : false;
 		}

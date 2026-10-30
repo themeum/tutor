@@ -164,6 +164,15 @@ class DateFilter extends BaseComponent {
 	protected $clear_params = array();
 
 	/**
+	 * Default preset to activate when no date range is selected.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @var string|null
+	 */
+	protected $default_preset = null;
+
+	/**
 	 * Whether to operate in AJAX mode (dispatch event instead of full page reload).
 	 *
 	 * @since 4.1.0
@@ -297,6 +306,20 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set default preset when no date range is selected.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string|null $preset Preset key (e.g. 'all-time').
+	 *
+	 * @return self
+	 */
+	public function default_preset( ?string $preset = 'all-time' ): self {
+		$this->default_preset = $preset;
+		return $this;
+	}
+
+	/**
 	 * Render the component.
 	 *
 	 * @return string
@@ -308,11 +331,14 @@ class DateFilter extends BaseComponent {
 			$this->label = $this->calculate_label();
 		}
 
+		$default_preset = $this->default_preset ?? ( $this->hide_initial_label ? null : 'all-time' );
+
 		// Default settings based on type.
 		$calendar_options = array(
-			'type'        => 'default',
-			'clearParams' => $this->clear_params,
-			'ajaxMode'    => $this->ajax_mode,
+			'type'          => 'default',
+			'clearParams'   => $this->clear_params,
+			'ajaxMode'      => $this->ajax_mode,
+			'defaultPreset' => $default_preset,
 		);
 
 		$button_classes = 'tutor-btn tutor-btn-outline';
@@ -330,6 +356,7 @@ class DateFilter extends BaseComponent {
 				'selectionDatesMode' => 'multiple-ranged',
 				'clearParams'        => $this->clear_params,
 				'ajaxMode'           => $this->ajax_mode,
+				'defaultPreset'      => $default_preset,
 			);
 			$popover_classes .= ' tutor-range-calendar-popover';
 		}
@@ -357,8 +384,8 @@ class DateFilter extends BaseComponent {
 			}"
 			<?php if ( $this->ajax_mode ) : ?>
 				@tutor:date-filter-changed.window="
-					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date );
-					label = $event.detail.label || <?php echo esc_attr( wp_json_encode( $this->hide_initial_label ? '' : __( 'All Time', 'tutor' ) ) ); ?>;
+					hasSelection = Boolean( $event.detail.startDate || $event.detail.endDate || $event.detail.date || $event.detail.period === 'all-time' );
+					label = hasSelection ? ( $event.detail.label || '' ) : <?php echo esc_attr( wp_json_encode( $this->hide_initial_label ? '' : __( 'All Time', 'tutor' ) ) ); ?>;
 				"
 			<?php endif; ?>
 			<?php echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string. ?>
@@ -406,7 +433,7 @@ class DateFilter extends BaseComponent {
 		if ( self::TYPE_SINGLE === $this->type ) {
 			return ! empty( Input::get( 'date' ) );
 		}
-		return ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) );
+		return ( ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) ) ) || 'all-time' === Input::get( 'period' );
 	}
 
 	/**
@@ -425,6 +452,11 @@ class DateFilter extends BaseComponent {
 
 		$start_date = Input::get( 'start_date' );
 		$end_date   = Input::get( 'end_date' );
+		$period     = Input::get( 'period' );
+
+		if ( 'all-time' === $period ) {
+			return __( 'All Time', 'tutor' );
+		}
 
 		if ( ! $start_date || ! $end_date ) {
 			return $this->hide_initial_label ? '' : __( 'All Time', 'tutor' );
