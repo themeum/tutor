@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.1.2
+Stable tag: 4.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,32 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.2.0 - 27 Oct, 2026
+
+New: Added REST API authentication with personalized access tokens.
+New: Added endpoint-level authorization to ensure REST API operations follow user roles and capabilities.
+Update: API key permissions for Read, Write, Delete, and All actions are now enforced across Tutor LMS REST API routes.
+Update: Sensitive learning content routes now require valid enrollment, public access, or instructor/admin permissions. (Pro)
+Update: Quiz answers are now verified server-side in Reveal Mode to prevent answer exposure.
+Update: Optimized loading performance for the course list page in the WordPress admin area.
+Update: Improved loading performance when exporting Analytics data. (Pro)
+Update: Optimized the overall Analytics data export process. (Pro)
+Fix: Fixed an issue where the Logout button was missing on mobile devices.
+Fix: Fixed an issue where subscription expiration emails were triggered before every renewal email. (Pro)
+Fix: Fixed a PHP warning appearing in the Courses section after disabling a subscription plan. (Pro)
+Fix: Fixed skipped Essay questions preventing quiz completion and blocking instructors from manually grading or closing pending attempts. (Pro)
+Fix: Fixed an issue preventing audio files from being submitted as assignment attachments. (Pro)
+Fix: Fixed a race condition affecting coupon usage.
+Fix: Fixed the "Use Points Instead of Grades" option not working correctly in the learner Gradebook within the Learning Area. (Pro)
+Fix: Fixed a JavaScript error on the checkout page when a subscription was pending. (Pro)
+Fix: Fixed unauthorized REST API access to course content, lessons, topics, announcements, quiz answers, quiz attempts, and user details.
+Fix: Fixed the REST API returning a 200 OK response with empty course data for non-existent course IDs.
+Fix: Fixed paid courses incorrectly returning a course price of "0" in REST API responses.
+
+= 4.1.3 - 15 Oct, 2026
+
+Fix: Patched a security vulnerability.
 
 = 4.1.2 - 12 Oct, 2026
 
