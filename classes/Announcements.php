@@ -112,10 +112,13 @@ class Announcements {
 		$bulk_ids = array_filter(
 			explode( ',', $bulk_ids ),
 			function ( $announcement_id ) {
-				$announcement = get_post( $announcement_id );
-				return $announcement && tutor()->announcement_post_type === $announcement->post_type && tutor_utils()->can_user_manage( 'announcement', $announcement_id );
+				return $this->can_manage_announcement( $announcement_id );
 			}
 		);
+
+		if ( empty( $bulk_ids ) ) {
+			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+		}
 
 		$update = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
@@ -192,5 +195,21 @@ class Announcements {
 		);
 
 		return $nav_items;
+	}
+
+	/**
+	 * Check if the user can manage announcement
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param int $post_id Announcement id.
+	 * @param int $user_id Optional user id, default is current user id.
+	 *
+	 * @return bool
+	 */
+	public function can_manage_announcement( int $post_id, int $user_id = 0 ): bool {
+		$post = get_post( $post_id );
+
+		return $post && tutor()->announcement_post_type === $post->post_type && tutor_utils()->can_user_manage( 'announcement', $post_id, $user_id );
 	}
 }
