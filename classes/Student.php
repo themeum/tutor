@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 
