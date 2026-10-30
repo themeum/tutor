@@ -9,12 +9,21 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
 if ( ! isset( $field['fields'] ) || ! is_array( $field['fields'] ) || ! count( $field['fields'] ) ) {
 	return;
 }
 
-$field_key = esc_attr( $field['key'] );
-$field_id  = esc_attr( 'field_' . $field_key );
+$field_key = $field['key'] ?? '';
+$field_id  = 'field_' . $field_key;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>

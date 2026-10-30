@@ -9,11 +9,20 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
 $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_url( $field_id ); ?>">
+<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
 		<div class="type-check tutor-d-flex">
@@ -23,9 +32,9 @@ $field_id     = 'field_' . $field['key'];
 				$field_value = $option_value[ $key ] ?? array();
 				?>
 				<div class="tutor-form-check">
-					<input type="hidden" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $field_value ); ?>">
-					<input type="checkbox" id="<?php echo esc_url( $field_id ); ?>" class="tutor-form-check-input" name="tutor_option[<?php echo esc_url( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" <?php checked( $field_value[1], 'on' ); ?> value="on">
-					<label for="<?php echo esc_url( $field_id ); ?>">
+					<input type="hidden" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" value="">
+					<input type="checkbox" id="<?php echo esc_attr( $field_id ); ?>" class="tutor-form-check-input" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" <?php checked( $field_value[1] ?? '', 'on' ); ?> value="on">
+					<label for="<?php echo esc_attr( $field_id ); ?>">
 					<?php echo wp_kses_data( $option ); ?>
 					</label>
 				</div>

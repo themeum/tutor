@@ -9,13 +9,22 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
 $value = $this->get( $field['key'] );
-if ( '0' != $value && ! $value && isset( $field['default'] ) ) {
+if ( '0' !== $value && ! $value && isset( $field['default'] ) ) {
 	$value = $field['default'];
 }
-$field_key   = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
-$field_id    = esc_attr( 'field_' . $field_key );
-$placeholder = isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : esc_attr( $field['desc'] );
+$field_key   = $field['key'] ?? '';
+$field_id    = 'field_' . $field_key;
+$placeholder = isset( $field['placeholder'] ) ? $field['placeholder'] : ( $field['desc'] ?? '' );
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
