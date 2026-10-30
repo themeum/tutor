@@ -8,10 +8,18 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 $question    = tutor_utils()->get_qa_question( $question_id );
+$question    = is_array( $question ) ? (object) $question : $question;
+
+if ( ! is_object( $question ) ) {
+	tutor_utils()->tutor_empty_state( __( 'Question not found', 'tutor' ) );
+	return;
+}
 ?>
 
 <div class="wrap">
@@ -57,7 +65,7 @@ $question    = tutor_utils()->get_qa_question( $question_id );
 
 				<div class="question-top-meta">
 					<p class="review-meta">
-						<?php echo esc_attr( $question->display_name ); ?> -
+						<?php echo esc_html( $question->display_name ); ?> -
 						<span class="tutor-color-muted">
 							<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ); //phpcs:ignore ?>
 						</span>
@@ -71,7 +79,7 @@ $question    = tutor_utils()->get_qa_question( $question_id );
 						</strong>
 
 						<span class="tutor-color-muted">
-							<?php esc_html_e( 'on', 'tutor' ); ?> <?php echo esc_attr( $question->post_title ); ?>
+							<?php esc_html_e( 'on', 'tutor' ); ?> <?php echo esc_html( $question->post_title ); ?>
 						</span>
 					</p>
 					<?php echo wp_kses_post( wpautop( stripslashes( $question->comment_content ) ) ); ?>
@@ -102,7 +110,7 @@ $question    = tutor_utils()->get_qa_question( $question_id );
 						<div class="question-right">
 							<div class="question-top-meta">
 								<p class="review-meta">
-									<?php echo esc_attr( $answer->display_name ); ?> -
+									<?php echo esc_html( $answer->display_name ); ?> -
 									<span class="tutor-color-muted">
 										<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); //phpcs:ignore ?>
 									</span>
