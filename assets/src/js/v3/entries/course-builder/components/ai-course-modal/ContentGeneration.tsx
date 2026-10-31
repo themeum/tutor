@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -108,10 +108,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
-  const promptValue = form.watch('prompt');
+  const promptValue = useWatch({ control: form.control, name: 'prompt' });
   const { showToast } = useToast();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoadingSteps((previous) => {
       const copy = { ...previous };
       const keys = getObjectKeys(copy);
