@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
@@ -26,7 +27,8 @@ interface CourseListTableProps {
 
 const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch('content_bank') || [], [form]);
+  const watchedItems = useWatch({ control: form.control, name: 'content_bank' });
+  const selectedItems = useMemo(() => watchedItems || [], [watchedItems]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
 
   const getCollectionListQuery = useGetCollectionsPaginatedQuery({

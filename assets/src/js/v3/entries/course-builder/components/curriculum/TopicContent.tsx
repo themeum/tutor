@@ -174,7 +174,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
       showModal({
         component: modalComponent[contentType],
         props: {
-          contentDripType: form.watch('contentDripType'),
+          contentDripType: form.getValues('contentDripType'),
           topicId: topicId,
           lessonId: contentId,
           assignmentId: contentId,

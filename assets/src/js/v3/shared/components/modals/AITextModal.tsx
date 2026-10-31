@@ -5,6 +5,7 @@ import {
   type ControllerRenderProps,
   type FieldValues,
   type Path,
+  useWatch,
 } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -107,7 +108,7 @@ const AITextModal = <T extends FieldValues>({
     return content[pointer];
   }, [content, pointer]);
 
-  const prompt = form.watch('prompt');
+  const prompt = useWatch({ control: form.control, name: 'prompt' });
 
   function insertText(text: string) {
     setContent((previous) => [text, ...previous]);

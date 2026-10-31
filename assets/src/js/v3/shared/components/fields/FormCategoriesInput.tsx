@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Controller, type FieldValues } from 'react-hook-form';
+import { Controller, type FieldValues, useWatch } from 'react-hook-form';
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { produce } from 'immer';
@@ -56,7 +56,7 @@ const FormMultiLevelInput = ({
   }>({
     shouldFocusError: true,
   });
-  const searchValue = form.watch('search');
+  const searchValue = useWatch({ control: form.control, name: 'search', defaultValue: '' });
   const debouncedSearchValue = useDebounce(searchValue, 300);
   const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
   const createCategoryMutation = useCreateCategoryMutation();
@@ -66,6 +66,7 @@ const FormMultiLevelInput = ({
 
   useEffect(() => {
     if (!categoryListQuery.isLoading && (categoryListQuery.data || []).length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasCategories(true);
     }
   }, [categoryListQuery.isLoading, categoryListQuery.data]);

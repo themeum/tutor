@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -19,9 +19,9 @@ import type { Coupon } from '@CouponDetails/services/coupon';
 function CouponValidity() {
   const form = useFormContext<Coupon>();
 
-  const isEndEnabled = form.watch('is_end_enabled');
-  const startDate = form.watch('start_date');
-  const startTime = form.watch('start_time');
+  const isEndEnabled = useWatch({ control: form.control, name: 'is_end_enabled' });
+  const startDate = useWatch({ control: form.control, name: 'start_date' });
+  const startTime = useWatch({ control: form.control, name: 'start_time' });
   const hasStartDateTime = !!startDate && !!startTime;
 
   return (

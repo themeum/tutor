@@ -1,4 +1,4 @@
-import { type UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -33,8 +33,9 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
     },
   });
 
-  const selectedItems =
-    ((type === 'courses' ? _form.watch('courses') : _form.watch('course-bundle')) as CourseBundleCombined[]) || [];
+  const watchedCourses = useWatch({ control: _form.control, name: 'courses' });
+  const watchedBundles = useWatch({ control: _form.control, name: 'course-bundle' });
+  const selectedItems = ((type === 'courses' ? watchedCourses : watchedBundles) as CourseBundleCombined[]) || [];
 
   const handleAddCourses = () => {
     const selectedItems = _form.getValues(type) || [];

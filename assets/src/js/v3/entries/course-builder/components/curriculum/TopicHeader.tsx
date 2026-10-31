@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
@@ -127,7 +127,8 @@ const TopicHeader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
-  const summaryValue = form.watch('summary') ?? '';
+  const summaryValue = useWatch({ control: form.control, name: 'summary' }) ?? '';
+  const titleValue = useWatch({ control: form.control, name: 'title' });
   const hasSummary = summaryValue.trim().length > 0;
 
   return (
@@ -163,7 +164,7 @@ const TopicHeader = ({
               when={isEdit}
               fallback={
                 <div css={styles.title({ isEdit })} onDoubleClick={() => setIsEdit(true)}>
-                  {form.watch('title')}
+                  {titleValue}
                 </div>
               }
             >

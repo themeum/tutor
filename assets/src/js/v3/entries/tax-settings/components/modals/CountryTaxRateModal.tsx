@@ -34,7 +34,7 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
       taxRate: 0,
     },
   });
-  const activeCountryCode = form.watch('active_country');
+  const activeCountryCode = form.getValues('active_country');
   const activeCountryRate = form.getValues('rates').find((rate) => String(rate.country) === String(activeCountryCode));
   const isEU = isEuropeanUnion(activeCountryCode ?? '');
 
@@ -82,15 +82,10 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
             rules={requiredRule()}
             render={(controllerProps) => {
               const activeCountryStates = activeCountryRate?.states.map((state) => `${state.id}`);
-              let options = [];
-
-              if (isEU) {
-                options = europeanUnionData.states.map((state) => ({ label: state.name, value: state.numeric_code }));
-              } else {
-                options = getStatesByCountryAsOptions(activeCountryCode ?? '');
-              }
-
-              options = options.filter((option) => !activeCountryStates?.includes(option.value));
+              const baseOptions = isEU
+                ? europeanUnionData.states.map((state) => ({ label: state.name, value: state.numeric_code }))
+                : getStatesByCountryAsOptions(activeCountryCode ?? '');
+              const options = baseOptions.filter((option) => !activeCountryStates?.includes(option.value));
 
               return (
                 <FormSelectInput

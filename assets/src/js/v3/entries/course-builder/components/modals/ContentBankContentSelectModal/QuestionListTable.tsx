@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
@@ -33,7 +33,7 @@ const questionTypeOptions = tutorConfig.is_legacy_learning_mode
 const QuestionListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
-  const selectedCollection = form.watch('selectedCollection');
+  const selectedCollection = useWatch({ control: form.control, name: 'selectedCollection' });
   const [questionTypes, setQuestionTypes] = useState<QuizQuestionType[]>([]);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [orderDirection, setOrderDirection] = useState<SortDirection>('asc');
@@ -51,7 +51,8 @@ const QuestionListTable = () => {
   const totalItems = getContentsQuery.data?.total_record || 0;
   const totalPages = Number(getContentsQuery.data?.total_page || 0);
   const collectionName = selectedCollection?.post_title ?? __('All Contents', 'tutor');
-  const selectedContents = form.watch('contents') || [];
+  const watchedContents = useWatch({ control: form.control, name: 'contents' });
+  const selectedContents = useMemo(() => watchedContents || [], [watchedContents]);
   const selectedContentIds = selectedContents.map((content) => String(content.ID));
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
@@ -113,8 +114,8 @@ const QuestionListTable = () => {
       name: 'title',
       Cell: (item) => {
         const handleItemToggle = () => {
-          const selectedContents = form.watch('contents') || [];
-          const filteredContents = selectedContents.filter((content) => String(content.ID) !== String(item.ID));
+          const currentSelected = form.getValues('contents') || [];
+          const filteredContents = currentSelected.filter((content) => String(content.ID) !== String(item.ID));
           const isNewItem = filteredContents.length === selectedContents.length;
 
           if (isNewItem) {

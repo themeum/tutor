@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -16,7 +16,8 @@ import { icons } from '@TutorShared/icons/types';
 
 const IconList = () => {
   const form = useFormWithGlobalError<{ search: string }>({ defaultValues: { search: '' } });
-  const search = useDebounce(form.watch('search'));
+  const searchValue = useWatch({ control: form.control, name: 'search' }) ?? '';
+  const search = useDebounce(searchValue);
   const filteredIcons = useMemo(() => {
     if (!search) {
       return icons;

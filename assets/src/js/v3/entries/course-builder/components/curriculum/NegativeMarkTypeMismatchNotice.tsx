@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -56,9 +56,9 @@ const NegativeMarkTypeMismatchNotice = () => {
   const form = useFormContext<QuizForm>();
   const { showModal } = useModal();
 
-  const negativeMarkType = form.watch('quiz_option.negative_mark_type');
-  const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
-  const negativeMarkValue = form.watch('quiz_option.negative_mark_value');
+  const negativeMarkType = useWatch({ control: form.control, name: 'quiz_option.negative_mark_type' });
+  const negativeMarkingEnabled = useWatch({ control: form.control, name: 'quiz_option.enable_negative_marking' });
+  const negativeMarkValue = useWatch({ control: form.control, name: 'quiz_option.negative_mark_value' });
 
   const adminNegativeMarkEnabled = tutorConfig.settings?.enable_quiz_negative_marking === 'on';
   const adminNegativeMarkValue = tutorConfig.settings.quiz_negative_mark_value;
