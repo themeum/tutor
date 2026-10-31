@@ -118,11 +118,9 @@ const GenerateQuizWithAi = () => {
         ];
   }, [topicId, topics]);
 
-  const watchedTopicIds = useWatch({ control: form.control, name: 'topic_ids' });
-  const selectedTopicIds = watchedTopicIds ?? emptyTopicIds;
+  const selectedTopicIds = useWatch({ control: form.control, name: 'topic_ids', defaultValue: emptyTopicIds });
   const questionTypes = useWatch({ control: form.control, name: 'question_types' });
-  const watchedQuestionCount = useWatch({ control: form.control, name: 'question_count' });
-  const questionCount = Number(watchedQuestionCount);
+  const questionCount = Number(useWatch({ control: form.control, name: 'question_count' }));
   const difficulty_level = useWatch({ control: form.control, name: 'difficulty_level' });
   const selectedQuestionTypes = questionTypeOptions
     .filter((option) => questionTypes?.[option.value])

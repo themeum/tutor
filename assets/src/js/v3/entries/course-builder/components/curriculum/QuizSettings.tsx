@@ -103,8 +103,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const negativeMarkType = useWatch({ control: form.control, name: 'quiz_option.negative_mark_type' });
   const negativeMarkingEnabled = useWatch({ control: form.control, name: 'quiz_option.enable_negative_marking' });
 
-  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
-  const questions = watchedQuestions || [];
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
   const questionsCount = questions.length;
   const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
   const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
@@ -146,8 +145,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   })();
   const questionsForStats = hasQuestionLimit ? orderedQuestions.slice(0, availableQuestionInPool) : orderedQuestions;
   const questionCountForStats = questionsForStats.length;
-  const passingGradeValue = useWatch({ control: form.control, name: 'quiz_option.passing_grade' });
-  const passingGrade = Number(passingGradeValue);
+  const passingGrade = Number(useWatch({ control: form.control, name: 'quiz_option.passing_grade' }));
   const totalMarksForStats = questionsForStats.reduce(
     (sum, question) => sum + Number(question.question_settings.question_mark || 0),
     0,
@@ -172,8 +170,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
     return questionCountForStats;
   })();
-  const timeLimitVal = useWatch({ control: form.control, name: 'quiz_option.time_limit.time_value' });
-  const timeLimitValue = Number(timeLimitVal);
+  const timeLimitValue = Number(useWatch({ control: form.control, name: 'quiz_option.time_limit.time_value' }));
   const timeLimitType = useWatch({ control: form.control, name: 'quiz_option.time_limit.time_type' });
   const quizAutoStart = useWatch({ control: form.control, name: 'quiz_option.quiz_auto_start' });
   const questionLayoutView = useWatch({ control: form.control, name: 'quiz_option.question_layout_view' });
@@ -882,7 +879,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Show when={hasTimeLimit}>
               <div css={styles.infoCard}>
                 <div data-title>
-                  {timeLimitVal} {timeLimitType}
+                  {timeLimitValue} {timeLimitType}
                 </div>
                 <div data-subtitle>{__('Time limit', 'tutor')}</div>
 
@@ -895,7 +892,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
             <div css={styles.infoCard}>
               <div data-title>
-                {passingGradeValue}
+                {passingGrade}
                 {__('%', 'tutor')}
               </div>
               <div data-subtitle>{__('Passing grade', 'tutor')}</div>

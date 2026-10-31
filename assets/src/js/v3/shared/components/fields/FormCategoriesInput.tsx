@@ -56,8 +56,7 @@ const FormMultiLevelInput = ({
   }>({
     shouldFocusError: true,
   });
-  const search = useWatch({ control: form.control, name: 'search' }) ?? '';
-  const searchValue = search;
+  const searchValue = useWatch({ control: form.control, name: 'search', defaultValue: '' });
   const debouncedSearchValue = useDebounce(searchValue, 300);
   const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
   const createCategoryMutation = useCreateCategoryMutation();

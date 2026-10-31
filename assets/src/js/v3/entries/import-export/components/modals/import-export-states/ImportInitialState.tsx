@@ -90,8 +90,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
       collectionId: '',
     },
   });
-  const watchedSearchTerm = useWatch({ control: form.control, name: 'collectionSearch' });
-  const searchTerm = watchedSearchTerm ?? '';
+  const searchTerm = useWatch({ control: form.control, name: 'collectionSearch', defaultValue: '' });
   const search = useDebounce(searchTerm, 300);
   const isContentBankSelectionEnabled = useWatch({ control: form.control, name: 'importIntoContentBank' });
 
@@ -105,8 +104,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     isEnabled: !!isContentBankSelectionEnabled,
   });
 
-  const watchedFiles = useWatch({ control: form.control, name: 'files' });
-  const files = watchedFiles ?? [];
+  const files = useWatch({ control: form.control, name: 'files', defaultValue: [] });
 
   useEffect(() => {
     if (files.length === 0) {
