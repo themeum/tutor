@@ -26,13 +26,10 @@ import { moveTo } from '@TutorShared/utils/util';
 import type { PaymentSettings } from '../services/payment';
 import PaymentItem from './PaymentItem';
 
-const emptyPaymentMethods: PaymentSettings['payment_methods'] = [];
-
 const PaymentMethods = () => {
   const form = useFormContext<PaymentSettings>();
-  const paymentMethods =
-    useWatch({ control: form.control, name: 'payment_methods', defaultValue: emptyPaymentMethods }) ??
-    emptyPaymentMethods;
+  const watchedPaymentMethods = useWatch({ control: form.control, name: 'payment_methods' });
+  const paymentMethods = useMemo(() => watchedPaymentMethods || [], [watchedPaymentMethods]);
 
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
