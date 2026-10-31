@@ -352,7 +352,7 @@ const QuizModal = ({
                                 variant="text"
                                 type="button"
                                 onClick={() => {
-                                  if (!form.watch('quiz_title')) {
+                                  if (!form.getValues('quiz_title')) {
                                     closeModal();
                                   }
                                   setIsEdit(false);

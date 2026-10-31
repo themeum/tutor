@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -20,9 +20,9 @@ const { tutor_currency } = tutorConfig;
 
 export function OfferSalePrice() {
   const form = useFormContext<SubscriptionFormDataWithSaved>();
-  const hasSale = form.watch('offer_sale_price');
-  const regularPrice = form.watch('regular_price');
-  const hasScheduledSale = !!form.watch('schedule_sale_price');
+  const hasSale = useWatch({ control: form.control, name: 'offer_sale_price' });
+  const regularPrice = useWatch({ control: form.control, name: 'regular_price' });
+  const hasScheduledSale = !!useWatch({ control: form.control, name: 'schedule_sale_price' });
 
   return (
     <div css={saleStyles.wrapper}>
@@ -110,7 +110,7 @@ export function OfferSalePrice() {
                     required: __('Schedule date is required', __TUTOR_TEXT_DOMAIN__),
                     validate: {
                       checkEndDate: (value) => {
-                        const startDate = form.watch('sale_price_from_date');
+                        const startDate = form.getValues('sale_price_from_date');
                         const endDate = value;
                         if (startDate && endDate) {
                           return new Date(startDate) > new Date(endDate)
@@ -139,9 +139,9 @@ export function OfferSalePrice() {
                     required: __('Schedule time is required', __TUTOR_TEXT_DOMAIN__),
                     validate: {
                       checkEndTime: (value) => {
-                        const startDate = form.watch('sale_price_from_date');
-                        const startTime = form.watch('sale_price_from_time');
-                        const endDate = form.watch('sale_price_to_date');
+                        const startDate = form.getValues('sale_price_from_date');
+                        const startTime = form.getValues('sale_price_from_time');
+                        const endDate = form.getValues('sale_price_to_date');
                         const endTime = value;
                         if (startDate && endDate && startTime && endTime) {
                           return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)

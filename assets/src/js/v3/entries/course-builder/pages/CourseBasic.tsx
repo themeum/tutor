@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -50,9 +50,8 @@ const CourseBasic = () => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
-  const postStatus = form.watch('post_status');
-
-  const editorUsed = form.watch('editor_used');
+  const postStatus = useWatch({ control: form.control, name: 'post_status' });
+  const editorUsed = useWatch({ control: form.control, name: 'editor_used' });
 
   return (
     <div css={styles.wrapper}>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css, keyframes } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -39,7 +39,9 @@ const MagicFill = () => {
 
   const { onDropdownMenuChange, currentImage, field, onCloseModal } = useMagicImageGeneration();
   const storeAIGeneratedImageMutation = useStoreAIGeneratedImageMutation();
-  const brushSize = useDebounce(form.watch('brush_size', 40));
+  const watchedBrushSize = useWatch({ control: form.control, name: 'brush_size', defaultValue: 40 });
+  const promptValue = useWatch({ control: form.control, name: 'prompt' });
+  const brushSize = useDebounce(watchedBrushSize);
   const [trackStack, setTrackStack] = useState<ImageData[]>([]);
   const [pointer, setPointer] = useState(1);
 
@@ -94,6 +96,7 @@ const MagicFill = () => {
   return (
     <form
       css={magicAIStyles.wrapper}
+      // eslint-disable-next-line react-hooks/refs
       onSubmit={form.handleSubmit(async (values) => {
         const canvas = canvasRef.current;
         const context = canvas?.getContext('2d');
@@ -261,7 +264,7 @@ const MagicFill = () => {
           ]}
         >
           <div css={styles.footerButtons}>
-            <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !form.watch('prompt')}>
+            <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !promptValue}>
               <SVGIcon name="magicWand" width={24} height={24} />
               {__('Generative Erase', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>

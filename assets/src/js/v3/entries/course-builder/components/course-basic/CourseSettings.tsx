@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -42,9 +42,10 @@ const CourseSettings = () => {
     VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.ENROLLMENT,
   );
 
-  const isContentDripActive = form.watch('contentDripType');
-  const isBuddyPressEnabled = form.watch('enable_tutor_bp');
-  const isPaidCourse = form.watch('course_price_type') === 'paid';
+  const isContentDripActive = useWatch({ control: form.control, name: 'contentDripType' });
+  const isBuddyPressEnabled = useWatch({ control: form.control, name: 'enable_tutor_bp' });
+  const coursePriceType = useWatch({ control: form.control, name: 'course_price_type' });
+  const isPaidCourse = coursePriceType === 'paid';
 
   const availableTabs = [
     isGeneralSettingsVisible && {

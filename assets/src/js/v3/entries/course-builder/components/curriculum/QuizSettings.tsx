@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
@@ -99,16 +99,17 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const isLegacyLearningMode = tutorConfig.settings?.learning_mode === 'legacy';
   const adminPartialEnabled = tutorConfig.settings?.enable_quiz_partial_marking === 'on';
   const adminNegativeEnabled = tutorConfig.settings?.enable_quiz_negative_marking === 'on';
-  const partialMarkingEnabled = form.watch('quiz_option.enable_partial_marking');
-  const negativeMarkType = form.watch('quiz_option.negative_mark_type');
-  const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
+  const partialMarkingEnabled = useWatch({ control: form.control, name: 'quiz_option.enable_partial_marking' });
+  const negativeMarkType = useWatch({ control: form.control, name: 'quiz_option.negative_mark_type' });
+  const negativeMarkingEnabled = useWatch({ control: form.control, name: 'quiz_option.enable_negative_marking' });
 
-  const questions = form.watch('questions');
+  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
+  const questions = watchedQuestions || [];
   const questionsCount = questions.length;
   const hasOpenEndedQuestions = questions.some((question) => question.question_type === 'open_ended');
   const hasShortAnswerQuestions = questions.some((question) => question.question_type === 'short_answer');
   const hasCharacterLimitQuestions = hasOpenEndedQuestions || hasShortAnswerQuestions;
-  const hasAttemptsLimit = form.watch('quiz_option.limit_attempts_allowed');
+  const hasAttemptsLimit = useWatch({ control: form.control, name: 'quiz_option.limit_attempts_allowed' });
   const showPassRequired =
     isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && hasAttemptsLimit;
   const showContentDripSettings =
@@ -116,11 +117,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
     contentType !== 'tutor_h5p_quiz' &&
     Boolean(contentDripType) &&
     contentDripType !== 'unlock_sequentially';
-  const hasQuestionLimit = form.watch('quiz_option.limit_questions_to_answer');
-  const hasTimeLimit = form.watch('quiz_option.enable_time_limit');
-  const questionsOrder = form.watch('quiz_option.questions_order');
+  const hasQuestionLimit = useWatch({ control: form.control, name: 'quiz_option.limit_questions_to_answer' });
+  const hasTimeLimit = useWatch({ control: form.control, name: 'quiz_option.enable_time_limit' });
+  const questionsOrder = useWatch({ control: form.control, name: 'quiz_option.questions_order' });
+  const maxQuestionsForAnswer = useWatch({ control: form.control, name: 'quiz_option.max_questions_for_answer' });
   const availableQuestionInPool = hasQuestionLimit
-    ? Math.min(Number(form.watch('quiz_option.max_questions_for_answer')), questionsCount) || questionsCount
+    ? Math.min(Number(maxQuestionsForAnswer), questionsCount) || questionsCount
     : questionsCount;
   const usedQuestionCountPercentage = (availableQuestionInPool / questionsCount) * 100;
   const orderedQuestions = (() => {
@@ -144,7 +146,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   })();
   const questionsForStats = hasQuestionLimit ? orderedQuestions.slice(0, availableQuestionInPool) : orderedQuestions;
   const questionCountForStats = questionsForStats.length;
-  const passingGrade = Number(form.watch('quiz_option.passing_grade'));
+  const passingGradeValue = useWatch({ control: form.control, name: 'quiz_option.passing_grade' });
+  const passingGrade = Number(passingGradeValue);
   const totalMarksForStats = questionsForStats.reduce(
     (sum, question) => sum + Number(question.question_settings.question_mark || 0),
     0,
@@ -169,8 +172,14 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
     return questionCountForStats;
   })();
-  const timeLimitValue = Number(form.watch('quiz_option.time_limit.time_value'));
-  const timeLimitType = form.watch('quiz_option.time_limit.time_type');
+  const timeLimitVal = useWatch({ control: form.control, name: 'quiz_option.time_limit.time_value' });
+  const timeLimitValue = Number(timeLimitVal);
+  const timeLimitType = useWatch({ control: form.control, name: 'quiz_option.time_limit.time_type' });
+  const quizAutoStart = useWatch({ control: form.control, name: 'quiz_option.quiz_auto_start' });
+  const questionLayoutView = useWatch({ control: form.control, name: 'quiz_option.question_layout_view' });
+  const enablePagination = useWatch({ control: form.control, name: 'quiz_option.enable_pagination' });
+  const paginationType = useWatch({ control: form.control, name: 'quiz_option.pagination_type' });
+  const enableAnswerReveal = useWatch({ control: form.control, name: 'quiz_option.enable_answer_reveal' });
   const timePerQuestionInSeconds =
     questionCountForStats > 0 ? Math.floor(getTimeInSeconds(timeLimitValue, timeLimitType) / questionCountForStats) : 0;
 
@@ -221,7 +230,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 )}
               />
 
-              <Show when={form.watch('quiz_option.limit_attempts_allowed')}>
+              <Show when={hasAttemptsLimit}>
                 <Controller
                   name="quiz_option.attempts_allowed"
                   control={form.control}
@@ -431,7 +440,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     <FormCheckbox {...controllerProps} label={__('Set time limit', 'tutor')} />
                   )}
                 />
-                <Show when={form.watch('quiz_option.enable_time_limit')}>
+                <Show when={hasTimeLimit}>
                   <div css={styles.timeLimit}>
                     <Controller
                       name="quiz_option.time_limit.time_value"
@@ -478,7 +487,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 </Show>
               </div>
 
-              <Show when={form.watch('quiz_option.enable_time_limit')}>
+              <Show when={hasTimeLimit}>
                 <Controller
                   name="quiz_option.hide_quiz_time_display"
                   control={form.control}
@@ -500,7 +509,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 )}
               />
 
-              <Show when={form.watch('quiz_option.quiz_auto_start')}>
+              <Show when={quizAutoStart}>
                 <div css={styles.inlineForm({ withPrefix: true })}>
                   <div data-prefix>{__('After', 'tutor')}</div>
                   <Controller
@@ -571,7 +580,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 )}
               />
 
-              <Show when={form.watch('quiz_option.question_layout_view') === 'single_question'}>
+              <Show when={questionLayoutView === 'single_question'}>
                 <hr />
 
                 <div css={styles.inlineForm({ minHeight: '34px' })}>
@@ -591,13 +600,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     )}
                   />
 
-                  <Show when={form.watch('quiz_option.enable_pagination')}>
+                  <Show when={enablePagination}>
                     <div css={styles.paginationIcons}>
-                      <SVGIcon
-                        name={getPaginationTypeIcon(form.watch('quiz_option.pagination_type'))}
-                        width={40}
-                        height={32}
-                      />
+                      <SVGIcon name={getPaginationTypeIcon(paginationType)} width={40} height={32} />
                     </div>
                     <Controller
                       control={form.control}
@@ -637,7 +642,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     )}
                   />
 
-                  <Show when={form.watch('quiz_option.enable_answer_reveal')}>
+                  <Show when={enableAnswerReveal}>
                     <div css={styles.inlineForm({ withPrefix: true })}>
                       <div data-prefix>{__('For', 'tutor')}</div>
                       <Controller
@@ -680,7 +685,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
                 <hr />
 
-                <Show when={!form.watch('quiz_option.enable_pagination')}>
+                <Show when={!enablePagination}>
                   <Controller
                     control={form.control}
                     name="quiz_option.hide_previous_button"
@@ -877,7 +882,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Show when={hasTimeLimit}>
               <div css={styles.infoCard}>
                 <div data-title>
-                  {form.watch('quiz_option.time_limit.time_value')} {form.watch('quiz_option.time_limit.time_type')}
+                  {timeLimitVal} {timeLimitType}
                 </div>
                 <div data-subtitle>{__('Time limit', 'tutor')}</div>
 
@@ -890,7 +895,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
             <div css={styles.infoCard}>
               <div data-title>
-                {form.watch('quiz_option.passing_grade')}
+                {passingGradeValue}
                 {__('%', 'tutor')}
               </div>
               <div data-subtitle>{__('Passing grade', 'tutor')}</div>
