@@ -27,8 +27,7 @@ interface ColumnDataType {
 function EuropeanUnionTax() {
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
   const form = useFormContext<TaxSettings>();
-  const watchedRates = useWatch({ control: form.control, name: 'rates' });
-  const rates = watchedRates ?? [];
+  const rates = useWatch({ control: form.control, name: 'rates', defaultValue: [] });
   const euIndex = rates.findIndex((rate) => String(rate.country) === String(euCountryCode));
   const euRate = rates[euIndex];
 

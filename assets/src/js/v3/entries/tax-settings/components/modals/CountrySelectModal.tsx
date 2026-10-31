@@ -44,11 +44,13 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     defaultValues: { searchValue: '', selectedCountries: {}, activeCountry: '' },
   });
 
-  const watchedSelectedCountries = useWatch({ control: regionStateForm.control, name: 'selectedCountries' });
-  const selectedCountries = watchedSelectedCountries ?? {};
+  const selectedCountries = useWatch({
+    control: regionStateForm.control,
+    name: 'selectedCountries',
+    defaultValue: {},
+  });
   const activeCountry = useWatch({ control: regionStateForm.control, name: 'activeCountry' });
-  const watchedSearchValue = useWatch({ control: regionStateForm.control, name: 'searchValue' });
-  const searchValue = watchedSearchValue ?? '';
+  const searchValue = useWatch({ control: regionStateForm.control, name: 'searchValue', defaultValue: '' });
 
   let countries = getCountryListAsOptions([]);
 

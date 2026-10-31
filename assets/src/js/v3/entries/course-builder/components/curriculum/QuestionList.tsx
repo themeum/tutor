@@ -103,8 +103,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
-  const questions = watchedQuestions || [];
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
   const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {

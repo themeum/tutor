@@ -49,8 +49,7 @@ const QuestionForm = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type',
   });
-  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
-  const questions = watchedQuestions || [];
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
   const dataStatus = useWatch({
     control: form.control,
     name: `questions.${activeQuestionIndex}._data_status` as 'questions.0._data_status',

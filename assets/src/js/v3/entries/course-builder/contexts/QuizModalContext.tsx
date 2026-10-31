@@ -76,8 +76,7 @@ export const QuizModalContextProvider = ({
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
-  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
-  const questions = watchedQuestions || [];
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
   const previousQuestions = useRef<QuizQuestion[]>(questions);
   const [validationError, setValidationError] = useState<{
     message: string;

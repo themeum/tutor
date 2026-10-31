@@ -30,8 +30,9 @@ const emptyPaymentMethods: PaymentSettings['payment_methods'] = [];
 
 const PaymentMethods = () => {
   const form = useFormContext<PaymentSettings>();
-  const watchedPaymentMethods = useWatch({ control: form.control, name: 'payment_methods' });
-  const paymentMethods = watchedPaymentMethods ?? emptyPaymentMethods;
+  const paymentMethods =
+    useWatch({ control: form.control, name: 'payment_methods', defaultValue: emptyPaymentMethods }) ??
+    emptyPaymentMethods;
 
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 

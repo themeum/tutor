@@ -31,8 +31,7 @@ const CollectionListModal = ({ closeModal, actions, form }: CollectionListModalP
     },
   });
 
-  const watchedItems = useWatch({ control: _form.control, name: 'content_bank' });
-  const selectedItems = (watchedItems as Collection[]) || [];
+  const selectedItems = useWatch({ control: _form.control, name: 'content_bank', defaultValue: [] }) as Collection[];
 
   const handleAddContent = () => {
     const selectedItems = _form.getValues('content_bank') || [];

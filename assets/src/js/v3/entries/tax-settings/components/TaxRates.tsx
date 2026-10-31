@@ -35,8 +35,7 @@ export default function TaxRates() {
   const form = useFormContext<TaxSettings>();
   const { openCountrySelectModal } = useCountrySelectModal();
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
-  const watchedRates = useWatch({ control: form.control, name: 'rates' });
-  const rates = watchedRates ?? [];
+  const rates = useWatch({ control: form.control, name: 'rates', defaultValue: [] });
   const activeCountry = useWatch({ control: form.control, name: 'active_country' });
   const enableTax = useWatch({ control: form.control, name: 'enable_tax' });
   const activeCountryIndex = rates.findIndex((rate) => String(rate.country) === String(activeCountry));
