@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import {
   closestCenter,
   DndContext,
@@ -103,7 +103,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const questions = form.watch('questions') || [];
+  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
+  const questions = watchedQuestions || [];
   const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
@@ -319,7 +320,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
-    const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
+    const currentQuestion = form.getValues(`questions.${index}` as 'questions.0');
 
     if (!currentQuestion || validationError) {
       return;
@@ -391,7 +392,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         window.innerHeight - questionListRef.current.getBoundingClientRect().top
       }px`;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/refs
   }, [questionListRef.current, isEditing]);
 
   if (!form.getValues('quiz_title')) {

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -78,7 +78,7 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
     },
   });
 
-  const reasonValue = form.watch('reason');
+  const reasonValue = useWatch({ control: form.control, name: 'reason' });
   const explanation =
     reasonOptions.find((item) => item.value === reasonValue)?.explanation ??
     // prettier-ignore

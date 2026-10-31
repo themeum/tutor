@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -29,9 +29,18 @@ const QuestionConditions = () => {
   const form = useFormContext<QuizForm>();
   const { showModal, closeModal } = useModal();
 
-  const activeQuestion = form.watch(`questions.${activeQuestionIndex}` as 'questions.0');
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
+  const activeQuestion = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}` as 'questions.0',
+  });
+  const activeQuestionType = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type',
+  });
+  const activeDataStatus = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}._data_status` as 'questions.0._data_status',
+  });
 
   const handlePreview = useCallback(() => {
     showModal({

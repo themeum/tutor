@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
@@ -70,6 +70,8 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     shouldFocusError: true,
     mode: 'onChange',
   });
+
+  const meetingStartDate = useWatch({ control: meetingForm.control, name: 'meeting_start_date' });
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMutation();
 
@@ -217,7 +219,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                   validate: {
                     invalidDate: invalidDateRule,
                     checkEndDate: (value) => {
-                      const startDate = meetingForm.watch('meeting_start_date');
+                      const startDate = meetingForm.getValues('meeting_start_date');
                       const endDate = value;
                       if (startDate && endDate) {
                         return new Date(startDate) > new Date(endDate)
@@ -233,7 +235,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                   <FormDateInput
                     {...controllerProps}
                     placeholder={__('End date', 'tutor')}
-                    disabledBefore={meetingForm.watch('meeting_start_date') || new Date().toISOString()}
+                    disabledBefore={meetingStartDate || new Date().toISOString()}
                   />
                 )}
               />
@@ -246,9 +248,9 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                   validate: {
                     invalidTime: invalidTimeRule,
                     checkEndTime: (value) => {
-                      const startDate = meetingForm.watch('meeting_start_date');
-                      const startTime = meetingForm.watch('meeting_start_time');
-                      const endDate = meetingForm.watch('meeting_end_date');
+                      const startDate = meetingForm.getValues('meeting_start_date');
+                      const startTime = meetingForm.getValues('meeting_start_time');
+                      const endDate = meetingForm.getValues('meeting_end_date');
                       const endTime = value;
 
                       if (startDate && endDate && startTime && endTime) {

@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import {
   type ID,
@@ -75,7 +76,8 @@ export const QuizModalContextProvider = ({
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
-  const questions = form.watch('questions') || [];
+  const watchedQuestions = useWatch({ control: form.control, name: 'questions' });
+  const questions = watchedQuestions || [];
   const previousQuestions = useRef<QuizQuestion[]>(questions);
   const [validationError, setValidationError] = useState<{
     message: string;

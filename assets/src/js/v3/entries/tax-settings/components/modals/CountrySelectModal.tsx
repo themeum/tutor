@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import { Controller, type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -44,9 +44,11 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     defaultValues: { searchValue: '', selectedCountries: {}, activeCountry: '' },
   });
 
-  const selectedCountries = regionStateForm.watch('selectedCountries');
-  const activeCountry = regionStateForm.watch('activeCountry');
-  const searchValue = regionStateForm.watch('searchValue');
+  const watchedSelectedCountries = useWatch({ control: regionStateForm.control, name: 'selectedCountries' });
+  const selectedCountries = watchedSelectedCountries ?? {};
+  const activeCountry = useWatch({ control: regionStateForm.control, name: 'activeCountry' });
+  const watchedSearchValue = useWatch({ control: regionStateForm.control, name: 'searchValue' });
+  const searchValue = watchedSearchValue ?? '';
 
   let countries = getCountryListAsOptions([]);
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -118,10 +118,12 @@ const GenerateQuizWithAi = () => {
         ];
   }, [topicId, topics]);
 
-  const selectedTopicIds = form.watch('topic_ids') ?? emptyTopicIds;
-  const questionTypes = form.watch('question_types');
-  const questionCount = Number(form.watch('question_count'));
-  const difficulty_level = form.watch('difficulty_level');
+  const watchedTopicIds = useWatch({ control: form.control, name: 'topic_ids' });
+  const selectedTopicIds = watchedTopicIds ?? emptyTopicIds;
+  const questionTypes = useWatch({ control: form.control, name: 'question_types' });
+  const watchedQuestionCount = useWatch({ control: form.control, name: 'question_count' });
+  const questionCount = Number(watchedQuestionCount);
+  const difficulty_level = useWatch({ control: form.control, name: 'difficulty_level' });
   const selectedQuestionTypes = questionTypeOptions
     .filter((option) => questionTypes?.[option.value])
     .map((option) => option.value);
