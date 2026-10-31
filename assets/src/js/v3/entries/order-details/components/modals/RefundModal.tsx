@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -62,7 +62,7 @@ function RefundModal({
       }),
     },
   });
-  const amount = form.watch('amount', 0);
+  const amount = useWatch({ control: form.control, name: 'amount', defaultValue: 0 });
 
   useEffect(() => {
     form.setFocus('amount');

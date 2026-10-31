@@ -23,6 +23,7 @@ export function OfferSalePrice() {
   const hasSale = useWatch({ control: form.control, name: 'offer_sale_price' });
   const regularPrice = useWatch({ control: form.control, name: 'regular_price' });
   const hasScheduledSale = !!useWatch({ control: form.control, name: 'schedule_sale_price' });
+  const salePriceFromDate = useWatch({ control: form.control, name: 'sale_price_from_date' });
 
   return (
     <div css={saleStyles.wrapper}>
@@ -127,7 +128,7 @@ export function OfferSalePrice() {
                       {...controllerProps}
                       isClearable={false}
                       placeholder="yyyy-mm-dd"
-                      disabledBefore={form.watch('sale_price_from_date') || undefined}
+                      disabledBefore={salePriceFromDate || undefined}
                     />
                   )}
                 />

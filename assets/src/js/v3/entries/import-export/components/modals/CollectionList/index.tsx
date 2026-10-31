@@ -1,4 +1,4 @@
-import { type UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -31,7 +31,8 @@ const CollectionListModal = ({ closeModal, actions, form }: CollectionListModalP
     },
   });
 
-  const selectedItems = (_form.watch('content_bank') as Collection[]) || [];
+  const watchedItems = useWatch({ control: _form.control, name: 'content_bank' });
+  const selectedItems = (watchedItems as Collection[]) || [];
 
   const handleAddContent = () => {
     const selectedItems = _form.getValues('content_bank') || [];

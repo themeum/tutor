@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -44,8 +44,8 @@ const TaxSettingsPage = () => {
 
   const ratesValue = taxSettingsQuery.data?.rates?.length ? taxSettingsQuery.data.rates : form.getValues('rates');
 
-  const activeCountry = form.watch('active_country');
-  const formData = form.watch();
+  const activeCountry = useWatch({ control: form.control, name: 'active_country' });
+  const formData = useWatch({ control: form.control });
 
   useEffect(() => {
     if (form.formState.isDirty) {
@@ -56,22 +56,24 @@ const TaxSettingsPage = () => {
   useEffect(() => {
     if (taxSettingsQuery.data) {
       const taxData = taxSettingsQuery.data;
-
-      taxData.rates = taxData.rates.map((rate) => {
+      const formattedRates = taxData.rates.map((rate) => {
         if (rate.is_same_rate && !rate.states.length) {
-          rate.states =
-            getCountryByCode(rate.country)?.states?.map((state) => ({
-              id: state.id,
-              rate: 0,
-              apply_on_shipping: false,
-            })) || [];
+          return {
+            ...rate,
+            states:
+              getCountryByCode(rate.country)?.states?.map((state) => ({
+                id: state.id,
+                rate: 0,
+                apply_on_shipping: false,
+              })) || [],
+          };
         }
         return rate;
       });
 
       reset({
         enable_tax: isDefined(taxData.enable_tax) ? taxData.enable_tax : true,
-        rates: taxData.rates ?? [],
+        rates: formattedRates,
         apply_tax_on: taxData.apply_tax_on ?? 'product',
         active_country: taxData.active_country || null,
         show_price_with_tax: isDefined(taxData.show_price_with_tax) ? taxData.show_price_with_tax : false,

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -35,8 +35,10 @@ export default function TaxRates() {
   const form = useFormContext<TaxSettings>();
   const { openCountrySelectModal } = useCountrySelectModal();
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
-  const rates = form.watch('rates');
-  const activeCountry = form.watch('active_country');
+  const watchedRates = useWatch({ control: form.control, name: 'rates' });
+  const rates = watchedRates ?? [];
+  const activeCountry = useWatch({ control: form.control, name: 'active_country' });
+  const enableTax = useWatch({ control: form.control, name: 'enable_tax' });
   const activeCountryIndex = rates.findIndex((rate) => String(rate.country) === String(activeCountry));
   const activeCountrySelectedStates = rates[activeCountryIndex]?.states ?? [];
   const activeCountryAllStates = getCountryByCode(activeCountry ?? '')?.states ?? [];
@@ -318,7 +320,7 @@ export default function TaxRates() {
         </div>
       </Card>
 
-      <Show when={form.watch('enable_tax')}>
+      <Show when={enableTax}>
         <Card>
           <div css={styleUtils.cardInnerSection}>
             <div css={styles.header}>
@@ -335,9 +337,10 @@ export default function TaxRates() {
                 label={__('Apply single tax rate for entire country', 'tutor')}
                 checked={rates[activeCountryIndex]?.is_same_rate ?? false}
                 onChange={(isChecked) => {
-                  const currentCountry = rates[activeCountryIndex];
-                  currentCountry.is_same_rate = isChecked;
-                  form.setValue('rates', rates);
+                  const updatedRates = rates.map((rate, idx) =>
+                    idx === activeCountryIndex ? { ...rate, is_same_rate: isChecked } : rate,
+                  );
+                  form.setValue('rates', updatedRates);
                 }}
               />
             </Show>
