@@ -7,16 +7,12 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.5.0
- */
-
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Field settings.
  *
- * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var mixed $this
  * @var array $field
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 $key    = $field['key'] ?? '';
 $events = $field['event'] ?? null;
