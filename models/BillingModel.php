@@ -90,7 +90,7 @@ class BillingModel {
 	/**
 	 * Update billing info
 	 *
-	 * @since 4.2.1 New \Tutor\Helpers\DB used instead of the deprecated one.
+	 * @since 4.2.1 New Tutor\Core\DB used instead of the deprecated one.
 	 *
 	 * @param array $data Bulling info data.
 	 * @param array $where Where condition.
@@ -102,23 +102,21 @@ class BillingModel {
 		$data = Input::sanitize_array( $data );
 
 		try {
-			DB::begin_transaction();
-
 			$updated = DB::table( 'tutor_customers' );
 			foreach ( $where as $key => $value ) {
 				$updated->where( $key, $value );
 			}
-			$updated->update( $data );
 
-			if ( ! $updated ) {
+			$result = $updated->update( $data );
+			if ( ! $result ) {
 				tutor_log( __( 'Failed to update user profile.', 'tutor' ) );
 				return false;
 			}
 
-			return DB::commit();
+			return true;
 		} catch ( \Throwable $e ) {
 			tutor_log( $e->getMessage() );
-			return DB::rollback();
+			return false;
 		}
 	}
 

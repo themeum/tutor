@@ -170,7 +170,15 @@ class BillingController extends BaseController {
 			);
 		}
 
-		$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$billing_info = $this->get_billing_info();
+		$data         = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if ( $billing_info ) {
+			foreach ( array_keys( $data ) as $key ) {
+				$old_value    = tutor_utils()->input_old( $key );
+				$data[ $key ] = ! empty( $old_value ) ? $old_value : ( $billing_info->$key ?? '' );
+			}
+		}
 
 		$user_id         = get_current_user_id();
 		$data['user_id'] = $user_id;
@@ -183,8 +191,6 @@ class BillingController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
-
-		$billing_info = $this->get_billing_info();
 
 		if ( $billing_info ) {
 			$response = $this->model->update( $data, array( 'user_id' => $user_id ) );
