@@ -7,19 +7,15 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
- */
-
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Field settings.
  *
- * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var mixed $this
  * @var array $field
  */
 
-$field_key = sanitize_key( $field['key'] ?? '' );
-$field_id  = 'field_' . $field_key;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
+$field_key = sanitize_key( $field['key'] );
+$field_id  = sanitize_key( 'field_' . $field_key );
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
