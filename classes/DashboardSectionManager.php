@@ -209,7 +209,7 @@ class DashboardSectionManager {
 	public function ajax_get_dashboard_section() {
 		tutor_utils()->check_nonce();
 
-		if ( ! User::is_admin() && ! tutor_utils()->is_instructor() ) {
+		if ( ! User::is_admin() && ! User::is_instructor() ) {
 			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
