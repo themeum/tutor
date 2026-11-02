@@ -10,12 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Manage students

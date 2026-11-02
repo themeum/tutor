@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\HttpHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Initialize REST API

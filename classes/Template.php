@@ -10,12 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\Helpers\UrlHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Handle template before include

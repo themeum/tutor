@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Core\Singleton;
 use Tutor\Models\OrderModel;
