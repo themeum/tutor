@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use stdClass;
 use TUTOR\Icon;
 use TUTOR\BaseController;
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\BillingModel;
@@ -171,12 +172,24 @@ class BillingController extends BaseController {
 		}
 
 		$billing_info = $this->get_billing_info();
-		$data         = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-		if ( $billing_info ) {
-			foreach ( array_keys( $data ) as $key ) {
-				$old_value    = tutor_utils()->input_old( $key );
-				$data[ $key ] = ! empty( $old_value ) ? $old_value : ( $billing_info->$key ?? '' );
+		// A partial update only touches the fields it sends, a full update expects all of them.
+		if ( Input::post( 'partial_update', false, Input::TYPE_BOOL ) ) {
+			$data = array_intersect_key( $_POST, array_flip( $this->model->get_partial_update_fields() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		} else {
+			$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
+
+		// A state can't outlive a move to a country that has none.
+		if ( isset( $data['billing_country'] ) ) {
+
+			$country_info = tutor_get_country_info_by_name( $data['billing_country'] );
+			if ( empty( $country_info['states'] ) ) {
+				$data['billing_state'] = '';
+			}
+
+			if ( ! isset( $data['billing_state'] ) || ( empty( $data['billing_state'] ) ) ) {
+				$data['billing_state'] = $country_info['states'][0]['name'] ?? '';
 			}
 		}
 
@@ -251,6 +264,11 @@ class BillingController extends BaseController {
 			'billing_state'      => 'required',
 			'billing_city'       => 'required',
 		);
+
+		// // Countries without states have nothing to select.
+		// if ( ! $this->model->country_has_states( wp_unslash( $data['billing_country'] ?? '' ) ) ) {
+		// 	unset( $validation_rules['billing_state'] );
+		// }
 
 		// Skip validation rules for not available fields in data.
 		foreach ( $validation_rules as $key => $value ) {
