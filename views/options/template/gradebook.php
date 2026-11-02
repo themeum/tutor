@@ -9,10 +9,19 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Options_V2::template().
+ *
+ * @var \Tutor\Options_V2 $this
+ * @var array            $section
+ */
+
 ?>
 <div class="tutor-option-main-title">
 	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
-		<?php echo esc_html( $section->label ); ?>
+		<?php echo esc_html( $section['label'] ); ?>
 	</div>
 	<button class="reset-btn reset_to_default" data-reset="<?php echo esc_attr( $section['slug'] ); ?>">
 		<i class="btn-icon tutor-icon-refresh"></i>
