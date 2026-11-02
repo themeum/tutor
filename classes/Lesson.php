@@ -347,15 +347,13 @@ class Lesson extends Tutor_Base {
 				true
 			);
 
-			$duration_sec = 0;
-			if ( isset( $video['duration_sec'] ) && '' !== $video['duration_sec'] ) {
-				$duration_sec = absint( $video['duration_sec'] );
-			}
+			$duration_sec = absint( $video['duration_sec'] ?? 0 );
 			if ( 0 === $duration_sec && ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
-				$hours        = isset( $video['runtime']['hours'] ) ? absint( $video['runtime']['hours'] ) : 0;
-				$minutes      = isset( $video['runtime']['minutes'] ) ? absint( $video['runtime']['minutes'] ) : 0;
-				$seconds      = isset( $video['runtime']['seconds'] ) ? absint( $video['runtime']['seconds'] ) : 0;
-				$duration_sec = $hours * 3600 + $minutes * 60 + $seconds;
+				$runtime      = $video['runtime'];
+				$hours        = absint( $runtime['hours'] ?? 0 );
+				$seconds      = absint( $runtime['minutes'] ?? 0 );
+				$minutes      = absint( $runtime['seconds'] ?? 0 );
+				$duration_sec = $hours * HOUR_IN_SECONDS + $minutes * MINUTE_IN_SECONDS + $seconds;
 			}
 
 			if ( $duration_sec > 0 ) {
