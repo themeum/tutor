@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! ( $user instanceof \WP_User ) ) {
+if ( ! $user instanceof \WP_User ) {
 	return;
 }
 
