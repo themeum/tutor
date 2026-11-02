@@ -13,7 +13,11 @@
 use Tutor\Core\Input;
 
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
-/** @var object $question */
+/**
+ * Question object.
+ *
+ * @var object $question
+ */
 $question = tutor_utils()->get_qa_question( $question_id );
 ?>
 
