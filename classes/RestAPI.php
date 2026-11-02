@@ -22,11 +22,6 @@ use Tutor\Helpers\HttpHelper;
 class RestAPI {
 
 	/**
-	 * Custom validation trait
-	 */
-	use Custom_Validation;
-
-	/**
 	 * API namespace
 	 *
 	 * @var string
