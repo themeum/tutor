@@ -7,13 +7,14 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var array $data
  */
 
-defined( 'ABSPATH' ) || exit;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 use TUTOR\Input;
 
-$data = isset( $data ) && is_array( $data ) ? $data : array();
 ?>
 <div class="tutor-wp-dashboard-filter tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap tutor-align-center tutor-justify-between tutor-pb-40">
 	<?php
@@ -22,7 +23,7 @@ $data = isset( $data ) && is_array( $data ) ? $data : array();
 		$end_date   = Input::get( 'end_date', '' );
 	?>
 
-	<?php if ( isset( $data['filter_period'] ) && is_array( $data['filter_period'] ) && count( $data['filter_period'] ) ) : ?>
+	<?php if ( count( $data['filter_period'] ) ) : ?>
 
 		<div class="tutor-d-flex tutor-align-center tutor-mb-24 tutor-mb-sm-0">
 			<?php foreach ( $data['filter_period'] as $key => $value ) : ?>
@@ -34,7 +35,7 @@ $data = isset( $data ) && is_array( $data ) ? $data : array();
 		</div>
 	<?php endif; ?>
 
-	<?php if ( ! empty( $data['filter_calendar'] ) ) : ?>
+	<?php if ( $data['filter_calendar'] ) : ?>
 		<div class="tutor-v2-date-range-picker " style="flex-basis:40%;"></div>
 	<?php endif; ?>
 </div>
