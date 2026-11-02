@@ -171,19 +171,20 @@ class BillingController extends BaseController {
 			);
 		}
 
-		$billing_info = $this->get_billing_info();
+		$billing_info      = $this->get_billing_info();
+		$is_partial_update = Input::post( 'partial_update', false, Input::TYPE_BOOL );
 
 		// A partial update only touches the fields it sends, a full update expects all of them.
-		if ( Input::post( 'partial_update', false, Input::TYPE_BOOL ) ) {
+		if ( $is_partial_update ) {
 			$data = array_intersect_key( $_POST, array_flip( $this->model->get_partial_update_fields() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		} else {
 			$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 
 		// A state can't outlive a move to a country that has none.
-		if ( isset( $data['billing_country'] ) ) {
+		if ( $is_partial_update && isset( $data['billing_country'] ) ) {
 
-			$country_info = tutor_get_country_info_by_name( $data['billing_country'] );
+			$country_info = tutor_get_country_info_by_name( wp_unslash( $data['billing_country'] ) );
 			if ( empty( $country_info['states'] ) ) {
 				$data['billing_state'] = '';
 			}
@@ -196,7 +197,7 @@ class BillingController extends BaseController {
 		$user_id         = get_current_user_id();
 		$data['user_id'] = $user_id;
 
-		$validation = $this->validate( $data );
+		$validation = $this->validate( wp_unslash( $data ) );
 		if ( ! $validation->success ) {
 			$this->json_response(
 				__( 'Invalid inputs', 'tutor' ),
@@ -265,10 +266,10 @@ class BillingController extends BaseController {
 			'billing_city'       => 'required',
 		);
 
-		// // Countries without states have nothing to select.
-		// if ( ! $this->model->country_has_states( wp_unslash( $data['billing_country'] ?? '' ) ) ) {
-		// 	unset( $validation_rules['billing_state'] );
-		// }
+		// Countries without states have nothing to select.
+		if ( ! $this->model->country_has_states( wp_unslash( $data['billing_country'] ?? '' ) ) ) {
+			unset( $validation_rules['billing_state'] );
+		}
 
 		// Skip validation rules for not available fields in data.
 		foreach ( $validation_rules as $key => $value ) {
