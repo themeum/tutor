@@ -7,25 +7,20 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
- */
-
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Field settings.
  *
  * @var array $field
  */
 
-$field_key = $field['key'] ?? '';
-$field_id  = 'field_' . $field_key;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
+$field_id = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="certificate-thumb">
 		<?php
-			$img_url = tutor()->url . 'assets/images/images-v2/' . ( $field['thumbs_url'] ?? '' );
+			$img_url = tutor()->url . 'assets/images/images-v2/' . $field['thumbs_url'];
 		?>
-		<img src="<?php echo esc_url( $img_url ); ?>" alt="">
+		<img src="<?php echo esc_url( $img_url ); ?>>" alt="">
 	</div>
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
