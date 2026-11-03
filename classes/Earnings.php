@@ -87,6 +87,8 @@ class Earnings extends Singleton {
 	 */
 	public function prepare_order_earnings( int $order_id ) {
 		$this->order_id = $order_id;
+		// Ensure never carry rows over from a previous order.
+		$this->earning_data = array();
 
 		$order_model   = new OrderModel();
 		$order_details = $order_model->get_order_by_id( $order_id );
@@ -356,7 +358,7 @@ class Earnings extends Singleton {
 		);
 
 		if ( $update ) {
-			$this->earning_data = null;
+			$this->earning_data = array();
 		}
 
 		return $update;
