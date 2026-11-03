@@ -46,7 +46,6 @@
   line-height: $line-height;
 }
 
-// Kept in sync with styleUtils.text.wrap in assets/src/js/v3/shared/utils/style-utils.ts.
 @mixin tutor-text-wrap {
   min-width: 0;
   overflow-wrap: break-word;
