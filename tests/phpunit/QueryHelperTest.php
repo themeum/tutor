@@ -704,6 +704,149 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		$this->assertSame( $already_prefixed, $result );
 	}
 
+	/**
+	 * Test prepare_table_name handles global tables in single site.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_prepare_table_name_single_site_global_tables() {
+		global $wpdb;
+
+		// Unprefixed global tables.
+		$this->assertSame( $wpdb->base_prefix . 'users', QueryHelper::prepare_table_name( 'users' ) );
+		$this->assertSame( $wpdb->base_prefix . 'usermeta', QueryHelper::prepare_table_name( 'usermeta' ) );
+
+		// Already prefixed global tables.
+		$this->assertSame( $wpdb->base_prefix . 'users', QueryHelper::prepare_table_name( $wpdb->base_prefix . 'users' ) );
+		$this->assertSame( $wpdb->base_prefix . 'usermeta', QueryHelper::prepare_table_name( $wpdb->base_prefix . 'usermeta' ) );
+	}
+
+	/**
+	 * Test prepare_table_name for site-specific tables in multisite.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_prepare_table_name_multisite_site_specific_tables() {
+		global $wpdb;
+
+		$orig_prefix      = $wpdb->prefix;
+		$orig_base_prefix = $wpdb->base_prefix;
+
+		try {
+			// Simulate multisite subsite (e.g. blog_id = 2).
+			$wpdb->base_prefix = 'wp_';
+			$wpdb->prefix      = 'wp_2_';
+
+			// Unprefixed site-specific tables get site prefix.
+			$this->assertSame( 'wp_2_posts', QueryHelper::prepare_table_name( 'posts' ) );
+			$this->assertSame( 'wp_2_tutor_earnings', QueryHelper::prepare_table_name( 'tutor_earnings' ) );
+
+			// Already site-prefixed table does not double prefix.
+			$this->assertSame( 'wp_2_posts', QueryHelper::prepare_table_name( 'wp_2_posts' ) );
+			$this->assertSame( 'wp_2_tutor_earnings', QueryHelper::prepare_table_name( 'wp_2_tutor_earnings' ) );
+
+			// Ensure site prefix precedence: 'wp_2_' is stripped first, not 'wp_' leaving '2_posts'.
+			$this->assertSame( 'wp_2_custom_table', QueryHelper::prepare_table_name( 'wp_2_custom_table' ) );
+		} finally {
+			$wpdb->prefix      = $orig_prefix;
+			$wpdb->base_prefix = $orig_base_prefix;
+		}
+	}
+
+	/**
+	 * Test prepare_table_name for global tables in multisite.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_prepare_table_name_multisite_global_tables() {
+		global $wpdb;
+
+		$orig_prefix      = $wpdb->prefix;
+		$orig_base_prefix = $wpdb->base_prefix;
+
+		try {
+			// Simulate multisite subsite (e.g. blog_id = 2).
+			$wpdb->base_prefix = 'wp_';
+			$wpdb->prefix      = 'wp_2_';
+
+			// Global tables must use base_prefix, never subsite prefix.
+			$this->assertSame( 'wp_users', QueryHelper::prepare_table_name( 'users' ) );
+			$this->assertSame( 'wp_usermeta', QueryHelper::prepare_table_name( 'usermeta' ) );
+
+			// Already base-prefixed global tables remain base-prefixed.
+			$this->assertSame( 'wp_users', QueryHelper::prepare_table_name( 'wp_users' ) );
+			$this->assertSame( 'wp_usermeta', QueryHelper::prepare_table_name( 'wp_usermeta' ) );
+
+			// If incorrectly given subsite prefix, global table is normalized to base prefix.
+			$this->assertSame( 'wp_users', QueryHelper::prepare_table_name( 'wp_2_users' ) );
+			$this->assertSame( 'wp_usermeta', QueryHelper::prepare_table_name( 'wp_2_usermeta' ) );
+
+			// Verify all registered global tables dynamically.
+			$global_tables = $wpdb->tables( 'global', false );
+			foreach ( $global_tables as $global_table ) {
+				$this->assertSame(
+					'wp_' . $global_table,
+					QueryHelper::prepare_table_name( $global_table ),
+					"Global table {$global_table} should have base_prefix."
+				);
+				$this->assertSame(
+					'wp_' . $global_table,
+					QueryHelper::prepare_table_name( 'wp_2_' . $global_table ),
+					"Subsite-prefixed global table wp_2_{$global_table} should normalize to base_prefix."
+				);
+			}
+		} finally {
+			$wpdb->prefix      = $orig_prefix;
+			$wpdb->base_prefix = $orig_base_prefix;
+		}
+	}
+
+	/**
+	 * Test prepare_table_name for custom tables starting with global table names.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_prepare_table_name_custom_table_similar_to_global_table() {
+		global $wpdb;
+
+		$orig_prefix      = $wpdb->prefix;
+		$orig_base_prefix = $wpdb->base_prefix;
+
+		try {
+			$wpdb->base_prefix = 'wp_';
+			$wpdb->prefix      = 'wp_2_';
+
+			// Tables like 'users_backup' or 'usermeta_archive' are NOT global tables.
+			$this->assertSame( 'wp_2_users_backup', QueryHelper::prepare_table_name( 'users_backup' ) );
+			$this->assertSame( 'wp_2_users_backup', QueryHelper::prepare_table_name( 'wp_2_users_backup' ) );
+			$this->assertSame( 'wp_2_usermeta_archive', QueryHelper::prepare_table_name( 'usermeta_archive' ) );
+			$this->assertSame( 'wp_2_usermeta_archive', QueryHelper::prepare_table_name( 'wp_2_usermeta_archive' ) );
+		} finally {
+			$wpdb->prefix      = $orig_prefix;
+			$wpdb->base_prefix = $orig_base_prefix;
+		}
+	}
+
+	/**
+	 * Test get_table_prefix.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_get_table_prefix() {
+		global $wpdb;
+		$this->assertSame( $wpdb->prefix, QueryHelper::get_table_prefix() );
+	}
+
 	// ─── get_valid_sort_order ───────────────────────────────────────────────
 
 	/**

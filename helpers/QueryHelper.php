@@ -1387,21 +1387,33 @@ class QueryHelper {
 	}
 
 	/**
-	 * Prepare table name with prefix.
+	 * Prepare table name with the appropriate prefix.
+	 * Supports both single-site and multisite installations.
 	 *
 	 * @since 3.7.0
+	 * @since 4.2.1 Added multisite base prefix support.
 	 *
 	 * @param string $table_name table name.
 	 *
 	 * @return string
 	 */
 	public static function prepare_table_name( string $table_name ) {
-		$table_prefix = self::get_table_prefix();
-		if ( strpos( $table_name, $table_prefix ) !== 0 ) {
-			$table_name = $table_prefix . $table_name;
+		global $wpdb;
+
+		// Remove an existing prefix (site prefix first).
+		foreach ( array_unique( array( $wpdb->prefix, $wpdb->base_prefix ) ) as $prefix ) {
+			if ( '' !== $prefix && 0 === strpos( $table_name, $prefix ) ) {
+				$table_name = substr( $table_name, strlen( $prefix ) );
+				break;
+			}
 		}
 
-		return $table_name;
+		// Global tables use the network base prefix.
+		if ( in_array( $table_name, $wpdb->tables( 'global', false ), true ) ) {
+			return $wpdb->base_prefix . $table_name;
+		}
+
+		return $wpdb->prefix . $table_name;
 	}
 
 	/**

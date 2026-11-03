@@ -2085,22 +2085,33 @@ class DB {
 	}
 
 	/**
-	 * Prepare table name with WordPress prefix if not already prefixed.
+	 * Prepare table name with the appropriate prefix.
+	 * Supports both single-site and multisite installations.
 	 *
 	 * @since 4.2.0
+	 * @since 4.2.1 Added multisite base prefix support.
 	 *
 	 * @param string $table Table name.
 	 *
 	 * @return string Prefixed table name.
 	 */
 	public static function prepare_table_name( string $table ): string {
-		$db     = self::get_db();
-		$prefix = isset( $db->prefix ) ? $db->prefix : '';
-		if ( ! empty( $prefix ) && 0 !== strpos( $table, $prefix ) ) {
-			return $prefix . $table;
+		$db = self::get_db();
+
+		// Remove an existing prefix (site prefix first).
+		foreach ( array_unique( array( $db->prefix, $db->base_prefix ) ) as $prefix ) {
+			if ( '' !== $prefix && 0 === strpos( $table, $prefix ) ) {
+				$table = substr( $table, strlen( $prefix ) );
+				break;
+			}
 		}
 
-		return $table;
+		// Global tables use the network base prefix.
+		if ( in_array( $table, $db->tables( 'global', false ), true ) ) {
+			return $db->base_prefix . $table;
+		}
+
+		return $db->prefix . $table;
 	}
 
 	/**
