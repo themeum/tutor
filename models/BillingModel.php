@@ -102,7 +102,7 @@ class BillingModel {
 	/**
 	 * Update billing info
 	 *
-	 * @since 4.2.1 New Tutor\Core\DB used instead of the deprecated one.
+	 * @since 4.2.2 New Tutor\Core\DB used instead of the deprecated one.
 	 *
 	 * @param array $data Bulling info data.
 	 * @param array $where Where condition.

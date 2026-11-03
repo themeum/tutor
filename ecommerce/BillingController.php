@@ -186,7 +186,6 @@ class BillingController extends BaseController {
 			$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 
-		// A state can't outlive a move to a country that has none.
 		if ( $is_partial_update && isset( $data['billing_country'] ) ) {
 
 			// Names like Cote D'Ivoire won't match unless unslashed.
