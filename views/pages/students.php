@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 $students = tutor_lms()->student_list;

@@ -1,0 +1,79 @@
+name: Validate PR Description
+
+on:
+pull_request:
+types: [opened, edited, synchronize, reopened]
+
+permissions:
+pull-requests: read
+
+jobs:
+validate:
+runs-on: ubuntu-latest
+steps:
+- name: Validate PR description
+env:
+PR_BODY: ${{ github.event.pull_request.body }}
+shell: bash
+run: |
+set -euo pipefail
+
+```
+      errors=0
+
+      # Check required sections and fields.
+      required_patterns=(
+        '^\*\*ClickUp ticket link:\*\*'
+        '^## Description'
+        '^## Testing'
+        '^- \[ \] Tested$'
+        '^- \[ \] Not tested$'
+        '^## Use of AI Tool'
+        '^\*\*Used:\*\* (Yes|No)$'
+        '^\*\*Used for:\*\*'
+      )
+
+      for pattern in "${required_patterns[@]}"; do
+        if ! grep -Eq "$pattern" <<< "$PR_BODY"; then
+          echo "::error::Missing or invalid PR description field: $pattern"
+          errors=1
+        fi
+      done
+
+      # Ensure exactly one testing option is selected.
+      tested_count=$(grep -Ec '^- \[[xX]\] Tested$' <<< "$PR_BODY" || true)
+      not_tested_count=$(grep -Ec '^- \[[xX]\] Not tested$' <<< "$PR_BODY" || true)
+
+      if (( tested_count + not_tested_count != 1 )); then
+        echo "::error::Select exactly one testing option: Tested or Not tested."
+        errors=1
+      fi
+
+      # Validate the ClickUp ticket link.
+      ticket_link=$(sed -n 's/^\*\*ClickUp ticket link:\*\*[[:space:]]*//p' <<< "$PR_BODY" | head -n 1)
+
+      if [[ ! "$ticket_link" =~ ^https://app\.clickup\.com/ ]]; then
+        echo "::error::Provide a valid ClickUp ticket URL starting with https://app.clickup.com/."
+        errors=1
+      fi
+
+      # Validate AI usage value.
+      if ! grep -Eq '^\*\*Used:\*\* (Yes|No)$' <<< "$PR_BODY"; then
+        echo "::error::Use of AI Tool must be Yes or No."
+        errors=1
+      fi
+
+      # Ensure the AI usage details are provided.
+      used_for=$(sed -n 's/^\*\*Used for:\*\*[[:space:]]*//p' <<< "$PR_BODY" | head -n 1)
+
+      if [[ -z "${used_for//[[:space:]]/}" ]]; then
+        echo "::error::Describe how AI was used, or provide N/A."
+        errors=1
+      fi
+
+      if (( errors != 0 )); then
+        exit 1
+      fi
+
+      echo "PR description validation passed."
+```

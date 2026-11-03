@@ -12,12 +12,17 @@ import { convertToErrorMessage } from '@TutorShared/utils/util';
 export interface PaymentField {
   name: string;
   label?: string;
-  type?: 'select' | 'text' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
+  type?: 'select' | 'text' | 'email' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
   options?: Option<string>[] | Record<string, string>;
   hint?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
 }
+
+export const OPTIONAL_PAYMENT_FIELDS = ['icon', 'webhook_url'];
+
+// Gateways that legitimately take an email address as the login identifier, not an opaque key
+export const EMAIL_AS_CREDENTIAL_FIELDS = ['login_id', 'username'];
 
 export interface PaymentMethod {
   name: string;

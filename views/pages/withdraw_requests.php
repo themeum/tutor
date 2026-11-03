@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\WithdrawModel;
 
 $withdraw = tutor_lms()->withdraw_list;

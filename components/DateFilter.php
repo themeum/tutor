@@ -11,7 +11,7 @@
 namespace Tutor\Components;
 
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Popover;
 

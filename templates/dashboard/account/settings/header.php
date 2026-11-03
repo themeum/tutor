@@ -49,7 +49,7 @@ use Tutor\Components\Constants\Variant;
 			?>
 			<h4 
 				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4 tutor-my-none"
-				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab => tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
+				x-text="windowWidth <= 768 ? (activeTab === 'none' ? <?php echo esc_attr( tutor_json_encode( __( 'Settings', 'tutor' ) ) ); ?> : tabs.find(tab => tab.id == activeTab).label) : <?php echo esc_attr( tutor_json_encode( __( 'Settings', 'tutor' ) ) ); ?>"
 			></h4>
 
 			<?php

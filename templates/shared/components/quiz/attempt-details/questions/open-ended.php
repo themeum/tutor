@@ -111,11 +111,11 @@ if ( $is_graded ) {
 			<?php if ( $feedback_attempt_answer_id > 0 ) : ?>
 				<div
 					class="tutor-question-feedback"
-					x-data='tutorQuestionFeedback({
-						initialFeedback: <?php echo wp_json_encode( (string) $question_feedback ); ?>,
-						fieldName: <?php echo wp_json_encode( "question_feedback[{$feedback_attempt_answer_id}]" ); ?>,
-						formId: <?php echo wp_json_encode( $form_id ?? 'quiz-attempt-review-form' ); ?>
-					})'
+					x-data="tutorQuestionFeedback({
+						initialFeedback: <?php echo esc_attr( tutor_json_encode( (string) $question_feedback ) ); ?>,
+						fieldName: 'question_feedback[<?php echo (int) $feedback_attempt_answer_id; ?>]',
+						formId: '<?php echo esc_js( $form_id ?? 'quiz-attempt-review-form' ); ?>'
+					})"
 				>
 					<?php
 					Button::make()
@@ -153,7 +153,7 @@ if ( $is_graded ) {
 						x-cloak
 					>
 						<div class="tutor-quiz-feedback-panel-header">
-							<span class="tutor-quiz-feedback-panel-title" x-text="feedback ? <?php echo esc_attr( __( 'Edit Feedback', 'tutor' ) ); ?> : <?php echo esc_attr( __( 'Write feedback', 'tutor' ) ); ?>"></span>
+							<span class="tutor-quiz-feedback-panel-title" x-text="feedback ? <?php echo esc_attr( tutor_json_encode( __( 'Edit Feedback', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Write feedback', 'tutor' ) ) ); ?>"></span>
 						</div>
 
 						<?php

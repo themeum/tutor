@@ -1009,6 +1009,76 @@ class QuizModel {
 	}
 
 	/**
+	 * Get committed attempt answers keyed by question ID.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return array<int, object>
+	 */
+	public static function get_committed_answers_by_attempt( int $attempt_id ): array {
+		global $wpdb;
+
+		if ( empty( $attempt_id ) ) {
+			return array();
+		}
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT question_id, given_answer, is_correct, achieved_mark
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				  WHERE quiz_attempt_id = %d",
+				$attempt_id
+			),
+			OBJECT_K
+		);
+
+		return is_array( $results ) ? $results : array();
+	}
+
+	/**
+	 * Get attempt answers aggregated statistics (earned marks, answered count).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $attempt_id Attempt ID.
+	 *
+	 * @return object{total_earned_marks: float, total_answered_count: int}
+	 */
+	public static function get_attempt_answers_stats( int $attempt_id ): object {
+		$default = (object) array(
+			'total_earned_marks'   => 0.0,
+			'total_answered_count' => 0,
+		);
+
+		if ( $attempt_id <= 0 ) {
+			return $default;
+		}
+
+		global $wpdb;
+
+		$stats = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COALESCE(SUM(achieved_mark), 0) AS total_earned_marks,
+						COUNT(*) AS total_answered_count
+				   FROM {$wpdb->prefix}tutor_quiz_attempt_answers
+				  WHERE quiz_attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		if ( ! $stats ) {
+			return $default;
+		}
+
+		return (object) array(
+			'total_earned_marks'   => (float) $stats->total_earned_marks,
+			'total_answered_count' => (int) $stats->total_answered_count,
+		);
+	}
+
+	/**
 	 * Check whether an attempt answer should be treated as skipped.
 	 *
 	 * @since 4.0.0
@@ -1191,9 +1261,12 @@ class QuizModel {
 		$is_skipped           = self::is_attempt_answer_skipped( $attempt_answer );
 
 		if ( $is_instructor_review && ! $is_skipped && $review_field_name ) {
-			$label_map   = wp_json_encode( $badge['label_map'] );
-			$variant_map = wp_json_encode( $badge['variant_map'] );
-			$field       = esc_attr( $review_field_name );
+			$label_map   = tutor_json_encode( $badge['label_map'] );
+			$variant_map = tutor_json_encode( $badge['variant_map'] );
+
+			// Whitelist-sanitize: only alphanumerics, underscores, and brackets are safe
+			// inside a JS single-quoted string literal (esc_attr does not escape ').
+			$field = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', $review_field_name );
 
 			Badge::make()
 				->rounded()
@@ -1794,7 +1867,10 @@ class QuizModel {
 		$answers = is_array( $answers ) ? $answers : array();
 
 		$has_pending = (bool) count(
-			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
+			array_filter(
+				$answers,
+				fn( $answer ) => null === $answer->is_correct && ! self::is_attempt_answer_skipped( $answer )
+			)
 		);
 
 		if ( $has_pending ) {

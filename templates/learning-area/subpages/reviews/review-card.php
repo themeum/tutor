@@ -29,7 +29,7 @@ $delete_modal_id         = 'review-delete-modal';
 $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review->comment_content ?? '' ) ) );
 
 ?>
-<div x-data="tutorReviewCard('<?php echo esc_attr( $review->comment_ID ); ?>')" class="tutor-border-t tutor-p-6">
+<div x-data="tutorReviewCard(<?php echo (int) $review->comment_ID; ?>)" class="tutor-border-t tutor-p-6">
 	<div x-show="!isEditMode">
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
@@ -85,7 +85,7 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 					->size( Size::SMALL )
 					->icon( Icon::DELETE_2 )
 					->icon_only()
-					->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review->comment_ID ) . ' })' )
+					->attr( 'onclick', "TutorCore.modal.showModal('" . esc_js( $delete_modal_id ) . "', { id: " . (int) $review->comment_ID . ' })' )
 					->icon_only()
 					->render();
 				?>
@@ -98,11 +98,11 @@ $review->comment_content = wp_kses_post( htmlspecialchars( stripslashes( $review
 		<form
 			class="tutor-flex tutor-flex-column tutor-gap-6"
 			id="<?php echo esc_attr( $form_id ); ?>"
-			x-data='tutorForm({
-				id: "<?php echo esc_attr( $form_id ); ?>",
-				mode: "onChange",
-				defaultValues: <?php echo wp_json_encode( $review ); ?>,
-			})'
+			x-data="tutorForm({
+				id: '<?php echo esc_js( $form_id ); ?>',
+				mode: 'onChange',
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $review ) ); ?>,
+			})"
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(
 				(data) => handleReviewSubmit(data),

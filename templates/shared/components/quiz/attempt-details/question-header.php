@@ -23,8 +23,11 @@ $attempt_id           = (int) ( $attempt_id ?? 0 );
 $attempt_answer_id    = (int) ( $attempt_answer_id ?? 0 );
 $is_instructor_review = ! empty( $is_instructor_review );
 $is_skipped           = ! empty( $is_skipped );
-$review_field_name    = (string) ( $review_field_name ?? '' );
-$is_manual_question   = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
+
+// Sanitize field name for use inside JS string literals in Alpine directives.
+// Only alphanumerics, underscores, and brackets are allowed — no quote/breakout chars.
+$review_field_name  = preg_replace( '/[^a-zA-Z0-9_\[\]]/', '', (string) ( $review_field_name ?? '' ) );
+$is_manual_question = $question && in_array( (string) ( $question->question_type ?? '' ), QuizModel::get_manual_review_types(), true );
 ?>
 
 <div class="tutor-quiz-question-header">
@@ -94,21 +97,21 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 							type="hidden"
 							name="<?php echo esc_attr( $review_field_name ); ?>"
 							value="<?php echo esc_attr( $answer_status ); ?>"
-							x-bind="register('<?php echo esc_attr( $review_field_name ); ?>')"
+							x-bind="register('<?php echo esc_js( $review_field_name ); ?>')"
 						/>
 
 						<label
 							class="tutor-quiz-question-review-action"
 							data-review-status="correct"
 							title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>"
-							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
+							@click="setValue('<?php echo esc_js( $review_field_name ); ?>', 'correct', { shouldDirty: true })"
 						>
 							<input
 								class="tutor-quiz-question-review-input"
 								type="radio"
 								name="<?php echo esc_attr( $review_field_name ); ?>"
 								value="correct"
-								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'correct'"
+								:checked="watch('<?php echo esc_js( $review_field_name ); ?>') === 'correct'"
 								tabindex="-1"
 								aria-hidden="true"
 							/>
@@ -119,14 +122,14 @@ $is_manual_question   = $question && in_array( (string) ( $question->question_ty
 							class="tutor-quiz-question-review-action"
 							data-review-status="incorrect"
 							title="<?php esc_attr_e( 'Mark as incorrect', 'tutor' ); ?>"
-							@click="setValue('<?php echo esc_attr( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
+							@click="setValue('<?php echo esc_js( $review_field_name ); ?>', 'incorrect', { shouldDirty: true })"
 						>
 							<input
 								class="tutor-quiz-question-review-input"
 								type="radio"
 								name="<?php echo esc_attr( $review_field_name ); ?>"
 								value="incorrect"
-								:checked="watch('<?php echo esc_attr( $review_field_name ); ?>') === 'incorrect'"
+								:checked="watch('<?php echo esc_js( $review_field_name ); ?>') === 'incorrect'"
 								tabindex="-1"
 								aria-hidden="true"
 							/>

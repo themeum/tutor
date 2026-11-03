@@ -62,13 +62,13 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data='tutorForm({ 
-			id: "<?php echo esc_attr( $form_id ); ?>",
-			mode: "onChange",
-			defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
-		})'
+		x-data="tutorForm({ 
+			id: '<?php echo esc_js( $form_id ); ?>',
+			mode: 'onChange',
+			defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
+		})"
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
@@ -81,7 +81,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 							variant: 'image-uploader',
 							accept: '.png,.jpg,.jpeg',
 							onFileSelect: handleUploadCoverPhoto,
-							imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['cover_placeholder'] ); ?>',
+							imagePreviewPlaceholder: '<?php echo esc_js( $settings_data['cover_placeholder'] ); ?>',
 						})"
 						class="tutor-account-cover-photo"
 						:class="{
@@ -179,7 +179,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 									variant: 'image-uploader',
 									accept: '.png,.jpg,.jpeg',
 									onFileSelect: handleUploadProfilePhoto,
-									imagePreviewPlaceholder: '<?php echo esc_attr( $settings_data['profile_placeholder'] ); ?>',
+									imagePreviewPlaceholder: '<?php echo esc_js( $settings_data['profile_placeholder'] ); ?>',
 								})"
 								class="tutor-account-avatar"
 								:class="{

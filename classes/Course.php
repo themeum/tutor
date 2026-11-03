@@ -1004,7 +1004,8 @@ class Course extends Tutor_Base {
 	public function ajax_create_course() {
 		tutor_utils()->check_nonce();
 
-		$this->check_access();
+		$course_id = intval( wp_unslash( $_POST['ID'] ?? 0 ) );
+		$this->check_access( $course_id ); // Check user cap for the given id before processing.
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1689,9 +1690,13 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function get_wc_products() {
+		tutor_utils()->checking_nonce();
+
 		$exclude                 = array();
 		$exclude_linked_products = Input::has( 'exclude_linked_products' );
 		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
 
 		if ( $exclude_linked_products ) {
 			$exclude = tutor_utils()->get_linked_product_ids();
@@ -1722,9 +1727,11 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$this->check_access( $course_id );
+
 		$product_id = Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
 
@@ -3642,10 +3649,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			foreach ( $content_parent as $topic ) {
-				$provided_topic_ids[]   = $topic['parent_topic_id'];
-				$provided_content_ids[] = $topic['content_id'];
-			}
+			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
+			$provided_content_ids[] = $content_parent['content_id'];			
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );

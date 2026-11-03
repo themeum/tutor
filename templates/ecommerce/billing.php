@@ -30,15 +30,15 @@ $form_id         = $form_id ?? 'tutor-billing-address-form';
 		<form
 			id="<?php echo esc_attr( $form_id ); ?>"
 			x-data="tutorForm({ 
-				id: '<?php echo esc_attr( $form_id ); ?>',
+				id: '<?php echo esc_js( $form_id ); ?>',
 				mode: 'onChange', 
 				shouldFocusError: true,
-				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>,
-				stateOptions: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
+				defaultValues: <?php echo esc_attr( tutor_json_encode( $default_values ) ); ?>,
+				stateOptions: <?php echo esc_attr( tutor_json_encode( $state_mapping ) ); ?>
 			})"
 			x-bind="getFormBindings()"
 			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"
-			@submit="handleSubmit((data) => handleSaveBillingInfo(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
+			@submit="handleSubmit((data) => handleSaveBillingInfo(data, '<?php echo esc_js( $form_id ); ?>'))($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-5"
 		>
 			<?php require tutor_get_template( 'ecommerce.billing-form-fields' ); ?>

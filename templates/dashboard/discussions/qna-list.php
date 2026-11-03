@@ -26,7 +26,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use Tutor\Helpers\QueryHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\User;
 
 if ( ! is_user_logged_in() ) {

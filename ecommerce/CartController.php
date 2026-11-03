@@ -12,7 +12,7 @@ namespace Tutor\Ecommerce;
 
 use TUTOR\Course;
 use Tutor\Helpers\HttpHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;

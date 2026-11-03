@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tutor-gutenberg/student-registration",
+  "title": "Student Registration",
+  "category": "tutor",
+  "icon": "welcome-learn-more",
+  "description": "Student registration form for Tutor LMS",
+  "textdomain": "tutor",
+  "editorScript": "tutor-student-registration-block"
+}
