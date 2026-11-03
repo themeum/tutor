@@ -349,11 +349,11 @@ class Lesson extends Tutor_Base {
 			);
 
 			$duration_sec = absint( $video['duration_sec'] ?? 0 );
-			if ( 0 === $duration_sec && ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
+			if ( ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
 				$runtime      = $video['runtime'];
 				$hours        = absint( $runtime['hours'] ?? 0 );
-				$seconds      = absint( $runtime['minutes'] ?? 0 );
-				$minutes      = absint( $runtime['seconds'] ?? 0 );
+				$minutes      = absint( $runtime['minutes'] ?? 0 );
+				$seconds      = absint( $runtime['seconds'] ?? 0 );
 				$duration_sec = $hours * HOUR_IN_SECONDS + $minutes * MINUTE_IN_SECONDS + $seconds;
 			}
 
