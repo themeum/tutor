@@ -56,7 +56,7 @@ class BillingModel {
 	/**
 	 * Fields a partial update is allowed to change
 	 *
-	 * @since 4.2.1
+	 * @since 4.2.2
 	 *
 	 * @var array
 	 */
@@ -212,7 +212,7 @@ class BillingModel {
 	/**
 	 * Check whether a country has states to choose from.
 	 *
-	 * @since 4.2.1
+	 * @since 4.2.2
 	 *
 	 * @param string $country Country name.
 	 *
@@ -227,7 +227,7 @@ class BillingModel {
 	/**
 	 * Get the fields a partial update is allowed to change.
 	 *
-	 * @since 4.2.1
+	 * @since 4.2.2
 	 *
 	 * @return array
 	 */

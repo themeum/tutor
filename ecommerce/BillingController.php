@@ -159,6 +159,11 @@ class BillingController extends BaseController {
 	 * Save billing information for the current user.
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.2 Added partial update support with the partial_update request key.
+	 * Handles two kinds of request:
+	 * - Full update, from the dashboard billing form: expects all required fields.
+	 * - Partial update, from the checkout country and state dropdowns: writes only
+	 *   the country and state, so the other saved details stay as they are.
 	 *
 	 * @return void
 	 */
@@ -184,11 +189,13 @@ class BillingController extends BaseController {
 		// A state can't outlive a move to a country that has none.
 		if ( $is_partial_update && isset( $data['billing_country'] ) ) {
 
+			// Names like Cote D'Ivoire won't match unless unslashed.
 			$country_info = tutor_get_country_info_by_name( wp_unslash( $data['billing_country'] ) );
 			if ( empty( $country_info['states'] ) ) {
 				$data['billing_state'] = '';
 			}
 
+			// No state was sent, so use the first one, which is what the checkout dropdown shows after a country change.
 			if ( ! isset( $data['billing_state'] ) || ( empty( $data['billing_state'] ) ) ) {
 				$data['billing_state'] = $country_info['states'][0]['name'] ?? '';
 			}
@@ -197,6 +204,7 @@ class BillingController extends BaseController {
 		$user_id         = get_current_user_id();
 		$data['user_id'] = $user_id;
 
+		// Validate unslashed values, or a valid email like o'brien@example.com is rejected as o\'brien@example.com.
 		$validation = $this->validate( wp_unslash( $data ) );
 		if ( ! $validation->success ) {
 			$this->json_response(
