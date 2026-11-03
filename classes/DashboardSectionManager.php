@@ -15,6 +15,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use TUTOR\InstructorMetricsAdapter;
 use Tutor\Traits\JsonResponse;
 
