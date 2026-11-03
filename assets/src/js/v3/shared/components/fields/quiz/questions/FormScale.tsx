@@ -1,14 +1,8 @@
-/**
- * Form field for Scale quiz question type (instructor sets target value on scale).
- *
- * @package Tutor
- * @since 4.0.0
- */
-
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import TextInput from '@TutorShared/atoms/TextInput';
 
 import {
@@ -22,8 +16,15 @@ import {
   lineHeight,
   spacing,
 } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
+import {
+  calculateQuizDataStatus,
+  getScaleValidationError,
+  scaleCorrectValueRangeErrorMessage,
+  scaleLabelEntryRangeErrorMessage,
+  scaleRangeErrorMessage,
+} from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ID,
@@ -62,6 +63,13 @@ interface ScaleData {
   config: ScaleConfig;
 }
 
+type ScaleField = 'min' | 'max' | 'labelEvery' | 'value';
+
+interface ScaleFieldError {
+  field: ScaleField;
+  message: string;
+}
+
 function normalizeScaleConfig(config: ScaleConfig): ScaleConfig {
   return {
     ...config,
@@ -94,31 +102,23 @@ function parseStoredScaleData(value: string): ScaleData | null {
   return null;
 }
 
-const scaleRangeErrorMessage = __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__);
-const scaleCorrectValueRangeErrorMessage = __(
-  'The correct value must be between the minimum and maximum values.',
-  __TUTOR_TEXT_DOMAIN__,
-);
+const toScaleInputs = (data: ScaleData) => ({
+  min: String(data.config.min),
+  max: String(data.config.max),
+  labelEvery: String(data.config.labelEvery),
+  value: String(data.value),
+});
 
 const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setValidationError']) => {
   setValidationError?.((prev) => {
     const isScaleRangeError =
-      prev?.type === 'question' && [scaleRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(prev?.message);
+      prev?.type === 'question' &&
+      [scaleRangeErrorMessage, scaleLabelEntryRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(
+        prev?.message,
+      );
 
     return isScaleRangeError ? null : prev;
   });
-};
-
-const getScaleValidationErrorMessage = (config: ScaleConfig, value: number): string | null => {
-  if (config.max <= config.min) {
-    return scaleRangeErrorMessage;
-  }
-
-  if (value < config.min || value > config.max) {
-    return scaleCorrectValueRangeErrorMessage;
-  }
-
-  return null;
 };
 
 const FormScale = ({ field, setValidationError }: FormScaleProps) => {
@@ -142,13 +142,20 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     );
   });
 
-  const [config, setConfig] = useState<ScaleConfig>(normalizeScaleConfig(scaleData.config));
+  const [inputs, setInputs] = useState(() => toScaleInputs(scaleData));
+  const [lastRangeField, setLastRangeField] = useState<'min' | 'max'>('max');
+  const savedJsonRef = useRef<string | null>(null);
+
+  const config = normalizeScaleConfig(scaleData.config);
 
   useEffect(() => {
-    const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
+    const raw = option?.answer_two_gap_match ?? '';
+    if (raw === savedJsonRef.current) return;
+
+    const parsed = parseStoredScaleData(raw);
     if (parsed) {
       setScaleData(parsed);
-      setConfig(normalizeScaleConfig(parsed.config));
+      setInputs(toScaleInputs(parsed));
     }
   }, [option?.answer_two_gap_match]);
 
@@ -164,6 +171,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       if (!option) return;
 
       const json = JSON.stringify(data);
+      savedJsonRef.current = json;
       updateOption({
         ...option,
         ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -176,55 +184,70 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     [option, updateOption],
   );
 
-  const handleConfigChange = useCallback(
-    (fieldKey: keyof ScaleConfig, value: number) => {
-      const newConfig = normalizeScaleConfig({ ...config, [fieldKey]: value });
-      const validationMessage = getScaleValidationErrorMessage(newConfig, scaleData.value);
-      if (validationMessage) {
-        setValidationError?.({
-          message: validationMessage,
-          type: 'question',
-        });
-      } else {
-        clearScaleRangeValidationError(setValidationError);
+  const handleInputChange = useCallback(
+    (fieldKey: ScaleField, rawValue: string) => {
+      setInputs((prev) => ({ ...prev, [fieldKey]: rawValue }));
+      if (fieldKey === 'min' || fieldKey === 'max') {
+        setLastRangeField(fieldKey);
+      }
+      clearScaleRangeValidationError(setValidationError);
+
+      const parsed = parseFloat(rawValue);
+      if (!Number.isFinite(parsed)) return;
+
+      if (fieldKey === 'value') {
+        if (parsed === scaleData.value) return;
+
+        const nextScaleData = { ...scaleData, value: parsed };
+        setScaleData(nextScaleData);
+        saveScaleData(nextScaleData);
+        return;
       }
 
-      setConfig(newConfig);
+      if (parsed === scaleData.config[fieldKey]) return;
 
-      const newScaleData = {
+      const nextScaleData = {
         ...scaleData,
-        config: newConfig,
-        value: scaleData.value,
+        config: normalizeScaleConfig({ ...scaleData.config, [fieldKey]: parsed }),
       };
-      setScaleData(newScaleData);
-      saveScaleData(newScaleData);
+      setScaleData(nextScaleData);
+      saveScaleData(nextScaleData);
     },
-    [config, scaleData, saveScaleData, setValidationError],
+    [saveScaleData, scaleData, setValidationError],
   );
 
-  const parseConfigNumber = (raw: string, fallback: number) => {
-    const n = parseFloat(String(raw));
-    return Number.isFinite(n) ? n : fallback;
-  };
-
-  const handleValueChange = useCallback(
-    (value: number) => {
-      const validationMessage = getScaleValidationErrorMessage(config, value);
-      if (validationMessage) {
-        setValidationError?.({
-          message: validationMessage,
-          type: 'question',
-        });
-      } else {
-        clearScaleRangeValidationError(setValidationError);
+  const handleInputBlur = useCallback(
+    (fieldKey: ScaleField, rawValue: string) => {
+      if (rawValue.trim() === '') {
+        return;
       }
 
-      const newScaleData = { ...scaleData, value };
-      setScaleData(newScaleData);
-      saveScaleData(newScaleData);
+      const committedValue = fieldKey === 'value' ? scaleData.value : scaleData.config[fieldKey];
+      setInputs((prev) => ({ ...prev, [fieldKey]: String(committedValue) }));
     },
-    [config, scaleData, saveScaleData, setValidationError],
+    [scaleData],
   );
+
+  const scaleError = getScaleValidationError(config, scaleData.value);
+  const fieldError: ScaleFieldError | null = scaleError
+    ? { field: scaleError.field === 'range' ? lastRangeField : scaleError.field, message: scaleError.message }
+    : null;
+
+  const renderFieldError = (fieldKey: ScaleField) => {
+    const message =
+      inputs[fieldKey].trim() === ''
+        ? __('This field is required', __TUTOR_TEXT_DOMAIN__)
+        : fieldError?.field === fieldKey
+          ? fieldError.message
+          : null;
+
+    return message ? (
+      <div css={styles.errorMessage} role="alert">
+        <SVGIcon name="info" height={20} width={20} />
+        <p>{message}</p>
+      </div>
+    ) : null;
+  };
 
   if (!option) {
     return null;
@@ -245,28 +268,39 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
               <TextInput
                 label={__('Min value', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
+                allowNegative
+                whole
                 size="small"
-                value={String(config.min)}
-                onChange={(v) => handleConfigChange('min', parseConfigNumber(v, 0))}
+                value={inputs.min}
+                onChange={(v) => handleInputChange('min', v)}
+                onBlur={(v) => handleInputBlur('min', v)}
               />
+              {renderFieldError('min')}
             </div>
             <div css={styles.configField}>
               <TextInput
                 label={__('Max value', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
+                allowNegative
+                whole
                 size="small"
-                value={String(config.max)}
-                onChange={(v) => handleConfigChange('max', parseConfigNumber(v, 100))}
+                value={inputs.max}
+                onChange={(v) => handleInputChange('max', v)}
+                onBlur={(v) => handleInputBlur('max', v)}
               />
+              {renderFieldError('max')}
             </div>
             <div css={styles.configField}>
               <TextInput
                 label={__('Label entry', __TUTOR_TEXT_DOMAIN__)}
                 type="number"
+                whole
                 size="small"
-                value={String(config.labelEvery)}
-                onChange={(v) => handleConfigChange('labelEvery', parseConfigNumber(v, 10))}
+                value={inputs.labelEvery}
+                onChange={(v) => handleInputChange('labelEvery', v)}
+                onBlur={(v) => handleInputBlur('labelEvery', v)}
               />
+              {renderFieldError('labelEvery')}
             </div>
           </div>
         </div>
@@ -279,9 +313,12 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
             <TextInput
               label={__('Correct Value', __TUTOR_TEXT_DOMAIN__)}
               type="number"
+              allowNegative
+              whole
               size="small"
-              value={String(scaleData.value)}
-              onChange={(v) => handleValueChange(parseConfigNumber(v, config.min))}
+              value={inputs.value}
+              onChange={(v) => handleInputChange('value', v)}
+              onBlur={(v) => handleInputBlur('value', v)}
               placeholder={
                 isRangeInvalid
                   ? undefined
@@ -293,6 +330,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
                     )
               }
             />
+            {renderFieldError('value')}
           </div>
         </div>
       </div>
@@ -351,5 +389,17 @@ const styles = {
   configField: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
+  `,
+  errorMessage: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.error};
+    align-items: flex-start;
+
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.error};
+    }
   `,
 };
