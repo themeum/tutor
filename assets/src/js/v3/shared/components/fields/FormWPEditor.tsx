@@ -23,6 +23,7 @@ import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type IconCollection } from '@TutorShared/icons/types';
+import { type UnlinkPageBuilderResponse } from '@TutorShared/services/course';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Editor, TutorMutationResponse } from '@TutorShared/utils/types';
@@ -51,7 +52,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   isMagicAi?: boolean;
   autoFocus?: boolean;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
-  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<UnlinkPageBuilderResponse>>;
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
@@ -62,7 +63,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
 interface CustomEditorOverlayProps {
   editorUsed: Editor;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
-  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<UnlinkPageBuilderResponse>>;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
