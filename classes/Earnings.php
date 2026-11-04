@@ -228,7 +228,24 @@ class Earnings extends Singleton {
 		$commission_type = 'percent';
 
 		// Course author id.
-		$user_id = get_post_field( 'post_author', $course_id );
+		if ( is_null( $course_id ) ) {
+			/**
+			 * For membership plans, the course_id is null, so the earning
+			 * is credited to the site admin.
+			 */
+			$admin = get_users(
+				array(
+					'role'    => User::ADMIN,
+					'number'  => 1,
+					'orderby' => 'ID',
+					'order'   => 'ASC',
+				)
+			);
+
+			$user_id = ! empty( $admin ) ? $admin[0]->ID : 0;
+		} else {
+			$user_id = get_post_field( 'post_author', $course_id );
+		}
 
 		// (Use Pro Filter - Start)
 		// The response must be same array structure.
