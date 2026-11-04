@@ -19,14 +19,21 @@ This directory documents automated testing for Tutor LMS:
 
 ```php
 /** Test database routing for PHPUnit, Playwright E2E and CLI testing */
-require_once __DIR__ . '/wp-content/plugins/tutor/tests/support/test-config.php';
+$tutor_test_config = __DIR__ . '/wp-content/plugins/tutor/tests/support/test-config.php';
 
-define( 'DB_NAME', TutorTestConfig::db( 'NAME', 'local' ) );
-define( 'DB_USER', TutorTestConfig::db( 'USER', 'root' ) );
-define( 'DB_PASSWORD', TutorTestConfig::db( 'PASS', 'root' ) );
-define( 'DB_HOST', TutorTestConfig::db( 'HOST', '127.0.0.1:10003' ) );
-
-TutorTestConfig::define_test_constants();
+if ( file_exists( $tutor_test_config ) ) {
+	require_once $tutor_test_config;
+	define( 'DB_NAME', TutorTestConfig::db( 'NAME', 'local' ) );
+	define( 'DB_USER', TutorTestConfig::db( 'USER', 'root' ) );
+	define( 'DB_PASSWORD', TutorTestConfig::db( 'PASS', 'root' ) );
+	define( 'DB_HOST', TutorTestConfig::db( 'HOST', '127.0.0.1:10003' ) );
+	TutorTestConfig::define_test_constants();
+} else {
+	define( 'DB_NAME', 'local' );
+	define( 'DB_USER', 'root' );
+	define( 'DB_PASSWORD', 'root' );
+	define( 'DB_HOST', '127.0.0.1:10003' );
+}
 
 // ... table_prefix and other settings
 
