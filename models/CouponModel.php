@@ -502,13 +502,15 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 * @since 4.2.0 Added exclude_order_id and active status filter.
+	 * @since 4.2.1 Added applicable_item_ids to validate coupon usage.
 	 *
 	 * @param mixed $coupon_code Coupon code.
 	 * @param int   $exclude_order_id Optional order ID to exclude from count.
+	 * @param array $applicable_item_ids Optional applicable item ids to check.
 	 *
 	 * @return int
 	 */
-	public function get_coupon_usage_count( $coupon_code, int $exclude_order_id = 0 ) {
+	public function get_coupon_usage_count( $coupon_code, int $exclude_order_id = 0, array $applicable_item_ids = array() ) {
 		$now_gmt = current_time( 'mysql', true );
 		$count   = 0;
 
@@ -522,6 +524,8 @@ class CouponModel {
 			// Check if the table schema is 4.2.0+.
 			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
 				$order_id       = (int) $result->order_id;
+				$items          = ( new OrderModel() )->get_order_items_by_id( $order_id );
+				$item_ids       = ! empty( $items ) ? array_column( $items, 'id' ) : array();
 				$status         = $result->status;
 				$expires_at_gmt = $result->expires_at_gmt;
 
@@ -533,8 +537,14 @@ class CouponModel {
 				if ( self::STATUS_CONSUMED === $status ) {
 					++$count;
 				} elseif ( self::STATUS_RESERVED === $status ) {
-					// If the reserver is the current user and the reservation is not expired then continue and allow them to use the coupon.
-					if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt ) {
+					// If the reserver is the current user and the reservation is not expired & using the coupon on the same item
+					// then continue and allow them to use the coupon.
+					$has_item_diff = false;
+					if ( ! empty( $item_ids ) && ! empty( $applicable_item_ids ) ) {
+						$has_item_diff = count( array_diff( $applicable_item_ids, $item_ids ) ) > 0;
+					}
+
+					if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt && ! $has_item_diff ) {
 						continue;
 					}
 
@@ -925,14 +935,16 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 * @since 4.2.0 Added user_id and exclude_order_id parameters.
-	 *
+	 * @since 4.2.1 Added applicable_item_ids to validate coupon usage.
+
 	 * @param object $coupon Coupon object.
 	 * @param int    $user_id Optional user id.
 	 * @param int    $exclude_order_id Optional order ID to exclude from usage limit.
+	 * @param array  $applicable_item_ids Optional applicable item ids.
 	 *
 	 * @return bool
 	 */
-	public function is_coupon_valid( object $coupon, int $user_id = 0, int $exclude_order_id = 0 ): bool {
+	public function is_coupon_valid( object $coupon, int $user_id = 0, int $exclude_order_id = 0, array $applicable_item_ids = array() ): bool {
 		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
 			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'invalid' ) );
 			return false;
@@ -940,7 +952,7 @@ class CouponModel {
 
 		$user_id = $user_id ? $user_id : get_current_user_id();
 
-		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, $user_id, $exclude_order_id );
+		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, $user_id, $exclude_order_id, $applicable_item_ids );
 	}
 
 	/**
@@ -1106,17 +1118,18 @@ class CouponModel {
 	 * @param object $coupon coupon object.
 	 * @param int    $user_id user id.
 	 * @param int    $exclude_order_id Optional order ID to exclude.
+	 * @param array  $applicable_item_ids Optional applicable item ids.
 	 *
 	 * @return bool true if has usage limit otherwise false
 	 */
-	public function has_user_usage_limit( object $coupon, int $user_id, int $exclude_order_id = 0 ): bool {
+	public function has_user_usage_limit( object $coupon, int $user_id, int $exclude_order_id = 0, array $applicable_item_ids = array() ): bool {
 		$has_limit = true;
 
 		$total_usage_limit = (int) $coupon->total_usage_limit;
 		$user_usage_limit  = (int) $coupon->per_user_usage_limit;
 
 		if ( $total_usage_limit > 0 ) {
-			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code, $exclude_order_id );
+			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code, $exclude_order_id, $applicable_item_ids );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
