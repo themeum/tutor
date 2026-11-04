@@ -1,22 +1,22 @@
 # Testing Tutor LMS
 
 This directory documents automated testing for Tutor LMS:
+
 - **`tests/phpunit/`**: PHPUnit unit and integration tests.
 - **`tests/e2e/`**: Modern E2E tests powered by Playwright.
 - **`tests/support/`**: Test database reset and fixture seeding utilities.
-
 
 ---
 
 ## Setup
 
 Just run the test installer command:
+
 ```bash
 composer test:install
 ```
 
-
-*(Optional Manual Configuration)*: 
+_(Optional Manual Configuration)_:
 
 If your `wp-config.php` is customized or not auto-configured, ensure the following database routing block is present:
 
@@ -44,7 +44,7 @@ if ( file_exists( $tutor_test_config ) ) {
 if ( ! defined( 'WP_RUNNING_TESTS' ) && ! defined( 'WP_INSTALLING' ) ) {
 	require_once ABSPATH . 'wp-settings.php';
 }
-``` 
+```
 
 ## Commands
 
@@ -60,6 +60,7 @@ php tests/supports/reset-test-db.php
 ```
 
 ### 2. Run PHPUnit Tests
+
 ```bash
 # Run all PHPUnit tests
 vendor/bin/phpunit
@@ -76,6 +77,7 @@ vendor/bin/phpunit --testsuite=query-helper-test
 ```
 
 ### 3. Run Playwright E2E Tests
+
 ```bash
 # Run all E2E tests headless
 pnpm run test:e2e
@@ -88,4 +90,3 @@ pnpm run test:e2e:debug
 ```
 
 ---
-
