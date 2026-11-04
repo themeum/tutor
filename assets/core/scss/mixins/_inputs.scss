@@ -50,7 +50,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     background-color: $tutor-surface-l1;
     border-color: $tutor-border-brand-tertiary;
@@ -83,7 +83,7 @@
 }
 
 @mixin tutor-textarea($min-height: 92px) {
-  @include tutor-input-base;
+  @include tutor-input-base();
 
   min-height: $min-height;
   resize: vertical;
@@ -150,7 +150,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     &:not(:checked) {
       box-shadow: $tutor-ring-gray-shadow-sm;
@@ -220,7 +220,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     &:not(:checked) {
       box-shadow: $tutor-ring-gray-shadow-sm;
@@ -267,7 +267,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     border-color: $tutor-border-brand-tertiary;
   }

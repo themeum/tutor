@@ -5,7 +5,7 @@
 button.tutor-btn,
 a.tutor-btn,
 .tutor-btn {
-  @include tutor-button-base;
+  @include tutor-button-base();
   @include tutor-button-size(medium);
 }
 
@@ -120,14 +120,14 @@ a.tutor-btn-large,
 
 // Button states
 .tutor-btn-loading {
-  @include tutor-button-loading;
+  @include tutor-button-loading();
 }
 
 // Button with full width
 button.tutor-btn-block,
 a.tutor-btn-block,
 .tutor-btn-block {
-  @include tutor-button-block;
+  @include tutor-button-block();
 }
 
 // Button group

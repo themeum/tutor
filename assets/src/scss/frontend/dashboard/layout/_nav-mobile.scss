@@ -32,7 +32,7 @@
 
       > a,
       > button {
-        @include tutor-button-reset;
+        @include tutor-button-reset();
         @include tutor-typography(tiny, medium);
         @include tutor-flex(column, center);
 
@@ -51,7 +51,7 @@
         }
 
         .tutor-dashboard-nav-mobile-icon {
-          @include tutor-flex-center;
+          @include tutor-flex-center();
         }
       }
     }

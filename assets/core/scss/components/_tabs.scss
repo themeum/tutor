@@ -85,7 +85,7 @@ button.tutor-tabs-tab,
   }
 
   &:focus-visible {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
   }
 }
 
@@ -113,7 +113,7 @@ button.tutor-tabs-tab,
     @include tutor-flex(row, flex-start, flex-start);
 
     .tutor-tabs-nav {
-      @include tutor-flex-column;
+      @include tutor-flex-column();
 
       align-items: stretch;
       min-width: 200px;

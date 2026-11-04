@@ -15,7 +15,7 @@
 
   img,
   svg {
-    @include tutor-flex-center;
+    @include tutor-flex-center();
 
     width: 12px;
     height: 12px;

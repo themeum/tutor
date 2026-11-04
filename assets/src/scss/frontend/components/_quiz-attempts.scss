@@ -94,7 +94,7 @@
         &[data-learning-area='true'] {
           .tutor-quiz-item-info {
             > div:first-of-type {
-              @include tutor-visually-hidden;
+              @include tutor-visually-hidden();
             }
 
             .tutor-quiz-item-info-date a {
@@ -159,7 +159,7 @@
         }
 
         .tutor-quiz-attempts-expand-btn {
-          @include tutor-button-reset;
+          @include tutor-button-reset();
           @include tutor-flex(row, center);
 
           gap: $tutor-spacing-2;
@@ -221,7 +221,7 @@
 
           .tutor-quiz-marks-correct,
           .tutor-quiz-marks-incorrect {
-            @include tutor-badge-base;
+            @include tutor-badge-base();
 
             width: 100%;
             border-radius: $tutor-radius-full;

@@ -39,7 +39,7 @@
   }
 
   &:focus-visible:not(:disabled, .disabled) {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
   }
 
   svg:not([class]) {

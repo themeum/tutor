@@ -33,7 +33,7 @@
     }
 
     &-action-btn {
-      @include tutor-button-reset;
+      @include tutor-button-reset();
       @include tutor-flex(row, center, center);
 
       gap: $tutor-spacing-2;
@@ -63,7 +63,7 @@
       }
 
       &:focus-visible {
-        @include tutor-focus-ring;
+        @include tutor-focus-ring();
       }
     }
 
@@ -83,7 +83,7 @@
     }
 
     &-replies-toggle {
-      @include tutor-button-reset;
+      @include tutor-button-reset();
       @include tutor-typography('tiny', 'medium', 'brand');
       @include tutor-flex(row, center, flex-start);
 

@@ -35,7 +35,7 @@
     border-bottom: 1px solid $tutor-border-idle;
 
     &-inner {
-      @include tutor-frontend-layout;
+      @include tutor-frontend-layout();
       @include tutor-flex(row, center, space-between);
 
       min-height: var(--tutor-quiz-summary-header-height);
@@ -82,7 +82,7 @@
     .tutor-quiz-sidebar-questions {
       overflow-y: auto;
 
-      @include tutor-scrollbar;
+      @include tutor-scrollbar();
 
       padding: 1px 1px $tutor-spacing-6;
 
@@ -139,7 +139,7 @@
         }
 
         &:focus-visible {
-          @include tutor-focus-ring;
+          @include tutor-focus-ring();
 
           background-color: $tutor-surface-l2;
         }
@@ -206,7 +206,7 @@
   }
 
   .tutor-quiz-questions {
-    @include tutor-frontend-layout;
+    @include tutor-frontend-layout();
     @include tutor-flex(column);
 
     padding-inline: 0;
@@ -446,7 +446,7 @@
     }
 
     &-review-action {
-      @include tutor-button-base;
+      @include tutor-button-base();
       @include tutor-button-variant(secondary);
       @include tutor-button-icon-size(x-small);
       @include tutor-transition((background-color, color, opacity, border-color));

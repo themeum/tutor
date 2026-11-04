@@ -195,7 +195,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-progress {
     @include tutor-flex(column);
-    @include tutor-frontend-layout;
+    @include tutor-frontend-layout();
 
     padding-inline: 0;
     padding-block: $tutor-spacing-5;
@@ -346,7 +346,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-timer-text {
     @include tutor-typography('h5', 'semibold');
-    @include tutor-flex-center;
+    @include tutor-flex-center();
 
     grid-area: 1 / 1;
     position: relative;
@@ -403,7 +403,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   }
 
   &-timer-reel {
-    @include tutor-flex-column;
+    @include tutor-flex-column();
 
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -434,7 +434,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-questions {
     @include tutor-flex(column);
-    @include tutor-frontend-layout;
+    @include tutor-frontend-layout();
 
     padding-inline: 0;
     width: 100%;
@@ -478,7 +478,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   }
 
   &-question-meta {
-    @include tutor-frontend-layout;
+    @include tutor-frontend-layout();
     @include tutor-flex(row, center, space-between);
 
     width: 100%;
@@ -547,7 +547,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &[data-pagination-style='shape'],
     &[data-pagination-style='radio'],
     &[data-pagination-style='number'] {
-      @include tutor-frontend-layout;
+      @include tutor-frontend-layout();
 
       width: calc(100dvw - #{$tutor-spacing-8});
       justify-content: flex-start;
@@ -1054,7 +1054,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         }
 
         [data-option-order] {
-          @include tutor-flex-center;
+          @include tutor-flex-center();
           @include tutor-typography('small', 'semibold');
 
           width: 40px;
@@ -1080,8 +1080,8 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         }
 
         [data-grab-handle] {
-          @include tutor-button-reset;
-          @include tutor-flex-center;
+          @include tutor-button-reset();
+          @include tutor-flex-center();
 
           margin-inline: auto $tutor-spacing-4;
           pointer-events: none;
@@ -1229,8 +1229,8 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
             }
 
             [data-grab-handle] {
-              @include tutor-button-reset;
-              @include tutor-flex-center;
+              @include tutor-button-reset();
+              @include tutor-flex-center();
 
               margin-inline-start: auto;
               pointer-events: none;
@@ -1426,7 +1426,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-inner {
       @include tutor-flex(row, center, flex-start);
-      @include tutor-frontend-layout;
+      @include tutor-frontend-layout();
 
       gap: $tutor-spacing-4;
       width: 100%;

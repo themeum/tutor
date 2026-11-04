@@ -5,18 +5,18 @@
   @include tutor-flex(row, center, space-between);
 
   button.tutor-star-rating-icon-btn {
-    @include tutor-button-reset;
+    @include tutor-button-reset();
 
     min-height: unset;
   }
 
   &.is-emoji-view {
-    @include tutor-flex-column;
+    @include tutor-flex-column();
 
     gap: $tutor-spacing-7;
 
     .tutor-star-rating-emoji-btn {
-      @include tutor-button-reset;
+      @include tutor-button-reset();
 
       width: 74px;
       height: 74px;
@@ -24,7 +24,7 @@
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
 
-      @include tutor-flex-column;
+      @include tutor-flex-column();
 
       align-items: center;
       justify-content: center;

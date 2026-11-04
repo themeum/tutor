@@ -233,7 +233,7 @@
     }
 
     &-option {
-      @include tutor-flex-center;
+      @include tutor-flex-center();
 
       gap: $tutor-spacing-3;
       padding: $tutor-spacing-3 $tutor-spacing-4;

@@ -189,7 +189,7 @@ $opacities: (
 }
 
 .tutor-focus-ring:focus {
-  @include tutor-focus-ring;
+  @include tutor-focus-ring();
 }
 
 .tutor-focus-outline-none:focus {

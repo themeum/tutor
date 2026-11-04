@@ -12,8 +12,8 @@
     }
 
     [data-grab] {
-      @include tutor-reset;
-      @include tutor-flex-center;
+      @include tutor-reset();
+      @include tutor-flex-center();
 
       cursor: grab;
 
@@ -28,7 +28,7 @@
   }
 
   &-chart {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
 
@@ -51,7 +51,7 @@
       gap: $tutor-spacing-2;
 
       &::before {
-        @include tutor-flex-center;
+        @include tutor-flex-center();
 
         content: '';
         height: 2px;
@@ -121,7 +121,7 @@
   }
 
   &-card {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
 
@@ -148,13 +148,13 @@
     }
 
     &-avatar {
-      @include tutor-flex-center;
+      @include tutor-flex-center();
 
       flex-shrink: 0;
     }
 
     &-icon {
-      @include tutor-flex-center;
+      @include tutor-flex-center();
       @include tutor-typography('tiny', 'regular', 'subdued');
 
       width: 16px;
@@ -163,7 +163,7 @@
   }
 
   &-course {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
     @include tutor-flex(row, center, space-between);
     @include tutor-transition(background-color);
@@ -177,7 +177,7 @@
 
     &-index {
       @include tutor-typography('p3', 'medium', 'secondary');
-      @include tutor-flex-center;
+      @include tutor-flex-center();
 
       width: 32px;
       height: 32px;
@@ -188,7 +188,7 @@
   }
 
   &-task {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
     @include tutor-flex(row, flex-start);
     @include tutor-transition(background-color);
@@ -218,7 +218,7 @@
     }
 
     &-icon {
-      @include tutor-flex-center;
+      @include tutor-flex-center();
 
       width: 32px;
       height: 32px;
@@ -269,21 +269,21 @@
   }
 
   &-review {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
 
     width: 100%;
     padding: $tutor-spacing-5;
 
     &-avatar {
-      @include tutor-flex-center;
+      @include tutor-flex-center();
 
       flex-shrink: 0;
       align-self: flex-start;
     }
 
     &-action {
-      @include tutor-button-base;
+      @include tutor-button-base();
       @include tutor-button-size(x-small);
       @include tutor-button-variant(link);
       @include tutor-flex(row, center);

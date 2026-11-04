@@ -3,7 +3,7 @@
 
 .tutor-user-profile {
   .tutor-profile-card {
-    @include tutor-card-base;
+    @include tutor-card-base();
 
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
@@ -31,7 +31,7 @@
     }
 
     .tutor-edit-profile-btn {
-      @include tutor-button-base;
+      @include tutor-button-base();
       @include tutor-button-variant(outline);
       @include tutor-button-size(x-small);
 
@@ -222,7 +222,7 @@
     }
 
     .tutor-statistic-card {
-      @include tutor-card-base;
+      @include tutor-card-base();
       @include tutor-flex(row, flex-start);
 
       gap: $tutor-spacing-5;

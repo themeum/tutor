@@ -43,7 +43,7 @@
   }
 
   &-icon {
-    @include tutor-flex-center;
+    @include tutor-flex-center();
   }
 
   &-live-tag {
@@ -80,7 +80,7 @@
     display: block;
 
     @include tutor-typography('small', 'medium', 'primary', 'body');
-    @include tutor-text-truncate;
+    @include tutor-text-truncate();
 
     margin: 0 0 $tutor-spacing-5;
 
