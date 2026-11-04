@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -121,43 +121,57 @@ const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setV
   });
 };
 
+const defaultScaleData: ScaleData = {
+  value: 50,
+  config: normalizeScaleConfig({
+    min: 0,
+    max: 100,
+    step: 1,
+    defaultValue: 50,
+    pxPerUnit: 10,
+    labelEvery: 10,
+    minorTickEvery: 5,
+    precision: 0,
+  }),
+};
+
 const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
-  const [scaleData, setScaleData] = useState<ScaleData>(() => {
-    const parsed = parseStoredScaleData(option?.answer_two_gap_match ?? '');
-    return (
-      parsed || {
-        value: 50,
-        config: normalizeScaleConfig({
-          min: 0,
-          max: 100,
-          step: 1,
-          defaultValue: 50,
-          pxPerUnit: 10,
-          labelEvery: 10,
-          minorTickEvery: 5,
-          precision: 0,
-        }),
-      }
-    );
-  });
+  const storedScalePayload = option?.answer_two_gap_match ?? '';
 
-  const [inputs, setInputs] = useState(() => toScaleInputs(scaleData));
+  const baseScaleData = useRef<ScaleData>(parseStoredScaleData(storedScalePayload) || defaultScaleData);
+  const lastPersistedPayloadRef = useRef<string | null>(storedScalePayload || null);
+
+  const [inputs, setInputs] = useState(() => toScaleInputs(baseScaleData.current));
   const [lastRangeField, setLastRangeField] = useState<'min' | 'max'>('max');
-  const savedJsonRef = useRef<string | null>(null);
 
-  const config = normalizeScaleConfig(scaleData.config);
-
-  useEffect(() => {
-    const raw = option?.answer_two_gap_match ?? '';
-    if (raw === savedJsonRef.current) return;
-
-    const parsed = parseStoredScaleData(raw);
+  // If the stored answer payload was updated externally (e.g. form reset, switching question),
+  // sync state during render without an asynchronous effect.
+  if (storedScalePayload !== lastPersistedPayloadRef.current) {
+    lastPersistedPayloadRef.current = storedScalePayload;
+    const parsed = parseStoredScaleData(storedScalePayload);
     if (parsed) {
-      setScaleData(parsed);
+      baseScaleData.current = parsed;
       setInputs(toScaleInputs(parsed));
     }
-  }, [option?.answer_two_gap_match]);
+  }
+
+  const parsedMin = parseFloat(inputs.min);
+  const parsedMax = parseFloat(inputs.max);
+  const parsedLabelEvery = parseFloat(inputs.labelEvery);
+  const parsedValue = parseFloat(inputs.value);
+
+  const currentScaleData: ScaleData = {
+    value: Number.isFinite(parsedValue) ? parsedValue : baseScaleData.current.value,
+    config: normalizeScaleConfig({
+      ...baseScaleData.current.config,
+      min: Number.isFinite(parsedMin) ? parsedMin : baseScaleData.current.config.min,
+      max: Number.isFinite(parsedMax) ? parsedMax : baseScaleData.current.config.max,
+      labelEvery: Number.isFinite(parsedLabelEvery) ? parsedLabelEvery : baseScaleData.current.config.labelEvery,
+    }),
+  };
+
+  const config = currentScaleData.config;
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -170,14 +184,17 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     (data: ScaleData) => {
       if (!option) return;
 
-      const json = JSON.stringify(data);
-      savedJsonRef.current = json;
+      const serializedPayload = JSON.stringify(data);
+      if (serializedPayload === lastPersistedPayloadRef.current) return;
+
+      lastPersistedPayloadRef.current = serializedPayload;
+      baseScaleData.current = data;
       updateOption({
         ...option,
         ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
           _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
         }),
-        answer_two_gap_match: json,
+        answer_two_gap_match: serializedPayload,
         is_saved: true,
       });
     },
@@ -196,39 +213,34 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       if (!Number.isFinite(parsed)) return;
 
       if (fieldKey === 'value') {
-        if (parsed === scaleData.value) return;
+        if (parsed === baseScaleData.current.value) return;
 
-        const nextScaleData = { ...scaleData, value: parsed };
-        setScaleData(nextScaleData);
+        const nextScaleData = { ...baseScaleData.current, value: parsed };
         saveScaleData(nextScaleData);
         return;
       }
 
-      if (parsed === scaleData.config[fieldKey]) return;
+      if (parsed === baseScaleData.current.config[fieldKey]) return;
 
       const nextScaleData = {
-        ...scaleData,
-        config: normalizeScaleConfig({ ...scaleData.config, [fieldKey]: parsed }),
+        ...baseScaleData.current,
+        config: normalizeScaleConfig({ ...baseScaleData.current.config, [fieldKey]: parsed }),
       };
-      setScaleData(nextScaleData);
       saveScaleData(nextScaleData);
     },
-    [saveScaleData, scaleData, setValidationError],
+    [saveScaleData, setValidationError],
   );
 
-  const handleInputBlur = useCallback(
-    (fieldKey: ScaleField, rawValue: string) => {
-      if (rawValue.trim() === '') {
-        return;
-      }
+  const handleInputBlur = useCallback((fieldKey: ScaleField, rawValue: string) => {
+    if (rawValue.trim() === '') {
+      return;
+    }
 
-      const committedValue = fieldKey === 'value' ? scaleData.value : scaleData.config[fieldKey];
-      setInputs((prev) => ({ ...prev, [fieldKey]: String(committedValue) }));
-    },
-    [scaleData],
-  );
+    const committedValue = fieldKey === 'value' ? baseScaleData.current.value : baseScaleData.current.config[fieldKey];
+    setInputs((prev) => ({ ...prev, [fieldKey]: String(committedValue) }));
+  }, []);
 
-  const scaleError = getScaleValidationError(config, scaleData.value);
+  const scaleError = getScaleValidationError(config, currentScaleData.value);
   const fieldError: ScaleFieldError | null = scaleError
     ? { field: scaleError.field === 'range' ? lastRangeField : scaleError.field, message: scaleError.message }
     : null;
