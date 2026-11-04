@@ -41,7 +41,7 @@ final class TutorTestConfig {
 		}
 
 		$defaults = array(
-			'NAME' => 'local_test',
+			'NAME' => preg_match( '/_test$/i', $live ) ? $live : $live . '_test',
 			'USER' => 'root',
 			'PASS' => 'root',
 			'HOST' => $live, // Same server as live by default.

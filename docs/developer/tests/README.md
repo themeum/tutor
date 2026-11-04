@@ -10,12 +10,15 @@ This directory documents automated testing for Tutor LMS:
 
 ## Setup
 
-1. Create a database for test. ex: `local_test`
-2. Copy `.env.example` to `.env` in the plugin root, then set your test database details.
+Just run the test installer command:
+```bash
+composer test:install
+```
 
-3. Initializes a fresh test database by `composer test:db:reset`
 
-4. Put it into `wp-config.php`
+*(Optional Manual Configuration)*: 
+
+If your `wp-config.php` is customized or not auto-configured, ensure the following database routing block is present:
 
 ```php
 /** Test database routing for PHPUnit, Playwright E2E and CLI testing */
@@ -41,8 +44,7 @@ if ( file_exists( $tutor_test_config ) ) {
 if ( ! defined( 'WP_RUNNING_TESTS' ) && ! defined( 'WP_INSTALLING' ) ) {
 	require_once ABSPATH . 'wp-settings.php';
 }
-```
-5. Check that it works: `composer test:unit:filter DBTest` 
+``` 
 
 ## Commands
 

@@ -58,6 +58,7 @@
     ],
     "test:unit": "vendor/bin/phpunit",
     "test:unit:filter": "vendor/bin/phpunit --filter",
-    "test:db:reset": "php tests/support/reset-test-db.php"
+    "test:db:reset": "php tests/support/reset-test-db.php",
+    "test:install": "php tests/support/install.php"
   }
 }
