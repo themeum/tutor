@@ -935,7 +935,7 @@ class CouponModel {
 	 * @since 3.0.0
 	 * @since 4.2.0 Added user_id and exclude_order_id parameters.
 	 * @since 4.2.1 Added applicable_item_ids to validate coupon usage.
-
+	 *
 	 * @param object $coupon Coupon object.
 	 * @param int    $user_id Optional user id.
 	 * @param int    $exclude_order_id Optional order ID to exclude from usage limit.
