@@ -524,8 +524,6 @@ class CouponModel {
 			// Check if the table schema is 4.2.0+.
 			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
 				$order_id       = (int) $result->order_id;
-				$items          = ( new OrderModel() )->get_order_items_by_id( $order_id );
-				$item_ids       = ! empty( $items ) ? array_column( $items, 'id' ) : array();
 				$status         = $result->status;
 				$expires_at_gmt = $result->expires_at_gmt;
 
@@ -537,19 +535,21 @@ class CouponModel {
 				if ( self::STATUS_CONSUMED === $status ) {
 					++$count;
 				} elseif ( self::STATUS_RESERVED === $status ) {
-					// If the reserver is the current user and the reservation is not expired & using the coupon on the same item
-					// then continue and allow them to use the coupon.
-					$has_item_diff = false;
-					if ( ! empty( $item_ids ) && ! empty( $applicable_item_ids ) ) {
-						$has_item_diff = count( array_diff( $applicable_item_ids, $item_ids ) ) > 0;
-					}
-
-					if ( $user_id === (int) $result->user_id && $expires_at_gmt > $now_gmt && ! $has_item_diff ) {
-						continue;
-					}
-
-					// Considering the reserved as used until not expired.
 					if ( $expires_at_gmt > $now_gmt ) {
+						// If the current user holds this reservation, check if it is for the exact same items.
+						if ( $user_id === (int) $result->user_id && ! empty( $applicable_item_ids ) ) {
+							$items    = ( new OrderModel() )->get_order_items_by_id( $order_id );
+							$item_ids = ! empty( $items ) ? array_column( $items, 'id' ) : array();
+
+							$is_same_items = count( $applicable_item_ids ) === count( $item_ids )
+								&& 0 === count( array_diff( $applicable_item_ids, $item_ids ) );
+
+							if ( $is_same_items ) {
+								// User is continuing checkout on the exact same cart; allow them to proceed.
+								continue;
+							}
+						}
+
 						++$count;
 					}
 				}
