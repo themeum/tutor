@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Core\Singleton;
 use Tutor\Models\OrderModel;
@@ -403,23 +404,31 @@ class Earnings extends Singleton {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @throws \Exception If earning_data is empty.
+	 * @throws \Exception If earning data is empty or the operation fails.
 	 *
-	 * @return int On success inserted id will be returned
+	 * @return int On success inserted id will be returned.
 	 */
 	public function remove_before_store_earnings() {
 		if ( empty( $this->earning_data ) ) {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		if ( $this->is_exist_order_earning( $this->order_id ) ) {
-			$this->delete_earning_by_order( $this->order_id );
-		}
+		$earning_id = 0;
 
 		try {
-			return $this->store_earnings();
-		} catch ( \Throwable $th ) {
+			DB::begin_transaction();
+			if ( $this->is_exist_order_earning( $this->order_id ) ) {
+				$this->delete_earning_by_order( $this->order_id );
+			}
+
+			$earning_id = $this->store_earnings();
+			DB::commit();
+		} catch ( \Exception $th ) {
+			DB::rollback();
 			tutor_log( $th );
+			throw $th;
 		}
+
+		return $earning_id;
 	}
 }
