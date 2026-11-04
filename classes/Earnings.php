@@ -260,6 +260,7 @@ class Earnings extends Singleton {
 			'commission_type'          => $commission_type,
 		);
 
+		// @deprecated Use `tutor_new_earning_data` instead.
 		$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
 		extract( $pro_calculation ); //phpcs:ignore
 		// (Use Pro Filter - End).
@@ -282,6 +283,7 @@ class Earnings extends Singleton {
 			'process_by'               => self::get_process_by(),
 			'created_at'               => current_time( 'mysql', true ),
 		);
+
 		$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
 
 		return $earning_data;
