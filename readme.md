@@ -47,7 +47,7 @@ Follow the steps
 
 ## Testing
 
-To run unit and E2E tests, see the [Testing Guide](docs/developer/tests/README.md).
+To run unit and E2E tests, see the [Testing Guide](docs/developer/testing.md).
 
 ## System Requirements
 
