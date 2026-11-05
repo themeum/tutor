@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -45,9 +45,15 @@ const QuestionForm = () => {
 
   const alertRef = useRef<HTMLDivElement>(null);
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const questions = form.watch('questions') || [];
-  const dataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
+  const activeQuestionType = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type',
+  });
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
+  const dataStatus = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}._data_status` as 'questions.0._data_status',
+  });
 
   const questionTypeForm = {
     true_false: <TrueFalse key={activeQuestionId} />,
@@ -129,7 +135,7 @@ const QuestionForm = () => {
             fallback={
               <div>
                 <div css={styles.h5pShortCode}>
-                  {`[h5p id: "${form.watch(`questions.${activeQuestionIndex}.question_description`)}"]`}
+                  {`[h5p id: "${form.getValues(`questions.${activeQuestionIndex}.question_description`)}"]`}
                 </div>
               </div>
             }
@@ -164,7 +170,7 @@ const QuestionForm = () => {
       </div>
 
       <Show when={validationError}>
-        <div key={Math.random()} ref={alertRef} css={styles.alertWrapper}>
+        <div key={validationError?.message} ref={alertRef} css={styles.alertWrapper}>
           <Alert type="danger" icon="warning">
             {validationError?.message}
           </Alert>

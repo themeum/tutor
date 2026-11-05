@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -27,18 +27,16 @@ interface ColumnDataType {
 function EuropeanUnionTax() {
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
   const form = useFormContext<TaxSettings>();
-  const rates = form.watch('rates');
+  const rates = useWatch({ control: form.control, name: 'rates', defaultValue: [] });
   const euIndex = rates.findIndex((rate) => String(rate.country) === String(euCountryCode));
   const euRate = rates[euIndex];
 
   const isMicroBusiness = euRate?.vat_registration_type === EUTaxRegistrationTypes.microBusiness;
   const isOneStopBusiness = euRate?.vat_registration_type === EUTaxRegistrationTypes.oneStop;
 
-  if (isMicroBusiness && euRate.states.length) {
-    euRate.states = [euRate.states[0]];
-  }
+  const states = isMicroBusiness && euRate?.states?.length ? [euRate.states[0]] : (euRate?.states ?? []);
 
-  const tableData: ColumnDataType[] = euRate.states.map((euState) => {
+  const tableData: ColumnDataType[] = states.map((euState) => {
     return {
       countryId: euState.id,
       rate: euState.rate,
