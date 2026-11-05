@@ -433,7 +433,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, 0, 0, $item_ids );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
@@ -871,7 +871,7 @@ class CheckoutController {
 				);
 			}
 
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( in_array( $order_type, array( OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ), true ) ) {
 				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;
