@@ -315,7 +315,7 @@ if ( 0 === $total_courses_count ) {
 											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-3x2">
-														<img class="tutor-radius-3 <?php echo esc_attr( 'course-bundle' === $post->post_type ? 'tutor-bundle-list-thumb' : '' ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $post->post_title ); ?>" loading="lazy">
+														<img class="tutor-radius-3 <?php echo esc_attr( 'course-bundle' === $post->post_type ? 'tutor-bundle-list-thumb' : '' ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" loading="lazy">
 													</div>
 												</div>
 											</a>
