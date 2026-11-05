@@ -23,6 +23,7 @@ import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type IconCollection } from '@TutorShared/icons/types';
+import { type UnlinkPageBuilderResponse } from '@TutorShared/services/course';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Editor, TutorMutationResponse } from '@TutorShared/utils/types';
@@ -51,7 +52,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   isMagicAi?: boolean;
   autoFocus?: boolean;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
-  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<UnlinkPageBuilderResponse>>;
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
@@ -62,7 +63,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
 interface CustomEditorOverlayProps {
   editorUsed: Editor;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
-  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<UnlinkPageBuilderResponse>>;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -295,7 +296,7 @@ const FormWPEditor = ({
         }
 
         return (
-          <div css={styles.wrapper({ isOverlayVisible })}>
+          <div css={styles.wrapper({ isOverlayVisible, hasError: !!fieldState?.error })}>
             <Show when={isOverlayVisible}>
               <CustomEditorOverlay
                 editorUsed={editorUsed}
@@ -332,13 +333,20 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
-  wrapper: ({ isOverlayVisible = false }) => css`
+  wrapper: ({ isOverlayVisible = false, hasError = false }: { isOverlayVisible?: boolean; hasError?: boolean }) => css`
     position: relative;
 
     ${isOverlayVisible &&
     css`
       overflow: hidden;
       border-radius: ${borderRadius[6]};
+    `}
+
+    ${hasError &&
+    css`
+      .wp-editor-container {
+        border-color: ${colorTokens.stroke.danger} !important;
+      }
     `}
   `,
   editorLabel: css`

@@ -11,6 +11,7 @@
 namespace Tutor;
 
 use TUTOR\Admin;
+use Tutor\Core\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

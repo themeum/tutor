@@ -433,7 +433,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, 0, 0, $item_ids );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {

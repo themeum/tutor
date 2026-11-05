@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.2.1 - 06 Nov, 2026
+
+Update: Improved WPML compatibility.
+Fix: Resolved an issue where post content disappeared when switching from a page builder to the native WordPress editor.
+Fix: Resolved an issue where period filters were not applied correctly to the earnings graph and dashboard reports.
+Fix: Corrected inaccurate course counts in the course export process.
+Fix: Strengthened overall security measures.
 
 = 4.2.0 - 27 Oct, 2026
 
