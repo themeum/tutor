@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Handle ratings related logics
  *

@@ -10,6 +10,9 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Core\Singleton;
 use Tutor\Models\OrderModel;
@@ -85,6 +88,8 @@ class Earnings extends Singleton {
 	 */
 	public function prepare_order_earnings( int $order_id ) {
 		$this->order_id = $order_id;
+		// Ensure never carry rows over from a previous order.
+		$this->earning_data = array();
 
 		$order_model   = new OrderModel();
 		$order_details = $order_model->get_order_by_id( $order_id );
@@ -223,7 +228,24 @@ class Earnings extends Singleton {
 		$commission_type = 'percent';
 
 		// Course author id.
-		$user_id = get_post_field( 'post_author', $course_id );
+		if ( is_null( $course_id ) ) {
+			/**
+			 * For membership plans, the course_id is null, so the earning
+			 * is credited to the site admin.
+			 */
+			$admin = get_users(
+				array(
+					'role'    => User::ADMIN,
+					'number'  => 1,
+					'orderby' => 'ID',
+					'order'   => 'ASC',
+				)
+			);
+
+			$user_id = ! empty( $admin ) ? $admin[0]->ID : 0;
+		} else {
+			$user_id = get_post_field( 'post_author', $course_id );
+		}
 
 		// (Use Pro Filter - Start)
 		// The response must be same array structure.
@@ -238,6 +260,7 @@ class Earnings extends Singleton {
 			'commission_type'          => $commission_type,
 		);
 
+		// @deprecated Use `tutor_new_earning_data` instead.
 		$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
 		extract( $pro_calculation ); //phpcs:ignore
 		// (Use Pro Filter - End).
@@ -260,6 +283,7 @@ class Earnings extends Singleton {
 			'process_by'               => self::get_process_by(),
 			'created_at'               => current_time( 'mysql', true ),
 		);
+
 		$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
 
 		return $earning_data;
@@ -354,7 +378,7 @@ class Earnings extends Singleton {
 		);
 
 		if ( $update ) {
-			$this->earning_data = null;
+			$this->earning_data = array();
 		}
 
 		return $update;
@@ -399,23 +423,31 @@ class Earnings extends Singleton {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @throws \Exception If earning_data is empty.
+	 * @throws \Exception If earning data is empty or the operation fails.
 	 *
-	 * @return int On success inserted id will be returned
+	 * @return int On success inserted id will be returned.
 	 */
 	public function remove_before_store_earnings() {
 		if ( empty( $this->earning_data ) ) {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		if ( $this->is_exist_order_earning( $this->order_id ) ) {
-			$this->delete_earning_by_order( $this->order_id );
-		}
+		$earning_id = 0;
 
 		try {
-			return $this->store_earnings();
-		} catch ( \Throwable $th ) {
+			DB::begin_transaction();
+			if ( $this->is_exist_order_earning( $this->order_id ) ) {
+				$this->delete_earning_by_order( $this->order_id );
+			}
+
+			$earning_id = $this->store_earnings();
+			DB::commit();
+		} catch ( \Exception $th ) {
+			DB::rollback();
 			tutor_log( $th );
+			throw $th;
 		}
+
+		return $earning_id;
 	}
 }

@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use InvalidArgumentException;
-
-defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -24,6 +24,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Tooltip;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;

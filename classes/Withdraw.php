@@ -10,14 +10,12 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Tutor\Core\Input;
 use Tutor\Models\WithdrawModel;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Withdraw class
