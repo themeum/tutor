@@ -538,7 +538,7 @@ class CouponModel {
 					if ( $expires_at_gmt > $now_gmt ) {
 						// If the current user holds this reservation, check if it is for the exact same items.
 						if ( $user_id === (int) $result->user_id && ! empty( $applicable_item_ids ) ) {
-							$item_ids = DB::table( 'tutor_order_items' )->where( 'order_id', $order_id )->pluck( 'id' );
+							$item_ids = DB::table( 'tutor_order_items' )->where( 'order_id', $order_id )->pluck( 'item_id' );
 
 							$is_same_items = count( $applicable_item_ids ) === count( $item_ids )
 								&& 0 === count( array_diff( $applicable_item_ids, $item_ids ) );
