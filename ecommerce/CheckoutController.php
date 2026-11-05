@@ -772,7 +772,7 @@ class CheckoutController {
 						// Mark order cancelled and return error so student can re-try.
 						$order_model = new OrderModel();
 						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
-						$err_msg = __( 'Coupon is no longer available or usage limit exceeded!', 'tutor' );
+						$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
 						set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, array( $err_msg ) );
 						return;
 					}
