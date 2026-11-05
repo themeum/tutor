@@ -631,7 +631,7 @@ class HooksHandler {
 		OrderMetaModel::add_meta(
 			$order_id,
 			OrderModel::META_KEY_BILLING_ADDRESS,
-			$meta_value
+			wp_slash( $meta_value )
 		);
 	}
 

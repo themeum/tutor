@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -52,6 +54,18 @@ class BillingModel {
 	);
 
 	/**
+	 * Fields a partial update is allowed to change
+	 *
+	 * @since 4.2.2
+	 *
+	 * @var array
+	 */
+	private $partial_update_fields = array(
+		'billing_country',
+		'billing_state',
+	);
+
+	/**
 	 * Get fillable fields
 	 *
 	 * @return array
@@ -88,19 +102,34 @@ class BillingModel {
 	/**
 	 * Update billing info
 	 *
+	 * @since 4.2.2 New Tutor\Core\DB used instead of the deprecated one.
+	 *
 	 * @param array $data Bulling info data.
 	 * @param array $where Where condition.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function update( $data, $where ) {
-		global $wpdb;
 
-		return QueryHelper::update(
-			"{$wpdb->prefix}tutor_customers",
-			$data,
-			$where,
-		);
+		$data = Input::sanitize_array( $data );
+
+		try {
+			$updated = DB::table( 'tutor_customers' );
+			foreach ( $where as $key => $value ) {
+				$updated->where( $key, $value );
+			}
+
+			$result = $updated->update( $data );
+			if ( ! $result ) {
+				tutor_log( __( 'Failed to update user profile.', 'tutor' ) );
+				return false;
+			}
+
+			return true;
+		} catch ( \Throwable $e ) {
+			tutor_log( $e->getMessage() );
+			return false;
+		}
 	}
 
 	/**
@@ -134,6 +163,10 @@ class BillingModel {
 	 */
 	public function has_complete_billing_info( array $data ) {
 		foreach ( $this->get_required_fields() as $field ) {
+			if ( 'billing_state' === $field && ! $this->country_has_states( $data['billing_country'] ?? '' ) ) {
+				continue;
+			}
+
 			if ( empty( $data[ $field ] ) ) {
 				return false;
 			}
@@ -174,5 +207,31 @@ class BillingModel {
 				'phone'   => $data['billing_phone'] ?? '',
 			)
 		);
+	}
+
+	/**
+	 * Check whether a country has states to choose from.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param string $country Country name.
+	 *
+	 * @return bool
+	 */
+	public function country_has_states( string $country ) {
+		$country_info = tutor_get_country_info_by_name( $country );
+
+		return ! empty( $country_info['states'] );
+	}
+
+	/**
+	 * Get the fields a partial update is allowed to change.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return array
+	 */
+	public function get_partial_update_fields() {
+		return $this->partial_update_fields;
 	}
 }

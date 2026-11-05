@@ -668,7 +668,7 @@ class CheckoutController {
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
+			$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $current_user_id ) );
 			if ( ! $update_billing ) {
 				array_push( $errors, __( 'Billing information update failed!', 'tutor' ) );
 			}
@@ -1165,7 +1165,7 @@ class CheckoutController {
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
-							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
+							$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $order_data->user_id ) );
 
 							if ( ! $update_billing ) {
 								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
