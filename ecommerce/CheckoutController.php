@@ -871,7 +871,7 @@ class CheckoutController {
 				);
 			}
 
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( in_array( $order_type, array( OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ), true ) ) {
 				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;
