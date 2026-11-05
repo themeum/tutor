@@ -8,6 +8,19 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Header data.
+ *
+ * @var string $back_url       Back URL.
+ * @var string $quiz_title     Quiz title.
+ * @var int    $question_count Total questions.
+ * @var string $quiz_time      Quiz time.
+ * @var float  $earned_marks   Earned marks.
+ * @var float  $total_marks    Total marks.
+ */
+
 $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 0 );
 $earned_marks  = (float) $earned_marks;
 $total_marks   = (float) $total_marks;
