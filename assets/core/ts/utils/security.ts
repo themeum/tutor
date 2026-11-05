@@ -74,3 +74,55 @@ export function sanitizeCsvCell(rawVal: unknown): string {
 
   return str;
 }
+
+/**
+ * Tags allowed by setSafeInlineHtml. No attributes are ever copied.
+ */
+const SAFE_INLINE_TAGS = new Set(['STRONG', 'B', 'EM', 'BR']);
+
+/**
+ * Recursively copy text and allow-listed inline elements from an untrusted
+ * DOM tree into a target node. Unknown elements are dropped but their text is kept.
+ */
+function copySafeInline(target: Node, source: Node): void {
+  source.childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      target.appendChild(document.createTextNode(node.textContent ?? ''));
+      return;
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return;
+    }
+
+    const el = node as Element;
+
+    if (SAFE_INLINE_TAGS.has(el.tagName)) {
+      const clean = document.createElement(el.tagName.toLowerCase());
+      copySafeInline(clean, el);
+      target.appendChild(clean);
+      return;
+    }
+
+    copySafeInline(target, el);
+  });
+}
+
+/**
+ * Render a string that may contain a few inline tags (<strong>, <b>, <em>, <br>)
+ * into an element without using innerHTML on untrusted input.
+ *
+ * The string is parsed in an inert document, then only allow-listed tags are
+ * rebuilt without attributes. Everything else is reduced to plain text.
+ * Dynamic values inside the string should still be passed through escapeHtml().
+ *
+ * @param target - Element to render into (existing content is replaced)
+ * @param html - String that may contain allow-listed inline tags
+ *
+ * @since 4.2.2
+ */
+export function setSafeInlineHtml(target: HTMLElement, html: string): void {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  target.textContent = '';
+  copySafeInline(target, doc.body);
+}
