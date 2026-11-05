@@ -406,6 +406,11 @@ class CheckoutController {
 	 */
 	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
+		$item_ids = array_unique( array_map( 'intval', $item_ids ) );
+		if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			$item_ids = array_values( array_filter( $item_ids, array( CourseModel::class, 'is_course_accessible' ) ) );
+		}
+
 		$response = array();
 		$user_id  = get_current_user_id();
 
