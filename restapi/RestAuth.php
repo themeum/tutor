@@ -1523,10 +1523,32 @@ class RestAuth {
 	}
 
 	/**
+	 * Permission: public route with optional access token.
+	 *
+	 * Empty token → allow (guest). Present but invalid token → reject.
+	 * Used by catalog/list routes that do not need resource-specific gates.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param WP_REST_Request $request request.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public static function permission_optional_access_token( WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Permission: author card — same gate as public-profile.php.
 	 *
 	 * Open instructor/student layout → allow (anonymous or JWT).
 	 * Private layout → deny (JWT does not bypass). Unknown user → 404.
+	 * Present but invalid access token → reject (optional auth).
 	 *
 	 * @since 4.2.0
 	 *
@@ -1535,6 +1557,11 @@ class RestAuth {
 	 * @return bool|\WP_Error
 	 */
 	public static function permission_public_author( WP_REST_Request $request ) {
+		$token_error = self::get_access_token_error( false );
+		if ( is_wp_error( $token_error ) ) {
+			return $token_error;
+		}
+
 		$user_id = absint( $request->get_param( 'id' ) );
 		if ( ! $user_id || ! get_userdata( $user_id ) ) {
 			return self::invalid_resource_error( __( 'Author not found.', 'tutor' ) );
@@ -1769,6 +1796,10 @@ class RestAuth {
 	/**
 	 * Whether the user may view full course learning content.
 	 *
+	 * Matches learning-area UI: students may access publish/private only.
+	 * Draft, pending, trash, future, etc. require edit or IA content access —
+	 * enrollment alone is not enough.
+	 *
 	 * @since 4.2.0
 	 *
 	 * @param int $course_id course id.
@@ -1782,11 +1813,23 @@ class RestAuth {
 			return false;
 		}
 
+		$user_id = tutor_utils()->get_user_id( $user_id );
+		$status  = get_post_status( $course_id );
+
+		// Non-publish / non-private: editors and IA content access only (not enrollment).
+		if ( ! in_array( $status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PRIVATE ), true ) ) {
+			if ( ! $user_id ) {
+				return false;
+			}
+
+			return tutor_utils()->can_user_edit_course( $user_id, $course_id )
+				|| (bool) tutor_utils()->has_user_course_content_access( $user_id, $course_id );
+		}
+
 		if ( Course_List::is_public( $course_id ) ) {
 			return true;
 		}
 
-		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id ) {
 			return false;
 		}
