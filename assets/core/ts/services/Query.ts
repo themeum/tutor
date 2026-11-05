@@ -300,8 +300,6 @@ export class QueryService {
           if (options.onSettled) {
             options.onSettled(null, err as TError, variables);
           }
-
-          throw err;
         } finally {
           (this as unknown as MutationState<TData, TVariables, TError>).isPending = false;
         }
