@@ -8,10 +8,17 @@
  * @since 2.0.0
  */
 
-$passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 0 );
-$earned_marks  = (float) $earned_marks;
-$total_marks   = (float) $total_marks;
-$pass_marks    = ( $total_marks * $passing_grade ) / 100;
+use TUTOR\Quiz;
+
+$quiz_id       = $attempt_data->quiz_id ?? get_the_ID();
+$passing_grade = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
+if ( empty( $back_url ) ) {
+	$time_limit = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit' );
+	$quiz_time  = ! empty( $time_limit['time_value'] ) ? $time_limit['time_value'] . ' ' . Quiz::quiz_time_units()[ $time_limit['time_type'] ] : '';
+}
+$earned_marks = (float) $earned_marks;
+$total_marks  = (float) $total_marks;
+$pass_marks   = ( $total_marks * $passing_grade ) / 100;
 
 ?>
 <?php if ( ! empty( $back_url ) ) : ?>
