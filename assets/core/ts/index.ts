@@ -38,7 +38,7 @@ import { convertToErrorMessage } from '@Core/ts/utils/error';
 import { formatBytes } from '@Core/ts/utils/format';
 import { getNonceData } from '@Core/ts/utils/nonce';
 import { parseNumberOnly } from '@Core/ts/utils/number';
-import { escapeAttr, escapeHtml, setSafeInlineHtml } from '@Core/ts/utils/security';
+import { escapeAttr, escapeHtml } from '@Core/ts/utils/security';
 import { makeFirstCharacterUpperCase } from '@Core/ts/utils/string';
 import { isMobileDevice, isRTL } from '@Core/ts/utils/util';
 
@@ -126,7 +126,6 @@ const initializePlugin = async () => {
     security: {
       escapeHtml,
       escapeAttr,
-      setSafeInlineHtml,
     },
     nonce: {
       getNonceData,

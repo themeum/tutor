@@ -117,8 +117,32 @@ export function sanitizeUrl(value: unknown): string {
 const SAFE_INLINE_TAGS = new Set(['STRONG', 'B', 'EM', 'BR']);
 
 /**
+ * Elements removed together with their content. Their text is code or
+ * non-display data, so it must never be copied out as visible text.
+ */
+const SAFE_INLINE_DROP_TAGS = new Set([
+  'SCRIPT',
+  'STYLE',
+  'TEMPLATE',
+  'NOSCRIPT',
+  'IFRAME',
+  'OBJECT',
+  'EMBED',
+  'TEXTAREA',
+  'TITLE',
+  'NOEMBED',
+  'NOFRAMES',
+  'XMP',
+]);
+
+/**
  * Recursively copy text and allow-listed inline elements from an untrusted
- * DOM tree into a target node. Unknown elements are dropped but their text is kept.
+ * DOM tree into a target node.
+ *
+ * - Allow-listed elements are rebuilt without attributes.
+ * - Elements in SAFE_INLINE_DROP_TAGS (script, style, etc.) are dropped
+ *   together with their content.
+ * - Any other unknown element is dropped but its text is kept.
  */
 function copySafeInline(target: Node, source: Node): void {
   source.childNodes.forEach((node) => {
@@ -132,9 +156,15 @@ function copySafeInline(target: Node, source: Node): void {
     }
 
     const el = node as Element;
+    // tagName is lowercase for foreign content (e.g. inside <svg>), so normalize it.
+    const tag = el.tagName.toUpperCase();
 
-    if (SAFE_INLINE_TAGS.has(el.tagName)) {
-      const clean = document.createElement(el.tagName.toLowerCase());
+    if (SAFE_INLINE_DROP_TAGS.has(tag)) {
+      return;
+    }
+
+    if (SAFE_INLINE_TAGS.has(tag)) {
+      const clean = document.createElement(tag.toLowerCase());
       copySafeInline(clean, el);
       target.appendChild(clean);
       return;
