@@ -25,14 +25,15 @@
   outline: none;
 
   &[data-position-x='left'] {
-    left: $tutor-toast-offset-x;
+    inset-inline-start: $tutor-toast-offset-x;
   }
 
   &[data-position-x='right'] {
-    right: $tutor-toast-offset-x;
+    inset-inline-end: $tutor-toast-offset-x;
   }
 
   &[data-position-x='center'] {
+    /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the toast centered in RTL */
     left: 50%;
     transform: translateX(-50%);
   }
@@ -43,18 +44,6 @@
 
   &[data-position-y='bottom'] {
     bottom: $tutor-toast-offset-y;
-  }
-}
-
-[dir='rtl'] {
-  .tutor-toast-container[data-position-x='left'] {
-    left: auto;
-    right: $tutor-toast-offset-x;
-  }
-
-  .tutor-toast-container[data-position-x='right'] {
-    right: auto;
-    left: $tutor-toast-offset-x;
   }
 }
 

@@ -48,7 +48,7 @@ table.tutor-table,
 
     th {
       @include tutor-typography(tiny, regular, secondary);
-      text-align: left;
+      text-align: start;
       padding: $tutor-spacing-5;
       border: none;
       white-space: nowrap;

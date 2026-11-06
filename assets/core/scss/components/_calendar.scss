@@ -137,7 +137,7 @@
       @include tutor-flex(row, center, space-between);
       border-radius: $tutor-radius-sm;
       padding: $tutor-spacing-3 $tutor-spacing-5;
-      text-align: left;
+      text-align: start;
 
       .vc-preset-icon {
         opacity: 0;
