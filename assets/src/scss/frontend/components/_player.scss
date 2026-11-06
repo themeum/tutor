@@ -12,6 +12,7 @@
     background: $tutor-surface-base;
     border-radius: $tutor-radius-sm;
     z-index: $tutor-z-positive;
+
     @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
 
     &::before {

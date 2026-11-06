@@ -4,6 +4,7 @@
 .tutor-preferences {
   &-reset-default {
     @include tutor-flex(row, center, flex-end);
+
     color: $tutor-text-secondary;
     gap: $tutor-spacing-2;
     cursor: pointer;
@@ -11,6 +12,7 @@
 
   &-setting-item {
     @include tutor-flex-between;
+
     gap: $tutor-spacing-10;
 
     &:not(:last-child) {
@@ -19,10 +21,12 @@
 
     .tutor-preferences-setting-content {
       @include tutor-flex(row, center, flex-start);
+
       gap: $tutor-spacing-4;
 
       .tutor-preferences-setting-icon {
         @include tutor-flex-center;
+
         color: $tutor-icon-idle;
       }
 
@@ -36,6 +40,7 @@
 
       .tutor-preferences-setting-text {
         @include tutor-flex-column;
+
         gap: $tutor-spacing-1;
 
         .tutor-preferences-setting-subtitle {
@@ -54,6 +59,7 @@
 
     .tutor-preferences-setting-action {
       @include tutor-flex(row, center, flex-end);
+
       flex-shrink: 0;
     }
 
@@ -73,6 +79,7 @@
 
   &-vision-preview {
     @include tutor-flex-center();
+
     background-color: $tutor-surface-l1-hover;
     border-radius: $tutor-radius-md;
     padding-top: $tutor-spacing-5;

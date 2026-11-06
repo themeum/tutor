@@ -5,16 +5,16 @@
   width: 100%;
   height: $tutor-spacing-6;
   border-radius: $tutor-radius-md;
-  background-color: rgba(0, 0, 0, 0.11);
+  background-color: rgb(0 0 0 / 11%);
   position: relative;
   mask-image: radial-gradient(white, black);
-  -webkit-mask-image: -webkit-radial-gradient(center, white, black);
+  -webkit-mask-image: radial-gradient(center, white, black);
   overflow: hidden;
   flex-shrink: 0;
 
   &::after {
     content: '';
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgb(0 0 0 / 5%), transparent);
     position: absolute;
     transform: translateX(-100%);
     inset: 0;

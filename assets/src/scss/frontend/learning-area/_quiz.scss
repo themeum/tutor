@@ -9,6 +9,7 @@ $tutor-quiz-pagination-height: 60px;
 $tutor-quiz-content-bottom-offset: calc(
   #{$tutor-quiz-pagination-gap-from-footer} + #{$tutor-quiz-pagination-height} + #{$tutor-spacing-2}
 );
+
 // Chrome inside the questions slot for draw/pin: meta, card padding/gap, header, actions.
 // Plain sum string so it interpolates cleanly into a single outer calc().
 $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8} * 2 + #{$tutor-spacing-7} + 4.5rem + 3rem';
@@ -16,6 +17,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 .tutor-quiz {
   &-submission {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-11;
     height: fit-content;
     padding-top: calc((#{$tutor-spacing-8} * 2) + #{$tutor-spacing-14});
@@ -51,6 +53,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &[data-question-layout-view='single_question'] .tutor-quiz-question-wrapper,
     &[data-question-layout-view='question_pagination'] .tutor-quiz-question-wrapper {
       @include tutor-flex(column);
+
       max-height: calc(100dvh - #{$tutor-quiz-header-offset} - #{$tutor-quiz-footer-offset});
       overflow: auto;
     }
@@ -83,6 +86,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         max-height: 100%;
         width: 100%;
         overflow: hidden;
+
         @include tutor-flex(column);
 
         .tutor-quiz-question {
@@ -113,6 +117,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         max-height: 100%;
         width: 100%;
         overflow: hidden;
+
         @include tutor-flex(column);
 
         .tutor-quiz-question {
@@ -191,6 +196,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-progress {
     @include tutor-flex(column);
     @include tutor-frontend-layout();
+
     padding-inline: 0;
     padding-block: $tutor-spacing-5;
     gap: $tutor-spacing-5;
@@ -201,6 +207,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-header {
       @include tutor-flex(row, center, space-between);
+
       gap: $tutor-spacing-5;
 
       @include tutor-breakpoint-down(sm) {
@@ -210,6 +217,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-meta {
       @include tutor-flex(row, center, flex-start);
+
       gap: $tutor-spacing-5;
       min-width: 0;
       flex: 1;
@@ -221,6 +229,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-title {
       @include tutor-typography('h5', 'semibold');
+
       color: $tutor-text-primary;
       padding-top: 4px;
       white-space: nowrap;
@@ -236,6 +245,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-timer-frame {
     @include tutor-flex(row, center, flex-start);
+
     position: relative;
     display: inline-grid;
     flex-shrink: 0;
@@ -297,7 +307,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     width: 10px;
     height: 4px;
     border-radius: 2px 2px 0 0;
-    background: currentColor;
+    background: currentcolor;
     opacity: 0.2;
   }
 
@@ -320,33 +330,36 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-timer-frame-body-stroke {
     position: absolute;
     inset: 0;
+
     @include tutor-card-radius(md);
   }
 
   &-timer-frame-body-fill {
-    background: currentColor;
+    background: currentcolor;
     opacity: 0.06;
   }
 
   &-timer-frame-body-stroke {
-    border: 1px solid currentColor;
+    border: 1px solid currentcolor;
     opacity: 0.4;
   }
 
   &-timer-text {
     @include tutor-typography('h5', 'semibold');
     @include tutor-flex-center;
+
     grid-area: 1 / 1;
     position: relative;
     min-height: 33px;
     margin-top: 4px;
-    padding-inline-start: var(--tutor-quiz-timer-padding-inline-start, #{$tutor-spacing-4});
-    padding-inline-end: var(--tutor-quiz-timer-padding-inline-end, #{$tutor-spacing-4});
+    padding-inline: var(--tutor-quiz-timer-padding-inline-start, #{$tutor-spacing-4}) var(--tutor-quiz-timer-padding-inline-end, #{$tutor-spacing-4});
     line-height: 1;
     font-variant-numeric: tabular-nums;
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
+
     @include tutor-transition(color);
+
     z-index: $tutor-z-positive;
 
     &.is-initial {
@@ -391,6 +404,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-timer-reel {
     @include tutor-flex-column;
+
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
     span {
@@ -405,11 +419,13 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     100% {
       transform: rotate(0deg);
     }
+
     10%,
     50%,
     90% {
       transform: rotate(-6deg);
     }
+
     30%,
     70% {
       transform: rotate(6deg);
@@ -419,6 +435,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-questions {
     @include tutor-flex(column);
     @include tutor-frontend-layout();
+
     padding-inline: 0;
     width: 100%;
     gap: $tutor-spacing-10;
@@ -463,6 +480,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-question-meta {
     @include tutor-frontend-layout();
     @include tutor-flex(row, center, space-between);
+
     width: 100%;
     padding-inline: 0;
 
@@ -481,6 +499,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-questions-pagination {
     @include tutor-flex(row, center, center);
+
     width: max-content;
     max-width: calc(100vw - #{$tutor-spacing-8});
     overflow: visible;
@@ -494,6 +513,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     ul {
       @include tutor-flex(row, center, center);
+
       gap: $tutor-spacing-2;
       list-style: none;
       padding: 0;
@@ -503,6 +523,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     .tutor-quiz-question-paginate-item {
       @include tutor-typography('small', 'semibold');
+
       width: 32px;
       height: 32px;
       border-radius: $tutor-radius-sm;
@@ -510,6 +531,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       background-color: $tutor-surface-l1;
       color: $tutor-text-secondary;
       cursor: pointer;
+
       @include tutor-transition((background-color, border-color, color, transform));
 
       .tutor-quiz-question-paginate-icon {
@@ -526,11 +548,11 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &[data-pagination-style='radio'],
     &[data-pagination-style='number'] {
       @include tutor-frontend-layout();
+
       width: calc(100dvw - #{$tutor-spacing-8});
       justify-content: flex-start;
       padding-block: 10px;
-      overflow-x: auto;
-      overflow-y: hidden;
+      overflow: auto hidden;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
       -webkit-mask-image: none;
@@ -692,6 +714,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       .tutor-quiz-question-paginate-item {
         @include tutor-flex(row, center, center);
+
         width: 16px;
         min-width: 16px;
         height: 16px;
@@ -774,6 +797,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       .tutor-quiz-question-paginate-item {
         @include tutor-flex(row, center, center);
         @include tutor-typography('small', 'medium');
+
         width: 24px;
         min-width: 24px;
         height: 38px;
@@ -873,7 +897,9 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &:disabled,
     &.disabled {
       background-color: $tutor-button-disabled;
+
       --tutor-button-border-shadow: #{$tutor-button-outline-border-shadow-disabled};
+
       color: $tutor-text-subdued;
       opacity: 1;
       cursor: default;
@@ -883,7 +909,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-btn-countdown,
   &.tutor-quiz-btn-countdown,
   .tutor-quiz-btn-countdown {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28));
+    background-image: linear-gradient(rgb(0 0 0 / 28%), rgb(0 0 0 / 28%));
     background-repeat: no-repeat;
     background-position: left top;
     animation: tutor-quiz-countdown-fill var(--reveal-wait-duration, 2000ms) linear forwards;
@@ -941,7 +967,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &[data-option='draggable'] {
         cursor: grab;
-        box-shadow: 2px 2px 0px 0px #00000014;
+        box-shadow: 2px 2px 0 0 #00000014;
 
         &:hover,
         &:focus,
@@ -952,19 +978,21 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         &:focus-visible {
           @include tutor-focus-ring(brand, true);
+
           outline-offset: $tutor-spacing-2;
         }
       }
 
       &[data-option='dragging'] {
         border-color: $tutor-border-brand;
-        box-shadow: -6px 7px 0px 0px #00000014;
+        box-shadow: -6px 7px 0 0 #00000014;
       }
     }
   }
 
   &-questions-error {
     @include tutor-typography('tiny', 'regular', 'critical');
+
     margin-top: $tutor-spacing-3;
   }
 
@@ -975,12 +1003,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         @include tutor-breakpoint-down(sm) {
           @include tutor-grid-auto-columns(1, 1);
+
           gap: $tutor-spacing-5;
         }
       }
 
       &-option {
         @include tutor-flex(column, flex-start, center);
+
         gap: $tutor-spacing-3;
         padding: $tutor-spacing-4;
 
@@ -1007,6 +1037,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &-option {
         @include tutor-flex(row, center, flex-start);
+
         padding: 0;
         gap: $tutor-spacing-3;
         cursor: grab;
@@ -1020,12 +1051,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         &:focus-visible {
           @include tutor-focus-ring(brand, true);
+
           outline-offset: $tutor-spacing-2;
         }
 
         [data-option-order] {
           @include tutor-flex-center;
           @include tutor-typography('small', 'semibold');
+
           width: 40px;
           height: 100%;
           border-inline-end: 1px solid $tutor-border-idle2;
@@ -1033,6 +1066,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         [data-title] {
           @include tutor-flex(row, center, flex-start);
+
           gap: $tutor-spacing-4;
           padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-1;
           min-height: 56px;
@@ -1050,6 +1084,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         [data-grab-handle] {
           @include tutor-button-reset;
           @include tutor-flex-center;
+
           margin-inline: auto $tutor-spacing-4;
           pointer-events: none;
           cursor: inherit;
@@ -1072,6 +1107,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
           &[data-image-matching='1'] {
             @include tutor-grid-auto-columns(1, 1);
+
             gap: $tutor-spacing-5;
           }
         }
@@ -1079,6 +1115,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &-option {
         @include tutor-flex(column);
+
         padding: $tutor-spacing-4;
         gap: $tutor-spacing-3;
         background-color: $tutor-surface-base;
@@ -1095,12 +1132,13 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         &-drop-zone {
           @include tutor-flex(row, center, space-between);
           @include tutor-typography('small');
+
           padding: $tutor-spacing-3;
           background-color: $tutor-surface-l1;
           border: 1px solid $tutor-border-idle;
           border-radius: $tutor-radius-md;
           border-style: dashed;
-          box-shadow: -1px -1px 6px 0px #0000000f inset;
+          box-shadow: -1px -1px 6px 0 #0000000f inset;
           max-width: 544px;
           min-height: 46px;
           width: 100%;
@@ -1131,6 +1169,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &-draggable {
         @include tutor-flex(column, flex-start, flex-start);
+
         gap: $tutor-spacing-5;
         padding: $tutor-spacing-6;
         background-color: $tutor-surface-base;
@@ -1144,6 +1183,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         &-header {
           @include tutor-flex(row, center, flex-start);
+
           gap: $tutor-spacing-3;
         }
 
@@ -1153,12 +1193,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
             @include tutor-breakpoint-down(sm) {
               @include tutor-grid-auto-columns(1, 1, '.tutor-quiz-question-option');
+
               gap: $tutor-spacing-5;
             }
           }
 
           &-option {
             @include tutor-flex(row, center, flex-start);
+
             background-color: $tutor-surface-l1;
             padding: 0 $tutor-spacing-4;
             cursor: grab;
@@ -1172,6 +1214,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
             &:focus-visible {
               @include tutor-focus-ring(brand, true);
+
               outline-offset: $tutor-spacing-2;
             }
 
@@ -1183,12 +1226,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
             [data-title] {
               @include tutor-typography('small');
               @include tutor-flex(row, center, flex-start);
+
               min-height: 36px;
             }
 
             [data-grab-handle] {
               @include tutor-button-reset;
               @include tutor-flex-center;
+
               margin-inline-start: auto;
               pointer-events: none;
               cursor: inherit;
@@ -1202,6 +1247,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       .tutor-quiz-question {
         &-option {
           @include tutor-flex(row, center, space-between);
+
           padding: 0;
           border: none;
           background-color: transparent !important;
@@ -1213,6 +1259,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
           &-number {
             @include tutor-flex(row, center, center);
             @include tutor-typography('medium', 'semibold');
+
             border-radius: $tutor-radius-sm;
             width: 28px;
             height: 28px;
@@ -1221,6 +1268,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
           [data-title] {
             @include tutor-flex(row, center, flex-start);
+
             gap: $tutor-spacing-4;
           }
 
@@ -1263,6 +1311,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   [data-question='pin_image'] {
     .tutor-quiz-question-options {
       @include tutor-flex(column, center, center);
+
       width: 100%;
     }
 
@@ -1290,6 +1339,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       .tutor-draw-image-question,
       .tutor-pin-image-question {
         @include tutor-flex(column, center, center);
+
         flex: 0 1 auto;
         min-height: 0;
         margin-top: 0;
@@ -1311,6 +1361,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
         img {
           display: block;
+
           // Cap against the questions slot (size container), not a stretched card.
           // Interpolate the whole value so Sass does not strip the outer calc().
           max-height: #{'min(744px, calc(100cqh - (#{$tutor-quiz-draw-pin-chrome})))'};
@@ -1330,14 +1381,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       .tutor-puzzle-question {
         @include tutor-flex(column, center, flex-start);
+
         flex: 0 1 auto;
         min-height: 0;
         max-height: 100%;
         height: auto;
         margin-top: 0;
         width: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden auto;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
       }
@@ -1378,6 +1429,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     &-inner {
       @include tutor-flex(row, center, flex-start);
       @include tutor-frontend-layout();
+
       gap: $tutor-spacing-4;
       width: 100%;
       margin-inline: auto;
@@ -1385,12 +1437,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-feedback {
       @include tutor-flex(row, center, flex-start);
+
       gap: $tutor-spacing-3;
       margin-inline-end: auto;
     }
 
     &-feedback-icon {
       @include tutor-flex(row, center, center);
+
       width: 40px;
       height: 40px;
       border-radius: $tutor-radius-full;
@@ -1407,6 +1461,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
     &-actions {
       @include tutor-flex(row, center, flex-end);
+
       gap: $tutor-spacing-6;
       margin-inline-start: auto;
     }
@@ -1415,12 +1470,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-submission-modal {
     &-content {
       @include tutor-flex(column, stretch, space-between);
+
       gap: $tutor-spacing-2;
     }
   }
 
   &-autostart-modal {
     @include tutor-flex(row, center, center);
+
     padding: 0;
   }
 
@@ -1444,6 +1501,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-autostart-title {
     @include tutor-typography('h4', 'semibold');
+
     position: absolute;
     top: $tutor-spacing-9;
     inset-inline: 0;
@@ -1454,6 +1512,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   &-autostart-digit {
     @include tutor-flex(row, center, center);
     @include tutor-typography('d1', 'bold');
+
     height: 100%;
     width: 100%;
     position: absolute;
@@ -1465,6 +1524,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-result-modal {
     @include tutor-flex(column, center, center);
+
     gap: $tutor-spacing-4;
     text-align: center;
     padding: $tutor-spacing-10 $tutor-spacing-7 $tutor-spacing-7 $tutor-spacing-7;
@@ -1527,6 +1587,7 @@ body:has(#wpadminbar) .tutor-learning-area.tutor-has-site-shell {
   0% {
     background-size: 0% 100%;
   }
+
   100% {
     background-size: 100% 100%;
   }

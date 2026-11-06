@@ -9,8 +9,7 @@
   padding: $tutor-spacing-6 $tutor-spacing-6 $tutor-spacing-5 $tutor-spacing-6;
   position: fixed;
   bottom: 0;
-  inset-inline-start: 0;
-  inset-inline-end: 0;
+  inset-inline: 0;
   z-index: $tutor-z-footer;
 
   @include tutor-breakpoint-up(md) {
@@ -19,12 +18,14 @@
 
   &-list {
     @include tutor-flex(row, center, space-between);
+
     list-style: none;
     margin: 0;
     padding: 0;
 
     > li {
       @include tutor-flex(column, center);
+
       min-width: 44px;
       margin: 0;
       padding: 0;
@@ -34,6 +35,7 @@
         @include tutor-button-reset();
         @include tutor-typography(tiny, medium);
         @include tutor-flex(column, center);
+
         gap: $tutor-spacing-2;
 
         &.active,
@@ -78,6 +80,7 @@
         a {
           @include tutor-typography(tiny, regular);
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-4;
           padding: $tutor-spacing-4 $tutor-spacing-5;
           text-decoration: none;
@@ -100,6 +103,5 @@
 .tutor-dashboard-layout.tutor-has-site-footer .tutor-dashboard-nav-mobile {
   position: sticky;
   bottom: 0;
-  inset-inline-start: auto;
-  inset-inline-end: auto;
+  inset-inline: auto;
 }

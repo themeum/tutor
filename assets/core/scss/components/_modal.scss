@@ -14,7 +14,7 @@
   &-backdrop {
     position: absolute;
     inset: 0;
-    background-color: #00000099;
+    background-color: #0009;
     backdrop-filter: blur(20px);
 
     // Transitions
@@ -67,12 +67,14 @@
 
   &-header {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-2;
     padding: $tutor-spacing-7 $tutor-spacing-7 $tutor-spacing-none $tutor-spacing-7;
   }
 
   &-title {
     @include tutor-typography('h5', 'semibold', 'secondary', 'heading');
+
     margin: 0;
   }
 
@@ -88,6 +90,7 @@
     @include tutor-button-base;
     @include tutor-button-icon-size(x-small);
     @include tutor-button-variant(ghost);
+
     position: absolute;
     top: $tutor-spacing-4;
     inset-inline-end: $tutor-spacing-4;
@@ -99,6 +102,7 @@
 
   &-footer {
     @include tutor-flex(row, center, flex-end);
+
     gap: $tutor-spacing-4;
     padding: $tutor-spacing-5 $tutor-spacing-7;
     border-top: 1px solid $tutor-border-idle;
