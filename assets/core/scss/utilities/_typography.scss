@@ -123,7 +123,7 @@ $text-align-utils: (
 
 // Text overflow
 .tutor-truncate {
-  @include tutor-text-truncate;
+  @include tutor-text-truncate();
 }
 
 .tutor-text-ellipsis {

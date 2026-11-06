@@ -122,7 +122,7 @@
     }
 
     &-remove {
-      @include tutor-button-reset;
+      @include tutor-button-reset();
       @include tutor-flex(row, center, center);
 
       padding: 0;
@@ -146,7 +146,7 @@
   }
 
   .tutor-select-clear {
-    @include tutor-button-base;
+    @include tutor-button-base();
     @include tutor-button-variant('ghost');
     @include tutor-flex(row, center, center);
     @include margin-end($tutor-spacing-2);

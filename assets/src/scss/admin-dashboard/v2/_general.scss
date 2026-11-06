@@ -1,3 +1,4 @@
+@use 'sass:color';
 // WordPress Notices
 .tutor-screen-backend-settings {
 	#wpbody-content {
@@ -392,9 +393,9 @@
 
 				&:hover,
 				&:focus {
-					background: darken(#e9edfb, 2);
-					box-shadow: 0 0 0 3px lighten(#e9edfb, 3);
-					border-color: lighten(#3e64de, 36);
+					background: color.adjust(#e9edfb, $lightness: -2%);
+					box-shadow: 0 0 0 3px color.adjust(#e9edfb, $lightness: 3%);
+					border-color: color.adjust(#3e64de, $lightness: 36%);
 				}
 			}
 		}
@@ -783,7 +784,7 @@
 			inset-inline-end: -12px;
 
 			&:hover {
-				background-color: darken($color-danger, 6);
+				background-color: color.adjust($color-danger, $lightness: -6%);
 			}
 		}
 

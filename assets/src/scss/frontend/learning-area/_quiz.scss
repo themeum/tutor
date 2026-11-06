@@ -346,7 +346,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
   &-timer-text {
     @include tutor-typography('h5', 'semibold');
-    @include tutor-flex-center;
+    @include tutor-flex-center();
 
     grid-area: 1 / 1;
     position: relative;
@@ -403,7 +403,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
   }
 
   &-timer-reel {
-    @include tutor-flex-column;
+    @include tutor-flex-column();
 
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -938,9 +938,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
 
       &:hover,
       &:focus {
-        &:not(:has(:checked)):not(:has(:disabled)):not([data-readonly='true']):not([data-option='correct']):not(
-            [data-option='incorrect']
-          ):not([data-option='draggable']) {
+        &:not(:has(:checked), :has(:disabled), [data-readonly='true'], [data-option='correct'], [data-option='incorrect'], [data-option='draggable']) {
           border-color: $tutor-border-hover;
           background-color: $tutor-quiz-hover;
         }
@@ -1056,7 +1054,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         }
 
         [data-option-order] {
-          @include tutor-flex-center;
+          @include tutor-flex-center();
           @include tutor-typography('small', 'semibold');
 
           width: 40px;
@@ -1082,8 +1080,8 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
         }
 
         [data-grab-handle] {
-          @include tutor-button-reset;
-          @include tutor-flex-center;
+          @include tutor-button-reset();
+          @include tutor-flex-center();
 
           margin-inline: auto $tutor-spacing-4;
           pointer-events: none;
@@ -1231,8 +1229,8 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
             }
 
             [data-grab-handle] {
-              @include tutor-button-reset;
-              @include tutor-flex-center;
+              @include tutor-button-reset();
+              @include tutor-flex-center();
 
               margin-inline-start: auto;
               pointer-events: none;

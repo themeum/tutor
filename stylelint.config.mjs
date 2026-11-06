@@ -41,9 +41,7 @@ export default {
         // not ours to rename.
         'selector-class-pattern': null,
         // The codebase calls argumentless mixins with (), so keep that style.
-        'scss/at-mixin-argumentless-call-parentheses': null,
-        // Both :not() forms are used intentionally; converting changes specificity.
-        'selector-not-notation': null,
+        'scss/at-mixin-argumentless-call-parentheses': 'always',
         // Keep min-/max-width for browsers without range syntax.
         'media-feature-range-notation': 'prefix',
 

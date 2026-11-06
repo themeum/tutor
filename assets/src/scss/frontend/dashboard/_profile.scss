@@ -3,7 +3,7 @@
 
 .tutor-user-profile {
   .tutor-profile-card {
-    @include tutor-card-base;
+    @include tutor-card-base();
 
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
@@ -222,7 +222,7 @@
     }
 
     .tutor-statistic-card {
-      @include tutor-card-base;
+      @include tutor-card-base();
       @include tutor-flex(row, flex-start);
 
       gap: $tutor-spacing-5;

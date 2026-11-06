@@ -6,7 +6,7 @@
 @use 'layout' as *;
 
 @mixin tutor-avatar-base {
-  @include tutor-flex-center;
+  @include tutor-flex-center();
 
   position: relative;
   border-radius: $tutor-radius-full;
