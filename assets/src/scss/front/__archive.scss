@@ -382,34 +382,10 @@ Instructor
 	border-color: var(--tutor-color-primary) !important;
 }
 
-.tutor-option-field textarea::input-placeholder,
-.tutor-option-field input::input-placeholder,
-.tutor-form-group textarea::input-placeholder,
-.tutor-form-group input::input-placeholder {
-	color: #b0b6c8;
-	opacity: 1;
-}
-
 .tutor-option-field textarea::placeholder,
 .tutor-option-field input::placeholder,
 .tutor-form-group textarea::placeholder,
 .tutor-form-group input::placeholder {
-	color: #b0b6c8;
-	opacity: 1;
-}
-
-.tutor-option-field textarea:input-placeholder,
-.tutor-option-field input:input-placeholder,
-.tutor-form-group textarea:input-placeholder,
-.tutor-form-group input:input-placeholder {
-	color: #b0b6c8;
-	opacity: 1;
-}
-
-.tutor-option-field textarea:placeholder,
-.tutor-option-field input:placeholder,
-.tutor-form-group textarea:placeholder,
-.tutor-form-group input:placeholder {
 	color: #b0b6c8;
 	opacity: 1;
 }
@@ -724,69 +700,7 @@ Instructor
 	color: #fff;
 }
 
-.rtl .tutor-progress-bar .tutor-progress-filled::after {
-	inset-inline: auto var(--tutor-progress-left);
-	-webkit-transform: translateY(-50%) translateX(50%);
-	transform: translateY(-50%) translateX(50%);
-}
 
-.rtl .tutor-progress-percent {
-	padding-inline: 0 20px;
-}
-
-.rtl .tutor-course-lesson h5 i {
-	margin-inline: 10px 0;
-}
-
-.rtl .tutor-course-lesson h5 .lesson-preview-icon i {
-	margin-inline: 0 10px;
-}
-
-.rtl .tutor-course-lesson h5 .tutor-lesson-duration {
-	flex-grow: 1;
-	text-align: start;
-}
-
-.rtl .tutor-custom-list-style li {
-	padding-inline: 0 25px;
-}
-
-.rtl .tutor-custom-list-style li::before {
-	inset-inline: auto 0;
-}
-
-.rtl .single-instructor-wrap .instructor-name {
-	float: inline-end;
-}
-
-.rtl .single-instructor-wrap .instructor-name {
-	padding-inline: 0 20px;
-}
-
-.rtl .single-instructor-wrap .instructor-bio {
-	padding-inline: 0 260px;
-}
-
-.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons {
-	inset-inline: 15px auto;
-}
-
-.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete {
-	margin-inline: 0 8px;
-}
-
-.rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
-.rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child {
-	margin-inline: 10px 0;
-}
-
-.rtl .tutor-topbar-home-btn {
-	margin-inline: 0 20px;
-
-	@media screen and (max-width: 546px) {
-		margin-inline-end: 10px;
-	}
-}
 
 /**
  * Tutor Front-End Modal
