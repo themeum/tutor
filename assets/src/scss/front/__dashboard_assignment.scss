@@ -7,17 +7,21 @@
 
 .submitted-assignments-sorting-wrap {
 	margin-bottom: 30px;
+
 	.tutor-form-group {
 		display: flex;
 		align-items: center;
 		flex-basis: 25% !important;
+
 		label,
 		select {
 			margin-bottom: 0;
 		}
+
 		label {
 			flex-basis: 35%;
 		}
+
 		select {
 			height: 40px;
 		}
@@ -28,12 +32,15 @@
 	.student-column {
 		display: flex;
 		align-items: center;
+
 		.student-avatar {
 			width: 34px;
-			margin-right: 10px;
+			margin-inline-end: 10px;
+
 			img {
 				border-radius: 50%;
 			}
+
 			span {
 				display: block;
 				width: 34px;
@@ -44,6 +51,7 @@
 				text-align: center;
 			}
 		}
+
 		.student-details {
 			h4,
 			p {
@@ -52,6 +60,7 @@
 			}
 		}
 	}
+
 	span.review-required,
 	span.result-pass,
 	span.result-fail {
@@ -62,28 +71,35 @@
 		padding: 4px 11px;
 		border-radius: 2px;
 	}
+
 	span.result-pass {
 		background: var(--tutor-color-success);
 	}
+
 	span.review-required {
 		background: #f5b30d;
 	}
 }
+
 .tutor-assignment-review-header {
 	p span {
 		font-weight: 600;
 		color: var(--tutor-body-color);
 	}
 }
+
 .tutor-assignment-submitted-page {
 	border-bottom: none;
+
 	.assignment-info {
 		display: flex;
 		align-items: center;
+
 		p {
-			margin-right: 15px;
+			margin-inline-end: 15px;
 		}
 	}
+
 	h3 {
 		margin: 5px 0;
 	}

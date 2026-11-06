@@ -2,14 +2,14 @@
 	&.taxonomy-course-category,
 	&.taxonomy-course-tag {
 		.button {
-			padding-left: 20px;
-			padding-right: 20px;
+			padding-inline: 20px;
 		}
+
 		select {
-			padding-left: 20px;
-			padding-right: 40px;
+			padding-inline: 20px 40px;
 			background-position: right 10px top 55%;
 		}
+
 		.button,
 		select {
 			border-radius: 6px;
@@ -54,23 +54,27 @@
 				td {
 					background: #f4f6f9;
 				}
+
 				tr {
 					> * {
 						&:first-child {
-							border-top-left-radius: 6px;
+							border-start-start-radius: 6px;
 						}
+
 						&:last-child {
-							border-top-right-radius: 6px;
+							border-start-end-radius: 6px;
 						}
 					}
 				}
 			}
+
 			tbody {
 				tr {
 					&:nth-child(odd) th,
 					&:nth-child(odd) td {
 						background: #fff;
 					}
+
 					&:nth-child(even) th,
 					&:nth-child(even) td {
 						background: #fcfcfd;

@@ -15,12 +15,15 @@
 	&.tutor-bg-primary {
 		border-color: var(--tutor-color-primary);
 	}
+
 	&.tutor-bg-success {
 		border-color: var(--tutor-color-success);
 	}
+
 	&.tutor-bg-warning {
 		border-color: var(--tutor-color-warning);
 	}
+
 	&.tutor-bg-danger {
 		border-color: var(--tutor-color-color);
 	}
@@ -28,11 +31,8 @@
 	&-icon {
 		color: var(--tutor-color-primary);
 		font-size: 32px;
-		@if ($is_rtl == true) {
-			margin-left: 16px;
-		} @else {
-			margin-right: 16px;
-		}
+
+		margin-inline-end: 16px;
 	}
 
 	&-content {
@@ -59,7 +59,7 @@
 		background: none;
 		position: absolute;
 		padding: 5px;
-		right: 6px;
+		inset-inline-end: 6px;
 		top: 6px;
 		color: var(--tutor-border-color);
 		transition: 200ms;
@@ -79,10 +79,10 @@
 
 // alert
 $alertVariations: (
-	'primary' rgba(var(--tutor-color-primary-rgb), 0.7) $color-secondary $color-white var(--tutor-color-primary) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3),
-	'success' rgba(var(--tutor-color-success-rgb), 0.7) $color-secondary $color-white var(--tutor-color-success) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3),
-	'danger' rgba(var(--tutor-color-danger-rgb), 0.7) $color-secondary $color-white var(--tutor-color-danger) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3),
-	'warning' rgba(var(--tutor-color-warning-rgb), 0.7) $color-secondary $color-white var(--tutor-color-warning) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3)
+	'primary' rgb(var(--tutor-color-primary-rgb), 0.7) $color-secondary $color-white var(--tutor-color-primary) var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3),
+	'success' rgb(var(--tutor-color-success-rgb), 0.7) $color-secondary $color-white var(--tutor-color-success) var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3),
+	'danger' rgb(var(--tutor-color-danger-rgb), 0.7) $color-secondary $color-white var(--tutor-color-danger) var(--tutor-color-danger) rgb(var(--tutor-color-danger-rgb), 0.15) rgb(var(--tutor-color-danger-rgb), 0.3),
+	'warning' rgb(var(--tutor-color-warning-rgb), 0.7) $color-secondary $color-white var(--tutor-color-warning) var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3)
 );
 
 // Tutor alert
@@ -97,7 +97,7 @@ $alertVariations: (
 	}
 
 	padding: 13px 16px;
-	grid-gap: 24px;
+	gap: 24px;
 	background: var(--tutor-color-white);
 	border: 1px solid var(--tutor-border-color);
 
@@ -121,8 +121,10 @@ $alertVariations: (
 
 	.tutor-alert-text {
 		@extend .text-regular-caption;
+
 		color: var(--tutor-color-secondary);
 		display: flex;
+
 		@include breakpoint-min(tablet) {
 			align-items: center;
 		}
@@ -132,18 +134,20 @@ $alertVariations: (
 		display: flex;
 		justify-self: flex-end;
 		align-items: center;
-		grid-gap: 10px;
+		gap: 10px;
 	}
 
 	.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
 		padding: 7.5px 13px;
 	}
+
 	.tutor-btn.tutor-btn-outline-primary {
 		border-color: var(--tutor-border-color);
 	}
 
 	.tutor-alert-close {
 		cursor: pointer;
+
 		@include breakpoint-max(mobile) {
 			display: none;
 		}
@@ -152,15 +156,15 @@ $alertVariations: (
 
 // icon---title---btnC---btnBg---btnBdr
 $largeNotificationVariations: (
-	'primary' var(--tutor-color-primary) var(--tutor-color-primary) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3),
-	'success' var(--tutor-color-success) var(--tutor-color-success) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3),
-	'warning' var(--tutor-color-warning) var(--tutor-color-warning) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3),
-	'danger' var(--tutor-color-danger) var(--tutor-color-danger) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3)
+	'primary' var(--tutor-color-primary) var(--tutor-color-primary) var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3),
+	'success' var(--tutor-color-success) var(--tutor-color-success) var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3),
+	'warning' var(--tutor-color-warning) var(--tutor-color-warning) var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3),
+	'danger' var(--tutor-color-danger) var(--tutor-color-danger) var(--tutor-color-danger) rgb(var(--tutor-color-danger-rgb), 0.15) rgb(var(--tutor-color-danger-rgb), 0.3)
 );
 
 .tutor-large-notification {
 	display: flex;
-	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
 	backdrop-filter: blur(24px);
 	position: relative;
 	background: #fff;
@@ -170,16 +174,13 @@ $largeNotificationVariations: (
 	@extend .tutor-p-24;
 
 	@include breakpoint-min(desktop-lg) {
-		padding-right: 90px;
+		padding-inline-end: 90px;
 	}
 
 	&-icon {
 		font-size: 32px;
-		@if ($is_rtl == true) {
-			margin-left: 20px;
-		} @else {
-			margin-right: 20px;
-		}
+
+		margin-inline-end: 20px;
 	}
 
 	&-btns {
@@ -188,18 +189,14 @@ $largeNotificationVariations: (
 		}
 
 		> *:not(:last-child) {
-			@if ($is_rtl == true) {
-				margin-left: 10px;
-			} @else {
-				margin-right: 10px;
-			}
+			margin-inline-end: 10px;
 		}
 	}
 
 	.tutor-noti-close {
 		position: absolute;
 		top: 16px;
-		right: 13px;
+		inset-inline-end: 13px;
 		cursor: pointer;
 	}
 
@@ -208,6 +205,7 @@ $largeNotificationVariations: (
 			.tutor-large-notification-icon {
 				color: #{$icon};
 			}
+
 			.tutor-large-notification-title {
 				color: #{$title};
 			}

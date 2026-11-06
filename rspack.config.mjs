@@ -322,7 +322,6 @@ const scssEntries = {
   'tutor-admin-scss': './assets/src/scss/admin-dashboard/index.scss',
   'tutor-setup-scss': './assets/src/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',
-  'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
   'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',

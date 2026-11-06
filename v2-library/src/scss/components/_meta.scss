@@ -17,6 +17,7 @@
 
     a {
         text-decoration: none;
+
         &:hover,
         &:focus,
         &:active {
@@ -28,10 +29,7 @@
 
     &-icon {
         line-height: 1.6;
-        @if ($is_rtl == true) {
-           margin-left: 4px;
-        } @else {
-           margin-right: 4px;
-        }
+
+        margin-inline-end: 4px;
     }
 }

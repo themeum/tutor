@@ -9,10 +9,11 @@
 		display: inline-flex;
 		border: 1px solid #c0c3cb;
 		border-radius: 6px;
-		&:before {
+
+		&::before {
 			content: "";
 			position: absolute;
-			right: -14px;
+			inset-inline-end: -14px;
 			top: -14px;
 			height: 28px;
 			width: 28px;
@@ -23,6 +24,7 @@
 			background-position: 50%;
 			transition: 0.3s;
 		}
+
 		&.icon-col {
 			&:hover {
 				background: #e9edfb;
@@ -43,17 +45,20 @@
 			~ .title {
 				color: var(--tutor-color-primary);
 			}
+
 			~ .icon-wrapper {
 				img {
 					box-shadow: 0 0 0 2px var(--tutor-color-primary);
 				}
 
-				&:before {
+				&::before {
 					span {
 						background-color: var(--tutor-color-primary);
 						border-color: var(--tutor-color-primary);
 					}
+
 					background-color: var(--tutor-color-primary);
+
 					@include svg-check-icon;
 				}
 			}
@@ -64,7 +69,9 @@
 	&.has-title {
 		label {
 			text-align: center;
+
 			@include getTypography(400, 15px, 160%);
+
 			.title {
 				margin-top: 6px;
 				display: block;
@@ -94,10 +101,10 @@
 				max-width: 100%;
 			}
 
-			&:before {
+			&::before {
 				content: "";
 				position: absolute;
-				right: -8px;
+				inset-inline-end: -8px;
 				top: -8px;
 				height: 16px;
 				width: 16px;
@@ -112,8 +119,9 @@
 			&:has(input[type="radio"]:checked) {
 				border-color: var(--tutor-color-primary);
 
-				&:before {
+				&::before {
 					background-color: var(--tutor-color-primary);
+
 					@include svg-check-icon-2;
 				}
 			}
@@ -129,20 +137,26 @@
 
 .items-per-row-label {
 	text-align: center;
+
 	@include getTypography(400, 15px, 160%);
+
 	input[type="radio"] {
 		&:checked + .icon-col {
 			background: #e9edfb;
+
 			span {
 				background-color: var(--tutor-color-primary);
 				border-color: var(--tutor-color-primary);
 			}
-			&:before {
+
+			&::before {
 				background-color: var(--tutor-color-primary);
+
 				@include svg-check-icon;
 			}
 		}
 	}
+
 	.icon-col {
 		width: 95.4px;
 		height: 46px;
@@ -155,6 +169,7 @@
 		background: var(--tutor-color-white);
 		transition: 0.2s linear;
 		position: relative;
+
 		span {
 			width: 100%;
 			height: 100%;
@@ -164,35 +179,37 @@
 			border-radius: 2px;
 			transition: 0.2s ease-in-out;
 		}
-		&:before {
-			right: -16px;
+
+		&::before {
+			inset-inline-end: -16px;
 			top: -16px;
 			height: 16px;
 			width: 16px;
 			background-size: 8px;
 		}
-		&:focus:before {
-			box-shadow: 0 0 0 6px rgba(var(--tutor-color-primary-rgb), 0.1);
+
+		&:focus::before {
+			box-shadow: 0 0 0 6px rgb(var(--tutor-color-primary-rgb), 0.1);
 		}
 	}
 
 	&:nth-child(2) .icon-col {
 		grid-template-columns: repeat(2, 1fr);
-		grid-gap: 10.24px;
+		gap: 10.24px;
 	}
 
 	&:nth-child(3) .icon-col {
 		grid-template-columns: repeat(3, 1fr);
-		grid-gap: 8.74px;
+		gap: 8.74px;
 	}
 
 	&:nth-child(4) .icon-col {
 		grid-template-columns: repeat(4, 1fr);
-		grid-gap: 8.49px;
+		gap: 8.49px;
 	}
 	
 	&:not(:last-child) {
-		margin-right: 30px;
+		margin-inline-end: 30px;
 	}
 
 	.title {

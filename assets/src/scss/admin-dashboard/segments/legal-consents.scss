@@ -2,23 +2,28 @@
     .tutor-option-main-title {
       margin-bottom: 40px;
     }
+
     .tutor-option-main-title + .tutor-legal-consents {
       margin-top: 0;
     }
+
     .tutor-legal-consents-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
+
     .tutor-legal-consent-card {
       border-radius: 6px;
       background: var(--tutor-color-white);
       overflow: visible;
       border: 1px solid var(--tutor-border-color);
+
       &.is-collapsed {
         overflow: hidden;
       }
     }
+
     .tutor-legal-consent-card-header {
       display: flex;
       align-items: center;
@@ -26,24 +31,29 @@
       gap: 16px;
       padding: 16px;
     }
+
     .tutor-legal-consent-card-title {
       display: flex;
       align-items: center;
       gap: 12px;
+
       .tutor-icon-legal-consent {
         font-size: 36px;
         color: var(--tutor-color-muted);
       }
     }
+
     .tutor-legal-consent-header-actions {
       display: flex;
       align-items: center;
       gap: 18px;
+
       .tutor-form-toggle-input:disabled + .tutor-form-toggle-control {
         opacity: 0.45;
         cursor: not-allowed;
       }
     }
+
     .tutor-legal-consent-settings-toggle {
       display: inline-flex;
       align-items: center;
@@ -56,11 +66,13 @@
       font-size: 20px;
       cursor: pointer;
       padding: 0;
+
       &:disabled {
         opacity: 0.45;
         cursor: not-allowed;
       }
     }
+
     .tutor-legal-consent-card-content {
       display: block;
       max-height: 800px;
@@ -70,12 +82,14 @@
         border-color 0.3s ease-out;
       opacity: 1;
     }
+
     .tutor-legal-consent-card.is-collapsed {
       .tutor-legal-consent-card-content {
         max-height: 0;
         opacity: 0;
       }
     }
+
     .tutor-legal-consent-card-body {
       margin: 0 16px;
       padding: 16px;
@@ -85,6 +99,7 @@
       flex-direction: column;
       gap: 20px;
     }
+
     .tutor-legal-consent-card-body .tutor-option-field-row {
       border-bottom: 0 !important;
       padding: 0 !important;
@@ -92,22 +107,26 @@
       grid-auto-flow: initial;
       align-items: start;
     }
+
     .tutor-legal-consent-card-body .tutor-option-field-input {
       width: 100%;
-      text-align: left;
+      text-align: start;
       justify-self: stretch;
     }
+
     .tutor-legal-consent-card-body .tutor-form-control,
     .tutor-legal-consent-card-body .tutor-form-select {
       width: 100%;
       max-width: 100%;
     }
+
     .tutor-legal-consent-page-link-control {
       position: absolute;
-      right: 8px;
+      inset-inline-end: 8px;
       bottom: 12px;
       z-index: 2;
     }
+
     .tutor-legal-consent-page-link-trigger {
       width: 32px;
       height: 32px;
@@ -115,14 +134,16 @@
       box-shadow: 0 0 0 1px var(--tutor-border-color);
       background: var(--tutor-color-white);
       color: var(--tutor-color-muted);
+
       &:hover {
         background: var(--tutor-color-gray-10);
         color: var(--tutor-body-color);
       }
     }
+
     .tutor-legal-consent-page-dropdown {
       position: absolute;
-      right: 0;
+      inset-inline-end: 0;
       bottom: calc(100% + 8px);
       z-index: 5;
       width: 220px;
@@ -132,11 +153,13 @@
       border: 1px solid var(--tutor-border-color);
       border-radius: 12px;
       background: var(--tutor-color-white);
-      box-shadow: 0 18px 40px rgba(var(--tutor-color-primary-rgb), 0.12);
+      box-shadow: 0 18px 40px rgb(var(--tutor-color-primary-rgb), 0.12);
     }
+
     .tutor-legal-consent-page-dropdown[hidden] {
       display: none;
     }
+
     .tutor-legal-consent-page-dropdown-item {
       display: block;
       width: 100%;
@@ -146,40 +169,47 @@
       color: var(--tutor-body-color);
       cursor: pointer;
       padding: 10px 12px;
-      text-align: left;
+      text-align: start;
       transition:
         background-color 0.2s ease,
         color 0.2s ease;
+
       &:hover {
         background: var(--tutor-color-gray-10);
       }
+
       &.is-selected,
       &:disabled {
-        background: rgba(var(--tutor-color-primary-rgb), 0.1);
+        background: rgb(var(--tutor-color-primary-rgb), 0.1);
         color: var(--tutor-color-primary);
         cursor: not-allowed;
+
         & + .is-selected,
         & + :disabled {
-          border-top-left-radius: 0;
-          border-top-right-radius: 0;
+          border-start-start-radius: 0;
+          border-start-end-radius: 0;
         }
+
         &:has(+ .is-selected),
         &:has(+ :disabled) {
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
+          border-end-start-radius: 0;
+          border-end-end-radius: 0;
         }
       }
     }
+
     .tutor-legal-consent-checkbox-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(140px, 1fr));
       gap: 12px;
     }
+
     .tutor-legal-consent-checkbox-grid .tutor-form-check {
       display: flex;
       align-items: center;
       margin: 0;
     }
+
     .tutor-legal-consent-card-footer {
       display: flex;
       align-items: center;
@@ -187,16 +217,19 @@
       gap: 16px;
       padding: 12px 16px 16px;
     }
+
     .tutor-legal-consent-card-footer-actions {
       display: flex;
       align-items: center;
       gap: 18px;
-      margin-left: auto;
+      margin-inline-start: auto;
     }
+
     .tutor-legal-consent-delete-btn {
-      background: rgba(var(--tutor-color-danger-rgb), 0.12);
+      background: rgb(var(--tutor-color-danger-rgb), 0.12);
       color: var(--tutor-color-danger);
     }
+
     .tutor-legal-consent-cancel-btn {
       border: 0;
       background: transparent;
@@ -204,43 +237,50 @@
       padding: 0;
       cursor: pointer;
     }
+
     .tutor-legal-consents-footer {
       margin-top: 16px;
     }
+
     .tutor-legal-consents-empty-state-action {
       margin-top: 20px;
       text-align: center;
     }
+
     @media (max-width: 1199px) {
       .tutor-legal-consent-card-body .tutor-option-field-row {
         grid-template-columns: 1fr;
         gap: 16px;
       }
     }
+
     @media (max-width: 991px) {
       .tutor-legal-consent-card-header,
       .tutor-legal-consent-card-footer {
-        padding-left: 24px;
-        padding-right: 24px;
+        padding-inline: 24px;
       }
+
       .tutor-legal-consent-card-body {
-        margin-left: 24px;
-        margin-right: 24px;
+        margin-inline: 24px;
         padding: 24px;
       }
+
       .tutor-legal-consent-checkbox-grid {
         grid-template-columns: repeat(2, minmax(140px, 1fr));
       }
     }
+
     @media (max-width: 767px) {
       .tutor-legal-consent-card-header,
       .tutor-legal-consent-card-footer {
         flex-direction: column;
         align-items: flex-start;
       }
+
       .tutor-legal-consent-card-footer-actions {
-        margin-left: 0;
+        margin-inline-start: 0;
       }
+
       .tutor-legal-consent-checkbox-grid {
         grid-template-columns: 1fr;
       }

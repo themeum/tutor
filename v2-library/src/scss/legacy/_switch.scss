@@ -29,27 +29,25 @@
     .slider {
         position: absolute;
         cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         background-color: #ccc;
         -webkit-transition: .4s;
         transition: .4s;
 
         &.round {
             border-radius: 34px;
-            &:before {
+
+            &::before {
                 border-radius: 50%;
             }
         }
 
-        &:before {
+        &::before {
             position: absolute;
             content: "";
             height: 18px;
             width: 18px;
-            left: 4px;
+            inset-inline-start: 4px;
             bottom: 3px;
             background-color: white;
             -webkit-transition: .4s;

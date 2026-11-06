@@ -1,11 +1,11 @@
 // Tutor setup page
 body.tutor-setup {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 }
 
 #tutor-onboard-wrapper {
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   min-height: calc(100dvh - 64px);
   padding: 32px 16px;
   background: #f5f3f1;
@@ -17,9 +17,11 @@ body.tutor-setup {
   width: 100%;
   max-width: 444px;
   margin: 0 auto;
+
   &.is-active {
     display: block;
   }
+
   &.tutor-onboard-screen-loading {
     max-width: 600px;
   }
@@ -49,6 +51,7 @@ body.tutor-setup {
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
+
   span {
     color: #0c111d;
   }
@@ -79,7 +82,7 @@ body.tutor-setup {
   line-height: 32px;
   font-weight: 600;
   letter-spacing: -1%;
-  margin: 0px 0px 20px;
+  margin: 0 0 20px;
   color: #2f3137;
 }
 
@@ -110,6 +113,7 @@ body.tutor-setup {
   font-size: 14px;
   line-height: 22px;
   margin-bottom: 20px;
+
   span {
     color: #0c111d;
     font-weight: 600;
@@ -140,7 +144,7 @@ body.tutor-setup {
   input#tutor-onboard-load-sample-course {
     width: 18px;
     height: 18px;
-    margin-right: 0px;
+    margin-inline-end: 0;
   }
 }
 
@@ -157,7 +161,7 @@ body.tutor-setup {
   flex-direction: column;
   gap: 2px;
   width: 90px;
-  padding: 8px 0px;
+  padding: 8px 0;
   box-shadow: 0 0 0 1px #ececed;
   border-radius: 10px;
   background: #fff;
@@ -165,6 +169,7 @@ body.tutor-setup {
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+
   .tutor-onboard-choice-text {
     color: #73767d;
     font-size: 12px;
@@ -172,9 +177,11 @@ body.tutor-setup {
     font-weight: 500;
     text-align: center;
   }
+
   &.is-selected {
     background-color: #f5f5f6;
     box-shadow: 0 0 0 2px #0049f8;
+
     .tutor-onboard-choice-text {
       color: #0c111d;
     }
@@ -200,7 +207,8 @@ body.tutor-setup {
 }
 
 .tutor-onboard-checkbox {
-  margin: 44px 0px 12px 0px;
+  margin: 44px 0 12px;
+
   .tutor-onboard-checkbox-label {
     color: #5d5f66;
     font-size: 14px;
@@ -214,9 +222,9 @@ body.tutor-setup {
   font-size: 13px;
   font-weight: 400;
   line-height: 18px;
-  letter-spacing: 0px;
+  letter-spacing: 0;
   text-align: center;
-  margin: 0px;
+  margin: 0;
 }
 
 .tutor-onboard-card-loading {

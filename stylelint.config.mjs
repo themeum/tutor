@@ -6,9 +6,9 @@
 //   assets/core/scss          design system
 //   assets/src/scss/frontend  dashboard, learning area, kids
 //
-// Legacy styles are deliberately out of scope: v2-library/src/scss builds a
-// separate RTL stylesheet via $is-rtl (main.rtl.scss), and
-// assets/src/scss/{front,admin-dashboard,modules} predate the design system.
+// Legacy trees (v2-library, assets/src/scss/{front,admin-dashboard,modules})
+// have been refactored to logical CSS to eliminate main.rtl.scss, but remain
+// out of scope for standard stylelint rules to prevent churn on legacy selectors.
 //
 // Intentional physical CSS (physical float utilities, or `left: 50%` with a
 // physical translate) gets a one-line disable with a reason:
