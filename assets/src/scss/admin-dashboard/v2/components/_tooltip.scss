@@ -56,8 +56,8 @@ $arrow: 5px;
 
 		&::after {
 			top: 100%;
-			inset-inline-start: 50%;
-			margin-inline-start: -$arrow;
+			left: 50%;
+			margin-left: -$arrow;
 			border-top-color: var(--tutor-body-color);
 		}
 	}
@@ -67,15 +67,15 @@ $arrow: 5px;
 
 		&::after {
 			bottom: 100%;
-			inset-inline-start: 50%;
-			margin-inline-start: -$arrow;
+			left: 50%;
+			margin-left: -$arrow;
 			border-bottom-color: var(--tutor-body-color);
 		}
 	}
 
 	.tooltip-top,
 	.tooltip-bottom {
-		inset-inline-start: 50%;
+		left: 50%;
 		transform: translateX(-50%);
 	}
 
