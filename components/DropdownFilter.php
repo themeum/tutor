@@ -472,8 +472,6 @@ class DropdownFilter extends BaseComponent {
 			}
 		}
 
-		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->position ] ?? 'left.top';
-
 		ob_start();
 		?>
 		<div

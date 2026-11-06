@@ -16,6 +16,21 @@ const PLACEMENTS = {
   RIGHT_BOTTOM: 'right-bottom',
 } as const;
 
+const TRANSFORM_ORIGIN_MAP: Record<string, string> = {
+  [PLACEMENTS.TOP]: 'center bottom',
+  [PLACEMENTS.TOP_START]: 'left bottom',
+  [PLACEMENTS.TOP_END]: 'right bottom',
+  [PLACEMENTS.BOTTOM]: 'center top',
+  [PLACEMENTS.BOTTOM_START]: 'left top',
+  [PLACEMENTS.BOTTOM_END]: 'right top',
+  [PLACEMENTS.LEFT]: 'right center',
+  [PLACEMENTS.LEFT_TOP]: 'right top',
+  [PLACEMENTS.LEFT_BOTTOM]: 'right bottom',
+  [PLACEMENTS.RIGHT]: 'left center',
+  [PLACEMENTS.RIGHT_TOP]: 'left top',
+  [PLACEMENTS.RIGHT_BOTTOM]: 'left bottom',
+};
+
 export interface PopoverProps {
   placement?: (typeof PLACEMENTS)[keyof typeof PLACEMENTS];
   offset?: number;
@@ -322,20 +337,24 @@ export const popover = (props: PopoverProps = {}) => ({
   },
 
   getContentDimensions(content: HTMLElement): PopoverDimensions {
-    // Temporarily reset transforms/transitions for accurate measurement
-    const originalTransform = content.style.transform;
-    const originalTransition = content.style.transition;
-    content.style.transform = 'none';
-    content.style.transition = 'none';
+    const isHidden = !content.offsetWidth && !content.offsetHeight;
+    const prevDisplay = content.style.display;
+    const prevVisibility = content.style.visibility;
 
-    const rect = content.getBoundingClientRect();
+    if (isHidden) {
+      content.style.visibility = 'hidden';
+      content.style.display = 'block';
+    }
+
     const dimensions = {
-      width: content.offsetWidth || rect.width,
-      height: content.offsetHeight || rect.height,
+      width: content.offsetWidth,
+      height: content.offsetHeight,
     };
 
-    content.style.transform = originalTransform;
-    content.style.transition = originalTransition;
+    if (isHidden) {
+      content.style.display = prevDisplay;
+      content.style.visibility = prevVisibility;
+    }
 
     return dimensions;
   },
@@ -398,13 +417,16 @@ export const popover = (props: PopoverProps = {}) => ({
     content.classList.remove(...placementClasses);
 
     // Add current placement class
-    const [side, align] = placement.split('-');
-    content.classList.add(`tutor-popover-${side}`);
+    const basePlacement = placement.split('-')[0];
+    content.classList.add(`tutor-popover-${basePlacement}`);
 
-    // Set RTL and flip aware transform origin
-    const originY = side === 'top' ? 'bottom' : side === 'bottom' ? 'top' : align || 'center';
-    const originX = side === 'left' ? 'right' : side === 'right' ? 'left' : align || 'center';
-    content.style.transformOrigin = `${originX} ${originY}`;
+    const origin = TRANSFORM_ORIGIN_MAP[placement] || 'center top';
+    content.style.transformOrigin = origin;
+
+    const xTransition = (content as { _x_transition?: Record<string, { during?: Record<string, string> }> })
+      ._x_transition;
+    if (xTransition?.enter?.during) xTransition.enter.during.transformOrigin = origin;
+    if (xTransition?.leave?.during) xTransition.leave.during.transformOrigin = origin;
   },
 });
 

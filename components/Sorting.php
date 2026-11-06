@@ -221,8 +221,6 @@ class Sorting extends BaseComponent {
 			'ASC'  => $this->label_asc,
 		);
 
-		$origin = Popover::TRANSFORM_ORIGIN_MAP[ Positions::BOTTOM_END ] ?? 'right.top';
-
 		ob_start();
 		?>
 		<div

@@ -342,8 +342,6 @@ class DateFilter extends BaseComponent {
 
 		$options_json = wp_json_encode( $calendar_options );
 
-		$origin = Popover::TRANSFORM_ORIGIN_MAP[ $this->placement ] ?? 'center.top';
-
 		$default_label = $this->label;
 		$has_selection = $this->has_selection();
 

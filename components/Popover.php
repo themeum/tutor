@@ -612,8 +612,6 @@ class Popover extends BaseComponent {
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()"' : '';
 
-		$origin = self::TRANSFORM_ORIGIN_MAP[ $placement_position ] ?? 'center.top';
-
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
 				%s
