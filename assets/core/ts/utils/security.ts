@@ -5,9 +5,14 @@
  */
 
 /**
- * Escape HTML and return safe HTML
+ * Escape a string for safe use as HTML text content.
  *
- * @param unsafeText - HTML string to escape
+ * Only `&`, `<` and `>` are encoded (quotes are NOT), so the result is safe
+ * between tags but must never be placed inside an HTML attribute value.
+ * Use escapeAttr() for attributes, and sanitizeUrl() before using a URL in
+ * href/src.
+ *
+ * @param unsafeText - Plain text to escape
  * @returns Escaped HTML string
  *
  * @since 4.0.0
@@ -73,6 +78,37 @@ export function sanitizeCsvCell(rawVal: unknown): string {
   }
 
   return str;
+}
+
+/**
+ * Protocols allowed by sanitizeUrl.
+ */
+const SAFE_URL_PROTOCOLS = new Set(['http:', 'https:']);
+
+/**
+ * Validate a URL for use in href/src attributes.
+ *
+ * Relative URLs are resolved against the current origin. Only http(s) URLs
+ * are returned, so javascript:, data:, vbscript: and similar schemes become
+ * an empty string. The result is NOT escaped: pass it through escapeAttr()
+ * before placing it inside an HTML attribute.
+ *
+ * @param value - URL to validate
+ * @returns Normalized absolute URL, or an empty string if unsafe or invalid
+ *
+ * @since 4.2.2
+ */
+export function sanitizeUrl(value: unknown): string {
+  if (typeof value !== 'string' || value.trim() === '') {
+    return '';
+  }
+
+  try {
+    const parsed = new URL(value.trim(), window.location.origin);
+    return SAFE_URL_PROTOCOLS.has(parsed.protocol) ? parsed.href : '';
+  } catch {
+    return '';
+  }
 }
 
 /**
