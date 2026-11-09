@@ -9,22 +9,6 @@
  * @since 1.4.3
  */
 
-use TUTOR\Instructor;
-
-if ( ! Instructor::can_apply_for_instructor() ) {
-	$args = array(
-		'image_path'  => tutor()->url . 'assets/images/construction.png',
-		'title'       => __( 'Instructor Application Disabled', 'tutor' ),
-		'description' => __( 'Become an instructor is currently disabled. Please contact the site administrator for further information.', 'tutor' ),
-		'button'      => array(
-			'text'  => __( 'Go to Home', 'tutor' ),
-			'url'   => get_home_url(),
-			'class' => 'tutor-btn tutor-btn-primary',
-		),
-	);
-	tutor_load_template( 'feature_disabled', $args );
-	return;
-}
 ?>
 
 <form method="post" enctype="multipart/form-data" id="tutor-instructor-application-form">
