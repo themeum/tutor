@@ -56,7 +56,7 @@ class Multisite {
 		switch_to_blog( $blog_id );
 
 		// 1. Create all tables.
-		TableManager::create_tables( true );
+		TableManager::create_core_tables( true );
 
 		// 2. Default options.
 		$default_options = Tutor::default_options();
@@ -137,7 +137,7 @@ class Multisite {
 		foreach ( $site_ids as $blog_id ) {
 			switch_to_blog( (int) $blog_id );
 
-			TableManager::create_tables( true );
+			TableManager::create_core_tables( true );
 
 			$version = get_option( 'tutor_version' );
 			if ( ! $version ) {

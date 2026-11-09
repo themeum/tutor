@@ -26,26 +26,26 @@ class TableManager {
 	/**
 	 * Core tables created on initial installation or new subsite provisioning.
 	 *
-	 * @var array<string, string> Key => table base name
+	 * @var array<string> table name.
 	 */
 	const CORE_TABLES = array(
-		'quiz_attempts'         => 'tutor_quiz_attempts',
-		'quiz_attempt_answers'  => 'tutor_quiz_attempt_answers',
-		'quiz_questions'        => 'tutor_quiz_questions',
-		'quiz_question_answers' => 'tutor_quiz_question_answers',
-		'earnings'              => 'tutor_earnings',
-		'withdraws'             => 'tutor_withdraws',
-		'orders'                => 'tutor_orders',
-		'ordermeta'             => 'tutor_ordermeta',
-		'order_items'           => 'tutor_order_items',
-		'order_itemmeta'        => 'tutor_order_itemmeta',
-		'coupons'               => 'tutor_coupons',
-		'coupon_applications'   => 'tutor_coupon_applications',
-		'coupon_usages'         => 'tutor_coupon_usages',
-		'carts'                 => 'tutor_carts',
-		'cart_items'            => 'tutor_cart_items',
-		'customers'             => 'tutor_customers',
-		'scheduler'             => 'tutor_scheduler',
+		'tutor_quiz_attempts',
+		'tutor_quiz_attempt_answers',
+		'tutor_quiz_questions',
+		'tutor_quiz_question_answers',
+		'tutor_earnings',
+		'tutor_withdraws',
+		'tutor_orders',
+		'tutor_ordermeta',
+		'tutor_order_items',
+		'tutor_order_itemmeta',
+		'tutor_coupons',
+		'tutor_coupon_applications',
+		'tutor_coupon_usages',
+		'tutor_carts',
+		'tutor_cart_items',
+		'tutor_customers',
+		'tutor_scheduler',
 	);
 
 	/**
@@ -78,7 +78,10 @@ class TableManager {
 	 * @return void
 	 */
 	public static function create_table( string $schema ): void {
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		if ( ! function_exists( 'dbDelta' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
+
 		dbDelta( $schema );
 	}
 
@@ -107,24 +110,6 @@ class TableManager {
 		 * @param bool $include_constraints Whether foreign key constraints were included.
 		 */
 		do_action( 'tutor_database_core_tables_created', $include_constraints );
-	}
-
-	/**
-	 * Create all tutor and tutor-pro (filtered by) table.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param bool $include_constraints Whether to include foreign key constraints.
-	 *
-	 * @return void
-	 */
-	public static function create_tables( bool $include_constraints = true ):void {
-		$schemas = Schema::get_all_schema( $include_constraints );
-		foreach ( $schemas as $sql ) {
-			self::create_table( $sql );
-		}
-
-		do_action( 'tutor_database_tables_created', $include_constraints );
 	}
 
 	/**

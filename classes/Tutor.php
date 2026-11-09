@@ -462,9 +462,8 @@ final class Tutor extends Singleton {
 		 * @since 4.3.0 Dynamically registered from TableRegistry with multisite awareness.
 		 */
 		global $wpdb;
-		foreach ( TableManager::get_tables() as $key => $table_base_name ) {
-			$prop        = 'tutor_' . $key;
-			$wpdb->$prop = DB::prepare_table_name( $table_base_name );
+		foreach ( TableManager::get_tables() as $table_name ) {
+			$wpdb->$table_name = DB::prepare_table_name( $table_name );
 		}
 
 		/**
