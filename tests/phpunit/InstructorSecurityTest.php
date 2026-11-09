@@ -34,26 +34,4 @@ class InstructorSecurityTest extends \WP_UnitTestCase {
 		update_option( 'tutor_option', array( 'enable_become_instructor_btn' => 'on' ) );
 		$this->assertTrue( Instructor::can_apply_for_instructor() );
 	}
-
-	/**
-	 * Test EnrollmentModel is_enrollment_paused.
-	 *
-	 * @return void
-	 */
-	public function test_enrollment_model_is_enrollment_paused() {
-		$course_id = $this->factory->post->create(
-			array(
-				'post_type'   => 'courses',
-				'post_status' => 'publish',
-			)
-		);
-
-		$this->assertFalse( EnrollmentModel::is_enrollment_paused( $course_id ) );
-
-		update_post_meta( $course_id, '_tutor_course_settings', array( 'pause_enrollment' => 'yes' ) );
-		$this->assertTrue( EnrollmentModel::is_enrollment_paused( $course_id ) );
-
-		update_post_meta( $course_id, '_tutor_course_settings', array( 'pause_enrollment' => 'no' ) );
-		$this->assertFalse( EnrollmentModel::is_enrollment_paused( $course_id ) );
-	}
 }

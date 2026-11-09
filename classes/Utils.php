@@ -6922,21 +6922,6 @@ class Utils {
 	}
 
 	/**
-	 * Check if enrollment is paused for a course.
-	 *
-	 * @since 4.2.1
-	 *
-	 * @param int $course_id course id.
-	 *
-	 * @return bool
-	 */
-	public function is_enrollment_paused( $course_id = 0 ): bool {
-		$course_id        = $this->get_post_id( $course_id );
-		$pause_enrollment = $this->get_course_settings( $course_id, 'pause_enrollment' );
-		return ( 'yes' === $pause_enrollment || true === $pause_enrollment || '1' === (string) $pause_enrollment );
-	}
-
-	/**
 	 * Get Lesson content drip settings
 	 *
 	 * @since 1.4.0

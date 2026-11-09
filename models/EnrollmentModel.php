@@ -51,19 +51,6 @@ class EnrollmentModel {
 	const ENROLLMENT_PRODUCT_ID_META = '_tutor_enrolled_by_product_id';
 
 	/**
-	 * Check if enrollment is paused for a course.
-	 *
-	 * @since 4.2.1
-	 *
-	 * @param int $course_id course id.
-	 *
-	 * @return bool
-	 */
-	public static function is_enrollment_paused( $course_id = 0 ): bool {
-		return tutor_utils()->is_enrollment_paused( $course_id );
-	}
-
-	/**
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
 	 * post_parent = enrolled course id
@@ -85,8 +72,7 @@ class EnrollmentModel {
 			return $enrolled_id;
 		}
 
-		$is_paused  = self::is_enrollment_paused( $course_id );
-		$can_enroll = apply_filters( 'tutor_allow_course_enrollment', ! $is_paused, $course_id );
+		$can_enroll = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
 		if ( is_wp_error( $can_enroll ) || ! $can_enroll ) {
 			return $enrolled_id;
 		}

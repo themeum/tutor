@@ -2221,10 +2221,6 @@ class Course extends Tutor_Base {
 			return;
 		}
 
-		if ( EnrollmentModel::is_enrollment_paused( $course_id ) ) {
-			wp_die( esc_html__( 'Enrollment for this course is currently paused.', 'tutor' ), 403 );
-		}
-
 		/**
 		 * TODO: need to check purchase information
 		 */
@@ -3203,9 +3199,6 @@ class Course extends Tutor_Base {
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
 		$course_id = sanitize_text_field( $course_id );
-		if ( EnrollmentModel::is_enrollment_paused( $course_id ) ) {
-			return;
-		}
 
 		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
 
@@ -3233,10 +3226,6 @@ class Course extends Tutor_Base {
 
 		if ( ! $course_id || ! $user_id ) {
 			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
-		}
-
-		if ( EnrollmentModel::is_enrollment_paused( $course_id ) ) {
-			wp_send_json_error( __( 'Enrollment for this course is currently paused.', 'tutor' ) );
 		}
 
 		$password_protected = post_password_required( $course_id );

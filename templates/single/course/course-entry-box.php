@@ -243,20 +243,6 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					</div>
 				<?php
 				echo apply_filters( 'tutor/course/single/entry-box/fully_booked', ob_get_clean(), get_the_ID() );//phpcs:ignore
-			} elseif ( tutor_utils()->is_enrollment_paused( get_the_ID() ) ) {
-				$alert_message = apply_filters( 'tutor_course_enrollment_paused_message', __( 'Enrollment for this course is currently paused.', 'tutor' ) );
-				ob_start();
-				?>
-					<div class="tutor-alert tutor-warning tutor-mt-28">
-						<div class="tutor-alert-text">
-							<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" aria-hidden="true"></span>
-							<span>
-								<?php echo wp_kses_post( $alert_message ); ?>
-							</span>
-						</div>
-					</div>
-				<?php
-				echo apply_filters( 'tutor/course/single/entry-box/paused', ob_get_clean(), get_the_ID() );//phpcs:ignore
 			} elseif ( $is_purchasable && $price && $tutor_course_sell_by ) {
 				// Load template based on monetization option.
 				ob_start();
