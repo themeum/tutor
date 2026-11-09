@@ -442,6 +442,15 @@ final class Tutor extends Singleton {
 	private $permalink;
 
 	/**
+	 * WordPress Abilities API integration.
+	 *
+	 * @since 4.1.1
+	 *
+	 * @var Abilities
+	 */
+	private $abilities;
+
+	/**
 	 * Initialize props & other dependencies
 	 *
 	 * @since 1.0.0
@@ -524,6 +533,7 @@ final class Tutor extends Singleton {
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
+		$this->abilities             = new Abilities();
 
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
