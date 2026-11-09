@@ -18,8 +18,26 @@
 
 // Block-axis and size properties read the same in LTR and RTL, so they stay
 // physical: width/height, top/bottom, and the block border/margin/padding sides.
-const directionNeutralProperties =
+export const directionNeutralProperties =
   /^(top|bottom|width|height|min-(width|height)|max-(width|height)|contain-intrinsic-(width|height)|margin-(top|bottom)|padding-(top|bottom)|border-(top|bottom)(-(width|style|color))?|overflow-[xy]|overscroll-behavior-[xy]|scroll-(margin|padding)-(top|bottom))$/;
+
+export const sharedRules = {
+  // Browser prefixes still needed for Safari/Firefox support.
+  'property-no-vendor-prefix': null,
+  // Public and third-party class names (BEM, Plyr, vanilla-calendar) are
+  // not ours to rename.
+  'selector-class-pattern': null,
+  // The codebase calls argumentless mixins with (), so keep that style.
+  'scss/at-mixin-argumentless-call-parentheses': null,
+  // Both :not() forms are used intentionally; converting changes specificity.
+  'selector-not-notation': null,
+  // Keep min-/max-width for browsers without range syntax.
+  'media-feature-range-notation': 'prefix',
+
+  'property-layout-mappings': ['flow-relative', { ignoreProperties: [directionNeutralProperties] }],
+  // resize does not mirror; block/inline only narrows browser support.
+  'value-keyword-layout-mappings': ['flow-relative', { ignoreProperties: ['resize'] }],
+};
 
 /** @type {import('stylelint').Config} */
 export default {
@@ -34,23 +52,7 @@ export default {
     {
       files: ['assets/core/scss/**/*.scss', 'assets/src/scss/frontend/**/*.scss'],
       extends: ['stylelint-config-standard-scss'],
-      rules: {
-        // Browser prefixes still needed for Safari/Firefox support.
-        'property-no-vendor-prefix': null,
-        // Public and third-party class names (BEM, Plyr, vanilla-calendar) are
-        // not ours to rename.
-        'selector-class-pattern': null,
-        // The codebase calls argumentless mixins with (), so keep that style.
-        'scss/at-mixin-argumentless-call-parentheses': null,
-        // Both :not() forms are used intentionally; converting changes specificity.
-        'selector-not-notation': null,
-        // Keep min-/max-width for browsers without range syntax.
-        'media-feature-range-notation': 'prefix',
-
-        'property-layout-mappings': ['flow-relative', { ignoreProperties: [directionNeutralProperties] }],
-        // resize does not mirror; block/inline only narrows browser support.
-        'value-keyword-layout-mappings': ['flow-relative', { ignoreProperties: ['resize'] }],
-      },
+      rules: sharedRules,
     },
   ],
 };
