@@ -117,8 +117,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       vanilla-calendar-pro:
-        specifier: ^3.0.5
-        version: 3.4.0
+        specifier: 3.0.5
+        version: 3.0.5
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -7212,8 +7212,8 @@ packages:
     resolution: {integrity: sha512-aeVK81SIuT6aMJfNo9Vte8Dw0/FZINGBV8BfCraGtqVxIeLAEhJyoWs8SmvRVmXfGss2PmmOwZCuBPbZR+IYWg==}
     engines: {node: '>= 10.13.0'}
 
-  vanilla-calendar-pro@3.4.0:
-    resolution: {integrity: sha512-HLWjzHOWvMIrjI77tXK5bYzp0s5TeBSrZC247STjcTAdWI7kqEwWT6Xvu20vqdwzF498H1Da8l4WpdgVIGtc1Q==}
+  vanilla-calendar-pro@3.0.5:
+    resolution: {integrity: sha512-4X9bmTo1/KzbZrB7B6mZXtvVXIhcKxaVSnFZuaVtps7tshKJDxgaIElkgdia6IjB5qWetWuu7kZ+ZaV1sPxy6w==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -15198,7 +15198,7 @@ snapshots:
 
   value-or-function@4.0.0: {}
 
-  vanilla-calendar-pro@3.4.0: {}
+  vanilla-calendar-pro@3.0.5: {}
 
   vary@1.1.2: {}
 
