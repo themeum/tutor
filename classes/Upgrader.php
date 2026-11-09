@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Core\DB;
+use Tutor\Database\Schema;
 use Tutor\Database\TableManager;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
@@ -341,9 +343,8 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_4_2_0() {
-		if ( QueryHelper::table_exists( 'tutor_coupon_usages' ) && ! QueryHelper::column_exist( 'tutor_coupon_usages', 'order_id' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
+		if ( DB::has_table( 'tutor_coupon_usages' ) && ! DB::has_column( 'tutor_coupon_usages', 'order_id' ) ) {
+			TableManager::create_table( Schema::get_coupon_usages_schema( false ) );
 		}
 	}
 
