@@ -106,7 +106,7 @@ class Instructor {
 	/**
 	 * Check if applying to become an instructor is allowed.
 	 *
-	 * @since 4.2.2
+	 * @since 4.2.1
 	 *
 	 * @return bool
 	 */

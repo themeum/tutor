@@ -53,7 +53,7 @@ class EnrollmentModel {
 	/**
 	 * Check if enrollment is paused for a course.
 	 *
-	 * @since 4.2.2
+	 * @since 4.2.1
 	 *
 	 * @param int $course_id course id.
 	 *
