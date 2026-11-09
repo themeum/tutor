@@ -56,6 +56,7 @@ $arrow: 5px;
 
 		&::after {
 			top: 100%;
+			/* stylelint-disable-next-line property-layout-mappings -- margin-left is physical, so left keeps the arrow centered in RTL */
 			left: 50%;
 			margin-left: -$arrow;
 			border-top-color: var(--tutor-body-color);
@@ -67,6 +68,7 @@ $arrow: 5px;
 
 		&::after {
 			bottom: 100%;
+			/* stylelint-disable-next-line property-layout-mappings -- margin-left is physical, so left keeps the arrow centered in RTL */
 			left: 50%;
 			margin-left: -$arrow;
 			border-bottom-color: var(--tutor-body-color);
@@ -75,6 +77,7 @@ $arrow: 5px;
 
 	.tooltip-top,
 	.tooltip-bottom {
+		/* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the tooltip centered in RTL */
 		left: 50%;
 		transform: translateX(-50%);
 	}
