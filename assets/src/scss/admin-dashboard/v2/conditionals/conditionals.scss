@@ -1,3 +1,7 @@
+@use "../../../../../../v2-library/src/scss/mixins/spinner";
+@use "../../../../../../v2-library/src/scss/mixins/svg-icons-static";
+@use "../../../../../../v2-library/src/scss/utility/variables";
+
 @use 'sass:color';
 // Toggle Disable -> Monitization > Monitization fees
 .monetization-fees.is-disable {
@@ -46,7 +50,7 @@
 			font-size: 2em;
 			position: absolute;
 			inset: 0;
-			background: $color-gray-10;
+			background: variables.$color-gray-10;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -62,12 +66,12 @@
 			content: '';
 			position: absolute;
 			inset: 0;
-			background: $color-gray-10;
+			background: variables.$color-gray-10;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 
-			@include svg-image-uppoad;
+			@include svg-icons-static.svg-image-uppoad;
 
 			background-repeat: no-repeat;
 			background-position: center;
@@ -81,7 +85,7 @@
 		border-radius: 3px;
 		display: none;
 
-		@include spinner(#1a73aa, #e8e8e8);
+		@include spinner.spinner(#1a73aa, #e8e8e8);
 
 		&.is-loading {
 			display: block;

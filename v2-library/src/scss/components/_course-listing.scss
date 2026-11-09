@@ -1,3 +1,5 @@
+@use "../mixins/general-minxins";
+
 // Course List
 .tutor-course {
     &-card {
@@ -40,7 +42,7 @@
 			}
 
 			&-name {
-				@include tutorLineClamp(3);
+				@include general-minxins.tutorLineClamp(3);
 
 				&,
 				a {

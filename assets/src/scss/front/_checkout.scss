@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 .tutor-checkout-page {
 	padding: 40px 0;
 
@@ -29,7 +31,7 @@
 			border-bottom: 1px solid var(--tutor-border-color);
 		}
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			padding: 16px;
 		}
 	}
@@ -338,7 +340,7 @@
 			border-end-end-radius: 6px;
 		}
 
-		@include breakpoint-min(desktop) {
+		@include breakpoint.breakpoint-min(desktop) {
 			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
 				border-inline-end: none!important;
 			}
@@ -348,7 +350,7 @@
 			}
 		}
 
-		@include breakpoint-minmax(576, 767) {
+		@include breakpoint.breakpoint-minmax(576, 767) {
 			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
 				border-inline-end: none!important;
 			}
@@ -358,13 +360,13 @@
 			}
 		}
 
-		@include breakpoint-minmax(768, 991) {
+		@include breakpoint.breakpoint-minmax(768, 991) {
 			.tutor-col-12:first-of-type .tutor-form-control {
 				border-start-end-radius: 6px;
 			}
 		}
 
-		@include breakpoint-max(575) {
+		@include breakpoint.breakpoint-max(575) {
 			.tutor-col-12:first-of-type .tutor-form-control {
 				border-start-end-radius: 6px;
 			}

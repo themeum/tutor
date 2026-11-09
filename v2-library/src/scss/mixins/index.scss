@@ -1,7 +1,7 @@
 // Mixins
-@import './typo';
-@import './svg-icons-dynamic';
-@import './svg-icons-static';
-@import './general-minxins';
-@import './spinner';
-@import './breakpoint';
+@forward 'typo';
+@forward 'svg-icons-dynamic';
+@forward 'svg-icons-static';
+@forward 'general-minxins';
+@forward 'spinner';
+@forward 'breakpoint';

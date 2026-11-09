@@ -1,3 +1,10 @@
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+@use "../../../../../v2-library/src/scss/mixins/general-minxins";
+@use "../../../../../v2-library/src/scss/mixins/spinner";
+@use "../../../../../v2-library/src/scss/mixins/svg-icons-static";
+@use "../../../../../v2-library/src/scss/mixins/typo";
+@use "../../../../../v2-library/src/scss/utility/variables";
+
 @use 'sass:color';
 // WordPress Notices
 .tutor-screen-backend-settings {
@@ -21,7 +28,7 @@
 		padding: 0;
 	}
 
-	@extend .text-body;
+	@extend .text-body !optional;
 
 	color: var(--tutor-color-secondary);
 
@@ -33,22 +40,22 @@
 		gap: 42px;
 		grid-auto-flow: column;
 
-		@include breakpoint-min(1400) {
+		@include breakpoint.breakpoint-min(1400) {
 			grid-template-columns: 245px 4fr 1fr;
 		}
 
-		@include breakpoint-min(1600) {
+		@include breakpoint.breakpoint-min(1600) {
 			grid-template-columns: 1fr 825px 1fr;
 		}
 	}
 
 	.tutor-option-form {
-		@include breakpoint-max(1400) {
+		@include breakpoint.breakpoint-max(1400) {
 			grid-template-columns: min-content auto;
 		}
 	}
 
-	@include breakpoint-max(1300) {
+	@include breakpoint.breakpoint-max(1300) {
 		.tutor-option-header {
 			grid-template-columns: 175px auto auto;
 			grid-template-columns: auto 1fr auto;
@@ -171,11 +178,11 @@
 	top: 32px;
 	border-bottom: 1px solid #f0f0f1;
 
-	@include breakpoint-min(960) {
+	@include breakpoint.breakpoint-min(960) {
 		inset-inline-start: 160px;
 	}
 
-	@include breakpoint-max(782) {
+	@include breakpoint.breakpoint-max(782) {
 		inset-inline-start: 0;
 		top: 47px;
 	}
@@ -192,7 +199,7 @@
 	margin-bottom: 32px;
 
 	h2 {
-		@extend .text-medium-h5;
+		@extend .text-medium-h5 !optional;
 
 		color: var(--tutor-body-color);
 	}
@@ -217,7 +224,7 @@
 
 	// custom styles
 	&.email-settings {
-		@include breakpoint-min(desktop-lg) {
+		@include breakpoint.breakpoint-min(desktop-lg) {
 			.tutor-option-field-label {
 				padding-inline-end: 53px;
 			}
@@ -274,9 +281,9 @@
 
 	// Tab -> #status
 	&.item-variation-grid {
-		@include breakpoint-min(tablet) {
+		@include breakpoint.breakpoint-min(tablet) {
 			.item-grid {
-				@include masonryGrid(2, 24px, 10px);
+				@include general-minxins.masonryGrid(2, 24px, 10px);
 			}
 		}
 
@@ -312,7 +319,7 @@
 		}
 
 		.drag-drop-zone {
-			@include getDashedBorder(2px, 18px, rgba(var(--tutor-color-primary-rgb), 0.3));
+			@include general-minxins.getDashedBorder(2px, 18px, rgba(var(--tutor-color-primary-rgb), 0.3));
 
 			background-color: var(--tutor-color-white);
 			border-radius: 6px;
@@ -654,7 +661,7 @@
 .tutor-option-field-label {
 	label,
 	.label {
-		@extend .text-medium-body;
+		@extend .text-medium-body !optional;
 
 		color: var(--tutor-body-color);
 		display: block;
@@ -670,7 +677,7 @@
 	}
 
 	.desc {
-		@extend .text-regular-small;
+		@extend .text-regular-small !optional;
 
 		margin-top: 5px;
 	}
@@ -774,7 +781,7 @@
 			height: 24px;
 			border-radius: 50%;
 
-			@include svg-delete-icon;
+			@include svg-icons-static.svg-delete-icon;
 
 			background-color: var(--tutor-color-danger);
 			background-repeat: no-repeat;
@@ -784,7 +791,7 @@
 			inset-inline-end: -12px;
 
 			&:hover {
-				background-color: color.adjust($color-danger, $lightness: -6%);
+				background-color: color.adjust(variables.$color-danger, $lightness: -6%);
 			}
 		}
 
@@ -811,7 +818,7 @@
 		.logo-upload-wrap {
 			color: #161616;
 
-			@include getTypography(400, 15px, 160%);
+			@include typo.getTypography(400, 15px, 160%);
 
 			p {
 				margin-bottom: 12px;
@@ -861,7 +868,7 @@
 	}
 
 	.layout-label {
-		@include getTypography(400, 15px, 160%);
+		@include typo.getTypography(400, 15px, 160%);
 
 		color: var(--tutor-body-color);
 	}
@@ -908,7 +915,7 @@
 		gap: 25px;
 		padding: 8px 0;
 
-		@include breakpoint-min(1400) {
+		@include breakpoint.breakpoint-min(1400) {
 			grid-template-columns: repeat(3, 1fr);
 		}
 
@@ -1010,7 +1017,7 @@
 		}
 
 		li {
-			@extend .text-medium-body;
+			@extend .text-medium-body !optional;
 		}
 	}
 }
@@ -1073,7 +1080,7 @@
 	border-radius: 3px;
 	z-index: 10;
 
-	@include spinner(#1973aa, #eee);
+	@include spinner.spinner(#1973aa, #eee);
 }
 
 .loading-spinner::before {

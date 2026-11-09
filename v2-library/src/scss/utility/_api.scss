@@ -1,35 +1,41 @@
+@use "../mixins/breakpoints";
+@use "../mixins/utilities";
+@use "../structure/utilities" as utilities2;
+@use "../structure/variables";
+@use "../structure/vendor/rfs";
+
 @use 'sass:map';
 @use 'sass:meta';
 
 // Loop over each breakpoint
-@each $breakpoint in map.keys($grid-breakpoints) {
+@each $breakpoint in map.keys(variables.$grid-breakpoints) {
   // Generate media query if needed
-  @include media-breakpoint-up($breakpoint) {
-    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+  @include breakpoints.media-breakpoint-up($breakpoint) {
+    $infix: breakpoints.breakpoint-infix($breakpoint, variables.$grid-breakpoints);
 
     // Loop over each utility property
-    @each $key, $utility in $utilities {
+    @each $key, $utility in utilities2.$utilities {
       // The utility can be disabled with `false`, thus check if the utility is a map first
       // Only proceed if responsive media queries are enabled or if it's the base media query
       @if meta.type-of($utility) == "map" and (map.get($utility, responsive) or $infix == "") {
-        @include generate-utility($utility, $infix);
+        @include utilities.generate-utility($utility, $infix);
       }
     }
   }
 }
 
 // RFS rescaling
-@media (min-width: $rfs-mq-value) {
-  @each $breakpoint in map.keys($grid-breakpoints) {
-    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+@media (min-width: rfs.$rfs-mq-value) {
+  @each $breakpoint in map.keys(variables.$grid-breakpoints) {
+    $infix: breakpoints.breakpoint-infix($breakpoint, variables.$grid-breakpoints);
 
-    @if map.get($grid-breakpoints, $breakpoint) < $rfs-breakpoint {
+    @if map.get(variables.$grid-breakpoints, $breakpoint) < rfs.$rfs-breakpoint {
       // Loop over each utility property
-      @each $key, $utility in $utilities {
+      @each $key, $utility in utilities2.$utilities {
         // The utility can be disabled with `false`, thus check if the utility is a map first
         // Only proceed if responsive media queries are enabled or if it's the base media query
         @if meta.type-of($utility) == "map" and map.get($utility, rfs) and (map.get($utility, responsive) or $infix == "") {
-          @include generate-utility($utility, $infix, true);
+          @include utilities.generate-utility($utility, $infix, true);
         }
       }
     }
@@ -39,11 +45,11 @@
 
 // Print utilities
 @media print {
-  @each $key, $utility in $utilities {
+  @each $key, $utility in utilities2.$utilities {
     // The utility can be disabled with `false`, thus check if the utility is a map first
     // Then check if the utility needs print styles
     @if meta.type-of($utility) == "map" and map.get($utility, print) == true {
-      @include generate-utility($utility, "-print");
+      @include utilities.generate-utility($utility, "-print");
     }
   }
 }

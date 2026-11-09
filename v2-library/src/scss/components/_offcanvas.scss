@@ -1,3 +1,5 @@
+@use "../elements/badge-label";
+
 .tutor-offcanvas {
 	.tutor-offcanvas-backdrop {
 		position: fixed;
@@ -190,7 +192,7 @@
 }
 
 // Notification Elements
-$variations: (
+badge-label.$variations: (
 	'primary' var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15),
 	'success' var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15),
 	'warning' var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15),
@@ -198,7 +200,7 @@ $variations: (
 	'purple' #9b4ab4 #faebff,
 );
 
-@each $prefix, $color, $bgColor in $variations {
+@each $prefix, $color, $bgColor in badge-label.$variations {
 	.tutor-notification-element {
 		&:not(.notification-read) {
 			.element-icon {

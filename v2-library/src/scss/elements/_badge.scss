@@ -1,5 +1,5 @@
 .tutor-badge {
-	@extend .d-inline-block;
+	@extend .d-inline-block !optional;
 
 	padding: 0 8px;
 	line-height: 21px;
@@ -22,13 +22,13 @@
 }
 
 .tutor-profile-badge {
-	@extend .d-flex;
-	@extend .align-items-center;
+	@extend .d-flex !optional;
+	@extend .align-items-center !optional;
 
 	box-sizing: border-box;
 
 	img {
-		@extend .d-block;
+		@extend .d-block !optional;
 
 		height: auto;
 		max-width: 50px;

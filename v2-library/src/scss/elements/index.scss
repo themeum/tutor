@@ -1,8 +1,8 @@
-@import './buttons';
-@import './input';
-@import './badge';
-@import './tag-list';
-@import './star-ratings';
-@import './badge-label';
-@import './select-with-icon';
-@import './tag';
+@use 'buttons';
+@use 'input';
+@use 'badge';
+@use 'tag-list';
+@use 'star-ratings';
+@use 'badge-label';
+@use 'select-with-icon';
+@use 'tag';

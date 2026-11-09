@@ -1,4 +1,4 @@
-@import './variables';
+@use 'variables';
 
 :root {
 	// --tutor-disabled-bg: #{$disabled-bg};
@@ -8,40 +8,40 @@
 	--tutor-text-size: 16px;
 
 	// // Common Colors
-	--tutor-color-white: 		#{$color-white};
-	--tutor-color-success: 		#{$color-success};
-	--tutor-color-success-rgb: 	#{$color-success-rgb};
-	--tutor-color-warning: 		#{$color-warning};
-	--tutor-color-warning-rgb: 	#{$color-warning-rgb};
-	--tutor-color-danger:		#{$color-danger};
-	--tutor-color-danger-rgb: 	#{$color-danger-rgb};
+	--tutor-color-white: 		#{variables.$color-white};
+	--tutor-color-success: 		#{variables.$color-success};
+	--tutor-color-success-rgb: 	#{variables.$color-success-rgb};
+	--tutor-color-warning: 		#{variables.$color-warning};
+	--tutor-color-warning-rgb: 	#{variables.$color-warning-rgb};
+	--tutor-color-danger:		#{variables.$color-danger};
+	--tutor-color-danger-rgb: 	#{variables.$color-danger-rgb};
 
 	// extra colors need to be replaces later
-	--tutor-color-secondary: 	#{$color-secondary};
-	--tutor-color-subdued: 		#{$color-subdued};
-	--tutor-color-hints: 		#{$color-hints};
-	--tutor-color-muted: 		#{$color-muted};
+	--tutor-color-secondary: 	#{variables.$color-secondary};
+	--tutor-color-subdued: 		#{variables.$color-subdued};
+	--tutor-color-hints: 		#{variables.$color-hints};
+	--tutor-color-muted: 		#{variables.$color-muted};
 	
 	// gray colors
-	--tutor-color-gray: 		#{$color-gray-20};
-	--tutor-color-gray-10: 		#{$color-gray-10};
+	--tutor-color-gray: 		#{variables.$color-gray-20};
+	--tutor-color-gray-10: 		#{variables.$color-gray-10};
 }
 
 // Color Utility class
 $colorUtils: (
 	// colors
 	'black' var(--tutor-body-color),
-	'white' $color-white,
-	'primary' $color-primary,
-	'success' $color-success,
-	'warning' $color-warning,
-	'danger' $color-danger,
-	'secondary' $color-secondary,
-	'muted' $color-muted,
-	'subdued' $color-subdued,
-	'hints' $color-hints,
-	'gray-20' $color-gray-20,
-	'gray-10' $color-gray-10,
+	'white' variables.$color-white,
+	'primary' variables.$color-primary,
+	'success' variables.$color-success,
+	'warning' variables.$color-warning,
+	'danger' variables.$color-danger,
+	'secondary' variables.$color-secondary,
+	'muted' variables.$color-muted,
+	'subdued' variables.$color-subdued,
+	'hints' variables.$color-hints,
+	'gray-20' variables.$color-gray-20,
+	'gray-10' variables.$color-gray-10,
 );
 
 @each $classSuffix, $value in $colorUtils {
