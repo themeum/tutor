@@ -112,7 +112,11 @@ $radius-directions: (
 // =============================================================================
 @each $key, $value in $tutor-radius {
   @each $abbr, $props in $radius-directions {
-    $prefix: if($abbr == '', '', $abbr + '-');
+    $prefix: '';
+
+    @if $abbr != '' {
+      $prefix: $abbr + '-';
+    }
 
     .tutor-rounded-#{$prefix}#{$key} {
       @each $prop in $props {
@@ -188,7 +192,11 @@ $responsive-radius-dirs: (
       @each $abbr, $props in $radius-directions {
         // We only generate for specific abbreviations to save space
         @if map.has-key($responsive-radius-dirs, $abbr) {
-          $prefix: if($abbr == '', '', $abbr + '-');
+          $prefix: '';
+
+          @if $abbr != '' {
+            $prefix: $abbr + '-';
+          }
 
           .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
             @each $prop in $props {

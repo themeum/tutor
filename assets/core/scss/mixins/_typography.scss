@@ -2,45 +2,55 @@
 @use '../tokens' as *;
 
 @mixin tutor-typography($size: 'medium', $typeface: 'regular', $color: 'primary', $context: 'body') {
-  $font-size: if(
-    map.has-key($tutor-font-sizes, $size),
-    map.get($tutor-font-sizes, $size),
-    map.get($tutor-font-sizes, 'medium')
-  );
-  $line-height: if(
-    map.has-key($tutor-line-heights, $size),
-    map.get($tutor-line-heights, $size),
-    map.get($tutor-line-heights, 'medium')
-  );
-  $font-weight: if(
-    map.has-key($tutor-font-weights, $typeface),
-    map.get($tutor-font-weights, $typeface),
-    map.get($tutor-font-weights, 'regular')
-  );
-  $color: if(
-    map.has-key($tutor-text-colors, $color),
-    map.get($tutor-text-colors, $color),
-    map.get($tutor-text-colors, 'primary')
-  );
+  $font-size: map.get($tutor-font-sizes, 'medium');
 
-  font-family: if($context == 'heading', $tutor-font-family-heading, $tutor-font-family-body);
+  @if map.has-key($tutor-font-sizes, $size) {
+    $font-size: map.get($tutor-font-sizes, $size);
+  }
+
+  $line-height: map.get($tutor-line-heights, 'medium');
+
+  @if map.has-key($tutor-line-heights, $size) {
+    $line-height: map.get($tutor-line-heights, $size);
+  }
+
+  $font-weight: map.get($tutor-font-weights, 'regular');
+
+  @if map.has-key($tutor-font-weights, $typeface) {
+    $font-weight: map.get($tutor-font-weights, $typeface);
+  }
+
+  $color-val: map.get($tutor-text-colors, 'primary');
+
+  @if map.has-key($tutor-text-colors, $color) {
+    $color-val: map.get($tutor-text-colors, $color);
+  }
+
+  $family: $tutor-font-family-body;
+
+  @if $context == 'heading' {
+    $family: $tutor-font-family-heading;
+  }
+
+  font-family: $family;
   font-weight: $font-weight;
   font-size: $font-size;
   line-height: $line-height;
-  color: $color;
+  color: $color-val;
 }
 
 @mixin tutor-text($size: 'medium') {
-  $font-size: if(
-    map.has-key($tutor-font-sizes, $size),
-    map.get($tutor-font-sizes, $size),
-    map.get($tutor-font-sizes, 'medium')
-  );
-  $line-height: if(
-    map.has-key($tutor-line-heights, $size),
-    map.get($tutor-line-heights, $size),
-    map.get($tutor-line-heights, 'medium')
-  );
+  $font-size: map.get($tutor-font-sizes, 'medium');
+
+  @if map.has-key($tutor-font-sizes, $size) {
+    $font-size: map.get($tutor-font-sizes, $size);
+  }
+
+  $line-height: map.get($tutor-line-heights, 'medium');
+
+  @if map.has-key($tutor-line-heights, $size) {
+    $line-height: map.get($tutor-line-heights, $size);
+  }
 
   font-size: $font-size;
   line-height: $line-height;
