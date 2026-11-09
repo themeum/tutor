@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Database\TableManager;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
@@ -47,8 +48,6 @@ class Upgrader {
 		/**
 		 * Installing Gradebook Addon from TutorPro
 		 */
-		add_action( 'tutor_addon_before_enable_tutor-pro/addons/gradebook/gradebook.php', array( $this, 'install_gradebook' ) );
-		add_action( 'tutor_addon_before_enable_tutor-pro/addons/tutor-email/tutor-email.php', array( $this, 'install_tutor_email_queue' ) );
 		add_action( 'upgrader_process_complete', array( $this, 'init_email_table_deployment' ), 10, 2 );
 	}
 
@@ -331,55 +330,6 @@ class Upgrader {
 		}
 	}
 
-	/**
-	 * Installing Gradebook if Tutor Pro exists
-	 *
-	 * @since v1.4.2
-	 *
-	 * @return void
-	 */
-	public function install_gradebook() {
-		global $wpdb;
-
-		$exists_gradebook_table         = $wpdb->query( "SHOW TABLES LIKE '{$wpdb->tutor_gradebooks}';" );
-		$exists_gradebook_results_table = $wpdb->query( "SHOW TABLES LIKE '{$wpdb->tutor_gradebooks_results}';" );
-		$charset_collate                = $wpdb->get_charset_collate();
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-		if ( ! $exists_gradebook_table ) {
-			$gradebook_table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks} (
-				gradebook_id bigint(20) NOT NULL AUTO_INCREMENT,
-				grade_name varchar(50) DEFAULT NULL,
-				grade_point varchar(20) DEFAULT NULL,
-				grade_point_to varchar(20) DEFAULT NULL,
-				percent_from int(3) DEFAULT NULL,
-				percent_to int(3) DEFAULT NULL,
-				grade_config longtext,
-				PRIMARY KEY (gradebook_id)
-			) $charset_collate;";
-			dbDelta( $gradebook_table );
-		}
-		if ( ! $exists_gradebook_results_table ) {
-			$gradebook_results = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks_results} (
-				gradebook_result_id bigint(20) NOT NULL AUTO_INCREMENT,
-				user_id bigint(20) DEFAULT NULL,
-				course_id bigint(20) DEFAULT NULL,
-				quiz_id bigint(20) DEFAULT NULL,
-				assignment_id bigint(20) DEFAULT NULL,
-				gradebook_id bigint(20) DEFAULT NULL,
-				result_for varchar(50) DEFAULT NULL,
-				grade_name varchar(50) DEFAULT NULL,
-				grade_point varchar(20) DEFAULT NULL,
-				earned_grade_point varchar(20) DEFAULT NULL,
-				earned_percent int(3) DEFAULT NULL,
-				generate_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-				update_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-				PRIMARY KEY (gradebook_result_id)
-			) {$charset_collate};";
-			dbDelta( $gradebook_results );
-		}
-	}
 
 	/**
 	 * Upgrade to version 4.2.0
@@ -411,36 +361,9 @@ class Upgrader {
 			$addon_config = tutor_utils()->get_addon_config( 'tutor-pro/addons/tutor-email/tutor-email.php' );
 			$is_enable    = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
 
-			$is_enable ? $this->install_tutor_email_queue() : 0;
-		}
-	}
-
-	/**
-	 * Installing email addon if Tutor Pro exists
-	 *
-	 * @since 1.8.6
-	 *
-	 * @return void
-	 */
-	public function install_tutor_email_queue() {
-
-		global $wpdb;
-		$charset_collate = $wpdb->get_charset_collate();
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-		if ( ! QueryHelper::table_exists( $wpdb->tutor_email_queue ) ) {
-			$table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_email_queue} (
-				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-				mail_to varchar(255) NOT NULL,
-				subject text NOT NULL,
-				message text NOT NULL,
-				headers text NOT NULL,
-				batch varchar(50) NULL,
-				PRIMARY KEY (id)
-			) {$charset_collate};";
-
-			dbDelta( $table );
+			if ( $is_enable && class_exists( \TutorPro\Database\Schema::class ) ) {
+				TableManager::create_table( \TutorPro\Database\Schema::get_email_queue_table_schema( false ) );
+			}
 		}
 	}
 }
