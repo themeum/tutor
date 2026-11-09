@@ -338,12 +338,12 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.1 - 06 Nov, 2026
+= 4.2.1 - 05 Nov, 2026
 
-Update: Improved WPML compatibility.
+Update: Improved WPML compatibility. (Pro)
 Fix: Resolved an issue where post content disappeared when switching from a page builder to the native WordPress editor.
-Fix: Resolved an issue where period filters were not applied correctly to the earnings graph and dashboard reports.
-Fix: Corrected inaccurate course counts in the course export process.
+Fix: Resolved an issue where period filters were not applied correctly to the earnings graph and dashboard reports. (Pro)
+Fix: Corrected inaccurate course counts in the course export process. (Pro)
 Fix: Strengthened overall security measures.
 
 = 4.2.0 - 27 Oct, 2026
