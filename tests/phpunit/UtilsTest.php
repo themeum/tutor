@@ -125,4 +125,26 @@ class UtilsTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'banana', tutor_utils()->avalue_dot( 'b', $obj ) );
 		$this->assertEquals( false, tutor_utils()->avalue_dot( 'c', $obj ) );
 	}
+
+	/**
+	 * Test is_enrollment_paused function
+	 *
+	 * @return void
+	 */
+	public function test_is_enrollment_paused() {
+		$course_id = $this->factory->post->create(
+			array(
+				'post_type'   => 'courses',
+				'post_status' => 'publish',
+			)
+		);
+
+		$this->assertFalse( tutor_utils()->is_enrollment_paused( $course_id ) );
+
+		update_post_meta( $course_id, '_tutor_course_settings', array( 'pause_enrollment' => 'yes' ) );
+		$this->assertTrue( tutor_utils()->is_enrollment_paused( $course_id ) );
+
+		update_post_meta( $course_id, '_tutor_course_settings', array( 'pause_enrollment' => 'no' ) );
+		$this->assertFalse( tutor_utils()->is_enrollment_paused( $course_id ) );
+	}
 }

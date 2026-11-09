@@ -224,8 +224,12 @@ class CartController {
 			$this->response_bad_request( __( 'Cannot add to cart, course is not available for purchase.', 'tutor' ) );
 		}
 
+		if ( tutor_utils()->is_enrollment_paused( $course_id ) ) {
+			$this->response_bad_request( __( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ) );
+		}
+
 		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
-		if ( is_wp_error( $can_buy ) ) {
+		if ( is_wp_error( $can_buy ) || ! $can_buy ) {
 			$this->response_bad_request( __( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ) );
 		}
 

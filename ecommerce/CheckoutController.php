@@ -646,9 +646,17 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
+				if ( tutor_utils()->is_enrollment_paused( $object_id ) ) {
+					/* translators: %s is the course title. */
+					array_push( $errors, sprintf( __( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
+					continue;
+				}
 				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
 				if ( is_wp_error( $can_purchase ) ) {
 					array_push( $errors, $can_purchase->get_error_message() );
+				} elseif ( ! $can_purchase ) {
+					/* translators: %s is the course title. */
+					array_push( $errors, sprintf( __( 'Enrollment for %s is currently paused. Please remove it from your cart to proceed.', 'tutor' ), get_the_title( $object_id ) ?? '' ) );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
@@ -1065,9 +1073,14 @@ class CheckoutController {
 		$course_id = Input::get( 'course_id', 0, Input::TYPE_INT );
 
 		if ( $course_id ) {
+			if ( tutor_utils()->is_enrollment_paused( $course_id ) ) {
+				$course_url = get_post_permalink( $course_id );
+				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
+				exit;
+			}
 			$can_buy    = apply_filters( 'tutor_can_purchase_course', true, $course_id );
 			$course_url = get_post_permalink( $course_id );
-			if ( is_wp_error( $can_buy ) ) {
+			if ( is_wp_error( $can_buy ) || ! $can_buy ) {
 				wp_safe_redirect( tutor_utils()->get_nocache_url( $course_url ) );
 				exit;
 			}
