@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.1 - 05 Nov, 2026
+= 4.2.1 - 09 Nov, 2026
 
 Update: Improved WPML compatibility. (Pro)
 Fix: Resolved an issue where post content disappeared when switching from a page builder to the native WordPress editor.
