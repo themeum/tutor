@@ -64,7 +64,7 @@ $include-column-box-sizing: true !default;
 @mixin make-col-offset($size, $columns: variables.$grid-columns) {
   $num: functions.divide($size, $columns);
 
-  margin-inline-start: if($num == 0, 0, math.percentage($num));
+  margin-inline-start: if(sass($num == 0): 0; else: math.percentage($num));
 }
 
 // Row columns
