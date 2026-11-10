@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -51,6 +51,7 @@ const ExportInitialState = ({
   resetBulkSelection,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
+  const watchedFormValues = useWatch({ control: form.control }) as Record<string, unknown>;
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -144,7 +145,7 @@ const ExportInitialState = ({
       <>
         {exportableContent.map((contentType) => {
           const contentKey = contentType.key;
-          const isChecked = form.watch(contentKey);
+          const isChecked = watchedFormValues?.[contentKey];
 
           const bulkSelectionCount =
             bulkSelectionForm.getValues(contentKey as keyof BulkSelectionFormData)?.length || 0;

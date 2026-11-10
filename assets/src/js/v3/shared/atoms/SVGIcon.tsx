@@ -66,7 +66,9 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
   const viewBox = icon ? icon.viewBox : `0 0 ${width} ${height}`;
   const fill = icon ? icon.fill : 'none';
 
-  if (!icon && !isLoading) {
+  const iconMarkup = icon?.icon ?? '';
+
+  if (!iconMarkup && !isLoading) {
     return (
       <svg viewBox={viewBox}>
         <rect width={width} height={height} fill="transparent" />
@@ -83,7 +85,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ig
       {...additionalAttributes}
       role="presentation"
       aria-hidden={true}
-      dangerouslySetInnerHTML={{ __html: icon ? icon.icon : '' }}
+      dangerouslySetInnerHTML={{ __html: iconMarkup }}
     />
   );
 };
