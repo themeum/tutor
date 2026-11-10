@@ -1,8 +1,8 @@
 @use "../utility/variables";
-@use "badge-label";
+@use "../utility/typography";
 
 $default-color: rgb(65 69 79 / 90%);
-badge-label.$variations: (
+$variations: (
 	'primary' var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3) '\e978',
 	'default' $default-color variables.$color-gray-10 var(--tutor-border-color) '\e9ab',
 	'success' var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3) '\E982',
@@ -10,7 +10,7 @@ badge-label.$variations: (
 	'warning' var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3) '\e966'
 );
 
-@each $suffix, $txtColor, $bgColor, $border, $icon in badge-label.$variations {
+@each $suffix, $txtColor, $bgColor, $border, $icon in $variations {
 	.tutor-form-select-with-icon {
 		&.select-#{$suffix} {
 			color: #{$txtColor};
@@ -43,7 +43,7 @@ badge-label.$variations: (
 	justify-content: space-between;
 
 	select {
-		@extend .text-medium-small !optional;
+		@extend .text-medium-small;
 
 		display: block;
 		width: 100%;
