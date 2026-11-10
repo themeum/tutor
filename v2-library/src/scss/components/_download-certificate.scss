@@ -3,29 +3,36 @@
 	display: grid;
 	margin: auto;
 }
+
 .tutor-certificate-demo {
 	max-width: 730px;
 	height: auto;
 	overflow: hidden;
+
 	img {
 		width: 100%;
 	}
 }
+
 .tutor-certificate-info {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
+
 	@include breakpoint-max(650) {
 		grid-template-columns: repeat(2, 1fr);
+
 		.tutor-info-issued,
 		.tutor-info-issued-date {
 			padding-top: 10px;
 		}
+
 		.tutor-info-id-name,
 		.tutor-info-expiration-name,
 		.tutor-info-issued-name,
 		.tutor-info-date-name {
 			font-size: 13px;
 		}
+
 		.tutor-info-id-details,
 		.tutor-info-expiration-value,
 		.tutor-info-issued-value,
@@ -33,8 +40,10 @@
 			font-size: 18px;
 		}
 	}
+
 	@include breakpoint-max(400) {
 		grid-template-columns: repeat(1, 1fr);
+
 		.tutor-info-expiration {
 			padding-top: 10px;
 		}
@@ -43,7 +52,7 @@
 
 .tutor-dc-button-group {
 	position: absolute;
-	right: 20px;
+	inset-inline-end: 20px;
 	top: 210px;
 }
 
@@ -53,27 +62,32 @@
 		padding-bottom: 200px;
 	}
 }
+
 @include breakpoint-minmax(992, 1200) {
 	.tutor-dc-button-group {
 		top: 200px;
 	}
 }
+
 @include breakpoint-max(991) {
 	.tutor-dc-button-group {
-		right: 0px;
+		inset-inline-end: 0;
 		top: 125px;
 	}
 }
+
 @include breakpoint-minmax(768, 1200) {
 	.tutor-certificate-demo {
 		max-width: 570px;
 	}
 }
+
 @include breakpoint-minmax(577, 767) {
 	.tutor-certificate-demo {
 		max-width: 420px;
 	}
 }
+
 @include breakpoint-max(576) {
 	.tutor-certificate-demo {
 		max-width: 82%;
@@ -82,5 +96,5 @@
 
 .tutor-dc-button-group .tooltip-txt.tooltip-left {
 	top: unset;
-	right: calc(100% + 19px);
+	inset-inline-end: calc(100% + 19px);
 }

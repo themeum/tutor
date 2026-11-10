@@ -12,14 +12,15 @@
 		flex: 0 0 400px;
 		width: 400px;
 		background-color: $color-gray-10;
-		border-right: 1px solid $border-color-secondary;
+		border-inline-end: 1px solid $border-color-secondary;
 
 		@include breakpoint-max(desktop-lg) {
 			flex: 0 0 100%;
 			width: 100%;
 			position: absolute;
+
 			// right: -100%;
-			top: 0px;
+			top: 0;
 			opacity: 0;
 			z-index: -1;
 		}
@@ -35,7 +36,7 @@
 			border-radius: 0;
 			user-select: none;
 
-			&:after {
+			&::after {
 				color: var(--tutor-color-muted);
 				font-size: 14px;
 			}
@@ -46,13 +47,14 @@
 			}
 
 			&.is-active {
-				&:after {
+				&::after {
 					color: var(--tutor-color-primary);
 				}
 			}
 
 			.tutor-course-topic-title {
 				position: relative;
+
 				&-info {
 					position: relative;
 					display: inline-flex;
@@ -61,7 +63,7 @@
 	
 					&-icon {
 						font-size: 14px;
-						color: rgba(var(--tutor-body-color-rgb), 0.5);
+						color: rgb(var(--tutor-body-color-rgb), 0.5);
 					}
 				}
 			}
@@ -73,7 +75,7 @@
 		}
 
 		.tutor-accordion-item-body {
-			background-color: #FFFFFF;
+			background-color: #FFF;
 			padding-top: 8px;
 			padding-bottom: 8px;
 		}
@@ -96,7 +98,7 @@
 	
 				&-icon {
 					font-size: 18px;
-					color: rgba(var(--tutor-body-color-rgb), 0.3);
+					color: rgb(var(--tutor-body-color-rgb), 0.3);
 					transition: 300ms ease-in;
 				}
 	
@@ -124,11 +126,13 @@
 					border-color: var(--tutor-color-success);
 					background-color: var(--tutor-color-success);
 				}
+
 				.tutor-check-pending{
 					border-color: var(--tutor-color-warning)!important;
 					background-color: var(--tutor-color-warning)!important;
 					background-image: url("data:image/svg+xml,%3Csvg fill='%23FFF' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='14' height='10' viewBox='0 0 459.313 459.314' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M459.313,229.648c0,22.201-17.992,40.199-40.205,40.199H40.181c-11.094,0-21.14-4.498-28.416-11.774 C4.495,250.808,0,240.76,0,229.66c-0.006-22.204,17.992-40.199,40.202-40.193h378.936 C441.333,189.472,459.308,207.456,459.313,229.648z'/%3E%3C/g%3E%3C/svg%3E");
 				}
+
 				.tutor-check-fail{
 					border-color: var(--tutor-color-danger)!important;
 					background-color: var(--tutor-color-danger)!important;

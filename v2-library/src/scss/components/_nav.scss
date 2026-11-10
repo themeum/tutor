@@ -42,14 +42,13 @@
     }
 
     .tutor-nav-more {
-        margin-left: auto !important;
+        margin-inline-start: auto !important;
+
         &-icon {
             font-size: 12px;
-            @if ($is_rtl == true) {
-                margin-right: 4px;
-            } @else {
-                margin-left: 4px;
-            }
+
+            margin-inline-start: 4px;
+
             color: var(--tutor-color-primary);
             transform: rotate(-45deg);
             transition: transform 200ms ease-in;
@@ -59,6 +58,7 @@
             .tutor-dropdown {
                 display: block;
             }
+
             .tutor-nav-more-icon {
                 transform: rotate(0deg);
             }
@@ -67,9 +67,11 @@
 
     &:not(.tutor-nav-pills):not(.tutor-nav-tabs) {
         border-bottom: 1px solid var(--tutor-border-color);
+
         .tutor-nav-link {
             border-bottom: 2px solid transparent;
             margin-bottom: -1px;
+
             &.is-active {
                 border-bottom-color: var(--tutor-color-primary);
             }
@@ -82,11 +84,7 @@
 
         .tutor-nav-item {
             &:not(:last-child) {
-                @if ($is_rtl == true) {
-                    margin-left: 4px;
-                } @else {
-                    margin-right: 4px;
-                }
+                margin-inline-end: 4px;
             }
         }
 
@@ -100,7 +98,7 @@
 
             &.is-active {
                 background-color: var(--tutor-color-primary);
-                color: #FFFFFF;
+                color: #FFF;
                 margin-bottom: 0;
             }
         }
@@ -110,11 +108,11 @@
     &-tabs {
         background-color: #FAFAFB;
         border-bottom: 1px solid #cdcfd5;
-        border-radius: 6px 6px 0px 0px;
+        border-radius: 6px 6px 0 0;
 
         .tutor-nav-link {
             position: relative;
-            border-right: 1px solid var(--tutor-border-color);
+            border-inline-end: 1px solid var(--tutor-border-color);
             border-top: 2px solid transparent;
             border-bottom: 1px solid var(--tutor-border-color);
             margin-top: -1px;
@@ -126,9 +124,9 @@
             padding: 16px 32px; // @todo: need to add an option for bigger tab
 
             &.is-active {
-                background-color: #FFFFFF;
+                background-color: #FFF;
                 border-top-color: var(--tutor-color-primary);
-                border-bottom-color: #FFFFFF;
+                border-bottom-color: #FFF;
             }
         }
 
@@ -139,20 +137,20 @@
             
             &:first-child {
                 .tutor-nav-link {
-                    border-radius: 5px 0 0 0;
+                    border-radius: 5px 0 0;
                 }
             }
 
             &:last-child {
                 .tutor-nav-link {
                     border-radius: 0 5px 0 0;
-                    border-right: 0;
+                    border-inline-end: 0;
                 }
             }
         }
 
         &-container {
-            background-color: #FFFFFF;
+            background-color: #FFF;
             border: 1px solid var(--tutor-border-color);
             border-radius: 6px;
         }
@@ -164,7 +162,8 @@
         border-bottom: 0;
 
         .tutor-nav-item {
-            margin-right: 0;
+            margin-inline-end: 0;
+
             &:not(:last-child) {
                 margin-bottom: 4px;
             }
@@ -174,6 +173,7 @@
     // @todo: to be removed
     &-admin {
         border-bottom: 0 !important;
+
         .tutor-nav-item {
             margin: 0;
         }

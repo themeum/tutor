@@ -8,16 +8,20 @@
 		cursor: move;
 	}
 }
+
 // width & height
 .tutor-w-100 {
 	width: 100%;
 }
+
 .tutor-mw-100 {
 	min-width: 100%;
 }
+
 .tutor-h-100 {
 	height: 100%;
 }
+
 .tutor-mh-100 {
 	min-height: 100%;
 }
@@ -26,18 +30,23 @@
 .d-inline {
 	display: inline;
 }
+
 .d-inline-block {
 	display: inline-block;
 }
+
 .d-block {
 	display: block;
 }
+
 .d-flex {
 	display: flex;
 }
+
 .d-inline-flex {
 	display: inline-flex;
 }
+
 .align-items-center {
 	align-items: center;
 }
@@ -50,6 +59,7 @@
 .tutor-bg-transparent {
 	background-color: transparent !important;
 }
+
 // text/typography
 
 // image
@@ -116,11 +126,11 @@
 }
 
 .tutor-text-left {
-	text-align: left;
+	text-align: start;
 }
 
 .tutor-text-right {
-	text-align: right;
+	text-align: end;
 }
 
 .tutor-text-justify {
@@ -190,33 +200,43 @@
 .tutor-bordered-box {
 	border: 1px solid var(--tutor-border-color);
 }
+
 .tutor-border-left {
-	border-left: 1px solid var(--tutor-border-color);
+	border-inline-start: 1px solid var(--tutor-border-color);
 }
+
 .tutor-border-right {
-	border-right: 1px solid var(--tutor-border-color);
+	border-inline-end: 1px solid var(--tutor-border-color);
 }
+
 .tutor-border-top {
 	border-top: 1px solid var(--tutor-border-color);
 }
+
 .tutor-border-bottom {
 	border-bottom: 1px solid var(--tutor-border-color);
 }
+
 .tutor-border-top-light {
 	border-top: 1px solid #E0E2EA;
 }
+
 .tutor-divider {	
 	border: 1px solid $border-color-secondary;
 }
+
 .tutor-divider-left {
-	border-left: 1px solid $border-color-secondary;
+	border-inline-start: 1px solid $border-color-secondary;
 }
+
 .tutor-divider-right {
-	border-right: 1px solid $border-color-secondary;
+	border-inline-end: 1px solid $border-color-secondary;
 }
+
 .tutor-divider-top {
 	border-top: 1px solid $border-color-secondary;
 }
+
 .tutor-divider-bottom {
 	border-bottom: 1px solid $border-color-secondary;
 }
@@ -265,7 +285,7 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 40, 50;
 	> * {
 		position: absolute !important;
 		top: 0 !important;
-		left: 0 !important;
+		inset-inline-start: 0 !important;
 		width: 100% !important;
 		height: 100% !important;
 	}
@@ -281,17 +301,18 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 40, 50;
 	&-collapsed {
 		position: relative;
 		overflow: hidden;
-		&:before {
+
+		&::before {
 			content: ' ';
 			position: absolute;
 			bottom: 0;
-			left: 0;
+			inset-inline-start: 0;
 			width: 100%;
 			height: 62px;
 			background: linear-gradient(
 				180deg,
-				rgba(255, 255, 255, 0.0001) 1.31%,
-				rgba(255, 255, 255, 0.721372) 15.41%,
+				rgb(255 255 255 / 0.01%) 1.31%,
+				rgb(255 255 255 / 72.1%) 15.41%,
 				#fff 100%
 			);
 			z-index: 5;
@@ -320,7 +341,7 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 40, 50;
 	border-radius: 80px;
 	overflow: hidden;
 	color: var(--tutor-color-primary);
-	background: rgba(var(--tutor-color-primary-rgb), 0.1);
+	background: rgb(var(--tutor-color-primary-rgb), 0.1);
 
 	[class^='tutor-icon-'],
 	[class*=' tutor-icon-'],
@@ -357,13 +378,10 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 40, 50;
 }
 
 // stretched link
-.tutor-stretched-link:after {
+.tutor-stretched-link::after {
 	content: ' ';
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	inset: 0;
 	z-index: 2;
 }
 
@@ -373,8 +391,8 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30, 40, 50;
 	width: 32px;
 	height: 32px;
 	vertical-align: -4px;
-	border: 4px solid currentColor;
-	border-right-color: transparent;
+	border: 4px solid currentcolor;
+	border-inline-end-color: transparent;
 	border-radius: 50%;
 	animation: 800ms linear infinite rotateSpinner;
 

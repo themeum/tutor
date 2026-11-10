@@ -2,8 +2,10 @@
 	list-style: none;
 	margin: 0 0 0 -15px;
 	padding: 0;
+
 	li {
 		display: inline-block;
+
 		a {
 			display: block;
 			font-size: 16px;
@@ -12,9 +14,10 @@
 			padding: 7px 23px;
 			border: 1px solid var(--tutor-border-color);
 			color: var(--tutor-color-secondary);
-			margin-left: 15px;
+			margin-inline-start: 15px;
 			border-radius: 6px;
 			transition: 200ms;
+
 			&:hover {
 				color: var(--tutor-color-primary);
 				border-color: var(--tutor-color-primary);

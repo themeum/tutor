@@ -1,10 +1,11 @@
 .tutor-video-player {
 	position: relative;
+
 	.loading-spinner {
-		&:before {
+		&::before {
 			top: 50%;
 			margin-top: -25px;
-			margin-left: -25px;
+			margin-inline-start: -25px;
 		}
 	}
 }

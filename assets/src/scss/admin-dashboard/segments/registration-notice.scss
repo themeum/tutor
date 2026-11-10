@@ -28,21 +28,21 @@
             font-weight: normal;
             font-size: 15px;
             line-height: 22px;
+
             strong{
                 color: black;
             }
         }
 
         &:last-child {
-            border-left: 1px solid var(--tutor-border-color);
-            margin-left: 20px;
+            border-inline-start: 1px solid var(--tutor-border-color);
+            margin-inline-start: 20px;
             display: flex;
             flex-direction: column;
             align-self: stretch;
             justify-content: space-around;
 
             a{
-                display: block;
                 width: calc(100% - 40px);
                 height: 100%;
                 padding: 0 20px;

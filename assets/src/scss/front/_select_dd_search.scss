@@ -10,17 +10,20 @@
 	.tutor-dropdown-select-option:last-child {
 		border-top: none;
 	}
+
 	.tutor-dropdown-select-selected {
 		margin-bottom: 0;
 		display: grid;
 		align-items: center;
 
 		@extend .tutor-text-ellipsis;
+
 		> * {
 			@extend .tutor-text-ellipsis;
 		}
+
 		.text-medium-body {
-			padding-right: 20px;
+			padding-inline-end: 20px;
 		}
 	}
 
@@ -28,11 +31,12 @@
 		.tutor-input-search {
 			input {
 				border-top: none;
-				border-right: none;
-				border-left: none;
+				border-inline-end: none;
+				border-inline-start: none;
 				border-color: #dcdbdc;
-				border-bottom-left-radius: unset !important;
-				border-bottom-right-radius: unset !important;
+				border-end-start-radius: unset !important;
+				border-end-end-radius: unset !important;
+
 				&:active,
 				&:focus {
 					border-color: #dcdbdc;
@@ -43,9 +47,11 @@
 		
 		&.is-active {
 			z-index: 999;
-			text-align: left;
+			text-align: start;
 		}
+
 		z-index: -1;
+
 		.tutor-frequencies {
 			max-height: 100%;
 			overflow-y: auto;
