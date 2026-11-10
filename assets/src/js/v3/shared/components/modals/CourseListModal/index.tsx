@@ -28,19 +28,26 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
     'course-bundle': CourseBundleCombined[];
   }>({
     defaultValues: {
-      courses: addedItems,
-      'course-bundle': addedItems,
+      courses: type === 'courses' ? addedItems : [],
+      'course-bundle': type === 'course-bundle' ? addedItems : [],
     },
   });
 
-  const watchedCourses = useWatch({ control: _form.control, name: 'courses' });
-  const watchedBundles = useWatch({ control: _form.control, name: 'course-bundle' });
+  const watchedCourses = useWatch({
+    control: _form.control,
+    name: 'courses',
+    defaultValue: type === 'courses' ? addedItems : [],
+  });
+  const watchedBundles = useWatch({
+    control: _form.control,
+    name: 'course-bundle',
+    defaultValue: type === 'course-bundle' ? addedItems : [],
+  });
   const selectedItems = ((type === 'courses' ? watchedCourses : watchedBundles) as CourseBundleCombined[]) || [];
 
   const handleAddCourses = () => {
     const selectedItems = _form.getValues(type) || [];
-    form.setValue(type, [...selectedItems]);
-    _form.setValue(type, []);
+    form.setValue(type, [...selectedItems], { shouldDirty: true, shouldTouch: true });
     closeModal({ action: 'CONFIRM' });
   };
 
@@ -63,10 +70,10 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
           size="small"
           variant="primary"
           onClick={handleAddCourses}
-          disabled={selectedItems.length === 0}
+          disabled={selectedItems.length === 0 && addedItems.length === 0}
           data-cy="add-courses"
         >
-          {__('Add', __TUTOR_TEXT_DOMAIN__)}
+          {addedItems.length > 0 ? __('Update', __TUTOR_TEXT_DOMAIN__) : __('Add', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </BasicModalWrapper>

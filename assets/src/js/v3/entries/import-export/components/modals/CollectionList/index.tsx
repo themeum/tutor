@@ -27,16 +27,21 @@ const CollectionListModal = ({ closeModal, actions, form }: CollectionListModalP
   const addedItems = form.getValues('content_bank') || [];
   const _form = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
+      courses: [],
+      'course-bundle': [],
       content_bank: addedItems,
     },
   });
 
-  const selectedItems = useWatch({ control: _form.control, name: 'content_bank', defaultValue: [] }) as Collection[];
+  const selectedItems = useWatch({
+    control: _form.control,
+    name: 'content_bank',
+    defaultValue: addedItems,
+  }) as Collection[];
 
   const handleAddContent = () => {
     const selectedItems = _form.getValues('content_bank') || [];
-    form.setValue('content_bank', [...selectedItems]);
-    _form.setValue('content_bank', []);
+    form.setValue('content_bank', [...selectedItems], { shouldDirty: true, shouldTouch: true });
     closeModal({ action: 'CONFIRM' });
   };
 
@@ -61,8 +66,13 @@ const CollectionListModal = ({ closeModal, actions, form }: CollectionListModalP
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
           {__('Cancel', 'tutor')}
         </Button>
-        <Button size="small" variant="primary" onClick={handleAddContent} disabled={selectedItems.length === 0}>
-          {__('Add', 'tutor')}
+        <Button
+          size="small"
+          variant="primary"
+          onClick={handleAddContent}
+          disabled={selectedItems.length === 0 && addedItems.length === 0}
+        >
+          {addedItems.length > 0 ? __('Update', 'tutor') : __('Add', 'tutor')}
         </Button>
       </div>
     </BasicModalWrapper>
