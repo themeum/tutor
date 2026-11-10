@@ -135,6 +135,9 @@ window.jQuery(document).ready($ => {
      */
 
     function tutor_quiz_validation($question_wrap, validated) {
+        if ($question_wrap.attr('data-revealed') === '1') {
+            return validated;
+        }
 
         var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
 

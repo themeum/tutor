@@ -19,6 +19,7 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Modal;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Table;
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -2043,15 +2044,7 @@ class Quiz {
 	 * @return float
 	 */
 	private function calculate_attempt_earned_marks( int $attempt_id ): float {
-		$marks = QueryHelper::query(
-			'tutor_quiz_attempt_answers',
-			array(
-				'select' => 'SUM(achieved_mark) AS earned_marks',
-				'where'  => array( 'quiz_attempt_id' => $attempt_id ),
-			)
-		);
-
-		return max( 0.0, (float) ( $marks[0]->earned_marks ?? 0.0 ) );
+		return QuizModel::get_attempt_answers_stats( $attempt_id )->total_earned_marks;
 	}
 
 	/**

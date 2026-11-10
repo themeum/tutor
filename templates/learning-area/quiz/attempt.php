@@ -91,7 +91,7 @@ $modal_cancel_button = Button::make()
 
 $committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $tutor_is_started_quiz->attempt_id );
 
-$last_answered_index = 0;
+$first_unanswered_index = 0;
 
 $default_values = array(
 	'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question_ids][]' => array_map(
@@ -104,15 +104,16 @@ $default_values = array(
 
 if ( is_array( $questions ) ) {
 	foreach ( $questions as $question_index => $question ) {
-		if ( isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
-			$last_answered_index = $question_index + 1;
+		if ( ! isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
+			$first_unanswered_index = $question_index + 1;
+			break;
 		}
 	}
 }
 
-$start_index = $last_answered_index > 0
-	? min( count( $questions ), $last_answered_index + 1 )
-	: 1;
+$start_index = $first_unanswered_index > 0
+	? $first_unanswered_index
+	: max( 1, count( $questions ) );
 
 ?>
 <form 
@@ -217,7 +218,8 @@ $start_index = $last_answered_index > 0
 		do_action( 'tutor_quiz/body/before', $tutor_is_started_quiz->quiz_id, $quiz_attempt_info );
 		foreach ( $questions as $index => $question ) {
 			$question_settings          = maybe_unserialize( $question->question_settings );
-			$answer_required            = isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
+			$is_committed_question      = ! empty( $committed_attempt_answers[ (int) $question->question_id ] );
+			$answer_required            = ! $is_committed_question && isset( $question_settings['answer_required'] ) && '1' === $question_settings['answer_required'];
 			$question_index             = $index + 1;
 			$question->committed_answer = $committed_attempt_answers[ (int) $question->question_id ] ?? null;
 			?>

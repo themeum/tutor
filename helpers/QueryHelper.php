@@ -1049,9 +1049,9 @@ class QueryHelper {
 		if ( is_int( $value ) ) {
 			$escaped_value = $wpdb->prepare( '%d', $value );
 		} elseif ( is_float( $value ) ) {
-			list( $whole, $decimal ) = explode( '.', $value );
-			$expression              = '%.' . strlen( $decimal ) . 'f';
-			$escaped_value           = $wpdb->prepare( $expression, $value );//phpcs:ignore
+			$value_parts   = explode( '.', (string) $value );
+			$expression    = '%.' . strlen( $value_parts[1] ?? '' ) . 'f';
+			$escaped_value = $wpdb->prepare( $expression, $value );//phpcs:ignore
 		} else {
 			$escaped_value = $wpdb->prepare( '%s', $value );
 		}
@@ -1509,5 +1509,4 @@ class QueryHelper {
 
 		return $result;
 	}
-
 }

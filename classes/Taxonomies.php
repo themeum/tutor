@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

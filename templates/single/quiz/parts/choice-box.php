@@ -67,7 +67,7 @@ if ( $is_committed ) {
 }
 ?>
 
-<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?>" <?php echo $is_committed ? 'style="pointer-events: none;"' : ''; ?>>
+<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo ( $answer_required && ! $is_committed ) ? 'quiz-answer-required' : ''; ?>" <?php echo $is_committed ? 'style="pointer-events: none;"' : ''; ?>>
 	<div id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $class ); ?> tutor-quiz-wrap">
 		<div class="tutor-row">
 			<?php if ( count( $answers ) ) : ?>

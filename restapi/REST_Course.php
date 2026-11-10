@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use WP_Error;
 use WP_Post;
 use WP_Query;
@@ -225,25 +226,26 @@ class REST_Course {
 	public function course_detail( WP_REST_Request $request ) {
 		$post_id = absint( $request->get_param( 'id' ) );
 
+		if ( ! CourseModel::get_post_types( $post_id ) ) {
+			return $this->response(
+				'tutor_read_course',
+				__( 'Detail not found for given ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
 		// Marketing viewers omit course_settings (enrolled / instructor / IA only).
 		$detail = $this->course_additional_info(
 			$post_id,
 			! RestAuth::can_reveal_course_internal_meta( $post_id )
 		);
-		if ( $detail ) {
-			return $this->response(
-				'tutor_read_course',
-				__( 'Course detail retrieved successfully', 'tutor' ),
-				$detail,
-				HttpHelper::STATUS_OK
-			);
-		}
 
 		return $this->response(
 			'tutor_read_course',
-			__( 'Detail not found for given ID', 'tutor' ),
-			array(),
-			HttpHelper::STATUS_NOT_FOUND
+			__( 'Course detail retrieved successfully', 'tutor' ),
+			$detail,
+			HttpHelper::STATUS_OK
 		);
 	}
 
@@ -321,7 +323,17 @@ class REST_Course {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function course_contents( WP_REST_Request $request ) {
-		$course_id     = absint( $request->get_param( 'id' ) );
+		$course_id = absint( $request->get_param( 'id' ) );
+
+		if ( ! CourseModel::get_post_types( $course_id ) ) {
+			return $this->response(
+				'tutor_read_course',
+				__( 'Contents for this course with the given course id not found', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
 		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
 		$topics        = tutor_utils()->get_topics(
 			$course_id,

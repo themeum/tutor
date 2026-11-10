@@ -359,7 +359,7 @@ jQuery(document).ready(function($) {
 		$(this)
 			.siblings('label')
 			.find('span')
-			.html(
+			.text(
 				$(this)
 					.val()
 					.replace(/.*(\/|\\)/, ''),

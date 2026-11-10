@@ -8,6 +8,8 @@
  * @since 1.5.8
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $tutor_social_share_icons = tutor_utils()->tutor_social_share_icons();
 if ( ! tutor_utils()->count( $tutor_social_share_icons ) ) {
 	return;
@@ -38,8 +40,8 @@ $share_config = array(
 					<?php esc_html_e( 'Page Link', 'tutor' ); ?>
 				</div>
 				<div class="tutor-mb-32 tutor-position-relative">
-					<input class="tutor-form-control" value="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Course Link', 'tutor' ); ?>" readonly />
-					<button class="tutor-btn tutor-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Copy link', 'tutor' ); ?>">
+					<input class="tutor-form-control" value="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Course Link', 'tutor' ); ?>" readonly />
+					<button class="tutor-btn tutor-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Copy link', 'tutor' ); ?>">
 						<span class="icon tutor-icon-copy" aria-hidden="true"></span>
 					</button>
 				</div>

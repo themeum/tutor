@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
 use WP_REST_Request;
 
 defined( 'ABSPATH' ) || exit;
@@ -60,7 +61,17 @@ class REST_Topic {
 			);
 		}
 
-		$course_id     = absint( $this->post_parent );
+		$course_id = absint( $this->post_parent );
+
+		if ( ! CourseModel::get_post_types( $course_id ) ) {
+			return $this->response(
+				'tutor_read_topic',
+				__( 'Topic not found for given course ID', 'tutor' ),
+				array(),
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
 		$reveal_bodies = RestAuth::can_reveal_learning_payload( $course_id );
 
 		$result = REST_Posts::get_published_child_posts( $this->post_type, $this->post_parent );

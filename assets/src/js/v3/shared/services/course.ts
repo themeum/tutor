@@ -45,8 +45,13 @@ interface UnlinkPageBuilderPayload {
   builder: string;
 }
 
+export interface UnlinkPageBuilderResponse {
+  course_id: number;
+  post_content: string;
+}
+
 const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
-  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<null>>(
+  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<UnlinkPageBuilderResponse>>(
     endpoints.TUTOR_UNLINK_PAGE_BUILDER,
     {
       course_id: courseId,
