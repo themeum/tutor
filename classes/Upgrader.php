@@ -10,15 +10,12 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\DB;
 use Tutor\Database\Tables\CouponUsagesTable;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
-use Tutor\Helpers\QueryHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Manage up grade
@@ -142,7 +139,7 @@ class Upgrader {
 
 		if ( version_compare( $this->installed_version, '3.0.0', '<' ) ) {
 			$table_name = $wpdb->prefix . 'tutor_orders';
-			if ( ! QueryHelper::table_exists( $table_name ) ) {
+			if ( ! DB::has_table( $table_name ) ) {
 				Tutor::tutor_activate();
 			}
 			update_option( 'tutor_version', TUTOR_VERSION );
@@ -151,7 +148,7 @@ class Upgrader {
 		// Beta upgrade.
 		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '>=' ) ) {
 			$order_items_table = $wpdb->prefix . 'tutor_order_items';
-			if ( QueryHelper::table_exists( $order_items_table ) && ! QueryHelper::column_exist( $order_items_table, 'discount_price' ) ) {
+			if ( DB::has_table( $order_items_table ) && ! DB::has_column( $order_items_table, 'discount_price' ) ) {
 				// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
 				$wpdb->query(
 					//phpcs:ignore
@@ -168,7 +165,7 @@ class Upgrader {
 			$order_table = $wpdb->prefix . 'tutor_orders';
 
 			$coupon_amount = 'coupon_amount';
-			if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, $coupon_amount ) ) {
+			if ( DB::has_table( $order_table ) && ! DB::has_column( $order_table, $coupon_amount ) ) {
 				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $coupon_amount DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
 			}
 
@@ -176,7 +173,7 @@ class Upgrader {
 			 * Tax Type: inclusive, exclusive
 			 */
 			$tax_type = 'tax_type';
-			if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
+			if ( DB::has_table( $order_table ) && ! DB::has_column( $order_table, $tax_type ) ) {
 				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER pre_tax_price" );//phpcs:ignore
 			}
 		}
@@ -198,7 +195,7 @@ class Upgrader {
 		 */
 		$result        = 'result';
 		$attempt_table = $wpdb->tutor_quiz_attempts;
-		if ( QueryHelper::table_exists( $attempt_table ) && ! QueryHelper::column_exist( $attempt_table, $result ) ) {
+		if ( DB::has_table( $attempt_table ) && ! DB::has_column( $attempt_table, $result ) ) {
 			$wpdb->query( "ALTER TABLE {$attempt_table} ADD COLUMN result VARCHAR(10);" ); //phpcs:ignore
 
 			// Index Added to improve query performance.
@@ -219,7 +216,7 @@ class Upgrader {
 		 * @since 3.7.0
 		 */
 		$question_table = $wpdb->prefix . 'tutor_quiz_questions';
-		if ( QueryHelper::table_exists( $question_table ) && ! QueryHelper::column_exist( $question_table, 'content_id' ) ) {
+		if ( DB::has_table( $question_table ) && ! DB::has_column( $question_table, 'content_id' ) ) {
 			$wpdb->query( "ALTER TABLE {$question_table} ADD COLUMN content_id BIGINT UNSIGNED DEFAULT NULL AFTER question_id" ); //phpcs:ignore
 			$wpdb->query( "ALTER TABLE {$question_table} ADD INDEX content_id(content_id)" );//phpcs:ignore
 		}
@@ -234,13 +231,13 @@ class Upgrader {
 		if ( version_compare( TUTOR_VERSION, '3.8.0', '>=' ) ) {
 			global $wpdb;
 			$order_table = $wpdb->prefix . 'tutor_orders';
-			if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, 'pre_tax_price' ) ) {
+			if ( DB::has_table( $order_table ) && ! DB::has_column( $order_table, 'pre_tax_price' ) ) {
 				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN pre_tax_price DECIMAL(13, 2) NOT NULL AFTER subtotal_price" ); //phpcs:ignore
 			}
 
 			$charset_collate = $wpdb->get_charset_collate();
-			$scheduler_table = QueryHelper::table_exists( $wpdb->prefix . 'tutor_scheduler' );
-			$item_meta_table = QueryHelper::table_exists( $wpdb->prefix . 'tutor_order_itemmeta' );
+			$scheduler_table = DB::has_table( $wpdb->prefix . 'tutor_scheduler' );
+			$item_meta_table = DB::has_table( $wpdb->prefix . 'tutor_order_itemmeta' );
 
 			// Create tutor_scheduler table.
 			if ( ! $scheduler_table ) {
@@ -283,9 +280,9 @@ class Upgrader {
 			$detail_column   = 'item_details';
 			$type_column     = 'item_type';
 
-			if ( QueryHelper::table_exists( $cart_item_table ) ) {
-				$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
-				$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
+			if ( DB::has_table( $cart_item_table ) ) {
+				$is_detail_column_exists = DB::has_column( $cart_item_table, $detail_column );
+				$is_type_column_exists   = DB::has_column( $cart_item_table, $type_column );
 
 				if ( ! $is_detail_column_exists ) {
 					$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
@@ -327,7 +324,13 @@ class Upgrader {
 			/**
 			 * Update process by to 'tutor' where it is 'Tutor'
 			 */
-			QueryHelper::update( $earnings_table, array( 'process_by' => 'tutor' ), array( 'process_by' => 'Tutor' ) );
+			DB::table( $earnings_table )
+				->where( 'process_by', 'Tutor' )
+				->update(
+					array(
+						'process_by' => 'tutor',
+					)
+				);
 		}
 	}
 
