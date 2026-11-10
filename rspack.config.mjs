@@ -38,6 +38,9 @@ const createSwcLoaderOptions = (isDevelopment) => ({
         refresh: false,
         importSource: '@emotion/react',
       },
+      reactCompiler: {
+        target: '18',
+      },
     },
     experimental: {
       plugins: [
