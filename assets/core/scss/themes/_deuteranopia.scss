@@ -130,15 +130,15 @@
 
 [data-tutor-theme='light'][data-tutor-vision='deuteranopia'],
 [data-tutor-theme='system'][data-tutor-vision='deuteranopia'] {
-  @include deuteranopia-light-tokens;
+  @include deuteranopia-light-tokens();
 }
 
 [data-tutor-theme='dark'][data-tutor-vision='deuteranopia'] {
-  @include deuteranopia-dark-tokens;
+  @include deuteranopia-dark-tokens();
 }
 
 @media (prefers-color-scheme: dark) {
   [data-tutor-theme='system'][data-tutor-vision='deuteranopia'] {
-    @include deuteranopia-dark-tokens;
+    @include deuteranopia-dark-tokens();
   }
 }

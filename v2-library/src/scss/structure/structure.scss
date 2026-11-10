@@ -1,23 +1,20 @@
 $include-column-box-sizing: true !default;
 
-@import "functions";
-@import "variables";
+@use "functions";
+@use "variables";
+@use "../mixins/breakpoints";
+@use "../mixins/container";
+@use "../mixins/grid";
+@use "../mixins/utilities" as utilities2;
+@use "vendor/rfs";
+@use "containers";
+@use "grid" as grid2;
+@use "utilities";
 
-@import "../mixins/breakpoints";
-@import "../mixins/container";
-@import "../mixins/grid";
-@import "../mixins/utilities";
-
-@import "vendor/rfs";
-
-@import "containers";
-@import "grid";
-
-@import "utilities";
 // Only use the utilities we need
 // stylelint-disable-next-line scss/dollar-variable-default
-$utilities: map-get-multiple(
-  $utilities,
+utilities.$utilities: functions.map-get-multiple(
+  utilities.$utilities,
   (
     "display",
     "order",
@@ -58,4 +55,4 @@ $utilities: map-get-multiple(
   )
 );
 
-@import "../utility/api";
+@use "../utility/api";

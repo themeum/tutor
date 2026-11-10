@@ -1,5 +1,8 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 .answer-image-matched-wrap {
 	display: block;
+
 	.image-matching-item {
 		display: flex;
 		align-items: center;
@@ -14,7 +17,7 @@
 
 		.dragged-caption {
 			font-size: 14px;
-			margin-left: 12px;
+			margin-inline-start: 12px;
 		}
 	}
 }
@@ -35,7 +38,7 @@
 		align-items: center;
 
 		.image {
-			margin-right: 12px;
+			margin-inline-end: 12px;
 		}
 	}
 
@@ -124,7 +127,7 @@
 
 			.is-penalty {
 				color: #dc3545;
-				margin-left: 2px;
+				margin-inline-start: 2px;
 			}
 		}
 
@@ -139,6 +142,7 @@
 		background:#F4F6F9; 
 		text-align:center!important;
 		padding:4px;
+
 		button{
 			margin:0;
 			line-height: 32px;
@@ -210,10 +214,9 @@
 
 	.tutor-quiz-question-review-actions {
 		display: flex;
-		flex-direction: row;
+		flex-flow: row nowrap;
 		align-items: center;
 		justify-content: flex-start;
-		flex-wrap: nowrap;
 		gap: 8px;
 	}
 
@@ -252,29 +255,29 @@
 
 		&[data-review-status='correct']:has(input:checked) {
 			background-color: #24983f;
-			color: #ffffff;
+			color: #fff;
 
 			svg:not([class]) {
-				color: #ffffff;
+				color: #fff;
 			}
 
 			&:hover:not(:disabled):not(.disabled) {
 				background-color: #1c7731;
-				color: #ffffff;
+				color: #fff;
 			}
 		}
 
 		&[data-review-status='incorrect']:has(input:checked) {
 			background-color: #d92d20;
-			color: #ffffff;
+			color: #fff;
 
 			svg:not([class]) {
-				color: #ffffff;
+				color: #fff;
 			}
 
 			&:hover:not(:disabled):not(.disabled) {
 				background-color: #b42318;
-				color: #ffffff;
+				color: #fff;
 			}
 		}
 	}
@@ -291,9 +294,9 @@
 		border: 0;
 	}
 
-	@include breakpoint-max(mobile) {
+	@include breakpoint.breakpoint-max(mobile) {
 		.tutor-manual-review-wrapper {
-			text-align: left;
+			text-align: start;
 		}
 	}
 }

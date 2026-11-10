@@ -12,6 +12,7 @@
     background: $tutor-surface-base;
     border-radius: $tutor-radius-sm;
     z-index: $tutor-z-positive;
+
     @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
 
     &::before {
@@ -65,6 +66,7 @@
     color: #fff;
     color: var(--plyr-video-control-color, #fff);
     display: block;
+    /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the control centered in RTL */
     left: 50%;
     opacity: 0.9;
     padding: 15px;

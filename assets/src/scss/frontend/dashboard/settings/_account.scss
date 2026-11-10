@@ -28,6 +28,7 @@
 
     .tutor-account-cover-photo-action {
       @include tutor-flex();
+
       gap: $tutor-spacing-3;
       position: absolute;
       top: $tutor-spacing-4;
@@ -37,6 +38,7 @@
 
   .tutor-account-avatar-wrapper {
     @include tutor-flex(row, center, center);
+
     transform: translateY(-52px);
     margin-bottom: -52px;
     position: relative;
@@ -44,6 +46,7 @@
 
     .tutor-account-avatar {
       @include tutor-avatar-base();
+
       width: 104px;
       height: 104px;
       border: 4px solid $tutor-border-inverse;
@@ -71,6 +74,7 @@
         bottom: 0;
         border: 3px solid $tutor-border-inverse;
         border-radius: $tutor-radius-full;
+
         @include tutor-transition((background-color, color));
 
         &:hover,

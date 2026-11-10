@@ -13,11 +13,12 @@
 	border-radius: $tutor-radius-full;
 
 	&-icon {
-		@include tutor-flex-center;
+		@include tutor-flex-center();
 	}
 
 	&-text {
 		@include tutor-typography('tiny');
+
 		white-space: nowrap;
 	}
 

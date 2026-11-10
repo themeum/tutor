@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 /* *********************** */
 
 /**
@@ -7,6 +9,7 @@
 /* dashboard quiz attempts */
 .tutor-dashboard-content {
 	margin-bottom: 60px;
+
 	> h2 {
 		margin-bottom: 20px;
 	}
@@ -79,7 +82,7 @@
 	display: inline-block;
 }
 
-/* end dashboard content*/
+/* end dashboard content */
 
 .tutor-dashboard-avater img {
 	width: 70px;
@@ -108,6 +111,7 @@
 		flex: 0 0 100%;
 		max-width: 100%;
 	}
+
 	.profile-completion-warning-details {
 		margin-bottom: 10px;
 	}
@@ -138,7 +142,7 @@
 }
 
 .date-range-input:last-child {
-	margin-right: 0;
+	margin-inline-end: 0;
 }
 
 .date-range-input:last-child button {
@@ -150,7 +154,7 @@
 	box-shadow: none;
 	line-height: 29px;
 	margin: 0;
-	padding-right: 30px;
+	padding-inline-end: 30px;
 	padding-top: 0;
 	padding-bottom: 0;
 	width: 100%;
@@ -158,13 +162,13 @@
 
 .date-range-input i.tutor-icon-calendar {
 	position: absolute;
-	right: 10px;
+	inset-inline-end: 10px;
 	top: 7px;
 }
 
 .date-range-input button {
 	background-color: var(--tutor-color-primary);
-	color: #ffffff;
+	color: #fff;
 	border: none;
 	line-height: 30px;
 	padding: 0 15px;
@@ -185,7 +189,7 @@ table.tutor-dashboard-statement-table p {
 
 table.tutor-dashboard-statement-table p.small-text {
 	font-size: 12px;
-	color: #666666;
+	color: #666;
 }
 
 /** ENd earning report **/
@@ -201,12 +205,14 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-mycourse-delete {
 	color: var(--tutor-color-muted);
 	transition: 300ms;
+
 	i {
 		line-height: inherit;
 		display: inline-block;
 		vertical-align: top;
 		color: var(--tutor-color-primary);
 	}
+
 	&:hover {
 		color: var(--tutor-color-primary);
 	}
@@ -236,7 +242,7 @@ table.tutor-dashboard-statement-table p.small-text {
 	margin-bottom: 0;
 }
 
-//applies to small devices (landscape phones, less than 768px)
+// applies to small devices (landscape phones, less than 768px)
 @media screen and (max-width: 767.98px) {
 	.tutor-header-right-side {
 		justify-content: flex-start;
@@ -244,7 +250,7 @@ table.tutor-dashboard-statement-table p.small-text {
 	}
 }
 
-@include breakpoint-max(tablet) {
+@include breakpoint.breakpoint-max(tablet) {
 	.tutor-header-right-side {
 		margin-top: 20px;
 	}

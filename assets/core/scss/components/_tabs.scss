@@ -5,6 +5,7 @@ button.tutor-tabs-tab,
 .tutor-tabs-tab {
   @include tutor-flex(row, center, flex-start);
   @include tutor-typography('small');
+
   border-radius: $tutor-tab-radius;
   font-weight: $tutor-tab-font-weight;
   background: transparent;
@@ -17,11 +18,14 @@ button.tutor-tabs-tab,
   color: $tutor-text-primary;
   height: $tutor-tab-height;
   box-shadow: none;
+
   @include tutor-transition((background-color, color, box-shadow));
+
   margin: $tutor-spacing-none;
 
   @include tutor-breakpoint-down(sm) {
     @include tutor-text('tiny');
+
     justify-content: center;
   }
 
@@ -36,7 +40,6 @@ button.tutor-tabs-tab,
 
     &:focus,
     &:hover {
-      box-shadow: none;
       color: $tutor-text-brand;
       background-color: $tutor-tab-l3-active;
       box-shadow: $tutor-tab-active-shadow;
@@ -46,20 +49,23 @@ button.tutor-tabs-tab,
 
   &-md {
     height: 34px;
+
     @include tutor-text('tiny');
+
     padding: 7px $tutor-spacing-5;
     gap: $tutor-spacing-2;
   }
 
   &-sm {
     @include tutor-text('tiny');
+
     padding: 6px $tutor-spacing-5;
     gap: $tutor-spacing-2;
     height: $tutor-tab-height-sm;
   }
 
-  &:hover:not(:disabled):not(.tutor-tabs-tab-active),
-  &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
+  &:hover:not(:disabled, .tutor-tabs-tab-active),
+  &:focus:not(:disabled, .tutor-tabs-tab-active) {
     color: $tutor-text-primary;
     background-color: $tutor-tab-l3-active-hover;
     outline: none;
@@ -86,9 +92,9 @@ button.tutor-tabs-tab,
 .tutor-tabs {
   &-nav {
     @include tutor-flex(row, center, flex-start);
+
     gap: $tutor-spacing-2;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     position: relative;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -107,7 +113,8 @@ button.tutor-tabs-tab,
     @include tutor-flex(row, flex-start, flex-start);
 
     .tutor-tabs-nav {
-      @include tutor-flex-column;
+      @include tutor-flex-column();
+
       align-items: stretch;
       min-width: 200px;
     }
@@ -131,8 +138,7 @@ button.tutor-tabs-tab,
     &-vertical {
       display: unset;
       flex-direction: column;
-      overflow-x: auto;
-      overflow-y: hidden;
+      overflow: auto hidden;
 
       .tutor-tabs-nav {
         flex-direction: row;

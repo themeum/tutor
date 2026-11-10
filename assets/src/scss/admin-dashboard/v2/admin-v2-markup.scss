@@ -1,16 +1,16 @@
-//@import './reset';
+// @import './reset';
 
 // Components
-@import './components/index';
+@use 'components/index';
 
 // Main Style
-@import './general';
+@use 'general';
 
 // Pages
-@import './custom-pages/index';
+@use 'custom-pages/index' as index2;
 
 // Conditional Style
-@import './conditionals/conditionals.scss';
+@use 'conditionals/conditionals';
 
 // WP conflict override
-@import './conflict-override/conflict-override.scss';
+@use 'conflict-override/conflict-override';

@@ -1,14 +1,16 @@
-$default-color: rgba(65, 69, 79, 0.9);
+@use "../utility/variables";
+@use "badge-label";
 
-$variations: (
-	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3) '\e978',
-	'default' $default-color $color-gray-10 var(--tutor-border-color) '\e9ab',
-	'success' var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3) '\E982',
-	'danger' var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3) '\e9a3',
-	'warning' var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3) '\e966'
+$default-color: rgb(65 69 79 / 90%);
+badge-label.$variations: (
+	'primary' var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3) '\e978',
+	'default' $default-color variables.$color-gray-10 var(--tutor-border-color) '\e9ab',
+	'success' var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3) '\E982',
+	'danger' var(--tutor-color-danger) rgb(var(--tutor-color-danger-rgb), 0.15) rgb(var(--tutor-color-danger-rgb), 0.3) '\e9a3',
+	'warning' var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3) '\e966'
 );
 
-@each $suffix, $txtColor, $bgColor, $border, $icon in $variations {
+@each $suffix, $txtColor, $bgColor, $border, $icon in badge-label.$variations {
 	.tutor-form-select-with-icon {
 		&.select-#{$suffix} {
 			color: #{$txtColor};
@@ -23,7 +25,7 @@ $variations: (
 				border-color: #{$txtColor};
 			}
 
-			.icon1:before {
+			.icon1::before {
 				content: '#{$icon}';
 			}
 		}
@@ -35,14 +37,14 @@ $variations: (
 	min-width: 120px;
 	max-width: max-content;
 	position: relative;
-
 	border-radius: 42px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 
 	select {
-		@extend .text-medium-small;
+		@extend .text-medium-small !optional;
+
 		display: block;
 		width: 100%;
 		margin: 0;
@@ -68,10 +70,11 @@ $variations: (
 
 	// variation icon
 	.icon1 {
-		left: 8px;
+		inset-inline-start: 8px;
 	}
+
 	// down arrow icon
 	.icon2 {
-		right: 8px;
+		inset-inline-end: 8px;
 	}
 }

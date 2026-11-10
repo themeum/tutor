@@ -3,10 +3,10 @@
 	margin-top: 4px;
 	padding: 10px;
 	width: 260px;
-	background: #FFFFFF;
+	background: #FFF;
 	border: 1px solid #E3E5EB;
 	box-sizing: border-box;
-	box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 10px 14px rgb(0 0 0 / 12%);
 	border-radius: 6px;
 
     table th span {
@@ -26,7 +26,8 @@
     .ui-datepicker-calendar {
         table-layout: fixed;
         width: 100%;
-        border: 0px !important;
+        border: 0 !important;
+
         .ui-state-default {
             border: none;
             background: none;
@@ -47,6 +48,7 @@
             cursor: pointer;
             -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
             transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+
             &:hover {
                 border-radius: 100% !important;
                 background-color: #E9EDFB !important;
@@ -58,13 +60,15 @@
                 text-decoration: none;
             }
         }
+
         tbody {
-            border: 0px !important;
+            border: 0 !important;
         }
+
         th, td {
             text-align: center;
             padding: 0;
-            border: 0px !important;
+            border: 0 !important;
         }
 
         .ui-datepicker-unselectable:hover {
@@ -113,7 +117,7 @@
 
     .ui-datepicker-prev, .ui-datepicker-next {
         cursor: default;
-        font-family: "tutor";
+        font-family: tutor;
         -webkit-font-smoothing: antialiased;
         font-style: normal;
         font-weight: normal;
@@ -124,19 +128,19 @@
     }
     
     .ui-datepicker-prev {
-        float: left;
-        text-align: left;
+        float: inline-start;
+        text-align: start;
         
-        &:before {
+        &::before {
             content: "\e921";
         }
     }
     
     .ui-datepicker-next {
-        float: right;
-        text-align: right;
+        float: inline-end;
+        text-align: end;
         
-        &:before {
+        &::before {
             content: "\e903";
         }
     }

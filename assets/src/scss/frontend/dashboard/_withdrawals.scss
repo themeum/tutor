@@ -4,6 +4,7 @@
 .tutor-user-withdrawals {
   .tutor-withdrawal-history-heading {
     @include tutor-typography(medium, medium);
+
     margin-top: $tutor-spacing-10;
     margin-bottom: $tutor-spacing-5;
 
@@ -157,7 +158,6 @@
 
       > div:last-child {
         min-width: 0;
-        word-break: break-word;
         overflow-wrap: break-word;
       }
     }
@@ -170,6 +170,7 @@
 
 .tutor-withdrawal-available-balance {
   @include tutor-flex();
+
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-5 $tutor-spacing-6;
   background: $tutor-surface-l1-hover;
@@ -178,6 +179,7 @@
 
   &-icon {
     @include tutor-flex-center();
+
     width: 44px;
     height: 44px;
     gap: $tutor-spacing-4;

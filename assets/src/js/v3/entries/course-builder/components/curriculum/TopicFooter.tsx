@@ -96,7 +96,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
               showModal({
                 component: LessonModal,
                 props: {
-                  contentDripType: courseDetailsForm.watch('contentDripType'),
+                  contentDripType: courseDetailsForm.getValues('contentDripType'),
                   topicId: topicId,
                   title: __('Lesson', 'tutor'),
                   icon: <SVGIcon name="lesson" width={24} height={24} />,
@@ -121,7 +121,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                 component: QuizModal,
                 props: {
                   topicId: topicId,
-                  contentDripType: courseDetailsForm.watch('contentDripType'),
+                  contentDripType: courseDetailsForm.getValues('contentDripType'),
                   title: __('Quiz', 'tutor'),
                   icon: <SVGIcon name="quiz" width={24} height={24} />,
                   /* translators: %s is the topic title */
@@ -150,7 +150,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                       component: QuizModal,
                       props: {
                         topicId: topicId,
-                        contentDripType: courseDetailsForm.watch('contentDripType'),
+                        contentDripType: courseDetailsForm.getValues('contentDripType'),
                         title: __('Interactive Quiz', 'tutor'),
                         icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
                         /* translators: %s is the topic title */
@@ -196,7 +196,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                       component: AssignmentModal,
                       props: {
                         topicId: topicId,
-                        contentDripType: courseDetailsForm.watch('contentDripType'),
+                        contentDripType: courseDetailsForm.getValues('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
                         /* translators: %s is the topic title */

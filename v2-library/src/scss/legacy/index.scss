@@ -1,12 +1,14 @@
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
+
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
-@import './dashboard';
-@import './switch.scss';
-@import './toast.scss';
-@import './slider-input';
+@use "sass:meta";
+@use 'dashboard';
+@use 'switch';
+@use 'toast';
+@use 'slider-input';
 
 .tutor-backend, .tutor-screen-frontend-dashboard {
-    @import './ui-date-picker.scss';
+    @include meta.load-css('ui-date-picker');
 }
 
 // @todo: to be removed
@@ -26,6 +28,7 @@
     i {
         background-color: #AAAEB5 !important;
     }
+
     color: #AAAEB5 !important;
     cursor: none !important;
     pointer-events: none !important;

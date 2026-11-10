@@ -20,14 +20,15 @@
     &-circle {
         --w: 24px;
         --pd: 3px;
+
         position: relative;
         width: var(--w);
         height: var(--w);
         padding: var(--pd);
         border-radius: 50%;
-        background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, rgba(var(--tutor-color-primary-rgb), 0.15) 100%);
+        background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, rgb(var(--tutor-color-primary-rgb), 0.15) 100%);
     
-        &:before {
+        &::before {
             content: '';
             position: absolute !important;
             inset: calc(0% + var(--pd));

@@ -1,3 +1,5 @@
+@use "../mixins/general-minxins";
+
 .clearfix::after {
 	display: block;
 	clear: both;
@@ -106,13 +108,15 @@
 }
 
 .tutor-line-clamp-1 {
-	@include tutorLineClamp(1);
+	@include general-minxins.tutorLineClamp(1);
 }
+
 .tutor-line-clamp-2 {
-	@include tutorLineClamp(2);
+	@include general-minxins.tutorLineClamp(2);
 }
+
 .tutor-line-clamp-3 {
-	@include tutorLineClamp(3);
+	@include general-minxins.tutorLineClamp(3);
 }
 
 // responsive image

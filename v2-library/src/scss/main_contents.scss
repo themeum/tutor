@@ -1,14 +1,14 @@
 // Reusables loader, (variables and mixins)
-@import './reusables.scss';
+@use 'reusables';
 
 // Core
-@import './core/index.scss';
+@use 'core/index';
 
 // Legacy common styles
-@import './legacy/index.scss';
+@use 'legacy/index' as index2;
 
 // ui elements
-@import './elements/index';
+@use 'elements/index' as index3;
 
 // ui components
-@import './components/index';
+@use 'components/index' as index4;

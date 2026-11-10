@@ -1,13 +1,17 @@
+@use "../mixins/breakpoints";
+@use "../mixins/grid";
+@use "variables";
+
 // Row
 //
 // Rows contain your columns.
 
-@if $enable-grid-classes {
+@if variables.$enable-grid-classes {
   .tutor-row {
-    @include make-row();
+    @include grid.make-row();
 
     > * {
-      @include make-col-ready();
+      @include grid.make-col-ready();
     }
   }
 }
@@ -17,16 +21,15 @@
 //
 // Common styles for small and large grid columns
 
-@if $enable-grid-classes {
-  @include make-grid-columns();
+@if variables.$enable-grid-classes {
+  @include grid.make-grid-columns();
 }
 
 
 // grids
 .tutor-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	grid-gap: 32px;
+	gap: 32px;
 	grid-template-rows: min-content;
 	grid-template-columns: repeat(1, 1fr);
 
@@ -35,31 +38,31 @@
 	}
 
 	&-2 {
-		@include media-breakpoint-up(md) {
+		@include breakpoints.media-breakpoint-up(md) {
 			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 
 	&-3 {
-		@include media-breakpoint-up(md) {
+		@include breakpoints.media-breakpoint-up(md) {
 			grid-template-columns: repeat(2, 1fr);
 		}
 
-		@include media-breakpoint-up(lg) {
+		@include breakpoints.media-breakpoint-up(lg) {
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 
 	&-4 {
-		@include media-breakpoint-up(md) {
+		@include breakpoints.media-breakpoint-up(md) {
 			grid-template-columns: repeat(2, 1fr);
 		}
 
-		@include media-breakpoint-up(lg) {
+		@include breakpoints.media-breakpoint-up(lg) {
 			grid-template-columns: repeat(3, 1fr);
 		}
 
-		@include media-breakpoint-up(xl) {
+		@include breakpoints.media-breakpoint-up(xl) {
 			grid-template-columns: repeat(4, 1fr);
 		}
 	}
