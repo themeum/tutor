@@ -327,6 +327,7 @@ const styles = {
     }
   `,
   questionTitle: ({ isActive = false }: { isActive: boolean }) => css`
+    ${styleUtils.text.wrap};
     ${typography.small(isActive ? 'medium' : 'regular')};
     color: ${isActive ? colorTokens.text.brand : colorTokens.text.subdued};
     flex-grow: 1;
