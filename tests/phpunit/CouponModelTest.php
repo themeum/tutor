@@ -1,7 +1,7 @@
 <?php
 namespace TutorTest;
 
-use Tutor\Database\Schema;
+use Tutor\Database\Tables\CouponUsagesTable;
 use Tutor\Models\CouponModel;
 use TUTOR\Tutor;
 
@@ -127,7 +127,7 @@ class CouponModelTest extends \WP_UnitTestCase {
 		dbDelta( $coupons_table );
 
 		// 2. Create coupon usages table after tutor_coupons exists.
-		$coupon_usage_table = Schema::get_coupon_usages_schema( false );
+		$coupon_usage_table = CouponUsagesTable::get_schema( false );
 		dbDelta( $coupon_usage_table );
 	}
 

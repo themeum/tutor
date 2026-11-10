@@ -11,8 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Core\DB;
-use Tutor\Database\Schema;
-use Tutor\Database\TableManager;
+use Tutor\Database\Tables\CouponUsagesTable;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
@@ -344,7 +343,7 @@ class Upgrader {
 	 */
 	public function upgrade_to_4_2_0() {
 		if ( DB::has_table( 'tutor_coupon_usages' ) && ! DB::has_column( 'tutor_coupon_usages', 'order_id' ) ) {
-			TableManager::create_table( Schema::get_coupon_usages_schema( false ) );
+			CouponUsagesTable::create( false );
 		}
 	}
 
@@ -362,8 +361,8 @@ class Upgrader {
 			$addon_config = tutor_utils()->get_addon_config( 'tutor-pro/addons/tutor-email/tutor-email.php' );
 			$is_enable    = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
 
-			if ( $is_enable && class_exists( \TutorPro\Database\Schema::class ) ) {
-				TableManager::create_table( \TutorPro\Database\Schema::get_email_queue_table_schema( false ) );
+			if ( $is_enable && class_exists( \TutorPro\Database\Tables\EmailQueueTable::class ) ) {
+				\TutorPro\Database\Tables\EmailQueueTable::create( false );
 			}
 		}
 	}

@@ -13,40 +13,83 @@
 
 namespace Tutor\Database;
 
-use Tutor\Core\DB;
+use Tutor\Core\Table;
+use Tutor\Database\Tables\QuizAttemptsTable;
+use Tutor\Database\Tables\QuizAttemptAnswersTable;
+use Tutor\Database\Tables\QuizQuestionsTable;
+use Tutor\Database\Tables\QuizQuestionAnswersTable;
+use Tutor\Database\Tables\EarningsTable;
+use Tutor\Database\Tables\WithdrawsTable;
+use Tutor\Database\Tables\OrdersTable;
+use Tutor\Database\Tables\OrdermetaTable;
+use Tutor\Database\Tables\OrderItemsTable;
+use Tutor\Database\Tables\OrderItemmetaTable;
+use Tutor\Database\Tables\CouponsTable;
+use Tutor\Database\Tables\CouponApplicationsTable;
+use Tutor\Database\Tables\CouponUsagesTable;
+use Tutor\Database\Tables\CartsTable;
+use Tutor\Database\Tables\CartItemsTable;
+use Tutor\Database\Tables\CustomersTable;
+use Tutor\Database\Tables\SchedulerTable;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class SchemaManager
+ * Class TableManager
  *
  * @since 4.3.0
  */
 class TableManager {
+
 	/**
-	 * Core tables created on initial installation or new subsite provisioning.
+	 * Core table classes created on initial installation or new subsite provisioning.
 	 *
-	 * @var array<string> table name.
+	 * @var array<class-string<\Tutor\Core\Table>>
 	 */
-	const CORE_TABLES = array(
-		'tutor_quiz_attempts',
-		'tutor_quiz_attempt_answers',
-		'tutor_quiz_questions',
-		'tutor_quiz_question_answers',
-		'tutor_earnings',
-		'tutor_withdraws',
-		'tutor_orders',
-		'tutor_ordermeta',
-		'tutor_order_items',
-		'tutor_order_itemmeta',
-		'tutor_coupons',
-		'tutor_coupon_applications',
-		'tutor_coupon_usages',
-		'tutor_carts',
-		'tutor_cart_items',
-		'tutor_customers',
-		'tutor_scheduler',
+	const CORE_TABLE_CLASSES = array(
+		QuizAttemptsTable::class,
+		QuizAttemptAnswersTable::class,
+		QuizQuestionsTable::class,
+		QuizQuestionAnswersTable::class,
+		EarningsTable::class,
+		WithdrawsTable::class,
+		OrdersTable::class,
+		OrdermetaTable::class,
+		OrderItemsTable::class,
+		OrderItemmetaTable::class,
+		CouponsTable::class,
+		CouponApplicationsTable::class,
+		CouponUsagesTable::class,
+		CartsTable::class,
+		CartItemsTable::class,
+		CustomersTable::class,
+		SchedulerTable::class,
 	);
+
+	/**
+	 * Get all table classes (Core + Addons + Pro via filter).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array<class-string<\Tutor\Core\Table>> Array of table classes.
+	 */
+	public static function get_table_classes(): array {
+		$core_classes = self::CORE_TABLE_CLASSES;
+
+		/**
+		 * Filter to register additional addon tables from Pro and third-party addons.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param array<class-string<\Tutor\Core\Table>> $all_classes Array of table classes.
+		 */
+		$all_classes = apply_filters( 'tutor_database_table_classes', $core_classes );
+
+		// Filter is instance of Table.
+		$all_classes = array_filter( $all_classes, fn( $class ) => $class instanceof Table );
+
+		return $all_classes;
+	}
 
 	/**
 	 * Get all known tables (Core + Addons + Pro via filter).
@@ -54,17 +97,22 @@ class TableManager {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @return array<string, string> Key => base name
+	 * @return array<string> Array of base table names.
 	 */
-	public static function get_tables(): array {
+	public static function get_table_names(): array {
+		$table_names = array_map(
+			fn( $class ) => $class::get_name(),
+			static::get_table_classes()
+		);
+
 		/**
 		 * Filter to register additional addon tables from Pro and third-party addons.
 		 *
 		 * @since 4.3.0
 		 *
-		 * @param array<string, string> $all_tables Array of key => base table name.
+		 * @param array<string> $all_tables Array of base table names.
 		 */
-		return apply_filters( 'tutor_database_tables', self::CORE_TABLES );
+		return apply_filters( 'tutor_database_tables', $table_names );
 	}
 
 	/**
@@ -96,10 +144,8 @@ class TableManager {
 	 * @return void
 	 */
 	public static function create_core_tables( bool $include_constraints = true ): void {
-		$schemas = Schema::get_core_schemas( $include_constraints );
-
-		foreach ( $schemas as $sql ) {
-			self::create_table( $sql );
+		foreach ( self::CORE_TABLE_CLASSES as $table_class ) {
+			$table_class::create( $include_constraints );
 		}
 
 		/**
@@ -122,14 +168,12 @@ class TableManager {
 	 */
 	public static function drop_tables(): void {
 		global $wpdb;
-
-		$tables = self::get_tables();
+		$table_names = self::get_table_names();
 
 		// Temporarily disable FK checks to cleanly drop without constraint order issues.
 		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
 
-		foreach ( $tables as $base_name ) {
-			$table_name = DB::prepare_table_name( $base_name );
+		foreach ( $table_names as $table_name ) {
 			$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); //phpcs:ignore
 		}
 
@@ -143,4 +187,3 @@ class TableManager {
 		do_action( 'tutor_database_tables_dropped' );
 	}
 }
-

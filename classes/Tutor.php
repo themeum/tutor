@@ -10,20 +10,17 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\DB;
 use Tutor\Core\Input;
 use Tutor\Core\Singleton;
-use Tutor\Database\Schema;
 use Tutor\Database\TableManager;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Tutor final class
@@ -460,10 +457,16 @@ final class Tutor extends Singleton {
 		 *
 		 * @since 1.4.2
 		 * @since 4.3.0 Dynamically registered from TableRegistry with multisite awareness.
+		 * @since 4.3.0 Registering tables dynamically like before.
+		 * Example:
+		 * $wpdb->tutor_courses = $wpdb->prefix . 'tutor_courses';
+		 * $wpdb->tutor_lessons = $wpdb->prefix . 'tutor_lessons';
+		 * $wpdb->tutor_quizzes = $wpdb->prefix . 'tutor_quizzes';
+		 * ... etc
 		 */
 		global $wpdb;
-		foreach ( TableManager::get_tables() as $table_name ) {
-			$wpdb->$table_name = DB::prepare_table_name( $table_name );
+		foreach ( TableManager::get_table_classes() as $table_class ) {
+			$wpdb->{$table_class::get_base_name()} = $table_class::get_name();
 		}
 
 		/**
