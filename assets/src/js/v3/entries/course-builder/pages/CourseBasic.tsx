@@ -140,6 +140,7 @@ const CourseBasic = () => {
                         label: __('Classic Editor', 'tutor'),
                         link: '',
                       });
+                      form.setValue('post_content', response.data.post_content);
                       return response;
                     });
                 }}
