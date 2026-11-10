@@ -93,6 +93,7 @@
     "storybook-react-rsbuild": "^3.6.1",
     "style-loader": "^4.0.0",
     "stylelint": "^17.16.0",
+    "stylelint-config-standard-scss": "17.0.0",
     "svgo": "^4.1.0",
     "tsx": "^4.23.15",
     "typescript-eslint": "8.72.0",

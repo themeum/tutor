@@ -6,10 +6,9 @@
 
 @mixin tutor-flex($direction: row, $align: stretch, $justify: flex-start, $wrap: nowrap) {
   display: flex;
-  flex-direction: $direction;
+  flex-flow: $direction $wrap;
   align-items: $align;
   justify-content: $justify;
-  flex-wrap: $wrap;
 }
 
 @mixin tutor-flex-center {
@@ -57,7 +56,7 @@
   padding: 0 !important;
   margin: -1px !important;
   overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
   white-space: nowrap !important;
   border: 0 !important;
 }
@@ -75,7 +74,7 @@
   @if map.has-key($tutor-breakpoints, $breakpoint) {
     $value: map.get($tutor-breakpoints, $breakpoint);
 
-    @if $value >0 {
+    @if $value > 0 {
       @media (min-width: $value) {
         @content;
       }
@@ -91,7 +90,7 @@
   @if map.has-key($tutor-breakpoints, $breakpoint) {
     $value: map.get($tutor-breakpoints, $breakpoint);
 
-    @if $value >0 {
+    @if $value > 0 {
       @media (max-width: $value) {
         @content;
       }
@@ -127,7 +126,6 @@
 @mixin tutor-grid-auto-columns($min, $max, $selector: '*') {
   display: grid;
   gap: $tutor-spacing-6;
-
   grid-template-columns: repeat($min, 1fr);
 
   @for $i from ($min + 1) through $max {
@@ -217,7 +215,7 @@
   display: flex;
   gap: $gap;
 
-  @if $side ==start {
+  @if $side == start {
     flex-direction: row;
 
     [dir='rtl'] & {

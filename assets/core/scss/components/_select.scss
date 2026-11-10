@@ -4,11 +4,13 @@
 .tutor-select {
   position: relative;
   width: 100%;
+
   @include tutor-typography(small);
 
   // Trigger button
   .tutor-select-trigger {
     @include tutor-flex(row, center, space-between);
+
     width: 100%;
     min-height: 40px;
     gap: $tutor-spacing-3;
@@ -17,17 +19,22 @@
     border: 1px solid $tutor-border-idle;
     border-color: $tutor-input-border-color;
     border-radius: $tutor-input-radius;
+
     --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
+
     box-shadow: var(--tutor-input-border-shadow-current);
     cursor: pointer;
     text-align: start;
+
     @include tutor-transition();
 
     &:hover,
     &:focus {
       @include tutor-focus-ring();
+
       border-color: $tutor-border-brand-tertiary;
       background-color: $tutor-surface-l1;
+
       --tutor-input-border-shadow-current: none;
     }
 
@@ -38,6 +45,7 @@
     &[disabled] {
       background-color: $tutor-surface-l1-hover;
       cursor: not-allowed;
+
       --tutor-input-border-shadow-current: none;
     }
 
@@ -47,6 +55,7 @@
 
       &:focus {
         @include tutor-focus-ring('error');
+
         border-color: $tutor-border-error;
       }
     }
@@ -55,6 +64,7 @@
   // Trigger content
   &-value {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-2;
     flex: 1;
     min-width: 0;
@@ -62,6 +72,7 @@
 
     &-text {
       @include tutor-typography(small);
+
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -74,7 +85,9 @@
 
     &-icon {
       flex-shrink: 0;
+
       @include tutor-flex(row, center, center);
+
       color: $tutor-icon-secondary;
       width: 16px;
       height: 16px;
@@ -84,6 +97,7 @@
   // Multiple selected items
   &-tags {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-2;
     flex-wrap: wrap;
     flex: 1;
@@ -92,6 +106,7 @@
 
   &-tag {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-2;
     padding: $tutor-spacing-1 $tutor-spacing-2;
     background: $tutor-surface-l2;
@@ -109,9 +124,11 @@
     &-remove {
       @include tutor-button-reset;
       @include tutor-flex(row, center, center);
+
       padding: 0;
       color: $tutor-icon-secondary;
       cursor: pointer;
+
       @include tutor-transition(color);
 
       &:hover {
@@ -123,6 +140,7 @@
   // Actions (clear, arrow)
   &-actions {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-2;
     flex-shrink: 0;
   }
@@ -132,16 +150,20 @@
     @include tutor-button-variant('ghost');
     @include tutor-flex(row, center, center);
     @include margin-end($tutor-spacing-2);
+
     padding: $tutor-spacing-1;
     border-radius: $tutor-radius-sm;
     color: $tutor-icon-secondary;
     cursor: pointer;
+
     @include tutor-transition(color);
   }
 
   &-arrow {
     @include tutor-flex(row, center, center);
+
     color: $tutor-icon-secondary;
+
     @include tutor-transition(transform);
 
     &[data-open='true'] {
@@ -161,8 +183,10 @@
   // Dropdown menu
   &-menu {
     position: absolute;
+
     @include left(0);
     @include right(0);
+
     z-index: $tutor-z-dropdown;
     background: $tutor-surface-l1;
     border: $tutor-popover-border;
@@ -191,15 +215,19 @@
     &-icon {
       position: absolute;
       top: 50%;
+
       @include left($tutor-spacing-7);
+
       transform: translateY(-50%);
       color: $tutor-icon-secondary;
       pointer-events: none;
+
       @include tutor-flex(row, center, center);
     }
 
     .tutor-select-search-input {
       @include tutor-input-base();
+
       padding-block: $tutor-spacing-3;
       padding-inline-start: $tutor-spacing-9;
     }
@@ -233,7 +261,9 @@
   &-group {
     &-label {
       padding: $tutor-spacing-3 $tutor-spacing-5;
+
       @include tutor-typography(tiny, semibold, subdued);
+
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -246,15 +276,19 @@
   // Single option
   &-option {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-3;
     padding: $tutor-spacing-4 $tutor-spacing-5;
     cursor: pointer;
     position: relative;
+
     @include tutor-transition(background-color);
 
     &-icon {
       flex-shrink: 0;
+
       @include tutor-flex(row, center, center);
+
       color: $tutor-icon-secondary;
       width: 16px;
       height: 16px;
@@ -267,6 +301,7 @@
 
     &-label {
       @include tutor-typography(small);
+
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -274,6 +309,7 @@
 
     &-description {
       @include tutor-typography(tiny, regular, subdued);
+
       margin-top: $tutor-spacing-1;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -307,6 +343,7 @@
   // Empty state
   &-empty {
     @include tutor-typography(small, regular, subdued);
+
     padding: $tutor-spacing-6 $tutor-spacing-5;
     text-align: center;
   }
@@ -315,6 +352,7 @@
   &-loading {
     @include tutor-typography(small, regular, subdued);
     @include tutor-flex(row, center, center);
+
     gap: $tutor-spacing-3;
     padding: $tutor-spacing-6 $tutor-spacing-5;
 
@@ -341,11 +379,13 @@
   .tutor-select-trigger {
     min-height: 32px;
     padding: $tutor-spacing-2 $tutor-spacing-3;
+
     @include tutor-typography(tiny);
   }
 
   .tutor-select-option {
     padding: $tutor-spacing-2 $tutor-spacing-4;
+
     @include tutor-typography(tiny);
   }
 }
@@ -354,11 +394,13 @@
   .tutor-select-trigger {
     min-height: 48px;
     padding: $tutor-spacing-5 $tutor-spacing-6;
+
     @include tutor-typography(medium);
   }
 
   .tutor-select-option {
     padding: $tutor-spacing-4 $tutor-spacing-6;
+
     @include tutor-typography(medium);
   }
 }

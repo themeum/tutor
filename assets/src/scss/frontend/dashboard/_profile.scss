@@ -4,12 +4,14 @@
 .tutor-user-profile {
   .tutor-profile-card {
     @include tutor-card-base;
+
     border-radius: $tutor-radius-2xl;
     padding: $tutor-spacing-6;
   }
 
   .tutor-profile-card-header {
     @include tutor-flex(row, center, center);
+
     background-color: $tutor-surface-brand-tertiary;
     background-size: cover;
     background-position: center center;
@@ -32,6 +34,7 @@
       @include tutor-button-base();
       @include tutor-button-variant(outline);
       @include tutor-button-size(x-small);
+
       outline: none;
       gap: $tutor-spacing-2;
       position: absolute;
@@ -57,6 +60,7 @@
 
   .tutor-profile-card-body {
     @include tutor-grid(2, $tutor-spacing-21);
+
     position: relative;
 
     @include tutor-breakpoint-down(sm) {
@@ -65,6 +69,7 @@
 
     .tutor-user-profile-title {
       @include tutor-typography(h3, semibold, primary, heading);
+
       margin-top: $tutor-spacing-none;
       margin-bottom: $tutor-spacing-2;
 
@@ -79,6 +84,7 @@
 
     .tutor-user-profile-social {
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
 
@@ -88,6 +94,7 @@
         outline: none;
         box-shadow: none;
         color: $tutor-text-primary;
+
         @include tutor-transition(color);
 
         &:hover {
@@ -98,6 +105,7 @@
 
     .tutor-user-profile-bio {
       @include tutor-typography(p2, regular, secondary);
+
       margin-bottom: $tutor-spacing-9;
 
       p {
@@ -124,6 +132,7 @@
 
     .tutor-user-profile-details {
       @include tutor-flex(column, flex-start);
+
       gap: $tutor-spacing-2;
       list-style: none;
       padding: 0;
@@ -155,7 +164,9 @@
 
     .tutor-profile-member-since {
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-2;
+
       @include tutor-typography(tiny, regular, subdued);
 
       @include tutor-breakpoint-up(sm) {
@@ -168,6 +179,7 @@
 
   %bio-toggle-base {
     @include tutor-typography(small);
+
     appearance: none;
     background: $tutor-surface-l1;
     border: none;
@@ -175,7 +187,7 @@
     color: $tutor-text-brand;
     cursor: pointer;
     text-box-trim: trim-both;
-    text-edge: cap alphabetic;
+    text-box-edge: cap alphabetic;
 
     &:focus-visible {
       outline: 2px solid $tutor-text-brand;
@@ -190,6 +202,7 @@
 
   .tutor-bio-toggle-less {
     @extend %bio-toggle-base;
+
     display: inline;
     margin-top: $tutor-spacing-2;
   }
@@ -199,6 +212,7 @@
 
     .tutor-statistic-title {
       @include tutor-typography(h5, semibold, primary, heading);
+
       margin-top: $tutor-spacing-none;
       margin-bottom: $tutor-spacing-4;
     }
@@ -210,6 +224,7 @@
     .tutor-statistic-card {
       @include tutor-card-base;
       @include tutor-flex(row, flex-start);
+
       gap: $tutor-spacing-5;
       background-color: $tutor-surface-l1;
       border: 1px solid $tutor-border-idle;
@@ -236,6 +251,7 @@
 
       &-content {
         @include tutor-flex(column);
+
         gap: $tutor-spacing-1;
       }
 

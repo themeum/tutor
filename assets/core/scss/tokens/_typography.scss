@@ -8,16 +8,16 @@
 $tutor-font-family-heading:
   var(--tutor-font-family-heading, 'Inter'),
   -apple-system,
-  BlinkMacSystemFont,
+  blinkmacsystemfont,
   'Segoe UI',
-  Roboto,
+  roboto,
   sans-serif;
 $tutor-font-family-body:
   var(--tutor-font-family-body, 'Inter'),
   -apple-system,
-  BlinkMacSystemFont,
+  blinkmacsystemfont,
   'Segoe UI',
-  Roboto,
+  roboto,
   sans-serif;
 
 // =============================================================================
@@ -86,7 +86,6 @@ $tutor-font-sizes: (
   tiny-2: $tutor-font-size-tiny-2,
   p3: $tutor-font-size-p3,
 );
-
 $tutor-line-heights: (
   d1: $tutor-line-height-d1,
   h1: $tutor-line-height-h1,
@@ -102,7 +101,6 @@ $tutor-line-heights: (
   tiny-2: $tutor-line-height-tiny-2,
   p3: $tutor-line-height-p3,
 );
-
 $tutor-font-weights: (
   regular: $tutor-font-weight-regular,
   medium: $tutor-font-weight-medium,

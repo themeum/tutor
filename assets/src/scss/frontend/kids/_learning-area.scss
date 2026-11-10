@@ -87,7 +87,7 @@
   .tutor-quiz-submission[data-question-layout-view='question_pagination'] {
     .tutor-quiz-question {
       width: calc(100% - 2px);
-      margin: 1px 1px 0 1px;
+      margin: 1px 1px 0;
     }
   }
 
@@ -120,6 +120,7 @@
     .tutor-text-area {
       --tutor-input-radius: #{$tutor-radius-2xl};
     }
+
     .tutor-quiz-question-option {
       @include tutor-kids-shadow(false, $tutor-border-idle, $tutor-radius-2xl, sm);
 
@@ -129,7 +130,7 @@
 
       &[data-option='dragging'] {
         border-color: $tutor-border-brand;
-        box-shadow: -6px 7px 0px 0px #00000014;
+        box-shadow: -6px 7px 0 0 #00000014;
       }
     }
 

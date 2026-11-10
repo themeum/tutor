@@ -5,6 +5,7 @@
 
 .tutor-learning-sidebar {
   @include tutor-flex(column);
+
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
   padding-bottom: calc(#{$tutor-spacing-6} + 40px);
@@ -15,6 +16,7 @@
   inset-inline-start: 0;
   overflow: hidden;
   z-index: $tutor-z-sidebar;
+
   @include tutor-transition((opacity, transform));
 
   .tutor-has-admin-bar & {
@@ -48,10 +50,9 @@
   }
 
   @include tutor-breakpoint-down(lg) {
-    inset-inline-start: auto;
-    inset-inline-end: 0px;
+    inset-inline: auto 0;
     gap: $tutor-spacing-4;
-    top: 0px;
+    top: 0;
     width: 100%;
     height: 100dvh;
     overflow-y: auto;
@@ -62,7 +63,9 @@
     .tutor-has-site-shell & {
       z-index: $tutor-z-highest;
     }
+
     transform: translateX(100%);
+
     @include tutor-transition(transform, 0.3s);
 
     .tutor-has-admin-bar & {
@@ -78,13 +81,16 @@
   .tutor-learning-sidebar-curriculum {
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
+
     @include tutor-flex(column);
+
     min-height: 0;
     flex-grow: 1;
     overflow: hidden;
 
     .tutor-learning-progress {
       @include tutor-flex(column);
+
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-6 $tutor-spacing-7;
 
@@ -103,6 +109,7 @@
 
     .tutor-learning-nav {
       @include tutor-flex(column);
+
       gap: $tutor-spacing-1;
       padding: $tutor-spacing-6 $tutor-spacing-4;
       flex-grow: 1;
@@ -111,17 +118,20 @@
 
       &-topic {
         @include tutor-flex(column);
+
         gap: $tutor-spacing-1;
 
         .tutor-learning-nav-header {
           @include tutor-flex(row, center);
+
           gap: $tutor-spacing-4;
           padding-block: $tutor-spacing-4;
-          padding-inline-start: $tutor-spacing-5;
-          padding-inline-end: $tutor-spacing-3;
+          padding-inline: $tutor-spacing-5 $tutor-spacing-3;
           cursor: pointer;
           border-radius: $tutor-radius-md;
+
           @include tutor-transition((color, background-color));
+
           outline: none;
 
           &:hover,
@@ -140,6 +150,7 @@
 
             @include tutor-breakpoint-down(lg) {
               @include tutor-flex(row, center);
+
               gap: $tutor-spacing-4;
               margin-inline-start: auto;
             }
@@ -151,7 +162,9 @@
 
           &-arrow {
             @include tutor-flex-center();
+
             color: $tutor-icon-secondary;
+
             @include tutor-transition(transform);
 
             &.is-expanded {
@@ -163,6 +176,7 @@
             &:hover .tutor-learning-nav-header-actions,
             &:focus-visible .tutor-learning-nav-header-actions {
               @include tutor-flex(row, center);
+
               gap: $tutor-spacing-4;
               margin-inline-start: auto;
             }
@@ -204,10 +218,13 @@
         @include tutor-button-reset();
         @include tutor-typography(small, medium, secondary);
         @include tutor-flex(row, flex-start);
+
         gap: $tutor-spacing-4;
         padding: $tutor-spacing-4 $tutor-spacing-5;
         border-radius: $tutor-radius-md;
+
         @include tutor-transition((color, background-color, box-shadow));
+
         position: relative;
         min-height: 40px;
         opacity: 1;
@@ -254,9 +271,11 @@
             color: $tutor-icon-secondary;
           }
         }
+
         &.pending svg {
           color: $tutor-icon-warning-secondary;
         }
+
         &.fail svg {
           color: $tutor-icon-critical;
         }
@@ -283,11 +302,12 @@
     .tutor-sidebar-resizer {
       position: absolute;
       top: -14px;
-      inset-inline-start: 0;
-      inset-inline-end: 0;
+      inset-inline: 0;
       height: 12px;
       cursor: ns-resize;
+
       @include tutor-flex-center();
+
       z-index: $tutor-z-sidebar;
 
       &::before {
@@ -296,6 +316,7 @@
         height: 3px;
         background-color: $tutor-surface-l2;
         border-radius: $tutor-radius-5xl;
+
         @include tutor-transition(background-color);
       }
 
@@ -310,6 +331,7 @@
 
     .tutor-sidebar-restore-dropdown {
       @include tutor-flex(row, center, center);
+
       position: absolute;
       width: 100%;
       inset-inline-start: 0;
@@ -318,6 +340,7 @@
       button {
         @include tutor-button-reset();
         @include tutor-flex(row, center, center);
+
         background-color: $tutor-surface-l1;
         color: $tutor-icon-secondary;
         border-start-start-radius: $tutor-radius-sm;
@@ -334,7 +357,6 @@
           bottom: 0;
           inset-inline-start: -8px;
           background: $tutor-surface-l1;
-
           mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
           -webkit-mask: radial-gradient(circle 8px at top left, transparent 8px, $tutor-surface-l1 8px);
         }
@@ -347,7 +369,6 @@
           bottom: 0;
           inset-inline-end: -8px;
           background: $tutor-surface-l1;
-
           mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
           -webkit-mask: radial-gradient(circle 8px at top right, transparent 8px, $tutor-surface-l1 8px);
         }
@@ -369,11 +390,12 @@
 
     .tutor-learning-pages {
       @include tutor-flex(column);
+
       gap: $tutor-spacing-1;
 
       &:not(:has(.tutor-popover)) {
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: hidden auto;
+
         @include tutor-transition(height, 0.3s);
       }
 
@@ -389,6 +411,7 @@
       &-nav,
       .tutor-popover-body {
         @include tutor-flex(column);
+
         gap: $tutor-spacing-1;
       }
 
@@ -396,15 +419,19 @@
         @include tutor-button-reset();
         @include tutor-typography(small);
         @include tutor-flex(row, center);
+
         gap: $tutor-spacing-5;
         padding: $tutor-spacing-4 $tutor-spacing-5;
         border-radius: $tutor-radius-md;
+
         @include tutor-transition(background-color);
+
         width: 100%;
         position: relative;
 
         svg {
           color: $tutor-icon-idle;
+
           @include tutor-transition(transform, 0.3s);
         }
 
@@ -445,6 +472,7 @@
     z-index: calc($tutor-z-sidebar + 1);
     color: $tutor-icon-secondary;
     transform: translateX(0);
+
     @include tutor-transition(transform);
 
     @include tutor-breakpoint-down(lg) {

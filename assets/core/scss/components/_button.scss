@@ -62,6 +62,7 @@ button.tutor-btn-link,
 a.tutor-btn-link,
 .tutor-btn-link {
   @include tutor-button-variant(link);
+
   box-shadow: none
 }
 
@@ -144,6 +145,7 @@ button.tutor-btn-icon,
 a.tutor-btn-icon,
 .tutor-btn-icon {
   flex-shrink: 0;
+
   @include tutor-button-icon-size(medium);
 
   &.tutor-btn-x-small {

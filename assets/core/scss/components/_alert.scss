@@ -3,6 +3,7 @@
 
 .tutor-alert {
   @include tutor-flex(row, center, space-between);
+
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-4;
   border-radius: $tutor-radius-sm;
@@ -10,6 +11,7 @@
 
   .tutor-alert-content {
     @include tutor-flex(row, start);
+
     gap: $tutor-spacing-3;
   }
 
