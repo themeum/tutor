@@ -167,10 +167,14 @@ class HttpHelper {
 	/**
 	 * Get body data as JSON
 	 *
+	 * @since 4.2.0 param $associative added
+	 *
+	 * @param ?bool $associative True returns arrays, false returns objects, null follows the JSON_OBJECT_AS_ARRAY flag.
+	 *
 	 * @return mixed
 	 */
-	public function get_json() {
-		return json_decode( $this->body );
+	public function get_json( ?bool $associative = null ) {
+		return json_decode( $this->body, $associative );
 	}
 
 	/**

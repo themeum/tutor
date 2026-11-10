@@ -44,7 +44,8 @@
     .tooltip, /*** Default is equivalent to .tip-bottom ***/
     .tooltip.tip-bottom,
     .tooltip.tip-top {
-        inset-inline-start: 50%;
+        /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the tooltip centered in RTL */
+        left: 50%;
         -webkit-transform: translate(-50%, 0);
             -ms-transform: translate(-50%, 0);
                 transform: translate(-50%, 0);
@@ -129,8 +130,9 @@
     .tooltip::after, /*** Default is equivalent to .tip-bottom:after; ***/
     .tooltip.tip-bottom::after,
     .tooltip.tip-top::after {
-        inset-inline-start: 50%;
-        margin-inline-start: -10px;
+        /* stylelint-disable-next-line property-layout-mappings -- margin-left is physical, so left keeps the arrow centered in RTL */
+        left: 50%;
+        margin-left: -10px;
     }
 
     /** Common styles: Up arrow **/

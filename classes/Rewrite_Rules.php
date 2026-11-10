@@ -117,8 +117,9 @@ class Rewrite_Rules extends Tutor_Base {
 	 * @return string
 	 */
 	public function change_lesson_single_url( $post_link, $id = 0 ) {
-		$post             = get_post( $id );
-		$course_base_slug = 'sample-course';
+		$post                  = get_post( $id );
+		$course_base_slug      = 'sample-course';
+		$course_base_permalink = apply_filters( 'tutor_course_permalink_base', $this->course_base_permalink );
 
 		if ( is_object( $post ) && $post->post_type == $this->lesson_post_type ) {
 			// Lesson Permalink.
@@ -129,9 +130,9 @@ class Rewrite_Rules extends Tutor_Base {
 				if ( $course ) {
 					$course_base_slug = $course->post_name;
 				}
-				return home_url( "/{$this->course_base_permalink}/{$course_base_slug}/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
+				return home_url( "/{$course_base_permalink}/{$course_base_slug}/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
 			} else {
-				return home_url( "/{$this->course_base_permalink}/sample-course/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
+				return home_url( "/{$course_base_permalink}/sample-course/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
 			}
 		} elseif ( is_object( $post ) && 'tutor_quiz' === $post->post_type ) {
 			// Quiz Permalink.
@@ -147,9 +148,9 @@ class Rewrite_Rules extends Tutor_Base {
 				}
 
 				$course_post_name = isset( $course->post_name ) ? $course->post_name : 'sample-course';
-				return home_url( "/{$this->course_base_permalink}/{$course_post_name}/{$this->quiz_base_permalink}/{$post->post_name}/" );
+				return home_url( "/{$course_base_permalink}/{$course_post_name}/{$this->quiz_base_permalink}/{$post->post_name}/" );
 			} else {
-				return home_url( "/{$this->course_base_permalink}/sample-course/{$this->quiz_base_permalink}/{$post->post_name}/" );
+				return home_url( "/{$course_base_permalink}/sample-course/{$this->quiz_base_permalink}/{$post->post_name}/" );
 			}
 		}
 		return $post_link;

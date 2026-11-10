@@ -34,6 +34,15 @@ use Tutor\Exceptions\DatabaseException;
 class DB {
 
 	/**
+	 * WordPress database instance.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var \wpdb|null
+	 */
+	protected static $db = null;
+
+	/**
 	 * Table name (with prefix).
 	 *
 	 * @since 4.2.0
@@ -144,6 +153,24 @@ class DB {
 	private $offset_value = 0;
 
 	/**
+	 * Row locking clause (e.g., 'FOR UPDATE').
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var string
+	 */
+	private $lock = '';
+
+	/**
+	 * Transaction nesting level.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var int
+	 */
+	private static $transaction_level = 0;
+
+	/**
 	 * Supported comparison operators.
 	 *
 	 * @since 4.2.0
@@ -169,8 +196,38 @@ class DB {
 	);
 
 	// ─────────────────────────────────────────────
-	// Factory
+	// Factory & Database Accessors
 	// ─────────────────────────────────────────────
+
+	/**
+	 * Get the database instance, falling back to the global $wpdb.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return \wpdb Database instance.
+	 */
+	protected static function get_db(): \wpdb {
+		if ( ! static::$db instanceof \wpdb ) {
+			global $wpdb;
+			static::$db = $wpdb;
+		}
+
+		return static::$db;
+	}
+
+	/**
+	 * Override the database instance (mainly for testing).
+	 * Pass null to reset to the global $wpdb.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param \wpdb|null $db Database instance.
+	 *
+	 * @return void
+	 */
+	public static function set_db( ?\wpdb $db = null ): void {
+		static::$db = $db;
+	}
 
 	/**
 	 * Create a new DB query instance for the given table.
@@ -234,9 +291,8 @@ class DB {
 	 */
 	public function select_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- User-provided expression with bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->raw_columns[] = $expression;
@@ -883,9 +939,8 @@ class DB {
 	 */
 	public function having_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->havings[] = $expression;
@@ -932,9 +987,8 @@ class DB {
 	 */
 	public function order_by_raw( string $expression, array $bindings = array() ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->order_by_clauses[] = $expression;
@@ -1003,6 +1057,38 @@ class DB {
 	}
 
 	// ─────────────────────────────────────────────
+	// Row Locking
+	// ─────────────────────────────────────────────
+
+	/**
+	 * Lock the selected rows for update ('FOR UPDATE').
+	 *
+	 * Appends 'FOR UPDATE' to the query. Locking is held within an active
+	 * transaction. On database engines that do not support row locking
+	 * (such as MyISAM or SQLite), the clause is safely omitted during execution.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return self
+	 */
+	public function lock_for_update(): self {
+		$this->lock = 'FOR UPDATE';
+
+		return $this;
+	}
+
+	/**
+	 * Check whether row locking is applied to the current query instance.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return bool True if lock_for_update has been applied.
+	 */
+	public function is_locked(): bool {
+		return ! empty( $this->lock );
+	}
+
+	// ─────────────────────────────────────────────
 	// Terminal Methods (execute & return results)
 	// ─────────────────────────────────────────────
 
@@ -1016,12 +1102,10 @@ class DB {
 	 * @return array Array of result rows.
 	 */
 	public function get( string $output = 'OBJECT' ): array {
-		global $wpdb;
-
 		$sql = $this->build_select_query();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- SQL built with prepare_value/prepare calls.
-		$results = $wpdb->get_results( $sql, $output );
+		$results = self::get_db()->get_results( $sql, $output );
 
 		return is_array( $results ) ? $results : array();
 	}
@@ -1036,8 +1120,6 @@ class DB {
 	 * @return object|array|null Single row or null if not found.
 	 */
 	public function first( string $output = 'OBJECT' ) {
-		global $wpdb;
-
 		// Temporarily set limit to 1.
 		$saved_limit       = $this->limit_value;
 		$this->limit_value = 1;
@@ -1047,7 +1129,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_row( $sql, $output );
+		return self::get_db()->get_row( $sql, $output );
 	}
 
 	/**
@@ -1060,8 +1142,6 @@ class DB {
 	 * @return int Total matching row count.
 	 */
 	public function count( string $column = '*' ): int {
-		global $wpdb;
-
 		if ( '*' !== $column && ! self::is_valid_column( $column ) ) {
 			$column = '*';
 		}
@@ -1073,9 +1153,11 @@ class DB {
 		$saved_limit    = $this->limit_value;
 		$saved_offset   = $this->offset_value;
 		$saved_distinct = $this->is_distinct;
+		$saved_lock     = $this->lock;
 
 		// Override for count.
 		$this->columns = array();
+		$this->lock    = '';
 
 		if ( $saved_distinct ) {
 			if ( '*' !== $column ) {
@@ -1103,9 +1185,10 @@ class DB {
 		$this->limit_value      = $saved_limit;
 		$this->offset_value     = $saved_offset;
 		$this->is_distinct      = $saved_distinct;
+		$this->lock             = $saved_lock;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return (int) $wpdb->get_var( $sql );
+		return (int) self::get_db()->get_var( $sql );
 	}
 
 	/**
@@ -1126,8 +1209,6 @@ class DB {
 	 * }
 	 */
 	public function paginate( int $per_page, int $current_page = 1, string $output = 'OBJECT' ): array {
-		global $wpdb;
-
 		$current_page = max( 1, $current_page );
 		$per_page     = max( 1, $per_page );
 
@@ -1137,10 +1218,10 @@ class DB {
 		$sql = $this->build_select_query( true );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$results = $wpdb->get_results( $sql, $output );
+		$results = self::get_db()->get_results( $sql, $output );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$total_count = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+		$total_count = (int) self::get_db()->get_var( 'SELECT FOUND_ROWS()' );
 		$total_pages = (int) ceil( $total_count / $per_page );
 
 		return array(
@@ -1162,8 +1243,6 @@ class DB {
 	 * @return mixed|null The column value or null if not found.
 	 */
 	public function value( string $column ) {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return null;
 		}
@@ -1186,7 +1265,7 @@ class DB {
 		$this->limit_value = $saved_limit;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_var( $sql );
+		return self::get_db()->get_var( $sql );
 	}
 
 	/**
@@ -1299,16 +1378,16 @@ class DB {
 	 * @return int Inserted row ID.
 	 */
 	public function insert( array $data, array $format = array() ): int {
-		global $wpdb;
+		$db = self::get_db();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$result = $wpdb->insert( $this->table, $data, ! empty( $format ) ? $format : null );
+		$result = $db->insert( $this->table, $data, ! empty( $format ) ? $format : null );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
-		return $wpdb->insert_id;
+		return $db->insert_id;
 	}
 
 	/**
@@ -1326,8 +1405,6 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function insert_multiple( array $rows ): bool {
-		global $wpdb;
-
 		if ( empty( $rows ) ) {
 			return false;
 		}
@@ -1363,11 +1440,13 @@ class DB {
 
 		$sql = "INSERT INTO {$this->table} ({$column_list}) VALUES " . implode( ', ', $value_groups );
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline via prepare_value().
-		$result = $wpdb->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return true;
@@ -1388,8 +1467,6 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function update( array $data ): bool {
-		global $wpdb;
-
 		if ( empty( $data ) ) {
 			return false;
 		}
@@ -1421,11 +1498,13 @@ class DB {
 			$sql .= " WHERE {$where_clause}";
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Values prepared inline.
-		$result = $wpdb->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return true;
@@ -1444,8 +1523,6 @@ class DB {
 	 * @return int Number of affected rows.
 	 */
 	public function delete(): int {
-		global $wpdb;
-
 		$where_clause = $this->build_where_sql();
 
 		if ( ! empty( $this->alias ) ) {
@@ -1458,11 +1535,13 @@ class DB {
 			$sql .= " WHERE {$where_clause}";
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WHERE values prepared inline.
-		$result = $wpdb->query( $sql );
+		$result = $db->query( $sql );
 
 		if ( false === $result ) {
-			throw new DatabaseException( esc_html( $wpdb->last_error ) );
+			throw new DatabaseException( esc_html( $db->last_error ) );
 		}
 
 		return (int) $result;
@@ -1483,12 +1562,11 @@ class DB {
 	 * @return string The generated SQL string.
 	 */
 	public function to_sql(): string {
-		global $wpdb;
-
 		$sql = $this->build_select_query();
+		$db  = self::get_db();
 
-		if ( isset( $wpdb ) && method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
-			return $wpdb->remove_placeholder_escape( $sql );
+		if ( isset( $db ) && method_exists( $db, 'remove_placeholder_escape' ) ) {
+			return $db->remove_placeholder_escape( $sql );
 		}
 
 		return $sql;
@@ -1515,8 +1593,6 @@ class DB {
 	 * @return self
 	 */
 	private function add_where( string $column, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return $this;
 		}
@@ -1625,14 +1701,14 @@ class DB {
 	 * @return self
 	 */
 	private function add_where_like( string $column, string $value, string $type, string $boolean ): self {
-		global $wpdb;
-
 		if ( ! self::is_valid_column( $column ) ) {
 			return $this;
 		}
 
+		$db = self::get_db();
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column validated, type is hardcoded.
-		$sql = $wpdb->prepare( "{$column} {$type} %s", '%' . $wpdb->esc_like( $value ) . '%' );
+		$sql = $db->prepare( "{$column} {$type} %s", '%' . $db->esc_like( $value ) . '%' );
 
 		$this->wheres[] = array(
 			'sql'     => $sql,
@@ -1655,9 +1731,8 @@ class DB {
 	 */
 	private function add_where_raw( string $expression, array $bindings, string $boolean ): self {
 		if ( ! empty( $bindings ) ) {
-			global $wpdb;
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Raw expression with user-controlled bindings.
-			$expression = $wpdb->prepare( $expression, $bindings );
+			$expression = self::get_db()->prepare( $expression, $bindings );
 		}
 
 		$this->wheres[] = array(
@@ -1726,6 +1801,10 @@ class DB {
 
 		if ( ! empty( $limit ) ) {
 			$parts[] = $limit;
+		}
+
+		if ( ! empty( $this->lock ) ) {
+			$parts[] = $this->lock;
 		}
 
 		return implode( ' ', $parts );
@@ -1957,18 +2036,18 @@ class DB {
 	 * @return string Escaped SQL value literal.
 	 */
 	public static function prepare_value( $value ): string {
-		global $wpdb;
-
 		if ( is_null( $value ) ) {
 			return 'NULL';
 		}
 
+		$db = self::get_db();
+
 		if ( is_bool( $value ) ) {
-			return $wpdb->prepare( '%d', $value ? 1 : 0 );
+			return $db->prepare( '%d', $value ? 1 : 0 );
 		}
 
 		if ( is_int( $value ) ) {
-			return $wpdb->prepare( '%d', $value );
+			return $db->prepare( '%d', $value );
 		}
 
 		if ( is_float( $value ) ) {
@@ -1977,12 +2056,12 @@ class DB {
 			if ( false !== $dot_pos ) {
 				$decimals = strlen( substr( $str_val, $dot_pos + 1 ) );
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				return $wpdb->prepare( '%.' . $decimals . 'f', $value );
+				return $db->prepare( '%.' . $decimals . 'f', $value );
 			}
-			return $wpdb->prepare( '%f', $value );
+			return $db->prepare( '%f', $value );
 		}
 
-		return $wpdb->prepare( '%s', $value );
+		return $db->prepare( '%s', $value );
 	}
 
 	/**
@@ -2015,9 +2094,8 @@ class DB {
 	 * @return string Prefixed table name.
 	 */
 	public static function prepare_table_name( string $table ): string {
-		global $wpdb;
-
-		$prefix = isset( $wpdb->prefix ) ? $wpdb->prefix : '';
+		$db     = self::get_db();
+		$prefix = isset( $db->prefix ) ? $db->prefix : '';
 		if ( ! empty( $prefix ) && 0 !== strpos( $table, $prefix ) ) {
 			return $prefix . $table;
 		}
@@ -2033,9 +2111,9 @@ class DB {
 	 * @return string Table prefix.
 	 */
 	public static function get_table_prefix(): string {
-		global $wpdb;
+		$db = self::get_db();
 
-		return isset( $wpdb->prefix ) ? $wpdb->prefix : '';
+		return isset( $db->prefix ) ? $db->prefix : '';
 	}
 
 	/**
@@ -2046,8 +2124,299 @@ class DB {
 	 * @return string Last executed SQL query.
 	 */
 	public static function get_last_query(): string {
-		global $wpdb;
+		$db = self::get_db();
 
-		return isset( $wpdb->last_query ) ? $wpdb->last_query : '';
+		return isset( $db->last_query ) ? $db->last_query : '';
+	}
+
+	// ─────────────────────────────────────────────
+	// Schema Validation Utilities
+	// ─────────────────────────────────────────────
+
+	/**
+	 * Check whether a table exists in the database.
+	 *
+	 * Handles both prefixed and non-prefixed table names safely without
+	 * SQL injection vulnerability.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table Table name to check.
+	 *
+	 * @return bool True if table exists, false otherwise.
+	 */
+	public static function has_table( string $table ): bool {
+		return null !== self::resolve_existing_table( $table );
+	}
+
+	/**
+	 * Check whether a specific column exists in a table.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table  Table name.
+	 * @param string $column Column name to check.
+	 *
+	 * @return bool True if column exists, false otherwise.
+	 */
+	public static function has_column( string $table, string $column ): bool {
+		return self::has_columns( $table, array( $column ) );
+	}
+
+	/**
+	 * Check whether all specified columns exist in a table.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table   Table name.
+	 * @param array  $columns Array of column names to check.
+	 *
+	 * @return bool True if all columns exist, false otherwise.
+	 */
+	public static function has_columns( string $table, array $columns ): bool {
+		if ( empty( $columns ) ) {
+			return false;
+		}
+
+		$table_name = self::resolve_existing_table( $table );
+		if ( null === $table_name ) {
+			return false;
+		}
+
+		foreach ( $columns as $column ) {
+			if ( ! is_string( $column ) || ! self::is_valid_identifier( $column ) ) {
+				return false;
+			}
+		}
+
+		$db = self::get_db();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$existing = $db->get_col( "SHOW COLUMNS FROM `{$table_name}`" );
+		if ( empty( $existing ) ) {
+			return false;
+		}
+
+		$existing = array_map( 'strtolower', $existing );
+		$columns  = array_map( 'strtolower', $columns );
+
+		return empty( array_diff( $columns, $existing ) );
+	}
+
+	/**
+	 * Internal helper to resolve an existing table name in the database.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table Table name identifier.
+	 *
+	 * @return string|null Resolved existing table name or null if invalid or not found.
+	 */
+	private static function resolve_existing_table( string $table ): ?string {
+		$table = trim( $table );
+		if ( '' === $table ) {
+			return null;
+		}
+
+		// Check prefixed table name first.
+		$prefixed = self::prepare_table_name( $table );
+		if ( self::is_valid_identifier( $prefixed ) && self::table_exists_in_db( $prefixed ) ) {
+			return $prefixed;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Internal helper to query MySQL for table existence.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $table_name Validated table identifier.
+	 *
+	 * @return bool True if table exists in database.
+	 */
+	private static function table_exists_in_db( string $table_name ): bool {
+		$db = self::get_db();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $db->get_var(
+			$db->prepare(
+				'SHOW TABLES LIKE %s',
+				$db->esc_like( $table_name )
+			)
+		);
+
+		return null !== $result && 0 === strcasecmp( $result, $table_name );
+	}
+
+	// ─────────────────────────────────────────────
+	// Transaction Management
+	// ─────────────────────────────────────────────
+
+	/**
+	 * Start a database transaction.
+	 *
+	 * Supports nested transactions using savepoints.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @throws DatabaseException If the transaction or savepoint cannot be started.
+	 *
+	 * @return bool True on success.
+	 */
+	public static function begin_transaction(): bool {
+		$db  = self::get_db();
+		$sql = 0 === self::$transaction_level
+		? 'START TRANSACTION'
+		: 'SAVEPOINT trans_' . self::$transaction_level;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		if ( false === $db->query( $sql ) ) {
+			throw new DatabaseException( esc_html( $db->last_error ) );
+		}
+
+		++self::$transaction_level;
+
+		return true;
+	}
+
+	/**
+	 * Commit the active database transaction.
+	 *
+	 * If nested, releases the current savepoint. The level is only decremented
+	 * after the query succeeds, so a failed commit can still be rolled back.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @throws DatabaseException If the commit or savepoint release fails.
+	 *
+	 * @return bool True on success, false if no transaction is active.
+	 */
+	public static function commit(): bool {
+		if ( self::$transaction_level <= 0 ) {
+			return false;
+		}
+
+		$db  = self::get_db();
+		$sql = 1 === self::$transaction_level
+		? 'COMMIT'
+		: 'RELEASE SAVEPOINT trans_' . ( self::$transaction_level - 1 );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		if ( false === $db->query( $sql ) ) {
+			throw new DatabaseException( esc_html( $db->last_error ) );
+		}
+
+		--self::$transaction_level;
+
+		return true;
+	}
+
+	/**
+	 * Roll back the active database transaction.
+	 *
+	 * If nested, rolls back to the current savepoint. A failed top-level
+	 * rollback still resets the level, since the transaction is unusable anyway
+	 * (typically the connection is gone).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @throws DatabaseException If the rollback fails.
+	 *
+	 * @return bool True on success, false if no transaction is active.
+	 */
+	public static function rollback(): bool {
+		if ( self::$transaction_level <= 0 ) {
+			return false;
+		}
+
+		$db           = self::get_db();
+		$is_top_level = 1 === self::$transaction_level;
+		$sql          = $is_top_level
+		? 'ROLLBACK'
+		: 'ROLLBACK TO SAVEPOINT trans_' . ( self::$transaction_level - 1 );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$result = $db->query( $sql );
+
+		if ( $is_top_level || false !== $result ) {
+			--self::$transaction_level;
+		}
+
+		if ( false === $result ) {
+			throw new DatabaseException( esc_html( $db->last_error ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Execute a callback within a database transaction.
+	 *
+	 * Automatically commits on success and rolls back on exception.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param callable $callback Operation(s) to execute within the transaction.
+	 *
+	 * @throws \Throwable If the callback or transaction fails.
+	 *
+	 * @return mixed The return value of the callback.
+	 */
+	public static function transaction( callable $callback ) {
+		self::begin_transaction();
+
+		try {
+			$result = $callback();
+			self::commit();
+
+			return $result;
+		} catch ( \Throwable $e ) {
+			try {
+				self::rollback();
+			} catch ( \Throwable $rollback_exception ) {
+				// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Preserve the original exception.
+				unset( $rollback_exception );
+			}
+
+			throw $e;
+		}
+	}
+
+	/**
+	 * Check whether there is an active database transaction.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return bool True if a transaction is currently active.
+	 */
+	public static function in_transaction(): bool {
+		return self::$transaction_level > 0;
+	}
+
+	/**
+	 * Get the current transaction nesting level.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return int 0 if outside a transaction, >= 1 if inside one.
+	 */
+	public static function transaction_level(): int {
+		return self::$transaction_level;
+	}
+
+	/**
+	 * Reset the internal nesting counter.
+	 *
+	 * Only resets the PHP-side counter, it does not touch the database. If a
+	 * transaction is actually open, it stays open. Intended for unit tests.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public static function reset_transaction_state(): void {
+		self::$transaction_level = 0;
 	}
 }

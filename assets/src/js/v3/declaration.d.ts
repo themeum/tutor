@@ -3,6 +3,7 @@ declare module '*.jpg';
 declare module '*.svg';
 declare module '*.gif';
 declare module '*.webp';
+declare module '*.css';
 
 interface Window {
   tutor_get_nonce_data: (sendKeyValue?: boolean) => Record<string, string> | { key: string; value: string };

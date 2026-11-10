@@ -67,7 +67,7 @@ const renderFilterFromState = (filter_container) => {
     // Loop through filter params array and change element state like check/uncheck/field value based on the filter
     for (let k in filters) {
         let value = filters[k];
-        let element = filter_container.find('[name="' + k + '"]');
+        let element = filter_container.find('[name]').filter((_, el) => el.name === k);
 
         if (element.eq(0).attr('type') == 'checkbox') {
             let values = !Array.isArray(value) ? [value] : value;

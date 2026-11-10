@@ -16,6 +16,7 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Options_V2;
 use Tutor\Traits\JsonResponse;

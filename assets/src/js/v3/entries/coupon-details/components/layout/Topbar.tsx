@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -35,6 +35,7 @@ function Topbar() {
 
   const form = useFormContext<Coupon>();
   const coupon = form.getValues();
+  const couponStatus = useWatch({ control: form.control, name: 'coupon_status' }) ?? coupon.coupon_status ?? 'active';
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
@@ -66,8 +67,8 @@ function Topbar() {
                 <h4 css={styles.headerTitle}>
                   {courseId ? __('Update Coupon', 'tutor') : __('Create Coupon', 'tutor')}
                 </h4>
-                <TutorBadge variant={statusVariant[coupon.coupon_status]}>
-                  {makeFirstCharacterUpperCase(coupon.coupon_status)}
+                <TutorBadge variant={statusVariant[couponStatus]}>
+                  {makeFirstCharacterUpperCase(couponStatus)}
                 </TutorBadge>
               </div>
               <Show

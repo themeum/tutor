@@ -38,6 +38,9 @@ const createSwcLoaderOptions = (isDevelopment) => ({
         refresh: false,
         importSource: '@emotion/react',
       },
+      reactCompiler: {
+        target: '18',
+      },
     },
     experimental: {
       plugins: [
@@ -248,10 +251,12 @@ const createConfig = (env, options) => {
         new rspack.SwcJsMinimizerRspackPlugin({
           extractComments: false,
           minimizerOptions: {
-            compress: false,
+            compress: {
+              conditionals: false,
+            },
             ecma: 2015,
             mangle: {
-              reserved: ['__'],
+              reserved: ['__', '_x', '_n', '_nx'],
             },
             format: {
               comments: /translators/i,

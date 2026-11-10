@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
@@ -140,7 +140,8 @@ const LessonModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
+  const isFormDirty = form.formState.isDirty;
+  const isLessonPreviewEnabled = useWatch({ control: form.control, name: 'lesson_preview' });
 
   const hasRightSidebar = Boolean(
     contentDripType !== '' ||
@@ -597,7 +598,7 @@ const LessonModal = ({
                     />
                   )}
                 />
-                <Show when={form.watch('lesson_preview')}>
+                <Show when={isLessonPreviewEnabled}>
                   <div css={styles.previewInfo}>
                     {
                       // prettier-ignore

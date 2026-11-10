@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import type { UseMutationResult } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -264,7 +264,8 @@ const FormVideoInput = ({
       : null,
   });
 
-  const videoSource = form.watch('videoSource') || '';
+  const videoSource = useWatch({ control: form.control, name: 'videoSource' }) || '';
+  const videoUrlValue = useWatch({ control: form.control, name: 'videoUrl' });
   const fieldValue = field.value;
 
   useEffect(() => {
@@ -290,6 +291,7 @@ const FormVideoInput = ({
 
     if (!fieldValue.poster_url && thumbnailGeneratorSources.includes(fieldValue.source)) {
       const source = fieldValue.source as 'vimeo' | 'youtube' | 'html5';
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsThumbnailLoading(true);
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
@@ -612,7 +614,7 @@ const FormVideoInput = ({
                         >
                           <Show
                             when={thumbnailGeneratorSources.includes(fieldValue?.source || '')}
-                            fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
+                            fallback={<div css={styles.urlData}>{videoUrlValue}</div>}
                           >
                             <ImageInput
                               value={
@@ -663,6 +665,7 @@ const FormVideoInput = ({
           top: 17,
           left: 0,
         }}
+        // eslint-disable-next-line react-hooks/refs
         maxWidth={`${triggerRef.current?.offsetWidth || 300}px`}
       >
         <div css={styles.popoverContent}>

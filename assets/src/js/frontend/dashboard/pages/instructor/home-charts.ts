@@ -1,4 +1,4 @@
-import type { Chart, ChartConfiguration, ChartItem, ScriptableContext, TooltipModel } from 'chart.js/auto';
+import type { Chart, ChartConfiguration, ChartItem, ScriptableContext, TooltipModel } from 'chart.js';
 
 export interface OverviewChartProps {
   earnings: number[];
@@ -56,8 +56,32 @@ type ChartConstructor = new (item: ChartItem, config: ChartConfiguration) => Cha
 let chartConstructorPromise: Promise<ChartConstructor> | null = null;
 
 const loadChartConstructor = async (): Promise<ChartConstructor> => {
-  chartConstructorPromise ??= import(/* webpackChunkName: "tutor-chart-js" */ 'chart.js/auto').then(
-    ({ Chart }) => Chart,
+  chartConstructorPromise ??= import(/* webpackChunkName: "tutor-chart-js" */ 'chart.js').then(
+    ({
+      Chart,
+      LineController,
+      BarController,
+      LineElement,
+      PointElement,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Filler,
+    }) => {
+      Chart.register(
+        LineController,
+        BarController,
+        LineElement,
+        PointElement,
+        BarElement,
+        CategoryScale,
+        LinearScale,
+        Tooltip,
+        Filler,
+      );
+      return Chart as unknown as ChartConstructor;
+    },
   );
 
   return chartConstructorPromise;

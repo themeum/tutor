@@ -56,7 +56,7 @@ const FormDrawImage = ({ field, precisionControllerProps, activeQuestionIndex = 
     ? (`questions.${activeQuestionIndex}._data_status` as const)
     : ('_data_status' as const);
   const activeQuestionDataStatus = form
-    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    ? ((form.getValues(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
     : QuizDataStatus.NO_CHANGE;
 
   const a11yBaseId = useId();
