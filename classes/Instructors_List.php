@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 
 /**

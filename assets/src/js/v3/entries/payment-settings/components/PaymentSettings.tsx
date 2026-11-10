@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -34,7 +34,7 @@ const TaxSettingsPage = () => {
     mode: 'all',
   });
   const { reset } = form;
-  const formData = form.watch();
+  const formData = useWatch({ control: form.control });
 
   const tutorOptionSaved = () => {
     reset(form.getValues());

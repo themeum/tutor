@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CouponController;
@@ -75,8 +76,6 @@ class Assets {
 		 * @since 1.9.0
 		 */
 		add_action( 'admin_head', array( $this, 'tutor_add_mce_button' ) );
-		add_filter( 'get_the_generator_html', array( $this, 'tutor_generator_tag' ), 10, 2 );
-		add_filter( 'get_the_generator_xhtml', array( $this, 'tutor_generator_tag' ), 10, 2 );
 
 		/**
 		 * Add translation support for external tinyMCE button
@@ -657,6 +656,13 @@ class Assets {
 		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
 			return;
 		}
+
+		// Exclude for Tutor post types (course, lesson, assignment, etc.).
+		$screen = get_current_screen();
+		if ( $screen && in_array( $screen->post_type, get_tutor_post_types(), true ) ) {
+			return;
+		}
+
 		// Check if WYSIWYG is enabled.
 		if ( 'true' == get_user_option( 'rich_editing' ) ) {
 			add_filter( 'mce_external_plugins', array( $this, 'tutor_add_tinymce_js' ) );
@@ -688,28 +694,6 @@ class Assets {
 	public function tutor_register_mce_button( $buttons ) {
 		array_push( $buttons, 'tutor_button' );
 		return $buttons;
-	}
-
-	/**
-	 * Output generator tag to aid debugging.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $gen Generator.
-	 * @param string $type Type.
-	 *
-	 * @return string
-	 */
-	public function tutor_generator_tag( $gen, $type ) {
-		switch ( $type ) {
-			case 'html':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
-				break;
-			case 'xhtml':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '" />';
-				break;
-		}
-		return $gen;
 	}
 
 	/**
@@ -812,7 +796,10 @@ class Assets {
 					$to_add[] = 'tutor-screen-backend-settings ';
 				}
 				if ( ! empty( $page ) ) {
-					$to_add[] = 'tutor-backend-' . $page;
+					$sanitized_page = sanitize_html_class( $page );
+					if ( ! empty( $sanitized_page ) ) {
+						$to_add[] = 'tutor-backend-' . $sanitized_page;
+					}
 				}
 			}
 		}

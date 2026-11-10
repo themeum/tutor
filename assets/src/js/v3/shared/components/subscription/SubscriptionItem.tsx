@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -35,7 +35,7 @@ export default function SubscriptionItem() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
+  const chargeEnrolmentFee = useWatch({ control: form.control, name: 'charge_enrollment_fee' });
   // @TODO: Will be added after confirmation
   // const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
 

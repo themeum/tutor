@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -117,8 +117,8 @@ export const ImageGeneration = () => {
   const [showEmptyState, setShowEmptyState] = useState(images.every((image) => image === null));
   const [imageLoading, setImageLoading] = useState([false, false, false, false]);
 
-  const styleValue = form.watch('style');
-  const promptValue = form.watch('prompt');
+  const styleValue = useWatch({ control: form.control, name: 'style' });
+  const promptValue = useWatch({ control: form.control, name: 'prompt' });
 
   const isDisabledButton = !styleValue || !promptValue;
   const hasGeneratedImage = images.some(isDefined);
