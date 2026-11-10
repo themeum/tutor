@@ -86,7 +86,10 @@ class TableManager {
 		$all_classes = apply_filters( 'tutor_database_table_classes', $core_classes );
 
 		// Filter is instance of Table.
-		$all_classes = array_filter( $all_classes, fn( $class ) => $class instanceof Table );
+		$all_classes = array_filter(
+			$all_classes,
+			fn( $class ) => is_string( $class ) && is_a( $class, Table::class, true )
+		);
 
 		return $all_classes;
 	}
