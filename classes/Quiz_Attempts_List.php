@@ -26,6 +26,7 @@ use Tutor\Helpers\UrlHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Progress;
+use Tutor\Core\Input;
 
 /**
  * Quiz attempt class

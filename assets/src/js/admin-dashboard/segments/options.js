@@ -391,7 +391,8 @@ document.addEventListener('DOMContentLoaded', function () {
 							section_label = '',
 							block_label = '',
 							matchedText = '',
-							searchKeyRegex = '',
+							escapedSearchKey = (searchKey || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+							searchKeyRegex = new RegExp(escapedSearchKey, 'ig'),
 							field_key = '',
 							result = data.data.fields;
 
@@ -401,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							section_label = item.section_label;
 							block_label = item.block_label;
 							field_key = item.event ? item.key + '_' + item.event : item.key;
-							searchKeyRegex = new RegExp(searchKey, 'ig');
 							matchedText = item_text.match(searchKeyRegex)?.[0];
 
 							if (matchedText) {

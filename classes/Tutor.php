@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Input;
 use Tutor\Core\Singleton;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;

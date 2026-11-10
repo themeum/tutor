@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $tutor_pages = tutor_utils()->tutor_pages();
 ?>
 <div class="tutor-option-main-title">
@@ -34,8 +36,8 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			</div>
 		</div>
 		<?php
-		foreach ( $tutor_pages as $page ) {
-			$page_id = $page['page_id'];
+		foreach ( $tutor_pages as $tutor_page ) {
+			$page_id = $tutor_page['page_id'];
 			?>
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
@@ -43,24 +45,24 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			</div>
 			<div class="tutor-option-field-label">
 				<div class="tutor-fs-7 tutor-fw-medium">
-					<?php if ( $page['page_exists'] ) : ?>
+					<?php if ( $tutor_page['page_exists'] ) : ?>
 						<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( admin_url( "post.php?post={$page_id}&action=edit" ) ); ?>" target='_blank'>
-							<?php echo esc_html( $page['page_name'] ); ?>
+							<?php echo esc_html( $tutor_page['page_name'] ); ?>
 						</a>
 					<?php else : ?>
-						<?php echo esc_html( $page['page_name'] ); ?>
+						<?php echo esc_html( $tutor_page['page_name'] ); ?>
 					<?php endif; ?>
 				</div>
 			</div>
 			<div class="tutor-option-field-label">
-				<?php if ( $page['page_exists'] && $page['page_visible'] ) : ?>
-					<?php $page = get_post( $page_id ); ?>
+				<?php $page_post = $tutor_page['page_exists'] && $tutor_page['page_visible'] ? get_post( $page_id ) : null; ?>
+				<?php if ( $page_post ) : ?>
 					<div class="tutor-d-flex tutor-align-center">
 						<span class='tutor-icon-circle-mark tutor-color-success'></span>
 						<span class='tutor-mx-4'>/</span>
-						<span><?php echo esc_html( urldecode( $page->post_name ) ); ?></span>
+						<span><?php echo esc_html( urldecode( $page_post->post_name ) ); ?></span>
 						<span class="tutor-ml-8">
-							<a href="<?php echo esc_url( get_permalink( $page ) ); ?>" class="tutor-iconic-btn" target="_blank">
+							<a href="<?php echo esc_url( get_permalink( $page_post ) ); ?>" class="tutor-iconic-btn" target="_blank">
 								<i class="tutor-icon-external-link"></i>
 							</a>
 						</span>

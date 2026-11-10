@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Exception;
+use Tutor\Core\Input;
 use Tutor\Models\WithdrawModel;
 use Tutor\Traits\JsonResponse;
 
