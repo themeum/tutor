@@ -20,7 +20,7 @@
     --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
     box-shadow: var(--tutor-input-border-shadow-current);
     cursor: pointer;
-    text-align: left;
+    text-align: start;
     @include tutor-transition();
 
     &:hover,

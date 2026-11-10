@@ -300,9 +300,11 @@ $overflow-types: auto, hidden, visible, scroll;
   float: inline-end;
 }
 .tutor-float-left {
+  /* stylelint-disable-next-line value-keyword-layout-mappings -- physical utility; the class name promises the physical side */
   float: left;
 }
 .tutor-float-right {
+  /* stylelint-disable-next-line value-keyword-layout-mappings -- physical utility; the class name promises the physical side */
   float: right;
 }
 .tutor-float-none {
@@ -350,7 +352,7 @@ $overflow-types: auto, hidden, visible, scroll;
   > * {
     position: absolute !important;
     top: 0 !important;
-    left: 0 !important;
+    inset-inline-start: 0 !important;
     width: 100% !important;
     height: 100% !important;
   }

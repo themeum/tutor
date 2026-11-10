@@ -165,8 +165,8 @@
     box-shadow: 0px -4px 13px -2px #1018280f;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
 
     .tutor-quiz-summary-footer-inner {
       max-width: 1220px;
@@ -477,8 +477,8 @@
   .tutor-quiz-summary-footer {
     position: sticky;
     bottom: 0;
-    left: auto;
-    right: auto;
+    inset-inline-start: auto;
+    inset-inline-end: auto;
   }
 }
 

@@ -9,8 +9,8 @@
   @include tutor-breakpoint-down(sm) {
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     padding: $tutor-spacing-6;
     margin: 0;
     background-color: $tutor-surface-l1;

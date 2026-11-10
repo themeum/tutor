@@ -435,6 +435,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
       position: absolute;
       top: $tutor-quiz-header-offset;
       bottom: $tutor-quiz-footer-offset;
+      /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the quiz centered in RTL */
       left: 50%;
       transform: translateX(-50%);
 
@@ -484,6 +485,7 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     max-width: calc(100vw - #{$tutor-spacing-8});
     overflow: visible;
     position: fixed;
+    /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the pagination centered in RTL */
     left: 50%;
     transform: translateX(-50%);
     bottom: calc(#{$tutor-quiz-footer-offset} + #{$tutor-quiz-pagination-gap-from-footer});
@@ -636,13 +638,14 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
           &::after {
             content: '';
             position: absolute;
+            /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the pointer centered in RTL */
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
             border-radius: $tutor-radius-2xl;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
+            border-inline-start: 5px solid transparent;
+            border-inline-end: 5px solid transparent;
           }
 
           &::before {

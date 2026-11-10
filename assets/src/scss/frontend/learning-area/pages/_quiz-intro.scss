@@ -36,6 +36,7 @@
       svg {
         position: absolute;
         top: 50%;
+        /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the icon centered in RTL */
         left: 50%;
         transform: translate(-50%, -50%);
       }
