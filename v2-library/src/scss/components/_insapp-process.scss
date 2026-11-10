@@ -1,3 +1,5 @@
+@use "../mixins/breakpoint";
+
 .tutor-app-process-image {
 	max-width: 920px;
 	height: auto;
@@ -13,7 +15,7 @@
 	max-width: 570px;
 }
 
-@include breakpoint-max(767) {
+@include breakpoint.breakpoint-max(767) {
 	span.tutor-app-process-title {
 		font-size: 28px;
 	}

@@ -24,7 +24,7 @@
   }
 
   .tutor-input {
-    @include tutor-input-base;
+    @include tutor-input-base();
 
     &.tutor-input-content {
       &-left {
@@ -50,7 +50,7 @@
   }
 
   .tutor-text-area {
-    @include tutor-textarea;
+    @include tutor-textarea();
   }
 
   .tutor-wp-editor-container {
@@ -136,7 +136,7 @@
   }
 
   .tutor-checkbox {
-    @include tutor-checkbox;
+    @include tutor-checkbox();
 
     &-md {
       @include tutor-checkbox(md);
@@ -148,7 +148,7 @@
   }
 
   .tutor-radio {
-    @include tutor-radio;
+    @include tutor-radio();
 
     &-md {
       @include tutor-radio(md);
@@ -156,7 +156,7 @@
   }
 
   .tutor-switch {
-    @include tutor-switch;
+    @include tutor-switch();
 
     &-md {
       @include tutor-switch(md);
@@ -180,7 +180,7 @@
   }
 
   .tutor-input-help-icon {
-    @include tutor-button-reset;
+    @include tutor-button-reset();
     @include tutor-flex(row, center, center);
 
     color: $tutor-icon-subdued;
@@ -189,7 +189,7 @@
 
   .tutor-input-clear-button {
     @include tutor-flex(row, center, center);
-    @include tutor-button-base;
+    @include tutor-button-base();
     @include tutor-button-variant('ghost');
 
     padding: $tutor-spacing-1;
@@ -223,7 +223,7 @@
     }
 
     .tutor-input-password-toggle {
-      @include tutor-button-reset;
+      @include tutor-button-reset();
 
       pointer-events: auto;
       cursor: pointer;

@@ -1,10 +1,13 @@
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+@use "../../../../../v2-library/src/scss/utility/variables";
+
 #tutor-assignment-wrap {
 	.tutor-assignment-attachments-list {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 20px;
 
-		@include breakpoint-max(768) {
+		@include breakpoint.breakpoint-max(768) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -13,7 +16,7 @@
 		border-top: 1px solid var(--tutor-border-color);
 		border-bottom: 1px solid var(--tutor-border-color);
 
-		@include breakpoint-minmax(576, 1192) {
+		@include breakpoint.breakpoint-minmax(576, 1192) {
 			flex-direction: column;
 		}
 
@@ -24,7 +27,7 @@
 				}
 			}
 
-			@include breakpoint-minmax(576, 1192) {
+			@include breakpoint.breakpoint-minmax(576, 1192) {
 				.tutor-assignment-duration,
 				.tutor-assignmetn-deadline,
 				.tutor-assignment-marks,
@@ -33,7 +36,7 @@
 				}
 			}
 
-			@include breakpoint-max(575) {
+			@include breakpoint.breakpoint-max(575) {
 				.tutor-assignment-duration,
 				.tutor-assignmetn-deadline,
 				.tutor-assignment-marks,
@@ -45,7 +48,7 @@
 			}
 		}
 
-		@include breakpoint-max(576) {
+		@include breakpoint.breakpoint-max(576) {
 			flex-direction: column;
 		}
 	} // assignment-meta-info
@@ -77,7 +80,7 @@
 		/* assignment details page */
 		.tutor-assignment-footer {
 			.tutor-assignment-footer-btn {
-				@include breakpoint-max(768) {
+				@include breakpoint.breakpoint-max(768) {
 					flex-direction: column;
 
 					// align-items: flex-start;
@@ -143,7 +146,7 @@
 				max-width: 730px;
 
 				.tutor-assignment-attachment {
-					background-color: $color-gray-10;
+					background-color: variables.$color-gray-10;
 					border-radius: 6px;
 
 					.tutor-input-type-size {
@@ -156,7 +159,7 @@
 						display: grid;
 						grid-template-columns: 180px auto;
 
-						@include breakpoint-max(tablet) {
+						@include breakpoint.breakpoint-max(tablet) {
 							grid-template-columns: 1fr;
 							gap: 10px;
 						}
@@ -173,7 +176,7 @@
 						display: grid;
 						grid-template-columns: repeat(2, 1fr);
 
-						@include breakpoint-max(600) {
+						@include breakpoint.breakpoint-max(600) {
 							grid-template-columns: 1fr;
 						}
 

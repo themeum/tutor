@@ -17,7 +17,7 @@ const config: Config = {
       rules: {
         'property-no-vendor-prefix': null,
         'selector-class-pattern': null,
-        'scss/at-mixin-argumentless-call-parentheses': null,
+        'scss/at-mixin-argumentless-call-parentheses': 'always',
         'selector-not-notation': null,
         'media-feature-range-notation': 'prefix',
         'property-layout-mappings': ['flow-relative', { ignoreProperties: [directionNeutralProperties] }],

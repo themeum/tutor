@@ -1,3 +1,7 @@
+@use "../../../../v2-library/src/scss/mixins/svg-icons-static";
+@use "../../../../v2-library/src/scss/utility/variables";
+
+@use 'sass:color';
 
 // Tab -> #certificate
 .tutor-option-nav-page, .tutor-cb-templates-table {
@@ -77,7 +81,7 @@
 				position: absolute;
 				content: '';
 
-				@include svg-eye-icon;
+				@include svg-icons-static.svg-eye-icon;
 
 				background-position: center;
 				background-repeat: no-repeat;
@@ -137,7 +141,7 @@
 
 	.certificate-settings {
 		.tutor-option-field-label .desc {
-			@extend .text-regular-small;
+			@extend .text-regular-small !optional;
 		}
 
 		.signature-upload-wrap {
@@ -180,9 +184,9 @@
 				height: 24px;
 				border-radius: 50%;
 
-				@include svg-delete-icon;
+				@include svg-icons-static.svg-delete-icon;
 
-				background-color: $color-danger;
+				background-color: variables.$color-danger;
 				background-repeat: no-repeat;
 				background-position: 50%;
 				cursor: pointer;
@@ -190,7 +194,7 @@
 				inset-inline-end: -12px;
 
 				&:hover {
-					background-color: darken($color: $color-danger, $amount: 6);
+					background-color: color.adjust(variables.$color-danger, $lightness: -6%);
 				}
 			}
 

@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 /**
 @package: Tutor LMS
 @author: Themeum
@@ -10,7 +12,7 @@
       margin-inline: 0 -20px;
     }
 
-    @include breakpoint-max(782) {
+    @include breakpoint.breakpoint-max(782) {
       margin-inline-start: -10px;
 
       .rtl & {
@@ -311,7 +313,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
       justify-self: end;
     }
 
-    @include breakpoint-max(782) {
+    @include breakpoint.breakpoint-max(782) {
       grid-template-columns: 1fr;
       gap: 10px;
     }
@@ -422,7 +424,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     }
   }
 
-  @include breakpoint-max(782) {
+  @include breakpoint.breakpoint-max(782) {
     .tutor-image-upload-list {
       padding: 0 16px;
     }
@@ -492,7 +494,7 @@ body.tutor-backend-tutor_settings #wpbody-content {
     justify-self: center;
   }
 
-  @include breakpoint-max(782) {
+  @include breakpoint.breakpoint-max(782) {
     .tutor-toggle-matrix-head,
     .tutor-toggle-matrix-row {
       grid-template-columns: minmax(140px, 1fr) 1fr 1fr;
@@ -2300,7 +2302,7 @@ h2.tutor-page-heading {
     }
   }
 
-  @include breakpoint-max(1024) {
+  @include breakpoint.breakpoint-max(1024) {
     .tutor-offer-notice-wrapper {
       padding-inline: 24px 56px;
     }
@@ -2319,7 +2321,7 @@ h2.tutor-page-heading {
     }
   }
 
-  @include breakpoint-max(782) {
+  @include breakpoint.breakpoint-max(782) {
     height: auto;
     min-height: 140px;
     margin-inline-start: 0;
@@ -2358,7 +2360,7 @@ h2.tutor-page-heading {
     }
   }
 
-  @include breakpoint-max(480) {
+  @include breakpoint.breakpoint-max(480) {
     .tutor-offer-notice-dismiss {
       top: 12px;
       inset-inline-end: 12px;

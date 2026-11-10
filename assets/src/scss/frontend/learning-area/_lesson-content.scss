@@ -25,7 +25,7 @@
       flex-shrink: 0;
     }
 
-    &:hover:not(.completed):not(:disabled) {
+    &:hover:not(.completed, :disabled) {
       background-color: $tutor-surface-l1;
 
       svg {

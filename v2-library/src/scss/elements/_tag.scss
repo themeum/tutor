@@ -1,3 +1,5 @@
+@use "badge-label";
+
 $variations: (
 	'default' var(--tutor-color-gray-10) var(--tutor-color-muted),
 	'primary' rgb(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary),
@@ -16,7 +18,7 @@ $variations: (
     border-radius: 4px;
     padding: 4px 8px;
 
-	@each $suffix, $bg, $color in $variations {
+	@each $suffix, $bg, $color in badge-label.$variations {
 		&.tag-#{$suffix} {
 			background: #{$bg};
 			color: #{$color};

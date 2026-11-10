@@ -1,3 +1,9 @@
+@use "../mixins/general-minxins";
+@use "../mixins/svg-icons-static";
+@use "../utility/variables";
+
+@use 'sass:color';
+
 .tutor-thumbnail-uploader {
 	width: 100%;
 
@@ -14,8 +20,8 @@
 	.thumbnail-preview {
 		--width: 235px;
 
-		background: $color-gray-10;
-		border: 2px solid $color-gray-10;
+		background: variables.$color-gray-10;
+		border: 2px solid variables.$color-gray-10;
 		border-radius: 3px;
 		position: relative;
 		width: var(--width);
@@ -34,12 +40,12 @@
 				content: '';
 				position: absolute;
 				inset: 0;
-				background: $color-gray-10;
+				background: variables.$color-gray-10;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 
-				@include svg-image-uppoad;
+				@include svg-icons-static.svg-image-uppoad;
 
 				background-repeat: no-repeat;
 				background-position: center;
@@ -53,9 +59,9 @@
 			height: 24px;
 			border-radius: 50%;
 
-			@include svg-delete-icon;
+			@include svg-icons-static.svg-delete-icon;
 
-			background-color: $color-danger;
+			background-color: variables.$color-danger;
 			background-repeat: no-repeat;
 			background-position: 50%;
 			cursor: pointer;
@@ -63,14 +69,14 @@
 			inset-inline-end: -12px;
 
 			&:hover {
-				background-color: darken($color: $color-danger, $amount: 6);
+				background-color: color.adjust(variables.$color-danger, $lightness: -6%);
 			}
 		}
 	}
 
 	.thumbnail-input {
 		input[type='file'] {
-			@include appearNone;
+			@include general-minxins.appearNone;
 
 			display: none;
 		}

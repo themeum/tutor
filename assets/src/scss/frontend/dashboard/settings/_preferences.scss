@@ -11,7 +11,7 @@
   }
 
   &-setting-item {
-    @include tutor-flex-between;
+    @include tutor-flex-between();
 
     gap: $tutor-spacing-10;
 
@@ -25,7 +25,7 @@
       gap: $tutor-spacing-4;
 
       .tutor-preferences-setting-icon {
-        @include tutor-flex-center;
+        @include tutor-flex-center();
 
         color: $tutor-icon-idle;
       }
@@ -39,7 +39,7 @@
       }
 
       .tutor-preferences-setting-text {
-        @include tutor-flex-column;
+        @include tutor-flex-column();
 
         gap: $tutor-spacing-1;
 

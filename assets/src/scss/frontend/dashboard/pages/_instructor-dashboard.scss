@@ -12,8 +12,8 @@
     }
 
     [data-grab] {
-      @include tutor-reset;
-      @include tutor-flex-center;
+      @include tutor-reset();
+      @include tutor-flex-center();
 
       cursor: grab;
 
@@ -28,7 +28,7 @@
   }
 
   &-chart {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
 
@@ -121,7 +121,7 @@
   }
 
   &-card {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
 
@@ -163,7 +163,7 @@
   }
 
   &-course {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
     @include tutor-flex(row, center, space-between);
     @include tutor-transition(background-color);
@@ -189,7 +189,7 @@
   }
 
   &-task {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
     @include tutor-flex(row, flex-start);
     @include tutor-transition(background-color);
@@ -270,7 +270,7 @@
   }
 
   &-review {
-    @include tutor-card-base;
+    @include tutor-card-base();
     @include tutor-card-radius(lg);
 
     width: 100%;
@@ -284,7 +284,7 @@
     }
 
     &-action {
-      @include tutor-button-base;
+      @include tutor-button-base();
       @include tutor-button-size(x-small);
       @include tutor-button-variant(link);
       @include tutor-flex(row, center);

@@ -1,10 +1,13 @@
-@import './players';
+@use "sass:meta";
+@use 'players';
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+@use "../../../../../v2-library/src/scss/utility/variables";
 
 .site-content {
 	padding-bottom: 0 !important;
 }
 
-@import './sidebar';
+@include meta.load-css('sidebar');
 
 .tutor-course-single-content-wrapper {
 	a {
@@ -43,7 +46,7 @@
 		}
 
 		&-open {
-			@include breakpoint-max(desktop-lg) {
+			@include breakpoint.breakpoint-max(desktop-lg) {
 				.tutor-course-single-sidebar-wrapper {
 					background-color: #fff;
 					height: 100vh;
@@ -73,7 +76,7 @@
 		position: relative;
 		width: 100%;
 
-		@include breakpoint-min(desktop-lg){
+		@include breakpoint.breakpoint-min(desktop-lg){
 			min-height: 100vh;
 		}
 
@@ -139,7 +142,7 @@
 		/* tutor-single-page-top-bar */
 		.tutor-mobile-footer-navigation {
 			height: 90px;
-			border: 1px solid $color-gray-10;
+			border: 1px solid variables.$color-gray-10;
 			box-shadow: 0 0 16px rgb(176 182 209 / 18.1%);
 			background: var(--tutor-color-white);
 			position: fixed;
@@ -148,7 +151,7 @@
 			width: 100%;
 			z-index: 1;
 
-			@include breakpoint-min(576) {
+			@include breakpoint.breakpoint-min(576) {
 				display: none;
 			}
 
@@ -172,7 +175,7 @@
 			}
 		}
 
-		@import './quiz';
+		@include meta.load-css('quiz');
 	}
 
 	/**
@@ -184,5 +187,5 @@
 	}
 }
 
-@import './spotlight';
-@import './course-assignment';
+@include meta.load-css('spotlight');
+@include meta.load-css('course-assignment');

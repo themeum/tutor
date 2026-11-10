@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 
 .tutor-whats-new-wrapper{
 	max-width: 1080px;
@@ -143,13 +145,13 @@
 
 		}
 
-		@include breakpoint-max(tablet) {
+		@include breakpoint.breakpoint-max(tablet) {
 			h1{
 				font-size: 34px;
 			}
 		}
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			h1{
 				font-size: 28px;
 			}

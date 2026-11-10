@@ -1,7 +1,9 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 .tutor-cart-page {
     padding: 80px 0;
     
-    @include breakpoint-max(mobile) {
+    @include breakpoint.breakpoint-max(mobile) {
         padding: 40px 0;
     }
 
@@ -19,7 +21,7 @@
         gap: 24px;
         padding: 32px;
 
-        @include breakpoint-max(mobile) {
+        @include breakpoint.breakpoint-max(mobile) {
             flex-direction: column;
             padding: 16px;
         }
@@ -34,7 +36,7 @@
             border-radius: 8px;
             overflow: hidden;
 
-            @include breakpoint-max(mobile) {
+            @include breakpoint.breakpoint-max(mobile) {
                 width: 100%;
                 height: auto;
             }
@@ -109,7 +111,7 @@
             justify-content: space-between;
             align-items: end;
 
-            @include breakpoint-max(mobile) {
+            @include breakpoint.breakpoint-max(mobile) {
                 flex-direction: row;
                 margin-inline-start: 0;
                 align-items: start;
@@ -121,7 +123,7 @@
                 align-items: end;
                 color: var(--tutor-body-color);
 
-                @include breakpoint-max(mobile) {
+                @include breakpoint.breakpoint-max(mobile) {
                     flex-direction: row;
                     gap: 8px;
                 }
@@ -146,7 +148,7 @@
             padding: 32px;
             border-bottom: 1px solid var(--tutor-border-color);
 
-            @include breakpoint-max(mobile) {
+            @include breakpoint.breakpoint-max(mobile) {
                 padding: 16px;
             }
         }
@@ -154,7 +156,7 @@
         .tutor-cart-summery-bottom {
             padding: 32px;
 
-            @include breakpoint-max(mobile) {
+            @include breakpoint.breakpoint-max(mobile) {
                 padding: 16px;
             }
         }
