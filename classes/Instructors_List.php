@@ -174,9 +174,9 @@ class Instructors_List {
 			do_action( 'tutor_after_instructor_delete', $bulk_ids );
 		}
 
-		$message = 'Instructor status updated';
+		$message = __( 'Instructor status updated', 'tutor' );
 
-		return true === $response ? wp_send_json_success( array( 'status' => $message ) ) : wp_send_json_error();
+		return true === $response ? wp_send_json_success( array( 'message' => $message ) ) : wp_send_json_error();
 	}
 
 	/**
@@ -398,7 +398,7 @@ class Instructors_List {
 		$params[] = $offset;
 		$params[] = $per_page;
 
-		$query = "SELECT
+		$query  = "SELECT
 					DISTINCT user.*,
 					ins_status.meta_value AS status,
 					(

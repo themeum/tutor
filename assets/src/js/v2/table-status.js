@@ -40,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if(response.success){
           target.dataset.status = newStatus;
           let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
-          let message = response.data ? response.data.status : __("Course status updated", "tutor");
+          let message = response.data ? response.data.message : __("Course status updated", "tutor");
           // add new status class
           target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 
-          tutor_toast(__("Updated", "tutor"), __(message, "tutor"), "success");
+          tutor_toast(__("Success", "tutor"), __(message, "tutor"), "success");
           courseTabsCoursesCount(prevStatus, newStatus);
         }
         else{

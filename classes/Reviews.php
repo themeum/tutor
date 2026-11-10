@@ -134,7 +134,7 @@ class Reviews {
 			do_action( 'tutor_course_review_approved', $review_id );
 		}
 
-		wp_send_json_success();
+		wp_send_json_success( array( 'message' => __( 'Review status updated', 'tutor' ) ) );
 	}
 
 	/**
