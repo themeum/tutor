@@ -1,6 +1,6 @@
 <?php
 /**
- * Schema Manager for Tutor LMS.
+ * Table Manager for Tutor LMS.
  *
  * Orchestrates table creation, migration, and safe table dropping
  * with WordPress Multisite awareness.
@@ -12,6 +12,8 @@
  */
 
 namespace Tutor\Database;
+
+defined( 'ABSPATH' ) || exit;
 
 use Tutor\Core\Table;
 use Tutor\Database\Tables\QuizAttemptsTable;
@@ -31,8 +33,6 @@ use Tutor\Database\Tables\CartsTable;
 use Tutor\Database\Tables\CartItemsTable;
 use Tutor\Database\Tables\CustomersTable;
 use Tutor\Database\Tables\SchedulerTable;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Class TableManager

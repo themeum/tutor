@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Database\TableManager;
-
 defined( 'ABSPATH' ) || exit;
+
+use Tutor\Database\TableManager;
 
 /**
  * Class Multisite
@@ -48,6 +48,7 @@ class Multisite {
 	 *
 	 * @param \WP_Site $site New site object.
 	 * @param array    $args Setup arguments.
+	 *
 	 * @return void
 	 */
 	public function on_initialize_site( \WP_Site $site, array $args = array() ): void {
@@ -88,6 +89,7 @@ class Multisite {
 	 * @since 4.3.0
 	 *
 	 * @param \WP_Site $site Site being uninitialized.
+	 *
 	 * @return void
 	 */
 	public function on_uninitialize_site( \WP_Site $site ): void {

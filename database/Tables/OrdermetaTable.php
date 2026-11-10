@@ -34,6 +34,7 @@ class OrdermetaTable extends Table {
 	 * @since 4.3.0
 	 *
 	 * @param bool $include_constraints Whether to include foreign key constraints.
+	 *
 	 * @return string
 	 */
 	public static function get_schema( bool $include_constraints = true ): string {
