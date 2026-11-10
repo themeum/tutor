@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/set-state-in-effect */
 /** Coordinates question field: instructor places correct answer points on the graph grid. */
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
@@ -236,7 +237,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
     ? (`questions.${activeQuestionIndex}._data_status` as const)
     : ('_data_status' as const);
   const activeQuestionDataStatus = form
-    ? ((form.watch(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
+    ? ((form.getValues(resolvedQuestionDataStatusPath) as QuizDataStatus | undefined) ?? QuizDataStatus.NO_CHANGE)
     : QuizDataStatus.NO_CHANGE;
   const axisRange = resolveAxisRange(axisRangeControllerProps?.field.value);
   const minCoord = -axisRange;
@@ -901,6 +902,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
                   );
                 })()
               : null}
+            {/* eslint-disable react-hooks/refs */}
             {!keyboardActive && hoverTargetRef.current !== null && hoverAlphaRef.current > 0.01
               ? (() => {
                   const hoverCell = hoverTargetRef.current;
@@ -928,6 +930,7 @@ const FormCoordinates = ({ field, activeQuestionIndex = 0, axisRangeControllerPr
                   );
                 })()
               : null}
+            {/* eslint-enable react-hooks/refs */}
           </div>
         </div>
         {axisRangeControllerProps && (

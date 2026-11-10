@@ -104,6 +104,19 @@ class Instructor {
 	}
 
 	/**
+	 * Check if applying to become an instructor is allowed.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return bool
+	 */
+	public static function can_apply_for_instructor(): bool {
+		$is_enabled = (bool) tutor_utils()->get_option( 'enable_become_instructor_btn' );
+
+		return apply_filters( 'tutor_can_apply_for_instructor', $is_enabled );
+	}
+
+	/**
 	 * Template Redirect Callback
 	 * For Register new user and mark him as instructor
 	 *
@@ -248,6 +261,10 @@ class Instructor {
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
+
+		if ( ! self::can_apply_for_instructor() ) {
+			wp_die( esc_html__( 'Become an instructor is currently disabled.', 'tutor' ), 403 );
+		}
 
 		$user_id = get_current_user_id();
 		if ( $user_id ) {

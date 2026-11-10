@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import {
   closestCenter,
   DndContext,
@@ -28,8 +28,8 @@ import PaymentItem from './PaymentItem';
 
 const PaymentMethods = () => {
   const form = useFormContext<PaymentSettings>();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const paymentMethods = form.watch('payment_methods') ?? [];
+  const watchedPaymentMethods = useWatch({ control: form.control, name: 'payment_methods' });
+  const paymentMethods = useMemo(() => watchedPaymentMethods || [], [watchedPaymentMethods]);
 
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
