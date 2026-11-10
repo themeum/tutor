@@ -10,7 +10,7 @@
  */
 
 use Tutor\Ecommerce\Ecommerce;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 ?>

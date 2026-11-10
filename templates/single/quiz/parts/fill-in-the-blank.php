@@ -16,8 +16,7 @@
 	<?php
 	if ( is_array( $answers ) && count( $answers ) ) {
 		foreach ( $answers as $answer ) {
-			$answer_title                         = stripslashes( $answer->answer_title );
-			$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
+			$answer_title = stripslashes( $answer->answer_title );
 			?>
 	<div class="fill-in-the-gap tutor-fs-6 tutor-body-color">
 			<?php

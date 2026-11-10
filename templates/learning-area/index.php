@@ -17,7 +17,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use TUTOR\Course;
 use TUTOR\Dashboard;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use TUTOR\Quiz;

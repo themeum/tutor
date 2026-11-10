@@ -13,7 +13,7 @@
 
 namespace Tutor\Components;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 defined( 'ABSPATH' ) || exit;
 

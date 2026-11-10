@@ -13,6 +13,8 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
@@ -3296,7 +3298,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int $course_id Course ID or Bundle ID.
 	 *
 	 * @return array|bool|null|object
 	 */
@@ -3349,7 +3351,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
-						   AND course.post_type = %s
+						   AND course.post_type IN (%s, %s)
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3362,6 +3364,7 @@ class Utils {
 			",
 				$course_id,
 				tutor()->course_post_type,
+				tutor()->bundle_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -4176,8 +4179,8 @@ class Utils {
 
 		$course_filter = '';
 		if ( $course_id ) {
-			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
+			$course_ids = array_filter( array_map( 'absint', $course_ids ) );
 			if ( ! empty( $course_ids ) ) {
 				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
 				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
@@ -5416,7 +5419,7 @@ class Utils {
 		$total_questions = (int) $attempt->total_questions;
 		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = 'RAND()';
+		$order_by = ! empty( $attempt->attempt_id ) ? 'RAND(' . (int) $attempt->attempt_id . ')' : 'RAND()';
 		$order    = '';
 
 		if ( 'asc' === $questions_order ) {
@@ -7680,6 +7683,7 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 *
 	 * @since 1.7.9
+	 * @since 4.2.1 tutor_announcements support added.
 	 *
 	 * @param int $content_id content id.
 	 *
@@ -7687,15 +7691,16 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'tutor_gm_course'    => 'tutor_gm_course',
-			'tutor_gm_topic'     => 'tutor_gm_topic',
-			'topics'             => 'topic',
-			'cb-lesson'          => 'cb-lesson',
+			'tutor_assignments'   => 'assignment',
+			'tutor_quiz'          => 'quiz',
+			'lesson'              => 'lesson',
+			'tutor_zoom_meeting'  => 'zoom_meeting',
+			'tutor_zoom_lesson'   => 'zoom_lesson',
+			'tutor_gm_course'     => 'tutor_gm_course',
+			'tutor_gm_topic'      => 'tutor_gm_topic',
+			'topics'              => 'topic',
+			'cb-lesson'           => 'cb-lesson',
+			'tutor_announcements' => 'announcement',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7759,14 +7764,15 @@ class Utils {
 			case 'review':
 			case 'qa_question':
 				// Just check if own content. Instructor privilege already checked in the earlier blocks.
-				$id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
-						$user_id,
-						$object_id
-					)
-				);
+				$comment_type = 'qa_question' === $content
+								? Q_And_A::COMMENT_TYPE
+								: Reviews::COURSE_RATING;
+
+				$id = DB::table( 'comments' )
+						->where( 'comment_type', $comment_type )
+						->where( 'user_id', $user_id )
+						->where( 'comment_ID', $object_id )
+						->value( 'comment_ID' );
 
 				return $id ? true : false;
 		}
@@ -9709,6 +9715,8 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
+	 * @since 4.2.0 Removed the total_enrollment count since no caller is using it
+	 *
 	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
@@ -9738,7 +9746,6 @@ class Utils {
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
 				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);
 
@@ -9752,7 +9759,6 @@ class Utils {
 					'tutor_quiz'        => array(),
 					'lesson'            => array(),
 					'topics'            => 0,
-					'tutor_enrolled'    => 0,
 				);
 			}
 
@@ -9779,7 +9785,6 @@ class Utils {
 			}
 		}
 
-		$course_meta = $this->assign_child_count( $course_meta, 'tutor_enrolled' );
 		$course_meta = $this->assign_child_count( $course_meta, 'topics' );
 
 		// Return single count if the course id was single.

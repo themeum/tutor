@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 $announcement_obj = tutor_lms()->announcements;
