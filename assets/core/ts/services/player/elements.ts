@@ -86,15 +86,11 @@ let sharedUnsupportedControlsSheet: CSSStyleSheet | null = null;
 const patchedSkins = new WeakSet<HTMLElement>();
 
 export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
-  if (patchedSkins.has(skin)) {
+  const root = skin.shadowRoot;
+  if (!root || patchedSkins.has(skin)) {
     return;
   }
   patchedSkins.add(skin);
-
-  const root = skin.shadowRoot;
-  if (!root) {
-    return;
-  }
 
   if ('adoptedStyleSheets' in root && Array.isArray(root.adoptedStyleSheets) && typeof CSSStyleSheet !== 'undefined') {
     try {
@@ -228,12 +224,18 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
       ytv?.classList.add('is-portrait');
     }
 
+    const cleanup = (): void => {
+      win.removeEventListener('message', handleMessage);
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+
     const setPortrait = (isPortrait: boolean): void => {
-      if (isPortrait) {
-        clearInterval(interval);
-      }
       this.classList.toggle('is-portrait', isPortrait);
       ytv?.classList.toggle('is-portrait', isPortrait);
+      if (isPortrait) {
+        cleanup();
+      }
     };
 
     const handleMessage = (event: MessageEvent): void => {
@@ -244,6 +246,11 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
         origin !== 'https://www.youtube-nocookie.com' &&
         origin !== 'https://m.youtube.com'
       ) {
+        return;
+      }
+
+      const iframe = ytv?.querySelector('iframe');
+      if (iframe?.contentWindow && event.source && event.source !== iframe.contentWindow) {
         return;
       }
 
@@ -297,13 +304,11 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     };
 
     const interval = setInterval(checkEngine, 250);
-    const timeout = setTimeout(() => clearInterval(interval), 5000);
+    const timeout = setTimeout(() => {
+      cleanup();
+    }, 5000);
 
-    this.#cleanupPortraitDetection = () => {
-      win.removeEventListener('message', handleMessage);
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
+    this.#cleanupPortraitDetection = cleanup;
   }
 
   #releasePlayer(): void {
@@ -333,21 +338,24 @@ export function defineVideoPlayer(tagName: string = VIDEO_PLAYER_TAG): void {
 function buildMediaSource(source: DetectedSource): { tagName: string; src: string } {
   if (source.provider === 'youtube') {
     const id = youtubeVideoId(source.src);
+    if (!id) {
+      throw new Error(`[tutor] player: invalid YouTube source: ${source.src}`);
+    }
     return {
       tagName: 'youtube-video',
-      src: id ? `https://www.youtube.com/watch?v=${encodeURIComponent(id)}` : source.src,
+      src: `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`,
     };
   }
 
   if (source.provider === 'vimeo') {
     const parsed = vimeoVideoId(source.src);
-    if (parsed) {
-      const src = parsed.hash
-        ? `https://vimeo.com/${encodeURIComponent(parsed.id)}/${encodeURIComponent(parsed.hash)}`
-        : `https://vimeo.com/${encodeURIComponent(parsed.id)}`;
-      return { tagName: 'vimeo-video', src };
+    if (!parsed) {
+      throw new Error(`[tutor] player: invalid Vimeo source: ${source.src}`);
     }
-    return { tagName: 'vimeo-video', src: source.src };
+    const src = parsed.hash
+      ? `https://vimeo.com/${encodeURIComponent(parsed.id)}/${encodeURIComponent(parsed.hash)}`
+      : `https://vimeo.com/${encodeURIComponent(parsed.id)}`;
+    return { tagName: 'vimeo-video', src };
   }
 
   return { tagName: 'video', src: source.src };

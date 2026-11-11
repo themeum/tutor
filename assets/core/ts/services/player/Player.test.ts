@@ -268,6 +268,19 @@ describe('createTutorPlayer', () => {
     expect(succeedingHandler).toHaveBeenCalled();
   });
 
+  it('ignores NaN and non-finite arguments in seek and setVolume', () => {
+    const { store } = createStore();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+
+    player.seek(NaN);
+    player.seek(Infinity);
+    expect(store.seek).not.toHaveBeenCalled();
+
+    player.setVolume(NaN);
+    player.setVolume(-Infinity);
+    expect(store.setVolume).not.toHaveBeenCalled();
+  });
+
   it('invokes onDispose once when the handle is disposed', () => {
     const { store } = createStore();
     const onDispose = vi.fn();

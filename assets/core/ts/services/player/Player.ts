@@ -142,6 +142,9 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     isPaused: () => store.paused,
     getVolume: () => store.volume,
     setVolume: (volume: number) => {
+      if (!Number.isFinite(volume)) {
+        return;
+      }
       store.setVolume(clamp(volume, 0, 1));
     },
     isMuted: () => store.muted,
@@ -153,6 +156,9 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     play: () => store.play(),
     pause: () => store.pause(),
     seek: (time: number) => {
+      if (!Number.isFinite(time)) {
+        return;
+      }
       const duration = store.duration;
       store.seek(duration > 0 ? clamp(time, 0, duration) : Math.max(time, 0));
     },

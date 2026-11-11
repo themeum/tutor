@@ -10,6 +10,7 @@ describe('youtubeVideoId', () => {
     ['https://www.youtube.com/embed/abc123?rel=0', 'abc123'],
     ['https://www.youtube-nocookie.com/embed/abc123', 'abc123'],
     ['https://www.youtube.com/shorts/abc123', 'abc123'],
+    ['https://www.youtube.com/live/abc123', 'abc123'],
     ['https://www.youtube.com/watch?v=abc%26list=x', null],
     ['https://www.youtube.com/watch?v=invalid!id@', null],
     ['https://example.com/abc123', null],
@@ -25,6 +26,8 @@ describe('vimeoVideoId', () => {
     expect(vimeoVideoId('https://vimeo.com/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345?h=abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
+    expect(vimeoVideoId('https://vimeo.com/channels/staffpicks/12345')).toEqual({ id: '12345', hash: undefined });
+    expect(vimeoVideoId('https://vimeo.com/showcase/1/video/12345')).toEqual({ id: '12345', hash: undefined });
     expect(vimeoVideoId('https://vimeo.com/notanid')).toBeNull();
     expect(vimeoVideoId('https://example.com/12345')).toBeNull();
   });
@@ -61,6 +64,17 @@ describe('detectSource', () => {
     expect(detectSource(root.querySelector('.tutorPlayer') as Element)).toEqual({
       provider: 'youtube',
       src: 'https://www.youtube.com/embed/abc123',
+    });
+  });
+
+  it('reads a native video element with a relative source', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<video src="media/video.mp4"></video>';
+
+    expect(detectSource(root.querySelector('video') as Element)).toEqual({
+      provider: 'html5',
+      src: 'media/video.mp4',
+      poster: undefined,
     });
   });
 

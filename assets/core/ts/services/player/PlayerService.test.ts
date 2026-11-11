@@ -118,6 +118,22 @@ describe('TutorPlayerService', () => {
     expect(mockUnsub).toHaveBeenCalled();
   });
 
+  it('re-binds subscriptions to newly tracked players upon lesson switch', () => {
+    const { service, handle: playerA } = setup();
+    const playerB = fakePlayer();
+    const onPlay = vi.fn();
+
+    service.track(playerA);
+    service.on('play', onPlay);
+    expect(playerA.on).toHaveBeenCalledWith('play', onPlay);
+
+    service.track(playerB);
+    expect(playerB.on).toHaveBeenCalledWith('play', onPlay);
+
+    service.untrack(playerB);
+    expect(service.getActive()).toBe(playerA);
+  });
+
   it('clears the active player when it is untracked', () => {
     const { service, handle } = setup();
     service.create(target());

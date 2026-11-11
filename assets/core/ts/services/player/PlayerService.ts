@@ -15,29 +15,44 @@ export interface PlayerServiceDependencies {
   createElement?: (source: DetectedSource, document: Document) => VideoPlayerElement;
 }
 
-type Waiting = { event: PlayerEvent; handler: AnyHandler; off?: PlayerUnsubscribe };
+type Sub = { event: PlayerEvent; handler: AnyHandler; off: PlayerUnsubscribe | null };
 
 export class TutorPlayerService implements PlayerService {
   #active: TutorPlayer | null = null;
-  #waiting: Waiting[] = [];
+  #subs = new Set<Sub>();
+  #live: TutorPlayer[] = [];
   #createElement: (source: DetectedSource, document: Document) => VideoPlayerElement;
 
   constructor(dependencies: PlayerServiceDependencies = {}) {
     this.#createElement = dependencies.createElement ?? createPlayerElement;
   }
 
+  #bind(sub: Sub, player: TutorPlayer): void {
+    sub.off?.();
+    sub.off = player.on(sub.event, sub.handler as (payload: PlayerEventMap[PlayerEvent]) => void);
+  }
+
   /** Marks a player booted by its own element as active (wired to the element hooks). */
   track(player: TutorPlayer): void {
-    this.#active = player;
-
-    for (const entry of this.#waiting.splice(0)) {
-      entry.off = player.on(entry.event, entry.handler as (payload: PlayerEventMap[PlayerEvent]) => void);
+    if (!this.#live.includes(player)) {
+      this.#live.push(player);
     }
+    this.#active = player;
+    this.#subs.forEach((sub) => this.#bind(sub, player));
   }
 
   untrack(player: TutorPlayer): void {
-    if (this.#active === player) {
-      this.#active = null;
+    this.#live = this.#live.filter((p) => p !== player);
+    if (this.#active !== player) {
+      return;
+    }
+    this.#subs.forEach((sub) => {
+      sub.off?.();
+      sub.off = null;
+    });
+    this.#active = this.#live.at(-1) ?? null;
+    if (this.#active) {
+      this.#subs.forEach((sub) => this.#bind(sub, this.#active!));
     }
   }
 
@@ -63,6 +78,7 @@ export class TutorPlayerService implements PlayerService {
     const player = host.player;
 
     if (!player) {
+      host.replaceWith(element);
       throw new Error('[tutor] player: handle unavailable after init');
     }
 
@@ -84,24 +100,16 @@ export class TutorPlayerService implements PlayerService {
   }
 
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe {
-    const active = this.#active;
+    const sub: Sub = { event, handler: handler as AnyHandler, off: null };
+    this.#subs.add(sub);
 
-    if (active) {
-      return active.on(event, handler);
+    if (this.#active) {
+      this.#bind(sub, this.#active);
     }
 
-    // No player yet: bind to the first one that appears (research F1).
-    const entry: Waiting = { event, handler: handler as AnyHandler };
-    this.#waiting.push(entry);
-
     return () => {
-      if (entry.off) {
-        return entry.off();
-      }
-      const index = this.#waiting.indexOf(entry);
-      if (index >= 0) {
-        this.#waiting.splice(index, 1);
-      }
+      sub.off?.();
+      this.#subs.delete(sub);
     };
   }
 }
