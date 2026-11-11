@@ -11,7 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use Tutor\Helpers\HttpHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\Traits\JsonResponse;
 

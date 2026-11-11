@@ -877,6 +877,32 @@ $tutor-quiz-draw-pin-chrome: '#{$tutor-spacing-5} + 2.5rem + #{$tutor-spacing-8}
     }
   }
 
+  &-btn-countdown,
+  &.tutor-quiz-btn-countdown,
+  .tutor-quiz-btn-countdown {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28));
+    background-repeat: no-repeat;
+    background-position: left top;
+    animation: tutor-quiz-countdown-fill var(--reveal-wait-duration, 2000ms) linear forwards;
+
+    [dir='rtl'] &,
+    .rtl & {
+      background-position: right top;
+    }
+
+    [data-tutor-motion='reduce'] & {
+      animation: none;
+      background-image: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-tutor-motion='auto'] & {
+        animation: none;
+        background-image: none;
+      }
+    }
+  }
+
   &-question {
     &-option {
       cursor: pointer;
@@ -1491,5 +1517,14 @@ body:has(#wpadminbar) .tutor-learning-area.tutor-has-site-shell {
 
   .tutor-quiz-questions-pagination {
     position: absolute;
+  }
+}
+
+@keyframes tutor-quiz-countdown-fill {
+  0% {
+    background-size: 0% 100%;
+  }
+  100% {
+    background-size: 100% 100%;
   }
 }

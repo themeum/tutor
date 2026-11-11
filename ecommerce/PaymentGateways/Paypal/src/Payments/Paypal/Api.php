@@ -3,12 +3,18 @@
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
 use ErrorException;
-use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
+use Tutor\Helpers\HttpHelper;
+use Tutor\PaymentGateways\Http;
 
 /**
  * Paypal Api Class
+ *
+ * Sends requests to the PayPal REST API.
+ *
+ * @since 3.9.0
+ * @since 4.2.0 Sends requests through \Tutor\PaymentGateways\Http instead of Guzzle.
  */
 final class Api {
 
@@ -29,8 +35,9 @@ final class Api {
 	protected static $headers;
 
 	/**
-	 * @var string|null $accessToken
-	 * This property holds the access token required for authenticating API requests.
+	 * The access token required for authenticating API requests.
+	 *
+	 * @var   string|null
 	 * @since 1.0.0
 	 */
 	protected $accessToken;
@@ -58,22 +65,26 @@ final class Api {
 	 * "token_type access_token".
 	 *
 	 * @return string The access token in the format "token_type access_token".
+	 * @throws HttpRequestException If the token request fails.
 	 * @since  3.0.0
+	 * @since  4.2.0 Sends the request through Http::send() with a Basic Authorization header instead of Guzzle.
 	 */
 	private function getAccessToken(): string {
 		if ( empty( $this->accessToken ) ) {
 
-			$requestData = (object) array(
-				'method'  => 'post',
+			$requestData = array(
 				'url'     => self::$config->get( 'api_url' ) . '/v1/oauth2/token',
 				'options' => array(
-					'auth'        => array( self::$config->get( 'client_id' ), self::$config->get( 'client_secret' ) ),
-					'headers'     => array( 'Content-Type' => 'application/x-www-form-urlencoded' ),
-					'form_params' => array( 'grant_type' => 'client_credentials' ),
+					'headers' => array(
+						'Authorization' => 'Basic ' . base64_encode( self::$config->get( 'client_id' ) . ':' . self::$config->get( 'client_secret' ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+						'Content-Type'  => 'application/x-www-form-urlencoded',
+					),
+					'body'    => array( 'grant_type' => 'client_credentials' ),
+					'method'  => HttpHelper::METHOD_POST,
 				),
 			);
 
-			$response = System::sendHttpRequest( $requestData );
+			$response = Http::send( $requestData );
 
 			if ( $response->token_type && $response->access_token ) {
 				$this->accessToken = "{$response->token_type}  {$response->access_token}";
@@ -87,26 +98,29 @@ final class Api {
 	 * Creates a new PayPal order by sending a POST request to the PayPal API.
 	 *
 	 * @since  3.0.0
+	 * @since  4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $data The order data to be sent in the request body.
 	 * @param string $order_id A unique identifier for the order.
 	 *
 	 * @return object The response from the PayPal API, decoded from JSON.
+	 *
+	 * @throws HttpRequestException If the request fails or PayPal returns a 4xx/5xx response.
 	 */
 	public static function createOrder( $data, $order_id ): object {
 
 		self::$headers['PayPal-Request-Id'] = "order-id-{$order_id}";
 
-		$request_data = (object) array(
-			'method'  => 'post',
+		$request_data = array(
 			'url'     => self::$config->get( 'api_url' ) . '/v2/checkout/orders',
 			'options' => array(
 				'headers' => self::$headers,
 				'body'    => wp_json_encode( $data ),
+				'method'  => HttpHelper::METHOD_POST,
 			),
 		);
 
-		return System::sendHttpRequest( $request_data );
+		return Http::send( $request_data );
 	}
 
 
@@ -114,9 +128,11 @@ final class Api {
 	 * Capture a PayPal payment based on the provided webhook payload.
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $payloadStream The decoded webhook payload containing payment resource data.
 	 * @return void
+	 * @throws HttpRequestException If the capture request fails.
 	 */
 	public static function capturePayment( $payloadStream ) {
 
@@ -125,19 +141,22 @@ final class Api {
 		self::$headers['PayPal-Request-Id'] = "paypal-order-id-{$payloadStream->id}";
 		self::$headers['Prefer']            = 'return=representation';
 
-		$requestData = (object) array(
-			'method'  => 'post',
+		$requestData = array(
 			'url'     => $capturePaymentUrl,
-			'options' => array( 'headers' => self::$headers ),
+			'options' => array(
+				'headers' => self::$headers,
+				'method'  => HttpHelper::METHOD_POST,
+			),
 		);
 
-		System::sendHttpRequest( $requestData );
+		Http::send( $requestData );
 	}
 
 	/**
 	 * Validate the PayPal webhook signature to ensure the authenticity of the incoming event.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param object $payload The webhook payload containing stream and server headers.
 	 * @return bool True if the webhook signature is verified successfully, false otherwise.
@@ -157,16 +176,16 @@ final class Api {
 				'webhook_event'     => $payload_stream,
 			);
 
-			$request_data = (object) array(
-				'method'  => 'post',
+			$request_data = array(
 				'url'     => self::$config->get( 'api_url' ) . '/v1/notifications/verify-webhook-signature',
 				'options' => array(
 					'headers' => self::$headers,
 					'body'    => wp_json_encode( $data ),
+					'method'  => HttpHelper::METHOD_POST,
 				),
 			);
 
-			$response_data = System::sendHttpRequest( $request_data );
+			$response_data = Http::send( $request_data );
 
 			return 'SUCCESS' === $response_data->verification_status ? true : false;
 		} catch ( \Throwable $error ) {
@@ -185,16 +204,13 @@ final class Api {
 
 		http_response_code( 200 );
 		echo 'OK';
-
-		if ( function_exists( 'fastcgi_finish_request' ) ) {
-			fastcgi_finish_request();
-		}
 	}
 
 	/**
 	 * Retrieve PayPal order details using the provided API URL.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 *
 	 * @param string $url The PayPal API endpoint URL for fetching order details.
 	 * @return object|null The API response object containing order details.
@@ -203,15 +219,17 @@ final class Api {
 	public static function get_order_details( $url ): ?object {
 		try {
 
-			$request_data = (object) array(
-				'method'  => 'get',
+			$request_data = array(
 				'url'     => $url,
-				'options' => array( 'headers' => self::$headers ),
+				'options' => array(
+					'headers' => self::$headers,
+					'method'  => HttpHelper::METHOD_GET,
+				),
 			);
 
-			return System::sendHttpRequest( $request_data );
+			return Http::send( $request_data );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $error_message ) );
 		}
@@ -221,6 +239,7 @@ final class Api {
 	 * Initiate a refund request for a PayPal order.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Sends the request through Http::send() instead of Guzzle.
 	 *
 	 * @param string       $refund_url The PayPal API refund endpoint URL.
 	 * @param string|int   $order_id The associated order ID for the refund request.
@@ -236,16 +255,16 @@ final class Api {
 			self::$headers['PayPal-Request-Id'] = "{$unique_id}-order-id-{$order_id}";
 			self::$headers['Prefer']            = 'return=representation';
 
-			$request_data = (object) array(
-				'method'  => 'post',
+			$request_data = array(
 				'url'     => $refund_url,
 				'options' => array(
 					'headers' => self::$headers,
 					'body'    => wp_json_encode( $data ),
+					'method'  => HttpHelper::METHOD_POST,
 				),
 			);
 
-			System::sendHttpRequest( $request_data );
+			Http::send( $request_data );
 		} catch ( \Throwable $th ) {
 			throw $th;
 		}
@@ -255,6 +274,7 @@ final class Api {
 	 * Retrieve PayPal vault details from a given URL.
 	 *
 	 * @since 3.9.0
+	 * @since 4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 *
 	 * @param string $url The PayPal vault API URL to retrieve details.
 	 *
@@ -265,17 +285,48 @@ final class Api {
 	public static function get_vault_details( $url ): ?object {
 		try {
 
-			$request_data = (object) array(
-				'method'  => 'get',
+			$request_data = array(
 				'url'     => $url,
-				'options' => array( 'headers' => self::$headers ),
+				'options' => array(
+					'headers' => self::$headers,
+					'method'  => HttpHelper::METHOD_GET,
+				),
 			);
 
-			return System::sendHttpRequest( $request_data );
+			return Http::send( $request_data );
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( $error_message ); //phpcs:ignore
 		}
+	}
+
+	/**
+	 * Retrieves the refund status based on the provided links and type.
+	 *
+	 * @since 1.0.0
+	 * @since 4.2.0 Moved from Paypal as a public static method and sends the request through Http::send().
+	 *
+	 * @param array  $links An array of links provided by the PayPal API.
+	 * @param string $type  The `rel` of the link to request. Default 'self'.
+	 *
+	 * @return string|null The lowercase refund status, e.g. 'completed'.
+	 *
+	 * @throws HttpRequestException If the request fails or PayPal returns a 4xx/5xx response.
+	 */
+	public static function getRefundStatus( $links, $type = 'self' ): ?string {
+		$url = Helper::getUrl( $links, $type );
+
+		$requestData = array(
+			'url'     => $url,
+			'options' => array(
+				'headers' => self::$headers,
+				'method'  => HttpHelper::METHOD_GET,
+			),
+		);
+
+		$responseData = Http::send( $requestData );
+
+		return strtolower( $responseData->status ) ?? null;
 	}
 }

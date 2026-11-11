@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 global $post;
 if ( null === $post && Input::has( 'course_id' ) ) {

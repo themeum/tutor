@@ -10,6 +10,7 @@
  */
 
 use Tutor\Models\CourseModel;
+use Tutor\Models\QuizModel;
 use TUTOR\Quiz;
 
 global $post;
@@ -33,7 +34,6 @@ $passing_grade               = (int) ( $quiz_details['passing_grade'] ?? 0 );
 $can_retry_quiz              = Quiz::can_retry_quiz( $limit_attempts_allowed, $configured_attempts_allowed, $attempted_count );
 
 $attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-$quiz_answers      = array();
 
 if ( 0 !== $attempted_count ) {
 	?>
@@ -59,6 +59,22 @@ if ( 0 !== $attempted_count ) {
 
 			$remaining_time_context = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 			$questions              = tutor_utils()->get_random_questions_by_quiz();
+
+			$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $is_started_quiz->attempt_id );
+
+			$first_unanswered_index = 0;
+			if ( is_array( $questions ) ) {
+				foreach ( $questions as $question_index => $question ) {
+					if ( ! isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
+						$first_unanswered_index = $question_index + 1;
+						break;
+					}
+				}
+			}
+
+			$start_question_index = $first_unanswered_index > 0
+				? $first_unanswered_index
+				: max( 1, count( $questions ) );
 
 			/* Quiz Meta */
 			require __DIR__ . '/parts/meta.php';
@@ -99,7 +115,3 @@ if ( 0 !== $attempted_count ) {
 		<?php
 }
 ?>
-
-<script>
-	window.tutor_quiz_context = '<?php echo strrev( json_encode( $quiz_answers ) ); //phpcs:ignore ?>';
-</script>

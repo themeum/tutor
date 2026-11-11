@@ -11,7 +11,7 @@
 namespace Tutor\GDPR\Models;
 
 use Tutor\GDPR\DB\UserConsents as Table;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\BaseModel;
 
 defined( 'ABSPATH' ) || exit;

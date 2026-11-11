@@ -13,6 +13,11 @@
   border-bottom: 1px solid $tutor-border-idle;
   padding: $tutor-spacing-6 $tutor-spacing-8;
 
+  // Elevate stacking context above fixed mobile bottom nav when user drawer is open
+  &:has(.tutor-dashboard-header-user-avatar.active) {
+    z-index: calc($tutor-z-header + 1);
+  }
+
   body:has(#wpadminbar) & {
     top: 32px;
   }

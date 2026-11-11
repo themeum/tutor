@@ -12,7 +12,7 @@ namespace Tutor\Ecommerce;
 
 use TUTOR\Course;
 use Tutor\Helpers\HttpHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
@@ -225,7 +225,7 @@ class CartController {
 		}
 
 		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
-		if ( is_wp_error( $can_buy ) ) {
+		if ( is_wp_error( $can_buy ) || ! $can_buy ) {
 			$this->response_bad_request( __( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ) );
 		}
 

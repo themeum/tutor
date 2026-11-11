@@ -23,7 +23,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
 

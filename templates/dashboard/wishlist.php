@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\Pagination;
 use Tutor\Components\EmptyState;
 

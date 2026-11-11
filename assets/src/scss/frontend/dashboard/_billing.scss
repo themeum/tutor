@@ -102,13 +102,17 @@
         background-color: $tutor-surface-l2-hover;
         height: 12px;
       }
+
+      .tutor-billing-card-payment-method {
+        @include tutor-flex();
+      }
     }
 
     &-right {
       @include tutor-flex(column, flex-end, center);
       flex-shrink: 0;
       gap: $tutor-spacing-2;
-      text-align: right;
+      text-align: end;
     }
 
     &-title {

@@ -4,45 +4,73 @@ This directory contains the complete, interactive API documentation and executab
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Open in Bruno GUI
+
 1. Download and install [Bruno](https://www.usebruno.com/downloads).
 2. Open Bruno, click **"Open Collection"**, and select the `wp-content/plugins/tutor/docs/api` directory.
 
 ### 2. Configure Environment & Authentication
-Tutor LMS REST API uses Basic Authentication with **API Keys** and **API Secrets**.
 
-1. In your WordPress admin dashboard, navigate to **Tutor LMS > Settings > REST API / API**.
-2. Generate an API Key & Secret with the desired permission level (`Read`, `Write`, or `All`).
-3. Set up your local environment file:
-   - Make a copy of `environments/local.bru.example` named `environments/local.bru`:
-     ```bash
-     cp docs/api/environments/local.bru.example docs/api/environments/local.bru
-     ```
-   - In Bruno, select the **local** environment from the top-right dropdown.
-   - Configure `base_url`, `api_key`, and `api_secret` in the environment settings (or directly in `environments/local.bru`). Note that `local.bru` is gitignored so your credentials won't be committed.
-4. For production environments, configure `environments/production.bru`.
+Tutor LMS REST API uses **JWT authentication** (since 4.2.0):
+
+1. In WordPress admin, go to **Tutor LMS → Settings → REST API**.
+2. Generate an API Key & Secret with the desired permission (`Read` in Free; Pro also offers `Write`, `Delete`, `Read/Write`, and `All`). **Copy the secret immediately and store it securely — it is shown only once and cannot be retrieved again.**
+3. Set up your local environment:
+   ```bash
+   cp docs/api/environments/local.bru.example docs/api/environments/local.bru
+   ```
+4. In Bruno, select the **local** environment and set:
+   - `base_url` — e.g. `http://yoursite.local/wp-json/tutor/v1`
+   - `api_key` / `api_secret` — from Tutor settings (use the secret copied at generation time)
+   - `username` / `password` — WordPress user credentials
+5. Run **Authentication → Login**. It stores `access_token` and `refresh_token` in the environment.
+6. All other authenticated requests send `Authorization: Bearer {{access_token}}`.
+
+`local.bru` is gitignored so credentials are not committed. For production, configure `environments/production.bru`.
+
+### Auth flow
+
+```
+Login only:
+  Tutor-Api-Key + Tutor-Api-Secret + username/password
+        │
+        ▼
+  POST /auth/login  →  access_token + refresh_token
+        │
+        ▼
+Other Tutor REST routes (when authenticated):
+  Authorization: Bearer <access_token>  (or Tutor-User-Token header)
+        │
+        ├── POST /auth/refresh  (body: refresh_token) when access expires
+        └── POST /auth/logout   (invalidate refresh token(s))
+```
+
+**Auth clarification**
+
+| Route                       | Credentials                                                                                                                                     |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /auth/login`          | `Tutor-Api-Key` + `Tutor-Api-Secret` headers + username/password body                                                                           |
+| All other Tutor REST routes | Bearer JWT only (`Authorization: Bearer …` or `Tutor-User-Token`). Permission is taken from the API key id (`kid`) bound into the access token. |
+| `POST /auth/refresh`        | Refresh token in body (no API key / Bearer required)                                                                                            |
+| `POST /auth/logout`         | Optional Bearer and/or `refresh_token` / `all` in body                                                                                          |
 
 ---
 
-## 📁 Collection Structure
+## Collection Structure
 
-The collection is organized into the following categories:
-
-- **`environments/`**: Contains `local.bru.example` and `production.bru`.
-- **`Authentication/`**: Overview of authentication mechanisms, key management, and headers.
-- **`Courses/`**: Endpoints for querying course listings, course details, complete curriculum trees, announcements, and ratings/reviews.
-- **`Curriculum/`**: Topic modules and lesson querying endpoints.
-- **`Quizzes/`**: Quiz structures, questions, answers, and student attempt histories.
-- **`Instructors/`**: Author/instructor profiles, bio, and associated course references.
-- **`Ecommerce & Webhooks/`**: Payment gateway webhooks and processing handlers.
+- **`environments/`**: `local.bru.example` and `production.bru`.
+- **`Authentication/`**: Login, refresh, and logout.
+- **`Courses/`**: Course listings, details, curriculum trees, announcements, ratings.
+- **`Curriculum/`**: Topics and lessons (read).
+- **`Quizzes/`**: Quizzes, questions/answers, attempt details.
+- **`Instructors/`**: Author/instructor profiles.
+- **`Ecommerce & Webhooks/`**: Payment gateway webhooks (public).
 
 ---
 
-## 💻 Running Requests via CLI
-
-You can execute this collection in terminal or CI/CD pipelines using the Bruno CLI:
+## Running Requests via CLI
 
 ```bash
 # Run against the local environment
@@ -55,21 +83,103 @@ npx @usebruno/cli run docs/api --env production
 npx @usebruno/cli run docs/api/Courses --env local
 ```
 
+Run **Authentication → Login** first (or ensure `access_token` is set) before authenticated folders.
+
 ---
 
-## 📡 API Response Format
+## API Response Format
 
-All Tutor LMS REST API endpoints return a standardized JSON envelope:
+Successful Tutor REST responses use an operation-specific `code` (not a generic `"success"`):
 
 ```json
 {
-  "code": "success",
+  "code": "tutor_read_course",
   "message": "Human readable message",
-  "data": { ... }
+  "data": {}
 }
 ```
 
-### Common Status Codes:
-- `200 OK`: Request succeeded.
-- `401 Unauthorized` / `403 Forbidden`: Missing, invalid, or insufficient API keys / user capabilities.
-- `404 Not Found`: Resource (Course, Topic, Lesson, Quiz, or Instructor) does not exist for the provided ID.
+Examples of operation codes: `tutor_read_course`, `tutor_read_rating`, `tutor_read_quiz`, `tutor_auth_login`, `tutor_auth_refresh`, `tutor_auth_logout`.
+
+### Error shape (`WP_Error`)
+
+HTTP status ≥ 400 responses are WordPress `WP_Error` objects. The REST API serializes them as:
+
+```json
+{
+  "code": "tutor_read_course",
+  "message": "Course not found",
+  "data": {
+    "status": 404
+  }
+}
+```
+
+When the controller passes extra error details, they appear under `data.details`:
+
+```json
+{
+  "code": "tutor_validation_error",
+  "message": "Invalid input",
+  "data": {
+    "status": 400,
+    "details": { "field": "…" }
+  }
+}
+```
+
+WordPress may also return core codes such as `rest_missing_callback_param` (missing required args) with `data.status` and `data.params`.
+
+### Access token errors (authenticated routes)
+
+Protected Tutor routes authorize via `RestAuth::authorize_authenticated_request()` / `get_access_token_error()`. Missing or bad Bearer JWTs return explicit codes (HTTP status from `rest_authorization_required_code()` — **401** when no WP user is authenticated, **403** if a session user is already present):
+
+**Missing / empty access token**
+
+```json
+{
+  "code": "rest_missing_access_token",
+  "message": "Access token is required.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+**Invalid, expired, or revoked access token**
+
+```json
+{
+  "code": "rest_invalid_access_token",
+  "message": "Invalid access token.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+**Valid token, insufficient API key permission**
+
+```json
+{
+  "code": "rest_forbidden",
+  "message": "API key does not have permission for this request.",
+  "data": {
+    "status": 401
+  }
+}
+```
+
+Send `Authorization: Bearer {{access_token}}` (or `Tutor-User-Token`) on authenticated routes. Run **Authentication → Login** (or **Refresh Token**) when you see these errors.
+
+### HTTP status codes
+
+- `200 OK`: Request succeeded (Tutor core read/auth routes).
+- `201 Created`: Not used by Tutor LMS **core** REST routes today (core is mostly `GET` plus auth). Pro write endpoints may return `201` where applicable.
+- `400 Bad Request`: Validation / missing required parameters.
+- `401 Unauthorized` / `403 Forbidden`: Missing/invalid JWT (`rest_missing_access_token`, `rest_invalid_access_token`), revoked API key, insufficient key permission (`rest_forbidden`), or a real resource the caller cannot access.
+- `404 Not Found`: Missing/invalid resource id (`rest_invalid_resource`), or empty result sets from controllers when the id is valid.
+
+### Ecommerce webhook exception
+
+`POST|GET|… /ecommerce-webhook/{payment_method}` does **not** use the Tutor JSON envelope. It is a public gateway callback: empty `payment_method` logs and exits; otherwise the gateway driver verifies the signature and may redirect. Prefer treating `payment_method` as effectively required.
