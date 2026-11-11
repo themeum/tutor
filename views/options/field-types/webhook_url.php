@@ -7,7 +7,12 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.0.0
+ *
+ * @var mixed $this
+ * @var array $field
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 $field_key = $field['key'];
 $field_id  = esc_attr( 'field_' . $field_key );
