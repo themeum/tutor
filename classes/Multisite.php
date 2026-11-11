@@ -31,13 +31,8 @@ class Multisite {
 			return;
 		}
 
-		// Modern site initialization hook (WP 5.1+).
 		add_action( 'wp_initialize_site', array( $this, 'on_initialize_site' ), 10, 2 );
-
-		// Site deletion hook.
 		add_action( 'wp_uninitialize_site', array( $this, 'on_uninitialize_site' ) );
-
-		// Ensure administrator capabilities on active subsite.
 		add_action( 'init', array( $this, 'ensure_admin_capabilities' ) );
 	}
 
@@ -54,33 +49,22 @@ class Multisite {
 	public function on_initialize_site( \WP_Site $site, array $args = array() ): void {
 		$blog_id = (int) $site->blog_id;
 
-		switch_to_blog( $blog_id );
+		self::run_in_site(
+			$blog_id,
+			function () use ( $blog_id, $site ) {
+				self::provision_site();
 
-		// 1. Create all tables.
-		TableManager::create_core_tables( true );
-
-		// 2. Default options.
-		$default_options = Tutor::default_options();
-		update_option( 'tutor_option', $default_options );
-		update_option( 'tutor_version', TUTOR_VERSION );
-
-		// 3. User roles & permissions.
-		Tutor::manage_tutor_roles_and_permissions();
-
-		// 4. Default pages.
-		Tutor::save_data();
-
-		/**
-		 * Action fired after a subsite is initialized with Tutor LMS.
-		 *
-		 * @since 4.3.0
-		 *
-		 * @param int      $blog_id Blog ID.
-		 * @param \WP_Site $site    Site instance.
-		 */
-		do_action( 'tutor_multisite_subsite_initialized', $blog_id, $site );
-
-		restore_current_blog();
+				/**
+				 * Action fired after a subsite is initialized with Tutor LMS.
+				 *
+				 * @since 4.3.0
+				 *
+				 * @param int      $blog_id Blog ID.
+				 * @param \WP_Site $site    Site instance.
+				 */
+				do_action( 'tutor_multisite_subsite_initialized', $blog_id, $site );
+			}
+		);
 	}
 
 	/**
@@ -103,11 +87,8 @@ class Multisite {
 		 * @param bool $should_drop Whether to drop tables. Default true.
 		 * @param int  $blog_id     Blog ID being deleted.
 		 */
-		$should_drop = apply_filters( 'tutor_multisite_drop_tables_on_delete', true, $blog_id );
-		if ( $should_drop ) {
-			switch_to_blog( $blog_id );
-			TableManager::drop_tables();
-			restore_current_blog();
+		if ( apply_filters( 'tutor_multisite_drop_tables_on_delete', true, $blog_id ) ) {
+			self::run_in_site( $blog_id, array( TableManager::class, 'drop_tables' ) );
 		}
 
 		/**
@@ -137,19 +118,7 @@ class Multisite {
 		);
 
 		foreach ( $site_ids as $blog_id ) {
-			switch_to_blog( (int) $blog_id );
-
-			TableManager::create_core_tables( true );
-
-			$version = get_option( 'tutor_version' );
-			if ( ! $version ) {
-				update_option( 'tutor_option', Tutor::default_options() );
-				Tutor::manage_tutor_roles_and_permissions();
-				Tutor::save_data();
-				update_option( 'tutor_version', TUTOR_VERSION );
-			}
-
-			restore_current_blog();
+			self::run_in_site( (int) $blog_id, array( __CLASS__, 'provision_site' ) );
 		}
 	}
 
@@ -169,5 +138,53 @@ class Multisite {
 			}
 		}
 	}
-}
 
+	/**
+	 * Create tables and seed defaults for the current site.
+	 *
+	 * Tables are always created or updated so missing ones are restored.
+	 * Default options, roles and pages are seeded only on a fresh install,
+	 * so existing settings are never overwritten.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return void
+	 */
+	private static function provision_site(): void {
+		$is_installed = (bool) get_option( 'tutor_version' );
+
+		TableManager::create_core_tables( ! $is_installed );
+
+		if ( $is_installed ) {
+			return;
+		}
+
+		update_option( 'tutor_option', Tutor::default_options() );
+		Tutor::manage_tutor_roles_and_permissions();
+		Tutor::save_data();
+		update_option( 'tutor_version', TUTOR_VERSION );
+	}
+
+	/**
+	 * Run a callback in the context of a given site, always restoring the previous one.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int      $blog_id  Blog ID.
+	 * @param callable $callback Callback to run.
+	 *
+	 * @return void
+	 */
+	private static function run_in_site( int $blog_id, callable $callback ): void {
+		switch_to_blog( $blog_id );
+		try {
+			$callback();
+		} catch ( \Exception $e ) {
+			error_log(
+				sprintf( 'Tutor: site initialization failed for blog ID %d: %s', $blog_id, $e->getMessage() )
+			);
+		} finally {
+			restore_current_blog();
+		}
+	}
+}

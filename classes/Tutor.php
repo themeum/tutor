@@ -690,9 +690,14 @@ final class Tutor extends Singleton {
 	}
 
 	/**
-	 * Do some task during plugin activation
+	 * Do some task during plugin activation.
 	 *
 	 * @since 4.0.0 Flush rewrite rules on activation.
+	 * @since 4.3.0 Param $network_wide added for multisite.
+	 *
+	 * @param bool $network_wide If true, network-wide activation.
+	 *
+	 * @return void
 	 */
 	public static function tutor_activate( $network_wide = false ) {
 		// Network-wide activation in Multisite.

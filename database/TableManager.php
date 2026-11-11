@@ -76,7 +76,11 @@ class TableManager {
 	protected static function get_table_classes(): array {
 		$classes = apply_filters( 'tutor_database_table_classes', self::CORE_TABLE_CLASSES );
 
-		// Filter is instance of Table.
+		/**
+		 * Validate the filtered list:
+		 * 1. Keep only strings that are subclasses of Tutor\Core\Table.
+		 * 2. Remove duplicates in case a class is registered more than once.
+		 */
 		$classes = array_unique(
 			array_filter(
 				$classes,
