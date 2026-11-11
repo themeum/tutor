@@ -9,7 +9,7 @@
  * @since 1.5.8
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 tutor_utils()->tutor_custom_header();
 

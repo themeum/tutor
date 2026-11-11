@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OrderController;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;

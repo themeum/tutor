@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +35,7 @@ if ( is_null( $course_rating ) ) {
 }
 ?>
 
-<header class="tutor-course-details-header tutor-mb-44">
+<div class="tutor-course-details-header tutor-mb-44">
 	<?php if ( ! $disable_reviews ) : ?>
 		<div class="tutor-course-details-ratings">
 			<?php
@@ -112,4 +112,4 @@ if ( is_null( $course_rating ) ) {
 			</div>
 		</div>
 	</div>
-</header>
+</div>

@@ -13,7 +13,7 @@
 
 // @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 ?>
 <div class="tutor-wp-dashboard-filter tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap tutor-align-center tutor-justify-between tutor-pb-40">

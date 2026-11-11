@@ -42,13 +42,15 @@ docs {
   
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `payment_method` | `string` | No | Identifier slug of the payment gateway (e.g. `paypal`, `stripe`). |
+  | `payment_method` | `string` | **Effectively yes** | Gateway slug (e.g. `paypal`, `stripe`). The route allows an optional segment, but an empty method logs `"No Payment Method found from webhook url,"` and **exits** without a Tutor JSON body. |
   
   ## Request Body
-  Accepts raw webhook payload sent by the payment provider (JSON or form-urlencoded).
+  Accepts raw webhook payload sent by the payment provider (JSON or form-urlencoded). The handler also reads `$_GET`, `$_POST`, `$_SERVER`, and `php://input` for gateway verification.
   
-  ## Responses
+  ## Response behavior (no Tutor JSON envelope)
   
-  ### 200 OK (Webhook Processed)
-  Standard HTTP 200/204 response returned to notify the payment provider that the webhook event was received.
+  This endpoint does **not** return `{ code, message, data }`. Behavior depends on the gateway:
+  - Empty / missing `payment_method`: server-side `error_log` + `exit()` (no JSON envelope).
+  - Known gateway: `verify_webhook_signature`; on success may fire `tutor_order_payment_updated` and optionally `wp_safe_redirect` to a `redirectUrl`.
+  - Gateways typically expect a plain HTTP 200/204 acknowledgement rather than Tutor’s REST envelope.
 }

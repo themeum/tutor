@@ -22,7 +22,7 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 // Get the user ID and active tab.

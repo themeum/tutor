@@ -60,8 +60,8 @@ $field_id = 'field_' . $field['key'];
 						<button type="button" class="tutor-btn tutor-image-upload-select" aria-label="<?php esc_attr_e( 'Replace logo', 'tutor' ); ?>">
 							<?php
 								SvgIcon::make()
-									->name( Icon::RELOAD_2 )
-									->size( 12 )
+									->name( Icon::EDIT_2 )
+									->size( 16 )
 									->ignore_kids()
 									->render();
 							?>
@@ -70,7 +70,7 @@ $field_id = 'field_' . $field['key'];
 							<?php
 								SvgIcon::make()
 									->name( Icon::DELETE_2 )
-									->size( 12 )
+									->size( 16 )
 									->ignore_kids()
 									->render();
 							?>
@@ -80,9 +80,9 @@ $field_id = 'field_' . $field['key'];
 					<button type="button" class="tutor-btn tutor-image-upload-select tutor-image-upload-empty">
 						<?php
 							SvgIcon::make()
-								->name( Icon::IMAGE_PLUS )
+								->name( Icon::IMAGE_ADD )
 								->ignore_kids()
-								->size( 20 )
+								->size( 24 )
 								->render();
 						?>
 						<?php esc_html_e( 'Upload logo', 'tutor' ); ?>

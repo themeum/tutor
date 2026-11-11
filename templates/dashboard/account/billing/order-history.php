@@ -30,7 +30,7 @@ use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
 use Tutor\Ecommerce\Ecommerce;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 if ( 'free' === $monetize_by ) {

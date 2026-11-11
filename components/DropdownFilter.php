@@ -16,7 +16,7 @@ use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 defined( 'ABSPATH' ) || exit;
 

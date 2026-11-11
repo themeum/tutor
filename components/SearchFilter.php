@@ -16,7 +16,7 @@ namespace Tutor\Components;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 defined( 'ABSPATH' ) || exit;
 
