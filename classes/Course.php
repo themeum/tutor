@@ -24,6 +24,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Tooltip;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
@@ -954,8 +955,7 @@ class Course extends Tutor_Base {
 		$search_term = '';
 		$post_status = Input::post( 'post_status', null );
 
-		$filter_raw = Input::post( 'filter', '' );
-		$filter     = ! empty( $filter_raw ) ? json_decode( $filter_raw ) : null;
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
 			$search_term = Input::sanitize( $filter->search );
 		}
@@ -1854,7 +1854,7 @@ class Course extends Tutor_Base {
 		$action = Input::post( 'action' );
 		if ( 'query-attachments' === $action && tutor_utils()->is_instructor() ) {
 			if ( ! tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
-				$where .= ' AND post_author=' . (int) get_current_user_id();
+				$where .= ' AND post_author=' . get_current_user_id();
 			}
 		}
 
@@ -2226,17 +2226,16 @@ class Course extends Tutor_Base {
 			return;
 		}
 
-		/**
-		 * TODO: need to check purchase information
-		 */
-
-		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
-
 		$course = get_post( $course_id );
 		if ( ! ( $course instanceof \WP_Post ) ) {
 			return;
 		}
 
+		/**
+		 * TODO: need to check purchase information
+		 */
+
+		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
 			if ( wp_doing_ajax() ) {
 				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
