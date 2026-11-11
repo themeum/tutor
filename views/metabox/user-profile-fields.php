@@ -14,11 +14,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * User object passed from User::edit_user_profile().
  *
- * @var \WP_User|null $user
+ * @var \WP_User $user
  */
-if ( ! is_admin() || ! ( $user instanceof \WP_User ) ) {
-	return;
-}
 ?>
 <h2>
 	<?php esc_html_e( 'Tutor Fields', 'tutor' ); ?>
