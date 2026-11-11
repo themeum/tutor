@@ -142,6 +142,7 @@ export function resolveProvider(element: Element): PlayerProvider {
 
 class TutorVideoPlayerElement extends PlayerElementBaseClass {
   player: TutorPlayer | null = null;
+  #cleanupPortraitDetection: (() => void) | null = null;
 
   connectedCallback(): void {
     // Tutor never shows the provider's own title; the lesson controller sets the
@@ -178,6 +179,10 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
       void loadProviderModule(provider);
     }
 
+    if (provider === 'youtube') {
+      this.#setupYouTubePortraitDetection();
+    }
+
     const player = createTutorPlayer({
       element: this,
       store: this.store,
@@ -196,7 +201,83 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     this.#releasePlayer();
   }
 
+  #setupYouTubePortraitDetection(): void {
+    const ytv = this.querySelector('youtube-video');
+    const src = ytv?.getAttribute('src') || '';
+    if (this.classList.contains('is-portrait') || src.includes('/shorts/')) {
+      this.classList.add('is-portrait');
+      ytv?.classList.add('is-portrait');
+    }
+
+    const setPortrait = (isPortrait: boolean): void => {
+      this.classList.toggle('is-portrait', isPortrait);
+      ytv?.classList.toggle('is-portrait', isPortrait);
+    };
+
+    const handleMessage = (event: MessageEvent): void => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data?.info?.videoContentRect) {
+          const { width, height, left, top } = data.info.videoContentRect;
+          if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
+            if (height > width || ((left ?? 0) > 0 && (top ?? 0) === 0)) {
+              setPortrait(true);
+            }
+          }
+        }
+      } catch {
+        // Ignore non-JSON messages
+      }
+    };
+
+    const win = this.ownerDocument?.defaultView || window;
+    win.addEventListener('message', handleMessage);
+
+    const checkEngine = (): void => {
+      const engine = (
+        ytv as unknown as {
+          engine?: {
+            playerInfo?: { videoContentRect?: { width: number; height: number; left?: number; top?: number } };
+            getVideoData?: () => { title?: string };
+          };
+        }
+      )?.engine;
+
+      const title = engine?.getVideoData?.()?.title;
+      if (title && /#shorts?\b/i.test(title)) {
+        setPortrait(true);
+        return;
+      }
+
+      const rect = engine?.playerInfo?.videoContentRect;
+      if (
+        rect &&
+        typeof rect.width === 'number' &&
+        typeof rect.height === 'number' &&
+        rect.width > 0 &&
+        rect.height > 0
+      ) {
+        if (rect.height > rect.width || ((rect.left ?? 0) > 0 && (rect.top ?? 0) === 0)) {
+          setPortrait(true);
+          return;
+        }
+      }
+    };
+
+    const interval = setInterval(checkEngine, 250);
+    const timeout = setTimeout(() => clearInterval(interval), 5000);
+
+    this.#cleanupPortraitDetection = () => {
+      win.removeEventListener('message', handleMessage);
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }
+
   #releasePlayer(): void {
+    this.#cleanupPortraitDetection?.();
+    this.#cleanupPortraitDetection = null;
+
     const player = this.player;
     this.player = null;
 
@@ -246,6 +327,10 @@ export function createMediaElement(source: DetectedSource, document: Document): 
 export function createPlayerElement(source: DetectedSource, document: Document): VideoPlayerElement {
   const host = document.createElement(VIDEO_PLAYER_TAG) as VideoPlayerElement;
   const skin = document.createElement(VIDEO_SKIN_TAG);
+
+  if (source.provider === 'youtube' && source.src.includes('/shorts/')) {
+    host.classList.add('is-portrait');
+  }
 
   applyUnsupportedControlsPatch(skin);
 

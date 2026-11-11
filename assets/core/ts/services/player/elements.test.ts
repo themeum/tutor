@@ -176,6 +176,45 @@ describe('tutor-video-player element', () => {
     player?.dispose();
   });
 
+  it('detects portrait YouTube video from /shorts/ in source URL', () => {
+    defineVideoPlayer();
+    const host = createPlayerElement(
+      { provider: 'youtube', src: 'https://www.youtube.com/shorts/12345678901' },
+      document,
+    );
+    document.body.appendChild(host);
+
+    expect(host.classList.contains('is-portrait')).toBe(true);
+    expect(host.querySelector('youtube-video')?.classList.contains('is-portrait')).toBe(true);
+
+    host.player?.dispose();
+  });
+
+  it('detects portrait YouTube video from postMessage videoContentRect', () => {
+    defineVideoPlayer();
+    const host = createPlayerElement(
+      { provider: 'youtube', src: 'https://www.youtube.com/watch?v=12345678901' },
+      document,
+    );
+    document.body.appendChild(host);
+
+    expect(host.classList.contains('is-portrait')).toBe(false);
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        data: JSON.stringify({
+          event: 'infoDelivery',
+          info: { videoContentRect: { width: 360, height: 640 } },
+        }),
+      }),
+    );
+
+    expect(host.classList.contains('is-portrait')).toBe(true);
+    expect(host.querySelector('youtube-video')?.classList.contains('is-portrait')).toBe(true);
+
+    host.player?.dispose();
+  });
+
   // Defines `video-skin`, so keep this test last in the file.
   it('patches a declared skin whose class registers after the host', async () => {
     defineVideoPlayer();
