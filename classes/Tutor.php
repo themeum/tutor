@@ -591,8 +591,6 @@ final class Tutor extends Singleton {
 		 * @since 2.8.0
 		 */
 		add_action( 'admin_init', array( $this, 'redirect_to_setup_page' ) );
-
-		// add_filter( 'rest_request_before_callbacks', array( $this, 'enforce_courses_privacy_rest_api' ), 10, 3 );
 	}
 
 	/**
