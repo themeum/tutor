@@ -25,7 +25,10 @@ const providerModulePromises = new Map<DeferredMediaProvider, Promise<unknown>>(
 export function loadProviderModule(provider: DeferredMediaProvider): Promise<unknown> {
   let promise = providerModulePromises.get(provider);
   if (!promise) {
-    promise = DEFERRED_MEDIA_LOADERS[provider]();
+    promise = DEFERRED_MEDIA_LOADERS[provider]().catch((err) => {
+      providerModulePromises.delete(provider);
+      throw err;
+    });
     providerModulePromises.set(provider, promise);
   }
   return promise;
@@ -79,7 +82,15 @@ const HIDE_UNSUPPORTED_CONTROLS_CSS = `
   }
 `;
 
+let sharedUnsupportedControlsSheet: CSSStyleSheet | null = null;
+const patchedSkins = new WeakSet<HTMLElement>();
+
 export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
+  if (patchedSkins.has(skin)) {
+    return;
+  }
+  patchedSkins.add(skin);
+
   const root = skin.shadowRoot;
   if (!root) {
     return;
@@ -87,9 +98,13 @@ export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
 
   if ('adoptedStyleSheets' in root && Array.isArray(root.adoptedStyleSheets) && typeof CSSStyleSheet !== 'undefined') {
     try {
-      const sheet = new CSSStyleSheet();
-      sheet.replaceSync(HIDE_UNSUPPORTED_CONTROLS_CSS);
-      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+      if (!sharedUnsupportedControlsSheet) {
+        sharedUnsupportedControlsSheet = new CSSStyleSheet();
+        sharedUnsupportedControlsSheet.replaceSync(HIDE_UNSUPPORTED_CONTROLS_CSS);
+      }
+      if (!root.adoptedStyleSheets.includes(sharedUnsupportedControlsSheet)) {
+        root.adoptedStyleSheets = [...root.adoptedStyleSheets, sharedUnsupportedControlsSheet];
+      }
       return;
     } catch {
       // Fall through to <style> injection
@@ -176,7 +191,10 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     if (isDeferredProvider(provider)) {
       // Import after the player element is defined and connected: the adapter's media
       // element registers itself with this element's media context on upgrade.
-      void loadProviderModule(provider);
+      loadProviderModule(provider).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('[tutor] provider load failed', err);
+      });
     }
 
     if (provider === 'youtube') {
@@ -211,11 +229,24 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     }
 
     const setPortrait = (isPortrait: boolean): void => {
+      if (isPortrait) {
+        clearInterval(interval);
+      }
       this.classList.toggle('is-portrait', isPortrait);
       ytv?.classList.toggle('is-portrait', isPortrait);
     };
 
     const handleMessage = (event: MessageEvent): void => {
+      const origin = event.origin;
+      if (
+        origin &&
+        origin !== 'https://www.youtube.com' &&
+        origin !== 'https://www.youtube-nocookie.com' &&
+        origin !== 'https://m.youtube.com'
+      ) {
+        return;
+      }
+
       try {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         if (data?.info?.videoContentRect) {
@@ -283,6 +314,7 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     this.player = null;
 
     if (player) {
+      player.release?.();
       this.dispatchEvent(
         new CustomEvent('tutor-player:dispose', { bubbles: true, composed: true, detail: { player } }),
       );
@@ -300,14 +332,22 @@ export function defineVideoPlayer(tagName: string = VIDEO_PLAYER_TAG): void {
 
 function buildMediaSource(source: DetectedSource): { tagName: string; src: string } {
   if (source.provider === 'youtube') {
-    const id = youtubeVideoId(source.src) ?? source.src;
-    return { tagName: 'youtube-video', src: `https://www.youtube.com/watch?v=${id}` };
+    const id = youtubeVideoId(source.src);
+    return {
+      tagName: 'youtube-video',
+      src: id ? `https://www.youtube.com/watch?v=${encodeURIComponent(id)}` : source.src,
+    };
   }
 
   if (source.provider === 'vimeo') {
-    const parsed = vimeoVideoId(source.src) ?? { id: source.src };
-    const src = parsed.hash ? `https://vimeo.com/${parsed.id}/${parsed.hash}` : `https://vimeo.com/${parsed.id}`;
-    return { tagName: 'vimeo-video', src };
+    const parsed = vimeoVideoId(source.src);
+    if (parsed) {
+      const src = parsed.hash
+        ? `https://vimeo.com/${encodeURIComponent(parsed.id)}/${encodeURIComponent(parsed.hash)}`
+        : `https://vimeo.com/${encodeURIComponent(parsed.id)}`;
+      return { tagName: 'vimeo-video', src };
+    }
+    return { tagName: 'vimeo-video', src: source.src };
   }
 
   return { tagName: 'video', src: source.src };

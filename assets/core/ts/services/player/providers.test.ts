@@ -10,6 +10,8 @@ describe('youtubeVideoId', () => {
     ['https://www.youtube.com/embed/abc123?rel=0', 'abc123'],
     ['https://www.youtube-nocookie.com/embed/abc123', 'abc123'],
     ['https://www.youtube.com/shorts/abc123', 'abc123'],
+    ['https://www.youtube.com/watch?v=abc%26list=x', null],
+    ['https://www.youtube.com/watch?v=invalid!id@', null],
     ['https://example.com/abc123', null],
     ['not a url', null],
   ])('%s -> %s', (url, expected) => {
@@ -23,6 +25,7 @@ describe('vimeoVideoId', () => {
     expect(vimeoVideoId('https://vimeo.com/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345?h=abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
+    expect(vimeoVideoId('https://vimeo.com/notanid')).toBeNull();
     expect(vimeoVideoId('https://example.com/12345')).toBeNull();
   });
 });

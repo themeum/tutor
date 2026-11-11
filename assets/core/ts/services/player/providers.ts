@@ -16,6 +16,10 @@ const parseUrl = (url: string): URL | null => {
   }
 };
 
+const YT_ID_REGEX = /^[\w-]{1,64}$/;
+const VIMEO_ID_REGEX = /^\d+$/;
+const VIMEO_HASH_REGEX = /^[a-z0-9]+$/i;
+
 export function youtubeVideoId(url: string): string | null {
   const parsed = parseUrl(url);
   if (!parsed) {
@@ -24,20 +28,19 @@ export function youtubeVideoId(url: string): string | null {
 
   const host = parsed.hostname.replace(/^www\./, '');
 
+  let id: string | null = null;
   if (host === 'youtu.be') {
-    return parsed.pathname.split('/').filter(Boolean)[0] || null;
+    id = parsed.pathname.split('/').filter(Boolean)[0] || null;
+  } else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+    if (parsed.pathname === '/watch') {
+      id = parsed.searchParams.get('v');
+    } else {
+      const match = parsed.pathname.match(/^\/(?:embed|v|shorts)\/([^/?#]+)/);
+      id = match ? match[1] : null;
+    }
   }
 
-  if (host !== 'youtube.com' && host !== 'm.youtube.com' && host !== 'youtube-nocookie.com') {
-    return null;
-  }
-
-  if (parsed.pathname === '/watch') {
-    return parsed.searchParams.get('v');
-  }
-
-  const match = parsed.pathname.match(/^\/(?:embed|v|shorts)\/([^/?#]+)/);
-  return match ? match[1] : null;
+  return id && YT_ID_REGEX.test(id) ? id : null;
 }
 
 export function vimeoVideoId(url: string): { id: string; hash?: string } | null {
@@ -57,13 +60,19 @@ export function vimeoVideoId(url: string): { id: string; hash?: string } | null 
     const index = parts.indexOf('video');
     const id = index >= 0 ? parts[index + 1] : parts[0];
     const hash = parsed.searchParams.get('h') ?? (index >= 0 ? parts[index + 2] : parts[1]);
-    return id ? { id, hash } : null;
+    if (!id || !VIMEO_ID_REGEX.test(id)) {
+      return null;
+    }
+    return hash && VIMEO_HASH_REGEX.test(hash) ? { id, hash } : { id };
   }
 
   const index = parts[0] === 'video' ? 1 : 0;
   const id = parts[index];
   const hash = parts[index + 1];
-  return id ? { id, hash } : null;
+  if (!id || !VIMEO_ID_REGEX.test(id)) {
+    return null;
+  }
+  return hash && VIMEO_HASH_REGEX.test(hash) ? { id, hash } : { id };
 }
 
 export function providerFromUrl(url: string, currentHost?: string): PlayerProvider {
@@ -84,6 +93,8 @@ export function providerFromUrl(url: string, currentHost?: string): PlayerProvid
   return 'html5';
 }
 
+const ALLOWED_SCHEMES = /^(https?:|blob:|\/|\.\/)/i;
+
 export function detectSource(root: Element): DetectedSource | null {
   const host = root.ownerDocument?.defaultView?.location?.hostname;
 
@@ -91,7 +102,7 @@ export function detectSource(root: Element): DetectedSource | null {
   if (video) {
     const source = video.querySelector('source[src]');
     const src = video.getAttribute('src') || source?.getAttribute('src') || '';
-    if (src) {
+    if (src && ALLOWED_SCHEMES.test(src.trim())) {
       return {
         provider: providerFromUrl(src, host),
         src,

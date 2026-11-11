@@ -105,6 +105,19 @@ describe('TutorPlayerService', () => {
     expect(handle.on).not.toHaveBeenCalled();
   });
 
+  it('unsubscribes a handed-off handler after a player appears', () => {
+    const { service, handle } = setup();
+    const mockUnsub = vi.fn();
+    vi.mocked(handle.on).mockReturnValue(mockUnsub);
+
+    const off = service.on('play', vi.fn());
+    service.create(target());
+
+    expect(handle.on).toHaveBeenCalled();
+    off();
+    expect(mockUnsub).toHaveBeenCalled();
+  });
+
   it('clears the active player when it is untracked', () => {
     const { service, handle } = setup();
     service.create(target());

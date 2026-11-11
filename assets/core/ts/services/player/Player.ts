@@ -49,8 +49,13 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     if (!handlers) {
       return;
     }
-    for (const handler of handlers) {
-      (handler as (payload: PlayerEventMap[E]) => void)(payload);
+    for (const handler of Array.from(handlers)) {
+      try {
+        (handler as (payload: PlayerEventMap[E]) => void)(payload);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('[tutor] player event handler error:', err);
+      }
     }
   };
 
@@ -81,24 +86,24 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     }
 
     const next = snapshot();
+    const prev = previous;
+    previous = next;
 
-    if (next.paused !== previous.paused) {
+    if (next.paused !== prev.paused) {
       emit(next.paused ? 'pause' : 'play', { player: handle });
     }
-    if (next.currentTime !== previous.currentTime) {
+    if (next.currentTime !== prev.currentTime) {
       emit('timeupdate', { player: handle, currentTime: next.currentTime, duration: next.duration });
     }
-    if (next.ended && !previous.ended) {
+    if (next.ended && !prev.ended) {
       emit('ended', { player: handle });
     }
-    if (next.volume !== previous.volume || next.muted !== previous.muted) {
+    if (next.volume !== prev.volume || next.muted !== prev.muted) {
       emit('volumechange', { player: handle, volume: next.volume, muted: next.muted });
     }
-    if (next.error && !previous.error) {
+    if (next.error && !prev.error) {
       emit('error', { player: handle, error: next.error });
     }
-
-    previous = next;
   }
 
   function onFullscreenChange(): void {
@@ -170,19 +175,30 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
       return () => handlers.delete(handler as unknown as AnyHandler);
     },
 
+    release: () => {
+      release();
+    },
+
     dispose: () => {
       if (disposed) {
         return;
       }
-      disposed = true;
-      unsubscribeStore();
-      element.ownerDocument?.removeEventListener('fullscreenchange', onFullscreenChange);
-      listeners.clear();
+      release();
       store.destroy();
       element.remove();
-      onDispose?.();
     },
   };
+
+  function release(): void {
+    if (disposed) {
+      return;
+    }
+    disposed = true;
+    unsubscribeStore();
+    element.ownerDocument?.removeEventListener('fullscreenchange', onFullscreenChange);
+    listeners.clear();
+    onDispose?.();
+  }
 
   unsubscribeStore = store.subscribe(sync);
   element.ownerDocument?.addEventListener('fullscreenchange', onFullscreenChange);

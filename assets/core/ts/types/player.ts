@@ -36,6 +36,7 @@ export interface TutorPlayer {
   seek(time: number): void;
 
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe;
+  release?(): void;
   dispose(): void;
 }
 

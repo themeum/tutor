@@ -15,9 +15,11 @@ export interface PlayerServiceDependencies {
   createElement?: (source: DetectedSource, document: Document) => VideoPlayerElement;
 }
 
+type Waiting = { event: PlayerEvent; handler: AnyHandler; off?: PlayerUnsubscribe };
+
 export class TutorPlayerService implements PlayerService {
   #active: TutorPlayer | null = null;
-  #waiting: Array<{ event: PlayerEvent; handler: AnyHandler }> = [];
+  #waiting: Waiting[] = [];
   #createElement: (source: DetectedSource, document: Document) => VideoPlayerElement;
 
   constructor(dependencies: PlayerServiceDependencies = {}) {
@@ -28,8 +30,8 @@ export class TutorPlayerService implements PlayerService {
   track(player: TutorPlayer): void {
     this.#active = player;
 
-    for (const { event, handler } of this.#waiting.splice(0)) {
-      player.on(event, handler as (payload: PlayerEventMap[PlayerEvent]) => void);
+    for (const entry of this.#waiting.splice(0)) {
+      entry.off = player.on(entry.event, entry.handler as (payload: PlayerEventMap[PlayerEvent]) => void);
     }
   }
 
@@ -89,10 +91,13 @@ export class TutorPlayerService implements PlayerService {
     }
 
     // No player yet: bind to the first one that appears (research F1).
-    const entry = { event, handler: handler as AnyHandler };
+    const entry: Waiting = { event, handler: handler as AnyHandler };
     this.#waiting.push(entry);
 
     return () => {
+      if (entry.off) {
+        return entry.off();
+      }
       const index = this.#waiting.indexOf(entry);
       if (index >= 0) {
         this.#waiting.splice(index, 1);

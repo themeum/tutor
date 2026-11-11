@@ -229,6 +229,45 @@ describe('createTutorPlayer', () => {
     expect(onPlay).not.toHaveBeenCalled();
   });
 
+  it('release unhooks listeners without destroying store or removing element', () => {
+    const { store, emit, set } = createStore();
+    const host = element();
+    document.body.appendChild(host);
+
+    const player = createTutorPlayer({ element: host, store, provider: 'html5' });
+    const onPlay = vi.fn();
+    player.on('play', onPlay);
+
+    player.release?.();
+
+    expect(store.destroy).not.toHaveBeenCalled();
+    expect(host.isConnected).toBe(true);
+
+    set({ paused: false });
+    emit();
+
+    expect(onPlay).not.toHaveBeenCalled();
+  });
+
+  it('isolates throwing event handlers so subsequent handlers still execute', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { store, emit, set } = createStore();
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+    const throwingHandler = vi.fn(() => {
+      throw new Error('boom');
+    });
+    const succeedingHandler = vi.fn();
+
+    player.on('play', throwingHandler);
+    player.on('play', succeedingHandler);
+
+    set({ paused: false });
+    emit();
+
+    expect(throwingHandler).toHaveBeenCalled();
+    expect(succeedingHandler).toHaveBeenCalled();
+  });
+
   it('invokes onDispose once when the handle is disposed', () => {
     const { store } = createStore();
     const onDispose = vi.fn();
