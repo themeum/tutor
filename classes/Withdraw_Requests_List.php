@@ -210,7 +210,7 @@ class Withdraw_Requests_List {
 		if ( 'rejected' === $status ) {
 			$withdraw = self::get_withdraw_by_id( $withdraw_id );
 			if ( $withdraw ) {
-				$details = WithdrawModel::safe_unserialize_array( $withdraw->method_data );
+				$details = tutor_unserialize( $withdraw->method_data );
 
 				if ( empty( $details ) ) {
 					$details = array();
