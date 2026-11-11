@@ -350,7 +350,7 @@ $courses       = current_user_can( 'manage_options' ) ? CourseModel::get_courses
 	<div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : 'tutor-mt-40' ); ?>">
 		<?php
 		$limit = tutor_utils()->get_option( 'pagination_per_page' );
-		if ( $the_query->found_posts > $limit ) {
+		if ( ! empty( $the_query->found_posts ) && $the_query->found_posts > $limit ) {
 			$pagination_data = array(
 				'total_items' => $the_query->found_posts,
 				'per_page'    => $limit,
