@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -100,6 +101,19 @@ class Instructor {
 
 		add_action( 'wp_ajax_tutor_save_instructor_home_sections_order', array( $this, 'ajax_save_home_sections_order' ) );
 		add_action( 'wp_ajax_tutor_save_instructor_home_sections_visibility', array( $this, 'ajax_save_home_section_visibility' ) );
+	}
+
+	/**
+	 * Check if applying to become an instructor is allowed.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return bool
+	 */
+	public static function can_apply_for_instructor(): bool {
+		$is_enabled = (bool) tutor_utils()->get_option( 'enable_become_instructor_btn' );
+
+		return apply_filters( 'tutor_can_apply_for_instructor', $is_enabled );
 	}
 
 	/**
@@ -247,6 +261,10 @@ class Instructor {
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
+
+		if ( ! self::can_apply_for_instructor() ) {
+			wp_die( esc_html__( 'Become an instructor is currently disabled.', 'tutor' ), 403 );
+		}
 
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
@@ -849,15 +867,12 @@ class Instructor {
 						WHERE {$earning_where_clause}
 						GROUP BY earnings.course_id";
 
-		$enrollment_sql = QueryHelper::prepare_raw_query(
-			"SELECT 
-				post_parent AS course_id, 
-				COUNT(DISTINCT post_author) AS total_student
-			FROM {$wpdb->posts}
-			WHERE {$enrollment_where_clause}
-			GROUP BY post_parent",
-			array()
-		);
+		$enrollment_sql = "SELECT 
+							post_parent AS course_id, 
+							COUNT(DISTINCT post_author) AS total_student
+						FROM {$wpdb->posts}
+						WHERE {$enrollment_where_clause}
+						GROUP BY post_parent";
 
 		//phpcs:disabled
 		$result = $wpdb->get_results(

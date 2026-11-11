@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 $announcement_obj = tutor_lms()->announcements;
@@ -55,7 +55,7 @@ if ( ! empty( $date_filter ) ) {
 	);
 }
 
-if ( ! current_user_can( 'administrator' ) ) {
+if ( ! current_user_can( 'manage_options' ) ) {
 	$args['author'] = get_current_user_id();
 }
 

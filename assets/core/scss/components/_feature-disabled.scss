@@ -1,0 +1,37 @@
+// Feature Disabled / Access Denied Component
+//
+// Ported from legacy assets/src/scss/front/_denied.scss into the v4 design system.
+// Used by templates/feature_disabled.php to render access-denied and feature-disabled
+// states (e.g. when user registration is disabled) with proper v4 tokens and typography.
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-disabled-wrapper {
+  max-width: 444px;
+  padding: $tutor-spacing-12 $tutor-spacing-none $tutor-spacing-8;
+  margin: auto;
+  @include tutor-flex(column, center, center);
+  text-align: center;
+
+  .tutor-disabled-content-wrapper {
+    @include tutor-flex(column, center, center);
+    text-align: center;
+
+    img {
+      margin-bottom: $tutor-spacing-6;
+    }
+
+    h3 {
+      @include tutor-typography('h4', 'medium', 'primary');
+      margin-top: $tutor-spacing-none;
+      margin-bottom: $tutor-spacing-3;
+    }
+
+    p {
+      @include tutor-typography('p2', 'regular', 'subdued');
+      margin-top: $tutor-spacing-none;
+      margin-bottom: $tutor-spacing-8;
+    }
+  }
+}

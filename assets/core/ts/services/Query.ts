@@ -79,7 +79,7 @@ export interface MutationState<TData = unknown, TVariables = unknown, TError = E
   isPending: boolean;
   isError: boolean;
   isSuccess: boolean;
-  mutate(variables: TVariables): Promise<TData>;
+  mutate(variables: TVariables): Promise<TData | undefined>;
   mutateAsync(variables: TVariables): Promise<TData>;
   reset(): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -255,6 +255,33 @@ export class QueryService {
     mutationFn: (variables: TVariables) => Promise<TData>,
     options: MutationOptions<TData, TVariables, TError> = {},
   ): MutationState<TData, TVariables, TError> {
+    const run = async (variables: TVariables): Promise<TData> => {
+      state.isPending = true;
+      state.isError = false;
+      state.isSuccess = false;
+      state.error = null;
+
+      let result: TData;
+      try {
+        await options.onMutate?.(variables);
+        result = await mutationFn(variables);
+      } catch (err) {
+        state.error = err as TError;
+        state.isError = true;
+        options.onError?.(err as TError, variables);
+        options.onSettled?.(null, err as TError, variables);
+        throw err;
+      } finally {
+        state.isPending = false;
+      }
+
+      state.data = result;
+      state.isSuccess = true;
+      await options.onSuccess?.(result, variables);
+      options.onSettled?.(result, null, variables);
+      return result;
+    };
+
     const state = Alpine.reactive({
       data: null as TData | null,
       error: null as TError | null,
@@ -262,61 +289,24 @@ export class QueryService {
       isError: false,
       isSuccess: false,
 
-      async mutate(variables: TVariables) {
-        (this as unknown as MutationState<TData, TVariables, TError>).isPending = true;
-        (this as unknown as MutationState<TData, TVariables, TError>).isError = false;
-        (this as unknown as MutationState<TData, TVariables, TError>).isSuccess = false;
-        (this as unknown as MutationState<TData, TVariables, TError>).error = null;
+      mutateAsync(variables: TVariables): Promise<TData> {
+        return run(variables);
+      },
 
+      async mutate(variables: TVariables): Promise<TData | undefined> {
         try {
-          // onMutate callback - for optimistic updates
-          if (options.onMutate) {
-            await options.onMutate(variables);
-          }
-
-          const result = await mutationFn(variables);
-          (this as unknown as MutationState<TData, TVariables, TError>).data = result;
-          (this as unknown as MutationState<TData, TVariables, TError>).isSuccess = true;
-
-          if (options.onSuccess) {
-            await options.onSuccess(result, variables);
-          }
-
-          // onSettled callback - always called
-          if (options.onSettled) {
-            options.onSettled(result, null, variables);
-          }
-
-          return result;
-        } catch (err) {
-          (this as unknown as MutationState<TData, TVariables, TError>).error = err as TError;
-          (this as unknown as MutationState<TData, TVariables, TError>).isError = true;
-
-          if (options.onError) {
-            options.onError(err as TError, variables);
-          }
-
-          // onSettled callback - always called
-          if (options.onSettled) {
-            options.onSettled(null, err as TError, variables);
-          }
-
-          throw err;
-        } finally {
-          (this as unknown as MutationState<TData, TVariables, TError>).isPending = false;
+          return await run(variables);
+        } catch {
+          return undefined;
         }
       },
 
-      async mutateAsync(variables: TVariables) {
-        return await this.mutate(variables);
-      },
-
       reset() {
-        (this as unknown as MutationState<TData, TVariables, TError>).data = null;
-        (this as unknown as MutationState<TData, TVariables, TError>).error = null;
-        (this as unknown as MutationState<TData, TVariables, TError>).isPending = false;
-        (this as unknown as MutationState<TData, TVariables, TError>).isError = false;
-        (this as unknown as MutationState<TData, TVariables, TError>).isSuccess = false;
+        state.data = null;
+        state.error = null;
+        state.isPending = false;
+        state.isError = false;
+        state.isSuccess = false;
       },
     }) as unknown as MutationState<TData, TVariables, TError>;
 

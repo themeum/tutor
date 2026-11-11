@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\User;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;

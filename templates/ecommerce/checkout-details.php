@@ -8,7 +8,7 @@
  * @since 3.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\OrderModel;
 use Tutor\Ecommerce\Settings;

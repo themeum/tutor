@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Lesson;
 
 $per_page           = tutor_utils()->get_option( 'pagination_per_page', 10 );

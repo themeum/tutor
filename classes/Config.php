@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Core\Singleton;
+
 defined( 'ABSPATH' ) || exit;
 
 /**

@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="tutor-fs-6 tutor-color-secondary">
-                                            ${file.name}
+                                            ${tutor_esc_html(file.name)}
                                         </div>
                                         <div class="tutor-fs-7">Size: ${file.size}</div>
                                     </div>

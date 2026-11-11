@@ -9,7 +9,7 @@
  * @since 2.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 ?>
 <div class="tutor-wp-dashboard-filter tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap tutor-align-center tutor-justify-between tutor-pb-40">
