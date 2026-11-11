@@ -18,6 +18,8 @@
 
 use TUTOR\Quiz;
 
+defined( 'ABSPATH' ) || exit;
+
 $quiz_id       = $attempt_data->quiz_id ?? get_the_ID();
 $passing_grade = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 if ( empty( $back_url ) ) {
