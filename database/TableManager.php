@@ -73,54 +73,37 @@ class TableManager {
 	 *
 	 * @return array<class-string<\Tutor\Core\Table>> Array of table classes.
 	 */
-	public static function get_table_classes(): array {
-		$core_classes = self::CORE_TABLE_CLASSES;
-
-		/**
-		 * Filter to register additional addon tables from Pro and third-party addons.
-		 *
-		 * @since 4.3.0
-		 *
-		 * @param array<class-string<\Tutor\Core\Table>> $all_classes Array of table classes.
-		 */
-		$all_classes = apply_filters( 'tutor_database_table_classes', $core_classes );
+	protected static function get_table_classes(): array {
+		$classes = apply_filters( 'tutor_database_table_classes', self::CORE_TABLE_CLASSES );
 
 		// Filter is instance of Table.
-		$all_classes = array_filter(
-			$all_classes,
-			fn( $class ) => is_string( $class ) && is_a( $class, Table::class, true )
+		$classes = array_unique(
+			array_filter(
+				$classes,
+				fn( $class ) => is_string( $class ) && is_a( $class, Table::class, true )
+			)
 		);
 
-		return $all_classes;
+		return $classes;
 	}
 
 	/**
 	 * Get all known tables (Core + Addons + Pro via filter).
-	 * Used for drop/cleanup operations across single-site and multisite.
 	 *
 	 * @since 4.3.0
 	 *
-	 * @return array<string> Array of base table names.
+	 * @return array<string,string> Base table name => prefixed table name.
 	 */
 	public static function get_table_names(): array {
-		$table_names = array_map(
-			fn( $class ) => $class::get_name(),
-			static::get_table_classes()
-		);
+		$table_names = array();
+		foreach ( static::get_table_classes() as $class ) {
+			$table_names[ $class::get_base_name() ] = $class::get_name();
+		}
 
-		/**
-		 * Filter to register additional addon tables from Pro and third-party addons.
-		 *
-		 * @since 4.3.0
-		 *
-		 * @param array<string> $all_tables Array of base table names.
-		 */
 		return apply_filters( 'tutor_database_tables', $table_names );
 	}
-
 	/**
 	 * Create or update a single table using dbDelta.
-	 * Reused across core tables, upgrade routines, and addon installers.
 	 *
 	 * @since 4.3.0
 	 *
@@ -137,8 +120,7 @@ class TableManager {
 	}
 
 	/**
-	 * Create only the Core tables for the current active blog context.
-	 * Called on plugin activation and new subsite provisioning.
+	 * Create only the Core tables.
 	 *
 	 * @since 4.3.0
 	 *
@@ -151,19 +133,11 @@ class TableManager {
 			$table_class::create( $include_constraints );
 		}
 
-		/**
-		 * Action fired after all Tutor Core tables have been created for the current blog.
-		 *
-		 * @since 4.3.0
-		 *
-		 * @param bool $include_constraints Whether foreign key constraints were included.
-		 */
 		do_action( 'tutor_database_core_tables_created', $include_constraints );
 	}
 
 	/**
-	 * Safely drop all known Tutor tables for the current active blog context.
-	 * Drops both Core and Addon tables using SET FOREIGN_KEY_CHECKS = 0.
+	 * Safely drop all known Tutor tables.
 	 *
 	 * @since 4.3.0
 	 *
@@ -171,7 +145,7 @@ class TableManager {
 	 */
 	public static function drop_tables(): void {
 		global $wpdb;
-		$table_names = self::get_table_names();
+		$table_names = array_values( self::get_table_names() );
 
 		// Temporarily disable FK checks to cleanly drop without constraint order issues.
 		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
@@ -182,11 +156,6 @@ class TableManager {
 
 		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
 
-		/**
-		 * Action fired after Tutor tables have been dropped for the current blog.
-		 *
-		 * @since 4.3.0
-		 */
 		do_action( 'tutor_database_tables_dropped' );
 	}
 }

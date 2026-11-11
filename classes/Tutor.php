@@ -456,17 +456,16 @@ final class Tutor extends Singleton {
 		 * Adding Tutor Database tables to $wpdb;
 		 *
 		 * @since 1.4.2
-		 * @since 4.3.0 Dynamically registered from TableRegistry with multisite awareness.
 		 * @since 4.3.0 Registering tables dynamically like before.
 		 * Example:
-		 * $wpdb->tutor_courses = $wpdb->prefix . 'tutor_courses';
-		 * $wpdb->tutor_lessons = $wpdb->prefix . 'tutor_lessons';
-		 * $wpdb->tutor_quizzes = $wpdb->prefix . 'tutor_quizzes';
+		 *  $wpdb->tutor_courses = $wpdb->prefix . 'tutor_courses';
+		 *  $wpdb->tutor_lessons = $wpdb->prefix . 'tutor_lessons';
+		 *  $wpdb->tutor_quizzes = $wpdb->prefix . 'tutor_quizzes';
 		 * ... etc
 		 */
 		global $wpdb;
-		foreach ( TableManager::get_table_classes() as $table_class ) {
-			$wpdb->{$table_class::get_base_name()} = $table_class::get_name();
+		foreach ( TableManager::get_table_names() as $base_name => $prefixed_name ) {
+			$wpdb->{$base_name} = $prefixed_name;
 		}
 
 		/**
