@@ -112,13 +112,13 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={editorUsed}
                 editors={courseDetails?.editors}
-                onCustomEditorButtonClick={() => {
-                  return form.handleSubmit((data) => {
+                onCustomEditorButtonClick={async (_editor) => {
+                  await form.handleSubmit(async (data) => {
                     const payload = convertCourseDataToPayload(
                       data,
                       findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
                     );
-                    return updateCourseMutation.mutateAsync({
+                    await updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
                       post_status: determinePostStatus(
