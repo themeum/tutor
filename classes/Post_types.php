@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 /**
  * Register Tutor's post types
@@ -519,6 +520,7 @@ class Post_types {
 			'menu_position'      => null,
 		);
 		register_post_type( tutor()->enrollment_post_type, $args );
+		EnrollmentModel::register_post_statuses();
 	}
 
 	/**

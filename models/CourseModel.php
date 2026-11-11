@@ -173,13 +173,15 @@ class CourseModel {
 			$post_status = array( 'publish' );
 		}
 
-		$query = DB::table( 'posts' )
-				->select( 'ID', 'post_author', 'post_title', 'post_name', 'post_status', 'menu_order' )
-				->where_in( 'post_status', $post_status )
-				->where( 'post_type', self::POST_TYPE )
-				->where_not_in( 'ID', $excludes );
-
-		return $query->get();
+		return get_posts(
+			array(
+				'posts_per_page' => -1,
+				'post_status'    => $post_status,
+				'post_type'      => self::POST_TYPE,
+				'post__not_in'   => $excludes,
+				'fields'         => array( 'ID', 'post_author', 'post_title', 'post_name', 'post_status', 'menu_order' ),
+			)
+		);
 	}
 
 	/**

@@ -290,29 +290,25 @@ class EnrollmentModel {
 			return null;
 		}
 
-		// If course ID provided, it will return single row data.
-		if ( $course_id > 0 && in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
-			$query = DB::table( 'posts' )
-					->where( 'post_type', self::POST_TYPE )
-					->where( 'post_parent', $course_id )
-					->where( 'post_author', $user_id );
+		$args = array(
+			'posts_per_page' => -1,
+			'post_type'      => self::POST_TYPE,
+			'post_status'    => array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ),
+		);
 
-			if ( ! empty( $status ) ) {
-				$query->where( 'post_status', $status );
-			}
-
-			return $query->first();
-
-		} else {
-			$query = DB::table( 'posts' )
-					->where( 'post_type', self::POST_TYPE )
-					->where( 'post_author', $user_id );
-			if ( ! empty( $status ) ) {
-				$query->where( 'post_status', $status );
-			}
-
-			return $query->get();
+		if ( $user_id > 0 ) {
+			$args['author'] = $user_id;
 		}
+
+		if ( $course_id > 0 && in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+			$args['post_parent'] = $course_id;
+		}
+
+		if ( ! empty( $status ) ) {
+			$args['post_status'] = $status;
+		}
+
+		return get_posts( $args );
 	}
 
 	/**
@@ -372,6 +368,37 @@ class EnrollmentModel {
 				'post_author' => $student_id,
 				'post_parent' => $course_id,
 				'post_type'   => self::POST_TYPE,
+			)
+		);
+	}
+
+	/**
+	 * Register enrollment post statuses.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return void
+	 */
+	public static function register_post_statuses() {
+		register_post_status(
+			self::STATUS_COMPLETED,
+			array(
+				'label'                     => _x( 'Completed', 'post status', 'tutor' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			)
+		);
+
+		register_post_status(
+			self::STATUS_CANCEL,
+			array(
+				'label'                     => _x( 'Cancel', 'post status', 'tutor' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
 			)
 		);
 	}

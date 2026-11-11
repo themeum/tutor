@@ -23,7 +23,13 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 	 */
 	public function test_delete_enrollment_record() {
 		$user_id     = 1;
-		$course_id   = 1;
+		$course_id   = self::factory()->post->create(
+			array(
+				'post_type'   => 'courses',
+				'post_status' => 'publish',
+				'post_author' => $user_id,
+			)
+		);
 		$enroll_id_1 = self::factory()->post->create(
 			array(
 				'post_type'   => EnrollmentModel::POST_TYPE,
@@ -68,7 +74,13 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 	 */
 	public function test_get_enrolled_data() {
 		$user_id   = 1;
-		$course_id = 1;
+		$course_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'courses',
+				'post_status' => 'publish',
+				'post_author' => $user_id,
+			)
+		);
 
 		self::factory()->post->create(
 			array(
@@ -79,7 +91,29 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 			)
 		);
 
+		self::factory()->post->create(
+			array(
+				'post_type'   => EnrollmentModel::POST_TYPE,
+				'post_status' => EnrollmentModel::STATUS_PENDING,
+				'post_author' => $user_id,
+				'post_parent' => $course_id,
+			)
+		);
+
+		self::factory()->post->create(
+			array(
+				'post_type'   => EnrollmentModel::POST_TYPE,
+				'post_status' => EnrollmentModel::STATUS_CANCEL,
+				'post_author' => $user_id,
+				'post_parent' => $course_id,
+			)
+		);
+
 		$enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id );
+
+		$this->assertEquals( 1, count( $enrollments ) );
+
+		$enrollments = EnrollmentModel::get_enrolled_data( $user_id );
 
 		$this->assertEquals( 1, count( $enrollments ) );
 	}
@@ -91,7 +125,13 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 	 */
 	public function test_update_enroll_data() {
 		$user_id   = 1;
-		$course_id = 1;
+		$course_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'courses',
+				'post_status' => 'publish',
+				'post_author' => $user_id,
+			)
+		);
 
 		$enroll_id_1 = self::factory()->post->create(
 			array(
