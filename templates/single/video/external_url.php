@@ -30,6 +30,7 @@ do_action( 'tutor_lesson/single/before/video/external_url' );
 				<video poster="<?php echo esc_url( $poster_url ); ?>" playsinline controls >
 					<source src="<?php echo esc_url( tutor_utils()->array_get( 'source_external_url', $video_info ) ); ?>" type="<?php echo esc_attr( tutor_utils()->avalue_dot( 'type', $video_info ) ); ?>">
 				</video>
+				<?php do_action( 'tutor_video_player/inside_skin' ); ?>
 			</video-skin>
 		</tutor-video-player>
 	</div>

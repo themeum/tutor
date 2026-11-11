@@ -215,6 +215,24 @@ describe('tutor-video-player element', () => {
     host.player?.dispose();
   });
 
+  it('initializes watermark inside player element if present', () => {
+    defineVideoPlayer();
+    const host = createPlayerElement(
+      { provider: 'youtube', src: 'https://www.youtube.com/watch?v=12345678901' },
+      document,
+    );
+    const wm = document.createElement('div');
+    wm.className = 'tutor-video-watermark';
+    host.querySelector('video-skin')?.appendChild(wm);
+
+    document.body.appendChild(host);
+
+    expect(wm.classList.contains('is-active')).toBe(true);
+    expect(wm.classList.contains('pos-top-left')).toBe(true);
+
+    host.player?.dispose();
+  });
+
   // Defines `video-skin`, so keep this test last in the file.
   it('patches a declared skin whose class registers after the host', async () => {
     defineVideoPlayer();

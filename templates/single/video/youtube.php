@@ -36,6 +36,7 @@ do_action( 'tutor_lesson/single/before/video/youtube' );
 			<tutor-video-player>
 				<video-skin>
 					<youtube-video src="<?php echo esc_url( $tutor_player_youtube_url ); ?>"></youtube-video>
+					<?php do_action( 'tutor_video_player/inside_skin' ); ?>
 				</video-skin>
 			</tutor-video-player>
 		<?php endif; ?>

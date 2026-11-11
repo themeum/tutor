@@ -40,6 +40,7 @@ do_action( 'tutor_lesson/single/before/video/embedded' );
 				)
 			);
 			?>
+			<?php do_action( 'tutor_video_player/inside_skin' ); ?>
 		</div>
 	</div>
 <?php endif; ?>

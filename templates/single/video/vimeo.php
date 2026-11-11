@@ -49,6 +49,7 @@ do_action( 'tutor_lesson/single/before/video/vimeo' );
 			<tutor-video-player>
 				<video-skin>
 					<vimeo-video src="<?php echo esc_url( $tutor_player_vimeo_url ); ?>"></vimeo-video>
+					<?php do_action( 'tutor_video_player/inside_skin' ); ?>
 				</video-skin>
 			</tutor-video-player>
 		<?php endif; ?>
