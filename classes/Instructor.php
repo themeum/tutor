@@ -160,6 +160,7 @@ class Instructor {
 			}
 		}
 
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_INS_REG, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
@@ -759,8 +760,8 @@ class Instructor {
 			$instructor_course_ids
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$row = $wpdb->get_row(
+			// phpcs:ignore -- sql are safely prepared.
 			$wpdb->prepare( $sql, $prepare_args ),
 			ARRAY_A
 		);
