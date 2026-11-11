@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Manage up grade
