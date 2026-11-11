@@ -200,6 +200,7 @@ class Instructor {
 		$wpdb->query( 'START TRANSACTION' );
 		$user_id = wp_insert_user( $userdata );
 		if ( is_wp_error( $user_id ) ) {
+			$wpdb->query( 'ROLLBACK' );
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
