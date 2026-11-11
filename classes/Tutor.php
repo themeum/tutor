@@ -620,7 +620,7 @@ final class Tutor extends Singleton {
 		if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
 			if ( ! wp_doing_ajax() ) {
 				update_option( 'tutor_wizard', 'active' );
-				$is_wp_cli = defined( 'WP_CLI' ) && WP_CLI;
+				$is_wp_cli = defined( 'WP_CLI' ) && \WP_CLI;
 				if ( ! $is_wp_cli ) {
 					wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
 				}
