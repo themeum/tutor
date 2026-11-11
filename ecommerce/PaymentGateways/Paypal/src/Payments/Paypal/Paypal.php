@@ -5,13 +5,20 @@ namespace Ollyo\PaymentHub\Payments\Paypal;
 use Throwable;
 use ErrorException;
 use Ollyo\PaymentHub\Core\Support\Arr;
-use Ollyo\PaymentHub\Core\Support\System;
-use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
-use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use Tutor\PaymentGateways\Exceptions\HttpRequestException;
+use Tutor\PaymentGateways\Utils;
 
+/**
+ * Paypal payment gateway.
+ *
+ * Creates one-time and recurring PayPal orders, handles webhooks and processes refunds.
+ *
+ * @since 3.0.0
+ * @since 4.2.0 Uses \Tutor\PaymentGateways\Utils and HttpRequestException instead of System and Guzzle.
+ */
 class Paypal extends BasePayment {
 
 	/**
@@ -23,25 +30,34 @@ class Paypal extends BasePayment {
 	protected $config;
 
 	/**
-	 * @var string|null $orderID
-	 * This property stores the ID of the current order being processed.
+	 * The ID of the current order being processed.
+	 *
+	 * @var   string|null
 	 * @since 3.0.0
 	 */
 	protected $orderID;
 
 	/**
-	 * @var object|null $previousPayload
-	 * This property contains the payload from a previous transaction, used in recurring payments.
+	 * The payload from a previous transaction, used in recurring payments.
+	 *
+	 * @var   object|null
+	 * @since 3.0.0
 	 */
 	protected $previousPayload;
 
 	/**
 	 * The API endpoint URL used to process PayPal refund requests.
 	 *
-	 * @var string|null
+	 * @var   string|null
+	 * @since 3.9.0
 	 */
 	protected $refundLink;
 
+	/**
+	 * PayPal webhook event types handled by this gateway.
+	 *
+	 * @since 3.0.0
+	 */
 	const CHECKOUT_ORDER_APPROVED   = 'CHECKOUT.ORDER.APPROVED';
 	const PAYMENT_CAPTURE_COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
 	const PAYMENT_CAPTURE_REFUNDED  = 'PAYMENT.CAPTURE.REFUNDED';
@@ -67,6 +83,15 @@ class Paypal extends BasePayment {
 		return $isConfigOk;
 	}
 
+	/**
+	 * Sets up the PayPal API client and requests an access token.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 *
+	 * @throws Throwable If the access token request fails.
+	 */
 	public function setup(): void {
 
 		try {
@@ -111,24 +136,32 @@ class Paypal extends BasePayment {
 	 * @param  object $data The raw data to be processed.
 	 * @return array        The structured data for sending to `Paypal Server`.
 	 * @since  3.0.0
+	 * @since  4.2.0 Adds Tutor merchant metadata to the purchase unit description.
 	 */
 	public function prepareData( $data ): array {
-		if ( empty( $data ) ) {
-			return array();
-		}
 
-		$this->orderID = $data->order_id;
-		$type          = $data->type ?? 'one-time';
-		$items         = 'one-time' === $type ? Helper::getItems( $data ) : null;
-		$amount        = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
+		$this->orderID  = $data->order_id;
+		$type           = $data->type ?? 'one-time';
+		$items          = 'one-time' === $type ? Helper::getItems( $data ) : null;
+		$amount         = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
+		$tutor_metadata = Utils::prepareMerchantMetadata( $data->order_user_id, $this->config->get( 'mode' ) );
+		$description    = implode(
+			',',
+			array_map(
+				fn ( $key, $value ) => "{$key}: {$value}",
+				array_keys( $tutor_metadata ),
+				$tutor_metadata
+			)
+		);
 
 		$returnData = array(
 			'purchase_units' => array(
 				array(
-					'custom_id' => $data->order_id,
-					'items'     => $items,
-					'amount'    => $amount,
-					'payee'     => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
+					'custom_id'   => $data->order_id,
+					'items'       => $items,
+					'amount'      => $amount,
+					'payee'       => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
+					'description' => $description,
 				),
 			),
 			'intent'         => 'CAPTURE',
@@ -158,6 +191,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error retrieving the checkout URL or handling the response.
 	 * @since  3.0.0
+	 * @since  4.2.0 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createPayment() {
 		try {
@@ -170,10 +204,11 @@ class Paypal extends BasePayment {
 
 			header( "Location: {$checkoutUrl}" );
 			exit();
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ' . $error_message ); //phpcs:ignore.
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -186,8 +221,9 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
-	 * @throws RequestException If the request fails.
+	 * @throws \Exception If a PayPal API request fails.
 	 * @since  3.0.0
+	 * @since  4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
@@ -219,7 +255,7 @@ class Paypal extends BasePayment {
 				default:
 					return new \stdClass();
 			}
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
 			// Handle the error response.
 			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
@@ -237,9 +273,10 @@ class Paypal extends BasePayment {
 	 * @param  object $payloadStream The payload stream object containing order and payment details.
 	 * @return object                     The constructed order data object.
 	 * @since  3.0.0
+	 * @since  4.2.0 Uses Utils::defaultOrderData() instead of System::defaultOrderData().
 	 */
 	private function setReturnData( $payloadStream ): object {
-		$returnData = System::defaultOrderData();
+		$returnData = Utils::defaultOrderData();
 
 		$statusMap = array(
 			'DECLINED'  => 'failed',
@@ -266,14 +303,16 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException If there is an error during the payment process or request handling.
 	 * @since  3.0.0
+	 * @since  4.2.0 Catches HttpRequestException, logs the error and shows a generic message.
 	 */
 	public function createRecurringPayment() {
 		try {
 			Api::createOrder( $this->getData(), $this->orderID );
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			error_log( 'Paypal Error: ' . $error_message );
+			throw new ErrorException( esc_html__( 'Something Went Wrong', 'tutor' ) );
 		}
 	}
 
@@ -313,117 +352,14 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if an error occurs while making the HTTP request or processing the response.
 	 * @since  3.0.0
+	 * @since  4.2.0 Catches HttpRequestException instead of Guzzle's RequestException.
 	 */
 	public function createRefund() {
 
 		try {
 			Api::refund( $this->refundLink, $this->orderID, $this->getData() );
 
-		} catch ( RequestException $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
-		}
-	}
-
-	/**
-	 * Retrieves the refund status based on the provided links and type.
-	 *
-	 * @param array  $links An array of links provided by the PayPal API.
-	 * @param string|null $type The type of link to use.
-	 *
-	 * @since 1.0.0
-	 */
-	private function getRefundStatus( $links, $type = 'self' ): ?string {
-		$url = $this->getUrl( $links, $type );
-
-		$requestData = (object) array(
-			'method'  => 'get',
-			'url'     => $url,
-			'options' => array( 'headers' => $this->headers ),
-		);
-
-		$responseData = System::sendHttpRequest( $requestData );
-
-		return strtolower( $responseData->status ) ?? null;
-	}
-
-	/**
-	 * Creates a webhook for PayPal notifications if it does not already exist.
-	 *
-	 * @return object|null Returns the webhook object or null if already registered.
-	 *
-	 * @throws ErrorException Throws an exception if there's an issue with the HTTP request or if webhook information is not found.
-	 * @since  1.0.0
-	 */
-	public function createWebhook(): ?object {
-		try {
-
-			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
-
-			$requestData = (object) array(
-				'method'  => 'get',
-				'url'     => $webhookApiUrl,
-				'options' => array( 'headers' => $this->headers ),
-			);
-
-			$responseData = $this->sendHttpRequest( $requestData );
-
-			if ( isset( $responseData->webhooks ) && is_array( $responseData->webhooks ) ) {
-
-				$registeredWebhookUrls  = array_column( $responseData->webhooks, 'url' );
-				$isWebhookUrlRegistered = in_array( $this->config->get( 'webhook_url' ), $registeredWebhookUrls );
-
-				return ! $isWebhookUrlRegistered ? $this->createNewWebhook() : null;
-			}
-
-			throw new ErrorException( 'Webhook Information Not Found' );
-
-		} catch ( RequestException $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
-		}
-	}
-
-	/**
-	 * Creates a new webhook for the specified events.
-	 *
-	 * @return object Returns an object containing the webhook_id and webhook_url of the newly created webhook.
-	 *
-	 * @throws InvalidDataException Throws an exception if the webhook information is invalid or the creation fails.
-	 * @throws ErrorException       Throws an exception if the HTTP request fails.
-	 * @since  1.0.0
-	 */
-	private function createNewWebhook() {
-		try {
-
-			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
-
-			$body = (object) array(
-				'url'         => $this->config->get( 'webhook_url' ),
-				'event_types' => array( (object) array( 'name' => 'PAYMENT.CAPTURE.REFUNDED' ) ),
-			);
-
-			$requestData = (object) array(
-				'method'  => 'post',
-				'url'     => $webhookApiUrl,
-				'options' => array(
-					'headers' => $this->headers,
-					'body'    => json_encode( $body ),
-				),
-			);
-
-			$responseData = $this->sendHttpRequest( $requestData );
-
-			if ( $responseData->url === $this->config->get( 'webhook_url' ) && $responseData->id ) {
-				return (object) array(
-					'webhook_id'  => $responseData->id,
-					'webhook_url' => $responseData->url,
-				);
-			}
-
-			throw new InvalidDataException( 'Invalid Webhook Information' );
-
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
@@ -438,9 +374,10 @@ class Paypal extends BasePayment {
 	 *
 	 * @throws ErrorException Throws an exception if there is an error during the HTTP request or while processing the refund.
 	 * @since  1.0.0
+	 * @since  4.2.0 Uses Utils::defaultOrderData() and Api::getRefundStatus(), and catches HttpRequestException.
 	 */
 	private function processRefund( $paymentData ): object {
-		$returnData = System::defaultOrderData( 'refund' );
+		$returnData = Utils::defaultOrderData( 'refund' );
 
 		try {
 
@@ -455,11 +392,11 @@ class Paypal extends BasePayment {
 				$returnData->refund_payload = json_encode( $paymentData );
 			}
 
-			$returnData->refund_status = static::getRefundStatus( $payloadStream->links, 'up' );
+			$returnData->refund_status = Api::getRefundStatus( $payloadStream->links, 'up' );
 
 			return $returnData;
 
-		} catch ( RequestException $error ) {
+		} catch ( HttpRequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}

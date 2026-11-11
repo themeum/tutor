@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 if ( Input::get( 'reset_key' ) && Input::get( 'user_id' ) ) {
 	tutor_load_template( 'template-part.form-retrieve-password' );

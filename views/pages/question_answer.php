@@ -9,7 +9,7 @@
  * @since 2.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 use TUTOR\Q_And_A;
 

@@ -28,7 +28,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 		<ul class="tutor-pagination-numbers">
 			<?php
 			// Pagination.
-			$big  = 999999999;
+			$big  = PHP_INT_MAX;
 			$base = str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) );
 
 			echo wp_kses_post(

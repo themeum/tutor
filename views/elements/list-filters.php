@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 if ( isset( $data ) ) : ?>
 <div class="tutor-admin-container tutor-admin-container-lg">

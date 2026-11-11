@@ -377,6 +377,7 @@ const styles = {
     flex-direction: column;
   `,
   optionPlaceholder: ({ isTitle, isCorrectAnswer }: { isTitle?: boolean; isCorrectAnswer?: number }) => css`
+    ${styleUtils.text.wrap};
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};

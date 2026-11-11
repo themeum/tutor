@@ -13,7 +13,7 @@ namespace Tutor;
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\User;

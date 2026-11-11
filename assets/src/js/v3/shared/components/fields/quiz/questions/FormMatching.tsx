@@ -553,6 +553,7 @@ const styles = {
     height: 210px;
   `,
   optionPlaceholder: css`
+    ${styleUtils.text.wrap};
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};

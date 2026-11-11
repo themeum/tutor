@@ -9,10 +9,11 @@
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || exit;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 ?>
 <?php if ( isset( $data ) ) : ?>
+
 	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between">
 		<?php if ( $data['bulk_action'] ) : ?>
 			<div class="tutor-admin-bulk-action-wrapper">

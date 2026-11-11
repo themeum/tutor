@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Constants\Size;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\Pagination;
 use Tutor\Models\CourseModel;
 use Tutor\Components\EmptyState;

@@ -7,11 +7,13 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var array $data
  */
 
-defined( 'ABSPATH' ) || exit;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
-$attachments = isset( $data['attachments'] ) && is_array( $data['attachments'] ) ? $data['attachments'] : array();
+$attachments = $data['attachments'];
 $size_below  = isset( $data['size_below'] ) && true == $data['size_below'];
 ?>
 

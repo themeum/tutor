@@ -9,7 +9,7 @@
  * @since 2.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,10 +50,10 @@ if ( $is_user_asker || $is_course_instructor ) {
 
 <div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo esc_attr( (string) $question->course_id ); ?>" data-question_id="<?php echo esc_attr( (string) $question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>">
 	<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ), true ) ) : ?>
-		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-mb-24' : 'tutor-qa-sticky-bar'; ?>">
-			<div class="tutor-row tutor-align-lg-center">
-				<div class="tutor-col-lg">
-					<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
+		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-py-16' : 'tutor-qa-sticky-bar'; ?>">
+			<div class="tutor-row tutor-gap-1 tutor-align-sm-center">
+				<div class="tutor-col-sm">
+					<div class="tutor-d-sm-flex tutor-align-sm-center">
 						<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
 							<span class="tutor-icon-previous tutor-mr-8" aria-hidden="true"></span>
 							<?php esc_html_e( 'Back', 'tutor' ); ?>
@@ -61,7 +61,7 @@ if ( $is_user_asker || $is_course_instructor ) {
 					</div>
 				</div>
 
-				<div class="tutor-col-lg-auto">
+				<div class="tutor-col-sm-auto">
 					<div class="tutor-qna-badges tutor-qna-badges-wrapper">
 						<?php if ( ! $is_user_asker ) : ?>
 							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-circle-mark-line" data-state-class-1="tutor-icon-circle-mark tutor-color-success" role="button">
