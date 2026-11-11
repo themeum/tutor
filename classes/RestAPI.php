@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\HttpHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Initialize REST API
@@ -22,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.5.0
  */
 class RestAPI {
-
-	/**
-	 * Custom validation trait
-	 */
-	use Custom_Validation;
 
 	/**
 	 * API namespace

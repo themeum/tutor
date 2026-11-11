@@ -10,10 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;

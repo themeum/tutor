@@ -52,17 +52,17 @@
     gap: 128px;
     padding-bottom: calc(var(--tutor-quiz-summary-footer-height) + #{$tutor-spacing-4});
 
-    @include tutor-breakpoint-down(sm) {
-      grid-template-columns: 1fr;
-      padding-top: $tutor-spacing-8;
+    @include tutor-breakpoint-down(lg) {
+      gap: $tutor-spacing-10;
     }
 
     @include tutor-breakpoint-down(md) {
       gap: $tutor-spacing-6;
     }
 
-    @include tutor-breakpoint-down(lg) {
-      gap: $tutor-spacing-10;
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+      padding-top: $tutor-spacing-8;
     }
   }
 
@@ -112,14 +112,7 @@
 
         .tutor-question-content {
           @include tutor-typography(p2);
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          -ms-word-break: break-all;
-          word-break: break-all;
-          -ms-hyphens: auto;
-          -moz-hyphens: auto;
-          -webkit-hyphens: auto;
-          hyphens: auto;
+          @include tutor-text-wrap;
         }
 
         &:hover {
@@ -517,8 +510,17 @@ body:has(#wpadminbar)
   grid-template-columns: 300px 1fr;
   gap: 128px;
 
+  @include tutor-breakpoint-down(lg) {
+    gap: $tutor-spacing-10;
+  }
+
+  @include tutor-breakpoint-down(md) {
+    gap: $tutor-spacing-6;
+  }
+
   @include tutor-breakpoint-down(sm) {
     grid-template-columns: 1fr;
+    gap: $tutor-spacing-none;
   }
 }
 

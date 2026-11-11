@@ -433,7 +433,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, 0, 0, $item_ids );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
@@ -772,7 +772,7 @@ class CheckoutController {
 						// Mark order cancelled and return error so student can re-try.
 						$order_model = new OrderModel();
 						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
-						$err_msg = __( 'Coupon is no longer available or usage limit exceeded!', 'tutor' );
+						$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
 						set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, array( $err_msg ) );
 						return;
 					}
@@ -871,7 +871,7 @@ class CheckoutController {
 				);
 			}
 
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( in_array( $order_type, array( OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ), true ) ) {
 				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;

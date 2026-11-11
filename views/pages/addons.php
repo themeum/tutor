@@ -6,7 +6,11 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var array $addons_themes_data
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 $current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data( $_GET ) ); //phpcs:ignore
 $page_name    = $current_page ? $current_page : 'addons';
