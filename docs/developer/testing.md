@@ -117,6 +117,9 @@ vendor/bin/phpunit --testsuite=query-helper-test
 ## Running Playwright E2E tests
 
 ```bash
+# Install the Playwright Chromium browser binary
+pnpm test:e2e:install
+
 # All E2E tests (headless)
 pnpm run test:e2e
 
