@@ -16,7 +16,14 @@ type DeferredMediaProvider = 'youtube' | 'vimeo';
 // pulled only when a lesson actually uses that provider, keeping the HTML5/external path lean.
 const DEFERRED_MEDIA_LOADERS: Record<DeferredMediaProvider, () => Promise<unknown>> = {
   youtube: () => import(/* webpackChunkName: "tutor-player-youtube" */ '@videojs/html/media/youtube-video'),
-  vimeo: () => import(/* webpackChunkName: "tutor-player-vimeo" */ '@videojs/html/media/vimeo-video'),
+  vimeo: async () => {
+    const [mod, { patchVimeoProvider }] = await Promise.all([
+      import(/* webpackChunkName: "tutor-player-vimeo" */ '@videojs/html/media/vimeo-video'),
+      import(/* webpackChunkName: "tutor-player-vimeo" */ './vimeoPatch'),
+    ]);
+    patchVimeoProvider();
+    return mod;
+  },
 };
 
 const providerModulePromises = new Map<DeferredMediaProvider, Promise<unknown>>();
