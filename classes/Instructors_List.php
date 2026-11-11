@@ -398,7 +398,7 @@ class Instructors_List {
 		$params[] = $offset;
 		$params[] = $per_page;
 
-		$query  = "SELECT
+		$query = "SELECT
 					DISTINCT user.*,
 					ins_status.meta_value AS status,
 					(
@@ -423,6 +423,7 @@ class Instructors_List {
 					{$order_clause}
 					LIMIT %d, %d;
 				";
+
 		$result = TutorCache::get( self::INSTRUCTOR_LIST_CACHE_KEY );
 		if ( false === $result ) {
 			TutorCache::set(
