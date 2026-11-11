@@ -6,7 +6,6 @@ import { type PlayerProvider, type TutorPlayer } from '@Core/ts/types/player';
 
 import { createTutorPlayer, type PlayerStore } from './Player';
 import { type DetectedSource, providerFromUrl, vimeoVideoId, youtubeVideoId } from './providers';
-import { initPlayerWatermark, type WatermarkController } from './watermark';
 
 export const VIDEO_PLAYER_TAG = 'tutor-video-player';
 const VIDEO_SKIN_TAG = 'video-skin';
@@ -144,7 +143,6 @@ export function resolveProvider(element: Element): PlayerProvider {
 class TutorVideoPlayerElement extends PlayerElementBaseClass {
   player: TutorPlayer | null = null;
   #cleanupPortraitDetection: (() => void) | null = null;
-  #watermarkController: WatermarkController | null = null;
 
   connectedCallback(): void {
     // Tutor never shows the provider's own title; the lesson controller sets the
@@ -193,7 +191,7 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     });
 
     this.player = player;
-    this.#watermarkController = initPlayerWatermark(this, player);
+    this.dispatchEvent(new CustomEvent('tutor-player:ready', { bubbles: true, composed: true, detail: { player } }));
     hooks.onMount?.(player);
   }
 
@@ -278,9 +276,6 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
   }
 
   #releasePlayer(): void {
-    this.#watermarkController?.dispose();
-    this.#watermarkController = null;
-
     this.#cleanupPortraitDetection?.();
     this.#cleanupPortraitDetection = null;
 
@@ -288,6 +283,9 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     this.player = null;
 
     if (player) {
+      this.dispatchEvent(
+        new CustomEvent('tutor-player:dispose', { bubbles: true, composed: true, detail: { player } }),
+      );
       hooks.onDispose?.(player);
     }
   }

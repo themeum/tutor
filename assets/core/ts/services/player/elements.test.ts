@@ -215,22 +215,25 @@ describe('tutor-video-player element', () => {
     host.player?.dispose();
   });
 
-  it('initializes watermark inside player element if present', () => {
+  it('dispatches tutor-player:ready and tutor-player:dispose events on connect and dispose', () => {
     defineVideoPlayer();
     const host = createPlayerElement(
       { provider: 'youtube', src: 'https://www.youtube.com/watch?v=12345678901' },
       document,
     );
-    const wm = document.createElement('div');
-    wm.className = 'tutor-video-watermark';
-    host.querySelector('video-skin')?.appendChild(wm);
+
+    const onReady = vi.fn();
+    const onDispose = vi.fn();
+    host.addEventListener('tutor-player:ready', onReady);
+    host.addEventListener('tutor-player:dispose', onDispose);
 
     document.body.appendChild(host);
 
-    expect(wm.classList.contains('is-active')).toBe(true);
-    expect(wm.classList.contains('pos-top-left')).toBe(true);
+    expect(onReady).toHaveBeenCalledTimes(1);
+    expect(onReady.mock.calls[0][0].detail.player).toBe(host.player);
 
     host.player?.dispose();
+    expect(onDispose).toHaveBeenCalledTimes(1);
   });
 
   // Defines `video-skin`, so keep this test last in the file.
