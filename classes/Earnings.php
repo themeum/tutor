@@ -228,7 +228,7 @@ class Earnings extends Singleton {
 		$commission_type = 'percent';
 
 		// Course author id.
-		if ( is_null( $course_id ) ) {
+		if ( empty( $course_id ) ) {
 			/**
 			 * For membership plans, the course_id is null, so the earning
 			 * is credited to the site admin.
