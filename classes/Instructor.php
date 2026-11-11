@@ -210,13 +210,13 @@ class Instructor {
 
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
-			do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
 			$reg_done = apply_filters( 'tutor_registration_done', true );
 			if ( ! $reg_done ) {
 				$wpdb->query( 'ROLLBACK' );
 				return;
 			} else {
 				$wpdb->query( 'COMMIT' );
+				do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
 			}
 		} else {
 			/**
