@@ -76,7 +76,7 @@ class EnrollmentModel {
 		}
 
 		$can_enroll = apply_filters( 'tutor_allow_course_enrollment', true, $course_id );
-		if ( is_wp_error( $can_enroll ) ) {
+		if ( is_wp_error( $can_enroll ) || ! $can_enroll ) {
 			return $enrolled_id;
 		}
 

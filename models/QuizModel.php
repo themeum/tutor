@@ -1089,7 +1089,7 @@ class QuizModel {
 			return true;
 		}
 
-		$given_answer = maybe_unserialize( $attempt_answer->given_answer ?? '' );
+		$given_answer = tutor_unserialize( $attempt_answer->given_answer ?? '' );
 
 		if ( is_array( $given_answer ) ) {
 			$given_answer = array_filter(
