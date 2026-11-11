@@ -1367,8 +1367,17 @@ class QuizModel {
 	public static function get_quiz_attempt_timing( $attempt_data ) {
 		$attempt_duration       = '';
 		$attempt_duration_taken = '';
-		$raw_info               = trim( (string) ( $attempt_data->attempt_info ?? '' ) );
-		$attempt_info           = is_string( $raw_info ) && is_serialized( $raw_info ) ? tutor_unserialize( $raw_info ) : array();
+		$raw_info               = $attempt_data->attempt_info ?? '';
+		$attempt_info           = '';
+
+		if ( is_array( $raw_info ) ) {
+			$attempt_info = $raw_info;
+		} elseif ( is_string( $raw_info ) && is_serialized( $raw_info ) ) {
+			$attempt_info = tutor_unserialize( $raw_info );
+		} else {
+			$attempt_info = array();
+		}
+
 		if ( is_array( $attempt_info ) ) {
 			// Allowed duration.
 			if ( isset( $attempt_info['time_limit'] ) ) {
