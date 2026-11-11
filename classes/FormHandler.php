@@ -144,8 +144,12 @@ class FormHandler {
 		// phpcs:enable
 
 		$user = get_user_by( 'ID', $user_id );
-		$user = check_password_reset_key( $reset_key, $user->user_login );
+		if ( ! $user ) {
+			tutor_flash_set( 'danger', __( 'Invalid Request.', 'tutor' ) );
+			return false;
+		}
 
+		$user = check_password_reset_key( $reset_key, $user->user_login );
 		if ( is_wp_error( $user ) ) {
 			tutor_flash_set( 'danger', __( 'This key is invalid or has already been used. Please reset your password again if needed.', 'tutor' ) );
 			return false;
