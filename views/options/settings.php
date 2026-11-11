@@ -12,6 +12,16 @@
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Core\Input;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Options_V2::load_settings_page().
+ *
+ * @var \Tutor\Options_V2 $this
+ * @var array            $option_fields
+ * @var string           $active_tab
+ */
+
 $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 ?>
 <div class="tutor-admin-wrap">
