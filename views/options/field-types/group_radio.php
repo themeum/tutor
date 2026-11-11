@@ -9,9 +9,18 @@
  * @since 2.0.0
  */
 
-$field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+defined( 'ABSPATH' ) || exit;
 
-$field_id = esc_attr( 'field_' . $field_key );
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key = $field['key'] ?? '';
+
+$field_id = 'field_' . $field_key;
 ?>
 <div class="tutor-option-field-row tutor-d-block">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
@@ -29,11 +38,11 @@ $field_id = esc_attr( 'field_' . $field_key );
 								$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
 								?>
 								<label for="<?php echo esc_attr( $option_key ); ?>">
-									<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="<?php echo esc_attr( $option_key ); ?>" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>" />
+									<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="<?php echo esc_attr( $option_key ); ?>" <?php checked( $option_value, $option_key ); ?> value="<?php echo esc_attr( $option_key ); ?>" />
 									<span class="icon-wrapper">
 										<img src="<?php echo esc_url( tutor()->url . 'assets/images/images-v2/' . $option['image'] ); ?>" alt="icon">
 									</span>
-									<span class="title"><?php echo esc_attr( $option ['title'] ); ?></span>
+									<span class="title"><?php echo esc_html( $option['title'] ); ?></span>
 								</label>
 							<?php endforeach; ?>
 						</div>
