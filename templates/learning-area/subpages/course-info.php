@@ -192,7 +192,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			<?php
 			printf(
 				wp_kses(
-					// translators: %s is the linked course author name.
+					// translators: %s is the course author name.
 					__( 'by %s', 'tutor' ),
 					array(
 						'a' => array(

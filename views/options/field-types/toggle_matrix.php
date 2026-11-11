@@ -81,7 +81,7 @@ $field_id = 'field_' . $field['key'];
 								echo esc_attr(
 									sprintf(
 										// translators: %1$s: item label, %2$s: position (header/footer).
-										__( '%1$s %2$s', 'tutor' ),
+										_x( '%1$s %2$s', 'matrix toggle label', 'tutor' ),
 										$item['label'],
 										ucfirst( $position )
 									)

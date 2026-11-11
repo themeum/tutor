@@ -9,6 +9,7 @@ import { rspack } from '@rspack/core';
 import nodeExternals from 'webpack-node-externals';
 
 import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
+import { RestoreCommentsPlugin } from './scripts/restore-comments.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -199,6 +200,7 @@ const createConfig = (env, options) => {
         'process.env.NODE_ENV': JSON.stringify(mode),
         __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
+      (!isDevelopment || isMakePot) && new RestoreCommentsPlugin(),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
     ].filter(Boolean),
     externals: {
