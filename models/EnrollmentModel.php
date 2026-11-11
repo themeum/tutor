@@ -292,18 +292,26 @@ class EnrollmentModel {
 
 		// If course ID provided, it will return single row data.
 		if ( $course_id > 0 && in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
-			return DB::table( 'posts' )
+			$query = DB::table( 'posts' )
 					->where( 'post_type', self::POST_TYPE )
 					->where( 'post_parent', $course_id )
-					->where( 'post_author', $user_id )
-					->where( 'post_status', $status ?? self::STATUS_COMPLETED )
-					->first();
+					->where( 'post_author', $user_id );
+
+			if ( ! empty( $status ) ) {
+				$query->where( 'post_status', $status );
+			}
+
+			return $query->first();
+
 		} else {
-			return DB::table( 'posts' )
+			$query = DB::table( 'posts' )
 					->where( 'post_type', self::POST_TYPE )
-					->where( 'post_author', $user_id )
-					->where( 'post_status', $status ?? self::STATUS_COMPLETED )
-					->get();
+					->where( 'post_author', $user_id );
+			if ( ! empty( $status ) ) {
+				$query->where( 'post_status', $status );
+			}
+
+			return $query->get();
 		}
 	}
 

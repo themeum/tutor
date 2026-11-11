@@ -50,7 +50,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 			)
 		);
 
-		$total_enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id );
+		$total_enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id, null );
 
 		$this->assertEquals( 3, count( $total_enrollments ) );
 
