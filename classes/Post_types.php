@@ -520,7 +520,28 @@ class Post_types {
 			'menu_position'      => null,
 		);
 		register_post_type( tutor()->enrollment_post_type, $args );
-		EnrollmentModel::register_post_statuses();
+
+		register_post_status(
+			EnrollmentModel::STATUS_COMPLETED,
+			array(
+				'label'                     => _x( 'Completed', 'post status', 'tutor' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			)
+		);
+
+		register_post_status(
+			EnrollmentModel::STATUS_CANCEL,
+			array(
+				'label'                     => _x( 'Cancel', 'post status', 'tutor' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			)
+		);
 	}
 
 	/**
