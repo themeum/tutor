@@ -95,6 +95,44 @@ final class DateTimeHelper {
 	}
 
 	/**
+	 * Set time
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int $hour Hour.
+	 * @param int $minute Minute.
+	 * @param int $second Second.
+	 *
+	 * @return self
+	 */
+	public function set_time( int $hour, int $minute = 0, int $second = 0 ) {
+		$this->datetime->setTime( $hour, $minute, $second );
+		return $this;
+	}
+
+	/**
+	 * Set the time to the start of the day (00:00:00).
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return self
+	 */
+	public function start_of_day() {
+		return $this->set_time( 0, 0, 0 );
+	}
+
+	/**
+	 * Set the time to the end of the day (23:59:59).
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return self
+	 */
+	public function end_of_day() {
+		return $this->set_time( 23, 59, 59 );
+	}
+
+	/**
 	 * Add
 	 *
 	 * @param int    $number number of interval.
