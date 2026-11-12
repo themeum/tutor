@@ -8,6 +8,18 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Header data.
+ *
+ * @var string $back_url     Back URL.
+ * @var string $course_title Course title.
+ * @var string $quiz_title   Quiz title.
+ * @var string $quiz_time    Quiz time.
+ * @var string $attempt_time Attempt time.
+ */
+
 if ( ! empty( $back_url ) ) : ?>
 	<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
 		<span class="tutor-icon-previous tutor-mr-8" aria-hidden="true"></span>
