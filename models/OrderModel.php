@@ -1331,11 +1331,7 @@ class OrderModel {
 			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 		}
 
-		if ( $course_id ) {
-			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
-		} elseif ( $user_id ) {
+		if ( $course_id && $user_id ) {
 			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
@@ -1395,7 +1391,7 @@ class OrderModel {
 		} else {
 			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} WHERE user_id = {$user_id} LIMIT 1)";
+				$user_clause = $wpdb->prepare( 'AND earning.user_id = %d', $user_id );
 			}
 
 			//phpcs:disable
@@ -1408,6 +1404,8 @@ class OrderModel {
 					LEFT JOIN {$order_meta_table} AS order_meta
 						ON order_meta.order_id = o.id
 						AND order_meta.meta_key IN ({$order_meta_in_clause})
+					LEFT JOIN {$earning_table} AS earning
+						ON earning.order_id = o.id
 					WHERE 1 = %d
 					AND o.refund_amount > %d
 					{$user_clause}
