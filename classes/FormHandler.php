@@ -143,7 +143,7 @@ class FormHandler {
 		$confirm_password = wp_unslash( $_POST['confirm_password'] ?? '' );
 		// phpcs:enable
 
-		if ( empty( $password ) ) {
+		if ( ! $password ) {
 			tutor_flash_set( 'danger', __( 'Please enter your password.', 'tutor' ) );
 			return false;
 		}
