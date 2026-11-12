@@ -9,6 +9,12 @@
  */
 
 use TUTOR\WhatsNew;
+
+defined( 'ABSPATH' ) || exit;
+
+$update_required   = $update_required ?? false;
+$remote_version    = $remote_version ?? '';
+$installed_version = $installed_version ?? TUTOR_VERSION;
 ?>
 
 <div class="wrap">

@@ -95,6 +95,7 @@
 
         &:first-of-type {
           font-weight: $tutor-font-weight-medium;
+          min-width: 200px;
 
           @include tutor-breakpoint-down(sm) {
             width: 140px;

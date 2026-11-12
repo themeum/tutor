@@ -335,34 +335,6 @@ class WithdrawModel {
 			)
 		);
 
-		return self::safe_unserialize_array( $raw );
-	}
-
-	/**
-	 * Unserialize withdraw method data as an array only.
-	 *
-	 * @since 4.0.8
-	 *
-	 * @param mixed $data Serialized string or already-decoded array.
-	 *
-	 * @return array
-	 */
-	public static function safe_unserialize_array( $data ) {
-		if ( is_array( $data ) ) {
-			return $data;
-		}
-
-		if ( ! is_string( $data ) || '' === $data ) {
-			return array();
-		}
-
-		// Reject object payloads before calling unserialize().
-		if ( preg_match( '/(^|;|{|})O:\+?[0-9]+:"/', $data ) ) {
-			return array();
-		}
-
-		$unserialized = unserialize( $data, array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
-
-		return is_array( $unserialized ) ? $unserialized : array();
+		return tutor_unserialize( $raw );
 	}
 }

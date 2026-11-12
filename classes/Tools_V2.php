@@ -10,11 +10,10 @@
 
 namespace Tutor;
 
-use TUTOR\Admin;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use TUTOR\Admin;
+use Tutor\Core\Input;
 
 /**
  * Tools class
@@ -327,7 +326,7 @@ class Tools_V2 {
 				),
 			),
 			'tutor_rest_api' => array(
-				'label'     => __( 'Rest API', 'tutor' ),
+				'label'     => __( 'REST API', 'tutor' ),
 				'slug'      => 'tutor_rest_api',
 				'desc'      => __( 'Token List', 'tutor' ),
 				'template'  => 'manage-tokens',

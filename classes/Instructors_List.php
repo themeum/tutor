@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -173,9 +174,9 @@ class Instructors_List {
 			do_action( 'tutor_after_instructor_delete', $bulk_ids );
 		}
 
-		$message = 'Instructor status updated';
+		$message = __( 'Instructor status updated', 'tutor' );
 
-		return true === $response ? wp_send_json_success( array( 'status' => $message ) ) : wp_send_json_error();
+		return true === $response ? wp_send_json_success( array( 'message' => $message ) ) : wp_send_json_error();
 	}
 
 	/**
@@ -422,6 +423,7 @@ class Instructors_List {
 					{$order_clause}
 					LIMIT %d, %d;
 				";
+
 		$result = TutorCache::get( self::INSTRUCTOR_LIST_CACHE_KEY );
 		if ( false === $result ) {
 			TutorCache::set(

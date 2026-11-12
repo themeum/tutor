@@ -66,3 +66,8 @@ assets/.rsdoctor
 playwright-report/
 test-results/
 tests/e2e/.auth/
+
+# Test reports and outputs
+tests/e2e/report/
+test-results/
+playwright-report/

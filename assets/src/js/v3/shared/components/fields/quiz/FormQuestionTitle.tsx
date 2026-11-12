@@ -11,6 +11,7 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 
 type Size = 'small' | 'regular';
@@ -339,6 +340,7 @@ const styles = {
     }
   `,
   placeholder: ({ size }: { size: Size }) => css`
+    ${styleUtils.text.wrap};
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
     border-radius: ${borderRadius[6]};

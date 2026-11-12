@@ -16,6 +16,7 @@ use TUTOR\Earnings;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CouponModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderActivitiesModel;
@@ -95,6 +96,7 @@ class HooksHandler {
 		 */
 		add_action( 'tutor_order_placed', array( $this, 'store_billing_address_for_order' ) );
 		add_action( 'tutor_order_updated', array( $this, 'store_billing_address_for_order' ) );
+		add_action( 'tutor_order_updated', array( $this, 'maybe_clear_coupon_reserve' ) );
 	}
 
 	/**
@@ -268,8 +270,13 @@ class HooksHandler {
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
-		// Store coupon usage.
-		$this->coupon_ctrl->store_coupon_usage( $order_id );
+		if ( OrderModel::PAYMENT_PAID === $new_payment_status ) {
+			// Promote coupon usage to consumed.
+			$this->coupon_ctrl->store_coupon_usage( $order_id );
+		} elseif ( in_array( $new_payment_status, array( OrderModel::PAYMENT_FAILED, OrderModel::PAYMENT_REFUNDED ), true ) || OrderModel::ORDER_CANCELLED === $order_status ) {
+			// Release coupon reservation / mark cancelled.
+			$this->coupon_ctrl->cancel_coupon_usage( $order_id );
+		}
 	}
 
 	/**
@@ -278,6 +285,7 @@ class HooksHandler {
 	 * Clear cart items, managing enrollment & earnings
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.1 manage earnings and enrollment only for the buyer's unprocessed order.
 	 *
 	 * @param int $order_id Order id.
 	 *
@@ -285,18 +293,27 @@ class HooksHandler {
 	 */
 	public function handle_order_placement_success( int $order_id ) {
 		$order_data = $this->order_model->get_order_by_id( $order_id );
-		if ( $order_data ) {
-			$user_id = $order_data->student->id;
+		if ( ! $order_data ) {
+			return;
+		}
 
+		$user_id = $order_data->student->id;
+		if ( get_current_user_id() === $user_id ) {
 			( new CartModel() )->clear_user_cart( $user_id );
 
-			// Manage enrollment & earnings.
-			$order          = ( new OrderModel() )->get_order_by_id( $order_id );
-			$payment_status = $order->payment_status;
+			/**
+			 * Skip if the order is already processed, otherwise revisiting the success URL re-activates expired/cancelled
+			 * enrollments and recalculates earnings.
+			 *
+			 * @since 4.2.1
+			 */
+			$is_processed = isset( $order_data->enrollment ) || Earnings::get_instance()->is_exist_order_earning( $order_id );
+			if ( ! $is_processed ) {
+				$payment_status = $order_data->payment_status;
+				$order_status   = $this->order_model->get_order_status_by_payment_status( $payment_status );
 
-			$order_status = $this->order_model->get_order_status_by_payment_status( $payment_status );
-
-			$this->manage_earnings_and_enrollments( $order_status, $order_id );
+				$this->manage_earnings_and_enrollments( $order_status, $order_id );
+			}
 		}
 	}
 
@@ -443,30 +460,32 @@ class HooksHandler {
 						do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
 					}
 				}
-			} else {
-				if ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
+			} elseif ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
 					// Insert enrollment.
-					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
+					add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 					$enrollment_id = EnrollmentModel::do_enroll( $object_id, $order_id, $student_id );
-					if ( $enrollment_id ) {
-						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
-							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
-						}
-						update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
-
-						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
-					} else {
-						// Log error message with student id and course id.
-						error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
+				if ( $enrollment_id ) {
+					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
+						BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 					}
+					update_post_meta( $enrollment_id, EnrollmentModel::ENROLLMENT_ORDER_ID_META, $order_id );
+
+					do_action( 'tutor_order_enrolled', $order, $enrollment_id );
+				} else {
+					// Log error message with student id and course id.
+					error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
 				}
 			}
 		}
 
 		// Update earnings.
-		$earnings->prepare_order_earnings( $order_id );
-		$earnings->remove_before_store_earnings();
+		try {
+			$earnings->prepare_order_earnings( $order_id );
+			$earnings->remove_before_store_earnings();
+		} catch ( \Exception $e ) {
+			tutor_log( $e->getMessage() );
+		}
 	}
 
 	/**
@@ -498,9 +517,22 @@ class HooksHandler {
 	 */
 	public function handle_free_checkout( array $order_data ) {
 		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
-			$order_id = $order_data['id'];
-			$user_id  = $order_data['user_id'];
-			$items    = $order_data['items'];
+			$order_id    = $order_data['id'];
+			$user_id     = $order_data['user_id'];
+			$items       = $order_data['items'];
+			$coupon_code = $order_data['coupon_code'] ?? '';
+			$order       = $this->order_model->get_order_by_id( $order_id );
+
+			// If a coupon brought the total to zero, reserve coupon usage before enrolling.
+			if ( ! empty( $coupon_code ) ) {
+				$reserved = $this->coupon_ctrl->reserve_coupon_usage( $order_id, $coupon_code, $user_id, 30 );
+				if ( ! $reserved ) {
+					// Limit exceeded concurrently; cancel order and prevent enrollment.
+					$this->order_model->update_order( $order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+					return $order_data;
+				}
+			}
+
 			foreach ( $items as $item ) {
 				$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
 				if ( $is_gift_item ) {
@@ -510,13 +542,26 @@ class HooksHandler {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = EnrollmentModel::do_enroll( $item['item_id'], $order_data['id'], $user_id );
-				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
-					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+				if ( $enrolled_id ) {
+					do_action( 'tutor_order_enrolled', $order, $enrolled_id );
+
+					if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
+						BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
+					}
 				}
 			}
 
-			// Store coupon usage.
+			// Promote coupon usage to consumed upon completed enrollment.
 			$this->coupon_ctrl->store_coupon_usage( $order_id );
+
+			// Free orders never get a payment webhook, so recording their (zero) earnings.
+			try {
+				$earnings = Earnings::get_instance();
+				$earnings->prepare_order_earnings( $order_id );
+				$earnings->remove_before_store_earnings();
+			} catch ( \Exception $e ) {
+				tutor_log( $e->getMessage() );
+			}
 		}
 		return $order_data;
 	}
@@ -596,5 +641,24 @@ class HooksHandler {
 			OrderModel::META_KEY_BILLING_ADDRESS,
 			$meta_value
 		);
+	}
+
+	/**
+	 * Maybe clear coupon reservation
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $order_data Order data.
+	 *
+	 * @return void
+	 */
+	public function maybe_clear_coupon_reserve( array $order_data ): void {
+		$updated_order_status = $order_data['order_status'] ?? '';
+		$order_id             = (int) $order_data['id'] ?? 0;
+
+		$clearable_status = array( OrderModel::ORDER_CANCELLED, OrderModel::ORDER_TRASH );
+		if ( $order_id && in_array( $updated_order_status, $clearable_status, true ) ) {
+			$this->coupon_ctrl->cancel_coupon_usage( $order_id );
+		}
 	}
 }

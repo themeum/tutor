@@ -24,7 +24,7 @@ use TUTOR\User;
  */
 $active_tab = Input::get( 'data', 'all' );
 
-$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
+$paged_filter = max( 1, Input::get( 'paged', 1, Input::TYPE_INT ) );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
@@ -36,6 +36,7 @@ $total_items = $get_orders['total_count'];
 
 $add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
+	// @phpstan-ignore property.notFound
 	'page_title'   => $order_controller->page_title,
 	'tabs'         => $order_controller->tabs_key_value(),
 	'active'       => $active_tab,
@@ -179,7 +180,7 @@ $filters = array(
 												tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
 												tutor_utils()->allowed_avatar_tags()
 											);
-											$is_instructor = User::is_instructor( $user_data->ID, false );
+											$is_instructor = $user_data ? User::is_instructor( $user_data->ID, false ) : false;
 											?>
 											<div class="tutor-ml-12">
 												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, $is_instructor ) ); ?>">
@@ -191,7 +192,7 @@ $filters = array(
 
 									<td>
 										<span class="tutor-fw-normal tutor-fs-7">
-											<?php echo esc_attr( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
+											<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 										</span>
 									</td>
 
@@ -262,6 +263,6 @@ $filters = array(
 tutor_load_template_from_custom_path(
 	tutor()->path . 'views/elements/common-confirm-popup.php',
 	array(
-		'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' ),
+		'message' => __( 'Are you sure you want to delete this order permanently? Please confirm your choice.', 'tutor' ),
 	)
 );

@@ -266,7 +266,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
             <SVGIcon name="bars" width={24} height={24} />
           </div>
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
-            <span dangerouslySetInnerHTML={{ __html: content.title }} />
+            <span title={content.title}>{content.title}</span>
             <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
               <span data-question-count>
                 (
@@ -320,7 +320,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
               </button>
             </Tooltip>
           </Show>
-          <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
+          <Show when={!['tutor-google-meet', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
                 <Show
