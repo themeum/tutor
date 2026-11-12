@@ -186,7 +186,7 @@ class Instructor {
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 
 		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
-		$password = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
+		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = array(
 			'user_login' => $user_login,
@@ -343,7 +343,7 @@ class Instructor {
 		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
 
 		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
-		$password = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
+		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',

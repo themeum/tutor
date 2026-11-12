@@ -105,7 +105,7 @@ final class DateTimeHelper {
 	 *
 	 * @return self
 	 */
-	public function set_time( int $hour, int $minute = 0, int $second = 0 ) {
+	public function set_time( int $hour, int $minute = 0, int $second = 0 ) : self {
 		$this->datetime->setTime( $hour, $minute, $second );
 		return $this;
 	}
@@ -117,7 +117,7 @@ final class DateTimeHelper {
 	 *
 	 * @return self
 	 */
-	public function start_of_day() {
+	public function start_of_day() : self {
 		return $this->set_time( 0, 0, 0 );
 	}
 
@@ -128,7 +128,7 @@ final class DateTimeHelper {
 	 *
 	 * @return self
 	 */
-	public function end_of_day() {
+	public function end_of_day() : self {
 		return $this->set_time( 23, 59, 59 );
 	}
 
