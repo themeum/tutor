@@ -285,7 +285,7 @@ class Instructor {
 			die( esc_html__( 'Permission denied', 'tutor' ) );
 		}
 
-		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
+		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
 		die();
 	}
 
