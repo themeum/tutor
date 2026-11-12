@@ -92,8 +92,14 @@ describe('resolveProvider', () => {
 });
 
 describe('deferred provider adapters', () => {
-  it('loads a provider adapter on demand, exactly once', async () => {
+  it('loads a provider adapter on demand, exactly once, patched before the element upgrades', async () => {
     expect(customElements.get('vimeo-video')).toBeUndefined();
+    defineVideoPlayer();
+
+    // A declared <vimeo-video> connects before the chunk is requested; the loader must
+    // patch the adapter before importing the module that upgrades it.
+    const host = createPlayerElement({ provider: 'vimeo', src: 'https://vimeo.com/123456789' }, document);
+    document.body.appendChild(host);
 
     const first = loadProviderModule('vimeo');
     expect(loadProviderModule('vimeo')).toBe(first);
@@ -102,6 +108,15 @@ describe('deferred provider adapters', () => {
 
     // The adapter element must exist before a declared `<vimeo-video>` can upgrade.
     expect(customElements.get('vimeo-video')).toBeDefined();
+
+    const adapter = (
+      host.querySelector('vimeo-video') as unknown as {
+        adapter?: { engine?: { __tutorVimeoPatched?: boolean } };
+      }
+    ).adapter;
+    expect(adapter?.engine?.__tutorVimeoPatched).toBe(true);
+
+    host.player?.dispose();
   });
 });
 

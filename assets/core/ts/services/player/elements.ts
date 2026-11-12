@@ -17,12 +17,12 @@ type DeferredMediaProvider = 'youtube' | 'vimeo';
 const DEFERRED_MEDIA_LOADERS: Record<DeferredMediaProvider, () => Promise<unknown>> = {
   youtube: () => import(/* webpackChunkName: "tutor-player-youtube" */ '@videojs/html/media/youtube-video'),
   vimeo: async () => {
-    const [mod, { patchVimeoProvider }] = await Promise.all([
-      import(/* webpackChunkName: "tutor-player-vimeo" */ '@videojs/html/media/vimeo-video'),
-      import(/* webpackChunkName: "tutor-player-vimeo" */ './vimeoPatch'),
-    ]);
+    // Patch first: importing the media module defines <vimeo-video>, which upgrades a
+    // declared element on the spot and creates the adapter (and its error handler) before
+    // returning. Patching afterwards only affects the next player instance.
+    const { patchVimeoProvider } = await import(/* webpackChunkName: "tutor-player-vimeo" */ './vimeoPatch');
     patchVimeoProvider();
-    return mod;
+    return import(/* webpackChunkName: "tutor-player-vimeo" */ '@videojs/html/media/vimeo-video');
   },
 };
 
