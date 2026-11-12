@@ -106,27 +106,38 @@ class LessonPlayer {
       const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
       if (btn && !btn.disabled) {
         btn.disabled = true;
-        if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'tutor-tooltip-wrap';
-          wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
-          btn.parentNode?.insertBefore(wrapper, btn);
-          wrapper.appendChild(btn);
-          btn.setAttribute('x-ref', 'trigger');
-        }
 
-        if (!btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
-          btn.insertAdjacentHTML(
-            'afterend',
-            `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${sprintf(
-              /* translators: %s is the required watch percentage (e.g., 80) */
-              __('Watch at least %s%% to complete the lesson.', 'tutor'),
-              required_percentage,
-            )}</div>`,
+        if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
+          const tooltipMessage = sprintf(
+            /* translators: %s is the required watch percentage (e.g., 80) */
+            __('Watch at least %s%% to complete the lesson.', 'tutor'),
+            Number(required_percentage),
           );
 
+          const wrapper = document.createElement('div');
+          wrapper.className = 'tutor-tooltip-wrap';
+          wrapper.setAttribute(
+            'x-data',
+            '{ ...tutorTooltip({ placement: "top", arrow: "center" }), isLoading: false }',
+          );
+          wrapper.setAttribute('x-ref', 'trigger');
+          btn.parentNode?.insertBefore(wrapper, btn);
+          wrapper.appendChild(btn);
+
+          const template = document.createElement('template');
+          template.setAttribute('x-teleport', 'body');
+          const tooltipEl = document.createElement('div');
+          tooltipEl.setAttribute('x-ref', 'content');
+          tooltipEl.className = 'tutor-tooltip';
+          tooltipEl.setAttribute('x-show', 'open');
+          tooltipEl.setAttribute('x-cloak', '');
+          tooltipEl.setAttribute('x-transition', '');
+          tooltipEl.textContent = tooltipMessage;
+          template.content.appendChild(tooltipEl);
+          wrapper.appendChild(template);
+
           if (window.Alpine) {
-            window.Alpine.initTree(btn.parentElement as HTMLElement);
+            window.Alpine.initTree(wrapper);
           }
         }
       }
