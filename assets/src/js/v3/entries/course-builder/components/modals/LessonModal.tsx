@@ -147,14 +147,13 @@ const LessonModal = ({
   const courseCompletionProcess = tutorConfig?.settings?.course_completion_process;
   const controlVideoLessonCompletion = tutorConfig?.settings?.control_video_lesson_completion === 'on';
 
-  const totalDurationSeconds =
-    (duration?.hour || 0) * 3600 + (duration?.minute || 0) * 60 + (duration?.second || 0);
+  const totalDurationSeconds = (duration?.hour || 0) * 3600 + (duration?.minute || 0) * 60 + (duration?.second || 0);
 
   const showDurationWarning =
     courseCompletionProcess === 'strict' &&
     controlVideoLessonCompletion &&
     !!video &&
-    Number(totalDurationSeconds) === 0;  
+    Number(totalDurationSeconds) === 0;
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
