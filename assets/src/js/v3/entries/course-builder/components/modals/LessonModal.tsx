@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
@@ -47,6 +47,7 @@ import {
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import Alert from '@TutorShared/atoms/Alert';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -139,6 +140,21 @@ const LessonModal = ({
     shouldFocusError: true,
     mode: 'onChange',
   });
+
+  const video = useWatch({ control: form.control, name: 'video' });
+  const duration = useWatch({ control: form.control, name: 'duration' });
+
+  const courseCompletionProcess = tutorConfig?.settings?.course_completion_process;
+  const controlVideoLessonCompletion = tutorConfig?.settings?.control_video_lesson_completion === 'on';
+
+  const totalDurationSeconds =
+    (duration?.hour || 0) * 3600 + (duration?.minute || 0) * 60 + (duration?.second || 0);
+
+  const showDurationWarning =
+    courseCompletionProcess === 'strict' &&
+    controlVideoLessonCompletion &&
+    !!video &&
+    Number(totalDurationSeconds) === 0;  
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
@@ -476,6 +492,14 @@ const LessonModal = ({
                     )}
                   />
                 </div>
+                <Show when={showDurationWarning}>
+                  <Alert icon="warning" type="warning">
+                    {__(
+                      'Strict video completion is enabled. This lesson requires a known video duration. Please add the video duration above or disable "Video Lesson Completion Control" in Course Settings.',
+                      'tutor',
+                    )}
+                  </Alert>
+                </Show>
               </div>
             </Show>
 
