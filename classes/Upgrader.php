@@ -60,6 +60,10 @@ class Upgrader {
 	 * @return void
 	 */
 	public function init_upgrader() {
+		if ( ! User::is_admin() ) {
+			return;
+		}
+
 		$upgrades = $this->available_upgrades();
 
 		if ( tutor_utils()->count( $upgrades ) ) {
@@ -82,7 +86,7 @@ class Upgrader {
 		$upgrades = array();
 		if ( $version ) {
 			// Required to use dbDelta.
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php'; // @phpstan-ignore requireOnce.fileNotFound
 
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
@@ -345,7 +349,7 @@ class Upgrader {
 		$exists_gradebook_results_table = $wpdb->query( "SHOW TABLES LIKE '{$wpdb->tutor_gradebooks_results}';" );
 		$charset_collate                = $wpdb->get_charset_collate();
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php'; // @phpstan-ignore requireOnce.fileNotFound
 
 		if ( ! $exists_gradebook_table ) {
 			$gradebook_table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks} (
@@ -392,7 +396,7 @@ class Upgrader {
 	 */
 	public function upgrade_to_4_2_0() {
 		if ( QueryHelper::table_exists( 'tutor_coupon_usages' ) && ! QueryHelper::column_exist( 'tutor_coupon_usages', 'order_id' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php'; // @phpstan-ignore requireOnce.fileNotFound
 			dbDelta( Tutor::get_coupon_usage_table_schema( false ) );
 		}
 	}
@@ -427,7 +431,7 @@ class Upgrader {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php'; // @phpstan-ignore requireOnce.fileNotFound
 
 		if ( ! QueryHelper::table_exists( $wpdb->tutor_email_queue ) ) {
 			$table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_email_queue} (
