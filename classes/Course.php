@@ -1145,25 +1145,16 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		/**
-		 * Can trash a course when user is admin or option `instructor_can_delete_course` is turned on.
-		 */
-		if ( CourseModel::STATUS_TRASH === $params['post_status'] ) {
-			if ( User::is_admin() || tutor_utils()->get_option( 'instructor_can_delete_course', false ) ) {
-				$params['post_status'] = CourseModel::STATUS_TRASH;
-			} else {
-				unset( $params['post_status'] );
-			}
-		}
-
-		/**
-		 * Can publish a course when user is admin or option `instructor_can_publish_course` is turned on.
-		 * If instructor_can_publish_course is turned off then course status will be pending.
-		 */
-		if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-			$is_instructor_allowed_to_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! User::is_admin() && ! $is_instructor_allowed_to_publish ) {
-				$params['post_status'] = CourseModel::STATUS_PENDING;
+		if ( isset( $params['post_status'] ) ) {
+			$current_status = get_post_status( $course_id );
+			if ( $params['post_status'] !== $current_status ) {
+				if ( ! CourseModel::can_user_update_status( $course_id, $params['post_status'] ) ) {
+					if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
+						$params['post_status'] = CourseModel::STATUS_PENDING;
+					} else {
+						unset( $params['post_status'] );
+					}
+				}
 			}
 		}
 
@@ -2450,40 +2441,14 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
 
-		/**
-		 * Co-instructor can not delete a course
-		 *
-		 * @since 2.1.6
-		 */
-		if ( false === CourseModel::is_main_instructor( $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
-		}
+		$deleted = CourseModel::delete_course( $course_id, false );
 
-		// Check if user is only an instructor.
-		if ( ! User::is_admin() ) {
-			// Check if instructor can trash course.
-			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-
-			if ( ! $can_trash_post ) {
-				wp_send_json_error( tutor_utils()->error_message() );
-			}
-		}
-
-		$trash_course = wp_update_post(
-			array(
-				'ID'          => $course_id,
-				'post_status' => CourseModel::STATUS_TRASH,
-			)
-		);
-
-		if ( $trash_course ) {
+		if ( $deleted ) {
 			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
 		}
-		wp_send_json_success();
+
+		wp_send_json_error( tutor_utils()->error_message() );
 	}
 
 	/**
@@ -3286,6 +3251,10 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public static function redirect_to_course_list_page( int $post_id ): void {
+		if ( wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) || headers_sent() ) {
+			return;
+		}
+
 		$post = get_post( $post_id );
 		if ( tutor()->course_post_type === $post->post_type ) {
 			$is_gutenberg_enabled = tutor_utils()->get_option( 'enable_gutenberg_course_edit' );

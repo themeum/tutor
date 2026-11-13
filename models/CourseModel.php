@@ -476,20 +476,243 @@ class CourseModel {
 	}
 
 	/**
-	 * Delete a course by ID
+	 * Check whether a user can delete/trash a course or bundle.
 	 *
-	 * @since 2.0.9
+	 * Rules:
+	 * - Admins can trash or force-delete any course/bundle.
+	 * - Non-admins cannot force-delete (only trash).
+	 * - Only the main instructor can trash a course (co-authors cannot).
+	 * - Main instructor can trash only if 'instructor_can_delete_course' option is enabled.
 	 *
-	 * @param int $post_id  course id that need to delete.
+	 * @since 4.3.0
+	 *
+	 * @param int  $course_id    Course or bundle ID.
+	 * @param bool $force_delete Whether to permanently delete.
+	 * @param int  $user_id      User ID to check (default: current user).
+	 *
 	 * @return bool
 	 */
-	public static function delete_course( $post_id ) {
+	public static function can_user_delete( $course_id, $force_delete = false, $user_id = 0 ): bool {
+		$course_id = absint( $course_id );
+		$user_id   = $user_id ? absint( $user_id ) : get_current_user_id();
+
+		if ( ! $course_id || ! $user_id || ! self::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		if ( User::is_admin( $user_id ) ) {
+			return true;
+		}
+
+		// Non-admins cannot permanently force delete courses.
+		if ( $force_delete ) {
+			return false;
+		}
+
+		// Only main instructor can delete/trash.
+		if ( ! self::is_main_instructor( $course_id, $user_id ) ) {
+			return false;
+		}
+
+		return (bool) tutor_utils()->get_option( 'instructor_can_delete_course', false );
+	}
+
+	/**
+	 * Check whether a user can update the status of a course or bundle.
+	 *
+	 * Rules:
+	 * - Admins can change status to any valid status.
+	 * - Co-authors/guests cannot change course status.
+	 * - Only the main instructor can change course status.
+	 * - Trashing requires can_user_delete permission.
+	 * - Publishing requires 'instructor_can_publish_course' option to be enabled.
+	 * - Changing to draft or pending is permitted for main author.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int    $course_id     Course or bundle ID.
+	 * @param string $target_status Target post status.
+	 * @param int    $user_id       User ID to check (default: current user).
+	 *
+	 * @return bool
+	 */
+	public static function can_user_update_status( $course_id, $target_status, $user_id = 0 ): bool {
+		$course_id = absint( $course_id );
+		$user_id   = $user_id ? absint( $user_id ) : get_current_user_id();
+
+		if ( ! $course_id || ! $user_id || ! self::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		if ( ! in_array( $target_status, self::get_status_list(), true ) ) {
+			return false;
+		}
+
+		if ( User::is_admin( $user_id ) ) {
+			return true;
+		}
+
+		// Co-authors cannot change course status.
+		if ( ! self::is_main_instructor( $course_id, $user_id ) ) {
+			return false;
+		}
+
+		if ( self::STATUS_TRASH === $target_status ) {
+			return self::can_user_delete( $course_id, false, $user_id );
+		}
+
+		if ( self::STATUS_PUBLISH === $target_status ) {
+			return (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Delete a course by ID (trash or permanent delete).
+	 *
+	 * @since 2.0.9
+	 * @since 4.3.0 Centralized permission checking, soft trash & permanent delete support.
+	 *
+	 * @param int  $post_id      Course id that need to delete.
+	 * @param bool $force_delete Whether to permanently delete (admin only) or trash.
+	 * @param int  $user_id      User ID performing action (default: current user).
+	 *
+	 * @return bool
+	 */
+	public static function delete_course( $post_id, $force_delete = false, $user_id = 0 ) {
+		$post_id = absint( $post_id );
 		if ( ! self::get_post_types( $post_id ) ) {
 			return false;
 		}
 
-		wp_delete_post( $post_id, true );
-		return true;
+		if ( ! self::can_user_delete( $post_id, $force_delete, $user_id ) ) {
+			return false;
+		}
+
+		do_action( 'tutor_before_delete_course', $post_id, $force_delete );
+
+		if ( $force_delete ) {
+			( new self() )->delete_course_data( $post_id );
+			$result = wp_delete_post( $post_id, true );
+		} else {
+			$result = wp_trash_post( $post_id );
+		}
+
+		if ( $result ) {
+			do_action( 'tutor_after_delete_course', $post_id, $force_delete );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Bulk delete courses (trash or permanent delete).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string|array $bulk_ids     Course IDs.
+	 * @param bool         $force_delete Whether to permanently delete or trash.
+	 * @param int          $user_id      User ID performing deletion.
+	 *
+	 * @return bool
+	 */
+	public static function bulk_delete_course( $bulk_ids, $force_delete = false, $user_id = 0 ): bool {
+		if ( is_string( $bulk_ids ) ) {
+			$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
+		}
+
+		if ( ! is_array( $bulk_ids ) || empty( $bulk_ids ) ) {
+			return false;
+		}
+
+		$success_count = 0;
+		foreach ( $bulk_ids as $course_id ) {
+			$course_id = absint( $course_id );
+			if ( $course_id && self::delete_course( $course_id, $force_delete, $user_id ) ) {
+				++$success_count;
+			}
+		}
+
+		return $success_count > 0;
+	}
+
+	/**
+	 * Update course status with permission check.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int    $course_id Course ID.
+	 * @param string $status    Target post status.
+	 * @param int    $user_id   User ID performing update.
+	 *
+	 * @return bool
+	 */
+	public static function update_course_status( int $course_id, string $status, int $user_id = 0 ): bool {
+		$course_id = absint( $course_id );
+		if ( ! self::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		$status = sanitize_text_field( $status );
+		if ( ! in_array( $status, self::get_status_list(), true ) ) {
+			return false;
+		}
+
+		if ( ! self::can_user_update_status( $course_id, $status, $user_id ) ) {
+			return false;
+		}
+
+		if ( self::STATUS_TRASH === $status ) {
+			return self::delete_course( $course_id, false, $user_id );
+		}
+
+		$args = array(
+			'ID'          => $course_id,
+			'post_status' => $status,
+		);
+
+		$current_course = get_post( $course_id );
+		if ( self::STATUS_FUTURE === $current_course->post_status && self::STATUS_PUBLISH === $status ) {
+			$args['post_date']     = current_time( 'mysql' );
+			$args['post_date_gmt'] = current_time( 'mysql', 1 );
+		}
+
+		$updated = wp_update_post( $args );
+
+		return ! is_wp_error( $updated ) && 0 !== $updated;
+	}
+
+	/**
+	 * Bulk update course status with permission check per course.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string|array $bulk_ids Course IDs.
+	 * @param string       $status   Target post status.
+	 * @param int          $user_id  User ID performing update.
+	 *
+	 * @return bool
+	 */
+	public static function bulk_update_course_status( $bulk_ids, string $status, int $user_id = 0 ): bool {
+		if ( is_string( $bulk_ids ) ) {
+			$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
+		}
+
+		if ( ! is_array( $bulk_ids ) || empty( $bulk_ids ) ) {
+			return false;
+		}
+
+		$success_count = 0;
+		foreach ( $bulk_ids as $course_id ) {
+			$course_id = absint( $course_id );
+			if ( $course_id && self::update_course_status( $course_id, $status, $user_id ) ) {
+				++$success_count;
+			}
+		}
+
+		return $success_count > 0;
 	}
 
 	/**
@@ -647,8 +870,12 @@ class CourseModel {
 		 *
 		 * @since 2.0.9
 		 */
-		$wpdb->delete( $wpdb->prefix . 'tutor_earnings', array( 'course_id' => $post_id ) );
-		$wpdb->delete( $wpdb->prefix . 'tutor_gradebooks_results', array( 'course_id' => $post_id ) );
+		if ( QueryHelper::table_exists( 'tutor_earnings' ) ) {
+			$wpdb->delete( $wpdb->prefix . 'tutor_earnings', array( 'course_id' => $post_id ) );
+		}
+		if ( QueryHelper::table_exists( 'tutor_gradebooks_results' ) ) {
+			$wpdb->delete( $wpdb->prefix . 'tutor_gradebooks_results', array( 'course_id' => $post_id ) );
+		}
 		$wpdb->delete(
 			$wpdb->comments,
 			array(
@@ -662,7 +889,9 @@ class CourseModel {
 		 *
 		 * @since 2.1.0
 		 */
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_notifications WHERE post_id=%d AND type IN ('Announcements','Q&A','Enrollments')", $post_id ) );
+		if ( QueryHelper::table_exists( 'tutor_notifications' ) ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_notifications WHERE post_id=%d AND type IN ('Announcements','Q&A','Enrollments')", $post_id ) );
+		}
 		$wpdb->delete(
 			$wpdb->usermeta,
 			array(

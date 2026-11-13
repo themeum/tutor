@@ -186,7 +186,7 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
-		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! User::is_admin() ) {
 			unset( $tabs[7] );
 		}
 		return apply_filters( 'tutor_course_tabs', $tabs );
@@ -225,7 +225,7 @@ class Course_List {
 		}
 
 		// Author query.
-		if ( 'mine' === $status || ! current_user_can( 'administrator' ) ) {
+		if ( 'mine' === $status || ! User::is_admin() ) {
 			$args['author'] = $user_id;
 		}
 
@@ -285,32 +285,6 @@ class Course_List {
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
-		// Check if user is privileged.
-		if ( ! User::is_admin() ) {
-			$course_ids = explode( ',', $bulk_ids );
-
-			if ( current_user_can( 'edit_tutor_courses' ) ) {
-				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
-
-				if ( CourseModel::STATUS_PUBLISH === $action && ! $can_publish_course ) {
-					wp_send_json_error( tutor_utils()->error_message() );
-				}
-			} else {
-				wp_send_json_error( tutor_utils()->error_message() );
-			}
-
-			// Check if the course ids are instructors own course.
-			$course_ids = array_filter(
-				$course_ids,
-				function ( $course_id ) {
-					return tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
-				}
-			);
-
-			$bulk_ids = implode( ',', $course_ids );
-
-		}
-
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -320,7 +294,8 @@ class Course_List {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
 
-			$delete_courses = self::bulk_delete_course( $bulk_ids );
+			$force_delete   = User::is_admin();
+			$delete_courses = CourseModel::bulk_delete_course( $bulk_ids, $force_delete );
 
 			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
 			$delete_courses ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected courses', 'tutor' ) ) );
@@ -335,7 +310,7 @@ class Course_List {
 		 */
 		do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status = self::update_course_status( $action, $bulk_ids );
+		$update_status = CourseModel::bulk_update_course_status( $bulk_ids, $action );
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
@@ -356,52 +331,18 @@ class Course_List {
 
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id', 0, Input::TYPE_INT );
-		$course = get_post( $id );
 
-		// Check if user is privileged.
-		if ( ! User::is_admin() ) {
+		$updated = CourseModel::update_course_status( $id, $status );
 
-			if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID ) ) {
-				wp_send_json_error( tutor_utils()->error_message() );
+		if ( $updated ) {
+			if ( CourseModel::STATUS_TRASH === $status ) {
+				wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
 			}
-
-			$can_delete_course  = tutor_utils()->get_option( 'instructor_can_delete_course' );
-			$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
-
-			if ( CourseModel::STATUS_PUBLISH === $status && ! $can_publish_course ) {
-				wp_send_json_error( tutor_utils()->error_message() );
-			}
-
-			if ( CourseModel::STATUS_TRASH === $status && $can_delete_course ) {
-				$args       = array(
-					'ID'          => $id,
-					'post_status' => $status,
-				);
-				$trash_post = wp_update_post( $args );
-
-				if ( $trash_post ) {
-					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
-				}
-			}
-		}
-
-		if ( ! CourseModel::get_post_types( $course ) ) {
+			wp_send_json_success();
+		} else {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$args = array(
-			'ID'          => $id,
-			'post_status' => $status,
-		);
-
-		if ( CourseModel::STATUS_FUTURE === $course->post_status && CourseModel::STATUS_PUBLISH === $status ) {
-			$args['post_status']   = CourseModel::STATUS_PUBLISH;
-			$args['post_date']     = current_time( 'mysql' );
-			$args['post_date_gmt'] = current_time( 'mysql', 1 );
-		}
-
-		wp_update_post( $args );
-		wp_send_json_success();
 		exit;
 	}
 
@@ -415,15 +356,10 @@ class Course_List {
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
 
-		$user_id   = get_current_user_id();
-		$course_id = Input::post( 'id', 0, Input::TYPE_INT );
+		$course_id    = Input::post( 'id', 0, Input::TYPE_INT );
+		$force_delete = User::is_admin() && 'trash' === get_post_status( $course_id );
 
-		// Check if user is privileged.
-		if ( ! tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$delete = CourseModel::delete_course( $course_id );
+		$delete = CourseModel::delete_course( $course_id, $force_delete );
 
 		if ( $delete ) {
 			wp_send_json_success( __( 'Course has been deleted ', 'tutor' ) );
@@ -444,13 +380,7 @@ class Course_List {
 	 * @return bool
 	 */
 	public static function bulk_delete_course( $bulk_ids ): bool {
-		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
-
-		foreach ( $bulk_ids as $post_id ) {
-			CourseModel::delete_course( $post_id );
-		}
-
-		return true;
+		return CourseModel::bulk_delete_course( $bulk_ids, User::is_admin() );
 	}
 
 	/**
@@ -464,22 +394,7 @@ class Course_List {
 	 * @return bool
 	 */
 	public static function update_course_status( string $status, $bulk_ids ): bool {
-		global $wpdb;
-		$post_table = $wpdb->posts;
-		$status     = sanitize_text_field( $status );
-		$bulk_ids   = sanitize_text_field( $bulk_ids );
-
-		$ids       = array_map( 'intval', explode( ',', $bulk_ids ) );
-		$in_clause = QueryHelper::prepare_in_clause( $ids );
-
-		$wpdb->query(
-			$wpdb->prepare(
-				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($in_clause)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$status
-			)
-		);
-
-		return true;
+		return CourseModel::bulk_update_course_status( $bulk_ids, $status );
 	}
 
 	/**
