@@ -10696,4 +10696,24 @@ class Utils {
 	public function is_multi_dimensional_array( array $data ): bool {
 		return isset( $data[0] ) && is_array( $data[0] );
 	}
+
+	/**
+	 * Get admin user id.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return int
+	 */
+	public function get_admin_use_id(): int {
+		$admin = get_users(
+			array(
+				'role'    => User::ADMIN,
+				'number'  => 1,
+				'orderby' => 'ID',
+				'order'   => 'ASC',
+			)
+		);
+
+		return ! empty( $admin ) ? $admin[0]->ID : 0;
+	}
 }
