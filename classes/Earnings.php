@@ -226,44 +226,7 @@ class Earnings extends Singleton {
 		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
 		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
 		$commission_type = 'percent';
-
-		// Course author id.
-		if ( empty( $course_id ) ) {
-			/**
-			 * For membership plans, the course_id is null, so the earning
-			 * is credited to the site admin.
-			 */
-			$admin = get_users(
-				array(
-					'role'    => User::ADMIN,
-					'number'  => 1,
-					'orderby' => 'ID',
-					'order'   => 'ASC',
-				)
-			);
-
-			$user_id = ! empty( $admin ) ? $admin[0]->ID : 0;
-		} else {
-			$user_id = get_post_field( 'post_author', $course_id );
-		}
-
-		// (Use Pro Filter - Start)
-		// The response must be same array structure.
-		// Do not change used variable names here, or change in both of here and pro plugin
-		$pro_arg = array(
-			'user_id'                  => $user_id,
-			'instructor_rate'          => $instructor_rate,
-			'admin_rate'               => $admin_rate,
-			'instructor_amount'        => max( 0, $instructor_amount ),
-			'admin_amount'             => max( 0, $admin_amount ),
-			'course_price_grand_total' => $course_price_grand_total,
-			'commission_type'          => $commission_type,
-		);
-
-		// @deprecated Use `tutor_new_earning_data` instead.
-		$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
-		extract( $pro_calculation ); //phpcs:ignore
-		// (Use Pro Filter - End).
+		$user_id         = empty( $course_id ) ? tutor_utils()->get_admin_use_id() : get_post_field( 'post_author', $course_id );
 
 		// Prepare insertable earning data.
 		$earning_data = array(
@@ -285,6 +248,14 @@ class Earnings extends Singleton {
 		);
 
 		$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
+
+		/**
+		 * Ensure instructor and admin amount are not negative.
+		 * 
+		 * @since 4.2.2
+		 */
+		$earning_data['instructor_amount'] = max( 0, $earning_data['instructor_amount'] ?? 0 );
+		$earning_data['admin_amount']      = max( 0, $earning_data['admin_amount'] ?? 0 );
 
 		return $earning_data;
 	}
