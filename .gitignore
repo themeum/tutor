@@ -53,6 +53,13 @@ launch.json
 #rspack
 .swc
 assets/.rsdoctor
+*.ignore
+
+*storybook.log
+storybook-static
+
+# Bruno Local Environment
+docs/api/environments/local.bru
 
 # E2E test artifacts
 .e2e/
