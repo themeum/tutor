@@ -6,12 +6,10 @@ The browser suite runs against a real WordPress site whose test requests are rou
 
 ```bash
 cp .env.example .env      # fill in the database credentials
-composer test:install     # dry run: prints what would change
-composer test:install:apply
-pnpm test:e2e:install     # install Chromium
+composer test:install     # preview, then confirm before changing wp-config.php
 ```
 
-`test:install:apply` creates `WP_TEST_DB_NAME` and `WP_PHPUNIT_DB_NAME`, routes `wp-config.php` through `tests/support/test-config.php`, links the test mu-plugins, and seeds fixtures. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
+`test:install` creates `WP_TEST_DB_NAME` and `WP_PHPUNIT_DB_NAME`, routes `wp-config.php` through `tests/support/test-config.php`, links the test mu-plugins, and seeds fixtures after you confirm. Pass `--yes` (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. Chromium installs automatically on the first E2E run. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
 
 ## Commands
 
@@ -50,7 +48,7 @@ tests/e2e/
   external/            # @external, auto-included when present
 tests/support/
   test-config.php      # request-scoped database selector
-  install.php          # dry-run installer and uninstaller
+  install.php          # interactive installer and uninstaller
   preflight.php        # fail-fast database safety checks
   seed.php             # shared five-role seeder
   reset-test-db.php    # drop, install, seed

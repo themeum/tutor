@@ -107,7 +107,7 @@ Exit: `pnpm exec playwright test -c tests/e2e/playwright.config.ts --list` lists
   - exit non-zero with a one-line message.
 - `.env.example` — `SITE_URL`, `WP_TEST_DB_*`, `WP_PHPUNIT_DB_NAME`, `WP_TEST_ACTIVE_PLUGINS`, `WP_TEST_HOSTS`, `E2E_PASSWORD`.
 
-Exit: `composer test:install` prints what it would do; `composer test:install:apply` writes idempotently; `preflight` fails if any DB name is wrong.
+Exit: `composer test:install` prints a plan and applies after confirmation; `--yes` applies non-interactively; `preflight` fails if any DB name is wrong.
 
 ## Phase 3 — One seeder
 
@@ -196,8 +196,7 @@ Exit: `rg 'wp-env'` returns only historical docs.
 Local:
 
 ```bash
-composer test:install            # dry run
-composer test:install:apply      # writes wp-config, creates local_test + local_phpunit
+composer test:install            # preview, confirm, then write wp-config + DBs
 composer test:db:reset
 pnpm test:e2e                    # 34 core tests, retries 0
 E2E_PRO=1 pnpm test:e2e          # + 121 Pro tests

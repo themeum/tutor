@@ -24,6 +24,8 @@ Run the installer once:
 composer test:install
 ```
 
+The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only.
+
 The installer will:
 
 1. Read your database settings from `wp-config.php`.
@@ -117,9 +119,7 @@ vendor/bin/phpunit --testsuite=query-helper-test
 ## Running Playwright E2E tests
 
 ```bash
-# Install the Playwright Chromium browser binary
-pnpm test:e2e:install
-
+# Chromium installs automatically on the first E2E run
 # All E2E tests (headless)
 pnpm run test:e2e
 
@@ -128,6 +128,9 @@ pnpm run test:e2e:ui
 
 # Debug mode
 pnpm run test:e2e:debug
+
+# PHPUnit + E2E
+pnpm test
 ```
 
 ## Troubleshooting

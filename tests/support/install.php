@@ -5,12 +5,14 @@
  * Creates the E2E and PHPUnit databases, routes wp-config.php through the
  * test selector, links the test mu-plugins, and seeds the test database.
  *
- * Dry run by default. Pass --yes to write.
+ * Shows what will change, asks for confirmation, then applies.
+ * Pass --yes to apply without asking, or --dry-run to preview only.
  *
  * Usage:
- *   composer test:install              # dry run
- *   composer test:install:apply        # apply
- *   php tests/support/install.php --uninstall
+ *   composer test:install              # preview, then confirm
+ *   php tests/support/install.php --yes # apply non-interactively
+ *   php tests/support/install.php --dry-run
+ *   php tests/support/install.php --uninstall --yes
  *
  * @package Tutor\Tests
  */
@@ -122,17 +124,24 @@ final class Tutor_Test_Installer {
 	/**
 	 * Run every step in order. Stops at the first failure.
 	 *
-	 * @param bool $apply     Write changes.
-	 * @param bool $uninstall Restore the original configuration and drop test DBs.
+	 * @param bool $apply       Write changes.
+	 * @param bool $uninstall   Restore the original configuration and drop test DBs.
+	 * @param bool $interactive Ask before applying an install.
 	 */
-	public function run( bool $apply, bool $uninstall ): void {
+	public function run( bool $apply, bool $uninstall, bool $interactive = false ): void {
 		$this->apply     = $apply;
 		$this->uninstall = $uninstall;
 
 		Console::title( $uninstall ? 'Tutor LMS · Test Environment Uninstaller' : 'Tutor LMS · Test Environment Installer' );
 
 		if ( ! $apply && ! $uninstall ) {
-			Console::line( ' ' . Console::dim( 'Dry run: no files or databases are changed. Add --yes to apply.' ) );
+			Console::line(
+				' ' . Console::dim(
+					$interactive
+						? 'Nothing is changed until you confirm.'
+						: 'Dry run: no files or databases are changed. Add --yes to apply.'
+				)
+			);
 		}
 
 		$this->step( 'Locate wp-config.php', array( $this, 'locate_wp_config' ) );
@@ -151,6 +160,35 @@ final class Tutor_Test_Installer {
 			return;
 		}
 
+		$this->install_steps();
+
+		if ( ! $this->apply ) {
+			if ( ! $interactive ) {
+				$this->finish( false );
+				return;
+			}
+
+			$question = ' Apply these changes? This modifies wp-config.php, creates the test databases, and seeds fixtures. (y/N) ';
+			if ( ! $this->confirm( $question ) ) {
+				Console::line();
+				Console::line( ' ' . Console::dim( 'No changes made. Re-run with --yes to apply non-interactively.' ) );
+				Console::line();
+				return;
+			}
+
+			$this->apply = true;
+			Console::line();
+			Console::title( 'Applying changes' );
+			$this->install_steps();
+		}
+
+		$this->finish( true );
+	}
+
+	/**
+	 * Run the install steps with the current apply state.
+	 */
+	private function install_steps(): void {
 		$this->step( 'Prepare .env file', array( $this, 'prepare_env' ) );
 		$this->step( 'Resolve test database settings', array( $this, 'resolve_db' ) );
 		$this->step( 'Sync test database variables in .env', array( $this, 'sync_env_keys' ) );
@@ -159,15 +197,49 @@ final class Tutor_Test_Installer {
 		$this->step( 'Guard wp-settings.php during tests', array( $this, 'guard_wp_settings' ) );
 		$this->step( 'Link test mu-plugins', array( $this, 'link_mu_plugins' ) );
 		$this->step( 'Reset database and seed fixtures', array( $this, 'reset_database' ) );
+	}
 
+	/**
+	 * Print the result and verify an applied install.
+	 *
+	 * @param bool $applied Whether the install was applied.
+	 */
+	private function finish( bool $applied ): void {
 		Console::line();
-		$done = $this->apply ? 'Test environment installed successfully!' : 'Dry run complete. Re-run with --yes to apply.';
+		$done = $applied ? 'Test environment installed successfully!' : 'Dry run complete. Re-run with --yes to apply.';
 		Console::line( ' ' . Console::green( '✔' ) . ' ' . Console::bold( Console::green( $done ) ) );
 		Console::line();
 
-		if ( $this->apply ) {
+		if ( $applied ) {
 			$this->verify();
 		}
+	}
+
+	/**
+	 * Ask a yes/no question when running in a terminal.
+	 *
+	 * @param string $question Prompt text.
+	 * @param bool   $default  Answer used for an empty response.
+	 */
+	private function confirm( string $question, bool $default = false ): bool {
+		$is_interactive = function_exists( 'stream_isatty' ) ? stream_isatty( STDIN ) : true;
+
+		if ( ! $is_interactive ) {
+			return false;
+		}
+
+		echo $question;
+		$handle = fopen( 'php://stdin', 'r' );
+		$answer = $handle ? strtolower( trim( (string) fgets( $handle ) ) ) : '';
+		if ( $handle ) {
+			fclose( $handle );
+		}
+
+		if ( '' === $answer ) {
+			return $default;
+		}
+
+		return in_array( $answer, array( 'y', 'yes' ), true );
 	}
 
 	/**
@@ -563,14 +635,7 @@ PHP,
 			return;
 		}
 
-		echo ' Run a unit test to verify the configuration? (y/n) [y]: ';
-		$handle = fopen( 'php://stdin', 'r' );
-		$answer = $handle ? strtolower( trim( (string) fgets( $handle ) ) ) : '';
-		if ( $handle ) {
-			fclose( $handle );
-		}
-
-		if ( '' !== $answer && ! in_array( $answer, array( 'y', 'yes' ), true ) ) {
+		if ( ! $this->confirm( ' Run a unit test to verify the configuration? (y/n) [y]: ', true ) ) {
 			Console::line();
 			Console::line( Console::dim( " Skipped. Run it any time with: composer {$command}" ) );
 			Console::line();
@@ -727,17 +792,21 @@ PHP,
 	}
 }
 
-$options   = getopt( '', array( 'yes', 'dry-run', 'uninstall', 'help' ) );
-$apply     = isset( $options['yes'] ) && ! isset( $options['dry-run'] );
-$uninstall = isset( $options['uninstall'] );
+$options     = getopt( '', array( 'yes', 'dry-run', 'uninstall', 'help' ) );
+$yes         = isset( $options['yes'] );
+$dry_run     = isset( $options['dry-run'] );
+$uninstall   = isset( $options['uninstall'] );
+$apply       = $yes && ! $dry_run;
+$interactive = ! $yes && ! $dry_run && ! $uninstall;
 
 if ( isset( $options['help'] ) ) {
 	Console::init();
-	Console::line( 'Usage: php tests/support/install.php [--yes] [--uninstall]' );
-	Console::line( '  --yes        Write changes (default is a dry run).' );
+	Console::line( 'Usage: php tests/support/install.php [--yes] [--dry-run] [--uninstall]' );
+	Console::line( '  --yes        Apply without asking (also applies --uninstall).' );
+	Console::line( '  --dry-run    Show what would change and exit.' );
 	Console::line( '  --uninstall  Restore wp-config.php, remove mu-plugins, drop test DBs.' );
 	exit( 0 );
 }
 
 Console::init();
-( new Tutor_Test_Installer() )->run( $apply, $uninstall );
+( new Tutor_Test_Installer() )->run( $apply, $uninstall, $interactive );

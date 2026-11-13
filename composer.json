@@ -8,7 +8,7 @@
       "Tutor\\Core\\": "core/",
       "Tutor\\Components\\": "components/",
       "Tutor\\Cache\\": "cache/",
-      "Tutor\\Migrations\\":"migrations/",
+      "Tutor\\Migrations\\": "migrations/",
       "Tutor\\Models\\": "models/",
       "Tutor\\Helpers\\": "helpers/",
       "Tutor\\Exceptions\\": "exceptions/",
@@ -60,7 +60,6 @@
     "test:unit:filter": "php tests/support/preflight.php && vendor/bin/phpunit --filter",
     "test:db:reset": "php tests/support/reset-test-db.php",
     "test:install": "php tests/support/install.php",
-    "test:install:apply": "php tests/support/install.php --yes",
     "test:uninstall": "php tests/support/install.php --uninstall --yes"
   }
 }
