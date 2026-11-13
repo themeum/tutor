@@ -125,7 +125,6 @@ vendor/bin/phpunit --testsuite=query-helper-test
 ## Running Playwright E2E tests
 
 ```bash
-# Chromium installs automatically on the first E2E run
 # All E2E tests (headless)
 pnpm run test:e2e
 

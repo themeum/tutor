@@ -8,7 +8,7 @@ The browser suite runs against a real WordPress site whose test requests are rou
 pnpm test:setup           # installer prompt, then Chromium
 ```
 
-`test:setup` runs the installer, which previews the changes and asks before modifying `wp-config.php`, then installs Chromium. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. Chromium also installs automatically on the first E2E run. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
+`test:setup` runs the installer, which previews the changes and asks before modifying `wp-config.php`, then installs Chromium. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
 
 ## Commands
 
