@@ -10,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'TutorTestConfig' ) || ! TutorTestConfig::is_test_environment() ) {
+	return;
+}
+
 add_filter(
 	'pre_http_request',
 	static function ( $response, $args, $url ) {

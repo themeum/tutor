@@ -59,9 +59,7 @@ launch.json
 .swc
 assets/.rsdoctor
 
-# wp-env overrides and e2e test artifacts
-.wp-env.override.json
-.wp-env.pro.json
+# E2E test artifacts
 .e2e/
 playwright-report/
 test-results/

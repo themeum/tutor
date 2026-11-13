@@ -1,4 +1,6 @@
 <?php
+// @phpcs:ignoreFile
+
 /**
  * Deterministic seed script for Tutor Core Admin Dashboard E2E tests.
  *
@@ -16,7 +18,7 @@
  * @package Tutor
  */
 
-if ( ! defined( 'ABSPATH' ) || ! class_exists( 'WP_CLI' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit( 1 );
 }
 
@@ -28,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) || ! class_exists( 'WP_CLI' ) ) {
  */
 function e2e_admin_assert( bool $condition, string $message ): void {
 	if ( ! $condition ) {
-		WP_CLI::error( $message );
+		throw new RuntimeException( $message );
 	}
 }
 
@@ -427,4 +429,4 @@ if ( ! $existing_withdraw ) {
 	);
 }
 
-WP_CLI::success( 'Tutor Core Admin Dashboard seeding complete.' );
+echo "Tutor Core admin fixtures seeded.\n";

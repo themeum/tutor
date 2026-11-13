@@ -3,9 +3,10 @@ import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
-const pluginSlug = path.basename(process.cwd());
-const factoryScript = `wp-content/plugins/${pluginSlug}/bin/e2e/factories.php`;
-const resultsDir = path.join(process.cwd(), '.e2e');
+const pluginDir = path.resolve(__dirname, '../../..');
+const wpRoot = path.resolve(process.env.WP_ROOT ?? path.resolve(pluginDir, '../../..'));
+const factoryScript = path.join(pluginDir, 'bin/e2e/factories.php');
+const resultsDir = path.join(wpRoot, 'wp-content/e2e');
 
 export type FactoryInput = Record<string, unknown>;
 
@@ -19,30 +20,28 @@ export function runFactory<T>(factory: string, input: FactoryInput = {}, script 
       factory,
       ...input,
       result_file: resultFile,
+      result_dir: resultsDir,
     }),
   ).toString('base64');
 
-  const wpEnvArgs = process.env.E2E_WP_ENV_CONFIG
-    ? ['--config', process.env.E2E_WP_ENV_CONFIG, 'run', 'cli', '--', 'wp', 'eval-file', script, payload]
-    : ['run', 'cli', '--', 'wp', 'eval-file', script, payload];
-
   try {
-    execFileSync('pnpm', ['exec', 'wp-env', ...wpEnvArgs], {
-      cwd: process.cwd(),
+    execFileSync(process.env.WP_CLI_BIN ?? 'wp', [`--path=${wpRoot}`, 'eval-file', script, payload], {
+      cwd: wpRoot,
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024,
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 120_000,
+      env: { ...process.env, WP_TEST_ENV: '1' },
     });
   } catch (error) {
     const failure = error as { stdout?: Buffer | string; stderr?: Buffer | string; message?: string };
     const stdout = failure.stdout?.toString() ?? '';
     const stderr = failure.stderr?.toString() ?? '';
-    throw new Error(`wp-env factory "${factory}" failed.\n${stdout}\n${stderr}\n${failure.message ?? ''}`);
+    throw new Error(`wp-cli factory "${factory}" failed.\n${stdout}\n${stderr}\n${failure.message ?? ''}`);
   }
 
   if (!existsSync(resultPath)) {
-    throw new Error(`Factory "${factory}" did not write a result. Is the .e2e mapping present in .wp-env.json?`);
+    throw new Error(`Factory "${factory}" did not write a result to ${resultsDir}.`);
   }
 
   try {

@@ -1,40 +1,66 @@
-import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-// Load .env from plugin root
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import { defineConfig, type Project } from '@playwright/test';
+import { config as loadEnv } from 'dotenv';
 
-const baseURL = process.env.SITE_URL || 'https://tutor-dev.local';
+loadEnv({ path: process.env.E2E_ENV_FILE ?? resolve(__dirname, '../../.env') });
+
+const baseURL = process.env.E2E_BASE_URL ?? process.env.SITE_URL ?? 'http://localhost:8888';
+
+const proTestDir = resolve(__dirname, '../../../tutor-pro/tests/e2e');
+const externalTestDir = resolve(__dirname, './external');
+
+const hasExternal = existsSync(externalTestDir) && process.env.E2E_EXTERNAL !== '0';
+const hasPro = existsSync(proTestDir) && process.env.E2E_PRO !== '0';
+
+const projects: Project[] = [
+  {
+    name: 'core',
+    testIgnore: ['**/external/**'],
+  },
+  ...(hasExternal
+    ? [
+        {
+          name: 'external',
+          testDir: './external',
+        },
+      ]
+    : []),
+  ...(hasPro
+    ? [
+        {
+          name: 'pro',
+          testDir: proTestDir,
+        },
+      ]
+    : []),
+];
 
 export default defineConfig({
-  testDir: './specs',
-  timeout: 30 * 1000,
-  expect: {
-    timeout: 5000,
-  },
+  testDir: '.',
+  outputDir: resolve(__dirname, '../../test-results'),
+  globalSetup: './global-setup.ts',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 0,
   workers: 1,
-  reporter: [['list'], ['html', { open: 'never', outputFolder: path.resolve(__dirname, 'report') }]],
-
+  reporter: [['list'], ['html', { outputFolder: resolve(__dirname, '../../playwright-report'), open: 'never' }]],
+  timeout: 60_000,
+  expect: {
+    timeout: 10_000,
+  },
   use: {
     baseURL,
-    ignoreHTTPSErrors: true, // Allow local self-signed SSL certificates (*.local)
-    trace: 'on-first-retry',
+    browserName: 'chromium',
+    testIdAttribute: 'data-testid',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    // Custom header ensuring WordPress serves requests from the dedicated test database (local_test)
+    ignoreHTTPSErrors: true,
     extraHTTPHeaders: {
       'X-WP-Test-Env': 'playwright',
     },
   },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
+  projects,
 });

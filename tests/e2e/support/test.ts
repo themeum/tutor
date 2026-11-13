@@ -17,6 +17,8 @@ const rolePage =
   async ({ browser }: { browser: Browser }, use: (page: Page) => Promise<void>) => {
     const context = await browser.newContext({
       baseURL,
+      ignoreHTTPSErrors: true,
+      extraHTTPHeaders: { 'X-WP-Test-Env': 'playwright' },
       ...(role ? { storageState: storageState(role) } : {}),
     });
     const page = await context.newPage();

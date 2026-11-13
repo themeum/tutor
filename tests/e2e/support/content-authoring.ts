@@ -73,19 +73,27 @@ export const toggleCheckbox = async (scope: Scope, label: string | RegExp, check
 export const fillRichText = async (page: Page, scope: Scope, html: string): Promise<void> => {
   const textarea = scope.locator('textarea[data-testid="tutor-tinymce"]').first();
   await expect(textarea).toBeAttached();
-  const id = await textarea.getAttribute('id');
-  expect(id).toBeTruthy();
 
-  await expect.poll(() => page.evaluate((editorId) => !!window.tinymce?.get(editorId), id as string)).toBe(true);
-
-  await page.evaluate(
-    ({ editorId, content }) => {
-      const editor = window.tinymce.get(editorId);
-      editor.setContent(content);
-      editor.fire('change');
-    },
-    { editorId: id as string, content: html },
-  );
+  // Set and verify in one evaluation: the editor can be removed and
+  // re-initialised by a React re-render between two round-trips, which
+  // silently drops the content. Re-query the live textarea each poll so a
+  // remount is picked up.
+  await expect
+    .poll(
+      () =>
+        page.evaluate((content) => {
+          const live = document.querySelector<HTMLTextAreaElement>('textarea[data-testid="tutor-tinymce"]');
+          const editor = live && window.tinymce?.get(live.id);
+          if (!editor || editor.removed) {
+            return false;
+          }
+          editor.setContent(content);
+          editor.fire('change');
+          return editor.getContent().trim().length > 0;
+        }, html),
+      { timeout: 15_000 },
+    )
+    .toBe(true);
 };
 
 const MONTHS = [

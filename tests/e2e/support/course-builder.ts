@@ -157,6 +157,9 @@ export const addLesson = async (page: Page, input: LessonFormInput): Promise<voi
 
   await fillLessonForm(page, modal, input);
 
+  // Clear any hover overlay from the media previews before using the header action.
+  await page.mouse.move(0, 0);
+
   await page.getByTestId('save-lesson').click();
   await expect(modal).toBeHidden();
   await expect(page.locator(`text="${input.title}"`).first()).toBeVisible();

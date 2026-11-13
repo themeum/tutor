@@ -165,7 +165,7 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       expect(lesson?.content).toContain(lessonContent);
       expect(lesson?.meta.preview).toBeTruthy();
       expect(lesson?.meta.attachments).toHaveLength(1);
-      expect(lesson?.meta.video).toMatchObject({ runtime: { hours: '1', minutes: '2', seconds: '3' } });
+      expect(lesson?.meta.video).toMatchObject({ runtime: { hours: '1', minutes: '02', seconds: '03' } });
 
       const publicLesson = topic?.children.find((item) => item.title === publicLessonTitle);
       expect(publicLesson?.content).toContain(publicLessonContent);
@@ -248,7 +248,7 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await expect(guestPage.getByRole('img', { name: 'Permission Denied' })).toHaveCount(0);
       await expect(guestPage.getByText(lessonContent, { exact: false }).first()).toBeVisible();
       await expect(guestPage.locator('iframe[src*="youtube"]').first()).toBeVisible();
-      await expect(guestPage.getByText(/Video - 1:2:3/).first()).toBeVisible();
+      await expect(guestPage.getByText(/Video - 1:02:03/).first()).toBeVisible();
       await expect(
         guestPage.locator('.tutor-attachment-card-title', { hasText: 'course-attachment' }).first(),
       ).toBeAttached();

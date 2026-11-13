@@ -11,7 +11,11 @@ export default async function globalSetup() {
 
   try {
     for (const role of roles) {
-      const context = await browser.newContext({ baseURL });
+      const context = await browser.newContext({
+        baseURL,
+        ignoreHTTPSErrors: true,
+        extraHTTPHeaders: { 'X-WP-Test-Env': 'playwright' },
+      });
       const page = await context.newPage();
       await login(page, role);
       await context.storageState({ path: storageState(role) });

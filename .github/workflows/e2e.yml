@@ -7,21 +7,47 @@ concurrency:
   group: e2e-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+env:
+  WP_VERSION: '7.1.3'
+  WP_ROOT: ${{ github.workspace }}/wordpress
+  PLUGIN_DIR: ${{ github.workspace }}/wordpress/wp-content/plugins/tutor
+  WP_TEST_DB_NAME: wordpress_test
+  WP_TEST_DB_USER: root
+  WP_TEST_DB_PASS: root
+  WP_TEST_DB_HOST: 127.0.0.1
+  WP_PHPUNIT_DB_NAME: wordpress_phpunit
+
 jobs:
   e2e:
     name: Playwright E2E
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          path: wordpress/wp-content/plugins/tutor
 
-      - name: Setup PHP & Composer
+      - name: Setup PHP, Composer & WP-CLI
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          tools: composer
+          tools: composer, wp-cli
           coverage: none
 
       - name: Setup pnpm
@@ -34,20 +60,51 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: wordpress/wp-content/plugins/tutor/pnpm-lock.yaml
+
+      - name: Install WordPress
+        run: |
+          wp core download --path="$WP_ROOT" --version="$WP_VERSION"
+          wp config create --path="$WP_ROOT" --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
 
       - name: Install dependencies
+        working-directory: ${{ env.PLUGIN_DIR }}
         run: |
           pnpm install
           composer install --no-interaction --prefer-dist --no-dev --no-scripts
 
       - name: Build plugin assets
+        working-directory: ${{ env.PLUGIN_DIR }}
         run: pnpm build-dev
 
       - name: Install Playwright Chromium & system dependencies
+        working-directory: ${{ env.PLUGIN_DIR }}
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Install test environment
+        working-directory: ${{ env.PLUGIN_DIR }}
+        env:
+          SITE_URL: http://127.0.0.1:8888
+          WP_TEST_ACTIVE_PLUGINS: tutor
+        run: |
+          php tests/support/install.php --yes
+          php tests/support/preflight.php
+
       - name: Run E2E tests
-        run: bash bin/e2e/run.sh --reporter=./tests/e2e/support/progress-reporter.ts,html
+        working-directory: ${{ env.PLUGIN_DIR }}
+        env:
+          E2E_BASE_URL: http://127.0.0.1:8888
+          WP_ROOT: ${{ env.WP_ROOT }}
+        run: |
+          WP_TEST_ENV=1 PHP_CLI_SERVER_WORKERS=4 wp server --host=127.0.0.1 --port=8888 --path="$WP_ROOT" > "$RUNNER_TEMP/wp-server.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8888/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8888/ > /dev/null
+          pnpm test:e2e
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
@@ -64,3 +121,11 @@ jobs:
           name: test-results
           path: test-results/
           retention-days: 14
+
+      - name: Upload WordPress server log
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: wp-server-log
+          path: ${{ runner.temp }}/wp-server.log
+          retention-days: 7

@@ -3,7 +3,7 @@
  * Per-spec data factories for the Playwright E2E suite.
  *
  * The Playwright support layer calls this through `wp eval-file` and reads a
- * JSON result from the `.e2e` mapping, which avoids parsing wp-env output.
+ * JSON result from wp-content/e2e, which avoids parsing WP-CLI output.
  *
  * @package Tutor
  */
@@ -650,6 +650,11 @@ function e2e_factory_set_addon_state( array $input ): array {
 	// Direct setup writes bypass the enable hooks that refresh rewrite rules.
 	flush_rewrite_rules();
 
+	// The add-on only registers its routes on the next request, once it loads.
+	if ( class_exists( 'TUTOR\Permalink' ) ) {
+		\TUTOR\Permalink::set_permalink_flag();
+	}
+
 	return array(
 		'name'     => $name,
 		'key'      => $key,
@@ -1229,7 +1234,7 @@ switch ( $factory ) {
 		WP_CLI::error( sprintf( 'Unknown factory "%s".', $factory ) );
 }
 
-$result_dir = WP_CONTENT_DIR . '/e2e';
+$result_dir = ! empty( $payload['result_dir'] ) ? (string) $payload['result_dir'] : WP_CONTENT_DIR . '/e2e';
 wp_mkdir_p( $result_dir );
 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 file_put_contents( $result_dir . '/' . $result_file, wp_json_encode( $result ) );
