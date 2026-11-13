@@ -10,7 +10,10 @@
 
 namespace Tutor\Models;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\TutorCache;
+use Tutor\Core\DB;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
@@ -280,35 +283,37 @@ class EnrollmentModel {
 	 * @return object|mixed
 	 */
 	public static function get_enrolled_data( $user_id = 0, $course_id = 0, $status = self::STATUS_COMPLETED ) {
-		global $wpdb;
-		$status_clause = $status ? $wpdb->prepare( 'AND post_status = %s ', $status ) : '';
-		// If course ID provided, it will return single row data.
-		if ( $course_id > 0 ) {
-			return $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						AND post_parent = %d
-						{$status_clause}
-						AND post_author = %d;",
-					self::POST_TYPE,
-					$course_id,
-					$user_id
-				)
-			);
-		} else {
-			// Return all enrolled data by user ID.
-			return $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM 	{$wpdb->posts} 
-						WHERE post_type = %s
-						{$status_clause}
-						AND post_author = %d;",
-					self::POST_TYPE,
-					$user_id
-				)
-			);
+		$user_id   = absint( $user_id );
+		$course_id = absint( $course_id );
+
+		if ( ! empty( $status ) && ! in_array( $status, array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ), true ) ) {
+			return null;
 		}
+
+		$args = array(
+			'posts_per_page' => -1,
+			'post_type'      => self::POST_TYPE,
+			'post_status'    => array( self::STATUS_COMPLETED, self::STATUS_CANCEL, self::STATUS_PENDING ),
+		);
+
+		if ( $user_id > 0 ) {
+			$args['author'] = $user_id;
+		}
+
+		if ( $course_id > 0 && in_array( get_post_type( $course_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ), true ) ) {
+			$args['post_parent'] = $course_id;
+		}
+
+		if ( ! empty( $status ) ) {
+			$args['post_status'] = $status;
+		}
+
+		if ( $course_id > 0 ) {
+			$posts = get_posts( $args );
+			return ! empty( $posts ) ? $posts[0] : null;
+		}
+
+		return get_posts( $args );
 	}
 
 	/**

@@ -60,6 +60,7 @@ class UserModel {
 	public function get_unenrolled_users( $object_id, $search_clause = array(), $limit = 10, $offset = 0 ) {
 		global $wpdb;
 
+		$object_id      = absint( $object_id );
 		$primary_table  = "{$wpdb->users} AS u";
 		$joining_tables = array(
 			array(
