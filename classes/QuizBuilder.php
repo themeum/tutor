@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\DB;
 use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
@@ -19,7 +20,6 @@ use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 use TUTOR_PRO\QuizImageStorage;
-use WP_Error;
 
 /**
  * Class QuizBuilder
@@ -27,6 +27,12 @@ use WP_Error;
  * @since 1.0.0
  */
 class QuizBuilder {
+	use JsonResponse;
+
+	const TRACKING_KEY   = '_data_status';
+	const FLAG_NEW       = 'new';
+	const FLAG_UPDATE    = 'update';
+	const FLAG_NO_CHANGE = 'no_change';
 
 	/**
 	 * Store question ids of current quiz.
@@ -47,6 +53,15 @@ class QuizBuilder {
 	private $current_quiz_answer_ids = null;
 
 	/**
+	 * Store question to answer ids mapping of current quiz.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @var array<int, array<int>>
+	 */
+	private $current_quiz_question_answers_map = array();
+
+	/**
 	 * Store current quiz details
 	 *
 	 * @since 4.0.5
@@ -54,13 +69,6 @@ class QuizBuilder {
 	 * @var object|null
 	 */
 	private $current_quiz = null;
-
-	use JsonResponse;
-
-	const TRACKING_KEY   = '_data_status';
-	const FLAG_NEW       = 'new';
-	const FLAG_UPDATE    = 'update';
-	const FLAG_NO_CHANGE = 'no_change';
 
 	/**
 	 * Register hooks and dependencies.
@@ -176,16 +184,22 @@ class QuizBuilder {
 
 			// Update answer.
 			if ( self::FLAG_UPDATE === $data_status ) {
-				$answer_id = $answer['answer_id'];
+				$answer_id = (int) $answer['answer_id'];
 				$old_mask  = '';
 				if ( $this->is_mask_image_question_type( $question_type ) ) {
-					$old_answer = QueryHelper::get_row( $answers_table, array( 'answer_id' => (int) $answer_id ), 'answer_id' );
+					$old_answer = DB::table( 'tutor_quiz_question_answers' )
+						->where( 'answer_id', $answer_id )
+						->where( 'belongs_question_id', (int) $question_id )
+						->first();
 					$old_mask   = is_object( $old_answer ) ? (string) ( $old_answer->answer_two_gap_match ?? '' ) : '';
 				}
 				$wpdb->update(
 					$answers_table,
 					$answer_data,
-					array( 'answer_id' => $answer_id )
+					array(
+						'answer_id'           => $answer_id,
+						'belongs_question_id' => (int) $question_id,
+					)
 				);
 				if ( $this->is_mask_image_question_type( $question_type ) ) {
 					$new_mask = (string) ( $answer_data['answer_two_gap_match'] ?? '' );
@@ -194,7 +208,7 @@ class QuizBuilder {
 			}
 
 			if ( self::FLAG_NO_CHANGE === $data_status ) {
-				$answer_id = $answer['answer_id'];
+				$answer_id = (int) $answer['answer_id'];
 			}
 
 			// Save sort order.
@@ -202,7 +216,10 @@ class QuizBuilder {
 			$wpdb->update(
 				$answers_table,
 				array( 'answer_order' => $answer_order ),
-				array( 'answer_id' => $answer_id )
+				array(
+					'answer_id'           => $answer_id,
+					'belongs_question_id' => (int) $question_id,
+				)
 			);
 		}
 	}
@@ -329,7 +346,18 @@ class QuizBuilder {
 			}
 
 			if ( self::FLAG_NO_CHANGE === $data_status ) {
-				$question_id = $question['question_id'];
+				$question_id = (int) $question['question_id'];
+			}
+
+			// Verify existing question belongs to this quiz before updating order or saving answers.
+			if ( self::FLAG_NEW !== $data_status ) {
+				$belongs = DB::table( 'tutor_quiz_questions' )
+					->where( 'question_id', $question_id )
+					->where( 'quiz_id', $quiz_id )
+					->exists();
+				if ( ! $belongs ) {
+					continue;
+				}
 			}
 
 			// Save sort order.
@@ -367,7 +395,7 @@ class QuizBuilder {
 			$errors['payload'] = __( 'Invalid payload', 'tutor' );
 		}
 
-		$quiz_id   = (int) $payload['ID'] ?? 0;
+		$quiz_id   = (int) ( $payload['ID'] ?? 0 );
 		$questions = $payload['questions'] ?? array();
 		$quiz      = get_post( $quiz_id );
 
@@ -376,7 +404,7 @@ class QuizBuilder {
 			$errors['ID'][] = __( 'Invalid quiz id provided', 'tutor' );
 		}
 
-		if ( $quiz && ! current_user_can( 'edit_post', $quiz_id ) ) {
+		if ( $quiz && ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			$success                = false;
 			$errors['permission'][] = __( 'You do not have permission to edit this quiz', 'tutor' );
 		}
@@ -901,30 +929,31 @@ class QuizBuilder {
 	 * @return void
 	 */
 	private function set_current_quiz_questions_answer_ids( int $quiz_id ) {
-		if ( ! $quiz_id ) {
+		$this->current_quiz                      = null;
+		$this->current_quiz_question_ids         = array();
+		$this->current_quiz_answer_ids           = array();
+		$this->current_quiz_question_answers_map = array();
+
+		$quiz_details = $quiz_id ? QuizModel::get_quiz_details( $quiz_id ) : null;
+		if ( ! $quiz_details ) {
 			return;
 		}
 
-		if ( is_null( $this->current_quiz ) ) {
-			$quiz_details = QuizModel::get_quiz_details( $quiz_id );
-			if ( $quiz_details ) {
-				$this->current_quiz = $quiz_details;
-			}
+		$this->current_quiz = $quiz_details;
+		$questions          = is_array( $quiz_details->questions ?? null ) ? $quiz_details->questions : array();
+
+		// Build the map first: question id => answer ids.
+		foreach ( $questions as $question ) {
+			$answers = is_array( $question->question_answers ?? null ) ? $question->question_answers : array();
+
+			$this->current_quiz_question_answers_map[ (int) $question->question_id ] = array_map( 'intval', wp_list_pluck( $answers, 'answer_id' ) );
 		}
 
-		if ( is_null( $this->current_quiz_question_ids ) && $this->current_quiz ) {
-			$questions = $this->current_quiz->questions;
-			if ( $questions ) {
-				$this->current_quiz_question_ids = wp_list_pluck( $questions, 'question_id' );
-			}
-		}
+		// Derive the flat lists from the map.
+		$map = $this->current_quiz_question_answers_map;
 
-		if ( is_null( $this->current_quiz_answer_ids ) && $this->current_quiz ) {
-			$quiz_details = $this->current_quiz->questions;
-
-			$quiz_question_answer          = wp_list_pluck( $quiz_details, 'question_answers' );
-			$this->current_quiz_answer_ids = wp_list_pluck( array_merge( ...$quiz_question_answer ), 'answer_id' );
-		}
+		$this->current_quiz_question_ids = array_keys( $map );
+		$this->current_quiz_answer_ids   = array_values( array_unique( array_merge( array(), ...array_values( $map ) ) ) );
 	}
 
 	/**
@@ -939,41 +968,60 @@ class QuizBuilder {
 	 * @return bool true True if everything is fine
 	 */
 	public function is_valid_quiz_question_answer_payload( array $payload ): bool {
-		$payload_question_ids     = wp_list_pluck( $payload, 'question_id' );
-		$payload_question_answers = wp_list_pluck( $payload, 'question_answers', 'question_id' );
+		$valid_question_ids = is_array( $this->current_quiz_question_ids ) ? $this->current_quiz_question_ids : array();
+		$valid_answer_ids   = is_array( $this->current_quiz_answer_ids ) ? $this->current_quiz_answer_ids : array();
+		$is_new_quiz        = is_null( $this->current_quiz );
 
-		$is_cb_question = array();
 		foreach ( $payload as $question ) {
-			if ( isset( $question['question_id'] ) ) {
-				$is_cb_question[ $question['question_id'] ] = ! empty( $question['is_cb_question'] );
+			$answers = $question['question_answers'] ?? array();
+
+			/**
+			 * For a new quiz, current_quiz is null.
+			 * There should not be any existing question or answer updates.
+			 *
+			 * @since 4.2.2
+			 */
+			if ( $is_new_quiz ) {
+				foreach ( array_merge( array( $question ), $answers ) as $item ) {
+					if ( self::FLAG_NEW !== ( $item[ self::TRACKING_KEY ] ?? self::FLAG_NEW ) ) {
+						throw new \Exception( esc_html__( 'Invalid question or answer id found', 'tutor' ), 1 );
+					}
+				}
+				continue;
 			}
-		}
 
-		// Remove content bank answers.
-		$payload_question_answers = array_filter( $payload_question_answers, fn( $question_id ) => empty( $is_cb_question[ $question_id ] ), ARRAY_FILTER_USE_KEY );
-		$payload_question_answers = array_filter( array_values( $payload_question_answers ) ); // Filter out empty array.
-		$payload_answer_ids       = wp_list_pluck( array_merge( ...$payload_question_answers ), 'answer_id' );
+			// New question: all of its answers must be new too.
+			if ( self::FLAG_NEW === ( $question[ self::TRACKING_KEY ] ?? self::FLAG_NO_CHANGE ) ) {
+				foreach ( $answers as $answer ) {
+					if ( self::FLAG_NEW !== ( $answer[ self::TRACKING_KEY ] ?? self::FLAG_NO_CHANGE ) ) {
+						throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
+					}
+				}
+				continue;
+			}
 
-		// Remove the hash id.
-		$payload_question_ids = array_filter( $payload_question_ids, fn( $id ) => is_numeric( $id ) && empty( $is_cb_question[ $id ] ) );
-		$payload_answer_ids   = array_filter( $payload_answer_ids, fn( $id ) => is_numeric( $id ) );
-
-		// For the new quiz current_quiz is null, in this there should not be any numeric question or answer id.
-		if ( is_null( $this->current_quiz ) && ( count( $payload_question_ids ) || count( $payload_answer_ids ) ) ) {
-			throw new \Exception( esc_html__( 'Invalid question or answer id found', 'tutor' ), 1 );
-		}
-
-		if ( $this->current_quiz_question_ids ) {
-			$has_question_diff = array_diff( $payload_question_ids, $this->current_quiz_question_ids );
-			if ( $has_question_diff ) {
+			// Existing question: it must belong to the target quiz.
+			$q_id = $question['question_id'] ?? null;
+			if ( ! is_numeric( $q_id ) || ! in_array( (int) $q_id, $valid_question_ids, true ) ) {
 				throw new \Exception( esc_html__( 'Invalid question id found', 'tutor' ), 1 );
 			}
-		}
 
-		if ( $this->current_quiz_answer_ids ) {
-			$has_answer_diff = array_diff( $payload_answer_ids, $this->current_quiz_answer_ids );
-			if ( $has_answer_diff ) {
-				throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
+			// Existing answers must belong to this question. New answers are allowed.
+			$allowed_q_answers = $this->current_quiz_question_answers_map[ (int) $q_id ] ?? array();
+
+			foreach ( $answers as $answer ) {
+				if ( self::FLAG_NEW === ( $answer[ self::TRACKING_KEY ] ?? self::FLAG_NO_CHANGE ) ) {
+					continue;
+				}
+
+				$a_id = $answer['answer_id'] ?? null;
+				if (
+				! is_numeric( $a_id )
+				|| ! in_array( (int) $a_id, $valid_answer_ids, true )
+				|| ! in_array( (int) $a_id, $allowed_q_answers, true )
+				) {
+					throw new \Exception( esc_html__( 'Invalid answer id found', 'tutor' ), 1 );
+				}
 			}
 		}
 
