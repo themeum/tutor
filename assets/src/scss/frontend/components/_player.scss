@@ -6,16 +6,23 @@
 .tutor-video-player {
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: 0;
+  border-radius: inherit;
   overflow: hidden;
 
   .loading-spinner {
     position: absolute;
     inset: 0;
     background: $tutor-surface-base;
-    border-radius: 0;
-    z-index: $tutor-z-positive;
+    border-radius: inherit;
+    z-index: $tutor-z-header;
+    @include tutor-transition((opacity, visibility));
     @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
+
+    &.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
 
     &::before {
       width: 50px;

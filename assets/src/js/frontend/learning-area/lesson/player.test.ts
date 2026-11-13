@@ -480,3 +480,96 @@ describe('LessonPlaybackController auto-next', () => {
     expect(env.fetchNextUrl).not.toHaveBeenCalled();
   });
 });
+
+describe('LessonPlaybackController loading spinner', () => {
+  it('keeps spinner visible until media has data, then removes it', () => {
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    container.className = 'tutor-video-player';
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    const playerEl = document.createElement('div');
+    container.appendChild(spinner);
+    container.appendChild(playerEl);
+    document.body.appendChild(container);
+
+    let duration = 0;
+    const { player, emit } = createFakePlayer({
+      element: playerEl,
+      getDuration: () => duration,
+    });
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    expect(container.querySelector('.loading-spinner')).not.toBeNull();
+    expect(spinner.classList.contains('hide')).toBe(false);
+
+    duration = 120;
+    emit('timeupdate', { currentTime: 0, duration: 120 });
+
+    expect(spinner.classList.contains('hide')).toBe(true);
+    vi.advanceTimersByTime(300);
+    expect(container.querySelector('.loading-spinner')).toBeNull();
+
+    container.remove();
+  });
+
+  it('removes spinner immediately if play starts', () => {
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    container.className = 'tutor-video-player';
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    const playerEl = document.createElement('div');
+    container.appendChild(spinner);
+    container.appendChild(playerEl);
+    document.body.appendChild(container);
+
+    const { player, emit } = createFakePlayer({
+      element: playerEl,
+      getDuration: () => 0,
+    });
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    expect(container.querySelector('.loading-spinner')).not.toBeNull();
+
+    emit('play');
+    expect(spinner.classList.contains('hide')).toBe(true);
+    vi.advanceTimersByTime(300);
+    expect(container.querySelector('.loading-spinner')).toBeNull();
+
+    container.remove();
+  });
+
+  it('removes spinner on fallback timer if metadata never loads', () => {
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    container.className = 'tutor-video-player';
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    const playerEl = document.createElement('div');
+    container.appendChild(spinner);
+    container.appendChild(playerEl);
+    document.body.appendChild(container);
+
+    const { player, emit } = createFakePlayer({
+      element: playerEl,
+      getDuration: () => 0,
+    });
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    expect(container.querySelector('.loading-spinner')).not.toBeNull();
+
+    vi.advanceTimersByTime(2600);
+    expect(spinner.classList.contains('hide')).toBe(true);
+    vi.advanceTimersByTime(300);
+    expect(container.querySelector('.loading-spinner')).toBeNull();
+
+    container.remove();
+  });
+});

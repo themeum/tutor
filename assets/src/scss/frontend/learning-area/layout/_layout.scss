@@ -33,10 +33,18 @@ $tutor-fixed-footer-offset: $tutor-spacing-6;
 
   .tutor-learning-area-content {
     padding-inline-end: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(lg) {
+      padding-inline-end: 0;
+    }
   }
 
   &.is-fullscreen .tutor-learning-area-content {
     padding-inline: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(lg) {
+      padding-inline: 0;
+    }
   }
 
   &.tutor-has-site-shell {

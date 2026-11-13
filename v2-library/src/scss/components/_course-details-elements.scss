@@ -16,13 +16,9 @@
 
 	// .tutor-course-details-page-main
 	&-page-main {
-		.tutor-course-thumbnail img {
-			border-radius: 6px;
-			overflow: hidden;
-		}
-
+		.tutor-course-thumbnail img,
 		.tutor-video-player {
-			border-radius: 0;
+			border-radius: 6px;
 			overflow: hidden;
 		}
 	}

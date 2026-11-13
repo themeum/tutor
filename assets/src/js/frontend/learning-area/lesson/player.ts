@@ -38,6 +38,8 @@ export interface LessonEnvironment {
 
 const SEEK_TOLERANCE = 1;
 const DEFAULT_SYNC_INTERVAL_SECONDS = 10;
+const SPINNER_TRANSITION_MS = 250;
+const SPINNER_FALLBACK_TIMEOUT_MS = 2500;
 
 export const getPercentage = (value: number, total: number): number => {
   if (value > 0 && total > 0) {
@@ -74,6 +76,9 @@ export class LessonPlaybackController {
   #playedOnce = false;
   #seekingBack = false;
   #seekDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  #spinnerRemoved = false;
+  #spinnerFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+  #spinnerCleanups: (() => void)[] = [];
   #unsubscribers: PlayerUnsubscribe[] = [];
 
   constructor(player: TutorPlayer, data: PlayerData, environment: LessonEnvironment) {
@@ -102,16 +107,91 @@ export class LessonPlaybackController {
       clearTimeout(this.#seekDebounceTimer);
       this.#seekDebounceTimer = null;
     }
+    if (this.#spinnerFallbackTimer) {
+      clearTimeout(this.#spinnerFallbackTimer);
+      this.#spinnerFallbackTimer = null;
+    }
+    this.#spinnerCleanups.forEach((cleanup) => cleanup());
+    this.#spinnerCleanups = [];
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
     this.#unsubscribers = [];
   }
 
-  #onReady = (): void => {
+  #removeLoadingSpinner = (): void => {
+    if (this.#spinnerRemoved) {
+      return;
+    }
+    this.#spinnerRemoved = true;
+    if (this.#spinnerFallbackTimer) {
+      clearTimeout(this.#spinnerFallbackTimer);
+      this.#spinnerFallbackTimer = null;
+    }
+    this.#spinnerCleanups.forEach((cleanup) => cleanup());
+    this.#spinnerCleanups = [];
+
     const spinner =
       this.#player.element.closest('.tutor-video-player')?.querySelector('.loading-spinner') ??
       this.#env.document.querySelector('.tutor-video-player .loading-spinner');
-    spinner?.remove();
 
+    if (spinner) {
+      spinner.classList.add('hide');
+      setTimeout(() => spinner.remove(), SPINNER_TRANSITION_MS);
+    }
+  };
+
+  #scheduleSpinnerRemoval = (): void => {
+    const media = this.#player.media;
+
+    const isMediaReady = (): boolean => {
+      if (this.#playing || this.#player.getCurrentTime() > 0) {
+        return true;
+      }
+      if (media instanceof HTMLVideoElement) {
+        return media.readyState >= 2;
+      }
+      return this.#player.getDuration() > 0;
+    };
+
+    if (isMediaReady()) {
+      this.#removeLoadingSpinner();
+      return;
+    }
+
+    this.#spinnerFallbackTimer = setTimeout(() => {
+      this.#removeLoadingSpinner();
+    }, SPINNER_FALLBACK_TIMEOUT_MS);
+
+    const onLoaded = (): void => {
+      this.#removeLoadingSpinner();
+    };
+
+    const offTime = this.#player.on('timeupdate', ({ duration }) => {
+      if (duration > 0) {
+        if (media instanceof HTMLVideoElement && media.readyState < 2) {
+          return;
+        }
+        onLoaded();
+      }
+    });
+
+    const offPlay = this.#player.on('play', onLoaded);
+
+    this.#spinnerCleanups.push(offTime, offPlay);
+
+    if (media) {
+      media.addEventListener('loadeddata', onLoaded, { once: true });
+      media.addEventListener('canplay', onLoaded, { once: true });
+      media.addEventListener('loadedmetadata', onLoaded, { once: true });
+
+      this.#spinnerCleanups.push(() => {
+        media.removeEventListener('loadeddata', onLoaded);
+        media.removeEventListener('canplay', onLoaded);
+        media.removeEventListener('loadedmetadata', onLoaded);
+      });
+    }
+  };
+
+  #onReady = (): void => {
     this.#syncTime();
 
     const bestWatchTime = this.#data.best_watch_time || 0;
@@ -128,10 +208,13 @@ export class LessonPlaybackController {
       this.#player.setMuted(true);
     }
 
+    this.#scheduleSpinnerRemoval();
+
     this.#env.notifyReady?.(this.#player);
   };
 
   #onPlay = (): void => {
+    this.#removeLoadingSpinner();
     this.#playedOnce = true;
     this.#playing = true;
     // A paused stretch must not count as allowed forward progress.

@@ -170,8 +170,14 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
     }
 
     // Stage-2 templates keep `controls` on the fallback media for no-JS; the skinned
-    // player owns its controls.
-    this.querySelector('video[controls]')?.removeAttribute('controls');
+    // player owns its controls. Ensure preload="metadata" so the first frame and duration fetch eagerly.
+    const video = this.querySelector('video');
+    if (video) {
+      video.removeAttribute('controls');
+      if (!video.hasAttribute('preload')) {
+        video.setAttribute('preload', 'metadata');
+      }
+    }
 
     // A declared skin's class registers after this element's (see boot.ts), so while the
     // engine script is still evaluating its shadow root is not attached yet; patch then.

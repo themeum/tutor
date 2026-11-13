@@ -1,7 +1,7 @@
 .tutor-video-player {
 	position: relative;
 	aspect-ratio: 16 / 9;
-	border-radius: 0;
+	border-radius: inherit;
 	overflow: hidden;
 
 	.loading-spinner {
@@ -15,7 +15,7 @@
 
 .tutor-video-player-wrapper {
 	position: relative;
-	border-radius: 0;
+	border-radius: inherit;
 	overflow: hidden;
 }
 
@@ -33,14 +33,14 @@
 
 	.tutor-video-player {
 		aspect-ratio: 16 / 9;
-		border-radius: 0;
+		border-radius: inherit;
 		overflow: hidden;
 
 		.loading-spinner {
 			position: absolute;
 			inset: 0;
 			background: var(--tutor-color-gray-10);
-			border-radius: 0;
+			border-radius: inherit;
 			z-index: 10;
 
 			@include spinner(var(--tutor-color-primary), #eee);

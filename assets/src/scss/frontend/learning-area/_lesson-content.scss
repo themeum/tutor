@@ -4,7 +4,6 @@
 
 .tutor-video-player {
   aspect-ratio: 16 / 9;
-  border-radius: 0;
 }
 
 .tutor-lesson-content {
@@ -148,6 +147,9 @@
         margin-inline: -$tutor-spacing-6;
         margin-bottom: $tutor-spacing-6;
         border-radius: 0;
+        border-bottom-left-radius: $tutor-radius-2xl;
+        border-bottom-right-radius: $tutor-radius-2xl;
+        overflow: hidden;
       }
 
       .tutor-tabs-nav {
