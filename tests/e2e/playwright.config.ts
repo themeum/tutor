@@ -45,7 +45,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1,
-  reporter: [['list'], ['html', { outputFolder: resolve(__dirname, '../../playwright-report'), open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }]],
   timeout: 60_000,
   expect: {
     timeout: 10_000,
