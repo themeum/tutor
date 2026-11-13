@@ -52,9 +52,6 @@ export default [
               '^@Frontend',
               '^@LearningArea',
             ],
-            // Internal aliases — Test
-            ['^@Cypress'],
-
             // Internal aliases — SharedImages
             ['^@SharedImages'],
             // Relative imports: parent first, then siblings

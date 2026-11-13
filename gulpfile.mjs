@@ -75,8 +75,6 @@ function copy() {
         '!phpcs.xml.dist',
         '!./includes/droip/**',
         '!./includes/kirki/**',
-        '!./cypress/**',
-        '!./cypress.config.ts',
         '!.husky',
         '!.lintstagedrc',
         '!./stories/**',

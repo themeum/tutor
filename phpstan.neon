@@ -1,5 +1,7 @@
 parameters:
     level: 3
+    scanFiles:
+      - tests/stubs/wp-cli.php
     scanDirectories:
       - ../tutor-pro
       - ../woocommerce

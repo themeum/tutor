@@ -233,7 +233,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
 
   return (
     <div
-      data-cy="subscription-preview-item"
+      data-testid="subscription-preview-item"
       css={styles.wrapper({
         isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending,
         isOverlay,
@@ -287,7 +287,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
               <ThreeDots.Option
                 icon={<SVGIcon name="edit" width={16} height={16} />}
                 text={__('Edit', __TUTOR_TEXT_DOMAIN__)}
-                data-cy="edit-subscription"
+                data-testid="edit-subscription"
                 onClick={handleEditSubscription}
               />
               <ThreeDots.Option

@@ -63,7 +63,7 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
           variant="primary"
           onClick={handleAddCourses}
           disabled={selectedItems.length === 0}
-          data-cy="add-courses"
+          data-testid="add-courses"
         >
           {__('Add', __TUTOR_TEXT_DOMAIN__)}
         </Button>

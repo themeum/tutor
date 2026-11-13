@@ -8,6 +8,10 @@ Automated tests for Tutor LMS live in the `tests/` directory:
 | `tests/e2e/`     | End-to-end tests powered by Playwright               |
 | `tests/support/` | Test installer, database reset and fixture utilities |
 
+For a detailed explanation of how the isolated databases, installer, seeder,
+Playwright lifecycle, factories, and safety guards work, see
+[Test environment walkthrough](./e2e-test-environment-walkthrough.md).
+
 ## Table of contents
 
 - [Setup](#setup)
@@ -21,6 +25,14 @@ Automated tests for Tutor LMS live in the `tests/` directory:
 Run the installer once:
 
 ```bash
+pnpm test:setup
+```
+
+`test:setup` runs the installer and installs Chromium. The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only.
+
+To run only the installer:
+
+```bash
 composer test:install
 ```
 
@@ -28,9 +40,10 @@ The installer will:
 
 1. Read your database settings from `wp-config.php`.
 2. Create `.env` (from `.env.example` when available) and add any missing `WP_TEST_DB_*` variables.
-3. Create a separate test database (your live database name with a `_test` suffix, for example `local_test`).
-4. Route `wp-config.php` to the test database and skip `wp-settings.php` while tests run. A backup is saved as `wp-config.php.bak`.
-5. Reset the test database and seed fixtures.
+3. Create two separate databases: an E2E database (your live database name with a `_test` suffix, for example `local_test`) and a PHPUnit database (for example `local_phpunit`).
+4. Route `wp-config.php` to the test databases and skip `wp-settings.php` while tests run. A backup is saved as `wp-config.php.bak`.
+5. Reset the E2E database and seed fixtures.
+6. Install Chromium (`pnpm test:setup` does this after the installer).
 
 Each step prints a green ✔ on success or a red ✘ on failure. The installer stops at the first failure and shows the error.
 
@@ -116,10 +129,13 @@ vendor/bin/phpunit --testsuite=query-helper-test
 
 ## Running Playwright E2E tests
 
-```bash
-# Install the Playwright Chromium browser binary
-pnpm test:e2e:install
+Make sure your local WordPress development site is running (e.g. in Local,
+Valet, Docker) and that `SITE_URL` in `.env` matches your site URL (e.g.
+`http://localhost:8888` or `http://themeum-tutor.local`). Playwright sends the
+`X-WP-Test-Env: playwright` header, which routes test requests to your isolated
+test database (`local_test`).
 
+```bash
 # All E2E tests (headless)
 pnpm run test:e2e
 
@@ -128,6 +144,9 @@ pnpm run test:e2e:ui
 
 # Debug mode
 pnpm run test:e2e:debug
+
+# PHPUnit + E2E
+pnpm test
 ```
 
 ## Troubleshooting

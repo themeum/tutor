@@ -1,40 +1,66 @@
-import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-// Load .env from plugin root
-dotenv.config( { path: path.resolve( __dirname, '../../.env' ) } );
+import { defineConfig, type Project } from '@playwright/test';
+import { config as loadEnv } from 'dotenv';
 
-const baseURL = process.env.SITE_URL || 'https://tutor-dev.local';
+loadEnv({ path: process.env.E2E_ENV_FILE ?? resolve(__dirname, '../../.env') });
 
-export default defineConfig( {
-	testDir: './specs',
-	timeout: 30 * 1000,
-	expect: {
-		timeout: 5000,
-	},
-	fullyParallel: false,
-	forbidOnly: !! process.env.CI,
-	retries: process.env.CI ? 2 : 0,
-	workers: 1,
-	reporter: [ [ 'list' ], [ 'html', { open: 'never', outputFolder: path.resolve( __dirname, 'report' ) } ] ],
+const baseURL = process.env.E2E_BASE_URL ?? process.env.SITE_URL ?? 'http://localhost:8888';
 
-	use: {
-		baseURL,
-		ignoreHTTPSErrors: true, // Allow local self-signed SSL certificates (*.local)
-		trace: 'on-first-retry',
-		screenshot: 'only-on-failure',
-		video: 'retain-on-failure',
-		// Custom header ensuring WordPress serves requests from the dedicated test database (local_test)
-		extraHTTPHeaders: {
-			'X-WP-Test-Env': 'playwright',
-		},
-	},
+const proTestDir = resolve(__dirname, '../../../tutor-pro/tests/e2e');
+const externalTestDir = resolve(__dirname, './external');
 
-	projects: [
-		{
-			name: 'chromium',
-			use: { ...devices['Desktop Chrome'] },
-		},
-	],
-} );
+const hasExternal = existsSync(externalTestDir) && process.env.E2E_EXTERNAL !== '0';
+const hasPro = existsSync(proTestDir) && process.env.E2E_PRO !== '0';
+
+const projects: Project[] = [
+  {
+    name: 'core',
+    testIgnore: ['**/external/**'],
+  },
+  ...(hasExternal
+    ? [
+        {
+          name: 'external',
+          testDir: './external',
+        },
+      ]
+    : []),
+  ...(hasPro
+    ? [
+        {
+          name: 'pro',
+          testDir: proTestDir,
+        },
+      ]
+    : []),
+];
+
+export default defineConfig({
+  testDir: '.',
+  outputDir: resolve(__dirname, '../../test-results'),
+  globalSetup: './global-setup.ts',
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: 0,
+  workers: 1,
+  reporter: [['list'], ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }]],
+  timeout: 60_000,
+  expect: {
+    timeout: 10_000,
+  },
+  use: {
+    baseURL,
+    browserName: 'chromium',
+    testIdAttribute: 'data-testid',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    ignoreHTTPSErrors: true,
+    extraHTTPHeaders: {
+      'X-WP-Test-Env': 'playwright',
+    },
+  },
+  projects,
+});

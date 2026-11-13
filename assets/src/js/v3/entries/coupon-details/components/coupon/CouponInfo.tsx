@@ -103,7 +103,7 @@ function CouponInfo() {
           />
           {!isEditMode && (
             <Button
-              data-cy="generate-code"
+              data-testid="generate-code"
               variant="text"
               onClick={handleGenerateCouponCode}
               buttonCss={styles.generateCode}

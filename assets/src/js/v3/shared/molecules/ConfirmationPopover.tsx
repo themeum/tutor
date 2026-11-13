@@ -81,7 +81,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
             {cancelButton?.text ?? __('Cancel', __TUTOR_TEXT_DOMAIN__)}
           </Button>
           <Button
-            data-cy="confirm-button"
+            data-testid="confirm-button"
             variant={confirmButton?.variant ?? 'text'}
             onClick={() => {
               onConfirmation();

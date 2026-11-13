@@ -409,7 +409,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           <Button
             type="button"
             size="small"
-            data-cy="add-question"
+            data-testid="add-question"
             ref={addButtonRef}
             aria-label={__('Add question', 'tutor')}
             isIconOnly
@@ -625,7 +625,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         setIsOpen(false);
                       }}
                       icon={<SVGIcon name="contentBank" width={24} height={24} />}
-                      data-cy="add-from-content-bank"
+                      data-testid="add-from-content-bank"
                     >
                       {__('Add from Content Bank', 'tutor')}
                     </Button>

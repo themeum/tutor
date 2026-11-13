@@ -85,7 +85,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
       <div css={styles.contentButtons}>
         <div css={styles.leftButtons}>
           <Button
-            data-cy="add-lesson"
+            data-testid="add-lesson"
             variant="tertiary"
             isOutlined
             size="small"
@@ -109,7 +109,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             {__('Lesson', 'tutor')}
           </Button>
           <Button
-            data-cy="add-quiz"
+            data-testid="add-quiz"
             variant="tertiary"
             isOutlined
             size="small"
@@ -138,7 +138,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             fallback={
               <Show when={isAddonEnabled(Addons.H5P_INTEGRATION)}>
                 <Button
-                  data-cy="add-interactive-quiz"
+                  data-testid="add-interactive-quiz"
                   variant="tertiary"
                   isOutlined
                   size="small"
@@ -184,7 +184,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             fallback={
               <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
                 <Button
-                  data-cy="add-assignment"
+                  data-testid="add-assignment"
                   variant="tertiary"
                   isOutlined
                   size="small"
@@ -236,7 +236,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                   icon={<SVGIcon name="contentBank" width={24} height={24} />}
                   disabled={!topic.isSaved}
                   buttonCss={styles.contentButton}
-                  data-cy="add-from-content-bank"
+                  data-testid="add-from-content-bank"
                   onClick={() => {
                     showModal({
                       id: 'content-bank-collection-list',
