@@ -308,6 +308,11 @@ class EnrollmentModel {
 			$args['post_status'] = $status;
 		}
 
+		if ( $course_id > 0 ) {
+			$posts = get_posts( $args );
+			return ! empty( $posts ) ? $posts[0] : null;
+		}
+
 		return get_posts( $args );
 	}
 

@@ -9,6 +9,7 @@
 namespace TutorTest;
 
 use Tutor\Models\EnrollmentModel;
+use WP_Post;
 
 /**
  * Unit tests for EnrollmentModel.
@@ -56,7 +57,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 			)
 		);
 
-		$total_enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id, null );
+		$total_enrollments = EnrollmentModel::get_enrolled_data( $user_id, null );
 
 		$this->assertEquals( 3, count( $total_enrollments ) );
 
@@ -64,7 +65,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 		$this->assertTrue( $enrollment );
 
 		$total_enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id );
-		$this->assertEquals( 0, count( $total_enrollments ) );
+		$this->assertEquals( null, $total_enrollments );
 	}
 
 	/**
@@ -82,7 +83,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 			)
 		);
 
-		self::factory()->post->create(
+		$enroll_id_1 = self::factory()->post->create(
 			array(
 				'post_type'   => EnrollmentModel::POST_TYPE,
 				'post_status' => EnrollmentModel::STATUS_COMPLETED,
@@ -111,7 +112,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 
 		$enrollments = EnrollmentModel::get_enrolled_data( $user_id, $course_id );
 
-		$this->assertEquals( 1, count( $enrollments ) );
+		$this->assertEquals( $enroll_id_1, $enrollments->ID );
 
 		$enrollments = EnrollmentModel::get_enrolled_data( $user_id );
 
@@ -147,7 +148,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 		$this->assertTrue( $update );
 
 		$updated_enrollment = EnrollmentModel::get_enrolled_data( $user_id, $course_id, EnrollmentModel::STATUS_CANCEL );
-		$this->assertEquals( EnrollmentModel::STATUS_CANCEL, $updated_enrollment[0]->post_status );
+		$this->assertEquals( EnrollmentModel::STATUS_CANCEL, $updated_enrollment->post_status );
 
 		$enroll_id_2 = self::factory()->post->create(
 			array(
@@ -163,7 +164,7 @@ class EnrollmentModelTest extends \WP_UnitTestCase {
 		$this->assertTrue( $update );
 
 		$updated_enrollment = EnrollmentModel::get_enrolled_data( $user_id, $course_id, EnrollmentModel::STATUS_PENDING );
-		$this->assertEquals( EnrollmentModel::STATUS_PENDING, $updated_enrollment[0]->post_status );
-		$this->assertEquals( EnrollmentModel::STATUS_PENDING, $updated_enrollment[1]->post_status );
+		$this->assertEquals( EnrollmentModel::STATUS_PENDING, $updated_enrollment->post_status );
+		$this->assertEquals( EnrollmentModel::STATUS_PENDING, $updated_enrollment->post_status );
 	}
 }
