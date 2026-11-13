@@ -9,6 +9,8 @@
  * @since 3.6.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-option-main-title">
 	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
@@ -34,12 +36,12 @@
 
 <div class="tutor-option-single-item tutor-mb-32 item-variation-table settings-history">
 	<div class="tutor-option-group-title tutor-mb-16">
-		<div class="tutor-fs-6 tutor-color-muted"><?php esc_attr_e( 'Logs', 'tutor' ); ?></div>
+		<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Logs', 'tutor' ); ?></div>
 	</div>
 	<div class="item-wrapper history_data">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<?php esc_attr_e( 'Date', 'tutor' ); ?>
+				<?php esc_html_e( 'Date', 'tutor' ); ?>
 			</div>
 		</div>
 		<?php
@@ -48,6 +50,9 @@
 			?>
 			<?php
 			foreach ( $tutor_options as $key => $option_data ) :
+				if ( ! is_array( $option_data ) || ! isset( $option_data['datatype'], $option_data['history_date'] ) ) {
+					continue;
+				}
 				$datetype_class = ' label-default';
 				if ( 'saved' === $option_data['datatype'] ) {
 					$datetype_class = ' label-primary';
