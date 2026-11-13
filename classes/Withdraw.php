@@ -438,7 +438,7 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
+		if ( ! User::is_only_instructor( $user_id ) ) {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
