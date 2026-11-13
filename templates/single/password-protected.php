@@ -36,7 +36,7 @@ $password_error = get_transient( 'tutor_post_password_error' );
 								<i class="tutor-icon-lock-line" aria-hidden="true"></i>
 							</div>
 							<span class="tutor-locked-badge tutor-mb-8"><?php esc_html_e( 'Course is locked', 'tutor' ); ?></span>
-							<h3 id="tutor-password-protected-title" class="tutor-fw-medium tutor-fs-5 tutor-color-black"><?php the_title(); ?></h3>
+							<h3 id="tutor-password-protected-title" class="tutor-fw-medium tutor-fs-5 tutor-color-black"><?php echo esc_html( get_the_title() ); ?></h3>
 						</div>
 					</div>
 					<div class="tutor-col-md-5">
