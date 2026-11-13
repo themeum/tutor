@@ -4,6 +4,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { escapeAttr, escapeHtml, sanitizeUrl } from '@Core/ts/utils/security';
 
 import { popover, type PopoverProps } from './popover';
 
@@ -176,25 +177,31 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       if (!this.previewData) return;
 
       const data = this.previewData;
-      const thumbnailHtml = data.thumbnail
-        ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />`
+
+      // Attribute context: quotes must be escaped, URLs restricted to http(s).
+      const url = escapeAttr(sanitizeUrl(data.url));
+      const thumbnail = escapeAttr(sanitizeUrl(data.thumbnail));
+      const instructorUrl = escapeAttr(sanitizeUrl(data.instructor_url));
+      const titleAttr = escapeAttr(data.title ?? '');
+
+      const title = escapeHtml(data.title ?? '');
+      const instructorName = escapeHtml(data.instructor ?? '');
+
+      const thumbnailHtml = thumbnail
+        ? `<img src="${thumbnail}" alt="${titleAttr}" class="tutor-preview-card-thumbnail" />`
         : '';
+
+      const instructorHtml = instructorUrl ? `<a href="${instructorUrl}">${instructorName}</a>` : instructorName;
 
       content.innerHTML = `
         <div class="tutor-preview-card-content">
-          ${data.thumbnail ? (data.url ? `<a tabindex="-1" href="${data.url}">${thumbnailHtml}</a>` : thumbnailHtml) : ''}
+          ${thumbnail ? (url ? `<a tabindex="-1" href="${url}">${thumbnailHtml}</a>` : thumbnailHtml) : ''}
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title">${data.url ? `<a href="${data.url}">${this.escapeHtml(data.title)}</a>` : this.escapeHtml(data.title)}</h4>
-            ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__(`by <a href="${data.instructor_url}">%s</a>`, 'tutor'), this.escapeHtml(data.instructor))}</div>` : ''}
+            <h4 class="tutor-preview-card-title">${url ? `<a href="${url}">${title}</a>` : title}</h4>
+            ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__('by %s', 'tutor'), instructorHtml)}</div>` : ''}
           </div>
         </div>
       `;
-    },
-
-    escapeHtml(text: string): string {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
     },
 
     destroy() {

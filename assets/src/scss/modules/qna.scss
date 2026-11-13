@@ -67,9 +67,36 @@
 		}
 	}
 
-	.tutor-qna-single-wrapper {
-		max-height: calc(100vh - 100px);
-		overflow-y: auto;
+	.tutor-wp-dashboard-header {
+		position: sticky;
+		top: 32px;
+		margin-bottom: 0px;
+		z-index: 1;
+		background-color: #f5f5f5;
+
+		@include breakpoint-max(tablet) {
+			top: 46px;
+		}
+
+		@include breakpoint-max(mobile) {
+			top: 0;
+		}
+	}
+	
+	.tutor-qna-course-title {
+		position: sticky;
+		top: 89px;
+		padding-top: 24px;
+		z-index: 1;
+		background-color: #f5f5f5;
+
+		@include breakpoint-max(tablet) {
+			top: 103px;
+		}
+
+		@include breakpoint-max(mobile) {
+			top: 0;
+		}
 	}
 
 	// Top Sticky bar for badges

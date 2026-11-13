@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use InvalidArgumentException;
-
-defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -24,6 +24,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Tooltip;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
@@ -2217,6 +2218,10 @@ class Course extends Tutor_Base {
 
 		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
 
+		if ( ! $course_id ) {
+			return;
+		}
+
 		/**
 		 * TODO: need to check purchase information
 		 */
@@ -3194,7 +3199,8 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
-		$course_id  = sanitize_text_field( $course_id );
+		$course_id = sanitize_text_field( $course_id );
+
 		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
 
 		if ( $course_id && $is_allowed ) {
@@ -3653,8 +3659,15 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
-			$provided_content_ids[] = $content_parent['content_id'];			
+			$parents = ( isset( $content_parent[0] ) && is_array( $content_parent[0] ) ) ? $content_parent : array( $content_parent );
+			foreach ( $parents as $item ) {
+				if ( isset( $item['parent_topic_id'] ) ) {
+					$provided_topic_ids[] = (int) $item['parent_topic_id'];
+				}
+				if ( isset( $item['content_id'] ) ) {
+					$provided_content_ids[] = (int) $item['content_id'];
+				}
+			}
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );
