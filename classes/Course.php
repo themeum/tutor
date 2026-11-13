@@ -2237,10 +2237,11 @@ class Course extends Tutor_Base {
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
+			$message = __( 'You do not have permission to enroll in this course', 'tutor' );
 			if ( wp_doing_ajax() ) {
-				wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+				wp_send_json_error( $message );
 			}
-			wp_die( esc_html__( 'You do not have permission to enroll in this course', 'tutor' ), 403 );
+			wp_die( esc_html( $message ), 403 );
 		}
 
 		/**
