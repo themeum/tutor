@@ -94,9 +94,14 @@ export const choosePricingModel = async (scope: Scope, model: 'Free' | 'Paid'): 
 /** Start a new course with the builder and return its ID. */
 export const createCourseInBuilder = async (page: Page): Promise<number> => {
   await page.goto(backendUrls.tutorDashboard);
+  const detailsPromise = page
+    .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
+    .catch(() => null);
   await page.locator('.tutor-create-new-course:visible').first().click();
   await expect(page).toHaveURL(/course_id=\d+/);
   await expect(page.getByTestId('course-builder-submit-button')).toBeVisible();
+  await detailsPromise;
+  await expect(field(page, 'Title').locator('input:visible, textarea:visible').first()).toBeVisible();
 
   const courseId = Number(new URL(page.url()).searchParams.get('course_id'));
   expect(courseId).toBeGreaterThan(0);
@@ -105,8 +110,12 @@ export const createCourseInBuilder = async (page: Page): Promise<number> => {
 
 /** Open an existing course in the builder. */
 export const openCourseBuilder = async (page: Page, courseId: number): Promise<void> => {
+  const detailsPromise = page
+    .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
+    .catch(() => null);
   await page.goto(`${backendUrls.courseBuilder}&course_id=${courseId}`);
   await expect(page.getByTestId('course-builder-submit-button')).toBeVisible();
+  await detailsPromise;
   // The details query resets the form after mount. Editing during that reset can
   // detach the submit button and silently drop the save click.
   await expect(field(page, 'Title').locator('input:visible, textarea:visible').first()).not.toHaveValue('');

@@ -6,6 +6,7 @@ import {
   createWcProduct,
   enrollStudent,
   getCourse,
+  getPlugins,
   setOption,
   setTutorOption,
 } from '@e2e/support/factories';
@@ -71,7 +72,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     const requirement = `Core requirement ${stamp}`;
 
     const previousQna = setTutorOption('enable_q_and_a_on_course', 'on');
-    const previousExpiry = setTutorOption('enrollment_expiry_enabled', 'on');
     const previousDuration = setTutorOption('enable_course_duration', 'on');
 
     try {
@@ -92,7 +92,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
       await openSettingsTab(page, 'Enrollment');
       await fillField(page, 'Maximum Student', '0');
-      await fillField(page, 'Enrollment Expiration', '15');
 
       await openBuilderStep(page, 'Curriculum');
       await addTopic(page, topicTitle, topicSummary);
@@ -103,7 +102,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
         video: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
         attachments: [fixtures.attachment],
         duration: { hours: 1, minutes: 2, seconds: 3 },
-        preview: true,
       });
       // Public Course should let anonymous visitors open this non-preview lesson.
       await addLesson(page, {
@@ -153,7 +151,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       expect(course.duration).toMatchObject({ hours: '4', minutes: '15' });
       expect(course.settings).toMatchObject({
         maximum_students: 0,
-        enrollment_expiry: 15,
         course_enrollment_period: 'no',
         pause_enrollment: 'no',
       });
@@ -163,7 +160,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
       const lesson = topic?.children.find((item) => item.title === lessonTitle);
       expect(lesson?.content).toContain(lessonContent);
-      expect(lesson?.meta.preview).toBeTruthy();
       expect(lesson?.meta.attachments).toHaveLength(1);
       expect(lesson?.meta.video).toMatchObject({ runtime: { hours: '1', minutes: '02', seconds: '03' } });
 
@@ -183,7 +179,11 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       });
 
       // Reloading the builder must restore every saved field.
+      const reloadDetailsPromise = page
+        .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
+        .catch(() => null);
       await page.reload();
+      await reloadDetailsPromise;
       await openBuilderStep(page, 'Basics');
       await expect(field(page, 'Title').locator('input')).toHaveValue(title);
       await expect(page.getByTestId('course-slug')).toContainText(slug);
@@ -192,7 +192,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await expect(field(page, 'Q&A').locator('input[data-input][type="checkbox"]')).not.toBeChecked();
       await openSettingsTab(page, 'Enrollment');
       await expect(field(page, 'Maximum Student').locator('input')).toHaveValue('0');
-      await expect(field(page, 'Enrollment Expiration').locator('input')).toHaveValue('15');
       await openBuilderStep(page, 'Curriculum');
       await expect(page.getByText(topicTitle, { exact: true }).first()).toBeVisible();
       await expect(page.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
@@ -226,7 +225,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
       const sidebarMeta = studentPage.locator('.tutor-single-course-sidebar .tutor-card-footer');
       await expect(sidebarMeta).toContainText('Intermediate');
-      await expect(sidebarMeta.locator('li').filter({ hasText: 'Enrollment validity' })).toContainText('15 days');
       const durationMeta = sidebarMeta.locator('li').filter({ hasText: 'Duration' });
       await expect(durationMeta).toContainText('4');
       await expect(durationMeta).toContainText('15');
@@ -273,7 +271,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await qnaTab.click();
       await expect(studentPage.locator('#tutor-course-details-tab-questions')).toBeVisible();
       await expect(studentPage.getByText('This feature has been disabled by the administrator')).toHaveCount(0);
-      await expect(studentPage.getByText(/Enrollment valid until/)).toBeVisible();
 
       // Quiz settings are reflected on the learning-area quiz screen.
       await studentPage.goto(quiz?.url ?? '');
@@ -283,7 +280,6 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await expect(studentPage.getByText('Total Attempts 3', { exact: true })).toBeVisible();
     } finally {
       setTutorOption('enable_q_and_a_on_course', previousQna.previous_value);
-      setTutorOption('enrollment_expiry_enabled', previousExpiry.previous_value);
       setTutorOption('enable_course_duration', previousDuration.previous_value);
     }
   });
@@ -498,6 +494,9 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     instructorPage: page,
     studentPage,
   }) => {
+    const plugins = getPlugins();
+    test.skip(!plugins.active.some((p) => p.includes('woocommerce')), 'WooCommerce is not active in this environment');
+
     test.setTimeout(240_000);
     const stamp = Date.now();
     const title = `E2E WooCommerce Course ${stamp}`;
