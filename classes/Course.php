@@ -332,7 +332,7 @@ class Course extends Tutor_Base {
 		global $wp_query;
 		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
 		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
-		if ( ! CourseModel::get_post_types( $content ) || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
+		if ( ! CourseModel::get_post_types( $content ) || User::is_admin() || $is_instructor || $course_coming_soon_enabled ) {
 			return $content;
 		}
 
@@ -1165,6 +1165,10 @@ class Course extends Tutor_Base {
 			if ( ! User::is_admin() && ! $is_instructor_allowed_to_publish ) {
 				$params['post_status'] = CourseModel::STATUS_PENDING;
 			}
+		}
+
+		if ( ! User::is_admin() ) {
+			unset( $params['post_author'] );
 		}
 
 		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
@@ -2222,16 +2226,22 @@ class Course extends Tutor_Base {
 			return;
 		}
 
+		$course = get_post( $course_id );
+		if ( ! ( $course instanceof \WP_Post ) ) {
+			return;
+		}
+
 		/**
 		 * TODO: need to check purchase information
 		 */
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
-
-		$course = get_post( $course_id );
-
 		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
-			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+			$message = __( 'You do not have permission to enroll in this course', 'tutor' );
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( $message );
+			}
+			wp_die( esc_html( $message ), 403 );
 		}
 
 		/**
@@ -2498,7 +2508,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Only admin can change main author
 		 */
-		if ( $courses_post_type === $post_type && ! current_user_can( 'administrator' ) ) {
+		if ( $courses_post_type === $post_type && ! User::is_admin() ) {
 			global $wpdb;
 			$post_ID     = (int) tutor_utils()->avalue_dot( 'ID', $postarr );
 			$post_author = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID ) );
