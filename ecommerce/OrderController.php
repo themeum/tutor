@@ -1046,7 +1046,7 @@ class OrderController {
 	 */
 	public function get_discount_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = is_admin() ? 0 : $user_id;
+		$user_id    = User::is_admin() && is_admin() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );

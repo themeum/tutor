@@ -1256,6 +1256,8 @@ class OrderModel {
 			'total_discounts' => 0,
 		);
 
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
+
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
 				$total_discount  += $discount->total;
@@ -1264,13 +1266,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = User::is_admin() && is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = $is_backend_admin ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = User::is_admin() && is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = $is_backend_admin ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1420,21 +1422,22 @@ class OrderModel {
 			//phpcs:enable
 		}
 
-		$total_refund = 0;
+		$total_refund     = 0;
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
 
 		foreach ( $refunds as $refund ) {
 			$total_refund += $refund->total;
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = User::is_admin() && is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = $is_backend_admin ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => User::is_admin() && is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => $is_backend_admin ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
