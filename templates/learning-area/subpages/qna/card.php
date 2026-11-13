@@ -54,7 +54,9 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
+				<div class="tutor-discussion-card-author">
+					<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+				</div>
 				<div class="tutor-text-tiny tutor-text-subdued">
 					<?php
 						/* translators: %s human-readable time difference. */

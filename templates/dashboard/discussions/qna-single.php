@@ -116,7 +116,9 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 			<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
 			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0">
+						<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+					</span> 
 					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
 							/* translators: %s human-readable time difference. */

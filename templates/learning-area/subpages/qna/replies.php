@@ -42,7 +42,7 @@ use Tutor\Components\Constants\Color;
 				<div class="tutor-flex-1">
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 						<span class="tutor-discussion-card-author">
-							<?php echo esc_html( $reply->comment_author ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $reply->user_id ) ); ?>
 						</span>
 						<span class="tutor-text-secondary">
 							<?php

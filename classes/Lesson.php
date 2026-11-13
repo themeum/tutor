@@ -875,7 +875,7 @@ class Lesson extends Tutor_Base {
 				<div class="tutor-actual-comment tutor-mb-12">
 					<div class="tutor-comment-author">
 						<span class="tutor-fs-6 tutor-fw-bold">
-							<?php echo esc_html( $reply->comment_author ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $reply->user_id ) ); ?>
 						</span>
 						<span class="tutor-fs-7 tutor-ml-0 tutor-ml-sm-10">
 							<?php echo esc_html( human_time_diff( strtotime( $reply->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ) ); ?>

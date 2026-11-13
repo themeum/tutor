@@ -151,11 +151,11 @@ class Avatar extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $size Avatar size, see size constants.
+	 * @param int $size Avatar size, see size constants.
 	 *
 	 * @return $this
 	 */
-	public function size( string $size ): self {
+	public function size( int $size ): self {
 		$this->size = sanitize_html_class( $size );
 		return $this;
 	}
@@ -270,7 +270,7 @@ class Avatar extends BaseComponent {
 			}
 
 			// Generate initials.
-			$name        = $user->display_name;
+			$name        = tutor_utils()->display_name( $user->ID );
 			$arr         = explode( ' ', trim( $name ) );
 			$first_char  = ! empty( $arr[0] ) ? mb_substr( $arr[0], 0, 1, 'UTF-8' ) : '';
 			$second_char = ! empty( $arr[1] ) ? mb_substr( $arr[1], 0, 1, 'UTF-8' ) : '';
