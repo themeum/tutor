@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createTutorPlayer, type PlayerStore } from './Player';
 
-function createStore(overrides: Partial<PlayerStore> = {}) {
+const createStore = (overrides: Partial<PlayerStore> = {}) => {
   const listeners = new Set<() => void>();
 
   const store = {
@@ -33,7 +33,7 @@ function createStore(overrides: Partial<PlayerStore> = {}) {
     emit: () => listeners.forEach((listener) => listener()),
     set: (patch: Partial<PlayerStore>) => Object.assign(store, patch),
   };
-}
+};
 
 const element = () => document.createElement('tutor-video-player');
 
@@ -281,15 +281,20 @@ describe('createTutorPlayer', () => {
     expect(store.setVolume).not.toHaveBeenCalled();
   });
 
-  it('invokes onDispose once when the handle is disposed', () => {
+  it('invokes onDispose once and emits dispose event when the handle is disposed', () => {
     const { store } = createStore();
     const onDispose = vi.fn();
+    const onDisposeEvent = vi.fn();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5', onDispose });
+
+    player.on('dispose', onDisposeEvent);
 
     player.dispose();
     player.dispose();
 
     expect(onDispose).toHaveBeenCalledTimes(1);
+    expect(onDisposeEvent).toHaveBeenCalledTimes(1);
+    expect(onDisposeEvent).toHaveBeenCalledWith({ player });
   });
 });
 

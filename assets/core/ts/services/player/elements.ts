@@ -29,7 +29,7 @@ const DEFERRED_MEDIA_LOADERS: Record<DeferredMediaProvider, () => Promise<unknow
 const providerModulePromises = new Map<DeferredMediaProvider, Promise<unknown>>();
 
 /** Resolves once the code-split adapter for a provider has been imported and defined. */
-export function loadProviderModule(provider: DeferredMediaProvider): Promise<unknown> {
+export const loadProviderModule = (provider: DeferredMediaProvider): Promise<unknown> => {
   let promise = providerModulePromises.get(provider);
   if (!promise) {
     promise = DEFERRED_MEDIA_LOADERS[provider]().catch((err) => {
@@ -39,11 +39,11 @@ export function loadProviderModule(provider: DeferredMediaProvider): Promise<unk
     providerModulePromises.set(provider, promise);
   }
   return promise;
-}
+};
 
-function isDeferredProvider(provider: DetectedSource['provider']): provider is DeferredMediaProvider {
+const isDeferredProvider = (provider: DetectedSource['provider']): provider is DeferredMediaProvider => {
   return provider === 'youtube' || provider === 'vimeo';
-}
+};
 
 export interface VideoPlayerElement extends HTMLElement {
   store: PlayerStore;
@@ -59,9 +59,9 @@ export interface PlayerElementHooks {
 let hooks: PlayerElementHooks = {};
 
 /** Wired by the engine entry so the service can track self-booted elements. */
-export function setPlayerElementHooks(next: PlayerElementHooks): void {
+export const setPlayerElementHooks = (next: PlayerElementHooks): void => {
   hooks = next;
-}
+};
 
 const { PlayerElement } = createPlayer({ features: videoFeatures });
 
@@ -92,7 +92,7 @@ const HIDE_UNSUPPORTED_CONTROLS_CSS = `
 let sharedUnsupportedControlsSheet: CSSStyleSheet | null = null;
 const patchedSkins = new WeakSet<HTMLElement>();
 
-export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
+export const applyUnsupportedControlsPatch = (skin: HTMLElement): void => {
   const root = skin.shadowRoot;
   if (!root || patchedSkins.has(skin)) {
     return;
@@ -118,9 +118,9 @@ export function applyUnsupportedControlsPatch(skin: HTMLElement): void {
   const style = doc.createElement('style');
   style.textContent = HIDE_UNSUPPORTED_CONTROLS_CSS;
   root.appendChild(style);
-}
+};
 
-export function patchVideoSkinStyles(): void {
+export const patchVideoSkinStyles = (): void => {
   const VideoSkin = customElements.get(VIDEO_SKIN_TAG) as
     | (CustomElementConstructor & { styles?: CSSStyleSheet | string })
     | undefined;
@@ -136,13 +136,13 @@ export function patchVideoSkinStyles(): void {
       // Ignored
     }
   }
-}
+};
 
 /**
  * Resolves the provider from the declared subtree: embed tags win, then the native
  * source URL decides between the site's own files and an external host.
  */
-export function resolveProvider(element: Element): PlayerProvider {
+export const resolveProvider = (element: Element): PlayerProvider => {
   if (element.querySelector('youtube-video')) {
     return 'youtube';
   }
@@ -156,7 +156,7 @@ export function resolveProvider(element: Element): PlayerProvider {
   const host = element.ownerDocument?.defaultView?.location?.hostname;
 
   return src ? providerFromUrl(src, host) : 'html5';
-}
+};
 
 class TutorVideoPlayerElement extends PlayerElementBaseClass {
   player: TutorPlayer | null = null;
@@ -335,14 +335,14 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
   }
 }
 
-export function defineVideoPlayer(tagName: string = VIDEO_PLAYER_TAG): void {
+export const defineVideoPlayer = (tagName: string = VIDEO_PLAYER_TAG): void => {
   if (!customElements.get(tagName)) {
     customElements.define(tagName, TutorVideoPlayerElement);
   }
   patchVideoSkinStyles();
-}
+};
 
-function buildMediaSource(source: DetectedSource): { tagName: string; src: string } {
+const buildMediaSource = (source: DetectedSource): { tagName: string; src: string } => {
   if (source.provider === 'youtube') {
     const id = youtubeVideoId(source.src);
     if (!id) {
@@ -366,9 +366,9 @@ function buildMediaSource(source: DetectedSource): { tagName: string; src: strin
   }
 
   return { tagName: 'video', src: source.src };
-}
+};
 
-export function createMediaElement(source: DetectedSource, document: Document): Element {
+export const createMediaElement = (source: DetectedSource, document: Document): Element => {
   const { tagName, src } = buildMediaSource(source);
   const element = document.createElement(tagName);
 
@@ -381,9 +381,9 @@ export function createMediaElement(source: DetectedSource, document: Document): 
   element.setAttribute('playsinline', '');
 
   return element;
-}
+};
 
-export function createPlayerElement(source: DetectedSource, document: Document): VideoPlayerElement {
+export const createPlayerElement = (source: DetectedSource, document: Document): VideoPlayerElement => {
   const host = document.createElement(VIDEO_PLAYER_TAG) as VideoPlayerElement;
   const skin = document.createElement(VIDEO_SKIN_TAG);
 
@@ -397,4 +397,4 @@ export function createPlayerElement(source: DetectedSource, document: Document):
   skin.appendChild(createMediaElement(source, document));
 
   return host;
-}
+};

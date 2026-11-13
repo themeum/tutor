@@ -16,8 +16,11 @@
 
 	// .tutor-course-details-page-main
 	&-page-main {
-		.plyr--video,
-		.tutor-course-thumbnail img,
+		.tutor-course-thumbnail img {
+			border-radius: 6px;
+			overflow: hidden;
+		}
+
 		.tutor-video-player {
 			border-radius: 0;
 			overflow: hidden;

@@ -30,10 +30,12 @@ interface VimeoAdapterProto {
  * 2. Installs an error filter that ignores non-fatal seek/method aborts (e.g. AbortError, RangeError).
  * 3. Serializes rapid setCurrentTime calls so overlapping postMessages don't trigger Vimeo iframe rejections.
  */
-export function hookVimeoPlayer(adapter: {
+const SEEK_TIMEOUT_MS = 4000;
+
+export const hookVimeoPlayer = (adapter: {
   engine?: HookedVimeoPlayer | null;
   dispatchEvent?: (e: Event) => boolean;
-}): void {
+}): void => {
   const player = adapter.engine;
   if (!player || player.__tutorVimeoPatched) {
     return;
@@ -49,19 +51,25 @@ export function hookVimeoPlayer(adapter: {
   if (typeof player.on === 'function') {
     player.on('error', (err: unknown) => {
       const errorObj = typeof err === 'object' && err !== null ? (err as VimeoMethodError) : undefined;
-      // Method-level rejections (aborted seeks, rapid seeks, duration edge cases)
-      // are non-fatal and should never crash the player UI.
-      if (
+
+      // Method-level rejections on seek/setCurrentTime are non-fatal and should never crash the player UI.
+      const isSeekAbort =
         errorObj?.method === 'setCurrentTime' ||
         errorObj?.method === 'seek' ||
         errorObj?.name === 'AbortError' ||
-        errorObj?.name === 'RangeError' ||
-        (typeof errorObj?.message === 'string' && /seek|abort/i.test(errorObj.message))
-      ) {
+        /seek.*abort|abort.*seek/i.test(errorObj?.message ?? '');
+
+      if (isSeekAbort) {
         return;
       }
 
       // If it's a genuine playback error (e.g. video unavailable, privacy restriction):
+      const errorPayload = {
+        code: 1,
+        message: errorObj?.message || 'Vimeo playback error',
+      };
+      (adapter as unknown as { __tutorFatalError?: unknown }).__tutorFatalError = errorPayload;
+
       if (typeof adapter.dispatchEvent === 'function') {
         adapter.dispatchEvent(
           new CustomEvent('error', {
@@ -94,7 +102,10 @@ export function hookVimeoPlayer(adapter: {
       }
 
       const runSeek = (targetTime: number): Promise<number> => {
-        inFlight = Promise.resolve(originalSetCurrentTime.call(player, targetTime))
+        inFlight = Promise.race([
+          Promise.resolve(originalSetCurrentTime.call(player, targetTime)),
+          new Promise<number>((resolve) => setTimeout(() => resolve(targetTime), SEEK_TIMEOUT_MS)),
+        ])
           .catch(() => targetTime)
           .finally(() => {
             inFlight = null;
@@ -110,14 +121,14 @@ export function hookVimeoPlayer(adapter: {
       return runSeek(clampedTime);
     };
   }
-}
+};
 
 /**
  * Patches VimeoAdapter prototype to:
  * - Clamp and validate currentTime assignments.
  * - Auto-hook VimeoPlayer instances created during attach and load.
  */
-export function patchVimeoProvider(): void {
+export const patchVimeoProvider = (): void => {
   if (isPatched) {
     return;
   }
@@ -127,17 +138,33 @@ export function patchVimeoProvider(): void {
   const originalAttach = proto.attach;
   const originalLoad = proto.load;
 
-  proto.attach = function (target: Element | null): void {
-    const result = originalAttach.call(this, target);
-    hookVimeoPlayer(this);
-    return result;
-  };
+  if (typeof originalAttach === 'function') {
+    proto.attach = function (target: Element | null): void {
+      const result = originalAttach.call(this, target);
+      hookVimeoPlayer(this);
+      return result;
+    };
+  }
 
-  proto.load = async function (): Promise<void> {
-    const result = await originalLoad.call(this);
-    hookVimeoPlayer(this);
-    return result;
-  };
+  if (typeof originalLoad === 'function') {
+    proto.load = async function (): Promise<void> {
+      const result = await originalLoad.call(this);
+      hookVimeoPlayer(this);
+      return result;
+    };
+  }
+
+  const origErrorDesc = Object.getOwnPropertyDescriptor(proto, 'error');
+  Object.defineProperty(proto, 'error', {
+    configurable: true,
+    enumerable: true,
+    get(this: VimeoAdapterProto & { __tutorFatalError?: unknown }) {
+      if (this.__tutorFatalError) {
+        return this.__tutorFatalError;
+      }
+      return origErrorDesc?.get ? origErrorDesc.get.call(this) : null;
+    },
+  });
 
   const desc = Object.getOwnPropertyDescriptor(proto, 'currentTime');
   if (desc && desc.set) {
@@ -157,4 +184,4 @@ export function patchVimeoProvider(): void {
       },
     });
   }
-}
+};

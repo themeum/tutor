@@ -180,6 +180,37 @@ describe('LessonPlaybackController strict mode', () => {
     emit('timeupdate', { currentTime: 301 });
     expect(player.seek).toHaveBeenCalledWith(1);
   });
+
+  it('rejects is_ended sync in strict mode when duration has not been watched', () => {
+    const { player, emit } = createFakePlayer();
+    player.getDuration = vi.fn(() => 100);
+    const env = createEnvironment({ proActive: true });
+    const controller = new LessonPlaybackController(player, strictData, env);
+    controller.start();
+
+    emit('ready');
+    // maxSeekTime is 0, duration is 100
+    emit('ended');
+
+    expect(env.syncPlayback).toHaveBeenCalledWith(expect.not.objectContaining({ is_ended: true }));
+  });
+
+  it('destroys controller and clears timers when player is disposed', () => {
+    vi.useFakeTimers();
+    const { player, emit } = createFakePlayer();
+    const env = createEnvironment({ proActive: true });
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, env);
+    controller.start();
+
+    emit('play');
+    vi.advanceTimersByTime(10_000);
+    expect(env.syncPlayback).toHaveBeenCalledTimes(1);
+
+    emit('dispose', { player });
+
+    vi.advanceTimersByTime(20_000);
+    expect(env.syncPlayback).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('LessonPlaybackController sync', () => {

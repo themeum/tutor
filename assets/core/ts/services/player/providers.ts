@@ -16,11 +16,11 @@ const parseUrl = (url: string): URL | null => {
   }
 };
 
-const YT_ID_REGEX = /^[\w-]{1,64}$/;
+const YT_ID_REGEX = /^(?!videoseries$|watch$)[\w-]{1,64}$/;
 const VIMEO_ID_REGEX = /^\d+$/;
 const VIMEO_HASH_REGEX = /^[a-z0-9]+$/i;
 
-export function youtubeVideoId(url: string): string | null {
+export const youtubeVideoId = (url: string): string | null => {
   const parsed = parseUrl(url);
   if (!parsed) {
     return null;
@@ -41,9 +41,9 @@ export function youtubeVideoId(url: string): string | null {
   }
 
   return id && YT_ID_REGEX.test(id) ? id : null;
-}
+};
 
-export function vimeoVideoId(url: string): { id: string; hash?: string } | null {
+export const vimeoVideoId = (url: string): { id: string; hash?: string } | null => {
   const parsed = parseUrl(url);
   if (!parsed) {
     return null;
@@ -74,7 +74,7 @@ export function vimeoVideoId(url: string): { id: string; hash?: string } | null 
     return hash ? { id, hash } : { id };
   }
 
-  for (let i = parts.length - 1; i >= 0; i--) {
+  for (let i = 0; i < parts.length; i++) {
     if (VIMEO_ID_REGEX.test(parts[i])) {
       const id = parts[i];
       const next = parts[i + 1];
@@ -84,9 +84,9 @@ export function vimeoVideoId(url: string): { id: string; hash?: string } | null 
   }
 
   return null;
-}
+};
 
-export function providerFromUrl(url: string, currentHost?: string): PlayerProvider {
+export const providerFromUrl = (url: string, currentHost?: string): PlayerProvider => {
   if (youtubeVideoId(url)) {
     return 'youtube';
   }
@@ -102,9 +102,9 @@ export function providerFromUrl(url: string, currentHost?: string): PlayerProvid
   }
 
   return 'html5';
-}
+};
 
-export function detectSource(root: Element): DetectedSource | null {
+export const detectSource = (root: Element): DetectedSource | null => {
   const host = root.ownerDocument?.defaultView?.location?.hostname;
 
   const video = root.matches('video') ? root : root.querySelector('video');
@@ -144,4 +144,4 @@ export function detectSource(root: Element): DetectedSource | null {
   }
 
   return null;
-}
+};

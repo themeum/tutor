@@ -41,7 +41,7 @@ const clamp = (value: number, min: number, max: number): number => Math.min(Math
 
 export type AnyHandler = (payload: never) => void;
 
-export function createTutorPlayer({ element, store, provider, onDispose }: CreateTutorPlayerOptions): TutorPlayer {
+export const createTutorPlayer = ({ element, store, provider, onDispose }: CreateTutorPlayerOptions): TutorPlayer => {
   const listeners = new Map<PlayerEvent, Set<AnyHandler>>();
 
   const emit = <E extends PlayerEvent>(event: E, payload: PlayerEventMap[E]): void => {
@@ -75,7 +75,7 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
   let previous = snapshot();
   let unsubscribeStore: PlayerUnsubscribe = () => undefined;
 
-  function sync(): void {
+  const sync = (): void => {
     if (disposed) {
       return;
     }
@@ -104,9 +104,9 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     if (next.error && !prev.error) {
       emit('error', { player: handle, error: next.error });
     }
-  }
+  };
 
-  function onFullscreenChange(): void {
+  const onFullscreenChange = (): void => {
     if (disposed) {
       return;
     }
@@ -128,7 +128,7 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
       srcElement: fullscreenElement,
       target: fullscreenElement,
     });
-  }
+  };
 
   const handle: TutorPlayer = {
     provider,
@@ -195,20 +195,21 @@ export function createTutorPlayer({ element, store, provider, onDispose }: Creat
     },
   };
 
-  function release(): void {
+  const release = (): void => {
     if (disposed) {
       return;
     }
     disposed = true;
+    emit('dispose', { player: handle });
     unsubscribeStore();
     element.ownerDocument?.removeEventListener('fullscreenchange', onFullscreenChange);
     listeners.clear();
     onDispose?.();
-  }
+  };
 
   unsubscribeStore = store.subscribe(sync);
   element.ownerDocument?.addEventListener('fullscreenchange', onFullscreenChange);
   queueMicrotask(sync);
 
   return handle;
-}
+};

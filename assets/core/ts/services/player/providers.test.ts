@@ -13,6 +13,8 @@ describe('youtubeVideoId', () => {
     ['https://www.youtube.com/live/abc123', 'abc123'],
     ['https://www.youtube.com/watch?v=abc%26list=x', null],
     ['https://www.youtube.com/watch?v=invalid!id@', null],
+    ['https://www.youtube.com/embed/videoseries?list=PL123', null],
+    ['https://www.youtube.com/watch?v=watch', null],
     ['https://example.com/abc123', null],
     ['not a url', null],
   ])('%s -> %s', (url, expected) => {
@@ -24,6 +26,7 @@ describe('vimeoVideoId', () => {
   it('parses plain, unlisted and player urls', () => {
     expect(vimeoVideoId('https://vimeo.com/12345')).toEqual({ id: '12345', hash: undefined });
     expect(vimeoVideoId('https://vimeo.com/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
+    expect(vimeoVideoId('https://vimeo.com/12345/1234567890')).toEqual({ id: '12345', hash: '1234567890' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345?h=abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://player.vimeo.com/video/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://vimeo.com/channels/staffpicks/12345')).toEqual({ id: '12345', hash: undefined });
@@ -58,8 +61,7 @@ describe('detectSource', () => {
 
   it('reads a YouTube iframe embed', () => {
     const root = document.createElement('div');
-    root.innerHTML =
-      '<div class="plyr__video-embed tutorPlayer"><iframe src="https://www.youtube.com/embed/abc123"></iframe></div>';
+    root.innerHTML = '<div class="tutorPlayer"><iframe src="https://www.youtube.com/embed/abc123"></iframe></div>';
 
     expect(detectSource(root.querySelector('.tutorPlayer') as Element)).toEqual({
       provider: 'youtube',

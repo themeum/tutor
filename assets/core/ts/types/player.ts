@@ -11,6 +11,7 @@ export interface PlayerEventMap {
   enterfullscreen: { player: TutorPlayer; srcElement: HTMLElement; target?: HTMLElement };
   exitfullscreen: { player: TutorPlayer; srcElement: HTMLElement; target?: HTMLElement };
   error: { player: TutorPlayer; error: Error };
+  dispose: { player: TutorPlayer };
 }
 
 export type PlayerEvent = keyof PlayerEventMap;

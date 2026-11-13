@@ -1,7 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { CONTENT_TITLE_ATTRIBUTE, TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
-import { getLegacyTutorLessonPlayer } from '@Core/ts/services/player/legacy';
 import type { PlayerEventMap, PlayerUnsubscribe, TutorPlayer } from '@Core/ts/types/player';
 
 interface AutoLoadResponse {
@@ -40,14 +39,14 @@ export interface LessonEnvironment {
 const SEEK_TOLERANCE = 1;
 const DEFAULT_SYNC_INTERVAL_SECONDS = 10;
 
-export function getPercentage(value: number, total: number): number {
+export const getPercentage = (value: number, total: number): number => {
   if (value > 0 && total > 0) {
     return Math.round((value / total) * 100);
   }
   return 0;
-}
+};
 
-export function readPlayerData(document: Document): PlayerData {
+export const readPlayerData = (document: Document): PlayerData => {
   const element = document.getElementById('tutor_video_tracking_information');
 
   if (!(element instanceof HTMLInputElement) || !element.value) {
@@ -61,7 +60,7 @@ export function readPlayerData(document: Document): PlayerData {
   } catch {
     return {};
   }
-}
+};
 
 export class LessonPlaybackController {
   #player: TutorPlayer;
@@ -73,6 +72,8 @@ export class LessonPlaybackController {
   #observedAt = 0;
   #playing = false;
   #playedOnce = false;
+  #seekingBack = false;
+  #seekDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   #unsubscribers: PlayerUnsubscribe[] = [];
 
   constructor(player: TutorPlayer, data: PlayerData, environment: LessonEnvironment) {
@@ -91,17 +92,25 @@ export class LessonPlaybackController {
       this.#player.on('ended', this.#onEnded),
       this.#player.on('timeupdate', this.#onTimeUpdate),
       this.#player.on('fullscreenchange', this.#onFullscreenChange),
+      this.#player.on('dispose', () => this.destroy()),
     ];
   }
 
   destroy(): void {
     this.#clearSyncTimer();
+    if (this.#seekDebounceTimer) {
+      clearTimeout(this.#seekDebounceTimer);
+      this.#seekDebounceTimer = null;
+    }
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
     this.#unsubscribers = [];
   }
 
   #onReady = (): void => {
-    this.#env.document.querySelector('.tutor-video-player .loading-spinner')?.remove();
+    const spinner =
+      this.#player.element.closest('.tutor-video-player')?.querySelector('.loading-spinner') ??
+      this.#env.document.querySelector('.tutor-video-player .loading-spinner');
+    spinner?.remove();
 
     this.#syncTime();
 
@@ -143,6 +152,10 @@ export class LessonPlaybackController {
     this.#clearSyncTimer();
 
     if (this.#env.proActive) {
+      // Do not sync forward position if paused during an unauthorized forward seek
+      if (this.#isStrict() && this.#player.getCurrentTime() > this.#maxSeekTime + SEEK_TOLERANCE) {
+        return;
+      }
       this.#syncTime();
     }
   };
@@ -150,6 +163,12 @@ export class LessonPlaybackController {
   #onEnded = (): void => {
     this.#playing = false;
     this.#clearSyncTimer();
+
+    // In strict mode, reject ending if user jumped ahead without watching
+    if (this.#isStrict() && this.#maxSeekTime < this.#player.getDuration() - SEEK_TOLERANCE) {
+      return;
+    }
+
     this.#syncTime({ is_ended: true });
 
     if (this.#env.autoPlayNext && this.#playedOnce) {
@@ -167,8 +186,18 @@ export class LessonPlaybackController {
       const limit = Math.max(this.#maxSeekTime, this.#observedTime + elapsed);
 
       if (currentTime > limit + SEEK_TOLERANCE) {
-        this.#player.seek(this.#maxSeekTime);
-        this.#env.toastWarning(__('Forward seeking is disabled', 'tutor'));
+        if (!this.#seekingBack) {
+          this.#seekingBack = true;
+          this.#player.seek(this.#maxSeekTime);
+          this.#env.toastWarning(__('Forward seeking is disabled', 'tutor'));
+          if (this.#seekDebounceTimer) {
+            clearTimeout(this.#seekDebounceTimer);
+          }
+          this.#seekDebounceTimer = setTimeout(() => {
+            this.#seekingBack = false;
+            this.#seekDebounceTimer = null;
+          }, 500);
+        }
         return;
       }
     }
@@ -241,7 +270,10 @@ export class LessonPlaybackController {
       this.#enableCompleteLessonBtn();
     }
 
-    const currentTime = this.#player.getCurrentTime();
+    const rawCurrentTime = this.#player.getCurrentTime();
+    const currentTime = this.#isStrict()
+      ? Math.min(rawCurrentTime, this.#maxSeekTime + SEEK_TOLERANCE)
+      : rawCurrentTime;
 
     this.#env.syncPlayback({
       currentTime,
@@ -352,10 +384,14 @@ export class LessonPlaybackController {
       return;
     }
 
-    const nextUrl = await this.#env.fetchNextUrl(this.#data.post_id);
+    try {
+      const nextUrl = await this.#env.fetchNextUrl(this.#data.post_id);
 
-    if (nextUrl) {
-      this.#env.openUrl(nextUrl);
+      if (nextUrl) {
+        this.#env.openUrl(nextUrl);
+      }
+    } catch {
+      // Ignore autoload failures
     }
   }
 
@@ -367,7 +403,7 @@ export class LessonPlaybackController {
   }
 }
 
-function createEnvironment(document: Document): LessonEnvironment {
+const createEnvironment = (document: Document): LessonEnvironment => {
   const core = window.TutorCore;
   const config = core.config.tutorConfig;
 
@@ -377,11 +413,15 @@ function createEnvironment(document: Document): LessonEnvironment {
     isMobile: core.device.isMobileDevice(),
     syncIntervalSeconds: DEFAULT_SYNC_INTERVAL_SECONDS,
     syncPlayback: (data) => {
-      core.api.wpPost('sync_video_playback', data);
+      void core.api.wpPost('sync_video_playback', data).catch(() => {});
     },
     fetchNextUrl: async (postId) => {
-      const response = await core.api.wpPost<AutoLoadResponse>('autoload_next_course_content', { post_id: postId });
-      return response?.data?.next_url ?? null;
+      try {
+        const response = await core.api.wpPost<AutoLoadResponse>('autoload_next_course_content', { post_id: postId });
+        return response?.data?.next_url ?? null;
+      } catch {
+        return null;
+      }
     },
     toastWarning: (message) => {
       core.toast.warning(message);
@@ -391,11 +431,10 @@ function createEnvironment(document: Document): LessonEnvironment {
     },
     notifyReady: (player) => {
       window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.LESSON_PLAYER_READY, { detail: { player } }));
-      window.TutorLessonPlayer = getLegacyTutorLessonPlayer();
     },
     document,
   };
-}
+};
 
 export const initializeLessonPlayer = (): void => {
   if (!window.TutorCore?.player) {
@@ -415,6 +454,17 @@ export const initializeLessonPlayer = (): void => {
     return;
   }
 
-  const player = window.TutorCore.player.create(target);
+  const playerContainer = target.closest('.tutor-video-player') ?? target.parentElement;
+
+  let player: TutorPlayer;
+  try {
+    player = window.TutorCore.player.create(target);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('[tutor] player: skipped an unplayable element', target, error);
+    playerContainer?.querySelector('.loading-spinner')?.remove();
+    return;
+  }
+
   new LessonPlaybackController(player, readPlayerData(document), createEnvironment(document)).start();
 };

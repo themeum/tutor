@@ -5,28 +5,26 @@ import { type TutorPlayer } from '@Core/ts/types/player';
 import { type VideoPlayerElement } from './elements';
 import { TutorPlayerService } from './PlayerService';
 
-function fakePlayer(): TutorPlayer {
-  return {
-    provider: 'html5',
-    element: document.createElement('div'),
-    media: null,
-    getCurrentTime: vi.fn(() => 5),
-    getDuration: vi.fn(() => 50),
-    isPaused: vi.fn(() => true),
-    getVolume: vi.fn(() => 1),
-    setVolume: vi.fn(),
-    isMuted: vi.fn(() => false),
-    setMuted: vi.fn(),
-    isFullscreen: vi.fn(() => false),
-    play: vi.fn(async () => undefined),
-    pause: vi.fn(),
-    seek: vi.fn(),
-    on: vi.fn(() => () => undefined),
-    dispose: vi.fn(),
-  };
-}
+const fakePlayer = (): TutorPlayer => ({
+  provider: 'html5',
+  element: document.createElement('div'),
+  media: null,
+  getCurrentTime: vi.fn(() => 5),
+  getDuration: vi.fn(() => 50),
+  isPaused: vi.fn(() => true),
+  getVolume: vi.fn(() => 1),
+  setVolume: vi.fn(),
+  isMuted: vi.fn(() => false),
+  setMuted: vi.fn(),
+  isFullscreen: vi.fn(() => false),
+  play: vi.fn(async () => undefined),
+  pause: vi.fn(),
+  seek: vi.fn(),
+  on: vi.fn(() => () => undefined),
+  dispose: vi.fn(),
+});
 
-function setup() {
+const setup = () => {
   const handle = fakePlayer();
   const host = document.createElement('div') as unknown as VideoPlayerElement;
   // As a connected element would expose it after self-boot.
@@ -37,13 +35,13 @@ function setup() {
   });
 
   return { service, handle, host };
-}
+};
 
-function target(): HTMLElement {
+const target = (): HTMLElement => {
   document.body.innerHTML =
     '<div class="tutor-video-player"><video class="tutorPlayer" src="https://lesson.test/wp-content/uploads/a.mp4"></video></div>';
   return document.querySelector('.tutorPlayer') as HTMLElement;
-}
+};
 
 describe('TutorPlayerService', () => {
   it('returns the handle booted by the built element and tracks it as active', () => {
@@ -142,6 +140,18 @@ describe('TutorPlayerService', () => {
 
     expect(service.getActive()).toBeNull();
     expect(service.getCurrentTime()).toBe(0);
+  });
+
+  it('is idempotent when track is called repeatedly on the active player', () => {
+    const { service, handle } = setup();
+    const onPlay = vi.fn();
+    service.on('play', onPlay);
+
+    service.track(handle);
+    expect(handle.on).toHaveBeenCalledTimes(1);
+
+    service.track(handle);
+    expect(handle.on).toHaveBeenCalledTimes(1);
   });
 
   it('throws when no source can be detected', () => {

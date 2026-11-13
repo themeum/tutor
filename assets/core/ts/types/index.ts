@@ -51,7 +51,7 @@ export interface TutorCore {
   query: QueryService;
   modal: ModalService;
   wpMedia: WPMediaService;
-  player: PlayerService;
+  player?: PlayerService;
   api: {
     wpPost: typeof wpPost;
     wpPostForm: typeof wpPostForm;

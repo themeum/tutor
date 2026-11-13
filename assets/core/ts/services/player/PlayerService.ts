@@ -34,6 +34,9 @@ export class TutorPlayerService implements PlayerService {
 
   /** Marks a player booted by its own element as active (wired to the element hooks). */
   track(player: TutorPlayer): void {
+    if (this.#active === player && this.#live.includes(player)) {
+      return;
+    }
     if (!this.#live.includes(player)) {
       this.#live.push(player);
     }
