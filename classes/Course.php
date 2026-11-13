@@ -652,6 +652,10 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
+						if ( ! current_user_can( 'edit_post', $product_id ) ) {
+							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
+						}
+
 						$product = wc_get_product( $product_id );
 						if ( is_a( $product, 'WC_Product' ) ) {
 							if ( $course_product_id !== $product_id ) {
@@ -2583,7 +2587,7 @@ class Course extends Tutor_Base {
 
 		if ( 'wc' === $monetize_by ) {
 
-			$is_update = ( $product_id && wc_get_product( $product_id ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) && current_user_can( 'edit_post', $product_id ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
