@@ -16,6 +16,8 @@ type TextInputProps = {
   label?: string;
   isInlineLabel?: boolean;
   type?: 'number' | 'text';
+  allowNegative?: boolean;
+  whole?: boolean;
   value?: string | number;
   disabled?: boolean;
   readOnly?: boolean;
@@ -37,6 +39,8 @@ const TextInput = ({
   label,
   isInlineLabel,
   type = 'text',
+  allowNegative = false,
+  whole = false,
   value,
   disabled,
   readOnly,
@@ -84,7 +88,8 @@ const TextInput = ({
           onChange={(event) => {
             const { value } = event.target;
 
-            const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+            const fieldValue: string | number =
+              type === 'number' ? parseNumberOnly(value, allowNegative, whole) : value;
             onChange(fieldValue);
           }}
           onKeyDown={(event) => {
@@ -93,7 +98,8 @@ const TextInput = ({
           onBlur={(event) => {
             const { value } = event.target;
 
-            const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+            const fieldValue: string | number =
+              type === 'number' ? parseNumberOnly(value, allowNegative, whole) : value;
             onBlur?.(fieldValue);
           }}
           onFocus={(event) => {

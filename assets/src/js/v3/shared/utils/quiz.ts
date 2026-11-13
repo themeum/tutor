@@ -30,6 +30,46 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   return QuizDataStatus.NO_CHANGE;
 };
 
+export const scaleRangeErrorMessage = __(
+  'The maximum value must be greater than the minimum value.',
+  __TUTOR_TEXT_DOMAIN__,
+);
+export const scaleLabelEntryRangeErrorMessage = __(
+  'The label entry must be greater than 0 and no more than the scale range.',
+  __TUTOR_TEXT_DOMAIN__,
+);
+export const scaleCorrectValueRangeErrorMessage = __(
+  'The correct value must be between the minimum and maximum values.',
+  __TUTOR_TEXT_DOMAIN__,
+);
+
+export type ScaleValidationError = {
+  field: 'range' | 'labelEvery' | 'value';
+  message: string;
+};
+
+/**
+ * Label entry is a tick interval, so it only has to fit inside the scale range.
+ */
+export const getScaleValidationError = (
+  { min, max, labelEvery }: { min: number; max: number; labelEvery: number },
+  value: number | null,
+): ScaleValidationError | null => {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+    return { field: 'range', message: scaleRangeErrorMessage };
+  }
+
+  if (!Number.isFinite(labelEvery) || labelEvery <= 0 || labelEvery > max - min) {
+    return { field: 'labelEvery', message: scaleLabelEntryRangeErrorMessage };
+  }
+
+  if (value !== null && (!Number.isFinite(value) || value < min || value > max)) {
+    return { field: 'value', message: scaleCorrectValueRangeErrorMessage };
+  }
+
+  return null;
+};
+
 export const validateQuizQuestion = (
   question: QuizQuestion,
 ):
@@ -107,26 +147,20 @@ export const validateQuizQuestion = (
         try {
           const data = JSON.parse(firstAnswer.answer_two_gap_match) as {
             value?: number;
-            config?: { min?: number; max?: number };
+            config?: { min?: number; max?: number; labelEvery?: number };
           };
           const min = Number(data.config?.min ?? 0);
           const max = Number(data.config?.max ?? 100);
-          if (!Number.isNaN(min) && !Number.isNaN(max) && max <= min) {
-            return {
-              message: __('The maximum value must be greater than the minimum value.', __TUTOR_TEXT_DOMAIN__),
-              type: 'question',
-            };
-          }
-
+          const labelEvery = Number(data.config?.labelEvery ?? 10);
           const correctValue = Number(data.value);
-          if (
-            !Number.isNaN(min) &&
-            !Number.isNaN(max) &&
-            !Number.isNaN(correctValue) &&
-            (correctValue < min || correctValue > max)
-          ) {
+          const validationError = getScaleValidationError(
+            { min, max, labelEvery },
+            Number.isFinite(correctValue) ? correctValue : null,
+          );
+
+          if (validationError) {
             return {
-              message: __('The correct value must be between the minimum and maximum values.', __TUTOR_TEXT_DOMAIN__),
+              message: validationError.message,
               type: 'question',
             };
           }
