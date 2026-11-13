@@ -22,6 +22,7 @@ use Tutor\Helpers\UrlHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\OrderActivitiesModel;
+use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1045,7 +1046,7 @@ class OrderController {
 	 */
 	public function get_discount_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = is_admin() ? 0 : $user_id;
+		$user_id    = User::is_admin() && is_admin() && ! wp_doing_ajax() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
@@ -1069,7 +1070,7 @@ class OrderController {
 	 */
 	public function get_refund_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = is_admin() ? 0 : $user_id;
+		$user_id    = User::is_admin() && is_admin() && ! wp_doing_ajax() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
@@ -1356,7 +1357,7 @@ class OrderController {
 	public function filter_order_history_status_options( $options, $selected ) {
 		$options = $this->tabs_key_value( 'dashboard' );
 		$options = array_map(
-			function( $option ) use ( $selected ) {
+			function ( $option ) use ( $selected ) {
 				$key = $option['key'] ?? '';
 				return array(
 					'label'  => $option['title'] ?? '',
