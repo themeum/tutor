@@ -20,7 +20,7 @@ pnpm test:e2e           # full suite (core + pro when present)
 pnpm test:e2e:smoke     # @smoke
 pnpm test:e2e:journey   # @journey
 pnpm test:e2e:ui        # Playwright interactive UI
-pnpm e2e:reset          # drop and reseed the test database
+pnpm test:e2e:reset     # drop and reseed the test database
 composer test:unit      # PHPUnit on its own database
 ```
 
