@@ -74,6 +74,10 @@ final class TutorTestConfig {
 				throw new RuntimeException( "Refusing unsafe test database name '{$name}'." );
 			}
 
+			if ( $name === (string) ( self::$live['NAME'] ?? '' ) ) {
+				throw new RuntimeException( "Refusing to use the live database '{$name}' for tests." );
+			}
+
 			return $name;
 		}
 

@@ -13,7 +13,7 @@
  * - Quiz Attempts
  * - Marketplace Settings, Pending Instructors, and Withdrawal Requests
  *
- * Run with: wp eval-file wp-content/plugins/tutor/bin/e2e/seed-admin.php
+ * Run with: wp eval-file wp-content/plugins/tutor/tests/support/seed-admin.php
  *
  * @package Tutor
  */
@@ -46,8 +46,8 @@ update_option( 'enable_qa_course_tab', 1 );
 $instructor = get_user_by( 'login', 'instructor' );
 $student    = get_user_by( 'login', 'student' );
 
-e2e_admin_assert( $instructor instanceof WP_User, 'Instructor user missing. Run bin/e2e/seed.php first.' );
-e2e_admin_assert( $student instanceof WP_User, 'Student user missing. Run bin/e2e/seed.php first.' );
+e2e_admin_assert( $instructor instanceof WP_User, 'Instructor user missing. Run tests/support/seed.php first.' );
+e2e_admin_assert( $student instanceof WP_User, 'Student user missing. Run tests/support/seed.php first.' );
 
 // Ensure pending instructor exists for marketplace tests.
 $pending_instructor = get_user_by( 'login', 'instructor_pending' );
@@ -219,7 +219,7 @@ if ( ! $lesson ) {
 			'post_type'    => tutor()->lesson_post_type,
 			'post_status'  => 'publish',
 			'post_author'  => $instructor->ID,
-			'post_parent'  => $main_course_id,
+			'post_parent'  => $topic_id,
 		)
 	);
 }
@@ -256,7 +256,7 @@ if ( ! $existing_enrollment ) {
 } else {
 	wp_update_post(
 		array(
-			'ID'          => $existing_enrollment,
+			'ID'          => $existing_enrollment->ID,
 			'post_status' => 'completed',
 		)
 	);

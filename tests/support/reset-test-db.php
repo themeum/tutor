@@ -17,11 +17,36 @@
 putenv( 'WP_TEST_ENV=1' );
 defined( 'WP_INSTALLING' ) || define( 'WP_INSTALLING', true );
 
+// Resolve the target before booting WordPress: booting an unrouted
+// wp-config.php would read the live database before the guard below runs.
+$env_file = dirname( __DIR__, 2 ) . '/.env';
+$env      = is_readable( $env_file ) ? (array) parse_ini_file( $env_file, false, INI_SCANNER_RAW ) : array();
+$expected = getenv( 'WP_TEST_DB_NAME' );
+$expected = ( false !== $expected && '' !== $expected ) ? trim( $expected ) : trim( (string) ( $env['WP_TEST_DB_NAME'] ?? '' ) );
+
+$wp_root       = dirname( __DIR__, 5 );
+$wp_config     = $wp_root . '/wp-config.php';
+$wp_load_path  = $wp_root . '/wp-load.php';
+$config_source = is_readable( $wp_config ) ? (string) file_get_contents( $wp_config ) : '';
+
+if ( '' === $expected ) {
+	fwrite( STDERR, "\n[FATAL ERROR] WP_TEST_DB_NAME is missing. Run: php tests/support/install.php --yes\n" );
+	exit( 1 );
+}
+
+if ( ! preg_match( '/_test$/i', $expected ) ) {
+	fwrite( STDERR, "\n[FATAL ERROR] Refusing to reset '{$expected}': the name must end in _test.\n" );
+	exit( 1 );
+}
+
+if ( false === strpos( $config_source, 'test-config.php' ) ) {
+	fwrite( STDERR, "\n[FATAL ERROR] wp-config.php is not routed through tests/support/test-config.php. Run: php tests/support/install.php --yes\n" );
+	exit( 1 );
+}
+
 // Suppress extraneous output during bootstrap.
 ob_start();
 
-// Dynamically find wp-load.php by walking up directory tree.
-$wp_load_path = dirname( __DIR__, 5 ) . '/wp-load.php';
 if ( ! file_exists( $wp_load_path ) ) {
 	ob_end_clean();
 	fwrite( STDERR, "[FATAL ERROR] Could not find wp-load.php in parent directories!\n" );
@@ -40,16 +65,7 @@ global $wpdb;
 // =========================================================================
 // SAFEGUARDS: the target must be explicit and must never be the live database.
 // =========================================================================
-$env_file = dirname( __DIR__, 2 ) . '/.env';
-$env      = is_readable( $env_file ) ? (array) parse_ini_file( $env_file, false, INI_SCANNER_RAW ) : array();
-$expected = getenv( 'WP_TEST_DB_NAME' );
-$expected = ( false !== $expected && '' !== $expected ) ? trim( $expected ) : trim( (string) ( $env['WP_TEST_DB_NAME'] ?? '' ) );
-$live     = class_exists( 'TutorTestConfig' ) ? TutorTestConfig::live_db_name() : '';
-
-if ( '' === $expected ) {
-	fwrite( STDERR, "\n[FATAL ERROR] WP_TEST_DB_NAME is missing. Run: php tests/support/install.php --yes\n" );
-	exit( 1 );
-}
+$live = class_exists( 'TutorTestConfig' ) ? TutorTestConfig::live_db_name() : '';
 
 if ( $expected !== $wpdb->dbname ) {
 	fwrite( STDERR, "\n[FATAL ERROR] Connected to '{$wpdb->dbname}' but WP_TEST_DB_NAME is '{$expected}'. Routing is broken.\n" );
@@ -58,11 +74,6 @@ if ( $expected !== $wpdb->dbname ) {
 
 if ( '' === $live || $expected === $live ) {
 	fwrite( STDERR, "\n[FATAL ERROR] Refusing to reset '{$expected}': it equals the live database.\n" );
-	exit( 1 );
-}
-
-if ( ! preg_match( '/_test$/i', $expected ) ) {
-	fwrite( STDERR, "\n[FATAL ERROR] Refusing to reset '{$expected}': the name must end in _test.\n" );
 	exit( 1 );
 }
 
@@ -86,7 +97,7 @@ require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 $admin_user = getenv( 'ADMIN_USERNAME' ) ?: ( $env['ADMIN_USERNAME'] ?? 'admin' );
-$admin_pass = getenv( 'ADMIN_PASSWORD' ) ?: ( $env['ADMIN_PASSWORD'] ?? ( getenv( 'E2E_PASSWORD' ) ?: ( $env['E2E_PASSWORD'] ?? 'password' ) ) );
+$admin_pass = getenv( 'E2E_ADMIN_PASSWORD' ) ?: ( $env['E2E_ADMIN_PASSWORD'] ?? ( getenv( 'ADMIN_PASSWORD' ) ?: ( $env['ADMIN_PASSWORD'] ?? ( getenv( 'E2E_PASSWORD' ) ?: ( $env['E2E_PASSWORD'] ?? 'password' ) ) ) ) );
 $site_title = 'Tutor LMS Test Site';
 $site_url   = getenv( 'SITE_URL' ) ?: ( $env['SITE_URL'] ?? ( getenv( 'E2E_BASE_URL' ) ?: 'http://localhost:8888' ) );
 

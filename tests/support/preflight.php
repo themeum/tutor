@@ -69,7 +69,7 @@ function tutor_preflight_live_db( string $file ): string {
 function tutor_preflight_host_allowed( string $url, string $patterns ): bool {
 	$host = strtolower( (string) parse_url( $url, PHP_URL_HOST ) );
 	if ( '' === $host ) {
-		return true;
+		return false;
 	}
 
 	foreach ( array_filter( array_map( 'trim', explode( ',', $patterns ) ) ) as $pattern ) {

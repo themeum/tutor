@@ -1,6 +1,6 @@
 # E2E environment with an isolated site and database
 
-Status: plan. Branch: `research/e2e-isolated-environment`.
+Status: historical plan, superseded by [e2e-test-db-migration.md](./e2e-test-db-migration.md). Branch: `research/e2e-isolated-environment`.
 Detailed comparison and sources: [e2e-isolated-environment-research.md](./e2e-isolated-environment-research.md).
 
 ## Goal
