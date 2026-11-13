@@ -14,12 +14,9 @@ pnpm test:setup           # installer prompt, then Chromium
 
 ## Commands
 
-The E2E commands start the test web server automatically when one is not
-already running. `bin/e2e/serve.php` finds the WordPress root and sets
-`WP_TEST_ENV=1`. To run the server separately:
+Ensure your local development site is running (e.g. Local by Flywheel, Valet, Docker) and that `SITE_URL` in `.env` matches your site URL (e.g. `http://themeum-tutor.local` or `http://localhost:8888`).
 
 ```bash
-pnpm test:e2e:serve     # start the test server only
 pnpm test:e2e           # full suite (core + pro when present)
 pnpm test:e2e:smoke     # @smoke
 pnpm test:e2e:journey   # @journey
@@ -27,12 +24,6 @@ pnpm test:e2e:ui        # Playwright interactive UI
 pnpm test:e2e:reset     # drop and reseed the test database
 composer test:unit      # PHPUnit on its own database
 ```
-
-Run `php bin/e2e/serve.php --check` to print the detected root, URL, and
-command without starting the server. If auto-detection fails, set `WP_ROOT` to
-the directory containing `wp-load.php`. The
-[walkthrough](../../docs/developer/e2e-test-environment-walkthrough.md#12-step-by-step-first-time-local-setup)
-has the full command and a WP-CLI-free fallback.
 
 Every test command runs `tests/support/preflight.php` first. It fails when the live, E2E, and PHPUnit database names collide, when the E2E name does not end in `_test`, or when the configured site host is not in `WP_TEST_HOSTS`.
 

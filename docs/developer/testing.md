@@ -129,16 +129,15 @@ vendor/bin/phpunit --testsuite=query-helper-test
 
 ## Running Playwright E2E tests
 
-The E2E commands start the test web server automatically when one is not
-already running. The server script finds the WordPress root and sets
-`WP_TEST_ENV=1`.
+Make sure your local WordPress development site is running (e.g. in Local,
+Valet, Docker) and that `SITE_URL` in `.env` matches your site URL (e.g.
+`http://localhost:8888` or `http://themeum-tutor.local`). Playwright sends the
+`X-WP-Test-Env: playwright` header, which routes test requests to your isolated
+test database (`local_test`).
 
 ```bash
 # All E2E tests (headless)
 pnpm run test:e2e
-
-# Start the test server only
-pnpm run test:e2e:serve
 
 # Interactive Playwright UI
 pnpm run test:e2e:ui
@@ -149,12 +148,6 @@ pnpm run test:e2e:debug
 # PHPUnit + E2E
 pnpm test
 ```
-
-Run `php bin/e2e/serve.php --check` to print the detected root, URL, and
-command. If auto-detection fails, set `WP_ROOT` in `.env` or the shell to the
-directory containing `wp-load.php`. The
-[walkthrough](./e2e-test-environment-walkthrough.md#12-step-by-step-first-time-local-setup)
-has the full command and a WP-CLI-free fallback.
 
 ## Troubleshooting
 

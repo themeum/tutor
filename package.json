@@ -23,7 +23,6 @@
     "test:e2e:journey": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --grep @journey",
     "test:e2e:ui": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --ui",
     "test:e2e:debug": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --debug",
-    "test:e2e:serve": "php bin/e2e/serve.php",
     "test:e2e:reset": "php tests/support/reset-test-db.php",
     "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
