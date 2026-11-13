@@ -62,5 +62,14 @@ export default defineConfig({
       'X-WP-Test-Env': 'playwright',
     },
   },
+  // Start the local test server when one is not already running. CI starts it manually.
+  webServer: {
+    command: 'php bin/e2e/serve.php',
+    cwd: resolve(__dirname, '../..'),
+    url: baseURL,
+    reuseExistingServer: true,
+    timeout: 120_000,
+    stdout: 'ignore',
+  },
   projects,
 });

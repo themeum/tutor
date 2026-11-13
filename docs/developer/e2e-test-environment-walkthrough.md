@@ -41,14 +41,13 @@ pnpm install
 composer install
 pnpm test:setup          # installer prompt, then Chromium
 
-# In another terminal, start the test server (see section 12, step 4)
-WP_TEST_ENV=1 PHP_CLI_SERVER_WORKERS=4 \
-  wp server --host=127.0.0.1 --port=8888 --path="<wordpress-root>"
-
-pnpm test:e2e:smoke      # 5 smoke tests
+pnpm test:e2e:smoke      # starts the test server automatically
 composer test:unit       # PHPUnit on its own database
 pnpm test                # PHPUnit, then the full E2E suite
 ```
+
+The test server is started by Playwright when needed. To run it separately, use
+`pnpm test:e2e:serve`; see section 12, step 4.
 
 `pnpm test:setup` must run in an interactive terminal: it prints the installer
 plan and asks before changing `wp-config.php`. In CI or any non-TTY shell, use
@@ -123,6 +122,7 @@ built from scratch by `tests/support/reset-test-db.php` and seeded by
 | `tests/e2e/support/test.ts`              | Role page fixtures (`adminPage`, `studentPage`, ...)                           |
 | `tests/e2e/support/factories.ts`         | TypeScript bridge to the WP-CLI factories                                      |
 | `bin/e2e/factories.php`                  | Per-spec fixture creation inside the test database                             |
+| `bin/e2e/serve.php`                      | Auto-detects the WordPress root and starts the test server                     |
 | `bin/e2e/mu-plugins/e2e-http-stub.php`   | Deterministic external HTTP responses                                          |
 | `bin/e2e/mu-plugins/e2e-mail-log.php`    | Captures `wp_mail()` instead of sending mail                                   |
 | `.github/workflows/e2e.yml`              | CI: MySQL, installer, `wp server`, Playwright, artifacts                       |
@@ -174,7 +174,7 @@ selector knows what it must never use for tests.
 | ----------------------------------------- | ------------------------------------------- | ------------------- |
 | `WP_RUNNING_TESTS` constant or env `=1`   | `tests/bootstrap.php`, wp-phpunit child     | `WP_PHPUNIT_DB_NAME` |
 | `WP_INSTALLING` constant                  | Reset script, installer, wp-phpunit         | E2E database        |
-| `WP_TEST_ENV=1` environment variable      | WP-CLI, reset script, CI server, factories  | E2E database        |
+| `WP_TEST_ENV=1` environment variable      | WP-CLI, reset script, test server, factories | E2E database        |
 | `X-WP-Test-Env: playwright` header        | Playwright config, global setup, fixtures   | E2E database        |
 | `wp_test_env=test` cookie                 | Manual browser escape hatch                 | E2E database        |
 
@@ -472,6 +472,8 @@ because the Pro seeder creates a lot of data.
 - Uses `data-testid` as the test-id attribute.
 - Keeps traces, screenshots, and video only on failure.
 - Sends `X-WP-Test-Env: playwright` on the default context.
+- Starts `bin/e2e/serve.php` as a Playwright `webServer` when `baseURL` is not
+  already up. An existing server is reused, including the one CI starts.
 - Writes `test-results/` and `playwright-report/` at the plugin root.
 
 ### 6.2 Projects
@@ -740,7 +742,7 @@ environment wins. The installer adds missing keys to `.env`.
 | `WP_TEST_HOSTS` | `localhost,127.0.0.1,::1,*.local` | Hosts allowed to opt in with header/cookie |
 | `WP_TEST_ENV` | unset | `1` selects the E2E database for a process |
 | `WP_RUNNING_TESTS` | unset | `1` selects the PHPUnit database |
-| `WP_ROOT` | derived from plugin path | WordPress root for factories |
+| `WP_ROOT` | auto-detected from plugin path | WordPress root for the test server and factories |
 | `WP_CLI_BIN` | `wp` | WP-CLI binary for factories |
 
 The fixed usernames are not configurable: `admin`, `instructor`, `student`,
@@ -786,16 +788,26 @@ pnpm, MySQL, and optionally WP-CLI.
    Do not use `pnpm test:setup -- --yes` for this: pnpm appends the flag to the
    Chromium command, not to the installer.
 
-4. Start the test web server in a separate terminal:
+4. The test server starts automatically when you run an E2E command.
+   Playwright runs `bin/e2e/serve.php`, which detects the WordPress root, uses
+   the port from `E2E_BASE_URL` (default 8888), and sets `WP_TEST_ENV=1`. To
+   start it separately or inspect what it detected:
 
    ```bash
-   WP_TEST_ENV=1 PHP_CLI_SERVER_WORKERS=4 \
-     wp server --host=127.0.0.1 --port=8888 --path="<wordpress-root>"
+   pnpm test:e2e:serve
+   php bin/e2e/serve.php --check
    ```
 
+   If auto-detection fails, set `WP_ROOT` to the directory containing
+   `wp-load.php`. The server script walks up from the plugin directory, so a
+   normal `wp-content/plugins/tutor` checkout needs no configuration.
+
    `WP_TEST_ENV=1` makes every request in that server process use the test
-   database, including WP-Cron loopbacks. `PHP_CLI_SERVER_WORKERS=4` prevents
-   the single-threaded PHP server from deadlocking on loopback requests.
+   database, including WP-Cron loopbacks. The server is single-threaded by
+   default. If loopback requests stall it, export
+   `PHP_CLI_SERVER_WORKERS=4` before running. It is not the default locally
+   because some macOS PHP builds crash forked workers, which appears as
+   `ERR_EMPTY_RESPONSE` in the browser. CI sets it to 4.
 
    If WP-CLI is unavailable, use PHP's built-in server with a router that
    serves existing files and falls through to `index.php`:
@@ -816,11 +828,10 @@ pnpm, MySQL, and optionally WP-CLI.
    Save it outside the web root, then:
 
    ```bash
-   WP_TEST_ENV=1 PHP_CLI_SERVER_WORKERS=4 \
-     php -S 127.0.0.1:8888 -t "<wordpress-root>" /path/to/router.php
+   WP_TEST_ENV=1 php -S 127.0.0.1:8888 -t "<wordpress-root>" /path/to/router.php
    ```
 
-5. Confirm the server is up:
+5. Optionally confirm the server is up, if you started it separately:
 
    ```bash
    curl -I http://localhost:8888/
@@ -962,6 +973,8 @@ with `--yes`, start the server with `WP_TEST_ENV=1`, and run `pnpm test:e2e`.
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | `wp-config.php is missing` | Installer run outside a WordPress tree | Run from `wp-content/plugins/tutor` in the WordPress install |
+| `Could not find WordPress` | The plugin is symlinked or the root is unusual | Set `WP_ROOT` to the directory containing `wp-load.php` |
+| `WP_ROOT does not contain wp-load.php` | `WP_ROOT` points at the wrong directory | Point it at the WordPress root |
 | `WP_TEST_DB_NAME is missing` | `.env` not created or key removed | `composer test:install -- --yes` |
 | `Refusing unsafe test database name` | Name does not match `_test` / `phpunit` | Fix `WP_TEST_DB_NAME` or `WP_PHPUNIT_DB_NAME` in `.env` |
 | `Refusing to use the live database` | Test name equals the live name | Choose a different name ending in `_test` |
@@ -1054,7 +1067,9 @@ idempotent: check for an existing entity before creating one. Run
 | `pnpm test:setup` | Installer prompt, then Chromium |
 | `pnpm test` | PHPUnit, then full E2E |
 | `pnpm test:unit` | PHPUnit |
-| `pnpm test:e2e` | Full E2E (core + Pro when present) |
+| `pnpm test:e2e` | Full E2E (core + Pro when present); starts the server if needed |
+| `pnpm test:e2e:serve` | Start the test server only |
+| `php bin/e2e/serve.php --check` | Print the detected root, URL, and command |
 | `pnpm test:e2e:smoke` | `@smoke` only |
 | `pnpm test:e2e:journey` | `@journey` only |
 | `pnpm test:e2e:ui` | Playwright UI |
@@ -1087,9 +1102,17 @@ idempotent: check for an existing entity before creating one. Run
   and cleanup are the spec author's responsibility.
 - **Chromium is installed only by `test:setup`.** Running an E2E script on a
   fresh clone before setup fails with Playwright's missing-browser error.
+- **Existing server reuse.** Playwright reuses a server already listening at
+  `baseURL`. If that server was not started with `WP_TEST_ENV=1`, WP-Cron
+  loopbacks can hit the live database. Stop it, then start it with
+  `pnpm test:e2e:serve`.
+- **Server auto-start uses WP-CLI.** `bin/e2e/serve.php` runs `wp server`. If
+  WP-CLI is unavailable, use the manual `php -S` fallback in section 12.
 - **`pnpm test` stops on the first failure.** If PHPUnit fails, E2E does not
   run.
 - **`127.0.0.1` and the Pro license.** The Pro license bypass checks for
   `localhost` or `.local`; use one of those hosts for Pro runs.
-- **`wp server` needs workers.** Without `PHP_CLI_SERVER_WORKERS`, loopback
-  requests can deadlock the single-threaded server.
+- **The test server is single-threaded by default.** If loopback requests
+  stall it, set `PHP_CLI_SERVER_WORKERS=4`; CI does. Some macOS PHP builds
+  crash forked workers, which shows up as `ERR_EMPTY_RESPONSE`, so the script
+  leaves it unset locally.
