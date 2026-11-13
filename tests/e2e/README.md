@@ -2,6 +2,8 @@
 
 The browser suite runs against a real WordPress site whose test requests are routed to a dedicated database. Core tests are always run, and Pro tests (`../tutor-pro/tests/e2e`) or External tests (`./external`) are automatically included when present.
 
+For the full explanation of the databases, installer, seeder, Playwright lifecycle, factories, and safety guards, see [Test environment walkthrough](../../docs/developer/e2e-test-environment-walkthrough.md).
+
 ## Setup
 
 ```bash
@@ -11,6 +13,10 @@ pnpm test:setup           # installer prompt, then Chromium
 `test:setup` runs the installer, which previews the changes and asks before modifying `wp-config.php`, then installs Chromium. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
 
 ## Commands
+
+Start the test web server with `WP_TEST_ENV=1` before running E2E. The
+[walkthrough](../../docs/developer/e2e-test-environment-walkthrough.md#12-step-by-step-first-time-local-setup)
+has the full command and a WP-CLI-free fallback.
 
 ```bash
 pnpm test:e2e           # full suite (core + pro when present)

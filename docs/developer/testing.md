@@ -8,6 +8,10 @@ Automated tests for Tutor LMS live in the `tests/` directory:
 | `tests/e2e/`     | End-to-end tests powered by Playwright               |
 | `tests/support/` | Test installer, database reset and fixture utilities |
 
+For a detailed explanation of how the isolated databases, installer, seeder,
+Playwright lifecycle, factories, and safety guards work, see
+[Test environment walkthrough](./e2e-test-environment-walkthrough.md).
+
 ## Table of contents
 
 - [Setup](#setup)
@@ -36,9 +40,10 @@ The installer will:
 
 1. Read your database settings from `wp-config.php`.
 2. Create `.env` (from `.env.example` when available) and add any missing `WP_TEST_DB_*` variables.
-3. Create a separate test database (your live database name with a `_test` suffix, for example `local_test`).
-4. Route `wp-config.php` to the test database and skip `wp-settings.php` while tests run. A backup is saved as `wp-config.php.bak`.
-5. Reset the test database and seed fixtures.
+3. Create two separate databases: an E2E database (your live database name with a `_test` suffix, for example `local_test`) and a PHPUnit database (for example `local_phpunit`).
+4. Route `wp-config.php` to the test databases and skip `wp-settings.php` while tests run. A backup is saved as `wp-config.php.bak`.
+5. Reset the E2E database and seed fixtures.
+6. Install Chromium (`pnpm test:setup` does this after the installer).
 
 Each step prints a green ✔ on success or a red ✘ on failure. The installer stops at the first failure and shows the error.
 
@@ -123,6 +128,10 @@ vendor/bin/phpunit --testsuite=query-helper-test
 > **Tip:** `composer test:unit:filter DBTest` is a quick way to confirm your setup works.
 
 ## Running Playwright E2E tests
+
+Start the test web server with `WP_TEST_ENV=1` in a separate terminal before
+running E2E. The [walkthrough](./e2e-test-environment-walkthrough.md#12-step-by-step-first-time-local-setup)
+has the full command and a WP-CLI-free fallback.
 
 ```bash
 # All E2E tests (headless)
