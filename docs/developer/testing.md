@@ -21,10 +21,16 @@ Automated tests for Tutor LMS live in the `tests/` directory:
 Run the installer once:
 
 ```bash
-composer test:install
+pnpm test:setup
 ```
 
-The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only.
+`test:setup` runs the installer and installs Chromium. The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only.
+
+To run only the installer:
+
+```bash
+composer test:install
+```
 
 The installer will:
 

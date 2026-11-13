@@ -17,6 +17,7 @@
     "tutor-kirki": "cd includes/kirki && npm run build && cp -r dist/* ../../includes/kirki",
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "composer test:unit",
+    "test:setup": "composer test:install && playwright install chromium",
     "test:e2e": "playwright install chromium && php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts",
     "test:e2e:smoke": "playwright install chromium && php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --grep @smoke",
     "test:e2e:journey": "playwright install chromium && php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --grep @journey",
