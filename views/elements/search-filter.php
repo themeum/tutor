@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
 ?>
 <?php if ( isset( $data ) ) : ?>
 

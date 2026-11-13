@@ -10,9 +10,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Backend_Page_Trait;
 use Tutor\Core\Input;

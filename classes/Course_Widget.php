@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Models\CourseModel;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Models\CourseModel;
 
 /**
  * Course Widget Class
