@@ -1213,7 +1213,10 @@ class OrderModel {
 			//phpcs:enable
 		} else {
 			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1391,9 +1394,11 @@ class OrderModel {
 			);
 			//phpcs:enable
 		} else {
-			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND earning.user_id = %d', $user_id );
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1406,8 +1411,6 @@ class OrderModel {
 					LEFT JOIN {$order_meta_table} AS order_meta
 						ON order_meta.order_id = o.id
 						AND order_meta.meta_key IN ({$order_meta_in_clause})
-					LEFT JOIN {$earning_table} AS earning
-						ON earning.order_id = o.id
 					WHERE 1 = %d
 					AND o.refund_amount > %d
 					{$user_clause}
