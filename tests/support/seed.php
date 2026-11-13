@@ -30,8 +30,7 @@ e2e_seed_assert( function_exists( 'tutor_utils' ), 'Tutor is not active.' );
 
 $e2e_env_file = dirname( __DIR__, 2 ) . '/.env';
 $e2e_env      = is_readable( $e2e_env_file ) ? (array) parse_ini_file( $e2e_env_file, false, INI_SCANNER_RAW ) : array();
-$e2e_password       = getenv( 'E2E_PASSWORD' ) ?: ( $e2e_env['E2E_PASSWORD'] ?? 'password' );
-$e2e_admin_password = getenv( 'E2E_ADMIN_PASSWORD' ) ?: ( $e2e_env['E2E_ADMIN_PASSWORD'] ?? ( getenv( 'ADMIN_PASSWORD' ) ?: ( $e2e_env['ADMIN_PASSWORD'] ?? $e2e_password ) ) );
+$e2e_password = getenv( 'E2E_PASSWORD' ) ?: ( $e2e_env['E2E_PASSWORD'] ?? 'password' );
 
 // Ensure Anyone Can Register is on so admin notices are suppressed.
 update_option( 'users_can_register', 1 );
@@ -41,7 +40,6 @@ $users = array(
 		'role'         => 'administrator',
 		'email'        => 'admin@example.test',
 		'display_name' => 'E2E Admin',
-		'password'     => $e2e_admin_password,
 	),
 	'instructor' => array(
 		'role'         => 'tutor_instructor',
@@ -90,7 +88,7 @@ foreach ( $users as $login => $data ) {
 		$user_id = wp_update_user(
 			array(
 				'ID'           => $user->ID,
-				'user_pass'    => $data['password'] ?? $e2e_password,
+				'user_pass'    => $e2e_password,
 				'user_email'   => $data['email'],
 				'display_name' => $data['display_name'],
 				'role'         => $data['role'],
@@ -100,7 +98,7 @@ foreach ( $users as $login => $data ) {
 		$user_id = wp_insert_user(
 			array(
 				'user_login'   => $login,
-				'user_pass'    => $data['password'] ?? $e2e_password,
+				'user_pass'    => $e2e_password,
 				'user_email'   => $data['email'],
 				'display_name' => $data['display_name'],
 				'role'         => $data['role'],

@@ -61,7 +61,7 @@ bin/e2e/
 
 ## Selectors
 
-Use lowercase `data-testid` (Playwright's default `testIdAttribute`). Do not add new `data-cy`. WordPress core screens have no test ids; use labels, roles, or their stable IDs there. `getByTestId()` is the default for plugin UI.
+Use lowercase `data-testid` (Playwright's default `testIdAttribute`). WordPress core screens have no test ids; use labels, roles, or their stable IDs there. `getByTestId()` is the default for plugin UI.
 
 ## Flake policy
 

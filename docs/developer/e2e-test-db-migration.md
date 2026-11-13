@@ -51,7 +51,7 @@ CI      wp server (WP_TEST_ENV=1) -------------------------> wordpress_test
 2. Copy `wp-config.php` and `wp-config.php.bak` aside.
 3. Dump the live DB (`local`).
 4. Record the current test count: `pnpm exec playwright test --list` must show 98 tests.
-5. Confirm `.env` has `SITE_URL`, `WP_TEST_DB_*`, `ADMIN_*`, and the five role credentials. It currently only has the four `WP_TEST_DB_*` keys.
+5. Confirm `.env` has `SITE_URL` and the `WP_TEST_DB_*` keys.
 
 Exit: a restorable backup exists and the current suite baseline is recorded.
 
@@ -105,7 +105,7 @@ Exit: `pnpm exec playwright test -c tests/e2e/playwright.config.ts --list` lists
   - assert live DB name, test DB name and PHPUnit DB name are all different;
   - assert the test names end in `_test`;
   - exit non-zero with a one-line message.
-- `.env.example` — `SITE_URL`, `WP_TEST_DB_*`, `WP_PHPUNIT_DB_NAME`, `WP_TEST_ACTIVE_PLUGINS`, `WP_TEST_HOSTS`, `ADMIN_*`, `E2E_*`.
+- `.env.example` — `SITE_URL`, `WP_TEST_DB_*`, `WP_PHPUNIT_DB_NAME`, `WP_TEST_ACTIVE_PLUGINS`, `WP_TEST_HOSTS`, `E2E_PASSWORD`.
 
 Exit: `composer test:install` prints what it would do; `composer test:install:apply` writes idempotently; `preflight` fails if any DB name is wrong.
 

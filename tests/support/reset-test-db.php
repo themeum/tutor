@@ -96,8 +96,8 @@ echo "==> Installing fresh WordPress core...\n";
 require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-$admin_user = getenv( 'ADMIN_USERNAME' ) ?: ( $env['ADMIN_USERNAME'] ?? 'admin' );
-$admin_pass = getenv( 'E2E_ADMIN_PASSWORD' ) ?: ( $env['E2E_ADMIN_PASSWORD'] ?? ( getenv( 'ADMIN_PASSWORD' ) ?: ( $env['ADMIN_PASSWORD'] ?? ( getenv( 'E2E_PASSWORD' ) ?: ( $env['E2E_PASSWORD'] ?? 'password' ) ) ) ) );
+$admin_user = 'admin';
+$admin_pass = getenv( 'E2E_PASSWORD' ) ?: ( $env['E2E_PASSWORD'] ?? 'password' );
 $site_title = 'Tutor LMS Test Site';
 $site_url   = getenv( 'SITE_URL' ) ?: ( $env['SITE_URL'] ?? ( getenv( 'E2E_BASE_URL' ) ?: 'http://localhost:8888' ) );
 

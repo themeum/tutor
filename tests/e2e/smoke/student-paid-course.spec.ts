@@ -15,9 +15,7 @@ test('student buys a paid course with the native manual payment method @smoke', 
 
   await page.goto(course.url);
   const buyNowBtn = page
-    .locator(
-      '[data-testid="tutor-buy-now"], [data-cy="tutor-buy-now"], a:has-text("Buy Now"):visible, button:has-text("Buy Now"):visible',
-    )
+    .locator('[data-testid="tutor-buy-now"], a:has-text("Buy Now"):visible, button:has-text("Buy Now"):visible')
     .first();
   await expect(buyNowBtn).toBeVisible();
   await buyNowBtn.click();
