@@ -122,6 +122,16 @@ describe('createTutorPlayer', () => {
     expect(store.setVolume).toHaveBeenLastCalledWith(0);
   });
 
+  it('safely handles stores where seek returns undefined or non-promise', () => {
+    const { store } = createStore({ duration: 60 });
+    // @ts-expect-error Mocking a store returning undefined from seek
+    store.seek = vi.fn(() => undefined);
+    const player = createTutorPlayer({ element: element(), store, provider: 'html5' });
+
+    expect(() => player.seek(30)).not.toThrow();
+    expect(store.seek).toHaveBeenCalledWith(30);
+  });
+
   it('emits fullscreenchange from the document event', () => {
     const { store } = createStore();
     const player = createTutorPlayer({ element: element(), store, provider: 'html5' });

@@ -345,4 +345,48 @@ describe('vimeoPatch', () => {
     adapter.currentTime = NaN;
     expect(adapter.currentTime).toBe(0);
   });
+
+  it('absorbs synchronous throw from originalSetCurrentTime without wedging the seek lock', async () => {
+    const originalSetCurrentTime = vi
+      .fn()
+      .mockImplementationOnce(() => {
+        throw new Error('Disconnected iframe');
+      })
+      .mockResolvedValue(20);
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+    };
+
+    const adapter = {
+      engine: player,
+      dispatchEvent: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    };
+
+    hookVimeoPlayer(adapter);
+
+    // Initial seek throws synchronously inside vendor SDK; should resolve gracefully without unhandled throw
+    const seek1 = player.setCurrentTime(10);
+    await expect(seek1).resolves.toBe(10);
+
+    // Lock was released, so subsequent seek can proceed immediately
+    const seek2 = player.setCurrentTime(20);
+    await expect(seek2).resolves.toBe(20);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+  });
+
+  it('asserts @videojs/vimeo-video vendor contract expectations', () => {
+    // Fails when @videojs/vimeo-video version or prototype changes so workarounds can be audited/upstreamed
+    expect(VimeoAdapter).toBeDefined();
+    expect(typeof VimeoAdapter.prototype.attach).toBe('function');
+    expect(typeof VimeoAdapter.prototype.load).toBe('function');
+
+    const desc = Object.getOwnPropertyDescriptor(VimeoAdapter.prototype, 'error');
+    expect(desc).toBeDefined();
+    expect(typeof desc?.get).toBe('function');
+  });
 });

@@ -16,6 +16,7 @@ describe('youtubeVideoId', () => {
     ['https://www.youtube.com/embed/videoseries?list=PL123', null],
     ['https://www.youtube.com/watch?v=watch', null],
     ['https://www.youtube.com/live_stream?channel=UC123', null],
+    ['https://www.youtube.com/embed/live_stream?channel=UC123', null],
     ['https://example.com/dQw4w9WgXcQ', null],
     ['not a url', null],
   ])('%s -> %s', (url, expected) => {

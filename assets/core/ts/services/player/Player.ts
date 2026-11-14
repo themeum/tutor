@@ -165,7 +165,7 @@ export const createTutorPlayer = ({ element, store, provider, onDispose }: Creat
         return;
       }
       // A rejected seek must not surface as an unhandled promise rejection.
-      void result.catch((err: unknown) => {
+      void Promise.resolve(result).catch((err: unknown) => {
         // eslint-disable-next-line no-console
         console.debug('[tutor] player seek failed:', err);
       });

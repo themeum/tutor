@@ -230,6 +230,7 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
   }
 
   #setupYouTubePortraitDetection(): void {
+    const isNarrow = (w: number, h: number): boolean => w / h < 16 / 9 - 0.01;
     const ytv = this.querySelector('youtube-video');
     const src = ytv?.getAttribute('src') || '';
     if (this.classList.contains('is-portrait') || src.includes('/shorts/')) {
@@ -272,7 +273,7 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
         if (data?.info?.videoContentRect) {
           const { width, height, left, top } = data.info.videoContentRect;
           if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-            if (height > width || ((left ?? 0) > 0 && (top ?? 0) === 0)) {
+            if (isNarrow(width, height) || ((left ?? 0) > 0 && (top ?? 0) === 0)) {
               setPortrait(true);
             }
           }
@@ -309,7 +310,7 @@ class TutorVideoPlayerElement extends PlayerElementBaseClass {
         rect.width > 0 &&
         rect.height > 0
       ) {
-        if (rect.height > rect.width || ((rect.left ?? 0) > 0 && (rect.top ?? 0) === 0)) {
+        if (isNarrow(rect.width, rect.height) || ((rect.left ?? 0) > 0 && (rect.top ?? 0) === 0)) {
           setPortrait(true);
           return;
         }

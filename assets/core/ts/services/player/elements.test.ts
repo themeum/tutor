@@ -230,6 +230,31 @@ describe('tutor-video-player element', () => {
     host.player?.dispose();
   });
 
+  it('detects narrow 4:3 YouTube video from postMessage videoContentRect', () => {
+    defineVideoPlayer();
+    const host = createPlayerElement(
+      { provider: 'youtube', src: 'https://www.youtube.com/watch?v=12345678901' },
+      document,
+    );
+    document.body.appendChild(host);
+
+    expect(host.classList.contains('is-portrait')).toBe(false);
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        data: JSON.stringify({
+          event: 'infoDelivery',
+          info: { videoContentRect: { width: 640, height: 480 } },
+        }),
+      }),
+    );
+
+    expect(host.classList.contains('is-portrait')).toBe(true);
+    expect(host.querySelector('youtube-video')?.classList.contains('is-portrait')).toBe(true);
+
+    host.player?.dispose();
+  });
+
   it('dispatches tutor-player:ready and tutor-player:dispose events on connect and dispose', () => {
     defineVideoPlayer();
     const host = createPlayerElement(

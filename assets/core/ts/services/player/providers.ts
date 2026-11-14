@@ -16,7 +16,7 @@ const parseUrl = (url: string): URL | null => {
   }
 };
 
-const YT_ID_REGEX = /^(?!videoseries$)[\w-]{11}$/;
+const YT_ID_REGEX = /^(?!videoseries$|live_stream$)[\w-]{11}$/;
 const VIMEO_ID_REGEX = /^\d+$/;
 const VIMEO_HASH_REGEX = /^[a-z0-9]+$/i;
 

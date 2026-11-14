@@ -166,7 +166,16 @@ export const hookVimeoPlayer = (adapter: {
         const mine = ++latestAttempt;
         attempts += 1;
 
-        const call = Promise.resolve(originalSetCurrentTime.call(player, targetTime));
+        let call: Promise<unknown>;
+        try {
+          call = Promise.resolve(originalSetCurrentTime.call(player, targetTime));
+        } catch {
+          if (mine === latestAttempt) {
+            release();
+          }
+          return;
+        }
+
         // A dropped attempt settles late, after a newer one owns the seek.
         const settle = (time: number | undefined): void => {
           if (mine !== latestAttempt) {
@@ -199,8 +208,6 @@ export const hookVimeoPlayer = (adapter: {
       // not wedge every later seek. One overlapping message beats a dead player.
       const hardTimer = setTimeout(release, SEEK_TIMEOUT_MS * 2);
 
-      attempt();
-
       inFlight = Promise.race([
         caller,
         new Promise<number>((resolve) => {
@@ -208,7 +215,10 @@ export const hookVimeoPlayer = (adapter: {
         }),
       ]).catch(() => targetTime);
 
-      return inFlight;
+      const seekPromise = inFlight;
+      attempt();
+
+      return seekPromise;
     };
 
     player.setCurrentTime = function (time: number): Promise<number> {
