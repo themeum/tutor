@@ -13,6 +13,7 @@ interface HookedVimeoPlayer {
   on?: (event: string, callback: (...args: unknown[]) => void) => void;
   off?: (event: string, callback?: (...args: unknown[]) => void) => void;
   setCurrentTime?: (time: number) => Promise<number>;
+  getCurrentTime?: () => Promise<number>;
 }
 
 interface VimeoAdapterProto {
@@ -25,12 +26,19 @@ interface VimeoAdapterProto {
 }
 
 const SEEK_TIMEOUT_MS = 4000;
+// Vimeo silently drops seeks posted while the embed is still initializing; it acknowledges
+// an accepted one with `seeking` within a few hundred milliseconds. Its own pending
+// `loadVideo` can then reset the player to 0, so verify the position afterwards.
+const SEEK_RETRY_MS = 1500;
+const SEEK_VERIFY_MS = 1000;
+const SEEK_MAX_ATTEMPTS = 3;
 
 /**
- * Hardens a VimeoPlayer instance against rapid seek errors:
+ * Hardens a VimeoPlayer instance against rapid seek errors and load-time seeks:
  * 1. Removes the blanket fatal error handler registered by VimeoAdapter.
  * 2. Installs an error filter that ignores non-fatal seek/method aborts (e.g. AbortError, RangeError).
  * 3. Serializes rapid setCurrentTime calls so overlapping postMessages don't trigger Vimeo iframe rejections.
+ * 4. Retries seeks the loading embed drops and re-applies one that its pending `loadVideo` reset.
  */
 export const hookVimeoPlayer = (adapter: {
   engine?: HookedVimeoPlayer | null;
@@ -93,42 +101,108 @@ export const hookVimeoPlayer = (adapter: {
     let pending: { time: number; resolve: (time: number) => void } | null = null;
     let seekId = 0;
 
-    const runSeek = (targetTime: number): Promise<number> => {
+    const runSeek = (targetTime: number, rechecked = false): Promise<number> => {
       const id = ++seekId;
       let softTimer: ReturnType<typeof setTimeout> | undefined;
+      let retryTimer: ReturnType<typeof setTimeout> | undefined;
+      let accepted = false;
+      let attempts = 0;
+      let latestAttempt = 0;
+      let released = false;
 
-      const call = Promise.resolve(originalSetCurrentTime.call(player, targetTime));
+      let resolveCaller: (time: number) => void = () => undefined;
+      const caller = new Promise<number>((resolve) => {
+        resolveCaller = resolve;
+      });
+
+      const onSeeking = (): void => {
+        accepted = true;
+      };
+
+      // Vimeo's pending `loadVideo` resets the player after an acknowledged seek (the resume
+      // seek at `loadedmetadata` is its usual victim), so re-apply once if it fell behind.
+      const verify = async (): Promise<void> => {
+        if (id !== seekId || inFlight) {
+          return;
+        }
+        const current = (await Promise.resolve(player.getCurrentTime?.()).catch(() => NaN)) ?? NaN;
+        if (id !== seekId || inFlight || !Number.isFinite(current) || current + 1 >= targetTime) {
+          return;
+        }
+        void runSeek(targetTime, true);
+      };
 
       // Hold the lock until the SDK call settles: releasing it at the soft timeout would let
       // the next postMessage overlap a still-pending one, which is what this serializes away.
       // Each caller still resolves at the soft timeout so a hung seek cannot freeze the UI.
       const release = (): void => {
+        if (released) {
+          return;
+        }
+        released = true;
         adapter.removeEventListener?.('seeked', release);
+        adapter.removeEventListener?.('seeking', onSeeking);
         if (id !== seekId) {
           // A newer seek owns the lock; this abandoned call settled too late to free it.
           return;
         }
+        // `seeked`/the hard cap can end a seek whose SDK promise never settles.
+        resolveCaller(targetTime);
         clearTimeout(softTimer);
         clearTimeout(hardTimer);
+        clearTimeout(retryTimer);
         inFlight = null;
+        if (accepted && !rechecked) {
+          setTimeout(() => void verify(), SEEK_VERIFY_MS);
+        }
         if (pending) {
           const next = pending;
           pending = null;
           void runSeek(next.time).then(next.resolve, next.resolve);
         }
       };
-      void call.then(release, release);
 
-      // The iframe can finish the seek without the SDK promise settling (`seeked` is the
-      // ground truth); release then so the next seek is not delayed by the hard cap.
+      const attempt = (): void => {
+        const mine = ++latestAttempt;
+        attempts += 1;
+
+        const call = Promise.resolve(originalSetCurrentTime.call(player, targetTime));
+        // A dropped attempt settles late, after a newer one owns the seek.
+        const settle = (time: number | undefined): void => {
+          if (mine !== latestAttempt) {
+            return;
+          }
+          if (id === seekId) {
+            resolveCaller(Number.isFinite(time) ? (time as number) : targetTime);
+          }
+          release();
+        };
+        void call.then(
+          (time) => settle(typeof time === 'number' ? time : undefined),
+          () => settle(undefined),
+        );
+
+        retryTimer = setTimeout(() => {
+          if (mine !== latestAttempt || accepted || attempts >= SEEK_MAX_ATTEMPTS) {
+            return;
+          }
+          attempt();
+        }, SEEK_RETRY_MS);
+      };
+
+      // The iframe acknowledges a seek with `seeking`; its `seeked` is the ground truth even
+      // when the SDK promise never settles, so release then instead of waiting for the cap.
+      adapter.addEventListener?.('seeking', onSeeking, { once: true });
       adapter.addEventListener?.('seeked', release, { once: true });
 
       // Hard cap: a request the SDK never settles (iframe reload, dropped postMessage) must
       // not wedge every later seek. One overlapping message beats a dead player.
       const hardTimer = setTimeout(release, SEEK_TIMEOUT_MS * 2);
 
+      attempt();
+
       inFlight = Promise.race([
-        call,
+        caller,
         new Promise<number>((resolve) => {
           softTimer = setTimeout(() => resolve(targetTime), SEEK_TIMEOUT_MS);
         }),

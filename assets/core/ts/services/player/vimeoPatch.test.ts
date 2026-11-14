@@ -111,6 +111,79 @@ describe('vimeoPatch', () => {
     expect(originalSetCurrentTime).toHaveBeenLastCalledWith(30);
   });
 
+  it('retries a seek the vimeo embed silently drops before it is ready', async () => {
+    vi.useFakeTimers();
+
+    const dropped = new Promise<number>(() => undefined);
+    const originalSetCurrentTime = vi
+      .fn()
+      .mockImplementationOnce(() => dropped)
+      .mockResolvedValueOnce(15);
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+    };
+
+    hookVimeoPlayer({ engine: player, dispatchEvent: vi.fn() });
+
+    const seek = player.setCurrentTime(15);
+
+    // A dropped seek never settles and is never acknowledged with `seeking`.
+    await vi.advanceTimersByTimeAsync(1499);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+    expect(originalSetCurrentTime).toHaveBeenLastCalledWith(15);
+    await expect(seek).resolves.toBe(15);
+
+    vi.useRealTimers();
+  });
+
+  it('re-applies a seek that the pending loadVideo reset to 0', async () => {
+    vi.useFakeTimers();
+
+    const originalSetCurrentTime = vi.fn().mockResolvedValue(10);
+    const getCurrentTime = vi.fn().mockResolvedValue(0);
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+      getCurrentTime,
+    };
+
+    let onSeeking: (() => void) | undefined;
+    const adapter = {
+      engine: player,
+      dispatchEvent: vi.fn(),
+      addEventListener: vi.fn((type: string, callback: () => void) => {
+        if (type === 'seeking') {
+          onSeeking = callback;
+        }
+      }),
+      removeEventListener: vi.fn(),
+    };
+
+    hookVimeoPlayer(adapter);
+
+    const seek = player.setCurrentTime(10);
+    onSeeking?.();
+    await vi.advanceTimersByTimeAsync(0);
+    await expect(seek).resolves.toBe(10);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(1);
+
+    // The embed's pending loadVideo reset the player after the acknowledged seek.
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(getCurrentTime).toHaveBeenCalledTimes(1);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+    expect(originalSetCurrentTime).toHaveBeenLastCalledWith(10);
+
+    vi.useRealTimers();
+  });
+
   it('holds the seek lock after a timeout until the SDK call settles', async () => {
     vi.useFakeTimers();
 
@@ -130,9 +203,24 @@ describe('vimeoPatch', () => {
       setCurrentTime: originalSetCurrentTime,
     };
 
-    hookVimeoPlayer({ engine: player, dispatchEvent: vi.fn() });
+    let onSeeking: (() => void) | undefined;
+    const adapter = {
+      engine: player,
+      dispatchEvent: vi.fn(),
+      addEventListener: vi.fn((type: string, callback: () => void) => {
+        if (type === 'seeking') {
+          onSeeking = callback;
+        }
+      }),
+      removeEventListener: vi.fn(),
+    };
+
+    hookVimeoPlayer(adapter);
 
     const seek1 = player.setCurrentTime(10);
+
+    // Vimeo acknowledged the seek; no retry may overlap the pending call.
+    onSeeking?.();
 
     // The caller stops waiting at the timeout...
     await vi.advanceTimersByTimeAsync(4000);
@@ -167,9 +255,22 @@ describe('vimeoPatch', () => {
       setCurrentTime: originalSetCurrentTime,
     };
 
-    hookVimeoPlayer({ engine: player, dispatchEvent: vi.fn() });
+    let onSeeking: (() => void) | undefined;
+    const adapter = {
+      engine: player,
+      dispatchEvent: vi.fn(),
+      addEventListener: vi.fn((type: string, callback: () => void) => {
+        if (type === 'seeking') {
+          onSeeking = callback;
+        }
+      }),
+      removeEventListener: vi.fn(),
+    };
+
+    hookVimeoPlayer(adapter);
 
     const seek1 = player.setCurrentTime(10);
+    onSeeking?.();
     await vi.advanceTimersByTimeAsync(4000);
     await expect(seek1).resolves.toBe(10);
 
