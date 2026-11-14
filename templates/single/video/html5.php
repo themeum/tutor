@@ -25,11 +25,15 @@ do_action( 'tutor_lesson/single/before/video/html5' );
 
 <?php if ( $video_url ) : ?>
 	<div class="tutor-video-player">
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ?? null ) ); ?>">
 		<div class="loading-spinner" aria-hidden="true"></div>
-		<video poster="<?php echo esc_url( $poster_url ); ?>" class="tutorPlayer" playsinline controls >
-			<source src="<?php echo esc_url( $video_url ); ?>" type="<?php echo esc_attr( tutor_utils()->avalue_dot( 'type', $video_info_array ) ); ?>">
-		</video>
+		<tutor-video-player>
+			<video-skin>
+				<video poster="<?php echo esc_url( $poster_url ); ?>" playsinline controls >
+					<source src="<?php echo esc_url( $video_url ); ?>" type="<?php echo esc_attr( tutor_utils()->avalue_dot( 'type', $video_info_array ) ); ?>">
+				</video>
+				<?php do_action( 'tutor_video_player/inside_skin' ); ?>
+			</video-skin>
+		</tutor-video-player>
 	</div>
 <?php endif; ?>
 

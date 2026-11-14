@@ -9,7 +9,6 @@ import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
 import { passwordInputMeta } from '@Core/ts/components/password-input';
-import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { readMoreMeta } from '@Core/ts/components/read-more';
@@ -45,6 +44,10 @@ import { isMobileDevice, isRTL } from '@Core/ts/utils/util';
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
 
+// Exposed at module scope so deferred engine bundles (the player) can register their
+// services before initializePlugin runs.
+window.TutorComponentRegistry = TutorComponentRegistry;
+
 const initializePlugin = async () => {
   TutorComponentRegistry.registerAll({
     components: [
@@ -59,7 +62,6 @@ const initializePlugin = async () => {
       readMoreMeta,
       starRatingMeta,
       toastMeta,
-      playerMeta,
       passwordInputMeta,
       copyToClipboardMeta,
       wpEditorMeta,
@@ -116,7 +118,6 @@ const initializePlugin = async () => {
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
-  window.TutorComponentRegistry = TutorComponentRegistry;
   window.Alpine = Alpine;
 
   // Expose TutorCore with services and utilities

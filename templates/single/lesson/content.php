@@ -40,6 +40,8 @@ $next_is_locked = ! ( $is_enrolled || $next_is_preview || $is_public );
 
 $json_data                                 = array();
 $json_data['post_id']                      = get_the_ID();
+$lesson_title                              = wp_strip_all_tags( html_entity_decode( apply_filters( 'the_title', get_post_field( 'post_title', $course_content_id ), $course_content_id ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+$json_data['lesson_title']                 = $lesson_title;
 $json_data['best_watch_time']              = 0;
 $json_data['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
 

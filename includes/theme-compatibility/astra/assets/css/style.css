@@ -16,19 +16,3 @@
 .tutor-cart-empty-state a {
 	text-decoration: none !important;
 }
-
-.plyr input[type=range]::-webkit-slider-runnable-track {
-	box-shadow: none !important;
-}
-
-.plyr input[type=range]::-moz-range-track {
-	box-shadow: none !important;
-}
-
-.plyr input[type=range]::-ms-fill-lower {
-	box-shadow: none !important;
-}
-
-.plyr input[type=range]::-ms-fill-upper {
-	box-shadow: none !important;
-}

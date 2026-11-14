@@ -55,7 +55,6 @@ declare global {
   interface Window {
     Alpine: AlpineType;
     TutorComponentRegistry: typeof TutorComponentRegistry;
-    TutorLessonPlayer?: Plyr;
     TutorCore: TutorCore & {
       toast?: ToastService;
       security?: {

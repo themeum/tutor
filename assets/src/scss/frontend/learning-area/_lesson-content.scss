@@ -127,6 +127,12 @@
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-lg;
       overflow: hidden;
+
+      .tutor-lesson-video-wrapper {
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+        overflow: hidden;
+      }
     }
   }
 
@@ -140,6 +146,10 @@
       .tutor-lesson-image-wrapper {
         margin-inline: -$tutor-spacing-6;
         margin-bottom: $tutor-spacing-6;
+        border-radius: 0;
+        border-bottom-left-radius: $tutor-radius-2xl;
+        border-bottom-right-radius: $tutor-radius-2xl;
+        overflow: hidden;
       }
 
       .tutor-tabs-nav {
