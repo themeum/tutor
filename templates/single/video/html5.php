@@ -25,7 +25,6 @@ do_action( 'tutor_lesson/single/before/video/html5' );
 
 <?php if ( $video_url ) : ?>
 	<div class="tutor-video-player">
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ?? null ) ); ?>">
 		<div class="loading-spinner" aria-hidden="true"></div>
 		<tutor-video-player>
 			<video-skin>

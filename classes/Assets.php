@@ -176,11 +176,12 @@ class Assets {
 		// Load available kids mode icons to avoid frontend 404s if kids mode is active.
 		$kids_icons = array();
 		if ( tutor_utils()->is_kids_mode() ) {
-			$kids_icons = array_map(
+			$kids_icon_files = glob( tutor()->path . 'assets/icons/kids/*.svg' );
+			$kids_icons      = array_map(
 				function ( $file ) {
 					return basename( $file, '.svg' );
 				},
-				glob( tutor()->path . 'assets/icons/kids/*.svg' ) ?: array()
+				$kids_icon_files ? $kids_icon_files : array()
 			);
 		}
 
