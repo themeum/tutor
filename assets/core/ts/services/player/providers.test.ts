@@ -4,18 +4,19 @@ import { detectSource, providerFromUrl, vimeoVideoId, youtubeVideoId } from './p
 
 describe('youtubeVideoId', () => {
   it.each([
-    ['https://www.youtube.com/watch?v=abc123', 'abc123'],
-    ['https://www.youtube.com/watch?x=1&v=abc123', 'abc123'],
-    ['https://youtu.be/abc123?t=10', 'abc123'],
-    ['https://www.youtube.com/embed/abc123?rel=0', 'abc123'],
-    ['https://www.youtube-nocookie.com/embed/abc123', 'abc123'],
-    ['https://www.youtube.com/shorts/abc123', 'abc123'],
-    ['https://www.youtube.com/live/abc123', 'abc123'],
+    ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'dQw4w9WgXcQ'],
+    ['https://www.youtube.com/watch?x=1&v=dQw4w9WgXcQ', 'dQw4w9WgXcQ'],
+    ['https://youtu.be/dQw4w9WgXcQ?t=10', 'dQw4w9WgXcQ'],
+    ['https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0', 'dQw4w9WgXcQ'],
+    ['https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', 'dQw4w9WgXcQ'],
+    ['https://www.youtube.com/shorts/dQw4w9WgXcQ', 'dQw4w9WgXcQ'],
+    ['https://www.youtube.com/live/dQw4w9WgXcQ', 'dQw4w9WgXcQ'],
     ['https://www.youtube.com/watch?v=abc%26list=x', null],
     ['https://www.youtube.com/watch?v=invalid!id@', null],
     ['https://www.youtube.com/embed/videoseries?list=PL123', null],
     ['https://www.youtube.com/watch?v=watch', null],
-    ['https://example.com/abc123', null],
+    ['https://www.youtube.com/live_stream?channel=UC123', null],
+    ['https://example.com/dQw4w9WgXcQ', null],
     ['not a url', null],
   ])('%s -> %s', (url, expected) => {
     expect(youtubeVideoId(url)).toBe(expected);
@@ -31,6 +32,10 @@ describe('vimeoVideoId', () => {
     expect(vimeoVideoId('https://player.vimeo.com/video/12345/abcdef')).toEqual({ id: '12345', hash: 'abcdef' });
     expect(vimeoVideoId('https://vimeo.com/channels/staffpicks/12345')).toEqual({ id: '12345', hash: undefined });
     expect(vimeoVideoId('https://vimeo.com/showcase/1/video/12345')).toEqual({ id: '12345', hash: undefined });
+    expect(vimeoVideoId('https://vimeo.com/groups/team/videos/12345')).toEqual({ id: '12345', hash: undefined });
+    // A listing URL has no video id; the numbers before `videos` are group ids.
+    expect(vimeoVideoId('https://vimeo.com/groups/123/videos')).toBeNull();
+    expect(vimeoVideoId('https://vimeo.com/showcase/1/video')).toBeNull();
     expect(vimeoVideoId('https://vimeo.com/notanid')).toBeNull();
     expect(vimeoVideoId('https://example.com/12345')).toBeNull();
   });
@@ -38,7 +43,7 @@ describe('vimeoVideoId', () => {
 
 describe('providerFromUrl', () => {
   it('classifies known hosts and same/cross-origin files', () => {
-    expect(providerFromUrl('https://www.youtube.com/watch?v=abc')).toBe('youtube');
+    expect(providerFromUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBe('youtube');
     expect(providerFromUrl('https://vimeo.com/123')).toBe('vimeo');
     expect(providerFromUrl('https://cdn.example.com/a.mp4', 'lesson.test')).toBe('external');
     expect(providerFromUrl('https://lesson.test/wp-content/uploads/a.mp4', 'lesson.test')).toBe('html5');
@@ -61,11 +66,11 @@ describe('detectSource', () => {
 
   it('reads a YouTube iframe embed', () => {
     const root = document.createElement('div');
-    root.innerHTML = '<div class="tutorPlayer"><iframe src="https://www.youtube.com/embed/abc123"></iframe></div>';
+    root.innerHTML = '<div class="tutorPlayer"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe></div>';
 
     expect(detectSource(root.querySelector('.tutorPlayer') as Element)).toEqual({
       provider: 'youtube',
-      src: 'https://www.youtube.com/embed/abc123',
+      src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     });
   });
 

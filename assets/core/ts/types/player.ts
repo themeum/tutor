@@ -37,7 +37,9 @@ export interface TutorPlayer {
   seek(time: number): void;
 
   on<E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe;
+  /** Unhooks listeners and stops syncing, leaving the store and DOM alive. Used by the element's own teardown. */
   release?(): void;
+  /** Full teardown: releases the handle, destroys the store and removes the element. */
   dispose(): void;
 }
 

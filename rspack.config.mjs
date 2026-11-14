@@ -260,7 +260,7 @@ const createConfig = (env, options) => {
           },
         }),
         new rspack.SwcJsMinimizerRspackPlugin({
-          test: /(?:tutor-player.*|lazy-chunks\/(?:tutor-player-.*|\d+))\.js(?:\?.*)?$/,
+          test: /tutor-player.*\.js(?:\?.*)?$/,
           extractComments: false,
           minimizerOptions: {
             compress: true,

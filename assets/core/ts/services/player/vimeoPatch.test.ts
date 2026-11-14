@@ -111,6 +111,119 @@ describe('vimeoPatch', () => {
     expect(originalSetCurrentTime).toHaveBeenLastCalledWith(30);
   });
 
+  it('holds the seek lock after a timeout until the SDK call settles', async () => {
+    vi.useFakeTimers();
+
+    let resolveFirst: (time: number) => void = () => undefined;
+    const firstPromise = new Promise<number>((resolve) => {
+      resolveFirst = resolve;
+    });
+
+    const originalSetCurrentTime = vi
+      .fn()
+      .mockImplementationOnce(() => firstPromise)
+      .mockResolvedValue(30);
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+    };
+
+    hookVimeoPlayer({ engine: player, dispatchEvent: vi.fn() });
+
+    const seek1 = player.setCurrentTime(10);
+
+    // The caller stops waiting at the timeout...
+    await vi.advanceTimersByTimeAsync(4000);
+    await expect(seek1).resolves.toBe(10);
+
+    // ...but the next seek still queues instead of overlapping the pending postMessage.
+    const seek2 = player.setCurrentTime(30);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(1);
+
+    resolveFirst(10);
+    await vi.advanceTimersByTimeAsync(0);
+
+    await expect(seek2).resolves.toBe(30);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+    expect(originalSetCurrentTime).toHaveBeenLastCalledWith(30);
+
+    vi.useRealTimers();
+  });
+
+  it('releases the seek lock at the hard cap when the SDK never settles', async () => {
+    vi.useFakeTimers();
+
+    const never = new Promise<number>(() => undefined);
+    const originalSetCurrentTime = vi
+      .fn()
+      .mockImplementationOnce(() => never)
+      .mockResolvedValue(42);
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+    };
+
+    hookVimeoPlayer({ engine: player, dispatchEvent: vi.fn() });
+
+    const seek1 = player.setCurrentTime(10);
+    await vi.advanceTimersByTimeAsync(4000);
+    await expect(seek1).resolves.toBe(10);
+
+    const seek2 = player.setCurrentTime(20);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(1);
+
+    // 8s after the abandoned call started, the lock opens and the queued target runs.
+    await vi.advanceTimersByTimeAsync(4000);
+    await expect(seek2).resolves.toBe(42);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+    expect(originalSetCurrentTime).toHaveBeenLastCalledWith(20);
+
+    vi.useRealTimers();
+  });
+
+  it('releases the seek lock as soon as the adapter reports seeked', async () => {
+    const never = new Promise<number>(() => undefined);
+    const originalSetCurrentTime = vi
+      .fn()
+      .mockImplementationOnce(() => never)
+      .mockResolvedValue(7);
+    let onSeeked: (() => void) | undefined;
+
+    const player = {
+      off: vi.fn(),
+      on: vi.fn(),
+      setCurrentTime: originalSetCurrentTime,
+    };
+
+    const adapter = {
+      engine: player,
+      dispatchEvent: vi.fn(),
+      addEventListener: vi.fn((type: string, callback: () => void) => {
+        if (type === 'seeked') {
+          onSeeked = callback;
+        }
+      }),
+      removeEventListener: vi.fn(),
+    };
+
+    hookVimeoPlayer(adapter);
+
+    void player.setCurrentTime(10);
+    const seek2 = player.setCurrentTime(20);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(1);
+
+    // The iframe finished the first seek even though its SDK promise never settles.
+    onSeeked?.();
+
+    await expect(seek2).resolves.toBe(7);
+    expect(originalSetCurrentTime).toHaveBeenCalledTimes(2);
+    expect(originalSetCurrentTime).toHaveBeenLastCalledWith(20);
+  });
+
   it('clamps and validates currentTime on VimeoAdapter prototype', () => {
     patchVimeoProvider();
 

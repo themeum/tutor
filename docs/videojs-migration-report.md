@@ -19,7 +19,7 @@ Plyr was a vendored copy of 3.8.4 (`assets/lib/plyr/`). The reasons for replacin
 
 | Area                                                                            | Change                                                                                                                                                                                                            |
 | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Engine (new, `assets/core/ts/services/player/`)                                 | `index.ts` (IIFE entry, ADR-0011), `PlayerService.ts`, `Player.ts` (handle), `elements.ts` (DOM builder + shadow patches), `providers.ts` (source detection), `legacy.ts` (deprecated `window.TutorLessonPlayer` shim) |
+| Engine (new, `assets/core/ts/services/player/`)                                 | `index.ts` (IIFE entry, ADR-0011), `PlayerService.ts`, `Player.ts` (handle), `elements.ts` (DOM builder + shadow patches), `providers.ts` (source detection)                                                       |
 | Contract (new, `assets/core/ts/types/player.ts`)                                | `TutorPlayer`, `PlayerProvider`, `PlayerEvent`, `PlayerService`. Types only — safe for IIFE bundles                                                                                                               |
 | Controller (rewritten, `assets/src/js/frontend/learning-area/lesson/player.ts`) | `LessonPlaybackController`: Strict Mode guard, completion button, Watch Progress Sync, Best Watch Time resume, auto-next, mobile Vimeo mute, fullscreen title swap + stuck-store resync                           |
 | Paths wired                                                                     | Learning Area (`initializeLessonPlayer`), legacy + course intro (`tutor-front.js` via `TutorCore.player.create()`)                                                                      |
@@ -86,9 +86,9 @@ First mount pays custom-element definition/upgrade; steady-state mounts are sing
 | Consistent skinned controls for every provider: captions, playback rate, quality/audio tracks, PiP, remote playback; unsupported controls hidden per-device | +~46 KB gzip JS on HTML5/external lessons, +~54 KB YouTube, +~60 KB Vimeo (§3.1)                                                                                                                                 |
 | Container-first fullscreen for **all** providers — YouTube chrome is gone without vendoring the skin (ADR-0009)                                             | Vimeo's SDK relays container fullscreen into the embed and echoes back asynchronously; its flag could stick and brick the toggle — corrected at our layer with an exit-time flag reset + store re-sync (see §5.4) |
 | One typed API (`TutorCore.player`) for free, Pro, and future callers; fake-able handle with full unit coverage                                              | A hard rule no IIFE bundle may import the engine stays (ADR-0002's ESM split is superseded by ADR-0011): shared values live in `@Core/ts/constant`                                                |
-| Lesson behaviours preserved: Strict Mode, resume, Watch Progress Sync, auto-next, mobile Vimeo mute, `is-fullscreen` class, `TutorLessonPlayer` compat shim | Hard cutover, no feature flag; rollback is re-enqueueing Plyr (engine is inert until `create()` is called)                                                                                                        |
+| Lesson behaviours preserved: Strict Mode, resume, Watch Progress Sync, auto-next, mobile Vimeo mute, `is-fullscreen` class | Hard cutover, no feature flag; `window.TutorLessonPlayer` is gone, so Pro and addons must read `TutorCore.player`                                                                                                 |
 | Skin title region repurposed: provider title suppressed, lesson title shown in fullscreen only                                                              | Browser floor regresses to roughly Chrome/Edge 111+, Safari/iOS 16.4+, Firefox 121+ (~91.5% of users); older browsers, most in-app webviews, and smart TVs lose full support — deliberate per ADR-0001            |
-| Release ordering decoupled via the one-cycle `TutorLessonPlayer` adapter                                                                                    | Pro must still ship after free for the new affordances                                                                                                                                                            |
+| Release ordering coupled: Pro notes read the same `TutorCore.player` handle                                                       | Pro must ship alongside free; the `TutorLessonPlayer` shim that decoupled them is removed                                                                                                                         |
 
 Deliberately **not** taken: vendored skin (ADR-0003 fallback), YouTube-only element without fullscreen (ADR-0008 fallback), caption/scrub-preview authoring (ADR-0006), note markers on the progress bar, `embedded`/`shortcode` in the engine.
 
@@ -107,7 +107,6 @@ flowchart TD
     E -->|"TutorPlayer handle"| H["LessonPlaybackController"]
     H -->|"rules: strict/resume/<br/>sync/auto-next/title"| B
     E -->|"getActive(), events"| I["tutor-pro notes<br/>Take Note, seek"]
-    E -->|"deprecated shim"| J["window.TutorLessonPlayer"]
 ```
 
 Two layers split along the engine boundary (plan §Architecture): the engine owns Video.js and knows nothing about lessons; the controller owns lesson rules and knows nothing about Video.js internals — it only sees the `TutorPlayer` handle. Templates now declare the player tree (ADR-0010, supersedes ADR-0004); legacy `.tutorPlayer` markup still mounts through `detectSource()` + `createPlayerElement()` for one deprecation cycle.
@@ -178,8 +177,8 @@ flowchart TD
 ## 6. Verification status and follow-ups
 
 - Done: unit/type/build gates (§3.3), Plyr removal, Pro migration, Take Note positioning, radius/aspect fixes, fullscreen title + toggle fixes, zips rebuilt (`tutor-4.1.1.zip`, `tutor-pro-4.1.1.zip`).
-- Size follow-up (2026-10-18): the player assets minify in the production build via `minify-videojs.mjs` (engine + adapter chunks + i18n locale packs); `compress: false` untouched, other bundles byte-identical, release zip −58,638 B deflated (report sections 3.1, 3.3).
+- Size follow-up: player assets minify in the production build through a second `SwcJsMinimizerRspackPlugin` scoped to `tutor-player*` chunks (engine + provider adapter chunks); `compress: false` is untouched for every other bundle (report sections 3.1, 3.3).
 - Review round 2 (2026-10-17): engine cut from the caller bundles and the registry shared through `window`; enqueue gated on `has_video_in_single()`; strict mode tolerates throttled timers; legacy tooltip and init guard restored; raw provider URLs; path-form Vimeo hashes; dead player surface removed (details in the issue 05 record).
 - Still human-gated: the manual provider matrix (Chrome, Firefox, Safari, iOS Safari × all providers, plan §Layer 3) and the final merge approval.
-- After one release cycle: remove the deprecated `window.TutorLessonPlayer` adapter and `tutorLessonPlayerReady`.
+- Pro and addons must read `TutorCore.player` (or `tutorLessonPlayerReady`'s `detail.player`): the `window.TutorLessonPlayer` shim and its global were removed, not deprecated.
 - Note: `TUTOR_ENV` is `PROD` on test sites, so JS/CSS are version-pinned — hard-refresh lesson pages (or bump the version) when validating new bundles.

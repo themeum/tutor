@@ -16,7 +16,7 @@ const parseUrl = (url: string): URL | null => {
   }
 };
 
-const YT_ID_REGEX = /^(?!videoseries$|watch$)[\w-]{1,64}$/;
+const YT_ID_REGEX = /^(?!videoseries$)[\w-]{11}$/;
 const VIMEO_ID_REGEX = /^\d+$/;
 const VIMEO_HASH_REGEX = /^[a-z0-9]+$/i;
 
@@ -66,9 +66,15 @@ export const vimeoVideoId = (url: string): { id: string; hash?: string } | null 
     return hash && VIMEO_HASH_REGEX.test(hash) ? { id, hash } : { id };
   }
 
-  const videoIdx = parts.indexOf('video');
-  if (videoIdx >= 0 && parts[videoIdx + 1] && VIMEO_ID_REGEX.test(parts[videoIdx + 1])) {
+  // `/showcase/1/video/2` and `/groups/team/videos/2` put the real id after `video(s)`.
+  const videoIdx = parts.findIndex((part) => part === 'video' || part === 'videos');
+  if (videoIdx >= 0) {
     const id = parts[videoIdx + 1];
+    // A listing URL (`/groups/team/videos`) has no id after the segment; the numbers
+    // before it belong to the group/showcase, not to a video.
+    if (!id || !VIMEO_ID_REGEX.test(id)) {
+      return null;
+    }
     const next = parts[videoIdx + 2];
     const hash = next && VIMEO_HASH_REGEX.test(next) ? next : undefined;
     return hash ? { id, hash } : { id };

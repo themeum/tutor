@@ -2,6 +2,10 @@
 
 **Status**: superseded by ADR-0007
 
+> The shim this ADR proposed was removed in the Video.js cutover without a deprecation
+> cycle; consumers now read `TutorCore.player` (see `docs/videojs-migration-report.md` §6).
+> The "Considered Options" reasoning below is kept as history, not as current guidance.
+
 ## Context
 
 The Lesson Player is exposed as `window.TutorLessonPlayer` (typed as `Plyr` in

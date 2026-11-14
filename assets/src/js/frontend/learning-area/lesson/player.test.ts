@@ -544,7 +544,7 @@ describe('LessonPlaybackController loading spinner', () => {
     container.remove();
   });
 
-  it('removes spinner on fallback timer if metadata never loads', () => {
+  it('keeps the spinner while buffering and drops it on error', () => {
     vi.useFakeTimers();
     const container = document.createElement('div');
     container.className = 'tutor-video-player';
@@ -565,7 +565,42 @@ describe('LessonPlaybackController loading spinner', () => {
     emit('ready');
     expect(container.querySelector('.loading-spinner')).not.toBeNull();
 
+    // A slow buffer must not hide the spinner: metadata still hasn't arrived.
     vi.advanceTimersByTime(2600);
+    expect(spinner.classList.contains('hide')).toBe(false);
+
+    // A failed load removes it so the error dialog is visible.
+    emit('error');
+    expect(spinner.classList.contains('hide')).toBe(true);
+    vi.advanceTimersByTime(300);
+    expect(container.querySelector('.loading-spinner')).toBeNull();
+
+    container.remove();
+  });
+
+  it('drops the spinner at the hard cap when the provider never becomes ready', () => {
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    container.className = 'tutor-video-player';
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    const playerEl = document.createElement('div');
+    container.appendChild(spinner);
+    container.appendChild(playerEl);
+    document.body.appendChild(container);
+
+    const { player, emit } = createFakePlayer({
+      element: playerEl,
+      getDuration: () => 0,
+    });
+    const controller = new LessonPlaybackController(player, { post_id: 1 }, createEnvironment());
+    controller.start();
+
+    emit('ready');
+    vi.advanceTimersByTime(2500);
+    expect(spinner.classList.contains('hide')).toBe(false);
+
+    vi.advanceTimersByTime(7500);
     expect(spinner.classList.contains('hide')).toBe(true);
     vi.advanceTimersByTime(300);
     expect(container.querySelector('.loading-spinner')).toBeNull();

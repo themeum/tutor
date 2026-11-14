@@ -2,6 +2,10 @@
 
 Status: approved — decisions locked (see below).
 
+> Historical planning record. The migration shipped as a hard cutover: Plyr is deleted and
+> the `window.TutorLessonPlayer` shim was removed rather than carried for a cycle. See
+> `docs/videojs-migration-report.md` for the current state.
+
 ## Goal
 
 Replace Plyr with Video.js 10 (`@videojs/html`) for Lesson Videos, on every init path,
@@ -248,9 +252,9 @@ Run on Chrome, Firefox, Safari, and iOS Safari, for each Provider:
 
 ## Rollback
 
-Plyr is left in the tree until Layer 3 passes. If blocked, re-enqueue `tutor-plyr` and
-revert the controller/entry changes; the engine and service are additive and inert until
-`TutorCore.player.create()` is called.
+Plyr is gone, so there is no re-enqueue path. Roll back by reverting the player engine,
+controller and entry changes together; the engine and service are additive and inert until
+`TutorCore.player.create()` is called, so PHP consumers can be reverted independently.
 
 ## Locked decisions
 

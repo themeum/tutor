@@ -8,6 +8,8 @@
   aspect-ratio: 16 / 9;
   border-radius: inherit;
   overflow: hidden;
+  // Keep the spinner's z-index local so it cannot paint over sticky headers or dropdowns.
+  isolation: isolate;
 
   .loading-spinner {
     position: absolute;

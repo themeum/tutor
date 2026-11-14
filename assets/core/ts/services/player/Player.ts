@@ -160,7 +160,15 @@ export const createTutorPlayer = ({ element, store, provider, onDispose }: Creat
         return;
       }
       const duration = store.duration;
-      store.seek(duration > 0 ? clamp(time, 0, duration) : Math.max(time, 0));
+      const result = store.seek(duration > 0 ? clamp(time, 0, duration) : Math.max(time, 0));
+      if (typeof result === 'number') {
+        return;
+      }
+      // A rejected seek must not surface as an unhandled promise rejection.
+      void result.catch((err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.debug('[tutor] player seek failed:', err);
+      });
     },
 
     on: <E extends PlayerEvent>(event: E, handler: (payload: PlayerEventMap[E]) => void): PlayerUnsubscribe => {

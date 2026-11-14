@@ -40,6 +40,7 @@ const SEEK_TOLERANCE = 1;
 const DEFAULT_SYNC_INTERVAL_SECONDS = 10;
 const SPINNER_TRANSITION_MS = 250;
 const SPINNER_FALLBACK_TIMEOUT_MS = 2500;
+const SPINNER_HARD_CAP_TIMEOUT_MS = 10000;
 
 export const getPercentage = (value: number, total: number): number => {
   if (value > 0 && total > 0) {
@@ -158,7 +159,20 @@ export class LessonPlaybackController {
     }
 
     this.#spinnerFallbackTimer = setTimeout(() => {
-      this.#removeLoadingSpinner();
+      // A slow buffer must keep the spinner; only hide it once the media is really ready.
+      // Playback errors remove it below so the error dialog is never covered.
+      if (isMediaReady()) {
+        this.#spinnerFallbackTimer = null;
+        this.#removeLoadingSpinner();
+        return;
+      }
+
+      // Hard cap: a provider that never becomes ready and never errors (blocked embed,
+      // CSP) must not leave an opaque overlay covering the controls forever.
+      this.#spinnerFallbackTimer = setTimeout(() => {
+        this.#spinnerFallbackTimer = null;
+        this.#removeLoadingSpinner();
+      }, SPINNER_HARD_CAP_TIMEOUT_MS - SPINNER_FALLBACK_TIMEOUT_MS);
     }, SPINNER_FALLBACK_TIMEOUT_MS);
 
     const onLoaded = (): void => {
@@ -175,8 +189,9 @@ export class LessonPlaybackController {
     });
 
     const offPlay = this.#player.on('play', onLoaded);
+    const offError = this.#player.on('error', onLoaded);
 
-    this.#spinnerCleanups.push(offTime, offPlay);
+    this.#spinnerCleanups.push(offTime, offPlay, offError);
 
     if (media) {
       media.addEventListener('loadeddata', onLoaded, { once: true });
@@ -496,7 +511,11 @@ const createEnvironment = (document: Document): LessonEnvironment => {
     isMobile: core.device.isMobileDevice(),
     syncIntervalSeconds: DEFAULT_SYNC_INTERVAL_SECONDS,
     syncPlayback: (data) => {
-      void core.api.wpPost('sync_video_playback', data).catch(() => {});
+      void core.api.wpPost('sync_video_playback', data).catch((error: unknown) => {
+        // Progress sync is best-effort; a failure must not break playback.
+        // eslint-disable-next-line no-console
+        console.debug('[tutor] playback sync failed:', error);
+      });
     },
     fetchNextUrl: async (postId) => {
       try {
@@ -526,8 +545,7 @@ export const initializeLessonPlayer = (): void => {
     return;
   }
 
-  // Declarative element first; `.tutorPlayer` keeps third-party legacy markup on the shim
-  // path until it is retired.
+  // Declarative element first; `.tutorPlayer` is legacy markup from older templates and themes.
   const target = document.querySelector(
     '.tutor-lesson-video-wrapper tutor-video-player, .tutor-lesson-video-wrapper .tutorPlayer',
   ) as HTMLElement | null;

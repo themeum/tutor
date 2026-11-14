@@ -24,17 +24,19 @@ interface VimeoAdapterProto {
   dispatchEvent(e: Event): boolean;
 }
 
+const SEEK_TIMEOUT_MS = 4000;
+
 /**
  * Hardens a VimeoPlayer instance against rapid seek errors:
  * 1. Removes the blanket fatal error handler registered by VimeoAdapter.
  * 2. Installs an error filter that ignores non-fatal seek/method aborts (e.g. AbortError, RangeError).
  * 3. Serializes rapid setCurrentTime calls so overlapping postMessages don't trigger Vimeo iframe rejections.
  */
-const SEEK_TIMEOUT_MS = 4000;
-
 export const hookVimeoPlayer = (adapter: {
   engine?: HookedVimeoPlayer | null;
   dispatchEvent?: (e: Event) => boolean;
+  addEventListener?: (type: string, callback: () => void, options?: { once?: boolean }) => void;
+  removeEventListener?: (type: string, callback: () => void) => void;
 }): void => {
   const player = adapter.engine;
   if (!player || player.__tutorVimeoPatched) {
@@ -65,7 +67,9 @@ export const hookVimeoPlayer = (adapter: {
 
       // If it's a genuine playback error (e.g. video unavailable, privacy restriction):
       const errorPayload = {
-        code: 1,
+        // `MEDIA_ERR_SRC_NOT_SUPPORTED`, not 1 (`MEDIA_ERR_ABORTED`): the dialog would
+        // otherwise treat a real failure as a user-cancelled load.
+        code: 4,
         message: errorObj?.message || 'Vimeo playback error',
       };
       (adapter as unknown as { __tutorFatalError?: unknown }).__tutorFatalError = errorPayload;
@@ -82,11 +86,56 @@ export const hookVimeoPlayer = (adapter: {
     });
   }
 
-  // 3. Serialize and debounce setCurrentTime calls to prevent overlapping postMessages
+  // 3. Serialize setCurrentTime calls so overlapping postMessages don't trigger rejections
   if (typeof player.setCurrentTime === 'function') {
     const originalSetCurrentTime = player.setCurrentTime;
     let inFlight: Promise<number> | null = null;
-    let pendingTarget: number | null = null;
+    let pending: { time: number; resolve: (time: number) => void } | null = null;
+    let seekId = 0;
+
+    const runSeek = (targetTime: number): Promise<number> => {
+      const id = ++seekId;
+      let softTimer: ReturnType<typeof setTimeout> | undefined;
+
+      const call = Promise.resolve(originalSetCurrentTime.call(player, targetTime));
+
+      // Hold the lock until the SDK call settles: releasing it at the soft timeout would let
+      // the next postMessage overlap a still-pending one, which is what this serializes away.
+      // Each caller still resolves at the soft timeout so a hung seek cannot freeze the UI.
+      const release = (): void => {
+        adapter.removeEventListener?.('seeked', release);
+        if (id !== seekId) {
+          // A newer seek owns the lock; this abandoned call settled too late to free it.
+          return;
+        }
+        clearTimeout(softTimer);
+        clearTimeout(hardTimer);
+        inFlight = null;
+        if (pending) {
+          const next = pending;
+          pending = null;
+          void runSeek(next.time).then(next.resolve, next.resolve);
+        }
+      };
+      void call.then(release, release);
+
+      // The iframe can finish the seek without the SDK promise settling (`seeked` is the
+      // ground truth); release then so the next seek is not delayed by the hard cap.
+      adapter.addEventListener?.('seeked', release, { once: true });
+
+      // Hard cap: a request the SDK never settles (iframe reload, dropped postMessage) must
+      // not wedge every later seek. One overlapping message beats a dead player.
+      const hardTimer = setTimeout(release, SEEK_TIMEOUT_MS * 2);
+
+      inFlight = Promise.race([
+        call,
+        new Promise<number>((resolve) => {
+          softTimer = setTimeout(() => resolve(targetTime), SEEK_TIMEOUT_MS);
+        }),
+      ]).catch(() => targetTime);
+
+      return inFlight;
+    };
 
     player.setCurrentTime = function (time: number): Promise<number> {
       if (!Number.isFinite(time)) {
@@ -94,29 +143,15 @@ export const hookVimeoPlayer = (adapter: {
       }
       const clampedTime = Math.max(0, time);
 
-      // If a seek is already in flight, queue this target time instead of
-      // spamming Vimeo with overlapping postMessages that trigger AbortError.
+      // If a seek is already in flight, queue the latest target instead of spamming
+      // Vimeo with overlapping postMessages that trigger AbortError.
       if (inFlight) {
-        pendingTarget = clampedTime;
-        return inFlight;
+        return new Promise<number>((resolve) => {
+          // A queued caller must still get its own target back, not the earlier seek's result.
+          pending?.resolve(pending.time);
+          pending = { time: clampedTime, resolve };
+        });
       }
-
-      const runSeek = (targetTime: number): Promise<number> => {
-        inFlight = Promise.race([
-          Promise.resolve(originalSetCurrentTime.call(player, targetTime)),
-          new Promise<number>((resolve) => setTimeout(() => resolve(targetTime), SEEK_TIMEOUT_MS)),
-        ])
-          .catch(() => targetTime)
-          .finally(() => {
-            inFlight = null;
-            if (pendingTarget !== null) {
-              const next = pendingTarget;
-              pendingTarget = null;
-              void runSeek(next);
-            }
-          });
-        return inFlight;
-      };
 
       return runSeek(clampedTime);
     };
@@ -127,6 +162,7 @@ export const hookVimeoPlayer = (adapter: {
  * Patches VimeoAdapter prototype to:
  * - Clamp and validate currentTime assignments.
  * - Auto-hook VimeoPlayer instances created during attach and load.
+ * - Clear a previously reported fatal error when a new load starts.
  */
 export const patchVimeoProvider = (): void => {
   if (isPatched) {
@@ -148,13 +184,25 @@ export const patchVimeoProvider = (): void => {
 
   if (typeof originalLoad === 'function') {
     proto.load = async function (): Promise<void> {
+      // A stale error from the previous source must not stick across a reload.
+      (this as unknown as { __tutorFatalError?: unknown }).__tutorFatalError = undefined;
       const result = await originalLoad.call(this);
       hookVimeoPlayer(this);
       return result;
     };
   }
 
-  const origErrorDesc = Object.getOwnPropertyDescriptor(proto, 'error');
+  const findDescriptor = (target: object | null, key: string): PropertyDescriptor | undefined => {
+    for (let current = target; current; current = Object.getPrototypeOf(current)) {
+      const descriptor = Object.getOwnPropertyDescriptor(current, key);
+      if (descriptor) {
+        return descriptor;
+      }
+    }
+    return undefined;
+  };
+
+  const origErrorDesc = findDescriptor(proto, 'error');
   Object.defineProperty(proto, 'error', {
     configurable: true,
     enumerable: true,
@@ -163,6 +211,11 @@ export const patchVimeoProvider = (): void => {
         return this.__tutorFatalError;
       }
       return origErrorDesc?.get ? origErrorDesc.get.call(this) : null;
+    },
+    // Keep the vendor's inherited setter reachable so `this.error = ...` cannot throw.
+    set(this: VimeoAdapterProto & { __tutorFatalError?: unknown }, value: unknown) {
+      this.__tutorFatalError = value;
+      origErrorDesc?.set?.call(this, value);
     },
   });
 
