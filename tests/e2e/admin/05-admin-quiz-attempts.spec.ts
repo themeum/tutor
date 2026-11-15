@@ -4,9 +4,9 @@ import {
   clearAdminSearch,
   searchAdminTable,
   toggleAdminSortOrder,
-} from '@e2e/support/admin';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+} from '@Test/e2e/support/admin';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Quiz Attempts Management @feature', () => {
   test('lists quiz attempts with pass/fail badges, student names, and handles empty search', async ({ adminPage }) => {

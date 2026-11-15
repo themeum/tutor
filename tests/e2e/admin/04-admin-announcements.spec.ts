@@ -1,6 +1,6 @@
-import { assertNoPhpErrors, clearAdminSearch, searchAdminTable, toggleAdminSortOrder } from '@e2e/support/admin';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+import { assertNoPhpErrors, clearAdminSearch, searchAdminTable, toggleAdminSortOrder } from '@Test/e2e/support/admin';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Announcements Management @feature', () => {
   test('lists course announcements, filters with search, and handles empty state', async ({ adminPage }) => {

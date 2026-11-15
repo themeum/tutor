@@ -9,8 +9,9 @@ import {
   getPlugins,
   setOption,
   setTutorOption,
-} from '@e2e/support/factories';
+} from '@Test/e2e/support/factories';
 
+import { CourseBuilderPage } from '../pages/CourseBuilderPage';
 import { findCourseCard } from '../support/archive';
 import { openSettingsTab, setCourseAlias } from '../support/builder';
 import { payWithNativeCheckout, payWithWooCommerceCheckout } from '../support/checkout';
@@ -23,20 +24,6 @@ import {
   toggleSwitch,
   uploadMedia,
 } from '../support/content-authoring';
-import {
-  addLesson,
-  addQuiz,
-  addTag,
-  addTopic,
-  changeAuthor,
-  choosePricingModel,
-  createCourseInBuilder,
-  fillCourseDuration,
-  openBuilderStep,
-  openCourseBuilder,
-  saveCourse,
-  selectCategory,
-} from '../support/course-builder';
 import { fixtures } from '../support/fixtures';
 import { expect, type Page, test } from '../support/test';
 
@@ -73,29 +60,30 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
     const previousQna = setTutorOption('enable_q_and_a_on_course', 'on');
     const previousDuration = setTutorOption('enable_course_duration', 'on');
+    const courseBuilder = new CourseBuilderPage(page);
 
     try {
-      const courseId = await createCourseInBuilder(page);
+      const courseId = await courseBuilder.createNew();
 
       await fillField(page, 'Title', title);
       await setCourseAlias(page, slug);
       await fillRichText(page, page, `<p>${description}</p>`);
-      await selectCategory(page, 'Web Development');
-      await addTag(page, tag);
+      await courseBuilder.selectCategory('Web Development');
+      await courseBuilder.addTag(tag);
       await uploadMedia(page, field(page, 'Featured Image'), fixtures.image, { reuse: false });
       await setVideoUrl(page, page, 'Intro Video', '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>');
       await selectField(page, 'Visibility', 'Public');
       await selectField(page, 'Difficulty Level', 'Intermediate');
-      await choosePricingModel(page, 'Free');
+      await courseBuilder.choosePricingModel('Free');
       await toggleSwitch(page, 'Public Course', true);
       await toggleSwitch(page, 'Q&A', false);
 
       await openSettingsTab(page, 'Enrollment');
       await fillField(page, 'Maximum Student', '0');
 
-      await openBuilderStep(page, 'Curriculum');
-      await addTopic(page, topicTitle, topicSummary);
-      await addLesson(page, {
+      await courseBuilder.openStep('Curriculum');
+      await courseBuilder.addTopic(topicTitle, topicSummary);
+      await courseBuilder.addLesson({
         title: lessonTitle,
         content: `<p>${lessonContent}</p>`,
         image: fixtures.image,
@@ -104,11 +92,11 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
         duration: { hours: 1, minutes: 2, seconds: 3 },
       });
       // Public Course should let anonymous visitors open this non-preview lesson.
-      await addLesson(page, {
+      await courseBuilder.addLesson({
         title: publicLessonTitle,
         content: `<p>${publicLessonContent}</p>`,
       });
-      await addQuiz(page, {
+      await courseBuilder.addQuiz({
         title: quizTitle,
         description: quizDescription,
         passingGrade: 70,
@@ -120,14 +108,14 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
         layout: 'Full Page',
       });
 
-      await openBuilderStep(page, 'Additional');
+      await courseBuilder.openStep('Additional');
       await fillField(page, 'What Will I Learn?', `${benefitOne}\n${benefitTwo}`);
       await fillField(page, 'Target Audience', audience);
-      await fillCourseDuration(page, 4, 15);
+      await courseBuilder.fillDuration(4, 15);
       await fillField(page, 'Materials Included', material);
       await fillField(page, 'Requirements/Instructions', requirement);
 
-      await saveCourse(page);
+      await courseBuilder.save();
 
       const course = getCourse(courseId);
       expect(course.title).toBe(title);
@@ -184,7 +172,7 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
         .catch(() => null);
       await page.reload();
       await reloadDetailsPromise;
-      await openBuilderStep(page, 'Basics');
+      await courseBuilder.openStep('Basics');
       await expect(field(page, 'Title').locator('input')).toHaveValue(title);
       await expect(page.getByTestId('course-slug')).toContainText(slug);
       await openSettingsTab(page, 'General');
@@ -192,11 +180,11 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await expect(field(page, 'Q&A').locator('input[data-input][type="checkbox"]')).not.toBeChecked();
       await openSettingsTab(page, 'Enrollment');
       await expect(field(page, 'Maximum Student').locator('input')).toHaveValue('0');
-      await openBuilderStep(page, 'Curriculum');
+      await courseBuilder.openStep('Curriculum');
       await expect(page.getByText(topicTitle, { exact: true }).first()).toBeVisible();
       await expect(page.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
       await expect(page.getByText(quizTitle, { exact: true }).first()).toBeVisible();
-      await openBuilderStep(page, 'Additional');
+      await courseBuilder.openStep('Additional');
       const durationWrapper = field(page, 'Total Course Duration').locator('..');
       await expect(durationWrapper.locator('input').nth(0)).toHaveValue('4');
       await expect(durationWrapper.locator('input').nth(1)).toHaveValue('15');
@@ -257,11 +245,11 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
       await expect(guestPage.getByText(publicLessonContent).first()).toBeVisible();
 
       // Enabling Q&A adds the course tab; enrolling shows the expiry date.
-      await openCourseBuilder(page, courseId);
-      await openBuilderStep(page, 'Basics');
+      await courseBuilder.open(courseId);
+      await courseBuilder.openStep('Basics');
       await openSettingsTab(page, 'General');
       await toggleSwitch(page, 'Q&A', true);
-      await saveCourse(page);
+      await courseBuilder.save();
       expect(getCourse(courseId).qna).toBe('yes');
 
       enrollStudent({ courseId, user: 'student' });
@@ -292,20 +280,21 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     const stamp = Date.now();
     const title = `E2E Visibility Course ${stamp}`;
     const password = `core-secret-${stamp}`;
-    const courseId = await createCourseInBuilder(page);
+    const courseBuilder = new CourseBuilderPage(page);
+    const courseId = await courseBuilder.createNew();
 
     await fillField(page, 'Title', title);
-    await selectCategory(page, 'Web Development');
-    await choosePricingModel(page, 'Free');
+    await courseBuilder.selectCategory('Web Development');
+    await courseBuilder.choosePricingModel('Free');
     await selectField(page, 'Visibility', 'Password Protected');
     await fillField(page, 'Password', password);
-    await openBuilderStep(page, 'Curriculum');
-    await addTopic(page, `Visibility Topic ${stamp}`);
-    await addLesson(page, {
+    await courseBuilder.openStep('Curriculum');
+    await courseBuilder.addTopic(`Visibility Topic ${stamp}`);
+    await courseBuilder.addLesson({
       title: `Visibility Lesson ${stamp}`,
       content: `<p>Visibility lesson content ${stamp}</p>`,
     });
-    await saveCourse(page);
+    await courseBuilder.save();
 
     let course = getCourse(courseId);
     expect(course.password).toBe(password);
@@ -329,9 +318,9 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     await expect(studentPage.locator('.tutor-enroll-course-button')).toBeVisible();
 
     // Changing the same course to private must hide it from students entirely.
-    await openCourseBuilder(page, courseId);
+    await courseBuilder.open(courseId);
     await selectField(page, 'Visibility', 'Private');
-    await saveCourse(page);
+    await courseBuilder.save();
 
     course = getCourse(courseId);
     expect(course.status).toBe('private');
@@ -354,9 +343,10 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
     expect(getCourse(course.courseId).author?.login).toBe('instructor');
 
-    await openCourseBuilder(adminPage, course.courseId);
-    await changeAuthor(adminPage, 'E2E Admin');
-    await saveCourse(adminPage);
+    const courseBuilder = new CourseBuilderPage(adminPage);
+    await courseBuilder.open(course.courseId);
+    await courseBuilder.changeAuthor('E2E Admin');
+    await courseBuilder.save();
 
     const updated = getCourse(course.courseId);
     expect(updated.author?.login).toBe('admin');
@@ -375,20 +365,21 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     const stamp = Date.now();
     const title = `E2E Enrollment Limit Course ${stamp}`;
     const lessonContent = `Enrollment limit lesson content ${stamp}`;
-    const courseId = await createCourseInBuilder(page);
+    const courseBuilder = new CourseBuilderPage(page);
+    const courseId = await courseBuilder.createNew();
 
     await fillField(page, 'Title', title);
-    await selectCategory(page, 'Web Development');
-    await choosePricingModel(page, 'Free');
+    await courseBuilder.selectCategory('Web Development');
+    await courseBuilder.choosePricingModel('Free');
     await openSettingsTab(page, 'Enrollment');
     await fillField(page, 'Maximum Student', '1');
-    await openBuilderStep(page, 'Curriculum');
-    await addTopic(page, `Enrollment Topic ${stamp}`);
-    await addLesson(page, {
+    await courseBuilder.openStep('Curriculum');
+    await courseBuilder.addTopic(`Enrollment Topic ${stamp}`);
+    await courseBuilder.addLesson({
       title: `Enrollment Lesson ${stamp}`,
       content: `<p>${lessonContent}</p>`,
     });
-    await saveCourse(page);
+    await courseBuilder.save();
 
     const course = getCourse(courseId);
     expect(course.settings).toMatchObject({ maximum_students: 1 });
@@ -414,10 +405,10 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     await expect(enrollmentButton(student2Page)).toHaveCount(0);
 
     // Raising the cap to 0 (unlimited) opens enrollment again.
-    await openCourseBuilder(page, courseId);
+    await courseBuilder.open(courseId);
     await openSettingsTab(page, 'Enrollment');
     await fillField(page, 'Maximum Student', '0');
-    await saveCourse(page);
+    await courseBuilder.save();
     expect(getCourse(courseId).settings).toMatchObject({ maximum_students: 0 });
 
     await student2Page.reload();
@@ -448,20 +439,21 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     const title = `E2E Native Paid Course ${stamp}`;
     const lessonContent = `Native paid lesson content ${stamp}`;
     setTutorOption('monetize_by', 'tutor');
-    const courseId = await createCourseInBuilder(page);
+    const courseBuilder = new CourseBuilderPage(page);
+    const courseId = await courseBuilder.createNew();
 
     await fillField(page, 'Title', title);
-    await selectCategory(page, 'Web Development');
-    await choosePricingModel(page, 'Paid');
+    await courseBuilder.selectCategory('Web Development');
+    await courseBuilder.choosePricingModel('Paid');
     await fillField(page, 'Regular Price', '39');
     await fillField(page, 'Sale Price', '29');
-    await openBuilderStep(page, 'Curriculum');
-    await addTopic(page, `Native Paid Topic ${stamp}`);
-    await addLesson(page, {
+    await courseBuilder.openStep('Curriculum');
+    await courseBuilder.addTopic(`Native Paid Topic ${stamp}`);
+    await courseBuilder.addLesson({
       title: `Native Paid Lesson ${stamp}`,
       content: `<p>${lessonContent}</p>`,
     });
-    await saveCourse(page);
+    await courseBuilder.save();
 
     const course = getCourse(courseId);
     expect(course.priceType).toBe('paid');
@@ -495,7 +487,7 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     studentPage,
   }) => {
     const plugins = getPlugins();
-    test.skip(!plugins.isWooCommerceActive, 'WooCommerce is not active in this environment');
+    test.skip(!plugins.active.some((p) => p.includes('woocommerce')), 'WooCommerce is not active in this environment');
 
     test.setTimeout(240_000);
     const stamp = Date.now();
@@ -517,20 +509,21 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     const previousMonetize = setTutorOption('monetize_by', 'wc');
     try {
       const product = createWcProduct({ title: productTitle, price: 65 });
-      const courseId = await createCourseInBuilder(page);
+      const courseBuilder = new CourseBuilderPage(page);
+      const courseId = await courseBuilder.createNew();
 
       await fillField(page, 'Title', title);
-      await selectCategory(page, 'Web Development');
-      await choosePricingModel(page, 'Paid');
+      await courseBuilder.selectCategory('Web Development');
+      await courseBuilder.choosePricingModel('Paid');
       await selectField(page, 'Select product', product.title);
       await fillField(page, 'Regular Price', String(product.price));
-      await openBuilderStep(page, 'Curriculum');
-      await addTopic(page, `WooCommerce Topic ${stamp}`);
-      await addLesson(page, {
+      await courseBuilder.openStep('Curriculum');
+      await courseBuilder.addTopic(`WooCommerce Topic ${stamp}`);
+      await courseBuilder.addLesson({
         title: `WooCommerce Lesson ${stamp}`,
         content: `<p>${lessonContent}</p>`,
       });
-      await saveCourse(page);
+      await courseBuilder.save();
 
       const course = getCourse(courseId);
       expect(course.priceType).toBe('paid');

@@ -49,7 +49,6 @@ export default defineConfig({
     ['list'],
     ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }],
     ['junit', { outputFile: resolve(__dirname, 'report/junit.xml') }],
-    ...(process.env.CI ? [['blob', { outputDir: resolve(__dirname, 'blob-report') }] as const] : []),
   ],
   timeout: 60_000,
   expect: {

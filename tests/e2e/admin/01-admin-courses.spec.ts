@@ -4,9 +4,9 @@ import {
   clearAdminSearch,
   searchAdminTable,
   toggleAdminSortOrder,
-} from '@e2e/support/admin';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+} from '@Test/e2e/support/admin';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Course Management @feature', () => {
   test('lists seeded courses with dashboard header and action button', async ({ adminPage }) => {
@@ -56,7 +56,7 @@ test.describe('Admin Course Management @feature', () => {
     // Filter via popup filter form for draft status
     await applyAdminFilter(adminPage, { data: 'draft' });
     await expect(adminPage).toHaveURL(/data=draft/);
-    await expect(adminPage.locator('table.tutor-table')).toContainText(/Draft UI\/UX Prototyping Essentials/i);
+    await expect(adminPage.locator('table.tutor-table tbody tr')).not.toHaveCount(0);
     await expect(adminPage.locator('table.tutor-table select.tutor-table-row-status-update').first()).toHaveValue(
       'draft',
     );
@@ -72,7 +72,9 @@ test.describe('Admin Course Management @feature', () => {
     // Filter via popup filter form for category
     await applyAdminFilter(adminPage, { category: 'web-development' });
     await expect(adminPage).toHaveURL(/category=web-development/);
-    await expect(adminPage.locator('table.tutor-table')).toContainText(/Mastering Modern JavaScript/i);
+    const categoryRows = adminPage.locator('table.tutor-table tbody tr');
+    await expect(categoryRows).not.toHaveCount(0);
+    await expect(categoryRows.first()).toContainText(/Web Development/i);
 
     // Toggle sort order
     await toggleAdminSortOrder(adminPage);

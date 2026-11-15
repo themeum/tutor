@@ -986,8 +986,8 @@ against the test database.
 ### Add a Pro spec
 
 Keep the spec, support code, and Pro-only factories in `tutor-pro`. Import the
-shared fixtures from `@e2e/support/test` and the shared factory bridge from
-`@e2e/support/factories`. The free Playwright config auto-includes the Pro
+shared fixtures from `@Test/e2e/support/test` and the shared factory bridge from
+`@Test/e2e/support/factories`. The free Playwright config auto-includes the Pro
 project when the sibling checkout exists.
 
 ### Add a factory

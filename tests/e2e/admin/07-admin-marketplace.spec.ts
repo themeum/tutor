@@ -4,9 +4,9 @@ import {
   clearAdminSearch,
   searchAdminTable,
   toggleAdminSortOrder,
-} from '@e2e/support/admin';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+} from '@Test/e2e/support/admin';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Course Marketplace & Instructors @feature', () => {
   test('manages instructor lists, views pending tab, and opens creation modal', async ({ adminPage }) => {

@@ -1,8 +1,8 @@
-import { assertNoPhpErrors } from '@e2e/support/admin';
-import { ensureNativePaymentSettings } from '@e2e/support/checkout';
-import { setTutorOption, snapshot } from '@e2e/support/factories';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+import { assertNoPhpErrors } from '@Test/e2e/support/admin';
+import { ensureNativePaymentSettings } from '@Test/e2e/support/checkout';
+import { setTutorOption, snapshot } from '@Test/e2e/support/factories';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Settings Management @feature', () => {
   test('navigates settings tabs and verifies tab content', async ({ adminPage }) => {

@@ -1,6 +1,6 @@
-import { assertNoPhpErrors } from '@e2e/support/admin';
-import { expect, test } from '@e2e/support/test';
-import { backendUrls } from '@e2e/support/urls';
+import { assertNoPhpErrors } from '@Test/e2e/support/admin';
+import { expect, test } from '@Test/e2e/support/test';
+import { backendUrls } from '@Test/e2e/support/urls';
 
 test.describe('Admin Addons and Tools @feature', () => {
   test('displays available addons catalog and key integrations', async ({ adminPage }) => {

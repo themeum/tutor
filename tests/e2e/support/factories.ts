@@ -493,7 +493,7 @@ export function setHttpStub(stubs: Record<string, unknown>): { success: boolean 
   return runFactory('set_http_stub', { stubs });
 }
 
-export function getPlugins(): { active: string[]; installed: string[]; isWooCommerceActive?: boolean } {
+export function getPlugins(): { active: string[]; installed: string[] } {
   return runFactory('get_plugins');
 }
 
