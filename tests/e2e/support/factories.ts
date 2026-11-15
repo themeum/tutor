@@ -8,7 +8,7 @@ const execFileAsync = promisify(execFile);
 
 const pluginDir = path.resolve(__dirname, '../../..');
 const wpRoot = path.resolve(process.env.WP_ROOT ?? path.resolve(pluginDir, '../../..'));
-const factoryScript = path.join(pluginDir, 'bin/e2e/factories.php');
+const factoryScript = path.join(pluginDir, 'tests/e2e/bin/factories.php');
 const resultsDir = path.join(wpRoot, 'wp-content/e2e');
 
 export type FactoryInput = Record<string, unknown>;

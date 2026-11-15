@@ -49,8 +49,10 @@ $student    = get_user_by( 'login', 'student' );
 e2e_admin_assert( $instructor instanceof WP_User, 'Instructor user missing. Run tests/support/seed.php first.' );
 e2e_admin_assert( $student instanceof WP_User, 'Student user missing. Run tests/support/seed.php first.' );
 
-// Ensure pending instructor exists for marketplace tests.
-$e2e_password = $e2e_password ?? ( getenv( 'E2E_PASSWORD' ) ?: 'password' );
+if ( empty( $e2e_password ) ) {
+	$env_password = getenv( 'E2E_PASSWORD' );
+	$e2e_password = ( false !== $env_password && '' !== $env_password ) ? $env_password : 'password';
+}
 $pending_instructor = get_user_by( 'login', 'instructor_pending' );
 if ( ! $pending_instructor ) {
 	$pending_instructor_id = wp_insert_user(

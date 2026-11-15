@@ -29,8 +29,10 @@ function e2e_seed_assert( $condition, $message ): void {
 e2e_seed_assert( function_exists( 'tutor_utils' ), 'Tutor is not active.' );
 
 $e2e_env_file = dirname( __DIR__, 2 ) . '/.env';
-$e2e_env      = is_readable( $e2e_env_file ) ? (array) parse_ini_file( $e2e_env_file, false, INI_SCANNER_RAW ) : array();
-$e2e_password = getenv( 'E2E_PASSWORD' ) ?: ( $e2e_env['E2E_PASSWORD'] ?? 'password' );
+$env_password = getenv( 'E2E_PASSWORD' );
+$e2e_password = ( false !== $env_password && '' !== $env_password )
+	? $env_password
+	: ( $e2e_env['E2E_PASSWORD'] ?? 'password' );
 
 // Ensure Anyone Can Register is on so admin notices are suppressed.
 update_option( 'users_can_register', 1 );
@@ -264,7 +266,7 @@ if ( empty( $course ) ) {
 
 require __DIR__ . '/seed-admin.php';
 
-$pro_seed = WP_PLUGIN_DIR . '/tutor-pro/bin/e2e/seed-pro.php';
+$pro_seed = WP_PLUGIN_DIR . '/tutor-pro/tests/e2e/bin/seed-pro.php';
 if ( file_exists( $pro_seed ) ) {
 	( static function () use ( $pro_seed ) {
 		require $pro_seed;

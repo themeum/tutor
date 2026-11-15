@@ -378,9 +378,8 @@ final class Tutor_Test_Installer {
 	}
 
 	private function resolve_db(): string {
-		$parsed = is_readable( $this->env_file )
-			? ( @parse_ini_file( $this->env_file, false, INI_SCANNER_RAW ) ?: array() )
-			: array();
+		$ini    = is_readable( $this->env_file ) ? @parse_ini_file( $this->env_file, false, INI_SCANNER_RAW ) : false;
+		$parsed = false !== $ini ? $ini : array();
 
 		$map = array(
 			'name'    => array( 'WP_TEST_DB_NAME', $this->test_db_name ),
@@ -511,16 +510,17 @@ PHP,
 			. "if ( ! defined( 'ABSPATH' ) ) {\n"
 			. "\texit;\n"
 			. "}\n\n"
-			. "\$tutor_e2e_source = dirname( __DIR__ ) . '/plugins/{$plugin_name}/bin/e2e/mu-plugins/{$source_filename}';\n"
+			. "\$tutor_e2e_source = dirname( __DIR__ ) . '/plugins/{$plugin_name}/tests/e2e/bin/mu-plugins/{$source_filename}';\n"
 			. "if ( file_exists( \$tutor_e2e_source ) ) {\n"
 			. "\trequire_once \$tutor_e2e_source;\n"
 			. "}\n";
 	}
 
 	private function link_mu_plugins(): string {
-		$source_dir = $this->plugin_dir . '/bin/e2e/mu-plugins';
-		$target_dir = dirname( $this->wp_config_file ) . '/wp-content/mu-plugins';
-		$sources    = glob( $source_dir . '/*.php' ) ?: array();
+		$source_dir   = $this->plugin_dir . '/tests/e2e/bin/mu-plugins';
+		$target_dir   = dirname( $this->wp_config_file ) . '/wp-content/mu-plugins';
+		$glob_sources = glob( $source_dir . '/*.php' );
+		$sources      = false !== $glob_sources ? $glob_sources : array();
 
 		if ( ! $sources ) {
 			return 'no test mu-plugins';
@@ -562,17 +562,19 @@ PHP,
 	}
 
 	private function unlink_mu_plugins(): string {
-		$source_dir = $this->plugin_dir . '/bin/e2e/mu-plugins';
-		$target_dir = dirname( $this->wp_config_file ) . '/wp-content/mu-plugins';
-		$sources    = glob( $source_dir . '/*.php' ) ?: array();
-		$targets    = array();
+		$source_dir   = $this->plugin_dir . '/tests/e2e/bin/mu-plugins';
+		$target_dir   = dirname( $this->wp_config_file ) . '/wp-content/mu-plugins';
+		$glob_sources = glob( $source_dir . '/*.php' );
+		$sources      = false !== $glob_sources ? $glob_sources : array();
+		$targets      = array();
 
 		foreach ( $sources as $source ) {
 			$targets[] = $target_dir . '/tutor-' . basename( $source );
 		}
 
 		// Also check existing tutor-e2e-*.php in case sources were deleted or on another branch.
-		$existing = glob( $target_dir . '/tutor-e2e-*.php' ) ?: array();
+		$glob_existing = glob( $target_dir . '/tutor-e2e-*.php' );
+		$existing      = false !== $glob_existing ? $glob_existing : array();
 		$targets  = array_unique( array_merge( $targets, $existing ) );
 		$removed  = 0;
 

@@ -97,9 +97,17 @@ require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 $admin_user = 'admin';
-$admin_pass = getenv( 'E2E_PASSWORD' ) ?: ( $env['E2E_PASSWORD'] ?? 'password' );
+$admin_pass = getenv( 'E2E_PASSWORD' );
+if ( false === $admin_pass || '' === $admin_pass ) {
+	$admin_pass = $env['E2E_PASSWORD'] ?? 'password';
+}
 $site_title = 'Tutor LMS Test Site';
-$site_url   = getenv( 'SITE_URL' ) ?: ( $env['SITE_URL'] ?? ( getenv( 'E2E_BASE_URL' ) ?: 'http://localhost:8888' ) );
+$site_url   = getenv( 'SITE_URL' );
+if ( false === $site_url || '' === $site_url ) {
+	$e2e_base_url = getenv( 'E2E_BASE_URL' );
+	$fallback_url = ( false !== $e2e_base_url && '' !== $e2e_base_url ) ? $e2e_base_url : 'http://localhost:8888';
+	$site_url     = $env['SITE_URL'] ?? $fallback_url;
+}
 
 wp_install( $site_title, $admin_user, 'admin@example.org', true, '', $admin_pass );
 
@@ -108,7 +116,10 @@ update_option( 'home', $site_url );
 update_option( 'permalink_structure', '/%postname%/' );
 
 // 3. Activate Tutor, WooCommerce and Pro when their files are present.
-$requested = getenv( 'WP_TEST_ACTIVE_PLUGINS' ) ?: ( $env['WP_TEST_ACTIVE_PLUGINS'] ?? '' );
+$requested = getenv( 'WP_TEST_ACTIVE_PLUGINS' );
+if ( false === $requested || '' === $requested ) {
+	$requested = $env['WP_TEST_ACTIVE_PLUGINS'] ?? '';
+}
 $plugins   = array();
 
 if ( '' !== trim( (string) $requested ) ) {
