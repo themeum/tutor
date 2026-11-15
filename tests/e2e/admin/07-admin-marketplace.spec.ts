@@ -16,13 +16,10 @@ test.describe('Admin Course Marketplace & Instructors @feature', () => {
     const table = adminPage.locator('table.tutor-table');
     await expect(table).toContainText('instructor');
 
-    // Check pending instructor tab
-    const pendingTab = adminPage.locator('a[data-tab="pending"], a[href*="data=pending"]').first();
-    if (await pendingTab.isVisible()) {
-      await pendingTab.click();
-      await adminPage.waitForLoadState('domcontentloaded');
-      await expect(adminPage.locator('table.tutor-table')).toContainText(/Pending|instructor_pending/i);
-    }
+    // Filter to pending instructor applications
+    await applyAdminFilter(adminPage, { data: 'pending' });
+    await expect(adminPage).toHaveURL(/data=pending/);
+    await expect(adminPage.locator('table.tutor-table')).toContainText(/Pending|instructor_pending/i);
 
     // Toggle sort order
     await toggleAdminSortOrder(adminPage);

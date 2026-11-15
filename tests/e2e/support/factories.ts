@@ -1,7 +1,10 @@
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
 
 const pluginDir = path.resolve(__dirname, '../../..');
 const wpRoot = path.resolve(process.env.WP_ROOT ?? path.resolve(pluginDir, '../../..'));
@@ -9,6 +12,50 @@ const factoryScript = path.join(pluginDir, 'bin/e2e/factories.php');
 const resultsDir = path.join(wpRoot, 'wp-content/e2e');
 
 export type FactoryInput = Record<string, unknown>;
+
+export async function runFactoryAsync<T>(
+  factory: string,
+  input: FactoryInput = {},
+  script = factoryScript,
+): Promise<T> {
+  mkdirSync(resultsDir, { recursive: true });
+
+  const resultFile = `${randomUUID()}.json`;
+  const resultPath = path.join(resultsDir, resultFile);
+  const payload = Buffer.from(
+    JSON.stringify({
+      factory,
+      ...input,
+      result_file: resultFile,
+      result_dir: resultsDir,
+    }),
+  ).toString('base64');
+
+  try {
+    await execFileAsync(process.env.WP_CLI_BIN ?? 'wp', [`--path=${wpRoot}`, 'eval-file', script, payload], {
+      cwd: wpRoot,
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024,
+      timeout: 120_000,
+      env: { ...process.env, WP_TEST_ENV: '1' },
+    });
+  } catch (error) {
+    const failure = error as { stdout?: Buffer | string; stderr?: Buffer | string; message?: string };
+    const stdout = failure.stdout?.toString() ?? '';
+    const stderr = failure.stderr?.toString() ?? '';
+    throw new Error(`wp-cli factory "${factory}" failed.\n${stdout}\n${stderr}\n${failure.message ?? ''}`);
+  }
+
+  if (!existsSync(resultPath)) {
+    throw new Error(`Factory "${factory}" did not write a result to ${resultsDir}.`);
+  }
+
+  try {
+    return JSON.parse(readFileSync(resultPath, 'utf8')) as T;
+  } finally {
+    rmSync(resultPath, { force: true });
+  }
+}
 
 export function runFactory<T>(factory: string, input: FactoryInput = {}, script = factoryScript): T {
   mkdirSync(resultsDir, { recursive: true });
@@ -100,6 +147,77 @@ export interface CourseFactoryInput {
 
 export function createCourse(input: CourseFactoryInput = {}): CourseFactoryResult {
   return runFactory<CourseFactoryResult>('course', input as FactoryInput);
+}
+
+export interface CourseTreeLessonInput {
+  title?: string;
+  content?: string;
+  is_preview?: boolean;
+  meta?: Record<string, unknown>;
+}
+
+export interface CourseTreeQuizInput {
+  title?: string;
+  description?: string;
+  meta?: Record<string, unknown>;
+}
+
+export interface CourseTreeAssignmentInput {
+  title?: string;
+  content?: string;
+  total_mark?: number;
+  pass_mark?: number;
+  meta?: Record<string, unknown>;
+}
+
+export interface CourseTreeTopicInput {
+  title?: string;
+  summary?: string;
+  lessons?: CourseTreeLessonInput[];
+  quizzes?: CourseTreeQuizInput[];
+  assignments?: CourseTreeAssignmentInput[];
+}
+
+export interface CourseTreeInput {
+  title?: string;
+  content?: string;
+  status?: string;
+  author?: string;
+  price_type?: 'free' | 'paid';
+  price?: number;
+  is_public?: boolean;
+  password?: string;
+  product_id?: number;
+  selling_option?: string;
+  course_meta?: Record<string, unknown>;
+  topics?: CourseTreeTopicInput[];
+}
+
+export interface CourseTreeResult {
+  courseId: number;
+  title: string;
+  courseUrl: string;
+  courseSlug: string;
+  topics: Array<{
+    topicId: number;
+    title: string;
+    lessons: Array<{ lessonId: number; title: string; url: string }>;
+    quizzes: Array<{ quizId: number; title: string; url: string }>;
+    assignments: Array<{ assignmentId: number; title: string; url: string }>;
+  }>;
+  lessonIds: number[];
+  quizIds: number[];
+  assignmentIds: number[];
+}
+
+/** Batch hierarchy creation into a single async WP-CLI call without blocking the Node event loop. */
+export function createCourseTree(input: CourseTreeInput = {}): Promise<CourseTreeResult> {
+  return runFactoryAsync<CourseTreeResult>('course_tree', input as FactoryInput);
+}
+
+/** Synchronous fallback for createCourseTree where async is not yet supported. */
+export function createCourseTreeSync(input: CourseTreeInput = {}): CourseTreeResult {
+  return runFactory<CourseTreeResult>('course_tree', input as FactoryInput);
 }
 
 export interface CourseState {

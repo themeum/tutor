@@ -29,11 +29,10 @@ test.describe('Admin Announcements Management @feature', () => {
     await expect(adminPage.locator('table.tutor-table')).toBeVisible();
 
     // Verify filter popup button opens filter controls
-    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button');
-    if (await filterBtn.isVisible()) {
-      await filterBtn.click();
-      await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
-    }
+    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button').first();
+    await expect(filterBtn).toBeVisible();
+    await filterBtn.click();
+    await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
     await assertNoPhpErrors(adminPage);
   });
 

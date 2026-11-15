@@ -1,9 +1,38 @@
+import { setTutorOption } from './factories';
 import { expect, type Page } from './test';
+
+export const ensureNativePaymentSettings = () => {
+  const defaultPaymentSettings = JSON.stringify({
+    payment_methods: [
+      {
+        name: 'bank-transfer',
+        label: 'Bank Transfer',
+        is_active: true,
+        icon: '',
+        support_subscription: false,
+        update_available: false,
+        is_manual: true,
+        fields: [
+          { name: 'method_name', value: 'Bank Transfer' },
+          { name: 'icon', value: '' },
+          { name: 'payment_instructions', value: '<p>Pay by bank transfer.</p>' },
+        ],
+      },
+    ],
+  });
+  setTutorOption('payment_settings', defaultPaymentSettings);
+  setTutorOption('monetize_by', 'tutor');
+};
 
 /** Complete the native Tutor checkout with the seeded manual bank-transfer method. */
 export const payWithNativeCheckout = async (page: Page, email: string): Promise<number> => {
+  ensureNativePaymentSettings();
+
   const buyNow = page
-    .locator('[data-testid="tutor-buy-now"], a:has-text("Buy Now"):visible, button:has-text("Buy Now"):visible')
+    .getByTestId('tutor-buy-now')
+    .or(page.getByRole('link', { name: /buy now/i }))
+    .or(page.getByRole('button', { name: /buy now/i }))
+    .filter({ visible: true })
     .first();
   await expect(buyNow).toBeVisible();
   await buyNow.click();
@@ -47,9 +76,7 @@ export const payWithWooCommerceCheckout = async (page: Page, email: string): Pro
   await page.goto('/checkout/');
   const checkout = page.locator('.wc-block-checkout').first();
   await expect(checkout).toBeVisible({ timeout: 20_000 });
-  await expect(checkout.locator('.wc-block-components-spinner'))
-    .toHaveCount(0, { timeout: 20_000 })
-    .catch(() => undefined);
+  await expect(checkout.locator('.wc-block-components-spinner')).toHaveCount(0, { timeout: 20_000 });
 
   await page.locator('#email').fill(email);
 

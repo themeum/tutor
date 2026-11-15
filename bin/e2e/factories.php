@@ -246,6 +246,232 @@ function e2e_factory_course( array $input ): array {
 }
 
 /**
+ * Create a full course tree (course + topics + lessons + quizzes + assignments) in one call.
+ *
+ * @param array $input Factory input.
+ * @return array
+ */
+function e2e_factory_course_tree( array $input ): array {
+	$title       = $input['title'] ?? ( 'E2E Course Tree ' . wp_generate_password( 6, false ) );
+	$price       = $input['price'] ?? 0;
+	$price_type  = $input['price_type'] ?? ( ! empty( $price ) ? 'paid' : 'free' );
+	$author_user = $input['author'] ?? 'instructor';
+
+	$author = get_user_by( 'login', $author_user );
+	if ( ! $author ) {
+		WP_CLI::error( sprintf( 'Author user "%s" not found.', $author_user ) );
+	}
+
+	$post_data = array(
+		'post_title'   => $title,
+		'post_content' => $input['content'] ?? ( 'Course description for ' . $title ),
+		'post_type'    => tutor()->course_post_type,
+		'post_status'  => $input['status'] ?? 'publish',
+		'post_author'  => $author->ID,
+	);
+
+	if ( ! empty( $input['password'] ) ) {
+		$post_data['post_password'] = (string) $input['password'];
+	}
+
+	$course_id = wp_insert_post( $post_data );
+	if ( is_wp_error( $course_id ) || ! $course_id ) {
+		WP_CLI::error( 'Could not create course: ' . ( is_wp_error( $course_id ) ? $course_id->get_error_message() : '' ) );
+	}
+
+	update_post_meta( $course_id, '_tutor_course_price_type', $price_type );
+	if ( 'paid' === $price_type ) {
+		update_post_meta( $course_id, 'tutor_course_price', (float) $price );
+		update_post_meta( $course_id, '_tutor_course_price', (float) $price );
+	}
+
+	add_user_meta( $author->ID, '_tutor_instructor_course_id', $course_id );
+
+	if ( ! empty( $input['is_public'] ) ) {
+		update_post_meta( $course_id, '_tutor_is_public_course', 'yes' );
+	}
+
+	if ( ! empty( $input['product_id'] ) ) {
+		update_post_meta( $course_id, '_tutor_course_product_id', (int) $input['product_id'] );
+	}
+
+	if ( ! empty( $input['selling_option'] ) ) {
+		update_post_meta( $course_id, '_tutor_course_selling_option', (string) $input['selling_option'] );
+		update_post_meta( $course_id, 'tutor_course_selling_option', (string) $input['selling_option'] );
+	}
+
+	if ( ! empty( $input['course_meta'] ) && is_array( $input['course_meta'] ) ) {
+		foreach ( $input['course_meta'] as $meta_key => $meta_value ) {
+			update_post_meta( $course_id, (string) $meta_key, $meta_value );
+		}
+	}
+
+	$created_topics     = array();
+	$all_lesson_ids     = array();
+	$all_quiz_ids       = array();
+	$all_assignment_ids = array();
+
+	$topics_input = $input['topics'] ?? array(
+		array(
+			'title'   => 'First Topic',
+			'lessons' => array(
+				array( 'title' => 'First Lesson' ),
+			),
+		),
+	);
+
+	foreach ( (array) $topics_input as $topic_idx => $t_data ) {
+		$topic_title = $t_data['title'] ?? ( 'Topic ' . ( $topic_idx + 1 ) );
+		$topic_id    = wp_insert_post(
+			array(
+				'post_title'   => $topic_title,
+				'post_content' => $t_data['summary'] ?? '',
+				'post_type'    => 'topics',
+				'post_status'  => 'publish',
+				'post_author'  => $author->ID,
+				'post_parent'  => $course_id,
+				'menu_order'   => $topic_idx + 1,
+			)
+		);
+
+		if ( is_wp_error( $topic_id ) || ! $topic_id ) {
+			WP_CLI::error( 'Could not create topic.' );
+		}
+
+		$created_lessons     = array();
+		$created_quizzes     = array();
+		$created_assignments = array();
+
+		// Lessons.
+		if ( ! empty( $t_data['lessons'] ) && is_array( $t_data['lessons'] ) ) {
+			foreach ( $t_data['lessons'] as $l_idx => $l_data ) {
+				$l_title   = $l_data['title'] ?? ( 'Lesson ' . ( $l_idx + 1 ) );
+				$l_content = $l_data['content'] ?? ( '<p>Content for ' . $l_title . '</p>' );
+				$lesson_id = wp_insert_post(
+					array(
+						'post_title'   => $l_title,
+						'post_content' => $l_content,
+						'post_type'    => tutor()->lesson_post_type,
+						'post_status'  => 'publish',
+						'post_author'  => $author->ID,
+						'post_parent'  => $topic_id,
+						'menu_order'   => $l_idx + 1,
+					)
+				);
+				if ( ! is_wp_error( $lesson_id ) && $lesson_id ) {
+					update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
+					update_post_meta( $lesson_id, '_tutor_topic_id_for_lesson', $topic_id );
+
+					if ( ! empty( $l_data['is_preview'] ) ) {
+						update_post_meta( $lesson_id, '_is_preview', 'yes' );
+					}
+					if ( ! empty( $l_data['meta'] ) && is_array( $l_data['meta'] ) ) {
+						foreach ( $l_data['meta'] as $mk => $mv ) {
+							update_post_meta( $lesson_id, (string) $mk, $mv );
+						}
+					}
+					$all_lesson_ids[]  = (int) $lesson_id;
+					$created_lessons[] = array(
+						'lessonId' => (int) $lesson_id,
+						'title'    => $l_title,
+						'url'      => get_permalink( $lesson_id ),
+					);
+				}
+			}
+		}
+
+		// Quizzes.
+		if ( ! empty( $t_data['quizzes'] ) && is_array( $t_data['quizzes'] ) ) {
+			foreach ( $t_data['quizzes'] as $q_idx => $q_data ) {
+				$q_title = $q_data['title'] ?? ( 'Quiz ' . ( $q_idx + 1 ) );
+				$quiz_id = wp_insert_post(
+					array(
+						'post_title'   => $q_title,
+						'post_content' => $q_data['description'] ?? '',
+						'post_type'    => tutor()->quiz_post_type,
+						'post_status'  => 'publish',
+						'post_author'  => $author->ID,
+						'post_parent'  => $topic_id,
+						'menu_order'   => $q_idx + 1,
+					)
+				);
+				if ( ! is_wp_error( $quiz_id ) && $quiz_id ) {
+					update_post_meta( $quiz_id, '_tutor_course_id_for_quiz', $course_id );
+					update_post_meta( $quiz_id, '_tutor_topic_id_for_quiz', $topic_id );
+
+					if ( ! empty( $q_data['meta'] ) && is_array( $q_data['meta'] ) ) {
+						foreach ( $q_data['meta'] as $mk => $mv ) {
+							update_post_meta( $quiz_id, (string) $mk, $mv );
+						}
+					}
+					$all_quiz_ids[]    = (int) $quiz_id;
+					$created_quizzes[] = array(
+						'quizId' => (int) $quiz_id,
+						'title'  => $q_title,
+						'url'    => get_permalink( $quiz_id ),
+					);
+				}
+			}
+		}
+
+		// Assignments.
+		if ( ! empty( $t_data['assignments'] ) && is_array( $t_data['assignments'] ) ) {
+			foreach ( $t_data['assignments'] as $a_idx => $a_data ) {
+				$a_title       = $a_data['title'] ?? ( 'Assignment ' . ( $a_idx + 1 ) );
+				$assignment_id = wp_insert_post(
+					array(
+						'post_title'   => $a_title,
+						'post_content' => $a_data['content'] ?? '',
+						'post_type'    => 'tutor_assignments',
+						'post_status'  => 'publish',
+						'post_author'  => $author->ID,
+						'post_parent'  => $topic_id,
+						'menu_order'   => $a_idx + 1,
+					)
+				);
+				if ( ! is_wp_error( $assignment_id ) && $assignment_id ) {
+					update_post_meta( $assignment_id, '_tutor_course_id_for_assignment', $course_id );
+					update_post_meta( $assignment_id, '_tutor_topic_id_for_assignment', $topic_id );
+					update_post_meta( $assignment_id, 'total_mark', (int) ( $a_data['total_mark'] ?? 100 ) );
+					update_post_meta( $assignment_id, 'pass_mark', (int) ( $a_data['pass_mark'] ?? 50 ) );
+
+					if ( ! empty( $a_data['meta'] ) && is_array( $a_data['meta'] ) ) {
+						foreach ( $a_data['meta'] as $mk => $mv ) {
+							update_post_meta( $assignment_id, (string) $mk, $mv );
+						}
+					}
+					$all_assignment_ids[]  = (int) $assignment_id;
+					$created_assignments[] = array(
+						'assignmentId' => (int) $assignment_id,
+						'title'        => $a_title,
+						'url'          => get_permalink( $assignment_id ),
+					);
+				}
+			}
+		}
+
+		$created_topics[] = array(
+			'topicId'     => (int) $topic_id,
+			'title'       => $topic_title,
+			'lessons'     => $created_lessons,
+			'quizzes'     => $created_quizzes,
+			'assignments' => $created_assignments,
+		);
+	}
+
+	return array(
+		'courseId'      => (int) $course_id,
+		'title'         => $title,
+		'courseUrl'     => get_permalink( $course_id ),
+		'courseSlug'    => get_post_field( 'post_name', $course_id ),
+		'topics'        => $created_topics,
+		'lessonIds'     => $all_lesson_ids,
+		'quizIds'       => $all_quiz_ids,
+		'assignmentIds' => $all_assignment_ids,
+	);
+}
+
+/**
  * Read a course and the values the course builder persists.
  *
  * @param array $input Factory input.
@@ -523,8 +749,11 @@ function e2e_factory_tutor_order_complete( array $input ): array {
 	}
 
 	$order = $order_model->get_order_by_id( $order_id );
-	if ( ! $order ) {
+	if ( ! $order || ! is_object( $order ) ) {
 		WP_CLI::error( sprintf( 'Could not reload Tutor order %d.', $order_id ) );
+		return array(
+			'orderId' => $order_id,
+		);
 	}
 
 	return array(
@@ -1151,6 +1380,9 @@ $result = array();
 switch ( $factory ) {
 	case 'course':
 		$result = e2e_factory_course( $payload );
+		break;
+	case 'course_tree':
+		$result = e2e_factory_course_tree( $payload );
 		break;
 	case 'get_course':
 		$result = e2e_factory_get_course( $payload );

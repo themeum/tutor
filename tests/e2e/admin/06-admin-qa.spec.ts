@@ -29,20 +29,17 @@ test.describe('Admin Q&A Management @feature', () => {
     await assertNoPhpErrors(adminPage);
   });
 
-  test('checks Q&A list filters and sort controls if present', async ({ adminPage }) => {
+  test('checks Q&A list filters and sort controls', async ({ adminPage }) => {
     await adminPage.goto(backendUrls.qna);
 
-    const sortBtn = adminPage.locator('.tutor-wp-dashboard-filter-order');
-    if (await sortBtn.isVisible()) {
-      await toggleAdminSortOrder(adminPage);
-      await expect(adminPage).toHaveURL(/order=/);
-    }
+    await expect(adminPage.locator('.tutor-wp-dashboard-filter-order')).toBeVisible();
+    await toggleAdminSortOrder(adminPage);
+    await expect(adminPage).toHaveURL(/order=/);
 
-    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button');
-    if (await filterBtn.isVisible()) {
-      await filterBtn.click();
-      await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
-    }
+    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button').first();
+    await expect(filterBtn).toBeVisible();
+    await filterBtn.click();
+    await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
     await assertNoPhpErrors(adminPage);
   });
 });

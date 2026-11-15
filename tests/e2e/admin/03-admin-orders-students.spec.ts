@@ -8,8 +8,13 @@ test.describe('Admin Orders and Students Management @feature', () => {
 
     await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Orders');
     const table = adminPage.locator('table.tutor-table');
-    await expect(table).toContainText(/student|E2E Student/i);
-    await expect(table).toContainText(/completed|incomplete|unpaid|\$49/i);
+    const orderRow = table
+      .locator('tbody tr')
+      .filter({ has: adminPage.getByRole('cell', { name: /E2E Student$/ }) })
+      .first();
+    await expect(orderRow).toBeVisible();
+    await expect(orderRow).toContainText(/completed/i);
+    await expect(orderRow).toContainText(/\$49\.99/);
     await assertNoPhpErrors(adminPage);
   });
 
@@ -18,11 +23,15 @@ test.describe('Admin Orders and Students Management @feature', () => {
 
     await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Students');
     const table = adminPage.locator('table.tutor-table');
-    await expect(table).toContainText(/student|E2E Student/i);
+    const studentRow = table
+      .locator('tbody tr')
+      .filter({ has: adminPage.getByRole('cell', { name: /E2E Student$/ }) })
+      .first();
+    await expect(studentRow).toBeVisible();
 
     // Positive search
     await searchAdminTable(adminPage, 'Student');
-    await expect(table).toContainText(/student|E2E Student/i);
+    await expect(studentRow).toBeVisible();
 
     // Negative search edge case
     await searchAdminTable(adminPage, '__non_existent_student_xyz__');
@@ -30,7 +39,7 @@ test.describe('Admin Orders and Students Management @feature', () => {
 
     // Clear search restores list
     await clearAdminSearch(adminPage);
-    await expect(table).toContainText(/student|E2E Student/i);
+    await expect(studentRow).toBeVisible();
     await assertNoPhpErrors(adminPage);
   });
 
@@ -43,11 +52,10 @@ test.describe('Admin Orders and Students Management @feature', () => {
     await expect(adminPage.locator('table.tutor-table')).toBeVisible();
 
     // Verify filter popup button opens filter controls
-    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button');
-    if (await filterBtn.isVisible()) {
-      await filterBtn.click();
-      await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
-    }
+    const filterBtn = adminPage.locator('.tutor-wp-dashboard-filters-button').first();
+    await expect(filterBtn).toBeVisible();
+    await filterBtn.click();
+    await expect(adminPage.locator('.tutor-admin-dashboard-filter-form')).toBeVisible();
     await assertNoPhpErrors(adminPage);
   });
 });

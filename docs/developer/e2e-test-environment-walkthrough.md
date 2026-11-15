@@ -905,7 +905,7 @@ database. A core reset takes about 3–4 minutes; a full Pro reset takes about
 1. Starts a MySQL 8.0 service with database `wordpress` and root password
    `root`.
 2. Checks out the plugin into `wordpress/wp-content/plugins/tutor`.
-3. Installs PHP 8.3, Composer, WP-CLI, pnpm 9, and Node.js 20.
+3. Installs PHP 8.3, Composer, WP-CLI, pnpm 12, and Node.js 24.
 4. Downloads WordPress `7.1.3` and creates a `wp-config.php` pointing at
    `wordpress`.
 5. Installs dependencies and builds assets with `pnpm build-dev`.

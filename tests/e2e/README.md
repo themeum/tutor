@@ -16,6 +16,8 @@ pnpm test:setup           # installer prompt, then Chromium
 
 Ensure your local development site is running (e.g. Local by Flywheel, Valet, Docker) and that `SITE_URL` in `.env` matches your site URL (e.g. `http://themeum-tutor.local` or `http://localhost:8888`).
 
+Rebuild assets after pulling source changes: `pnpm exec rspack --mode=production` in this plugin, and in `../tutor-pro` when running Pro tests. The tests target `data-testid` attributes that only exist in freshly built JS.
+
 ```bash
 pnpm test:e2e           # full suite (core + pro when present)
 pnpm test:e2e:smoke     # @smoke
@@ -35,7 +37,7 @@ Every test command runs `tests/support/preflight.php` first. It fails when the l
 - `WP_RUNNING_TESTS` (constant or environment) selects `WP_PHPUNIT_DB_NAME` for PHPUnit, including the child installer process.
 - The header and cookie only count on hosts in `WP_TEST_HOSTS` (default `localhost,127.0.0.1,::1,*.local`), so a public host cannot opt into the test database.
 
-Current coverage is 45 spec files / 155 tests: 16 files / 34 core tests and 29 files / 121 Pro tests.
+Current coverage is 45 spec files / 155 tests when the Pro checkout is present: 16 files / 34 core tests and 29 files / 121 Pro tests. Without Pro, the core project runs 34 tests.
 
 ## Layout
 

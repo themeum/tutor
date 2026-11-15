@@ -1,5 +1,6 @@
 import { type Browser, expect, type Locator, type Page, test as base } from '@playwright/test';
 
+import { CourseBuilderPage } from '../pages/CourseBuilderPage';
 import { storageState } from './auth';
 import { baseURL, type Role } from './env';
 
@@ -10,6 +11,10 @@ type RoleFixtures = {
   student2Page: Page;
   managerPage: Page;
   guestPage: Page;
+};
+
+type AppFixtures = RoleFixtures & {
+  courseBuilder: CourseBuilderPage;
 };
 
 const rolePage =
@@ -32,14 +37,18 @@ const rolePage =
     }
   };
 
-export const test = base.extend<RoleFixtures>({
+export const test = base.extend<AppFixtures>({
   adminPage: rolePage('admin'),
   instructorPage: rolePage('instructor'),
   studentPage: rolePage('student'),
   student2Page: rolePage('student2'),
   managerPage: rolePage('manager'),
   guestPage: rolePage(),
+  courseBuilder: async ({ instructorPage }, use) => {
+    const builder = new CourseBuilderPage(instructorPage);
+    await use(builder);
+  },
 });
 
-export { expect };
+export { CourseBuilderPage, expect };
 export type { Browser, Locator, Page };

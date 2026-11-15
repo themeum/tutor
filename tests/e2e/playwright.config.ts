@@ -45,7 +45,12 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1,
-  reporter: [['list'], ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }]],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }],
+    ['junit', { outputFile: resolve(__dirname, 'report/junit.xml') }],
+    ...(process.env.CI ? [['blob', { outputDir: resolve(__dirname, 'blob-report') }] as const] : []),
+  ],
   timeout: 60_000,
   expect: {
     timeout: 10_000,
@@ -54,6 +59,7 @@ export default defineConfig({
     baseURL,
     browserName: 'chromium',
     testIdAttribute: 'data-testid',
+    timezoneId: 'UTC',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

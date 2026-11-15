@@ -14,9 +14,10 @@ test.describe('Admin Quiz Attempts Management @feature', () => {
 
     await expect(adminPage.locator('.tutor-wp-dashboard-header-title')).toContainText('Quiz Attempts');
     const table = adminPage.locator('table.tutor-table');
-    await expect(table).toContainText('JavaScript Engine Evaluation Quiz');
-    await expect(table).toContainText(/pass/i);
-    await expect(table).toContainText(/student|E2E Student/i);
+    const attemptRow = table.locator('tbody tr').filter({ hasText: 'JavaScript Engine Evaluation Quiz' }).first();
+    await expect(attemptRow).toBeVisible();
+    await expect(attemptRow).toContainText(/pass/i);
+    await expect(attemptRow).toContainText('E2E Student');
 
     // Negative search edge case
     await searchAdminTable(adminPage, '__non_existent_quiz_attempt__');

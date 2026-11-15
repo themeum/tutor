@@ -19,9 +19,15 @@ env:
 
 jobs:
   e2e:
-    name: Playwright E2E
+    name: Playwright E2E (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
 
     services:
       mysql:
@@ -90,7 +96,7 @@ jobs:
           php tests/support/install.php --yes
           php tests/support/preflight.php
 
-      - name: Run E2E tests
+      - name: Run E2E tests (Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
         working-directory: ${{ env.PLUGIN_DIR }}
         env:
           SITE_URL: http://127.0.0.1:8888
@@ -105,13 +111,21 @@ jobs:
             sleep 1
           done
           curl -fsS http://127.0.0.1:8888/ > /dev/null
-          pnpm test:e2e
+          pnpm test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-      - name: Upload Playwright Report
+      - name: Upload Blob Report Shard
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: blob-report-${{ matrix.shardIndex }}
+          path: wordpress/wp-content/plugins/tutor/tests/e2e/blob-report/
+          retention-days: 7
+
+      - name: Upload Playwright Report Shard
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-shard-${{ matrix.shardIndex }}
           path: wordpress/wp-content/plugins/tutor/tests/e2e/report/
           retention-days: 14
 
@@ -119,7 +133,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: test-results
+          name: test-results-shard-${{ matrix.shardIndex }}
           path: wordpress/wp-content/plugins/tutor/test-results/
           retention-days: 14
 
@@ -127,6 +141,35 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: wp-server-log
+          name: wp-server-log-shard-${{ matrix.shardIndex }}
           path: ${{ runner.temp }}/wp-server.log
           retention-days: 7
+
+  merge-reports:
+    name: Merge Playwright Reports
+    if: ${{ !cancelled() }}
+    needs: e2e
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge reports
+        run: |
+          npx playwright merge-reports --reporter=html,junit ./all-blob-reports
+
+      - name: Upload Unified Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-merged
+          path: playwright-report/
+          retention-days: 14

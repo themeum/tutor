@@ -1,4 +1,6 @@
 import { assertNoPhpErrors } from '@e2e/support/admin';
+import { ensureNativePaymentSettings } from '@e2e/support/checkout';
+import { setTutorOption, snapshot } from '@e2e/support/factories';
 import { expect, test } from '@e2e/support/test';
 import { backendUrls } from '@e2e/support/urls';
 
@@ -21,27 +23,41 @@ test.describe('Admin Settings Management @feature', () => {
   });
 
   test('toggles configuration and saves settings with feedback confirmation', async ({ adminPage }) => {
-    await adminPage.goto(backendUrls.settings);
+    // Saving regenerates payment_settings from installed gateways and drops the
+    // seeded manual bank-transfer method, so restore it for later checkout tests.
+    const tutorOptions = (snapshot({ options: ['tutor_option'] }).options.tutor_option ?? {}) as Record<
+      string,
+      unknown
+    >;
+    const previousPaymentSettings = tutorOptions.payment_settings;
 
-    const saveButton = adminPage.locator('#save_tutor_option, button[name="tutor_option_save_btn"]');
-    await expect(saveButton).toBeAttached();
+    try {
+      await adminPage.goto(backendUrls.settings);
 
-    // Toggle a setting checkbox to trigger form modification
-    const firstCheckbox = adminPage
-      .locator('#tutor-option-form, form[action*="tutor_option"]')
-      .locator('input[type="checkbox"]')
-      .first();
-    if (await firstCheckbox.isVisible()) {
-      await firstCheckbox.click();
+      const saveButton = adminPage.locator('#save_tutor_option, button[name="tutor_option_save_btn"]');
+      await expect(saveButton).toBeAttached();
+
+      // Toggle a setting to dirty the form, then toggle it back so the saved
+      // configuration stays the same for later tests.
+      const firstToggle = adminPage.locator('.tutor-form-toggle').first();
+      await firstToggle.click();
+      await expect(saveButton).toBeEnabled();
+      await firstToggle.click();
       await expect(saveButton).toBeEnabled();
 
       // Save changes
       await saveButton.click();
-      await expect(adminPage.locator('.tutor-toast, .tutor-alert, .notice-success')).toBeVisible({
-        timeout: 10000,
-      });
-      await expect(adminPage.locator('.tutor-toast, .tutor-alert, .notice-success')).toContainText(/Saved|Success/i);
+      const toast = adminPage
+        .locator('.tutor-toast-parent .tutor-notification')
+        .filter({ hasText: /Settings Saved|Success/i });
+      await expect(toast).toBeVisible({ timeout: 10_000 });
+      await assertNoPhpErrors(adminPage);
+    } finally {
+      if (previousPaymentSettings) {
+        setTutorOption('payment_settings', previousPaymentSettings);
+      } else {
+        ensureNativePaymentSettings();
+      }
     }
-    await assertNoPhpErrors(adminPage);
   });
 });
