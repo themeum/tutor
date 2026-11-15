@@ -2,7 +2,7 @@ import { mkdirSync } from 'node:fs';
 
 import { chromium } from '@playwright/test';
 
-import { authDir, login, storageState } from './support/auth';
+import { apiLogin, authDir, storageState } from './support/auth';
 import { baseURL, roles } from './support/env';
 
 export default async function globalSetup() {
@@ -16,8 +16,7 @@ export default async function globalSetup() {
         ignoreHTTPSErrors: true,
         extraHTTPHeaders: { 'X-WP-Test-Env': 'playwright' },
       });
-      const page = await context.newPage();
-      await login(page, role);
+      await apiLogin(context, role);
       await context.storageState({ path: storageState(role) });
       await context.close();
     }

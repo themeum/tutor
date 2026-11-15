@@ -51,9 +51,9 @@ export class CourseBuilderPage {
   /** Start a new course with the builder and return its ID. */
   async createNew(): Promise<number> {
     await this.page.goto(backendUrls.tutorDashboard);
-    const detailsPromise = this.page
-      .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
-      .catch(() => null);
+    const detailsPromise = this.page.waitForResponse((res) => res.url().includes('tutor_course_details') && res.ok(), {
+      timeout: 30_000,
+    });
     await this.page.locator('.tutor-create-new-course:visible').first().click();
     await expect(this.page).toHaveURL(/course_id=\d+/);
     await expect(this.submitButton).toBeVisible();
@@ -69,9 +69,9 @@ export class CourseBuilderPage {
   /** Open an existing course in the builder. */
   async open(courseId: number): Promise<void> {
     this.currentCourseId = courseId;
-    const detailsPromise = this.page
-      .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
-      .catch(() => null);
+    const detailsPromise = this.page.waitForResponse((res) => res.url().includes('tutor_course_details') && res.ok(), {
+      timeout: 30_000,
+    });
     await this.page.goto(`${backendUrls.courseBuilder}&course_id=${courseId}`);
     await expect(this.submitButton).toBeVisible();
     await detailsPromise;
@@ -100,13 +100,15 @@ export class CourseBuilderPage {
 
   /** Save the course from the header and wait for the success toast. */
   async save(): Promise<void> {
-    // The success toast lives for 3s; clear the previous one so its replacement is unambiguous.
-    await this.saveToast
-      .last()
-      .waitFor({ state: 'hidden' })
-      .catch(() => undefined);
-
+    const savePromise = this.page.waitForResponse(
+      (res) =>
+        res.url().includes('admin-ajax.php') &&
+        (res.request().postData() ?? '').includes('tutor_update_course') &&
+        res.ok(),
+      { timeout: 20_000 },
+    );
     await this.submitButton.click();
+    await savePromise;
     await expect(this.saveToast.last()).toBeVisible({ timeout: 20_000 });
   }
 

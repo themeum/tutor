@@ -19,10 +19,5 @@ test('student enrolls in a free course and opens the lesson @smoke', async ({ st
   await expect(startLearning).toBeVisible({ timeout: 15_000 });
   await startLearning.click();
 
-  const skipTour = page.getByRole('button', { name: 'Skip' });
-  if (await skipTour.isVisible().catch(() => false)) {
-    await skipTour.click();
-  }
-
   await expect(page.getByText(content)).toBeVisible();
 });

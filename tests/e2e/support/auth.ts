@@ -1,11 +1,42 @@
 import path from 'node:path';
 
-import { expect, type Page } from '@playwright/test';
+import { type BrowserContext, expect, type Page } from '@playwright/test';
 
-import { credentials, type Role } from './env';
+import { baseURL, credentials, type Role } from './env';
 
 export const authDir = path.resolve(__dirname, '..', '.auth');
 export const storageState = (role: Role) => path.join(authDir, `${role}.json`);
+
+/**
+ * Log in via HTTP request to /wp-login.php directly without UI races.
+ * Sets auth cookies in the context and falls back to UI login if needed.
+ */
+export async function apiLogin(context: BrowserContext, role: Role): Promise<void> {
+  const { username, password } = credentials[role];
+  const host = new URL(baseURL).hostname;
+  await context.addCookies([{ name: 'wordpress_test_cookie', value: 'WP Cookie check', domain: host, path: '/' }]);
+
+  const res = await context.request.post('/wp-login.php', {
+    form: {
+      log: username,
+      pwd: password,
+      'wp-submit': 'Log In',
+      redirect_to: '/wp-admin/',
+      testcookie: '1',
+    },
+    maxRedirects: 0,
+    failOnStatusCode: false,
+  });
+
+  if (res.status() !== 302) {
+    const page = await context.newPage();
+    try {
+      await login(page, role);
+    } finally {
+      await page.close();
+    }
+  }
+}
 
 /**
  * Log in through WordPress. Tutor redirects students to the dashboard after login,

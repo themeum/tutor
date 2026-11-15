@@ -65,207 +65,221 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     try {
       const courseId = await courseBuilder.createNew();
 
-      await fillField(page, 'Title', title);
-      await setCourseAlias(page, slug);
-      await fillRichText(page, page, `<p>${description}</p>`);
-      await courseBuilder.selectCategory('Web Development');
-      await courseBuilder.addTag(tag);
-      await uploadMedia(page, field(page, 'Featured Image'), fixtures.image, { reuse: false });
-      await setVideoUrl(page, page, 'Intro Video', '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>');
-      await selectField(page, 'Visibility', 'Public');
-      await selectField(page, 'Difficulty Level', 'Intermediate');
-      await courseBuilder.choosePricingModel('Free');
-      await toggleSwitch(page, 'Public Course', true);
-      await toggleSwitch(page, 'Q&A', false);
+      await test.step('Author core course fields, curriculum, and settings', async () => {
+        await fillField(page, 'Title', title);
+        await setCourseAlias(page, slug);
+        await fillRichText(page, page, `<p>${description}</p>`);
+        await courseBuilder.selectCategory('Web Development');
+        await courseBuilder.addTag(tag);
+        await uploadMedia(page, field(page, 'Featured Image'), fixtures.image, { reuse: false });
+        await setVideoUrl(
+          page,
+          page,
+          'Intro Video',
+          '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
+        );
+        await selectField(page, 'Visibility', 'Public');
+        await selectField(page, 'Difficulty Level', 'Intermediate');
+        await courseBuilder.choosePricingModel('Free');
+        await toggleSwitch(page, 'Public Course', true);
+        await toggleSwitch(page, 'Q&A', false);
 
-      await openSettingsTab(page, 'Enrollment');
-      await fillField(page, 'Maximum Student', '0');
+        await openSettingsTab(page, 'Enrollment');
+        await fillField(page, 'Maximum Student', '0');
 
-      await courseBuilder.openStep('Curriculum');
-      await courseBuilder.addTopic(topicTitle, topicSummary);
-      await courseBuilder.addLesson({
-        title: lessonTitle,
-        content: `<p>${lessonContent}</p>`,
-        image: fixtures.image,
-        video: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
-        attachments: [fixtures.attachment],
-        duration: { hours: 1, minutes: 2, seconds: 3 },
+        await courseBuilder.openStep('Curriculum');
+        await courseBuilder.addTopic(topicTitle, topicSummary);
+        await courseBuilder.addLesson({
+          title: lessonTitle,
+          content: `<p>${lessonContent}</p>`,
+          image: fixtures.image,
+          video: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
+          attachments: [fixtures.attachment],
+          duration: { hours: 1, minutes: 2, seconds: 3 },
+        });
+        // Public Course should let anonymous visitors open this non-preview lesson.
+        await courseBuilder.addLesson({
+          title: publicLessonTitle,
+          content: `<p>${publicLessonContent}</p>`,
+        });
+        await courseBuilder.addQuiz({
+          title: quizTitle,
+          description: quizDescription,
+          passingGrade: 70,
+          allowAttempts: true,
+          attempts: 3,
+          timeLimit: { value: 10, unit: 'Min' },
+          autoStart: true,
+          revealAnswers: true,
+          layout: 'Full Page',
+        });
+
+        await courseBuilder.openStep('Additional');
+        await fillField(page, 'What Will I Learn?', `${benefitOne}\n${benefitTwo}`);
+        await fillField(page, 'Target Audience', audience);
+        await courseBuilder.fillDuration(4, 15);
+        await fillField(page, 'Materials Included', material);
+        await fillField(page, 'Requirements/Instructions', requirement);
+
+        await courseBuilder.save();
       });
-      // Public Course should let anonymous visitors open this non-preview lesson.
-      await courseBuilder.addLesson({
-        title: publicLessonTitle,
-        content: `<p>${publicLessonContent}</p>`,
-      });
-      await courseBuilder.addQuiz({
-        title: quizTitle,
-        description: quizDescription,
-        passingGrade: 70,
-        allowAttempts: true,
-        attempts: 3,
-        timeLimit: { value: 10, unit: 'Min' },
-        autoStart: true,
-        revealAnswers: true,
-        layout: 'Full Page',
-      });
-
-      await courseBuilder.openStep('Additional');
-      await fillField(page, 'What Will I Learn?', `${benefitOne}\n${benefitTwo}`);
-      await fillField(page, 'Target Audience', audience);
-      await courseBuilder.fillDuration(4, 15);
-      await fillField(page, 'Materials Included', material);
-      await fillField(page, 'Requirements/Instructions', requirement);
-
-      await courseBuilder.save();
 
       const course = getCourse(courseId);
-      expect(course.title).toBe(title);
-      expect(course.slug).toBe(slug);
-      expect(course.content).toContain(description);
-      expect(course.status).toBe('publish');
-      expect(course.priceType).toBe('free');
-      expect(course.isPublic).toBe(true);
-      expect(course.qna).toBe('no');
-      expect(course.level).toBe('intermediate');
-      expect(course.password).toBe('');
-      expect(course.thumbnailId).toBeGreaterThan(0);
-      expect(JSON.stringify(course.video)).toContain('youtube');
-      expect(course.categories.map((item) => item.name)).toContain('Web Development');
-      expect(course.tags.map((item) => item.name)).toContain(tag);
-      expect(course.benefits).toContain(benefitOne);
-      expect(course.benefits).toContain(benefitTwo);
-      expect(course.audience).toContain(audience);
-      expect(course.materials).toContain(material);
-      expect(course.requirements).toContain(requirement);
-      expect(course.duration).toMatchObject({ hours: '4', minutes: '15' });
-      expect(course.settings).toMatchObject({
-        maximum_students: 0,
-        course_enrollment_period: 'no',
-        pause_enrollment: 'no',
-      });
-
       const topic = course.contents.find((item) => item.title === topicTitle);
-      expect(topic?.summary).toContain(topicSummary);
-
       const lesson = topic?.children.find((item) => item.title === lessonTitle);
-      expect(lesson?.content).toContain(lessonContent);
-      expect(lesson?.meta.attachments).toHaveLength(1);
-      expect(lesson?.meta.video).toMatchObject({ runtime: { hours: '1', minutes: '02', seconds: '03' } });
-
       const publicLesson = topic?.children.find((item) => item.title === publicLessonTitle);
-      expect(publicLesson?.content).toContain(publicLessonContent);
-      expect(publicLesson?.meta.preview).toBeFalsy();
-
       const quiz = topic?.children.find((item) => item.title === quizTitle);
-      expect(quiz?.content).toContain(quizDescription);
-      expect(quiz?.meta.quiz_option).toMatchObject({
-        passing_grade: '70',
-        attempts_allowed: '3',
-        time_limit: { time_type: 'minutes', time_value: '10' },
-        quiz_auto_start: '1',
-        enable_answer_reveal: '1',
-        question_layout_view: 'question_below_each_other',
+
+      await test.step('Verify database persistence', async () => {
+        expect(course.title).toBe(title);
+        expect(course.slug).toBe(slug);
+        expect(course.content).toContain(description);
+        expect(course.status).toBe('publish');
+        expect(course.priceType).toBe('free');
+        expect(course.isPublic).toBe(true);
+        expect(course.qna).toBe('no');
+        expect(course.level).toBe('intermediate');
+        expect(course.password).toBe('');
+        expect(course.thumbnailId).toBeGreaterThan(0);
+        expect(JSON.stringify(course.video)).toContain('youtube');
+        expect(course.categories.map((item) => item.name)).toContain('Web Development');
+        expect(course.tags.map((item) => item.name)).toContain(tag);
+        expect(course.benefits).toContain(benefitOne);
+        expect(course.benefits).toContain(benefitTwo);
+        expect(course.audience).toContain(audience);
+        expect(course.materials).toContain(material);
+        expect(course.requirements).toContain(requirement);
+        expect(course.duration).toMatchObject({ hours: '4', minutes: '15' });
+        expect(course.settings).toMatchObject({
+          maximum_students: 0,
+          course_enrollment_period: 'no',
+          pause_enrollment: 'no',
+        });
+
+        expect(topic?.summary).toContain(topicSummary);
+        expect(lesson?.content).toContain(lessonContent);
+        expect(lesson?.meta.attachments).toHaveLength(1);
+        expect(lesson?.meta.video).toMatchObject({ runtime: { hours: '1', minutes: '02', seconds: '03' } });
+
+        expect(publicLesson?.content).toContain(publicLessonContent);
+        expect(publicLesson?.meta.preview).toBeFalsy();
+
+        expect(quiz?.content).toContain(quizDescription);
+        expect(quiz?.meta.quiz_option).toMatchObject({
+          passing_grade: '70',
+          attempts_allowed: '3',
+          time_limit: { time_type: 'minutes', time_value: '10' },
+          quiz_auto_start: '1',
+          enable_answer_reveal: '1',
+          question_layout_view: 'question_below_each_other',
+        });
       });
 
-      // Reloading the builder must restore every saved field.
-      const reloadDetailsPromise = page
-        .waitForResponse((res) => res.url().includes('tutor_course_details'), { timeout: 30_000 })
-        .catch(() => null);
-      await page.reload();
-      await reloadDetailsPromise;
-      await courseBuilder.openStep('Basics');
-      await expect(field(page, 'Title').locator('input')).toHaveValue(title);
-      await expect(page.getByTestId('course-slug')).toContainText(slug);
-      await openSettingsTab(page, 'General');
-      await expect(field(page, 'Public Course').locator('input[data-input][type="checkbox"]')).toBeChecked();
-      await expect(field(page, 'Q&A').locator('input[data-input][type="checkbox"]')).not.toBeChecked();
-      await openSettingsTab(page, 'Enrollment');
-      await expect(field(page, 'Maximum Student').locator('input')).toHaveValue('0');
-      await courseBuilder.openStep('Curriculum');
-      await expect(page.getByText(topicTitle, { exact: true }).first()).toBeVisible();
-      await expect(page.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
-      await expect(page.getByText(quizTitle, { exact: true }).first()).toBeVisible();
-      await courseBuilder.openStep('Additional');
-      const durationWrapper = field(page, 'Total Course Duration').locator('..');
-      await expect(durationWrapper.locator('input').nth(0)).toHaveValue('4');
-      await expect(durationWrapper.locator('input').nth(1)).toHaveValue('15');
-      await expect(field(page, 'What Will I Learn?').locator('textarea')).toHaveValue(new RegExp(benefitOne));
+      await test.step('Reload builder and verify field restoration', async () => {
+        const reloadDetailsPromise = page.waitForResponse(
+          (res) => res.url().includes('tutor_course_details') && res.ok(),
+          { timeout: 30_000 },
+        );
+        await page.reload();
+        await reloadDetailsPromise;
+        await courseBuilder.openStep('Basics');
+        await expect(field(page, 'Title').locator('input')).toHaveValue(title);
+        await expect(page.getByTestId('course-slug')).toContainText(slug);
+        await openSettingsTab(page, 'General');
+        await expect(field(page, 'Public Course').locator('input[data-input][type="checkbox"]')).toBeChecked();
+        await expect(field(page, 'Q&A').locator('input[data-input][type="checkbox"]')).not.toBeChecked();
+        await openSettingsTab(page, 'Enrollment');
+        await expect(field(page, 'Maximum Student').locator('input')).toHaveValue('0');
+        await courseBuilder.openStep('Curriculum');
+        await expect(page.getByText(topicTitle, { exact: true }).first()).toBeVisible();
+        await expect(page.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
+        await expect(page.getByText(quizTitle, { exact: true }).first()).toBeVisible();
+        await courseBuilder.openStep('Additional');
+        const durationWrapper = field(page, 'Total Course Duration').locator('..');
+        await expect(durationWrapper.locator('input').nth(0)).toHaveValue('4');
+        await expect(durationWrapper.locator('input').nth(1)).toHaveValue('15');
+        await expect(field(page, 'What Will I Learn?').locator('textarea')).toHaveValue(new RegExp(benefitOne));
+      });
 
-      // The course renders on the frontend for enrolled and anonymous visitors.
-      await studentPage.goto(course.url);
-      await expect(studentPage.locator('.tutor-course-details-title')).toContainText(title);
-      await expect(studentPage.locator('.tutor-course-details-content')).toContainText(description);
-      await expect(studentPage.getByText('What Will You Learn?')).toBeVisible();
-      await expect(studentPage.getByText(benefitOne, { exact: true })).toBeVisible();
-      await expect(studentPage.getByText(benefitTwo, { exact: true })).toBeVisible();
-      await expect(studentPage.getByText(audience, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(material, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(requirement, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(topicTitle).first()).toBeVisible();
-      await expect(studentPage.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(publicLessonTitle, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(quizTitle, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.locator('iframe[src*="youtube"]').first()).toBeVisible();
-      await expect(studentPage.getByText('Intermediate', { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText('Web Development', { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText(tag, { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByText('E2E Instructor', { exact: true }).first()).toBeVisible();
-      await expect(studentPage.getByRole('link', { name: 'Q&A', exact: true })).toHaveCount(0);
+      await test.step('Verify frontend course and curriculum rendering', async () => {
+        await studentPage.goto(course.url);
+        await expect(studentPage.locator('.tutor-course-details-title')).toContainText(title);
+        await expect(studentPage.locator('.tutor-course-details-content')).toContainText(description);
+        await expect(studentPage.getByText('What Will You Learn?')).toBeVisible();
+        await expect(studentPage.getByText(benefitOne, { exact: true })).toBeVisible();
+        await expect(studentPage.getByText(benefitTwo, { exact: true })).toBeVisible();
+        await expect(studentPage.getByText(audience, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(material, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(requirement, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(topicTitle).first()).toBeVisible();
+        await expect(studentPage.getByText(lessonTitle, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(publicLessonTitle, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(quizTitle, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.locator('iframe[src*="youtube"]').first()).toBeVisible();
+        await expect(studentPage.getByText('Intermediate', { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText('Web Development', { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText(tag, { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByText('E2E Instructor', { exact: true }).first()).toBeVisible();
+        await expect(studentPage.getByRole('link', { name: 'Q&A', exact: true })).toHaveCount(0);
 
-      const sidebarMeta = studentPage.locator('.tutor-single-course-sidebar .tutor-card-footer');
-      await expect(sidebarMeta).toContainText('Intermediate');
-      const durationMeta = sidebarMeta.locator('li').filter({ hasText: 'Duration' });
-      await expect(durationMeta).toContainText('4');
-      await expect(durationMeta).toContainText('15');
+        const sidebarMeta = studentPage.locator('.tutor-single-course-sidebar .tutor-card-footer');
+        await expect(sidebarMeta).toContainText('Intermediate');
+        const durationMeta = sidebarMeta.locator('li').filter({ hasText: 'Duration' });
+        await expect(durationMeta).toContainText('4');
+        await expect(durationMeta).toContainText('15');
+      });
 
-      const thumbnailName =
-        (course.thumbnailUrl || '')
-          .split('/')
-          .pop()
-          ?.replace(/\.[^.]+$/, '') ?? '';
-      expect(thumbnailName).not.toBe('');
-      await guestPage.goto('/courses/');
-      const courseCard = await findCourseCard(guestPage, title);
-      await expect(courseCard.locator('img.tutor-card-image-top').first()).toHaveAttribute(
-        'src',
-        new RegExp(thumbnailName),
-      );
+      await test.step('Verify guest public access to lessons and featured image', async () => {
+        const thumbnailName =
+          (course.thumbnailUrl || '')
+            .split('/')
+            .pop()
+            ?.replace(/\.[^.]+$/, '') ?? '';
+        expect(thumbnailName).not.toBe('');
+        await guestPage.goto('/courses/');
+        const courseCard = await findCourseCard(guestPage, title);
+        await expect(courseCard.locator('img.tutor-card-image-top').first()).toHaveAttribute(
+          'src',
+          new RegExp(thumbnailName),
+        );
 
-      await guestPage.goto(lesson?.url ?? '');
-      await expect(guestPage.getByRole('img', { name: 'Permission Denied' })).toHaveCount(0);
-      await expect(guestPage.getByText(lessonContent, { exact: false }).first()).toBeVisible();
-      await expect(guestPage.locator('iframe[src*="youtube"]').first()).toBeVisible();
-      await expect(guestPage.getByText(/Video - 1:02:03/).first()).toBeVisible();
-      await expect(
-        guestPage.locator('.tutor-attachment-card-title', { hasText: 'course-attachment' }).first(),
-      ).toBeAttached();
+        await guestPage.goto(lesson?.url ?? '');
+        await expect(guestPage.getByRole('img', { name: 'Permission Denied' })).toHaveCount(0);
+        await expect(guestPage.getByText(lessonContent, { exact: false }).first()).toBeVisible();
+        await expect(guestPage.locator('iframe[src*="youtube"]').first()).toBeVisible();
+        await expect(guestPage.getByText(/Video - 1:02:03/).first()).toBeVisible();
+        await expect(
+          guestPage.locator('.tutor-attachment-card-title', { hasText: 'course-attachment' }).first(),
+        ).toBeAttached();
 
-      // Public Course lets a guest open a lesson that is not marked as a preview.
-      await guestPage.goto(publicLesson?.url ?? '');
-      await expect(guestPage.getByRole('img', { name: 'Permission Denied' })).toHaveCount(0);
-      await expect(guestPage.getByText(publicLessonContent).first()).toBeVisible();
+        // Public Course lets a guest open a lesson that is not marked as a preview.
+        await guestPage.goto(publicLesson?.url ?? '');
+        await expect(guestPage.getByRole('img', { name: 'Permission Denied' })).toHaveCount(0);
+        await expect(guestPage.getByText(publicLessonContent).first()).toBeVisible();
+      });
 
-      // Enabling Q&A adds the course tab; enrolling shows the expiry date.
-      await courseBuilder.open(courseId);
-      await courseBuilder.openStep('Basics');
-      await openSettingsTab(page, 'General');
-      await toggleSwitch(page, 'Q&A', true);
-      await courseBuilder.save();
-      expect(getCourse(courseId).qna).toBe('yes');
+      await test.step('Enable Q&A and verify enrolled quiz learning area settings', async () => {
+        await courseBuilder.open(courseId);
+        await courseBuilder.openStep('Basics');
+        await openSettingsTab(page, 'General');
+        await toggleSwitch(page, 'Q&A', true);
+        await courseBuilder.save();
+        expect(getCourse(courseId).qna).toBe('yes');
 
-      enrollStudent({ courseId, user: 'student' });
-      await studentPage.goto(course.url);
-      const qnaTab = studentPage.getByRole('link', { name: 'Q&A', exact: true });
-      await expect(qnaTab).toBeVisible();
-      await qnaTab.click();
-      await expect(studentPage.locator('#tutor-course-details-tab-questions')).toBeVisible();
-      await expect(studentPage.getByText('This feature has been disabled by the administrator')).toHaveCount(0);
+        enrollStudent({ courseId, user: 'student' });
+        await studentPage.goto(course.url);
+        const qnaTab = studentPage.getByRole('link', { name: 'Q&A', exact: true });
+        await expect(qnaTab).toBeVisible();
+        await qnaTab.click();
+        await expect(studentPage.locator('#tutor-course-details-tab-questions')).toBeVisible();
+        await expect(studentPage.getByText('This feature has been disabled by the administrator')).toHaveCount(0);
 
-      // Quiz settings are reflected on the learning-area quiz screen.
-      await studentPage.goto(quiz?.url ?? '');
-      await expect(studentPage.getByText('Questions 1', { exact: true })).toBeVisible();
-      await expect(studentPage.getByText('Quiz Time 10 Minutes', { exact: true })).toBeVisible();
-      await expect(studentPage.getByText('Passing Grade 70%', { exact: true })).toBeVisible();
-      await expect(studentPage.getByText('Total Attempts 3', { exact: true })).toBeVisible();
+        await studentPage.goto(quiz?.url ?? '');
+        await expect(studentPage.getByText('Questions 1', { exact: true })).toBeVisible();
+        await expect(studentPage.getByText('Quiz Time 10 Minutes', { exact: true })).toBeVisible();
+        await expect(studentPage.getByText('Passing Grade 70%', { exact: true })).toBeVisible();
+        await expect(studentPage.getByText('Total Attempts 3', { exact: true })).toBeVisible();
+      });
     } finally {
       setTutorOption('enable_q_and_a_on_course', previousQna.previous_value);
       setTutorOption('enable_course_duration', previousDuration.previous_value);
