@@ -495,7 +495,7 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
     studentPage,
   }) => {
     const plugins = getPlugins();
-    test.skip(!plugins.active.some((p) => p.includes('woocommerce')), 'WooCommerce is not active in this environment');
+    test.skip(!plugins.isWooCommerceActive, 'WooCommerce is not active in this environment');
 
     test.setTimeout(240_000);
     const stamp = Date.now();

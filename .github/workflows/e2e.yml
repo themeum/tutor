@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload Blob Report Shard
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
           name: blob-report-${{ matrix.shardIndex }}
           path: wordpress/wp-content/plugins/tutor/tests/e2e/blob-report/
@@ -151,10 +151,22 @@ jobs:
     needs: e2e
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Download blob reports
         uses: actions/download-artifact@v4
@@ -163,12 +175,29 @@ jobs:
           pattern: blob-report-*
           merge-multiple: true
 
-      - name: Merge reports
+      - name: Validate & Merge reports
         run: |
-          npx playwright merge-reports --reporter=html,junit ./all-blob-reports
+          mkdir -p all-blob-reports
+          # Verify integrity of downloaded zip archives and purge any truncated/corrupted ones
+          for zip in all-blob-reports/*.zip; do
+            if [ -f "$zip" ]; then
+              if ! unzip -tq "$zip" 2>/dev/null; then
+                echo "::warning::Removing corrupted or truncated blob report: $zip"
+                rm -f "$zip"
+              fi
+            fi
+          done
+
+          # Only merge if valid blob report archives remain
+          if compgen -G "all-blob-reports/*.zip" > /dev/null; then
+            pnpm exec playwright merge-reports --reporter=html,junit ./all-blob-reports
+          else
+            echo "::warning::No valid blob reports found to merge."
+          fi
 
       - name: Upload Unified Playwright HTML Report
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: playwright-report-merged
           path: playwright-report/

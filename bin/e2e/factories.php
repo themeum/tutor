@@ -1087,9 +1087,17 @@ function e2e_factory_set_http_stub( array $input ): array {
  * @return array
  */
 function e2e_factory_get_plugins( array $input ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	$active = array();
+	foreach ( (array) get_option( 'active_plugins', array() ) as $plugin ) {
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+			$active[] = $plugin;
+		}
+	}
+
 	return array(
-		'active'    => array_values( (array) get_option( 'active_plugins', array() ) ),
-		'installed' => array_keys( get_plugins() ),
+		'active'              => array_values( $active ),
+		'installed'           => array_keys( get_plugins() ),
+		'isWooCommerceActive' => class_exists( 'WC_Product_Simple' ) || class_exists( 'WooCommerce' ),
 	);
 }
 
