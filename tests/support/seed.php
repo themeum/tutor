@@ -29,10 +29,18 @@ function e2e_seed_assert( $condition, $message ): void {
 e2e_seed_assert( function_exists( 'tutor_utils' ), 'Tutor is not active.' );
 
 $e2e_env_file = dirname( __DIR__, 2 ) . '/.env';
-$env_password = getenv( 'E2E_PASSWORD' );
-$e2e_password = ( false !== $env_password && '' !== $env_password )
-	? $env_password
-	: ( $e2e_env['E2E_PASSWORD'] ?? 'password' );
+$e2e_env      = is_readable( $e2e_env_file ) ? (array) parse_ini_file( $e2e_env_file, false, INI_SCANNER_RAW ) : array();
+
+if ( ! function_exists( 'e2e_password' ) ) {
+	function e2e_password( array $env ): string {
+		$v = getenv( 'E2E_PASSWORD' );
+		if ( false !== $v && '' !== $v ) {
+			return $v;
+		}
+		return (string) ( $env['E2E_PASSWORD'] ?? 'password' );
+	}
+}
+$e2e_password = e2e_password( $e2e_env );
 
 // Ensure Anyone Can Register is on so admin notices are suppressed.
 update_option( 'users_can_register', 1 );

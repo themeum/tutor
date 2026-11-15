@@ -116,8 +116,8 @@ if ( $test_db && $phpunit_db && $test_db === $phpunit_db ) {
 if ( '' !== $test_db && ! preg_match( '/_test$/i', $test_db ) ) {
 	$errors[] = "WP_TEST_DB_NAME '{$test_db}' must end in _test";
 }
-if ( '' !== $phpunit_db && ! preg_match( '/(_test|phpunit)/i', $phpunit_db ) ) {
-	$errors[] = "WP_PHPUNIT_DB_NAME '{$phpunit_db}' must end in _test or contain phpunit";
+if ( '' !== $phpunit_db && ! preg_match( '/_(test|phpunit)$/i', $phpunit_db ) ) {
+	$errors[] = "WP_PHPUNIT_DB_NAME '{$phpunit_db}' must end in _test or _phpunit";
 }
 
 $hosts    = tutor_preflight_env( 'WP_TEST_HOSTS', $env, 'localhost,127.0.0.1,::1,*.local' );

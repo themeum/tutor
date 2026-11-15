@@ -114,11 +114,11 @@ Exit: `composer test:install` prints a plan and applies after confirmation; `--y
 - New `tests/support/seed.php` (pure WP, no `WP_CLI`):
   - five roles: `admin`, `instructor`, `student`, `student2`, `manager`;
   - password from `E2E_PASSWORD`, default `password`;
-  - pages, settings, manual payment, baseline course/topic/lesson from `bin/e2e/seed.php`;
-  - invoke `../tutor-pro/bin/e2e/seed-pro.php` when present.
+  - pages, settings, manual payment, baseline course/topic/lesson from `tests/e2e/bin/seed.php`;
+  - invoke `../tutor-pro/tests/e2e/bin/seed-pro.php` when present.
 - `tests/support/reset-test-db.php` — replace the inline users/course with a `require` of the seeder.
-- `bin/e2e/seed.php` — becomes a thin wrapper or is deleted after wp-env removal.
-- `bin/e2e/seed-admin.php` — fold into the shared seeder.
+- `tests/e2e/bin/seed.php` — becomes a thin wrapper or is deleted after wp-env removal.
+- `tests/e2e/bin/seed-admin.php` — fold into the shared seeder.
 - `tests/e2e/support/env.ts` — defaults stay `password`; the seeder now matches.
 
 Exit: reset produces five users with `password`, and the current suite logs in without credential overrides.
@@ -129,9 +129,9 @@ Exit: reset produces five users with `password`, and the current suite logs in w
   - `WP_ROOT` env, default `path.resolve(process.cwd(), '../../..')`;
   - `WP_CLI_BIN` env, default `wp`;
   - `E2E_FACTORY_RUNNER` — `wp-cli` default, `wp-env` kept temporarily for the old CI;
-  - run `wp --path <WP_ROOT> eval-file <plugin>/bin/e2e/factories.php <payload>` with `WP_TEST_ENV=1`;
+  - run `wp --path <WP_ROOT> eval-file <plugin>/tests/e2e/bin/factories.php <payload>` with `WP_TEST_ENV=1`;
   - results directory `<WP_ROOT>/wp-content/e2e`, not `process.cwd()/.e2e`.
-- `bin/e2e/factories.php` — accept an explicit result directory from the payload; fall back to `WP_CONTENT_DIR/e2e`.
+- `tests/e2e/bin/factories.php` — accept an explicit result directory from the payload; fall back to `WP_CONTENT_DIR/e2e`.
 - `tests/e2e/support/factories.ts` error message — point at the new directory.
 
 Exit: all 27 factory cases return a result locally; rerunning a spec is idempotent.
@@ -144,7 +144,7 @@ Exit: all 27 factory cases return a result locally; rerunning a spec is idempote
   - set `active_plugins` before running activation hooks;
   - run `activate_plugin()` for each, so Pro/Woo tables and roles are created in the test DB;
   - load the Pro seeder when present.
-- `bin/e2e/mu-plugins/e2e-http-stub.php` and `e2e-mail-log.php`
+- `tests/e2e/bin/mu-plugins/e2e-http-stub.php` and `e2e-mail-log.php`
   - return early unless `TutorTestConfig::is_test_environment()`;
   - installer links them into `wp-content/mu-plugins/tutor-e2e-*.php`;
   - `--uninstall` removes the links.
@@ -183,7 +183,7 @@ Exit: a PR run is green with zero retries.
 
 ## Phase 8 — Remove wp-env
 
-- Delete `.wp-env.json`, generated `.wp-env.override.json`, `bin/e2e/run.sh`, `bin/e2e/ensure-docker.sh`, `bin/e2e/seed.sh`, `bin/e2e/seed.php`, `bin/e2e/seed-admin.php`.
+- Delete `.wp-env.json`, generated `.wp-env.override.json`, `tests/e2e/bin/run.sh`, `tests/e2e/bin/ensure-docker.sh`, `tests/e2e/bin/seed.sh`, `tests/e2e/bin/seed.php`, `tests/e2e/bin/seed-admin.php`.
 - Remove `@wordpress/env` from `devDependencies` and the wp-env scripts (`test`, `e2e`, `e2e:full`, `e2e:journey`, `e2e:open`, `e2e:env`, `e2e:reset`, `e2e:down`); point `test` at `pnpm test:e2e`.
 - Remove the `wp-env` branch from `factories.ts`.
 - `.gitignore`: drop `.wp-env.override.json`; keep `.env`, `.e2e/`, `test-results/`, `playwright-report/`.

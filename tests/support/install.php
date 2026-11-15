@@ -403,8 +403,8 @@ final class Tutor_Test_Installer {
 		if ( '' === $this->db['phpunit'] || $this->db['phpunit'] === $this->live_db['name'] || $this->db['phpunit'] === $this->db['name'] ) {
 			throw new RuntimeException( "Refusing PHPUnit database '{$this->db['phpunit']}': it must differ from the live and E2E databases." );
 		}
-		if ( ! preg_match( '/(_test|phpunit)/i', $this->db['phpunit'] ) ) {
-			throw new RuntimeException( "Refusing PHPUnit database '{$this->db['phpunit']}': the name must end in _test or contain phpunit." );
+		if ( ! preg_match( '/_(test|phpunit)$/i', $this->db['phpunit'] ) ) {
+			throw new RuntimeException( "Refusing PHPUnit database '{$this->db['phpunit']}': the name must end in _test or _phpunit." );
 		}
 
 		return "{$this->db['name']} + {$this->db['phpunit']} @ {$this->db['host']}";
@@ -622,7 +622,7 @@ PHP,
 		$dropped = array();
 
 		foreach ( array( $this->db['name'], $this->db['phpunit'] ) as $name ) {
-			if ( '' === $name || $name === $this->live_db['name'] || ! preg_match( '/(_test|phpunit)/i', $name ) ) {
+			if ( '' === $name || $name === $this->live_db['name'] || ! preg_match( '/_(test|phpunit)$/i', $name ) ) {
 				throw new RuntimeException( "Refusing to drop unsafe database '{$name}'." );
 			}
 

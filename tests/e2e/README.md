@@ -57,7 +57,7 @@ tests/support/
   preflight.php        # fail-fast database safety checks
   seed.php             # shared five-role seeder
   reset-test-db.php    # drop, install, seed
-bin/e2e/
+tests/e2e/bin/
   factories.php        # per-spec courses/lessons/enrollments
   mu-plugins/          # mail log and HTTP stub (test requests only)
 ```

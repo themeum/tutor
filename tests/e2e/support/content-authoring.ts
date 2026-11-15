@@ -247,14 +247,14 @@ export const setVideoUrl = async (
     const current = await sourceInput.inputValue();
     if (current !== source) {
       const sourceOption = page.getByRole('button', { name: source, exact: true }).filter({ visible: true }).last();
-      // Toggling the select can need more than one attempt inside a modal's focus trap.
-      for (let attempt = 0; attempt < 4 && (await sourceOption.count()) === 0; attempt++) {
-        await sourceInput.evaluate((element) => (element as HTMLElement).click());
-        await page.waitForTimeout(200);
-      }
-      await expect(sourceOption).toBeVisible();
-      // Picking a source re-renders the popover, detaching the option mid-click.
-      await sourceOption.evaluate((element) => (element as HTMLElement).click());
+      await expect(async () => {
+        if (!(await sourceOption.isVisible())) {
+          await sourceInput.click();
+        }
+        await expect(sourceOption).toBeVisible({ timeout: 1000 });
+      }).toPass({ timeout: 10_000 });
+      await sourceOption.click();
+      await expect(sourceInput).toHaveValue(source);
     }
   }
 

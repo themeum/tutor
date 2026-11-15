@@ -121,17 +121,17 @@ built from scratch by `tests/support/reset-test-db.php` and seeded by
 | `tests/e2e/support/env.ts`               | Fixed usernames, password, base URL, role list                                 |
 | `tests/e2e/support/test.ts`              | Role page fixtures (`adminPage`, `studentPage`, ...)                           |
 | `tests/e2e/support/factories.ts`         | TypeScript bridge to the WP-CLI factories                                      |
-| `bin/e2e/factories.php`                  | Per-spec fixture creation inside the test database                             |
-| `bin/e2e/mu-plugins/e2e-http-stub.php`   | Deterministic external HTTP responses                                          |
-| `bin/e2e/mu-plugins/e2e-mail-log.php`    | Captures `wp_mail()` instead of sending mail                                   |
+| `tests/e2e/bin/factories.php`                  | Per-spec fixture creation inside the test database                             |
+| `tests/e2e/bin/mu-plugins/e2e-http-stub.php`   | Deterministic external HTTP responses                                          |
+| `tests/e2e/bin/mu-plugins/e2e-mail-log.php`    | Captures `wp_mail()` instead of sending mail                                   |
 | `.github/workflows/e2e.yml`              | CI: MySQL, installer, `wp server`, Playwright, artifacts                       |
 | `.env.example`                           | The documented environment variables                                           |
 
 Pro-owned code stays in `tutor-pro`:
 
 - `tutor-pro/tests/e2e/` — Pro specs, Pro support, Pro factories.
-- `tutor-pro/bin/e2e/seed-pro.php` — Pro add-on and dashboard fixtures.
-- `tutor-pro/bin/e2e/factories.php` — Pro-only factories such as course bundles.
+- `tutor-pro/tests/e2e/bin/seed-pro.php` — Pro add-on and dashboard fixtures.
+- `tutor-pro/tests/e2e/bin/factories.php` — Pro-only factories such as course bundles.
 
 The free plugin auto-detects those paths. It does not copy Pro code into the
 free repo.
@@ -429,7 +429,7 @@ It also sets the wizard flags, feature version, and first-activation time.
 - Creates the baseline `Sample Test Course` with `Introduction Topic` and
   `Lesson 1: Getting Started` if that course does not already exist.
 - Requires `tests/support/seed-admin.php`.
-- Requires `tutor-pro/bin/e2e/seed-pro.php` when that file exists.
+- Requires `tutor-pro/tests/e2e/bin/seed-pro.php` when that file exists.
 
 `seed-admin.php` adds the admin dashboard baseline: categories and tags,
 published/draft/pending courses, orders and order items, announcements, Q&A
@@ -563,7 +563,7 @@ WordPress root.
 
 ### 7.2 Free factories
 
-`bin/e2e/factories.php` supports:
+`tests/e2e/bin/factories.php` supports:
 
 | Factory | Creates or returns |
 | --- | --- |
@@ -589,7 +589,7 @@ WordPress root.
 | `add_capability`, `remove_capability` | Per-user capabilities |
 | `get_cron` | Cron hooks |
 
-Pro factories are in `tutor-pro/bin/e2e/factories.php` and currently cover
+Pro factories are in `tutor-pro/tests/e2e/bin/factories.php` and currently cover
 course bundles (`bundle`, `get_bundle`). Pro specs import the free bridge and
 pass the Pro script path.
 
@@ -607,7 +607,7 @@ database; they always run with `WP_TEST_ENV=1`.
 
 ## 8. Test-only mu-plugins
 
-The installer links `bin/e2e/mu-plugins/*.php` into
+The installer links `tests/e2e/bin/mu-plugins/*.php` into
 `wp-content/mu-plugins/tutor-*.php`. Both plugins bail out unless
 `TutorTestConfig` exists and `is_test_environment()` is true, so they are inert
 on the live site.
@@ -992,13 +992,13 @@ project when the sibling checkout exists.
 
 ### Add a factory
 
-1. Add the PHP function and a `case` in `bin/e2e/factories.php`.
+1. Add the PHP function and a `case` in `tests/e2e/bin/factories.php`.
 2. Add a typed wrapper in `tests/e2e/support/factories.ts`.
 3. Return JSON-serializable data.
 4. Keep the factory idempotent or make its unique inputs explicit.
 5. Add a small assertion in the spec that uses it.
 
-Pro-only factories go in `tutor-pro/bin/e2e/factories.php` and
+Pro-only factories go in `tutor-pro/tests/e2e/bin/factories.php` and
 `tutor-pro/tests/e2e/support/factories.ts`.
 
 ### Add a seeded fixture
@@ -1018,7 +1018,7 @@ idempotent: check for an existing entity before creating one. Run
 
 ### Add a mu-plugin
 
-1. Put it in `bin/e2e/mu-plugins/`.
+1. Put it in `tests/e2e/bin/mu-plugins/`.
 2. Bail out unless `TutorTestConfig` exists and `is_test_environment()` is
    true.
 3. Re-run `composer test:install -- --yes` to link it.
@@ -1050,7 +1050,7 @@ idempotent: check for an existing entity before creating one. Run
 
 - **Non-TTY installer.** `composer test:install` previews and exits 0 when
   stdin is not a terminal. Use `--yes` in automation.
-- **Pro seeder password.** `tutor-pro/bin/e2e/seed-pro.php` currently resets
+- **Pro seeder password.** `tutor-pro/tests/e2e/bin/seed-pro.php` currently resets
   the instructor password to the literal `password`. If you use a non-default
   `E2E_PASSWORD`, the instructor login can fail after a Pro seed. Check that
   file in the Pro repo when changing the password.

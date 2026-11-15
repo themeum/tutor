@@ -31,8 +31,9 @@ final class TutorTestConfig {
 	 * @return bool
 	 */
 	public static function is_test_environment(): bool {
+		$is_installing = function_exists( 'wp_installing' ) ? wp_installing() : ( defined( 'WP_INSTALLING' ) && constant( 'WP_INSTALLING' ) );
 		if ( ( defined( 'WP_RUNNING_TESTS' ) && WP_RUNNING_TESTS )
-			|| ( defined( 'WP_INSTALLING' ) && WP_INSTALLING )
+			|| $is_installing
 			|| ( '1' === getenv( 'WP_TEST_ENV' ) ) ) {
 			return true;
 		}
@@ -42,6 +43,23 @@ final class TutorTestConfig {
 
 		// A header or cookie only counts on an approved host.
 		return $requested && self::is_allowed_host();
+	}
+
+	/**
+	 * Assert that a test database name is safe to use or drop.
+	 *
+	 * @param string $name Database name.
+	 * @param bool   $phpunit Whether this is for phpunit.
+	 *
+	 * @throws RuntimeException If database name does not strictly end with _test or _phpunit.
+	 */
+	private static function assert_safe_name( string $name, bool $phpunit ): void {
+		$ok = $phpunit
+			? (bool) preg_match( '/_(test|phpunit)$/i', $name )
+			: (bool) preg_match( '/_test$/i', $name );
+		if ( ! $ok ) {
+			throw new RuntimeException( "Refusing unsafe test database name '{$name}'." );
+		}
 	}
 
 	/**
@@ -70,9 +88,7 @@ final class TutorTestConfig {
 				);
 			}
 
-			if ( ! preg_match( '/(_test|phpunit)/i', $name ) ) {
-				throw new RuntimeException( "Refusing unsafe test database name '{$name}'." );
-			}
+			self::assert_safe_name( $name, $is_phpunit );
 
 			if ( $name === (string) ( self::$live['NAME'] ?? '' ) ) {
 				throw new RuntimeException( "Refusing to use the live database '{$name}' for tests." );
@@ -143,6 +159,12 @@ final class TutorTestConfig {
 	 * @return bool
 	 */
 	public static function is_allowed_host(): bool {
+		$remote = (string) ( $_SERVER['REMOTE_ADDR'] ?? '' );
+		// filter_var returns the IP only for PUBLIC addresses; those may never opt in.
+		if ( '' !== $remote && false !== filter_var( $remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+			return false;
+		}
+
 		$host = (string) ( $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '' );
 		$host = strtolower( trim( (string) preg_replace( '/:\d+$/', '', $host ) ) );
 

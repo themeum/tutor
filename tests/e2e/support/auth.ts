@@ -4,8 +4,7 @@ import { expect, type Page } from '@playwright/test';
 
 import { credentials, type Role } from './env';
 
-export const authDir = path.join(process.cwd(), 'tests/e2e/.auth');
-
+export const authDir = path.resolve(__dirname, '..', '.auth');
 export const storageState = (role: Role) => path.join(authDir, `${role}.json`);
 
 /**
