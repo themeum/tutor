@@ -45,7 +45,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1,
-  reporter: [['list'], ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }]],
+  reporter: [
+    ['list'],
+    ...(process.env.CI ? [['github'] as const] : []),
+    ['html', { open: 'never', outputFolder: resolve(__dirname, 'report') }],
+  ],
   timeout: 60_000,
   expect: {
     timeout: 10_000,
