@@ -1112,8 +1112,10 @@ class Course extends Tutor_Base {
 			true
 		);
 
-		$course_id = (int) $params['course_id'];
-		if ( ! $course_id ) {
+		$current_user_id = get_current_user_id();
+		$course_id       = (int) $params['course_id'];
+		$course          = get_post( $course_id );
+		if ( ! $course_id || ! $course || tutor()->course_post_type !== $course->post_type ) {
 			$this->response_bad_request( __( 'Invalid course id', 'tutor' ) );
 		}
 
@@ -1158,8 +1160,8 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		if ( ! User::is_admin() ) {
-			unset( $params['post_author'] );
+		if ( ! User::is_admin() || ! CourseModel::is_main_instructor( $course_id, $current_user_id ) ) {
+			$params['post_author'] = $course->post_author;
 		}
 
 		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
@@ -1569,10 +1571,10 @@ class Course extends Tutor_Base {
 			'control_video_lesson_completion',
 		);
 
-		$full_settings                     = get_option( 'tutor_option', array() );
-		$settings                          = Options_V2::get_only( $required_options );
-		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
-		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+		$full_settings                = get_option( 'tutor_option', array() );
+		$settings                     = Options_V2::get_only( $required_options );
+		$logo_id                      = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+		$settings['brand_logo_light'] = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
 
 		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
@@ -1729,7 +1731,7 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$this->check_access( $course_id );
 
 		$product_id = Input::post( 'product_id' );
