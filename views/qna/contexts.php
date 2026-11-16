@@ -9,6 +9,11 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+$page_key = isset( $page_key ) ? $page_key : '';
+$context  = isset( $context ) ? $context : '';
+
 $contexts = array(
 	'qna-table' => array(
 		'columns'  => array(

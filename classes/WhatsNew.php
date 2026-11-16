@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class WhatsNew
  */

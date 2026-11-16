@@ -9,21 +9,24 @@
  * @since 2.0.0
  */
 
-extract( $data ); // $course_id, $context.
+defined( 'ABSPATH' ) || exit;
+
+$course_id = (int) ( $data['course_id'] ?? 0 );
+$context   = $data['context'] ?? '';
 ?>
-<div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
+<div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( (string) $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
 	<div class="tutor-quesanswer-askquestion tutor-qna-reply-editor">
 
 		<?php
 			$placeholder = __( 'Do you have any questions?', 'tutor' );
-			$text_editor = '<textarea placeholder="' . $placeholder . '" class="tutor-form-control"></textarea>';
-            //phpcs:ignore
+			$text_editor = '<textarea placeholder="' . esc_attr( $placeholder ) . '" class="tutor-form-control"></textarea>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo apply_filters(
 				'tutor_qna_text_editor',
 				$text_editor
 			);
 			?>
-		<?php if ( 'course-single-qna-sidebar' == $data['context'] ) : ?>
+		<?php if ( 'course-single-qna-sidebar' === $context ) : ?>
 			<div class="sidebar-ask-new-qna-submit tutor-row tutor-mt-16">
 				<div class="tutor-col">
 					<button class="sidebar-ask-new-qna-cancel-btn tutor-btn tutor-btn-outline-primary tutor-btn-block">
@@ -39,9 +42,9 @@ extract( $data ); // $course_id, $context.
 			</div>
 
 			<div class="sidebar-ask-new-qna-btn-wrap">
-				<a class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-primary tutor-btn-block">
-					<?php esc_html_e( 'Ask a New Question', 'tutor' ); ?>
-				</a>
+				<button class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-outline-primary tutor-btn-block">
+					<span><?php esc_html_e( 'Ask a New Question', 'tutor' ); ?></span>
+				</button>
 			</div>
 		<?php else : ?>
 			<div class="tutor-d-flex tutor-justify-end tutor-mt-24">
@@ -49,7 +52,6 @@ extract( $data ); // $course_id, $context.
 					<?php esc_html_e( 'Ask Question', 'tutor' ); ?>
 				</button>
 			</div>
-		<?php endif ?>
+		<?php endif; ?>
 	</div>
 </div>
-<div class="tutor-qna-single-question"></div>

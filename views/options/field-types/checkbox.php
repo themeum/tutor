@@ -9,6 +9,15 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
 $key    = $field['key'] ?? '';
 $events = $field['event'] ?? null;
 if ( $events ) {

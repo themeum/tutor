@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Core\Input;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Core\Input;
 
 /**
  * Manage taxonomies
