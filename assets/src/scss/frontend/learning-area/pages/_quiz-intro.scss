@@ -5,6 +5,7 @@
   @include tutor-card-base();
   @include tutor-card-padding(medium);
   @include tutor-card-radius(2xl);
+
   margin-top: $tutor-spacing-4;
 
   @include tutor-breakpoint-down(sm) {
@@ -20,12 +21,14 @@
     @include tutor-breakpoint-down(sm) {
       @include tutor-card-base();
       @include tutor-card-radius(2xl);
+
       padding: $tutor-spacing-5;
     }
   }
 
   &-icon {
     @include tutor-flex-center;
+
     height: 200px;
     background-color: $tutor-surface-l3;
     border-radius: $tutor-radius-lg;
@@ -45,17 +48,21 @@
 
   &-title {
     @include tutor-typography('h3', 'semibold', 'primary', 'heading');
+
     margin-top: $tutor-spacing-8;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('h5', 'semibold', 'primary', 'heading');
+
       margin-block: $tutor-spacing-5 $tutor-spacing-4;
     }
   }
 
   &-description {
     @include tutor-typography('p1', 'regular', 'secondary');
+
     margin-block: $tutor-spacing-5 $tutor-spacing-8;
+
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('small', 'regular', 'secondary');
     }
@@ -75,6 +82,7 @@
         td {
           &:first-of-type {
             width: 31.71%;
+
             svg {
               flex-shrink: 0;
             }
@@ -111,6 +119,7 @@
   .tutor-quiz-attempts {
     background-color: $tutor-surface-l1;
     overflow: hidden;
+
     .tutor-quiz-attempts-header {
       grid-template-columns: 324px 190px 1.5fr 1fr;
     }
@@ -150,6 +159,7 @@
       th {
         &.tutor-quiz-intro-attempts-header {
           @include tutor-typography('tiny', 'regular', 'secondary');
+
           letter-spacing: 0;
 
           &:first-child {
@@ -166,6 +176,7 @@
     &-row {
       @include tutor-breakpoint-down(sm) {
         @include tutor-flex(column);
+
         padding: $tutor-spacing-5;
         gap: $tutor-spacing-4;
       }
@@ -190,6 +201,7 @@
 
       @include tutor-breakpoint-down(sm) {
         width: 100%;
+
         @include tutor-flex(column);
       }
     }
@@ -199,6 +211,7 @@
 
       @include tutor-breakpoint-down(sm) {
         width: 100%;
+
         @include tutor-flex(row, center, flex-start, wrap);
 
         > div {
@@ -231,6 +244,7 @@
   &-attempt {
     &-number {
       @include tutor-typography('medium', 'semibold', 'primary');
+
       margin-bottom: $tutor-spacing-3;
 
       @include tutor-breakpoint-down(sm) {
@@ -259,6 +273,7 @@
     width: 100%;
 
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-4;
 
     @include tutor-breakpoint-down(sm) {
@@ -269,6 +284,7 @@
 
   &-time-info {
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-2;
 
     svg {
@@ -281,6 +297,7 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex();
+
       margin-inline-start: $tutor-spacing-4;
     }
   }
@@ -290,8 +307,10 @@
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-flex(row, center);
+
       margin-inline-start: auto;
       gap: $tutor-spacing-2;
+
       @include tutor-typography('tiny', 'medium', 'secondary');
     }
   }
@@ -299,6 +318,7 @@
   &-marks {
     &-breakdown {
       @include tutor-flex(column);
+
       gap: $tutor-spacing-2;
 
       @include tutor-breakpoint-down(sm) {
@@ -310,6 +330,7 @@
     &-incorrect {
       @include tutor-typography('tiny', 'medium', 'primary');
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-2;
       background-color: $tutor-gray-200;
       padding: 0 $tutor-spacing-4;

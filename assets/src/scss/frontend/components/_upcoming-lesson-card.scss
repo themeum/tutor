@@ -18,6 +18,7 @@
       .tutor-upcoming-lesson-card-live-tag-badge {
         opacity: 0;
       }
+
       .tutor-upcoming-lesson-card-action {
         opacity: 1;
         pointer-events: auto;
@@ -27,14 +28,17 @@
 
   &-header {
     @include tutor-flex(row, center, space-between);
+
     margin-bottom: $tutor-spacing-1;
     min-height: 32px;
   }
 
   &-meta {
     @include tutor-flex(row, center, flex-start);
+
     gap: $tutor-spacing-2;
     align-items: center;
+
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
   }
 
@@ -47,20 +51,24 @@
 
     &-badge {
       @include tutor-flex(row, center, center);
+
       opacity: 1;
       z-index: $tutor-z-positive;
+
       @include tutor-transition(opacity);
     }
   }
 
   &-action {
     @include tutor-flex(row, center, center);
+
     position: absolute;
     top: 0;
     inset-inline-end: 0;
     opacity: 0;
     pointer-events: none;
     z-index: $tutor-z-dropdown;
+
     @include tutor-transition(opacity);
 
     &:hover {
@@ -70,9 +78,11 @@
 
   &-title {
     display: block;
+
     @include tutor-typography('small', 'medium', 'primary', 'body');
     @include tutor-text-truncate();
-    margin: 0 0 $tutor-spacing-5 0;
+
+    margin: 0 0 $tutor-spacing-5;
 
     &:hover {
       color: $tutor-text-brand;
@@ -86,6 +96,7 @@
   &-course {
     @include tutor-flex(row, baseline, flex-start);
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+
     gap: $tutor-spacing-1;
   }
 

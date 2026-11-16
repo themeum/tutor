@@ -46,6 +46,7 @@ $height-sm: 38px;
 			background-color: var(--tutor-disabled-bg);
 			border-color: var(--tutor-disabled-bg);
 			color: var(--tutor-disabled-color);
+
 			&::placeholder {
 				color: var(--tutor-disabled-color);
 			}
@@ -55,6 +56,7 @@ $height-sm: 38px;
 			background: $color-gray-20;
 			border-color: $color-gray-20;
 			cursor: not-allowed;
+
 			&::placeholder {
 				color: var(--tutor-color-muted);
 			}
@@ -85,7 +87,7 @@ $height-sm: 38px;
 	&-select {
 		position: relative;
 		min-width: 180px;
-		text-align: left;
+		text-align: start;
 		cursor: pointer;
 
 		&-dropdown {
@@ -96,20 +98,21 @@ $height-sm: 38px;
 			max-height: 300px;
 			transition: all 100ms;
 			position: absolute;
-			left: 0px;
+			inset-inline-start: 0;
 			top: calc(100% + 5px);
-			background: #ffffff;
+			background: #fff;
 			border: 1px solid #cdcfd5;
-			box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+			box-shadow: 0 6px 20px rgb(28 49 104 / 10%);
 			border-radius: 6px;
 			z-index: 10;
 
 			.tutor-form-control {
-				padding-left: 0;
-				padding-right: 0;
+				padding-inline-start: 0;
+				padding-inline-end: 0;
 				border-top: 0;
-				border-left: 0;
-				border-right: 0;
+				border-inline-start: 0;
+				border-inline-end: 0;
+
 				// border-radius: 0;
 			}
 		}
@@ -125,7 +128,7 @@ $height-sm: 38px;
 			display: flex;
 			flex-direction: column;
 			gap: 1px;
-			padding: 8px 0px;
+			padding: 8px 0;
 			margin: 0;
 			overflow-y: auto;
 		}
@@ -163,11 +166,9 @@ $height-sm: 38px;
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		@if ($is_rtl == true) {
-			right: 0;
-		} @else {
-			left: 0;
-		}
+
+		inset-inline-start: 0;
+
 		font-size: 16px;
 		line-height: 1.4;
 		width: 40px;
@@ -181,29 +182,16 @@ $height-sm: 38px;
 		}
 	
 		&-reverse {
-			@if ($is_rtl == true) {
-				right: auto;
-				left: 0;
-			} @else {
-				left: auto;
-				right: 0;
-			}
+			inset-inline-start: auto;
+			inset-inline-end: 0;
 	
 			& ~ .tutor-form-control {
-				@if ($is_rtl == true) {
-					padding-left: 40px !important;
-				} @else {
-					padding-right: 40px !important;
-				}
+				padding-inline-end: 40px !important;
 			}
 		}
 	
 		&:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
-			@if ($is_rtl == true) {
-				padding-right: 40px !important;
-			} @else {
-				padding-left: 40px !important;
-			}
+			padding-inline-start: 40px !important;
 		}
 	}
 }
@@ -212,6 +200,7 @@ textarea {
 	&.tutor-form-control {
 		min-height: 180px;
 		resize: vertical;
+
 		&-auto-height {
 			min-height: 72px;
 		}
@@ -225,7 +214,7 @@ select.tutor-form-control,
 	background-repeat: no-repeat;
 	background-position: right 0.75rem center;
 	background-size: 16px 12px;
-	padding-right: 36px;
+	padding-inline-end: 36px;
 }
 
 .tutor-input-group {
@@ -242,6 +231,7 @@ select.tutor-form-control,
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 1.4;
+
 		// color: $input-group-addon-color;
 		text-align: center;
 		white-space: nowrap;
@@ -252,19 +242,19 @@ select.tutor-form-control,
 
 	>:not(.tutor-form-wrap):not(:last-child),
 	>.tutor-form-wrap:not(:last-child) > .tutor-form-control {
-		border-top-right-radius: 0;
-    	border-bottom-right-radius: 0;
+		border-start-end-radius: 0;
+    	border-end-end-radius: 0;
 	}
 
 	>:not(.tutor-form-wrap):not(:first-child),
 	>.tutor-form-wrap:not(:first-child) > .tutor-form-control {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
+		border-start-start-radius: 0;
+		border-end-start-radius: 0;
 	}
 
 	>:not(.tutor-form-wrap):not(:first-child),
 	>.tutor-form-wrap:not(:first-child) {
-		margin-left: -1px;
+		margin-inline-start: -1px;
 	}
 
 	>.tutor-form-control,
@@ -295,11 +285,8 @@ select.tutor-form-control,
 
 	.tutor-form-feedback-icon {
 		font-size: 18px;
-		@if ($is_rtl == true) {
-			margin-left: 8px;
-		} @else {
-			margin-right: 8px;
-		}
+
+		margin-inline-end: 8px;
 	}
 }
 
@@ -314,21 +301,15 @@ select.tutor-form-control,
 		margin: 0 !important;
 		cursor: pointer;
 	}
+
 	input.tutor-form-check-input {
-		margin-top: 0px !important;
-		@if ($is-rtl) {
-			margin-left: 8px;
-		} @else {
-			margin-right: 8px;
-		}
+		margin-top: 0 !important;
+
+		margin-inline-end: 8px;
 	}
 
 	& + & {
-		@if ($is-rtl) {
-			margin-right: 16px;
-		} @else {
-			margin-left: 16px;
-		}
+		margin-inline-start: 16px;
 	}
 }
 
@@ -349,26 +330,29 @@ select.tutor-form-control,
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: 300ms;
-	box-shadow: 0 0 0 0 rgba(var(--tutor-color-primary-rgb), 0.1);
+	box-shadow: 0 0 0 0 rgb(var(--tutor-color-primary-rgb), 0.1);
 	flex: 0 0 auto;
 
-	&:before,
-	&:after {
+	&::before,
+	&::after {
 		display: none !important;
 	}
 
 	&:focus {
-		box-shadow: 0 0 0 6px rgba(var(--tutor-color-primary-rgb), 0.1);
+		box-shadow: 0 0 0 6px rgb(var(--tutor-color-primary-rgb), 0.1);
 	}
 
 	&[type='checkbox'] {
 		border-radius: 4px;
+
 		&.tutor-form-check-square {
 			border-radius: 0;
 		}
+
 		&.tutor-form-check-circle {
 			border-radius: 50%;
 		}
+
 		&:checked {
 			border-color: var(--tutor-color-primary);
 			background-color: var(--tutor-color-primary);
@@ -402,8 +386,10 @@ select.tutor-form-control,
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;
+
 	input {
 		display: none;
+
 		~ .tutor-form-toggle-control {
 			flex-shrink: 0;
 			display: inline-block;
@@ -415,6 +401,7 @@ select.tutor-form-control,
 			cursor: pointer;
 			position: relative;
 			margin: 0 4px;
+
 			&::before {
 				content: '';
 				position: absolute;
@@ -422,20 +409,24 @@ select.tutor-form-control,
 				width: 18px;
 				background-color: var(--tutor-color-white);
 				top: 3px;
-				left: 4px;
+				inset-inline-start: 4px;
 				border-radius: 50%;
 				transition: 100ms;
-				box-shadow: 0px 2px 4px 0px #0000002A;
+				box-shadow: 0 2px 4px 0 #0000002A;
 			}
 		}
+
 		&:checked ~ .tutor-form-toggle-control {
 			background-color: var(--tutor-color-primary);
+
 			&::before {
-				left: 18px;
+				inset-inline-start: 18px;
 			}
 		}
+
 		~ .tutor-form-toggle-label {
 			padding: 0 4px;
+
 			&.tutor-form-toggle-checked {
 				color: var(--tutor-border-color);
 			}
@@ -445,6 +436,7 @@ select.tutor-form-control,
 			~ .tutor-form-toggle-checked {
 				color: inherit;
 			}
+
 			~ .tutor-form-toggle-unchecked {
 				color: var(--tutor-border-color);
 			}

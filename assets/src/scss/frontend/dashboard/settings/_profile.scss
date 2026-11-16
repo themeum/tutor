@@ -27,17 +27,17 @@
       .tutor-profile-settings-tab {
         background: transparent;
         height: auto;
+        overflow: unset;
         overflow-y: visible;
         width: 100%;
         flex-direction: column;
         gap: $tutor-spacing-6;
         border: none;
         padding: $tutor-spacing-none;
-        overflow: unset;
       }
 
       .tutor-profile-settings-tab button {
-        padding: 0px 0px;
+        padding: 0;
       }
 
       .tutor-flex:has(.tutor-profile-tab-activated) .tutor-profile-settings-tab {
@@ -128,10 +128,11 @@
 
     svg {
       color: $tutor-icon-secondary;
+
       @include tutor-transition(transform);
 
       path {
-        transform: translate(0px, 2px);
+        transform: translate(0, 2px);
       }
     }
 
@@ -145,11 +146,12 @@
   }
 
   .tutor-input-field {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   .tutor-profile-notification-content {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-3;
     padding: $tutor-spacing-6;
     border-top: 1px solid $tutor-border-idle;

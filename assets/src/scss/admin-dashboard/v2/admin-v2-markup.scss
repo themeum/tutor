@@ -1,4 +1,4 @@
-//@import './reset';
+// @import './reset';
 
 // Components
 @import './components/index';
@@ -10,7 +10,7 @@
 @import './custom-pages/index';
 
 // Conditional Style
-@import './conditionals/conditionals.scss';
+@import './conditionals/conditionals';
 
 // WP conflict override
-@import './conflict-override/conflict-override.scss';
+@import './conflict-override/conflict-override';

@@ -24,6 +24,7 @@
 	list-style: none;
 	margin: $tutor-spacing-none;
 	padding: $tutor-spacing-none;
+
 	li {
 		margin: $tutor-spacing-none;
 		padding: $tutor-spacing-none;
@@ -32,7 +33,9 @@
 
 @mixin tutor-pagination-info {
 	@include tutor-typography('small', 'regular');
+
 	margin: 0;
+
 	.tutor-pagination-current, 
 	.tutor-pagination-total {
 		font-weight: $tutor-font-weight-medium;
@@ -42,13 +45,17 @@
 
 @mixin tutor-pagination-item {
 	@include tutor-flex-center;
+
 	padding: $tutor-spacing-3 $tutor-spacing-5;
 	border-radius: $tutor-radius-md;
 	text-decoration: none;
+
 	@include tutor-typography('tiny', 'medium');
+
 	cursor: pointer;
 	min-width: 32px;
 	min-height: 32px;
+
 	@include tutor-transition((background-color, color));
 
 	// Default state
@@ -89,8 +96,11 @@
 
 @mixin tutor-pagination-ellipsis {
 	@include tutor-flex-center;
+
 	min-width: 32px;
 	min-height: 32px;
+
 	@include tutor-typography('tiny', 'medium');
+
 	cursor: default;
 }

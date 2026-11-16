@@ -134,11 +134,7 @@ class Tutor_Setup {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
 			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 
-			if ( is_rtl() ) {
-				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
-			} else {
-				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
-			}
+			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 
 			wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 

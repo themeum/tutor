@@ -2,26 +2,26 @@
 .tutor-course {
     &-card {
 		height: 100%;
+
 		.tutor-card-body {
 			display: flex;
-			flex-direction: column;
-			flex-wrap: nowrap;
+			flex-flow: column nowrap;
 		}
 		
 		.tutor-course {
 			&-bookmark {
 				position: absolute;
 				top: 12px;
-				right: 12px;
+				inset-inline-end: 12px;
 			}
 
 			&-co-author-badge {
 				position: absolute;
 				top: 9px;
-				right: 10px;
+				inset-inline-end: 10px;
 				border-radius: 4px;
 				font-size: 10px;
-				padding: 0px 7px;
+				padding: 0 7px;
 				background: #3F51B5;
 				color: white;
 			}
@@ -29,9 +29,9 @@
 			&-difficulty-level {
 				position: absolute;
 				top: 12px;
-				left: 12px;
+				inset-inline-start: 12px;
 				background: var(--tutor-color-primary);
-				color: #FFFFFF;
+				color: #FFF;
 				font-size: 12px;
 				line-height: 1.4;
 				font-weight: 500;
@@ -41,6 +41,7 @@
 
 			&-name {
 				@include tutorLineClamp(3);
+
 				&,
 				a {
 					color: var(--tutor-body-color);

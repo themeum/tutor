@@ -22,6 +22,7 @@
 
   [data-vc-week-day] {
     @include tutor-typography('tiny', 'regular', 'secondary');
+
     color: $tutor-text-secondary !important;
   }
 
@@ -29,6 +30,7 @@
   .vc-years__year.vc-years__year {
     @include tutor-button-base();
     @include tutor-button-variant('ghost');
+
     color: $tutor-text-primary;
   }
 
@@ -41,6 +43,7 @@
   button {
     box-shadow: none;
     transition: none;
+
     @include tutor-transition((background-color, color));
   }
 
@@ -129,12 +132,14 @@
 
   .vc-presets {
     grid-area: presets;
+
     @include tutor-flex(column);
 
     button {
       @include tutor-button-reset();
       @include tutor-typography(tiny, medium);
       @include tutor-flex(row, center, space-between);
+
       border-radius: $tutor-radius-sm;
       padding: $tutor-spacing-3 $tutor-spacing-5;
       text-align: start;
@@ -159,8 +164,7 @@
     }
 
     @include tutor-breakpoint-down(md) {
-      flex-direction: row;
-      flex-wrap: wrap;
+      flex-flow: row wrap;
       border-bottom: 1px solid $tutor-border-idle;
       padding-bottom: $tutor-spacing-4;
       margin-bottom: $tutor-spacing-4;

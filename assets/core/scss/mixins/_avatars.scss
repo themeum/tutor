@@ -1,10 +1,13 @@
 // Avatar Mixins
+@use 'sass:map';
+@use 'sass:meta';
 @use '../tokens' as *;
 @use 'typography' as *;
 @use 'layout' as *;
 
 @mixin tutor-avatar-base {
   @include tutor-flex-center;
+
   position: relative;
   border-radius: $tutor-radius-full;
   overflow: hidden;
@@ -25,6 +28,7 @@
 
 @mixin tutor-avatar-initials {
   @include tutor-typography('small', 'medium');
+
   color: inherit;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -71,16 +75,16 @@ $tutor-avatar-sizes: (
 );
 
 @mixin tutor-avatar-size($size) {
-  @if map-has-key($tutor-avatar-sizes, $size) {
-    $config: map-get($tutor-avatar-sizes, $size);
-    $font-size: map-get($config, font-size);
-    $icon-size: map-get($config, icon-size);
+  @if map.has-key($tutor-avatar-sizes, $size) {
+    $config: map.get($tutor-avatar-sizes, $size);
+    $font-size: map.get($config, font-size);
+    $icon-size: map.get($config, icon-size);
 
     width: #{$size}px;
     height: #{$size}px;
 
     .tutor-avatar-initials {
-      @if type-of($font-size) == 'string' {
+      @if meta.type-of($font-size) == 'string' {
         @include tutor-typography($font-size, 'medium');
       } @else {
         font-size: $font-size;
@@ -114,9 +118,10 @@ $tutor-avatar-sizes: (
     }
   } @else if $variant == border {
     border: 1px solid $tutor-border-brand-secondary;
+
     svg,
     .tutor-avatar-image {
-      border-radius: 0px;
+      border-radius: 0;
     }
   }
 }

@@ -3,14 +3,15 @@
 
 .tutor-learning-area-footer {
   margin-top: $tutor-spacing-6;
+
   @include tutor-flex(row, stretch, flex-end);
+
   gap: $tutor-spacing-4;
 
   @include tutor-breakpoint-down(sm) {
     position: fixed;
     bottom: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
+    inset-inline: 0;
     padding: $tutor-spacing-6;
     margin: 0;
     background-color: $tutor-surface-l1;
@@ -21,6 +22,7 @@
 
     .tutor-has-site-shell & {
       @include tutor-card-base();
+
       margin-top: $tutor-spacing-6;
       border-radius: $tutor-radius-2xl;
       position: sticky;
@@ -37,6 +39,7 @@
     button:not(.tutor-mark-as-complete-button),
     a {
       @include tutor-button-size(large);
+
       width: 50%;
 
       &:is(:only-child),
@@ -48,6 +51,7 @@
 
   &[data-lesson] {
     @include tutor-flex(row, center, space-between);
+
     background-color: $tutor-surface-base;
     padding: $tutor-spacing-6 0;
     margin-top: $tutor-spacing-none;
@@ -71,11 +75,13 @@
 
       a.tutor-btn {
         @include tutor-button-size(x-small);
+
         width: auto;
       }
 
       button.tutor-btn {
         @include tutor-button-size(medium);
+
         width: auto;
         gap: $tutor-spacing-4;
       }

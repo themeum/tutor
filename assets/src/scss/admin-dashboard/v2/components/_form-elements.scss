@@ -6,15 +6,17 @@
 	input[type='radio'] {
 		background-size: 120%;
 	}
+
 	input[type='checkbox'] {
 		background-size: 70%;
 	}
 
 	input.tutor-form-control {
 		padding: 0 15px;
+
 		&.tutor-w-90,
 		&[type='number'] {
-			padding: 0px 5px;
+			padding: 0 5px;
 			text-align: center;
 			max-width: 90px;
 			min-width: 90px;
@@ -22,7 +24,7 @@
 		}
 
 		&.tutor-w-160 {
-			padding: 0px 5px;
+			padding: 0 5px;
 			text-align: center;
 			max-width: 160px;
 			min-width: 160px;
@@ -45,6 +47,7 @@
 		label {
 			font-size: 15px;
 		}
+
 		.desc {
 			margin-top: 5px;
 		}
@@ -60,6 +63,7 @@
 	textarea.tutor-form-control,
 	textarea.tutor-form-control:read-only {
 		@include getTypography(400, 16px, 162%);
+
 		border-color: #bababa;
 		transition: all 200ms;
 
@@ -89,6 +93,7 @@
 		&:hover {
 			box-shadow: 0 0 10px -7px;
 		}
+
 		&:focus {
 			border-color: var(--tutor-color-primary);
 			box-shadow: 0 0 10px -5px;

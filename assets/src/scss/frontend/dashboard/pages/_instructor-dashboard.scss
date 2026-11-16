@@ -14,6 +14,7 @@
     [data-grab] {
       @include tutor-reset;
       @include tutor-flex-center;
+
       cursor: grab;
 
       svg {
@@ -30,6 +31,7 @@
     @include tutor-card-base;
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
+
     padding-bottom: $tutor-spacing-6;
 
     &-canvas {
@@ -38,16 +40,19 @@
 
     &-header {
       @include tutor-flex(row, center, space-between);
+
       padding: $tutor-spacing-6;
     }
 
     &-legend {
       @include tutor-flex(row, center);
       @include tutor-typography('tiny', 'regular', 'subdued');
+
       gap: $tutor-spacing-2;
 
       &::before {
         @include tutor-flex-center();
+
         content: '';
         height: 2px;
         width: 14px;
@@ -75,6 +80,7 @@
       .tutor-dashboard-home-chart-legend {
         @include tutor-flex(row, start);
         @include tutor-typography('tiny', 'regular', 'subdued');
+
         gap: $tutor-spacing-2;
         min-width: 99px;
 
@@ -118,11 +124,13 @@
     @include tutor-card-base;
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
+
     gap: $tutor-spacing-5;
     padding: $tutor-spacing-6;
 
     &-body {
       @include tutor-flex(column, center);
+
       gap: $tutor-spacing-5;
 
       &:has(.tutor-dashboard-home-activity) {
@@ -133,6 +141,7 @@
     &-item {
       @include tutor-flex(row, center);
       @include tutor-typography('tiny', 'regular', 'subdued');
+
       gap: $tutor-spacing-4;
       padding-inline: $tutor-spacing-5;
       width: 100%;
@@ -140,12 +149,14 @@
 
     &-avatar {
       @include tutor-flex-center();
+
       flex-shrink: 0;
     }
 
     &-icon {
       @include tutor-flex-center();
       @include tutor-typography('tiny', 'regular', 'subdued');
+
       width: 16px;
       flex-shrink: 0;
     }
@@ -156,6 +167,7 @@
     @include tutor-card-radius(lg);
     @include tutor-flex(row, center, space-between);
     @include tutor-transition(background-color);
+
     width: 100%;
     padding: $tutor-spacing-4 $tutor-spacing-5;
 
@@ -166,6 +178,7 @@
     &-index {
       @include tutor-typography('p3', 'medium', 'secondary');
       @include tutor-flex-center();
+
       width: 32px;
       height: 32px;
       aspect-ratio: 1/1;
@@ -179,6 +192,7 @@
     @include tutor-card-radius(lg);
     @include tutor-flex(row, flex-start);
     @include tutor-transition(background-color);
+
     gap: $tutor-spacing-5;
     width: 100%;
     padding: $tutor-spacing-5;
@@ -205,6 +219,7 @@
 
     &-icon {
       @include tutor-flex-center();
+
       width: 32px;
       height: 32px;
       aspect-ratio: 1/1;
@@ -218,6 +233,7 @@
 
     &-meta {
       @include tutor-typography('tiny', 'medium', 'subdued');
+
       width: fit-content;
       padding-inline: $tutor-spacing-4;
       border-radius: $tutor-radius-sm;
@@ -237,9 +253,11 @@
 
       &-badge {
         @include tutor-flex(row, center, flex-start);
+
         opacity: 1;
         visibility: visible;
         z-index: $tutor-z-positive;
+
         @include tutor-transition((opacity, visibility));
       }
     }
@@ -253,11 +271,13 @@
   &-review {
     @include tutor-card-base;
     @include tutor-card-radius(lg);
+
     width: 100%;
     padding: $tutor-spacing-5;
 
     &-avatar {
       @include tutor-flex-center();
+
       flex-shrink: 0;
       align-self: flex-start;
     }
@@ -267,6 +287,7 @@
       @include tutor-button-size(x-small);
       @include tutor-button-variant(link);
       @include tutor-flex(row, center);
+
       color: $tutor-text-subdued;
       gap: $tutor-spacing-2;
       min-height: unset;

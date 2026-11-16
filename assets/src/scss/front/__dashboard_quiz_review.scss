@@ -3,15 +3,18 @@
     .attempt-view-top {
         display: flex;
         justify-content: space-between;
+
         .attempt-info-col {
             display: inline-flex;
             align-items: center;
             max-width: 30%;
         }
     }
+
     .attempt-view-bottom .attempt-info-col {
         align-items: flex-start;
     }
+
     .attempt-info-content {
         span.result-review-required,
         span.result-pass,
@@ -21,15 +24,18 @@
             font-weight: 400;
             color: #fff;
             padding: 1px 4px;
-            margin-right: 13px;
+            margin-inline-end: 13px;
             border-radius: 2px;
         }
+
         span.result-pass {
             background: var(--tutor-color-success);
         }
+
         span.result-review-required {
             background: #f5b30d;
         }
+
         h4,
         h5 {
             font-size: 14px;
@@ -38,6 +44,7 @@
             color: #7a7f85;
             font-weight: 400;
         }
+
         h4 a,
         h4 {
             font-weight: 700;
@@ -45,11 +52,13 @@
             margin-top: 7px;
         }
     }
+
     .attempt-view-top {
         padding-bottom: 30px;
         margin-bottom: 30px;
         border-bottom: 1px solid #dcdfe5;
     }
+
     .attempt-view-bottom {
         margin-bottom: 60px;
     }
@@ -58,8 +67,10 @@
 .attempt-user-details {
     display: flex;
     align-items: center;
+
     .attempt-user-avatar {
-        padding-right: 20px;
+        padding-inline-end: 20px;
+
         img {
             display: block;
             width: 70px;
@@ -67,6 +78,7 @@
             border-radius: 50%;
         }
     }
+
     .attempt-info-content h4 {
         font-size: 18px;
     }
@@ -76,23 +88,27 @@
     display: flex;
     margin-bottom: 60px;
     justify-content: space-between;
+
     p {
         margin: 0;
         display: inline-flex;
         align-items: center;
+
         &.attempt-review-notice i {
             font-size: 16px;
             color: #f5c813;
-            margin-right: 9px;
+            margin-inline-end: 9px;
         }
+
         &.attempt-review-at > span {
             color: var(--tutor-color-primary);
-            margin-right: 7px;
+            margin-inline-end: 7px;
             font-size: 16px;
         }
+
         > strong {
             font-weight: 400;
-            margin-right: 5px;
+            margin-inline-end: 5px;
         }
     }
 }
@@ -105,8 +121,8 @@
     align-items: center;
 
     .back-to-quiz-btn {
-        margin-left: 10px;
-        color: #ffffff !important;
+        margin-inline-start: 10px;
+        color: #fff !important;
     }
 }
 
@@ -123,8 +139,9 @@
     color: #fff;
     display: inline-block;
     border-radius: 2px;
-    margin-right: 6px;
+    margin-inline-end: 6px;
 }
+
 .tutor-status-blocked-context i,
 .quiz-incorrect-answer-text i {
     background: #f44337;

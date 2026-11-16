@@ -7,7 +7,9 @@
 
   .tutor-input-wrapper {
     position: relative;
+
     @include tutor-flex(row, center, flex-start);
+
     gap: $tutor-spacing-3;
 
     .tutor-label {
@@ -52,7 +54,6 @@
   }
 
   .tutor-wp-editor-container {
-
     .wp-editor-container,
     .mce-tinymce {
       border-radius: $tutor-input-radius;
@@ -165,6 +166,7 @@
   .tutor-label {
     @include tutor-typography('small', 'medium');
     @include tutor-flex(row, center);
+
     gap: $tutor-spacing-3;
     margin-bottom: $tutor-spacing-3;
 
@@ -180,6 +182,7 @@
   .tutor-input-help-icon {
     @include tutor-button-reset;
     @include tutor-flex(row, center, center);
+
     color: $tutor-icon-subdued;
     cursor: help;
   }
@@ -188,11 +191,14 @@
     @include tutor-flex(row, center, center);
     @include tutor-button-base;
     @include tutor-button-variant('ghost');
+
     padding: $tutor-spacing-1;
     border-radius: $tutor-radius-sm;
     flex-shrink: 0;
     position: absolute;
+
     @include right($tutor-spacing-5);
+
     top: 50%;
     transform: translateY(-50%);
     color: $tutor-icon-idle;
@@ -202,7 +208,9 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+
     @include tutor-flex(row, center, center);
+
     color: $tutor-icon-secondary;
     pointer-events: none;
 
@@ -216,6 +224,7 @@
 
     .tutor-input-password-toggle {
       @include tutor-button-reset;
+
       pointer-events: auto;
       cursor: pointer;
       color: inherit;
@@ -262,11 +271,14 @@
   &-error {
     .tutor-input {
       border: 1px solid $tutor-border-error;
+
       --tutor-input-border-shadow-current: none;
+
       box-shadow: $tutor-shadow-xs;
 
       &:focus {
         @include tutor-focus-ring('error');
+
         border-color: $tutor-border-error;
       }
     }
@@ -278,6 +290,7 @@
 
       &:focus {
         @include tutor-focus-ring('error');
+
         border-color: $tutor-border-error;
       }
     }

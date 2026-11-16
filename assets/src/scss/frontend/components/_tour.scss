@@ -39,7 +39,7 @@
       }
 
       &[class*='tutor-slide-4']::after {
-        box-shadow: inset 10px 0px 20px 0px $tutor-surface-l1-hover;
+        box-shadow: inset 10px 0 20px 0 $tutor-surface-l1-hover;
       }
 
       @include tutor-breakpoint-up(sm) {
@@ -47,7 +47,7 @@
         &[class*='tutor-slide-1']::after,
         &[class*='tutor-slide-2']::after,
         &[class*='tutor-slide-3']::after {
-          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
+          box-shadow: inset -6px -6px 20px 0 $tutor-surface-l1-hover;
         }
       }
 
@@ -55,11 +55,11 @@
         &[class*='tutor-slide-0']::after,
         &[class*='tutor-slide-2']::after,
         &[class*='tutor-slide-3']::after {
-          box-shadow: inset -6px -6px 20px 0px $tutor-surface-l1-hover;
+          box-shadow: inset -6px -6px 20px 0 $tutor-surface-l1-hover;
         }
 
         &[class*='tutor-slide-1']::after {
-          box-shadow: inset 6px -6px 20px 0px $tutor-surface-l1-hover;
+          box-shadow: inset 6px -6px 20px 0 $tutor-surface-l1-hover;
         }
       }
     }
@@ -71,6 +71,7 @@
     border-radius: $tutor-radius-full;
     background: $tutor-icon-disabled;
     display: inline-block;
+
     @include tutor-transition(background);
 
     &.is-active {

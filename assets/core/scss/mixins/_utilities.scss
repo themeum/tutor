@@ -1,10 +1,11 @@
+@use 'sass:list';
+@use 'sass:math';
 @use '../tokens' as *;
 
 @mixin tutor-reset {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
   vertical-align: baseline;
   background-color: transparent;
@@ -80,13 +81,13 @@
 }
 
 @mixin tutor-transition($properties: all, $duration: 0.25s, $timing: ease-in-out, $delay: 0s) {
-  @if $properties ==all {
+  @if $properties == all {
     transition: all $duration $timing $delay;
   } @else {
     $transitions: ();
 
     @each $property in $properties {
-      $transitions: append($transitions, $property $duration $timing $delay, comma);
+      $transitions: list.append($transitions, $property $duration $timing $delay, comma);
     }
 
     transition: $transitions;
@@ -117,7 +118,7 @@
   }
 }
 
-@mixin tutor-aspect-ratio($ratio: 16/9) {
+@mixin tutor-aspect-ratio($ratio: 16 / 9) {
   aspect-ratio: $ratio;
 
   // Fallback for older browsers
@@ -127,7 +128,7 @@
     &::before {
       content: '';
       display: block;
-      padding-top: percentage(1 / $ratio);
+      padding-top: math.percentage(1 / $ratio);
     }
 
     > * {

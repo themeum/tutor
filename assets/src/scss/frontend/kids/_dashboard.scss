@@ -16,8 +16,10 @@
     .active {
       .tutor-dashboard-nav-mobile-icon {
         @include tutor-kids-shadow(false, $tutor-border-brand, $tutor-radius-full, sm);
+
         background-color: $tutor-surface-brand-tertiary;
       }
+
       .tutor-dashboard-nav-mobile-text {
         font-weight: $tutor-font-weight-semibold;
       }
@@ -55,6 +57,7 @@
 
   .tutor-billing-card:hover {
     @include tutor-kids-shadow;
+
     &:not(:last-of-type) {
       border-bottom: 1px solid transparent;
     }
@@ -164,6 +167,7 @@
       .tutor-quiz-attempts-item:hover {
         &:not(:first-of-type) {
           @include tutor-kids-shadow($tutor-border-brand-tertiary);
+
           border-bottom: 1px solid transparent;
         }
       }
@@ -217,7 +221,7 @@
 
   // notification drawer
   .tutor-pn-drawer-content {
-    border-width: 0px 2px 5px 2px;
+    border-width: 0 2px 5px;
   }
 
   // user account/notification
@@ -290,13 +294,14 @@
 
     .tutor-lesson-note:hover {
       @include tutor-kids-shadow(true, $tutor-border-brand-tertiary);
+
       border-bottom: 1px solid transparent;
     }
   }
 
   @include tutor-breakpoint-down(md) {
     .tutor-calendar {
-      border-radius: 0px;
+      border-radius: 0;
       box-shadow: none;
     }
 
@@ -312,7 +317,7 @@
   @include tutor-breakpoint-down(sm) {
     .tutor-dashboard-header-user-popover,
     .tutor-profile-settings-tab.tutor-tabs-nav {
-      border-radius: 0px !important;
+      border-radius: 0 !important;
       box-shadow: none !important;
     }
 
@@ -325,7 +330,7 @@
     .tutor-billing-body,
     .tutor-dashboard-courses-wrapper .tutor-dashboard-courses-card,
     .tutor-dashboard-lesson-notes .tutor-dashboard-page-card {
-      border-radius: 0px;
+      border-radius: 0;
       box-shadow: none;
     }
 
@@ -357,8 +362,8 @@
     }
 
     .tutor-dashboard-courses-card {
-      padding: 2px 2px 5px 2px;
-      margin: -2px -2px -5px -2px;
+      padding: 2px 2px 5px;
+      margin: -2px -2px -5px;
     }
   }
 }

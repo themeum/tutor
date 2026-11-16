@@ -6,24 +6,30 @@
 
   button.tutor-star-rating-icon-btn {
     @include tutor-button-reset();
+
     min-height: unset;
   }
 
   &.is-emoji-view {
     @include tutor-flex-column;
+
     gap: $tutor-spacing-7;
 
     .tutor-star-rating-emoji-btn {
       @include tutor-button-reset;
+
       width: 74px;
       height: 74px;
       background-color: $tutor-surface-base;
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
+
       @include tutor-flex-column;
+
       align-items: center;
       justify-content: center;
       cursor: pointer;
+
       @include tutor-transition(background-color);
 
       .tutor-rating-emoji-img {

@@ -6,6 +6,7 @@
 
 @mixin tutor-input-base($size: md) {
   @include tutor-typography('small', 'regular');
+
   width: 100%;
   padding: 7px $tutor-spacing-5;
   margin: 0;
@@ -15,8 +16,11 @@
   border-radius: $tutor-input-radius;
   background-color: $tutor-surface-l1;
   font-weight: $tutor-input-font-weight;
+
   --tutor-input-border-shadow-current: #{$tutor-input-border-shadow};
+
   box-shadow: var(--tutor-input-border-shadow-current);
+
   @include tutor-transition(all);
 
   -moz-appearance: textfield;
@@ -47,15 +51,18 @@
 
   &:focus {
     @include tutor-focus-ring();
+
     background-color: $tutor-surface-l1;
     border-color: $tutor-border-brand-tertiary;
     color: $tutor-text-primary;
+
     --tutor-input-border-shadow-current: none;
   }
 
   &:disabled {
     background-color: $tutor-surface-l1-hover;
     cursor: not-allowed;
+
     --tutor-input-border-shadow-current: none;
   }
 
@@ -77,13 +84,14 @@
 
 @mixin tutor-textarea($min-height: 92px) {
   @include tutor-input-base;
+
   min-height: $min-height;
   resize: vertical;
 }
 
 @mixin tutor-checkbox($size: sm, $intermediate: false) {
-  $checkbox-size: if($size ==md, 20px, 16px);
-  $svg-size: if($size ==md, 12px, 10px);
+  $checkbox-size: if($size == md, 20px, 16px);
+  $svg-size: if($size == md, 12px, 10px);
 
   appearance: none;
   width: $checkbox-size;
@@ -94,6 +102,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
+
   @include tutor-transition((background-color, border-color, box-shadow, color));
 
   color: $tutor-icon-idle;
@@ -112,9 +121,10 @@
     height: $svg-size;
     transform: translate(-50%, -50%) scale(0.6);
     opacity: 0;
+
     @include tutor-transition((opacity, transform));
 
-    background-color: currentColor;
+    background-color: currentcolor;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E")
       center / contain no-repeat;
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E")
@@ -147,14 +157,14 @@
     }
   }
 
-  @if $intermediate ==true {
+  @if $intermediate == true {
     &::after {
       mask: none;
       -webkit-mask: none;
       width: 7px;
       height: 2.5px;
       border-radius: $tutor-radius-full;
-      background-color: currentColor;
+      background-color: currentcolor;
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
@@ -166,8 +176,8 @@
 }
 
 @mixin tutor-radio($size: sm) {
-  $radio-size: if($size ==md, 20px, 16px);
-  $inner-circle: if($size ==md, 8px, 6px);
+  $radio-size: if($size == md, 20px, 16px);
+  $inner-circle: if($size == md, 8px, 6px);
 
   appearance: none;
   width: $radio-size;
@@ -178,6 +188,7 @@
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
+
   @include tutor-transition((background-color, border-color, box-shadow));
 
   &:checked {
@@ -218,9 +229,9 @@
 }
 
 @mixin tutor-switch($size: sm, $intermediate: false) {
-  $width: if($size ==sm, 36px, 44px);
-  $height: if($size ==sm, 20px, 24px);
-  $thumb: if($size ==sm, 16px, 20px);
+  $width: if($size == sm, 36px, 44px);
+  $height: if($size == sm, 20px, 24px);
+  $thumb: if($size == sm, 16px, 20px);
   $gap: $tutor-spacing-1;
 
   appearance: none;
@@ -234,6 +245,7 @@
   outline: none;
   border-radius: $height;
   cursor: pointer;
+
   @include tutor-transition(background-color);
 
   &::before {
@@ -250,11 +262,13 @@
     border-radius: 50%;
     background-color: $tutor-actions-inverse;
     box-shadow: $tutor-shadow-sm;
+
     @include tutor-transition((transform, background-color));
   }
 
   &:focus {
     @include tutor-focus-ring();
+
     border-color: $tutor-border-brand-tertiary;
   }
 

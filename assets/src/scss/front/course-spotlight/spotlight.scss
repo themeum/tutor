@@ -15,21 +15,27 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 20px;
 		word-break: break-all;
+
 		@include breakpoint-max(mobile) {
 			grid-template-columns: repeat(1, 1fr);
 		}
+
 		.tutor-instructor-card {
 			cursor: pointer;
+
 			&:hover {
 				.tutor-avatar {
 					background: var(--tutor-color-primary);
+
 					span {
 						color: var(--tutor-color-white);
 					}
 				}
 			}
+
 			.tutor-avatar {
-				background: rgba(var(--tutor-color-primary-rgb), 0.15);
+				background: rgb(var(--tutor-color-primary-rgb), 0.15);
+
 				span {
 					font-size: 30px;
 				}
@@ -40,21 +46,25 @@
 	/* tutor-exercise-files */
 	.tutor-conversation {
 		border-bottom: 1px solid #ddd;
-		padding: 0px 0px 55px 0px;
+		padding: 0 0 55px;
+
 		.tutor-no-comments-show {
 			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
 			padding: 47px 33px;
+
 			@include breakpoint-max(mobile) {
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				padding: 30px 20px;
+
 				p {
 					text-align: center;
 				}
 			}
 		}
+
 		.comment-avatar {
 			img {
 				width: 50px;
@@ -62,9 +72,10 @@
 				border-radius: 50%;
 			}
 		}
+
 		.tutor-comment-textarea,
 		.tutor-actual-comment {
-			&:before {
+			&::before {
 				content: '';
 				display: block;
 				height: 10px;
@@ -72,36 +83,41 @@
 				background-color: #fff;
 				border: 1px solid var(--tutor-border-color);
 				position: absolute;
-				left: -6px;
+				inset-inline-start: -6px;
 				top: 18px;
 				clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
 				transform: rotate(45deg);
 				border-radius: 0 0 0 3px;
 			}
-			&:after {
+
+			&::after {
 				content: '';
 				display: block;
 				height: 10px;
 				width: 10px;
 				background-color: #fff;
-				border: 1px solid #ffffff;
+				border: 1px solid #fff;
 				position: absolute;
-				left: -2px;
+				inset-inline-start: -2px;
 				top: 18px;
 				border-radius: 3px 0 0 3px;
 			}
 		}
+
 		.tutor-comment-box {
 			display: grid;
 			grid-template-columns: 70px auto;
+
 			.tutor-comment-textarea {
 				position: relative;
 				grid-area: 1/2/1/3;
 				border: 1px solid var(--tutor-border-color);
 				border-radius: 6px;
+
 				&.is-focused {
 					border: 1px solid var(--tutor-color-primary);
-					&:before {
+
+					&::before {
 						border: 1px solid var(--tutor-color-primary);
 					}
 				}
@@ -112,16 +128,19 @@
 					border-color: transparent;
 				}
 			}
+
 			.tutor-comment-submit-btn {
 				margin-top: 20px;
 				grid-area: 2/2/2/3;
 				justify-self: end;
 			}
 		}
+
 		/* tutor-comment-box */
 		.tutor-comments-list {
 			display: grid;
 			grid-template-columns: 70px auto;
+
 			.tutor-single-comment {
 				.tutor-actual-comment {
 					background-color: #fff;
@@ -129,28 +148,34 @@
 					border-radius: 6px;
 					position: relative;
 					padding: 15px 20px;
+
 					.tutor-comment-author {
 						span:first-child {
 							color: #161d25;
 						}
+
 						span:last-child {
 							color: #808993;
 						}
 					}
 				}
+
 				/* tutor-actual-comment */
 				.tutor-comment-actions {
 					span {
 						cursor: pointer;
 						text-transform: capitalize;
+
 						&:not(:last-child) {
-							margin-right: 23px;
+							margin-inline-end: 23px;
 						}
 					}
 				}
+
 				.tutor-comment-box.tutor-reply-box {
-					padding: 16px 0px 16px 16px;
+					padding: 16px 0 16px 16px;
 					min-height: 54px;
+
 					.tutor-comment-textarea {
 						textarea {
 							padding: 15px 20px;
@@ -159,39 +184,46 @@
 					}
 				}
 			}
+
 			/* tutor-single-comment */
 		}
+
 		.tutor-comments-list.tutor-parent-comment {
 			position: relative;
+
 			.tutor-comment-line {
 				position: absolute;
 				width: 1px;
-				left: 24px;
+				inset-inline-start: 24px;
 				top: 50px;
 				background: var(--tutor-border-color);
 			}
+
 			.tutor-child-comment {
 				position: relative;
-				&:after {
+
+				&::after {
 					content: '';
 					position: absolute;
 					width: 45px;
 					height: 1px;
-					left: -45px;
+					inset-inline-start: -45px;
 					top: 25px;
 					background: var(--tutor-border-color);
 				}
-				&:before {
+
+				&::before {
 					content: '';
 					position: absolute;
 					width: 45px;
 					height: 1px;
-					left: -68px;
+					inset-inline-start: -68px;
 					top: 3px;
 					background: var(--tutor-border-color);
 					transform: rotate(90deg);
 					z-index: 9;
 				}
+
 				.tutor-single-comment {
 					.tutor-actual-comment {
 						.tutor-comment-author {
@@ -212,8 +244,8 @@
 // .tutor-spotlight-mobile-progress-complete
 .tutor-spotlight-mobile {
 	&-progress-complete {
-		background: #ffffff;
-		box-shadow: 0px 0px 16px 0 rgba(176, 182, 209, 0.180862);
+		background: #fff;
+		box-shadow: 0 0 16px 0 rgb(176 182 209 / 18.1%);
 		margin-top: 16px;
 
 		@include breakpoint-max(420) {
@@ -226,16 +258,19 @@
 
 	&-progress-right {
 		text-align: center;
+
 		@include breakpoint-min(420) {
 			.tutor-topbar-complete-btn {
-				text-align: right;
+				text-align: end;
 			}
 		}
+
 		@include breakpoint-max(420) {
 			.tutor-topbar-complete-btn.tutor-ml-24 {
-				margin-left: 0 !important;
+				margin-inline-start: 0 !important;
 			}
 		}
+
 		[class*='tutor-icon-'] {
 			display: none;
 		}
@@ -253,15 +288,16 @@
 		.tutor-conversation {
 			.tutor-comment-textarea,
 			.tutor-actual-comment {
-				&:before {
-					left: initial;
-					right: -6px;
+				&::before {
+					inset-inline-start: initial;
+					inset-inline-end: -6px;
 					transform: rotate(220deg);
-					border-radius: 0 3px 0 0px;
+					border-radius: 0 3px 0 0;
 				}
-				&:after {
-					left: initial;
-					right: -2px;
+
+				&::after {
+					inset-inline-start: initial;
+					inset-inline-end: -2px;
 				}
 			}
 
@@ -270,8 +306,8 @@
 					.tutor-comment-actions {
 						span {
 							&:not(:last-child) {
-								margin-right: initial;
-								margin-left: 23px;
+								margin-inline-end: initial;
+								margin-inline-start: 23px;
 							}
 						}
 					}
@@ -280,18 +316,19 @@
 
 			.tutor-comments-list.tutor-parent-comment {
 				.tutor-comment-line {
-					left: initial;
-					right: 24px;
+					inset-inline-start: initial;
+					inset-inline-end: 24px;
 				}
 
 				.tutor-child-comment {
-					&:after {
-						left: initial;
-						right: -45px;
+					&::after {
+						inset-inline-start: initial;
+						inset-inline-end: -45px;
 					}
-					&:before {
-						left: initial;
-						right: -68px;
+
+					&::before {
+						inset-inline-start: initial;
+						inset-inline-end: -68px;
 						transform: rotate(90deg);
 					}
 				}
