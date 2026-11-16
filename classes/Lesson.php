@@ -272,7 +272,7 @@ class Lesson extends Tutor_Base {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$comment_content = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$comment_content = wp_kses( Input::post( 'comment', '', Input::TYPE_TEXTAREA ), array() );
 		$user_id         = get_current_user_id();
 		$lesson_id       = $comment->comment_post_ID;
 
@@ -947,6 +947,11 @@ class Lesson extends Tutor_Base {
 			'comment_agent'        => 'Tutor',
 		);
 		$comment_data = wp_parse_args( $request, $default_data );
+
+		if ( ! empty( $comment_data['comment_content'] ) ) {
+			$comment_data['comment_content'] = wp_kses( $comment_data['comment_content'], array() );
+		}
+
 		return wp_insert_comment( $comment_data );
 	}
 
