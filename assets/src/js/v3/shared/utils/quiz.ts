@@ -9,7 +9,7 @@ import {
   type QuizValidationErrorType,
 } from '@TutorShared/utils/types';
 
-import { normalizeLineEndings } from './util';
+import { nanoid, normalizeLineEndings } from './util';
 
 export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
   if (currentStatus === dataStatus) {
@@ -30,6 +30,7 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   return QuizDataStatus.NO_CHANGE;
 };
 
+export const scaleRequiredErrorMessage = __('This field is required', __TUTOR_TEXT_DOMAIN__);
 export const scaleRangeErrorMessage = __(
   'The maximum value must be greater than the minimum value.',
   __TUTOR_TEXT_DOMAIN__,
@@ -43,6 +44,20 @@ export const scaleCorrectValueRangeErrorMessage = __(
   __TUTOR_TEXT_DOMAIN__,
 );
 
+export const defaultScaleAnswerTwoGapMatch = JSON.stringify({
+  value: 50,
+  config: {
+    min: 0,
+    max: 100,
+    step: 1,
+    defaultValue: 50,
+    pxPerUnit: 10,
+    labelEvery: 10,
+    minorTickEvery: 5,
+    precision: 0,
+  },
+});
+
 export type ScaleValidationError = {
   field: 'range' | 'labelEvery' | 'value';
   message: string;
@@ -55,15 +70,21 @@ export const getScaleValidationError = (
   { min, max, labelEvery }: { min: number; max: number; labelEvery: number },
   value: number | null,
 ): ScaleValidationError | null => {
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+  if (
+    !Number.isFinite(min) ||
+    !Number.isFinite(max) ||
+    !Number.isInteger(min) ||
+    !Number.isInteger(max) ||
+    max <= min
+  ) {
     return { field: 'range', message: scaleRangeErrorMessage };
   }
 
-  if (!Number.isFinite(labelEvery) || labelEvery <= 0 || labelEvery > max - min) {
+  if (!Number.isFinite(labelEvery) || !Number.isInteger(labelEvery) || labelEvery <= 0 || labelEvery > max - min) {
     return { field: 'labelEvery', message: scaleLabelEntryRangeErrorMessage };
   }
 
-  if (value !== null && (!Number.isFinite(value) || value < min || value > max)) {
+  if (value !== null && (!Number.isFinite(value) || !Number.isInteger(value) || value < min || value > max)) {
     return { field: 'value', message: scaleCorrectValueRangeErrorMessage };
   }
 
@@ -71,13 +92,16 @@ export const getScaleValidationError = (
 };
 
 export const validateQuizQuestion = (
-  question: QuizQuestion,
+  question?: QuizQuestion | null,
 ):
   | {
       message: string;
       type: QuizValidationErrorType;
     }
   | true => {
+  if (!question) {
+    return true;
+  }
   if (question) {
     const currentQuestionType = question.question_type;
 
@@ -145,7 +169,7 @@ export const validateQuizQuestion = (
       const firstAnswer = answers[0];
       if (!firstAnswer || !firstAnswer.answer_two_gap_match) {
         return {
-          message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+          message: scaleRequiredErrorMessage,
           type: 'question',
         };
       }
@@ -160,19 +184,17 @@ export const validateQuizQuestion = (
         const labelEvery = data.config?.labelEvery;
         const correctValue = data.value;
 
-        const isMinValid = typeof min === 'number' && Number.isFinite(min);
-        const isMaxValid = typeof max === 'number' && Number.isFinite(max);
-        const isLabelEveryValid = typeof labelEvery === 'number' && Number.isFinite(labelEvery);
-        const isCorrectValueValid = typeof correctValue === 'number' && Number.isFinite(correctValue);
-
-        if (!isMinValid || !isMaxValid || !isLabelEveryValid || !isCorrectValueValid) {
+        if (![min, max, labelEvery, correctValue].every(Number.isFinite)) {
           return {
-            message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+            message: scaleRequiredErrorMessage,
             type: 'question',
           };
         }
 
-        const validationError = getScaleValidationError({ min, max, labelEvery }, correctValue);
+        const validationError = getScaleValidationError(
+          { min: min as number, max: max as number, labelEvery: labelEvery as number },
+          correctValue as number,
+        );
 
         if (validationError) {
           return {
@@ -182,7 +204,7 @@ export const validateQuizQuestion = (
         }
       } catch {
         return {
-          message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+          message: scaleRequiredErrorMessage,
           type: 'question',
         };
       }
@@ -374,6 +396,45 @@ export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>):
           question_type: 'matching',
           is_image_matching: true,
         },
+      };
+    }
+    case 'scale': {
+      const answers = Array.isArray(question.question_answers) ? question.question_answers : [];
+      if (answers.length === 0) {
+        return {
+          ...question,
+          _data_status: QuizDataStatus.UPDATE,
+          question_answers: [
+            {
+              _data_status: QuizDataStatus.NEW,
+              is_saved: true,
+              answer_id: nanoid(),
+              answer_title: '',
+              belongs_question_id: question.question_id,
+              belongs_question_type: 'scale',
+              answer_two_gap_match: defaultScaleAnswerTwoGapMatch,
+              answer_view_format: 'scale',
+              answer_order: 0,
+              is_correct: '1',
+            },
+          ],
+        };
+      }
+
+      const hasEmptyGapMatch = answers.some((answer) => !answer.answer_two_gap_match);
+      return {
+        ...question,
+        _data_status: hasEmptyGapMatch ? QuizDataStatus.UPDATE : QuizDataStatus.NO_CHANGE,
+        question_answers: answers.map((answer) => {
+          if (!answer.answer_two_gap_match) {
+            return {
+              ...answer,
+              _data_status: QuizDataStatus.UPDATE,
+              answer_two_gap_match: defaultScaleAnswerTwoGapMatch,
+            };
+          }
+          return answer;
+        }),
       };
     }
     default:

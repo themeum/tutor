@@ -1,4 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+/**
+ * Form scale component
+ *
+ * @package Tutor
+ * @since 4.0.0
+ */
+
+import { useCallback, useState } from 'react';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -24,6 +31,7 @@ import {
   scaleCorrectValueRangeErrorMessage,
   scaleLabelEntryRangeErrorMessage,
   scaleRangeErrorMessage,
+  scaleRequiredErrorMessage,
 } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -88,13 +96,10 @@ function parseStoredScaleInputs(value: string): ScaleInputs | null {
     const data = JSON.parse(value) as StoredScalePayload;
     if (data && typeof data === 'object') {
       return {
-        min: typeof data.config?.min === 'number' && Number.isFinite(data.config.min) ? String(data.config.min) : '',
-        max: typeof data.config?.max === 'number' && Number.isFinite(data.config.max) ? String(data.config.max) : '',
-        labelEvery:
-          typeof data.config?.labelEvery === 'number' && Number.isFinite(data.config.labelEvery)
-            ? String(data.config.labelEvery)
-            : '',
-        value: typeof data.value === 'number' && Number.isFinite(data.value) ? String(data.value) : '',
+        min: Number.isFinite(data.config?.min) ? String(data.config?.min) : '',
+        max: Number.isFinite(data.config?.max) ? String(data.config?.max) : '',
+        labelEvery: Number.isFinite(data.config?.labelEvery) ? String(data.config?.labelEvery) : '',
+        value: Number.isFinite(data.value) ? String(data.value) : '',
       };
     }
   } catch {
@@ -108,7 +113,7 @@ const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setV
     const isScaleRangeError =
       prev?.type === 'question' &&
       [
-        __('This field is required', __TUTOR_TEXT_DOMAIN__),
+        scaleRequiredErrorMessage,
         scaleRangeErrorMessage,
         scaleLabelEntryRangeErrorMessage,
         scaleCorrectValueRangeErrorMessage,
@@ -122,45 +127,33 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
   const storedScalePayload = option?.answer_two_gap_match ?? '';
 
-  const lastPersistedPayloadRef = useRef<string | null>(storedScalePayload || null);
+  const [prevStoredPayload, setPrevStoredPayload] = useState(storedScalePayload);
   const [inputs, setInputs] = useState<ScaleInputs>(() => parseStoredScaleInputs(storedScalePayload) || defaultInputs);
   const [lastRangeField, setLastRangeField] = useState<'min' | 'max'>('max');
 
-  // If the stored answer payload was updated externally (e.g. form reset, switching question),
-  // sync state during render without an asynchronous effect.
-  if (storedScalePayload !== lastPersistedPayloadRef.current) {
-    lastPersistedPayloadRef.current = storedScalePayload;
+  if (storedScalePayload !== prevStoredPayload) {
+    setPrevStoredPayload(storedScalePayload);
     const parsed = parseStoredScaleInputs(storedScalePayload);
     if (parsed) {
       setInputs(parsed);
     }
   }
 
-  const updateOption = useCallback(
-    (updated: QuizQuestionOption) => {
-      field.onChange(updated);
-    },
-    [field],
-  );
-
   const saveScaleData = useCallback(
     (currentInputs: ScaleInputs) => {
       if (!option) return;
 
-      const pMin =
-        currentInputs.min.trim() === '' || currentInputs.min.trim() === '-' ? null : parseFloat(currentInputs.min);
-      const pMax =
-        currentInputs.max.trim() === '' || currentInputs.max.trim() === '-' ? null : parseFloat(currentInputs.max);
-      const pLabel = currentInputs.labelEvery.trim() === '' ? null : parseFloat(currentInputs.labelEvery);
-      const pVal =
-        currentInputs.value.trim() === '' || currentInputs.value.trim() === '-'
-          ? null
-          : parseFloat(currentInputs.value);
+      const toFinite = (s: string) => {
+        const n = parseFloat(s.trim());
+        return Number.isFinite(n) ? n : null;
+      };
 
-      const validMin = pMin !== null && Number.isFinite(pMin) ? pMin : null;
-      const validMax = pMax !== null && Number.isFinite(pMax) ? pMax : null;
-      const validLabel = pLabel !== null && Number.isFinite(pLabel) ? pLabel : null;
-      const validVal = pVal !== null && Number.isFinite(pVal) ? pVal : null;
+      const [validMin, validMax, validLabel, validVal] = [
+        currentInputs.min,
+        currentInputs.max,
+        currentInputs.labelEvery,
+        currentInputs.value,
+      ].map(toFinite);
 
       const payload: StoredScalePayload = {
         value: validVal,
@@ -168,7 +161,8 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
           min: validMin,
           max: validMax,
           step: 1,
-          defaultValue: validVal ?? (validMin !== null && validMax !== null ? (validMin + validMax) / 2 : 50),
+          defaultValue:
+            validVal ?? (validMin !== null && validMax !== null ? Math.round((validMin + validMax) / 2) : 50),
           pxPerUnit: 10,
           labelEvery: validLabel,
           minorTickEvery: 5,
@@ -177,10 +171,9 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       };
 
       const serializedPayload = JSON.stringify(payload);
-      if (serializedPayload === lastPersistedPayloadRef.current) return;
+      if (serializedPayload === storedScalePayload) return;
 
-      lastPersistedPayloadRef.current = serializedPayload;
-      updateOption({
+      field.onChange({
         ...option,
         ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
           _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
@@ -189,7 +182,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
         is_saved: true,
       });
     },
-    [option, updateOption],
+    [field, option, storedScalePayload],
   );
 
   const handleInputChange = useCallback(
@@ -213,28 +206,23 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
       }
 
       const parsed = parseFloat(trimmed);
-      if (Number.isFinite(parsed)) {
-        setInputs((prev) => {
-          if (prev[fieldKey] === String(parsed)) return prev;
-          const next = { ...prev, [fieldKey]: String(parsed) };
-          saveScaleData(next);
-          return next;
-        });
+      if (Number.isFinite(parsed) && inputs[fieldKey] !== String(parsed)) {
+        const next = { ...inputs, [fieldKey]: String(parsed) };
+        setInputs(next);
+        saveScaleData(next);
       }
     },
-    [saveScaleData],
+    [inputs, saveScaleData],
   );
 
-  const parsedMin = parseFloat(inputs.min);
-  const parsedMax = parseFloat(inputs.max);
-  const parsedLabelEvery = parseFloat(inputs.labelEvery);
-  const parsedValue = parseFloat(inputs.value);
+  const [parsedMin, parsedMax, parsedLabelEvery, parsedValue] = [
+    inputs.min,
+    inputs.max,
+    inputs.labelEvery,
+    inputs.value,
+  ].map((s) => parseFloat(s.trim()));
 
-  const hasAllNumbers =
-    Number.isFinite(parsedMin) &&
-    Number.isFinite(parsedMax) &&
-    Number.isFinite(parsedLabelEvery) &&
-    Number.isFinite(parsedValue);
+  const hasAllNumbers = [parsedMin, parsedMax, parsedLabelEvery, parsedValue].every(Number.isFinite);
 
   const scaleError = hasAllNumbers
     ? getScaleValidationError({ min: parsedMin, max: parsedMax, labelEvery: parsedLabelEvery }, parsedValue)
@@ -248,13 +236,13 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     const rawVal = inputs[fieldKey].trim();
     const isFieldEmpty = rawVal === '' || rawVal === '-';
     const message = isFieldEmpty
-      ? __('This field is required', __TUTOR_TEXT_DOMAIN__)
+      ? scaleRequiredErrorMessage
       : fieldError?.field === fieldKey
         ? fieldError.message
         : null;
 
     return message ? (
-      <div css={styles.errorMessage} role="alert">
+      <div id={`scale-error-${fieldKey}`} css={styles.errorMessage} role="alert">
         <SVGIcon name="info" height={20} width={20} />
         <p>{message}</p>
       </div>
