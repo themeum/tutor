@@ -170,7 +170,7 @@ if ( isset( $data ) ) : ?>
 					if ( ! empty( $data['filters'] ) ) {
 						foreach ( $data['filters'] as $key => $filter ) {
 							$query_value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
-							if ( empty( $query_value ) ) {
+							if ( '' === (string) $query_value ) {
 								continue;
 							}
 							?>

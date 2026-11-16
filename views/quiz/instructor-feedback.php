@@ -8,7 +8,19 @@
  * @since 2.0.0
  */
 
-$attempt_data = $data['attempt_data'];
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Instructor feedback data.
+ *
+ * @var array $data Template data with attempt_data.
+ */
+
+$attempt_data = $data['attempt_data'] ?? null;
+if ( empty( $attempt_data ) ) {
+	return;
+}
+
 $attempt_info = isset( $attempt_data->attempt_info ) ? maybe_unserialize( $attempt_data->attempt_info ) : false;
 $content      = '';
 if ( $attempt_info ) {
@@ -34,7 +46,7 @@ if ( $attempt_info ) {
 				tutor_load_template_from_custom_path( $text_editor_template, $editor_args );
 				?>
 		</div>
-		<button class="tutor-btn tutor-btn-primary tutor-instructor-feedback tutor-mt-4" data-attempt-id="<?php echo esc_attr( $attempt_data->attempt_id ); ?>" data-toast_success_message="<?php esc_html_e( 'Updated', 'tutor' ); ?>" disabled>
+		<button class="tutor-btn tutor-btn-primary tutor-instructor-feedback tutor-mt-4" data-attempt-id="<?php echo esc_attr( $attempt_data->attempt_id ); ?>" data-toast_success_message="<?php esc_attr_e( 'Updated', 'tutor' ); ?>" disabled>
 				<?php esc_html_e( 'Submit', 'tutor' ); ?>
 		</button>
 	</div>

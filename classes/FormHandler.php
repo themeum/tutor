@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Core\Input;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Core\Input;
 
 /**
  * FormHandler class
@@ -137,29 +135,37 @@ class FormHandler {
 	public function tutor_process_reset_password() {
 		tutils()->checking_nonce();
 
-		$reset_key        = Input::post( 'reset_key' );
-		$user_id          = Input::post( 'user_id', 0, Input::TYPE_INT );
-		$password         = Input::post( 'password' );
-		$confirm_password = Input::post( 'confirm_password' );
+		$reset_key = Input::post( 'reset_key' );
+		$user_id   = Input::post( 'user_id', 0, Input::TYPE_INT );
+
+		// phpcs:disable -- Passwords are unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password         = wp_unslash( $_POST['password'] ?? '' );
+		$confirm_password = wp_unslash( $_POST['confirm_password'] ?? '' );
+		// phpcs:enable
+
+		if ( ! $password ) {
+			tutor_flash_set( 'danger', __( 'Please enter your password.', 'tutor' ) );
+			return false;
+		}
+
+		if ( $password !== $confirm_password ) {
+			tutor_flash_set( 'danger', __( 'Passwords do not match.', 'tutor' ) );
+			return false;
+		}
 
 		$user = get_user_by( 'ID', $user_id );
-		$user = check_password_reset_key( $reset_key, $user->user_login );
+		if ( ! $user ) {
+			tutor_flash_set( 'danger', __( 'Invalid Request.', 'tutor' ) );
+			return false;
+		}
 
+		$user = check_password_reset_key( $reset_key, $user->user_login );
 		if ( is_wp_error( $user ) ) {
 			tutor_flash_set( 'danger', __( 'This key is invalid or has already been used. Please reset your password again if needed.', 'tutor' ) );
 			return false;
 		}
 
 		if ( $user instanceof \WP_User ) {
-			if ( ! $password ) {
-				tutor_flash_set( 'danger', __( 'Please enter your password.', 'tutor' ) );
-				return false;
-			}
-
-			if ( $password !== $confirm_password ) {
-				tutor_flash_set( 'danger', __( 'Passwords do not match.', 'tutor' ) );
-				return false;
-			}
 
 			tutils()->reset_password( $user, $password );
 
