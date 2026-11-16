@@ -41,7 +41,7 @@
     margin: 0;
   }
 
-  &:placeholder-shown:not(:focus):not(:disabled) {
+  &:placeholder-shown:not(:focus, :disabled) {
     background-color: $tutor-surface-l3;
   }
 
@@ -83,15 +83,20 @@
 }
 
 @mixin tutor-textarea($min-height: 92px) {
-  @include tutor-input-base;
+  @include tutor-input-base();
 
   min-height: $min-height;
   resize: vertical;
 }
 
 @mixin tutor-checkbox($size: sm, $intermediate: false) {
-  $checkbox-size: if($size == md, 20px, 16px);
-  $svg-size: if($size == md, 12px, 10px);
+  $checkbox-size: 16px;
+  $svg-size: 10px;
+
+  @if $size == md {
+    $checkbox-size: 20px;
+    $svg-size: 12px;
+  }
 
   appearance: none;
   width: $checkbox-size;
@@ -150,7 +155,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     &:not(:checked) {
       box-shadow: $tutor-ring-gray-shadow-sm;
@@ -176,8 +181,13 @@
 }
 
 @mixin tutor-radio($size: sm) {
-  $radio-size: if($size == md, 20px, 16px);
-  $inner-circle: if($size == md, 8px, 6px);
+  $radio-size: 16px;
+  $inner-circle: 6px;
+
+  @if $size == md {
+    $radio-size: 20px;
+    $inner-circle: 8px;
+  }
 
   appearance: none;
   width: $radio-size;
@@ -220,7 +230,7 @@
   }
 
   &:focus {
-    @include tutor-focus-ring;
+    @include tutor-focus-ring();
 
     &:not(:checked) {
       box-shadow: $tutor-ring-gray-shadow-sm;
@@ -229,9 +239,16 @@
 }
 
 @mixin tutor-switch($size: sm, $intermediate: false) {
-  $width: if($size == sm, 36px, 44px);
-  $height: if($size == sm, 20px, 24px);
-  $thumb: if($size == sm, 16px, 20px);
+  $width: 44px;
+  $height: 24px;
+  $thumb: 20px;
+
+  @if $size == sm {
+    $width: 36px;
+    $height: 20px;
+    $thumb: 16px;
+  }
+
   $gap: $tutor-spacing-1;
 
   appearance: none;

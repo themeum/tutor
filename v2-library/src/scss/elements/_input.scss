@@ -1,3 +1,6 @@
+@use "../core/utility";
+@use "../utility/variables";
+
 $radius: 6px;
 $height: 44px;
 $height-lg: 48px;
@@ -17,7 +20,7 @@ $height-sm: 38px;
 		display: block;
 		width: 100%;
 		outline: none;
-		border-radius: $radius;
+		border-radius: utility.$radius;
 		background-color: var(--tutor-color-white);
 		box-sizing: border-box;
 		color: var(--tutor-color-black); // @todo: need to replace
@@ -53,8 +56,8 @@ $height-sm: 38px;
 		}
 	
 		&:disabled {
-			background: $color-gray-20;
-			border-color: $color-gray-20;
+			background: variables.$color-gray-20;
+			border-color: variables.$color-gray-20;
 			cursor: not-allowed;
 
 			&::placeholder {
@@ -237,7 +240,7 @@ select.tutor-form-control,
 		white-space: nowrap;
 		background-color: var(--tutor-color-white);
 		border: 1px solid var(--tutor-border-color);
-		border-radius: $radius;
+		border-radius: utility.$radius;
 	}
 
 	>:not(.tutor-form-wrap):not(:last-child),
@@ -395,7 +398,7 @@ select.tutor-form-control,
 			display: inline-block;
 			width: 40px;
 			height: 24px;
-			background-color: $color-light-gray;
+			background-color: variables.$color-light-gray;
 			border-radius: 12px;
 			vertical-align: top;
 			cursor: pointer;

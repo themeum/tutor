@@ -1,3 +1,5 @@
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+
 .tutor-admin-page-wrapper {
 	.tutor-admin-page-content-wrapper.tutor-withdraw-wrapper {
 		table {
@@ -50,7 +52,7 @@
 			}
 
 			td.tutor-withdraw-btns {
-				@include breakpoint-min(1200px) {
+				@include breakpoint.breakpoint-min(1200px) {
 					width: 16%;
 
 					button {
@@ -73,7 +75,7 @@
 				}
 
 				.tutor-modal-btns.tutor-btn-group {
-					@include breakpoint-max(600) {
+					@include breakpoint.breakpoint-max(600) {
 						button:not(:last-child) {
 							margin-bottom: 15px;
 						}

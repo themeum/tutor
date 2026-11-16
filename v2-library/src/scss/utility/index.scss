@@ -1,4 +1,4 @@
 // style ulities
-@import './variables';
-@import './colors';
-@import './typography';
+@forward 'variables';
+@forward 'colors';
+@forward 'typography';

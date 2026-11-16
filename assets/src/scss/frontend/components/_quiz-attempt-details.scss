@@ -82,7 +82,7 @@
     .tutor-quiz-sidebar-questions {
       overflow-y: auto;
 
-      @include tutor-scrollbar;
+      @include tutor-scrollbar();
 
       padding: 1px 1px $tutor-spacing-6;
 
@@ -139,7 +139,7 @@
         }
 
         &:focus-visible {
-          @include tutor-focus-ring;
+          @include tutor-focus-ring();
 
           background-color: $tutor-surface-l2;
         }
@@ -378,9 +378,7 @@
       padding: $tutor-spacing-6;
       border-radius: $tutor-radius-lg;
 
-      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
-          [data-option='draggable']
-        ) {
+      &:hover:not(:has(:checked), [data-option='correct'], [data-option='incorrect'], [data-option='draggable']) {
         background-color: $tutor-surface-base;
       }
 
@@ -448,7 +446,7 @@
     }
 
     &-review-action {
-      @include tutor-button-base;
+      @include tutor-button-base();
       @include tutor-button-variant(secondary);
       @include tutor-button-icon-size(x-small);
       @include tutor-transition((background-color, color, opacity, border-color));

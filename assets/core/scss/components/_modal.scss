@@ -87,7 +87,7 @@
   }
 
   &-close {
-    @include tutor-button-base;
+    @include tutor-button-base();
     @include tutor-button-icon-size(x-small);
     @include tutor-button-variant(ghost);
 

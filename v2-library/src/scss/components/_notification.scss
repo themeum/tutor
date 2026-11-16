@@ -1,3 +1,6 @@
+@use "../mixins/breakpoint";
+@use "../utility/variables";
+
 // @todo: rework on the design
 .tutor-notification {
 	border: 1px solid var(--tutor-border-color);
@@ -79,10 +82,10 @@
 
 // alert
 $alertVariations: (
-	'primary' rgb(var(--tutor-color-primary-rgb), 0.7) $color-secondary $color-white var(--tutor-color-primary) var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3),
-	'success' rgb(var(--tutor-color-success-rgb), 0.7) $color-secondary $color-white var(--tutor-color-success) var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3),
-	'danger' rgb(var(--tutor-color-danger-rgb), 0.7) $color-secondary $color-white var(--tutor-color-danger) var(--tutor-color-danger) rgb(var(--tutor-color-danger-rgb), 0.15) rgb(var(--tutor-color-danger-rgb), 0.3),
-	'warning' rgb(var(--tutor-color-warning-rgb), 0.7) $color-secondary $color-white var(--tutor-color-warning) var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3)
+	'primary' rgb(var(--tutor-color-primary-rgb), 0.7) variables.$color-secondary variables.$color-white var(--tutor-color-primary) var(--tutor-color-primary) rgb(var(--tutor-color-primary-rgb), 0.15) rgb(var(--tutor-color-primary-rgb), 0.3),
+	'success' rgb(var(--tutor-color-success-rgb), 0.7) variables.$color-secondary variables.$color-white var(--tutor-color-success) var(--tutor-color-success) rgb(var(--tutor-color-success-rgb), 0.15) rgb(var(--tutor-color-success-rgb), 0.3),
+	'danger' rgb(var(--tutor-color-danger-rgb), 0.7) variables.$color-secondary variables.$color-white var(--tutor-color-danger) var(--tutor-color-danger) rgb(var(--tutor-color-danger-rgb), 0.15) rgb(var(--tutor-color-danger-rgb), 0.3),
+	'warning' rgb(var(--tutor-color-warning-rgb), 0.7) variables.$color-secondary variables.$color-white var(--tutor-color-warning) var(--tutor-color-warning) rgb(var(--tutor-color-warning-rgb), 0.15) rgb(var(--tutor-color-warning-rgb), 0.3)
 );
 
 // Tutor alert
@@ -92,7 +95,7 @@ $alertVariations: (
 	margin-bottom: 16px;
 	display: grid;
 	
-	@include breakpoint-min(mobile) {
+	@include breakpoint.breakpoint-min(mobile) {
 		grid-template-columns: 1fr auto;
 	}
 
@@ -120,12 +123,12 @@ $alertVariations: (
 	}
 
 	.tutor-alert-text {
-		@extend .text-regular-caption;
+		@extend .text-regular-caption !optional;
 
 		color: var(--tutor-color-secondary);
 		display: flex;
 
-		@include breakpoint-min(tablet) {
+		@include breakpoint.breakpoint-min(tablet) {
 			align-items: center;
 		}
 	}
@@ -148,7 +151,7 @@ $alertVariations: (
 	.tutor-alert-close {
 		cursor: pointer;
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			display: none;
 		}
 	}
@@ -170,10 +173,10 @@ $largeNotificationVariations: (
 	background: #fff;
 	border: 1px solid var(--tutor-border-color);
 
-	@extend .tutor-radius-10;
-	@extend .tutor-p-24;
+	@extend .tutor-radius-10 !optional;
+	@extend .tutor-p-24 !optional;
 
-	@include breakpoint-min(desktop-lg) {
+	@include breakpoint.breakpoint-min(desktop-lg) {
 		padding-inline-end: 90px;
 	}
 

@@ -1,7 +1,7 @@
-@import './social-share';
-@import './archive';
-@import './filter';
-@import './single-course-details';
+@use 'social-share';
+@use 'archive';
+@use 'filter';
+@use 'single-course-details';
 
 .tutor-course-author {
     img {

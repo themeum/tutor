@@ -1,3 +1,5 @@
+@use "../../../../../../v2-library/src/scss/mixins/typo";
+
 // @todo: can be removed all code
 
 .tutor-option-field-row,
@@ -62,7 +64,7 @@
 	input.tutor-form-control,
 	textarea.tutor-form-control,
 	textarea.tutor-form-control:read-only {
-		@include getTypography(400, 16px, 162%);
+		@include typo.getTypography(400, 16px, 162%);
 
 		border-color: #bababa;
 		transition: all 200ms;

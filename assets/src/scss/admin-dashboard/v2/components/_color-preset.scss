@@ -1,3 +1,5 @@
+@use "../../../../../../v2-library/src/scss/mixins/general-minxins";
+
 .item-wrapper.color-preset-picker {
 	.tutor-option-field-row {
 		border-bottom: none !important;
@@ -100,7 +102,7 @@
 	input[type='radio'] {
 		display: none;
 
-		@include appearNone;
+		@include general-minxins.appearNone;
 
 		&:checked {
 			+ .preset-item {

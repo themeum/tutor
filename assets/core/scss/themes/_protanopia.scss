@@ -108,15 +108,15 @@
 
 [data-tutor-theme='light'][data-tutor-vision='protanopia'],
 [data-tutor-theme='system'][data-tutor-vision='protanopia'] {
-  @include protanopia-light-tokens;
+  @include protanopia-light-tokens();
 }
 
 [data-tutor-theme='dark'][data-tutor-vision='protanopia'] {
-  @include protanopia-dark-tokens;
+  @include protanopia-dark-tokens();
 }
 
 @media (prefers-color-scheme: dark) {
   [data-tutor-theme='system'][data-tutor-vision='protanopia'] {
-    @include protanopia-dark-tokens;
+    @include protanopia-dark-tokens();
   }
 }

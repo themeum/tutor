@@ -1,3 +1,7 @@
+@use "../mixins/breakpoint";
+@use "../mixins/general-minxins";
+@use "../utility/variables";
+
 // Course Details Page
 .tutor-course-details {
 	// .tutor-course-details-header
@@ -9,7 +13,7 @@
 
 	// .tutor-course-details-title
 	&-title {
-		@include breakpoint-min(desktop) {
+		@include breakpoint.breakpoint-min(desktop) {
 			max-width: 80%;
 		}
 	}
@@ -27,7 +31,7 @@
 
 .tutor-course-details-page {
 	.tutor-course-details-tab {
-		@include breakpoint-min(800) {
+		@include breakpoint.breakpoint-min(800) {
 			.tutor-is-sticky {
 				position: sticky;
 				top: 0;
@@ -41,7 +45,7 @@
 
 .admin-bar {
 	.tutor-course-details-tab {
-		@include breakpoint-min(800) {
+		@include breakpoint.breakpoint-min(800) {
 			.tutor-is-sticky {
 				top: 32px;
 			}
@@ -71,7 +75,7 @@
 	}
 
 	&-col-2 {
-		@include breakpoint-min(tablet) {
+		@include breakpoint.breakpoint-min(tablet) {
 			ul {
 				display: flex;
 				flex-flow: row wrap;
@@ -139,7 +143,7 @@
 			position: relative;
 
 			&::before {
-				@include triangleRibbonStar;
+				@include general-minxins.triangleRibbonStar;
 			}
 		}
 	}
@@ -184,7 +188,7 @@
 			position: relative;
 
 			&::before {
-				@include triangleRibbonStar;
+				@include general-minxins.triangleRibbonStar;
 
 				opacity: 0;
 			}
@@ -243,13 +247,13 @@
 
 	// .tutor-course-details-page-main
 	&-main {
-		@include breakpoint-min(desktop) {
+		@include breakpoint.breakpoint-min(desktop) {
 			display: grid;
 			gap: 32px;
 			grid-template-columns: 8fr 4fr;
 		}
 
-		@include breakpoint-min(desktop-lg) {
+		@include breakpoint.breakpoint-min(desktop-lg) {
 			gap: 54px;
 		}
 	}
@@ -275,7 +279,7 @@
 		}
 
 		&:hover {
-			background-color: $color-gray-10;
+			background-color: variables.$color-gray-10;
 		}
 
 		&-title {

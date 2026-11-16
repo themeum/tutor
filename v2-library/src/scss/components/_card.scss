@@ -1,3 +1,5 @@
+@use "../mixins/breakpoints";
+
 .tutor {
 	&-card {
 		background-color: #FFF;
@@ -149,7 +151,7 @@
 			}
 
 			// Horizontal
-			@include media-breakpoint-up(xl) {
+			@include breakpoints.media-breakpoint-up(xl) {
 				&-horizontal {
 					flex-direction: row;
 

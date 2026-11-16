@@ -1,13 +1,16 @@
+@use "../mixins/breakpoint";
+@use "../utility/variables";
+
 .tutor-accordion {
 	&-item {
 		background-color: #fff;
-		border: 1px solid $border-color-secondary;
+		border: 1px solid variables.$border-color-secondary;
 		border-radius: 6px;
 
 		&:not(:last-child) {
 			margin-bottom: 10px;
 
-			@include breakpoint-min(desktop) {
+			@include breakpoint.breakpoint-min(desktop) {
 				margin-bottom: 20px;
 			}
 		}
@@ -23,7 +26,7 @@
             padding-inline-end: 40px;
 
             margin: 0 !important;
-            background-color: $color-gray-2;
+            background-color: variables.$color-gray-2;
             color: var(--tutor-color-secondary);
             user-select: none;
             border-radius: 6px;
@@ -52,7 +55,7 @@
 
             &.is-active {
                 color: var(--tutor-color-primary);
-                background-color: $color-gray-10;
+                background-color: variables.$color-gray-10;
                 border-radius: 6px 6px 0 0;
 
                 &::after {
@@ -77,7 +80,7 @@
 
             &-content {
                 padding: 0 16px;
-                border-top: 1px solid $border-color-secondary;
+                border-top: 1px solid variables.$border-color-secondary;
             }
         }
 	}

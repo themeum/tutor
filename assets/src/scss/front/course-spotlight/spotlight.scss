@@ -1,3 +1,5 @@
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+
 .tutor-course-spotlight-wrapper {
 	.tutor-course-spotlight {
 		&-tab {
@@ -16,7 +18,7 @@
 		gap: 20px;
 		word-break: break-all;
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			grid-template-columns: repeat(1, 1fr);
 		}
 
@@ -53,7 +55,7 @@
 			border-radius: 6px;
 			padding: 47px 33px;
 
-			@include breakpoint-max(mobile) {
+			@include breakpoint.breakpoint-max(mobile) {
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
@@ -227,7 +229,7 @@
 				.tutor-single-comment {
 					.tutor-actual-comment {
 						.tutor-comment-author {
-							@include breakpoint-max(mobile) {
+							@include breakpoint.breakpoint-max(mobile) {
 								display: flex;
 								flex-direction: column;
 							}
@@ -248,7 +250,7 @@
 		box-shadow: 0 0 16px 0 rgb(176 182 209 / 18.1%);
 		margin-top: 16px;
 
-		@include breakpoint-max(420) {
+		@include breakpoint.breakpoint-max(420) {
 			.tutor-col-6 {
 				flex: 0 0 auto;
 				width: 100%;
@@ -259,13 +261,13 @@
 	&-progress-right {
 		text-align: center;
 
-		@include breakpoint-min(420) {
+		@include breakpoint.breakpoint-min(420) {
 			.tutor-topbar-complete-btn {
 				text-align: end;
 			}
 		}
 
-		@include breakpoint-max(420) {
+		@include breakpoint.breakpoint-max(420) {
 			.tutor-topbar-complete-btn.tutor-ml-24 {
 				margin-inline-start: 0 !important;
 			}

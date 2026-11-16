@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 .tutor-user-public-profile {
 	// rating style as per layout
 	&.tutor-user-public-profile-pp-circle,
@@ -146,7 +148,7 @@
 			align-items: center;
 			gap: 30px;
 
-			@include breakpoint-max(992) {
+			@include breakpoint.breakpoint-max(992) {
 				gap: 10px;
 			}
 
@@ -475,14 +477,14 @@
 
 // FDash > Analytics > Student > Details
 .tutor-user-public-profile {
-	@include breakpoint-min(992) {
+	@include breakpoint.breakpoint-min(992) {
 		.photo-area {
 			margin-bottom: -90px;
 		}
 	}
 
 	.student-details-table-wrapper {
-		@include breakpoint-max(992) {
+		@include breakpoint.breakpoint-max(992) {
 			margin-top: 40px;
 		}
 	}
@@ -491,7 +493,7 @@
 .analytics-profile-authormeta {
 	gap: 20px;
 
-	@include breakpoint-min(1200) {
+	@include breakpoint.breakpoint-min(1200) {
 		display: flex;
 		gap: 40px;
 
@@ -512,7 +514,7 @@
 		}
 	}
 
-	@include breakpoint-max(1200) {
+	@include breakpoint.breakpoint-max(1200) {
 		> * {
 			display: block;
 		}

@@ -252,7 +252,7 @@
 }
 
 .tutor-quiz-item {
-	@extend .tutor-bordered-box;
+	@extend .tutor-bordered-box !optional;
 
 	background: var(--tutor-color-white);
 	border-radius: 6px;
@@ -298,7 +298,7 @@
 }
 
 .tutor-radio-select {
-	@extend .tutor-bordered-box;
+	@extend .tutor-bordered-box !optional;
 
 	display: flex;
 	padding: 13px;

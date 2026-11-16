@@ -42,7 +42,7 @@ $arrow: 5px;
 			border: $arrow solid transparent;
 		}
 
-		@extend .text-regular-small;
+		@extend .text-regular-small !optional;
 	}
 
 	&:hover .tooltip-txt {

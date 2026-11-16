@@ -1,3 +1,5 @@
+@use "../../../../v2-library/src/scss/mixins/breakpoint";
+
 .answer-image-matched-wrap {
 	display: block;
 
@@ -292,7 +294,7 @@
 		border: 0;
 	}
 
-	@include breakpoint-max(mobile) {
+	@include breakpoint.breakpoint-max(mobile) {
 		.tutor-manual-review-wrapper {
 			text-align: start;
 		}

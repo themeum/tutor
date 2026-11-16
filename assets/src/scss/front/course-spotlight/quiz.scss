@@ -1,3 +1,6 @@
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+@use "../../../../../v2-library/src/scss/utility/variables";
+
 #tutor-start-quiz {
 	display: inline-block;
 }
@@ -49,7 +52,7 @@
 .tutor-quiz-wrapper {
 	padding: 80px 24px;
 
-	@include breakpoint-max(mobile) {
+	@include breakpoint.breakpoint-max(mobile) {
 		padding: 40px 16px;
 	}
 
@@ -59,7 +62,7 @@
 		border: 1px solid #c0c3cb;
 		border-radius: 10px;
 
-		@include breakpoint-min(desktop-lg){
+		@include breakpoint.breakpoint-min(desktop-lg){
 			padding: 65px 95px;
 		}
 
@@ -85,7 +88,7 @@
 			display: flex;
 			justify-content: space-between;
 
-			@include breakpoint-max(mobile) {
+			@include breakpoint.breakpoint-max(mobile) {
 				flex-direction: column;
 				gap: 16px;
 			}
@@ -94,7 +97,7 @@
 				display: flex;
 				gap: 35px;
 
-				@include breakpoint-max(tablet) {
+				@include breakpoint.breakpoint-max(tablet) {
 					gap: 16px;
 				}
 			}
@@ -197,7 +200,7 @@
 				padding: 9px;
 				border-radius: 6px;
 
-				@include breakpoint-max(600) {
+				@include breakpoint.breakpoint-max(600) {
 					flex-wrap: wrap;
 				}
 
@@ -209,18 +212,18 @@
 
 				.flash-action {
 					button {
-						background: $color-warning;
+						background: variables.$color-warning;
 						color: var(--tutor-color-white);
 						border: unset;
 
-						@include breakpoint-max(600) {
+						@include breakpoint.breakpoint-max(600) {
 							margin-top: 10px;
 						}
 					}
 				}
 
 				&.time-over {
-					border: 1px solid $color-danger;
+					border: 1px solid variables.$color-danger;
 				}
 			}
 		}
@@ -291,7 +294,7 @@
 					border-bottom: 2px dashed var(--tutor-color-secondary);
 					margin: 0 0 10px;
 
-					@include breakpoint-max(mobile) {
+					@include breakpoint.breakpoint-max(mobile) {
 						margin: 0 10px 5px 0;
 					}
 				}
@@ -330,7 +333,7 @@
 					width: 270px;
 					align-items: center;
 
-					@include breakpoint-max(mobile) {
+					@include breakpoint.breakpoint-max(mobile) {
 						margin-top: 20px;
 					}
 
@@ -445,7 +448,7 @@
 		border-top: 1px solid var(--tutor-border-color);
 		border-bottom: 1px solid var(--tutor-border-color);
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			flex-direction: column;
 			gap: 16px;
 		}

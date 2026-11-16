@@ -1,12 +1,15 @@
+@use "../mixins/breakpoint";
+@use "../utility/variables";
+
 .tutor-wp-dashboard-filter {
 	gap: 30px;
 
-	@include breakpoint-max(1300) {
+	@include breakpoint.breakpoint-max(1300) {
 		flex-wrap: wrap;
 		margin-top: 40px;
 	}
 
-	@include breakpoint-max(mobile) {
+	@include breakpoint.breakpoint-max(mobile) {
 		flex-direction: row;
 		display: block !important;
 
@@ -37,7 +40,7 @@
 		gap: 24px;
 
 		.tutor-form-label {
-			@extend .text-medium-caption;
+			@extend .text-medium-caption !optional;
 
 			color: var(--tutor-color-secondary);
 		}
@@ -45,7 +48,7 @@
 }
 
 .tutor-wp-dashboard-header {
-	border-bottom: 1px solid $border-color-secondary;
+	border-bottom: 1px solid variables.$border-color-secondary;
 	margin-bottom: 24px;
 
 	&-inner {
@@ -69,7 +72,7 @@
 	align-items: start;
 	gap: 24px;
 
-	@include breakpoint-max(mobile) {
+	@include breakpoint.breakpoint-max(mobile) {
 		flex-direction: column;
 		gap: 16px;
 	}
@@ -151,7 +154,7 @@
 		&-line {
 			height: 24px;
 			width: 1px;
-			background: $border-color-secondary;
+			background: variables.$border-color-secondary;
 			border-radius: 4px;
 		}
 

@@ -1,3 +1,5 @@
+@use "functions";
+
 // Variables
 
 $enable-negative-margins: true !default;
@@ -15,8 +17,8 @@ $grid-breakpoints: (
 
 // scss-docs-end grid-breakpoints
 
-@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
-@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+@include functions.assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include functions.assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
 
 
 // Grid containers
@@ -34,7 +36,7 @@ $container-max-widths: (
 
 // scss-docs-end container-max-widths
 
-@include _assert-ascending($container-max-widths, "$container-max-widths");
+@include functions.assert-ascending($container-max-widths, "$container-max-widths");
 
 
 // Grid columns
@@ -95,7 +97,7 @@ $utility-spacers: (
   76: $utility-spacer * 19,
   80: $utility-spacer * 20,
 ) !default;
-$negative-utility-spacers: negativify-map($utility-spacers);
+$negative-utility-spacers: functions.negativify-map($utility-spacers);
 
 // scss-docs-start font-sizes
 $font-sizes: (

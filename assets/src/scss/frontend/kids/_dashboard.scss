@@ -46,7 +46,7 @@
   .tutor-dashboard-home-card,
   .tutor-dashboard-home-sort .tutor-popover-bottom,
   .tutor-subscription-payments-item:hover {
-    @include tutor-kids-shadow;
+    @include tutor-kids-shadow();
   }
 
   .tutor-dashboard-welcome-card,
@@ -56,7 +56,7 @@
   }
 
   .tutor-billing-card:hover {
-    @include tutor-kids-shadow;
+    @include tutor-kids-shadow();
 
     &:not(:last-of-type) {
       border-bottom: 1px solid transparent;

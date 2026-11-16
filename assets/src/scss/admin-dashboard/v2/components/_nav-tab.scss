@@ -1,3 +1,5 @@
+@use "../../../../../../v2-library/src/scss/mixins/breakpoint";
+
 // Navigation Tab
 .tutor-option-nav-page {
 	&:not(.is-active) {
@@ -40,16 +42,16 @@
 			.tutor-nav-link {
 				padding: 8px 12px;
 				
-				@include breakpoint-max(desktop) {
+				@include breakpoint.breakpoint-max(desktop) {
 					padding: 8px 20px;
 				}
 			}
 
-			@include breakpoint-max(desktop) {
+			@include breakpoint.breakpoint-max(desktop) {
 				margin-inline: 0;
 			}
 
-			@include breakpoint-max(mobile) {
+			@include breakpoint.breakpoint-max(mobile) {
 				margin-inline-start: 20px;
 
 				.rtl & {

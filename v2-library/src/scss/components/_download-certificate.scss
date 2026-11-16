@@ -1,3 +1,5 @@
+@use "../mixins/breakpoint";
+
 .tutor-download-certificate {
 	max-width: 750px;
 	display: grid;
@@ -18,7 +20,7 @@
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 
-	@include breakpoint-max(650) {
+	@include breakpoint.breakpoint-max(650) {
 		grid-template-columns: repeat(2, 1fr);
 
 		.tutor-info-issued,
@@ -41,7 +43,7 @@
 		}
 	}
 
-	@include breakpoint-max(400) {
+	@include breakpoint.breakpoint-max(400) {
 		grid-template-columns: repeat(1, 1fr);
 
 		.tutor-info-expiration {
@@ -56,39 +58,39 @@
 	top: 210px;
 }
 
-@include breakpoint-min(992) {
+@include breakpoint.breakpoint-min(992) {
 	.tutor-download-certificate {
 		padding-top: 100px;
 		padding-bottom: 200px;
 	}
 }
 
-@include breakpoint-minmax(992, 1200) {
+@include breakpoint.breakpoint-minmax(992, 1200) {
 	.tutor-dc-button-group {
 		top: 200px;
 	}
 }
 
-@include breakpoint-max(991) {
+@include breakpoint.breakpoint-max(991) {
 	.tutor-dc-button-group {
 		inset-inline-end: 0;
 		top: 125px;
 	}
 }
 
-@include breakpoint-minmax(768, 1200) {
+@include breakpoint.breakpoint-minmax(768, 1200) {
 	.tutor-certificate-demo {
 		max-width: 570px;
 	}
 }
 
-@include breakpoint-minmax(577, 767) {
+@include breakpoint.breakpoint-minmax(577, 767) {
 	.tutor-certificate-demo {
 		max-width: 420px;
 	}
 }
 
-@include breakpoint-max(576) {
+@include breakpoint.breakpoint-max(576) {
 	.tutor-certificate-demo {
 		max-width: 82%;
 	}
