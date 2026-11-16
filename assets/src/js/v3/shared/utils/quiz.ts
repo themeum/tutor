@@ -30,6 +30,7 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   return QuizDataStatus.NO_CHANGE;
 };
 
+export const scaleValidationErrorMessage = __('Please configure valid scale settings.', __TUTOR_TEXT_DOMAIN__);
 export const scaleRequiredErrorMessage = __('This field is required', __TUTOR_TEXT_DOMAIN__);
 export const scaleRangeErrorMessage = __(
   'The maximum value must be greater than the minimum value.',
@@ -169,7 +170,7 @@ export const validateQuizQuestion = (
       const firstAnswer = answers[0];
       if (!firstAnswer || !firstAnswer.answer_two_gap_match) {
         return {
-          message: scaleRequiredErrorMessage,
+          message: scaleValidationErrorMessage,
           type: 'question',
         };
       }
@@ -186,7 +187,7 @@ export const validateQuizQuestion = (
 
         if (![min, max, labelEvery, correctValue].every(Number.isFinite)) {
           return {
-            message: scaleRequiredErrorMessage,
+            message: scaleValidationErrorMessage,
             type: 'question',
           };
         }
@@ -204,7 +205,7 @@ export const validateQuizQuestion = (
         }
       } catch {
         return {
-          message: scaleRequiredErrorMessage,
+          message: scaleValidationErrorMessage,
           type: 'question',
         };
       }

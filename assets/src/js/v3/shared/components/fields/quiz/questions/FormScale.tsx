@@ -32,6 +32,7 @@ import {
   scaleLabelEntryRangeErrorMessage,
   scaleRangeErrorMessage,
   scaleRequiredErrorMessage,
+  scaleValidationErrorMessage,
 } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -113,6 +114,7 @@ const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setV
     const isScaleRangeError =
       prev?.type === 'question' &&
       [
+        scaleValidationErrorMessage,
         scaleRequiredErrorMessage,
         scaleRangeErrorMessage,
         scaleLabelEntryRangeErrorMessage,
