@@ -169,7 +169,6 @@ const QuizModal = ({
         type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
       } | null>
     >,
-    setActiveQuestionId?: React.Dispatch<React.SetStateAction<ID>>,
   ) => {
     if (!data.quiz_title) {
       setActiveTab('details');
@@ -190,15 +189,16 @@ const QuizModal = ({
       return;
     }
 
-    for (const q of data.questions) {
-      const validation = validateQuizQuestion(q);
+    const activeQuestion = data.questions[activeQuestionIndex];
 
-      if (validation !== true) {
-        setValidationError(validation);
-        setActiveQuestionId?.(q.question_id);
-        setActiveTab('details');
-        return;
-      }
+    const validation = validateQuizQuestion(activeQuestion);
+
+    if (validation !== true) {
+      setValidationError(validation);
+
+      setActiveTab('details');
+
+      return;
     }
 
     setIsEdit(false);
@@ -233,237 +233,219 @@ const QuizModal = ({
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''} topicId={topicId} contentType={contentType || 'tutor_quiz'}>
-        {({
-          activeQuestionIndex,
-          activeQuestionId,
-          setActiveQuestionId,
-          validateActiveQuestion,
-          setValidationError,
-        }) => {
-          const handleGoToSettings = () => {
-            const validation = validateActiveQuestion();
-            if (validation !== true) {
-              setValidationError(validation);
-              return;
+        {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
+          <ModalWrapper
+            onClose={() => closeModal({ action: 'CLOSE' })}
+            icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+            title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+            subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
+            fullScreen
+            headerChildren={
+              <Tabs
+                wrapperCss={styles.tabsWrapper}
+                activeTab={activeTab}
+                tabList={[
+                  {
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Question Details', 'tutor') : '',
+                    value: 'details',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
+                  },
+                  {
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Settings', 'tutor') : '',
+                    value: 'settings',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
+                  },
+                ]}
+                onChange={(tab) => setActiveTab(tab)}
+              />
             }
-            setActiveTab('settings');
-          };
-
-          return (
-            <ModalWrapper
-              onClose={() => closeModal({ action: 'CLOSE' })}
-              icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-              title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
-              subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
-              fullScreen
-              headerChildren={
-                <Tabs
-                  wrapperCss={styles.tabsWrapper}
-                  activeTab={activeTab}
-                  tabList={[
-                    {
-                      label: CURRENT_VIEWPORT.isAboveMobile ? __('Question Details', 'tutor') : '',
-                      value: 'details',
-                      icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
-                    },
-                    {
-                      label: CURRENT_VIEWPORT.isAboveMobile ? __('Settings', 'tutor') : '',
-                      value: 'settings',
-                      icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
-                    },
-                  ]}
-                  onChange={(tab) => {
-                    if (tab === 'settings') {
-                      handleGoToSettings();
-                      return;
-                    }
-                    setActiveTab(tab);
-                  }}
-                />
-              }
-              actions={
-                isFormDirty && (
-                  <>
-                    <Button
-                      variant="text"
-                      size="small"
-                      onClick={() => {
-                        if (isFormDirty) {
-                          setIsConfirmationOpen(true);
-                          return;
-                        }
-
-                        closeModal();
-                      }}
-                      ref={cancelRef}
-                    >
-                      {quizId
-                        ? CURRENT_VIEWPORT.isAboveSmallMobile
-                          ? __('Discard Changes', 'tutor')
-                          : __('Discard', 'tutor')
-                        : __('Cancel', 'tutor')}
-                    </Button>
-                    <Show
-                      when={activeTab === 'settings' || quizId}
-                      fallback={
-                        <Button data-cy="quiz-next" variant="primary" size="small" onClick={handleGoToSettings}>
-                          {__('Next', 'tutor')}
-                        </Button>
+            actions={
+              isFormDirty && (
+                <>
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => {
+                      if (isFormDirty) {
+                        setIsConfirmationOpen(true);
+                        return;
                       }
-                    >
+
+                      closeModal();
+                    }}
+                    ref={cancelRef}
+                  >
+                    {quizId
+                      ? CURRENT_VIEWPORT.isAboveSmallMobile
+                        ? __('Discard Changes', 'tutor')
+                        : __('Discard', 'tutor')
+                      : __('Cancel', 'tutor')}
+                  </Button>
+                  <Show
+                    when={activeTab === 'settings' || quizId}
+                    fallback={
                       <Button
-                        data-cy="save-quiz"
-                        loading={saveQuizMutation.isPending}
+                        data-cy="quiz-next"
                         variant="primary"
                         size="small"
-                        onClick={form.handleSubmit((data) =>
-                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError, setActiveQuestionId),
-                        )}
+                        onClick={() => setActiveTab('settings')}
                       >
-                        {__('Save', 'tutor')}
+                        {__('Next', 'tutor')}
                       </Button>
-                    </Show>
-                  </>
-                )
-              }
-            >
-              <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
-                <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
-                  <Show when={activeTab === 'details'}>
-                    <div css={styles.left}>
-                      <Show when={activeTab === 'details'}>
-                        <div css={styles.quizTitleWrapper}>
-                          <div css={styles.quizForm}>
+                    }
+                  >
+                    <Button
+                      data-cy="save-quiz"
+                      loading={saveQuizMutation.isPending}
+                      variant="primary"
+                      size="small"
+                      onClick={form.handleSubmit((data) =>
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                      )}
+                    >
+                      {__('Save', 'tutor')}
+                    </Button>
+                  </Show>
+                </>
+              )
+            }
+          >
+            <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
+              <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+                <Show when={activeTab === 'details'}>
+                  <div css={styles.left}>
+                    <Show when={activeTab === 'details'}>
+                      <div css={styles.quizTitleWrapper}>
+                        <div css={styles.quizForm}>
+                          <Controller
+                            control={form.control}
+                            name="quiz_title"
+                            rules={{ required: __('Quiz title is required', 'tutor') }}
+                            render={(controllerProps) => (
+                              <FormQuestionTitle
+                                {...controllerProps}
+                                placeholder={__('Add quiz title', 'tutor')}
+                                size="small"
+                                isEdit={isEdit}
+                                onToggleEdit={(isEdit) => {
+                                  setIsEdit(isEdit);
+                                }}
+                                wrapperCss={styles.quizTitle}
+                              />
+                            )}
+                          />
+                          <Show when={isEdit}>
                             <Controller
                               control={form.control}
-                              name="quiz_title"
-                              rules={{ required: __('Quiz title is required', 'tutor') }}
+                              name="quiz_description"
                               render={(controllerProps) => (
-                                <FormQuestionTitle
+                                <FormTextareaInput
                                   {...controllerProps}
-                                  placeholder={__('Add quiz title', 'tutor')}
-                                  size="small"
-                                  isEdit={isEdit}
-                                  onToggleEdit={(isEdit) => {
-                                    setIsEdit(isEdit);
-                                  }}
-                                  wrapperCss={styles.quizTitle}
+                                  placeholder={__('Add a summary', 'tutor')}
+                                  rows={3}
                                 />
                               )}
                             />
-                            <Show when={isEdit}>
-                              <Controller
-                                control={form.control}
-                                name="quiz_description"
-                                render={(controllerProps) => (
-                                  <FormTextareaInput
-                                    {...controllerProps}
-                                    placeholder={__('Add a summary', 'tutor')}
-                                    rows={3}
-                                  />
-                                )}
-                              />
 
-                              <div css={styles.quizFormButtonWrapper}>
-                                <Button
-                                  variant="text"
-                                  type="button"
-                                  onClick={() => {
-                                    if (!form.watch('quiz_title')) {
-                                      closeModal();
-                                    }
-                                    setIsEdit(false);
-                                  }}
-                                  size="small"
-                                >
-                                  {__('Cancel', 'tutor')}
-                                </Button>
-                                <Button
-                                  data-cy="save-quiz-title"
-                                  loading={saveQuizMutation.isPending}
-                                  variant="secondary"
-                                  type="submit"
-                                  size="small"
-                                  onClick={() => {
-                                    if (!form.getValues('quiz_title')) {
-                                      form.trigger('quiz_title');
-                                      return;
-                                    }
-                                    setIsEdit(false);
-                                  }}
-                                >
-                                  {__('Ok', 'tutor')}
-                                </Button>
-                              </div>
-                            </Show>
-                          </div>
+                            <div css={styles.quizFormButtonWrapper}>
+                              <Button
+                                variant="text"
+                                type="button"
+                                onClick={() => {
+                                  if (!form.watch('quiz_title')) {
+                                    closeModal();
+                                  }
+                                  setIsEdit(false);
+                                }}
+                                size="small"
+                              >
+                                {__('Cancel', 'tutor')}
+                              </Button>
+                              <Button
+                                data-cy="save-quiz-title"
+                                loading={saveQuizMutation.isPending}
+                                variant="secondary"
+                                type="submit"
+                                size="small"
+                                onClick={() => {
+                                  if (!form.getValues('quiz_title')) {
+                                    form.trigger('quiz_title');
+                                    return;
+                                  }
+                                  setIsEdit(false);
+                                }}
+                              >
+                                {__('Ok', 'tutor')}
+                              </Button>
+                            </div>
+                          </Show>
                         </div>
+                      </div>
 
-                        <QuestionList isEditing={isEdit} />
-                      </Show>
-                    </div>
-                  </Show>
-                  <div css={styles.centerColumn}>
-                    <div css={styles.content({ activeTab })}>
-                      <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
-                        <QuizSettings contentDripType={contentDripType} />
-                      </Show>
-                    </div>
+                      <QuestionList isEditing={isEdit} />
+                    </Show>
                   </div>
-                  <Show when={activeTab === 'details' && contentType !== 'tutor_h5p_quiz'}>
-                    <div css={styles.right}>
-                      <QuestionConditions />
-                    </div>
-                  </Show>
                 </Show>
-              </div>
-
-              <ConfirmationPopover
-                isOpen={isConfirmationOpen}
-                triggerRef={cancelRef}
-                closePopover={() => setIsConfirmationOpen(false)}
-                maxWidth="258px"
-                title={
-                  <div css={styles.confirmationPopoverTitle}>
-                    <SVGIcon name="warning" width={20} height={20} />
-                    <span>{__('Discard changes?', 'tutor')}</span>
+                <div css={styles.centerColumn}>
+                  <div css={styles.content({ activeTab })}>
+                    <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
+                      <QuizSettings contentDripType={contentDripType} />
+                    </Show>
                   </div>
-                }
-                message={''}
-                animationType={AnimationType.slideUp}
-                placement={
-                  CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
-                }
-                positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
-                confirmButton={{
-                  text: __('Keep Editing', 'tutor'),
-                  variant: 'primary',
-                }}
-                cancelButton={{
-                  text: __('Discard', 'tutor'),
-                  variant: 'text',
-                }}
-                onConfirmation={() => {
-                  setIsConfirmationOpen(false);
-                }}
-                onCancel={() => {
-                  form.reset();
-                  setValidationError(null);
+                </div>
+                <Show when={activeTab === 'details' && contentType !== 'tutor_h5p_quiz'}>
+                  <div css={styles.right}>
+                    <QuestionConditions />
+                  </div>
+                </Show>
+              </Show>
+            </div>
 
-                  if (
-                    !getQuizDetailsQuery.data?.questions.find((question) => question.question_id === activeQuestionId)
-                  ) {
-                    setActiveQuestionId('');
-                  }
-                  if (!quizId) {
-                    closeModal();
-                  }
-                  setIsConfirmationOpen(false);
-                }}
-              />
-            </ModalWrapper>
-          );
-        }}
+            <ConfirmationPopover
+              isOpen={isConfirmationOpen}
+              triggerRef={cancelRef}
+              closePopover={() => setIsConfirmationOpen(false)}
+              maxWidth="258px"
+              title={
+                <div css={styles.confirmationPopoverTitle}>
+                  <SVGIcon name="warning" width={20} height={20} />
+                  <span>{__('Discard changes?', 'tutor')}</span>
+                </div>
+              }
+              message={''}
+              animationType={AnimationType.slideUp}
+              placement={
+                CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
+              }
+              positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
+              confirmButton={{
+                text: __('Keep Editing', 'tutor'),
+                variant: 'primary',
+              }}
+              cancelButton={{
+                text: __('Discard', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                setIsConfirmationOpen(false);
+              }}
+              onCancel={() => {
+                form.reset();
+                setValidationError(null);
+
+                if (
+                  !getQuizDetailsQuery.data?.questions.find((question) => question.question_id === activeQuestionId)
+                ) {
+                  setActiveQuestionId('');
+                }
+                if (!quizId) {
+                  closeModal();
+                }
+                setIsConfirmationOpen(false);
+              }}
+            />
+          </ModalWrapper>
+        )}
       </QuizModalContextProvider>
     </FormProvider>
   );

@@ -35,7 +35,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import Popover from '@TutorShared/molecules/Popover';
 import { basicQuestionTypes, interactiveQuestionTypes } from '@TutorShared/utils/question-type-registry';
-import { convertedQuestion, defaultScaleAnswerTwoGapMatch } from '@TutorShared/utils/quiz';
+import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ContentBankContent,
@@ -72,14 +72,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const {
-    contentType,
-    activeQuestionIndex,
-    validationError,
-    setActiveQuestionId,
-    setValidationError,
-    validateActiveQuestion,
-  } = useQuizModalContext();
+  const { contentType, activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } =
+    useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -110,9 +104,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   }, [activeSortId, questionFields]);
 
   const questions = form.watch('questions') || [];
+  const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
-    const validation = validateActiveQuestion();
+    const validation = validateQuizQuestion(activeQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -226,7 +221,19 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                           answer_title: '',
                           belongs_question_id: questionId,
                           belongs_question_type: 'scale',
-                          answer_two_gap_match: defaultScaleAnswerTwoGapMatch,
+                          answer_two_gap_match: JSON.stringify({
+                            value: 50,
+                            config: {
+                              min: 0,
+                              max: 100,
+                              step: 1,
+                              defaultValue: 50,
+                              pxPerUnit: 10,
+                              labelEvery: 10,
+                              minorTickEvery: 5,
+                              precision: 0,
+                            },
+                          }),
                           answer_view_format: 'scale',
                           answer_order: 0,
                           is_correct: '1',
@@ -279,7 +286,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       question: QuizQuestion;
     })[],
   ) => {
-    const validation = validateActiveQuestion();
+    const validation = validateQuizQuestion(activeQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -312,12 +319,6 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
-    const validation = validateActiveQuestion();
-    if (validation !== true) {
-      setValidationError(validation);
-      return;
-    }
-
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
     if (!currentQuestion || validationError) {

@@ -1,8 +1,7 @@
 import type React from 'react';
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import {
   type ID,
   type QuizQuestion,
@@ -16,12 +15,6 @@ interface QuizModalContextProps {
   activeQuestionIndex: number;
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
-  validateActiveQuestion: () =>
-    | true
-    | {
-        message: string;
-        type: QuizValidationErrorType;
-      };
   quizId: ID;
   topicId: ID;
   contentType: TopicContentType;
@@ -60,18 +53,11 @@ export const QuizModalContextProvider = ({
         activeQuestionIndex,
         activeQuestionId,
         setActiveQuestionId,
-        validateActiveQuestion,
         setValidationError,
       }: {
         activeQuestionIndex: NonNullable<number>;
         activeQuestionId: ID;
         setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
-        validateActiveQuestion: () =>
-          | true
-          | {
-              message: string;
-              type: QuizValidationErrorType;
-            };
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
@@ -123,21 +109,12 @@ export const QuizModalContextProvider = ({
     }
   }, [activeQuestionIndex, activeQuestionId]);
 
-  const validateActiveQuestion = useCallback(() => {
-    if (activeQuestionIndex === -1) {
-      return true;
-    }
-    const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
-    return validateQuizQuestion(currentActiveQuestion);
-  }, [activeQuestionIndex, form]);
-
   return (
     <QuizModalContext.Provider
       value={{
         activeQuestionIndex,
         activeQuestionId,
         setActiveQuestionId,
-        validateActiveQuestion,
         quizId,
         validationError,
         setValidationError,
@@ -150,7 +127,6 @@ export const QuizModalContextProvider = ({
             activeQuestionIndex,
             activeQuestionId,
             setActiveQuestionId,
-            validateActiveQuestion,
             setValidationError,
           })
         : children}
