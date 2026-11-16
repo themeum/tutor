@@ -550,7 +550,16 @@ window.jQuery(document).ready($ => {
                         callback: function () {
                             clearRevealTimeout();
                             $('#tutor-answering-quiz').find('input, select, textarea').prop('disabled', false);
-                            var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
+                            var $form = $('form#tutor-answering-quiz');
+                            // No question form is rendered when legacy mode has no supported question type.
+                            var formData = $form.length
+                                ? $form.serialize()
+                                : $.param({
+                                      quiz_id: $('#tutor_quiz_id').val(),
+                                      tutor_action: 'tutor_answering_quiz_question',
+                                      _tutor_nonce: window._tutorobject._tutor_nonce,
+                                  });
+                            formData += '&action=' + 'tutor_quiz_abandon';
                             $.ajax({
                                 url: window._tutorobject.ajaxurl,
                                 type: 'POST',
