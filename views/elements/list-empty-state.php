@@ -9,6 +9,8 @@
  * @since 3.5.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $subtile       = tutor_utils()->get_list_empty_state_subtitle();
 $subtitle_text = '';
 
