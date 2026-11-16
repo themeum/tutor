@@ -143,30 +143,48 @@ export const validateQuizQuestion = (
 
     if (currentQuestionType === 'scale') {
       const firstAnswer = answers[0];
-      if (firstAnswer?.answer_two_gap_match) {
-        try {
-          const data = JSON.parse(firstAnswer.answer_two_gap_match) as {
-            value?: number;
-            config?: { min?: number; max?: number; labelEvery?: number };
-          };
-          const min = Number(data.config?.min ?? 0);
-          const max = Number(data.config?.max ?? 100);
-          const labelEvery = Number(data.config?.labelEvery ?? 10);
-          const correctValue = Number(data.value);
-          const validationError = getScaleValidationError(
-            { min, max, labelEvery },
-            Number.isFinite(correctValue) ? correctValue : null,
-          );
+      if (!firstAnswer || !firstAnswer.answer_two_gap_match) {
+        return {
+          message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+          type: 'question',
+        };
+      }
 
-          if (validationError) {
-            return {
-              message: validationError.message,
-              type: 'question',
-            };
-          }
-        } catch {
-          // Invalid JSON; other validation may apply elsewhere.
+      try {
+        const data = JSON.parse(firstAnswer.answer_two_gap_match) as {
+          value?: number | null;
+          config?: { min?: number | null; max?: number | null; labelEvery?: number | null };
+        };
+        const min = data.config?.min;
+        const max = data.config?.max;
+        const labelEvery = data.config?.labelEvery;
+        const correctValue = data.value;
+
+        const isMinValid = typeof min === 'number' && Number.isFinite(min);
+        const isMaxValid = typeof max === 'number' && Number.isFinite(max);
+        const isLabelEveryValid = typeof labelEvery === 'number' && Number.isFinite(labelEvery);
+        const isCorrectValueValid = typeof correctValue === 'number' && Number.isFinite(correctValue);
+
+        if (!isMinValid || !isMaxValid || !isLabelEveryValid || !isCorrectValueValid) {
+          return {
+            message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+            type: 'question',
+          };
         }
+
+        const validationError = getScaleValidationError({ min, max, labelEvery }, correctValue);
+
+        if (validationError) {
+          return {
+            message: validationError.message,
+            type: 'question',
+          };
+        }
+      } catch {
+        return {
+          message: __('This field is required', __TUTOR_TEXT_DOMAIN__),
+          type: 'question',
+        };
       }
     }
 

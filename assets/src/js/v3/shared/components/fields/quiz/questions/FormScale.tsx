@@ -47,20 +47,25 @@ interface FormScaleProps extends FormControllerProps<QuizQuestionOption> {
   >;
 }
 
-interface ScaleConfig {
-  min: number;
-  max: number;
-  step: number;
-  defaultValue: number;
-  pxPerUnit: number;
-  labelEvery: number;
-  minorTickEvery: number;
-  precision: number;
+interface ScaleInputs {
+  min: string;
+  max: string;
+  labelEvery: string;
+  value: string;
 }
 
-interface ScaleData {
-  value: number;
-  config: ScaleConfig;
+interface StoredScalePayload {
+  value?: number | null;
+  config?: {
+    min?: number | null;
+    max?: number | null;
+    step?: number;
+    defaultValue?: number;
+    pxPerUnit?: number;
+    labelEvery?: number | null;
+    minorTickEvery?: number;
+    precision?: number;
+  };
 }
 
 type ScaleField = 'min' | 'max' | 'labelEvery' | 'value';
@@ -70,30 +75,26 @@ interface ScaleFieldError {
   message: string;
 }
 
-function normalizeScaleConfig(config: ScaleConfig): ScaleConfig {
-  return {
-    ...config,
-    step: 1,
-  };
-}
+const defaultInputs: ScaleInputs = {
+  min: '0',
+  max: '100',
+  labelEvery: '10',
+  value: '50',
+};
 
-function parseStoredScaleData(value: string): ScaleData | null {
+function parseStoredScaleInputs(value: string): ScaleInputs | null {
   if (!value || typeof value !== 'string') return null;
   try {
-    const data = JSON.parse(value) as Partial<ScaleData>;
-    if (typeof data.value === 'number' && data.config) {
+    const data = JSON.parse(value) as StoredScalePayload;
+    if (data && typeof data === 'object') {
       return {
-        value: data.value,
-        config: normalizeScaleConfig({
-          min: data.config.min ?? 0,
-          max: data.config.max ?? 100,
-          step: 1,
-          defaultValue: data.config.defaultValue ?? 50,
-          pxPerUnit: data.config.pxPerUnit ?? 10,
-          labelEvery: data.config.labelEvery ?? 10,
-          minorTickEvery: data.config.minorTickEvery ?? 5,
-          precision: data.config.precision ?? 0,
-        }),
+        min: typeof data.config?.min === 'number' && Number.isFinite(data.config.min) ? String(data.config.min) : '',
+        max: typeof data.config?.max === 'number' && Number.isFinite(data.config.max) ? String(data.config.max) : '',
+        labelEvery:
+          typeof data.config?.labelEvery === 'number' && Number.isFinite(data.config.labelEvery)
+            ? String(data.config.labelEvery)
+            : '',
+        value: typeof data.value === 'number' && Number.isFinite(data.value) ? String(data.value) : '',
       };
     }
   } catch {
@@ -101,13 +102,6 @@ function parseStoredScaleData(value: string): ScaleData | null {
   }
   return null;
 }
-
-const toScaleInputs = (data: ScaleData) => ({
-  min: String(data.config.min),
-  max: String(data.config.max),
-  labelEvery: String(data.config.labelEvery),
-  value: String(data.value),
-});
 
 const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setValidationError']) => {
   setValidationError?.((prev) => {
@@ -121,57 +115,23 @@ const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setV
   });
 };
 
-const defaultScaleData: ScaleData = {
-  value: 50,
-  config: normalizeScaleConfig({
-    min: 0,
-    max: 100,
-    step: 1,
-    defaultValue: 50,
-    pxPerUnit: 10,
-    labelEvery: 10,
-    minorTickEvery: 5,
-    precision: 0,
-  }),
-};
-
 const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   const option = field.value;
   const storedScalePayload = option?.answer_two_gap_match ?? '';
 
-  const baseScaleData = useRef<ScaleData>(parseStoredScaleData(storedScalePayload) || defaultScaleData);
   const lastPersistedPayloadRef = useRef<string | null>(storedScalePayload || null);
-
-  const [inputs, setInputs] = useState(() => toScaleInputs(baseScaleData.current));
+  const [inputs, setInputs] = useState<ScaleInputs>(() => parseStoredScaleInputs(storedScalePayload) || defaultInputs);
   const [lastRangeField, setLastRangeField] = useState<'min' | 'max'>('max');
 
   // If the stored answer payload was updated externally (e.g. form reset, switching question),
   // sync state during render without an asynchronous effect.
   if (storedScalePayload !== lastPersistedPayloadRef.current) {
     lastPersistedPayloadRef.current = storedScalePayload;
-    const parsed = parseStoredScaleData(storedScalePayload);
+    const parsed = parseStoredScaleInputs(storedScalePayload);
     if (parsed) {
-      baseScaleData.current = parsed;
-      setInputs(toScaleInputs(parsed));
+      setInputs(parsed);
     }
   }
-
-  const parsedMin = parseFloat(inputs.min);
-  const parsedMax = parseFloat(inputs.max);
-  const parsedLabelEvery = parseFloat(inputs.labelEvery);
-  const parsedValue = parseFloat(inputs.value);
-
-  const currentScaleData: ScaleData = {
-    value: Number.isFinite(parsedValue) ? parsedValue : baseScaleData.current.value,
-    config: normalizeScaleConfig({
-      ...baseScaleData.current.config,
-      min: Number.isFinite(parsedMin) ? parsedMin : baseScaleData.current.config.min,
-      max: Number.isFinite(parsedMax) ? parsedMax : baseScaleData.current.config.max,
-      labelEvery: Number.isFinite(parsedLabelEvery) ? parsedLabelEvery : baseScaleData.current.config.labelEvery,
-    }),
-  };
-
-  const config = currentScaleData.config;
 
   const updateOption = useCallback(
     (updated: QuizQuestionOption) => {
@@ -181,14 +141,42 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
   );
 
   const saveScaleData = useCallback(
-    (data: ScaleData) => {
+    (currentInputs: ScaleInputs) => {
       if (!option) return;
 
-      const serializedPayload = JSON.stringify(data);
+      const pMin =
+        currentInputs.min.trim() === '' || currentInputs.min.trim() === '-' ? null : parseFloat(currentInputs.min);
+      const pMax =
+        currentInputs.max.trim() === '' || currentInputs.max.trim() === '-' ? null : parseFloat(currentInputs.max);
+      const pLabel = currentInputs.labelEvery.trim() === '' ? null : parseFloat(currentInputs.labelEvery);
+      const pVal =
+        currentInputs.value.trim() === '' || currentInputs.value.trim() === '-'
+          ? null
+          : parseFloat(currentInputs.value);
+
+      const validMin = pMin !== null && Number.isFinite(pMin) ? pMin : null;
+      const validMax = pMax !== null && Number.isFinite(pMax) ? pMax : null;
+      const validLabel = pLabel !== null && Number.isFinite(pLabel) ? pLabel : null;
+      const validVal = pVal !== null && Number.isFinite(pVal) ? pVal : null;
+
+      const payload: StoredScalePayload = {
+        value: validVal,
+        config: {
+          min: validMin,
+          max: validMax,
+          step: 1,
+          defaultValue: validVal ?? (validMin !== null && validMax !== null ? (validMin + validMax) / 2 : 50),
+          pxPerUnit: 10,
+          labelEvery: validLabel,
+          minorTickEvery: 5,
+          precision: 0,
+        },
+      };
+
+      const serializedPayload = JSON.stringify(payload);
       if (serializedPayload === lastPersistedPayloadRef.current) return;
 
       lastPersistedPayloadRef.current = serializedPayload;
-      baseScaleData.current = data;
       updateOption({
         ...option,
         ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
@@ -203,55 +191,64 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
 
   const handleInputChange = useCallback(
     (fieldKey: ScaleField, rawValue: string) => {
-      setInputs((prev) => ({ ...prev, [fieldKey]: rawValue }));
+      const nextInputs = { ...inputs, [fieldKey]: rawValue };
+      setInputs(nextInputs);
       if (fieldKey === 'min' || fieldKey === 'max') {
         setLastRangeField(fieldKey);
       }
       clearScaleRangeValidationError(setValidationError);
+      saveScaleData(nextInputs);
+    },
+    [inputs, saveScaleData, setValidationError],
+  );
 
-      const parsed = parseFloat(rawValue);
-      if (!Number.isFinite(parsed)) return;
-
-      if (fieldKey === 'value') {
-        if (parsed === baseScaleData.current.value) return;
-
-        const nextScaleData = { ...baseScaleData.current, value: parsed };
-        saveScaleData(nextScaleData);
+  const handleInputBlur = useCallback(
+    (fieldKey: ScaleField, rawValue: string) => {
+      const trimmed = rawValue.trim();
+      if (trimmed === '' || trimmed === '-') {
         return;
       }
 
-      if (parsed === baseScaleData.current.config[fieldKey]) return;
-
-      const nextScaleData = {
-        ...baseScaleData.current,
-        config: normalizeScaleConfig({ ...baseScaleData.current.config, [fieldKey]: parsed }),
-      };
-      saveScaleData(nextScaleData);
+      const parsed = parseFloat(trimmed);
+      if (Number.isFinite(parsed)) {
+        setInputs((prev) => {
+          if (prev[fieldKey] === String(parsed)) return prev;
+          const next = { ...prev, [fieldKey]: String(parsed) };
+          saveScaleData(next);
+          return next;
+        });
+      }
     },
-    [saveScaleData, setValidationError],
+    [saveScaleData],
   );
 
-  const handleInputBlur = useCallback((fieldKey: ScaleField, rawValue: string) => {
-    if (rawValue.trim() === '') {
-      return;
-    }
+  const parsedMin = parseFloat(inputs.min);
+  const parsedMax = parseFloat(inputs.max);
+  const parsedLabelEvery = parseFloat(inputs.labelEvery);
+  const parsedValue = parseFloat(inputs.value);
 
-    const committedValue = fieldKey === 'value' ? baseScaleData.current.value : baseScaleData.current.config[fieldKey];
-    setInputs((prev) => ({ ...prev, [fieldKey]: String(committedValue) }));
-  }, []);
+  const hasAllNumbers =
+    Number.isFinite(parsedMin) &&
+    Number.isFinite(parsedMax) &&
+    Number.isFinite(parsedLabelEvery) &&
+    Number.isFinite(parsedValue);
 
-  const scaleError = getScaleValidationError(config, currentScaleData.value);
+  const scaleError = hasAllNumbers
+    ? getScaleValidationError({ min: parsedMin, max: parsedMax, labelEvery: parsedLabelEvery }, parsedValue)
+    : null;
+
   const fieldError: ScaleFieldError | null = scaleError
     ? { field: scaleError.field === 'range' ? lastRangeField : scaleError.field, message: scaleError.message }
     : null;
 
   const renderFieldError = (fieldKey: ScaleField) => {
-    const message =
-      inputs[fieldKey].trim() === ''
-        ? __('This field is required', __TUTOR_TEXT_DOMAIN__)
-        : fieldError?.field === fieldKey
-          ? fieldError.message
-          : null;
+    const rawVal = inputs[fieldKey].trim();
+    const isFieldEmpty = rawVal === '' || rawVal === '-';
+    const message = isFieldEmpty
+      ? __('This field is required', __TUTOR_TEXT_DOMAIN__)
+      : fieldError?.field === fieldKey
+        ? fieldError.message
+        : null;
 
     return message ? (
       <div css={styles.errorMessage} role="alert">
@@ -265,7 +262,7 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
     return null;
   }
 
-  const isRangeInvalid = config.max <= config.min;
+  const isRangeValid = Number.isFinite(parsedMin) && Number.isFinite(parsedMax) && parsedMax > parsedMin;
 
   return (
     <div css={styles.wrapper}>
@@ -332,14 +329,14 @@ const FormScale = ({ field, setValidationError }: FormScaleProps) => {
               onChange={(v) => handleInputChange('value', v)}
               onBlur={(v) => handleInputBlur('value', v)}
               placeholder={
-                isRangeInvalid
-                  ? undefined
-                  : sprintf(
+                isRangeValid
+                  ? sprintf(
                       // translators: %1$s is the minimum scale value, %2$s is the maximum scale value
                       __('Between %1$s and %2$s', __TUTOR_TEXT_DOMAIN__),
-                      String(config.min),
-                      String(config.max),
+                      inputs.min,
+                      inputs.max,
                     )
+                  : undefined
               }
             />
             {renderFieldError('value')}
