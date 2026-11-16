@@ -484,7 +484,7 @@ class CourseModel {
 	 * - Only the main instructor can trash a course (co-authors cannot).
 	 * - Main instructor can trash only if 'instructor_can_delete_course' option is enabled.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.2
 	 *
 	 * @param int  $course_id    Course or bundle ID.
 	 * @param bool $force_delete Whether to permanently delete.
@@ -528,7 +528,7 @@ class CourseModel {
 	 * - Publishing requires 'instructor_can_publish_course' option to be enabled.
 	 * - Changing to draft or pending is permitted for main author.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.2
 	 *
 	 * @param int    $course_id     Course or bundle ID.
 	 * @param string $target_status Target post status.
@@ -572,7 +572,7 @@ class CourseModel {
 	 * Delete a course by ID (trash or permanent delete).
 	 *
 	 * @since 2.0.9
-	 * @since 4.3.0 Centralized permission checking, soft trash & permanent delete support.
+	 * @since 4.2.2 Centralized permission checking, soft trash & permanent delete support.
 	 *
 	 * @param int  $post_id      Course id that need to delete.
 	 * @param bool $force_delete Whether to permanently delete (admin only) or trash.
@@ -610,7 +610,7 @@ class CourseModel {
 	/**
 	 * Bulk delete courses (trash or permanent delete).
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.2
 	 *
 	 * @param string|array $bulk_ids     Course IDs.
 	 * @param bool         $force_delete Whether to permanently delete or trash.
@@ -641,7 +641,7 @@ class CourseModel {
 	/**
 	 * Update course status with permission check.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.2
 	 *
 	 * @param int    $course_id Course ID.
 	 * @param string $status    Target post status.
@@ -687,7 +687,7 @@ class CourseModel {
 	/**
 	 * Bulk update course status with permission check per course.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.2
 	 *
 	 * @param string|array $bulk_ids Course IDs.
 	 * @param string       $status   Target post status.
