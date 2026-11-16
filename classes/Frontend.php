@@ -37,7 +37,7 @@ class Frontend {
 		add_action( 'wp_head', array( new Utils(), 'handle_flash_message' ), 999 );
 
 		add_action( 'tutor_course/single/before/wrap', array( $this, 'do_auto_course_complete' ) );
-		add_filter( 'body_class', array( $this, 'add_kids_mode_attribute' ) );
+		add_filter( 'language_attributes', array( $this, 'add_kids_mode_attribute' ) );
 	}
 
 	/**
@@ -124,22 +124,17 @@ class Frontend {
 	}
 
 	/**
-	 * Add kids mode data attribute to the <body> tag.
-	 *
-	 * Note: body_class filter only accepts class names, not attributes.
+	 * Add kids mode data attribute to the html tag.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $classes Body classes.
+	 * @param string $output language attribute output.
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function add_kids_mode_attribute( $classes ) {
-		if ( ! tutor_utils()->is_kids_mode() ) {
-			return $classes;
-		}
-
-		echo ' data-tutor-ui="kids"';
-		return $classes;
+	public function add_kids_mode_attribute( $output ) {
+		return tutor_utils()->is_kids_mode()
+				? $output . ' data-tutor-ui="kids"'
+				: $output;
 	}
 }
