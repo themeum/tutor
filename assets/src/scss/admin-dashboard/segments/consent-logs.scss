@@ -14,7 +14,8 @@
         content: '';
         position: absolute;
         top: 24px;
-        inset-inline-start: 50%;
+        /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the line centered in RTL */
+        left: 50%;
         transform: translateX(-50%);
         width: 2px;
         bottom: 0;
