@@ -177,7 +177,10 @@ test.describe('Course Creation Journey: Core Authoring & Enrollment @journey', (
 
       await test.step('Reload builder and verify field restoration', async () => {
         const reloadDetailsPromise = page.waitForResponse(
-          (res) => res.url().includes('tutor_course_details') && res.ok(),
+          (res) =>
+            res.url().includes('admin-ajax.php') &&
+            (res.request().postData() ?? '').includes('tutor_course_details') &&
+            res.ok(),
           { timeout: 30_000 },
         );
         await page.reload();

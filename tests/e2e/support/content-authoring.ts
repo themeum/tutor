@@ -252,9 +252,9 @@ export const setVideoUrl = async (
           await sourceInput.click();
         }
         await expect(sourceOption).toBeVisible({ timeout: 1000 });
+        await sourceOption.click();
+        await expect(sourceInput).toHaveValue(source);
       }).toPass({ timeout: 10_000 });
-      await sourceOption.click();
-      await expect(sourceInput).toHaveValue(source);
     }
   }
 
