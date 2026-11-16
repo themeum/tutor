@@ -343,7 +343,7 @@ class Dashboard {
 		$meta_title = '';
 
 		if ( '' !== $page_title ) {
-			/* translators: 1: current page title, 2: site name. */
+			/* translators: 1: page title, 2: site name. */
 			$meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $page_title, $site_name );
 		}
 

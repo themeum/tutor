@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -138,8 +138,8 @@ const AssignmentModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
-  const isRetryAllowed = form.watch('is_retry_allowed');
+  const isFormDirty = form.formState.isDirty;
+  const isRetryAllowed = useWatch({ control: form.control, name: 'is_retry_allowed' });
 
   useEffect(() => {
     if (assignmentDetails) {

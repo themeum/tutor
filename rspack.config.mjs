@@ -9,6 +9,7 @@ import { rspack } from '@rspack/core';
 import nodeExternals from 'webpack-node-externals';
 
 import { purgecssContent, purgecssSafelist } from './purgecss.config.mjs';
+import { RestoreCommentsPlugin } from './scripts/restore-comments.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,9 @@ const createSwcLoaderOptions = (isDevelopment) => ({
         development: isDevelopment,
         refresh: false,
         importSource: '@emotion/react',
+      },
+      reactCompiler: {
+        target: '18',
       },
     },
     experimental: {
@@ -80,7 +84,6 @@ const createConfig = (env, options) => {
       implementation: 'sass',
       sassOptions: {
         outputStyle: isDevelopment ? 'expanded' : 'compressed',
-        silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
       },
     },
   };
@@ -197,6 +200,7 @@ const createConfig = (env, options) => {
         'process.env.NODE_ENV': JSON.stringify(mode),
         __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
+      (!isDevelopment || isMakePot) && new RestoreCommentsPlugin(),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
     ].filter(Boolean),
     externals: {
@@ -249,10 +253,12 @@ const createConfig = (env, options) => {
         new rspack.SwcJsMinimizerRspackPlugin({
           extractComments: false,
           minimizerOptions: {
-            compress: false,
+            compress: {
+              conditionals: false,
+            },
             ecma: 2015,
             mangle: {
-              reserved: ['__'],
+              reserved: ['__', '_x', '_n', '_nx'],
             },
             format: {
               comments: /translators/i,
@@ -322,7 +328,6 @@ const scssEntries = {
   'tutor-admin-scss': './assets/src/scss/admin-dashboard/index.scss',
   'tutor-setup-scss': './assets/src/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',
-  'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
   'tutor-kids-scss': './assets/src/scss/frontend/kids/index.scss',

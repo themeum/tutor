@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
@@ -30,8 +30,8 @@ type SortDirection = 'asc' | 'desc';
 const ContentListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
-  const selectedCollection = form.watch('selectedCollection');
-  const existingContentIds = form.watch('existingContentIds');
+  const selectedCollection = useWatch({ control: form.control, name: 'selectedCollection' });
+  const existingContentIds = useWatch({ control: form.control, name: 'existingContentIds' }) ?? [];
 
   const [contentType, setContentType] = useState<'lesson' | 'assignment' | ''>('');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
@@ -50,7 +50,8 @@ const ContentListTable = () => {
   const totalItems = getContentsQuery.data?.total_record || 0;
   const totalPages = Number(getContentsQuery.data?.total_page || 0);
   const collectionName = selectedCollection?.post_title ?? __('All Contents', 'tutor');
-  const selectedContents = form.watch('contents') || [];
+  const watchedContents = useWatch({ control: form.control, name: 'contents' });
+  const selectedContents = useMemo(() => watchedContents || [], [watchedContents]);
   const selectedContentIds = selectedContents.map((content) => String(content.ID));
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
@@ -124,9 +125,9 @@ const ContentListTable = () => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const selectedContents = form.watch('contents') || [];
+                const currentSelected = form.getValues('contents') || [];
 
-                const filteredContents = selectedContents.filter((content) => String(content.ID) !== String(item.ID));
+                const filteredContents = currentSelected.filter((content) => String(content.ID) !== String(item.ID));
                 const isNewItem = filteredContents.length === selectedContents.length;
 
                 if (isNewItem) {

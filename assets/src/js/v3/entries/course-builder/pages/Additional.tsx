@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
@@ -56,6 +56,7 @@ const Additional = () => {
   }, [navigate]);
 
   const form = useFormContext<CourseFormData>();
+  const currentCertificateKey = useWatch({ control: form.control, name: 'tutor_course_certificate_template' });
   const queryClient = useQueryClient();
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
@@ -94,7 +95,6 @@ const Additional = () => {
     return null;
   }
 
-  const currentCertificateKey = form.watch('tutor_course_certificate_template');
   const certificateTemplates = courseDetails?.course_certificates_templates ?? [];
 
   const isOverViewVisible =
@@ -118,7 +118,7 @@ const Additional = () => {
     });
   };
 
-  const SidebarContent = () => (
+  const renderSidebarContent = () => (
     <div css={styles.sidebarContent}>
       <Show when={!isTutorPro || isPrerequisiteAddonEnabled}>
         <div>
@@ -341,9 +341,7 @@ const Additional = () => {
         </Show>
 
         <Show when={!hasLeftSideContent && hasSidebarContent}>
-          <div css={styles.formWrapper}>
-            <SidebarContent />
-          </div>
+          <div css={styles.formWrapper}>{renderSidebarContent()}</div>
         </Show>
 
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
@@ -352,9 +350,7 @@ const Additional = () => {
       </div>
 
       <Show when={hasSidebarContent && hasLeftSideContent}>
-        <div css={styles.sidebar}>
-          <SidebarContent />
-        </div>
+        <div css={styles.sidebar}>{renderSidebarContent()}</div>
       </Show>
 
       <Show when={!CURRENT_VIEWPORT.isAboveTablet}>

@@ -1,7 +1,10 @@
+@use "../mixins/breakpoint";
+
 .tutor-app-process-image {
 	max-width: 920px;
 	height: auto;
 	overflow: hidden;
+
 	img {
 		width: 100%;
 		border-radius: 10px;
@@ -12,10 +15,11 @@
 	max-width: 570px;
 }
 
-@include breakpoint-max(767) {
+@include breakpoint.breakpoint-max(767) {
 	span.tutor-app-process-title {
 		font-size: 28px;
 	}
+
 	span.tutor-app-process-subtitle {
 		font-size: 16px;
 	}

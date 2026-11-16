@@ -12,7 +12,7 @@
 		flex-wrap: wrap;
 
 		.tutor-loop-cart-btn-wrap {
-			margin-left: auto;
+			margin-inline-start: auto;
 
 			a {
 				color: var(--tutor-body-color);
@@ -34,7 +34,7 @@
 
 				&::before {
 					content: '\e915';
-					font-family: 'tutor' !important;
+					font-family: tutor !important;
 					speak: none;
 					font-style: normal;
 					font-weight: normal;
@@ -43,14 +43,14 @@
 					line-height: 20px;
 					-webkit-font-smoothing: antialiased;
 					-moz-osx-font-smoothing: grayscale;
-					margin-right: 5px;
+					margin-inline-end: 5px;
 					vertical-align: top;
 					color: var(--tutor-color-primary);
 				}
 			}
 
 			.tutor-course-booked-fully {
-				margin-left: auto;
+				margin-inline-start: auto;
 
 				& > * {
 					display: inline-block;
@@ -66,7 +66,7 @@
 
 		.subscription-details {
 			font-size: 15px;
-			margin-left: 4px;
+			margin-inline-start: 4px;
 			font-weight: 400;
 		}
 
@@ -74,7 +74,7 @@
 			font-weight: 400;
 
 			& > span {
-				margin-right: 6px;
+				margin-inline-end: 6px;
 			}
 
 			span {
@@ -84,7 +84,7 @@
 
 			& + ins {
 				background: transparent;
-				margin-left: 0;
+				margin-inline-start: 0;
 				text-decoration: none;
 			}
 		}

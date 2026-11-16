@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -51,6 +51,8 @@ const ExportInitialState = ({
   resetBulkSelection,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
+  const watchedFormValues = useWatch({ control: form.control }) as Record<string, unknown>;
+  const watchedBulkSelection = useWatch({ control: bulkSelectionForm.control }) as BulkSelectionFormData;
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -114,17 +116,7 @@ const ExportInitialState = ({
       return key;
     }
 
-    const getSelectionCount = () => {
-      const countMap: Record<string, number> = {
-        courses: bulkSelectionForm.getValues('courses').length,
-        'course-bundle': bulkSelectionForm.getValues('course-bundle').length,
-        content_bank: bulkSelectionForm.getValues('content_bank').length,
-      };
-
-      return countMap[key] || 0;
-    };
-
-    const selectedCount = getSelectionCount();
+    const selectedCount = watchedBulkSelection?.[key as keyof BulkSelectionFormData]?.length || 0;
 
     return selectedCount > 0
       ? createLabelWithCount(content.label, selectedCount, key)
@@ -144,10 +136,9 @@ const ExportInitialState = ({
       <>
         {exportableContent.map((contentType) => {
           const contentKey = contentType.key;
-          const isChecked = form.watch(contentKey);
+          const isChecked = watchedFormValues?.[contentKey];
 
-          const bulkSelectionCount =
-            bulkSelectionForm.getValues(contentKey as keyof BulkSelectionFormData)?.length || 0;
+          const bulkSelectionCount = watchedBulkSelection?.[contentKey as keyof BulkSelectionFormData]?.length || 0;
 
           if (['keep_media_files', 'keep_user_data'].includes(contentKey)) {
             return null;

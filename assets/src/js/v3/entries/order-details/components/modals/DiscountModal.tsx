@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -51,8 +51,8 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
     defaultValues: discount,
     mode: 'onChange',
   });
-  const type = form.watch('type');
-  const value = form.watch('amount');
+  const type = useWatch({ control: form.control, name: 'type' });
+  const value = useWatch({ control: form.control, name: 'amount' });
   const currencySymbol = tutorConfig.tutor_currency.symbol ?? '$';
   const content = type === 'flat' ? currencySymbol : '%';
   const priceAfterDiscount = useMemo(() => {

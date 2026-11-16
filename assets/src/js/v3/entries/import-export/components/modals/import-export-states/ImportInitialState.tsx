@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -90,9 +90,9 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
       collectionId: '',
     },
   });
-  const searchTerm = form.watch('collectionSearch');
+  const searchTerm = useWatch({ control: form.control, name: 'collectionSearch', defaultValue: '' });
   const search = useDebounce(searchTerm, 300);
-  const isContentBankSelectionEnabled = form.watch('importIntoContentBank');
+  const isContentBankSelectionEnabled = useWatch({ control: form.control, name: 'importIntoContentBank' });
 
   const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>({
     dependencies: [isContentBankSelectionEnabled],
@@ -104,7 +104,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     isEnabled: !!isContentBankSelectionEnabled,
   });
 
-  const files = form.watch('files');
+  const files = useWatch({ control: form.control, name: 'files', defaultValue: [] });
 
   useEffect(() => {
     if (files.length === 0) {
@@ -115,6 +115,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
@@ -322,7 +323,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             onClick={async () =>
               onImport({
                 file: files[0],
-                collectionId: isContentBankSelectionEnabled ? Number(form.watch('collectionId')) : undefined,
+                collectionId: isContentBankSelectionEnabled ? Number(form.getValues('collectionId')) : undefined,
               })
             }
           >

@@ -16,6 +16,7 @@
 
 	.tutor-progress-card-inner {
 		@include tutor-flex(row, stretch, flex-start);
+
 		gap: $tutor-spacing-5;
 	}
 
@@ -41,18 +42,22 @@
 	&-content {
 		flex: 0 0 calc(100% - 350px);
 		min-width: 0;
+
 		@include tutor-flex(column, stretch, space-between);
 	}
 
 	&-header {
 		min-width: 0;
+
 		@include tutor-flex(column, stretch, flex-start);
+
 		gap: $tutor-spacing-1;
 	}
 
 	&-category {
 		@include tutor-typography('tiny', 'regular', 'secondary');
 		@include tutor-text-truncate();
+
 		min-width: 0;
 		max-width: 100%;
 		margin-bottom: $tutor-spacing-1;
@@ -60,11 +65,13 @@
 
 	&-title {
 		@include tutor-typography('small', 'medium', 'primary');
+
 		margin: 0;
 	}
 
 	&-details {
 		@include tutor-typography('tiny', 'regular', 'secondary');
+
 		display: flex;
 		align-items: center;
 		gap: $tutor-spacing-2;
@@ -78,8 +85,10 @@
 	&-actions {
 		position: absolute;
 		top: $tutor-spacing-4;
+
 		@include right($tutor-spacing-4);
 		@include tutor-flex(row, center, flex-end);
+
 		gap: $tutor-spacing-3;
 		opacity: 0;
 		visibility: hidden;
@@ -130,6 +139,7 @@
 
 	&:focus-visible {
 		@include tutor-focus-ring();
+
 		border-radius: $tutor-radius-2xl !important;
 		z-index: $tutor-z-positive;
 	}
@@ -143,6 +153,7 @@
 	// Mobile styles
 	@include tutor-breakpoint-down(sm) {
 		@include tutor-flex(column, stretch, flex-start);
+
 		height: auto;
 		gap: $tutor-spacing-none;
 
@@ -161,7 +172,9 @@
 			display: block;
 			position: absolute;
 			top: $tutor-spacing-4;
+
 			@include right($tutor-spacing-4);
+
 			z-index: $tutor-z-dropdown;
 		}
 

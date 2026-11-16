@@ -23,6 +23,7 @@ window.jQuery(document).ready(($) => {
 		}
 
 		if ('' !== max && value > parseFloat(max)) {
+			// translators: %s: maximum mark allowed.
 			return sprintf(__('Mark cannot exceed %s.', 'tutor'), max);
 		}
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -27,6 +27,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
       prompt: '',
     },
   });
+  const promptValue = useWatch({ control: form.control, name: 'prompt' });
 
   const { setCurrentStep } = useContentGenerationContext();
   const { startGeneration } = useGenerateCourseContent();
@@ -71,7 +72,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
         />
       </div>
       <div css={styles.footer}>
-        <MagicButton type="submit" disabled={form.watch('prompt') === ''}>
+        <MagicButton type="submit" disabled={promptValue === ''}>
           <SVGIcon name="magicAi" width={24} height={24} />
           {__('Generate Now', 'tutor')}
         </MagicButton>

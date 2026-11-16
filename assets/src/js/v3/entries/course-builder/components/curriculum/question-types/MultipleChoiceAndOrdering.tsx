@@ -42,7 +42,10 @@ const MultipleChoiceAndOrdering = () => {
     defaultValue: false,
   });
 
-  const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  const currentQuestionType = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type',
+  });
 
   const {
     fields: optionsFields,

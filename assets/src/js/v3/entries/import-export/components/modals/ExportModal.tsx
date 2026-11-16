@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -51,6 +52,10 @@ interface BulkSelectionFormData {
   content_bank: Collection[];
 }
 
+const getNumericId = (item: { id?: number | string; ID?: number | string }): number => Number(item.id ?? item.ID ?? 0);
+
+const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
+
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const ExportModal = ({
@@ -81,8 +86,30 @@ const ExportModal = ({
     },
   });
 
+  const watchedFormValues = useWatch({
+    control: form.control,
+  });
+
+  const selectedCourses = useWatch({
+    control: bulkSelectionForm.control,
+    name: 'courses',
+    defaultValue: [],
+  });
+  const selectedBundles = useWatch({
+    control: bulkSelectionForm.control,
+    name: 'course-bundle',
+    defaultValue: [],
+  });
+  const selectedCollections = useWatch({
+    control: bulkSelectionForm.control,
+    name: 'content_bank',
+    defaultValue: [],
+  });
+
+  const selectedCourseIds = useMemo(() => selectedCourses.map(getNumericId), [selectedCourses]);
+
   const getExportableContentQuery = useExportableContentQuery({
-    course_ids: bulkSelectionForm.getValues('courses').map((course) => course.id),
+    course_ids: selectedCourseIds,
   });
   const exportableContent = isTutorPro
     ? getExportableContentQuery.data
@@ -137,29 +164,7 @@ const ExportModal = ({
       ] as ExportableContent[]);
 
   const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'content_bank') => {
-    if (type === 'courses') {
-      bulkSelectionForm.reset({
-        courses: [],
-        'course-bundle': bulkSelectionForm.getValues('course-bundle'),
-        content_bank: bulkSelectionForm.getValues('content_bank'),
-      });
-    }
-
-    if (type === 'course-bundle') {
-      bulkSelectionForm.reset({
-        courses: bulkSelectionForm.getValues('courses'),
-        'course-bundle': [],
-        content_bank: bulkSelectionForm.getValues('content_bank'),
-      });
-    }
-
-    if (type === 'content_bank') {
-      bulkSelectionForm.reset({
-        courses: bulkSelectionForm.getValues('courses'),
-        'course-bundle': bulkSelectionForm.getValues('course-bundle'),
-        content_bank: [],
-      });
-    }
+    bulkSelectionForm.setValue(type, [], { shouldDirty: true, shouldTouch: true });
   };
 
   const getContentIds = (data: ExportableContent[], key: string): number[] => {
@@ -208,9 +213,7 @@ const ExportModal = ({
         },
       },
       bulkSelectionButtonLabel:
-        bulkSelectionForm.getValues('courses').length > 0
-          ? __('Edit Selected Courses', 'tutor')
-          : __('Select Specific Courses', 'tutor'),
+        selectedCourses.length > 0 ? __('Edit Selected Courses', 'tutor') : __('Select Specific Courses', 'tutor'),
     },
     'course-bundle': {
       modal: {
@@ -222,9 +225,7 @@ const ExportModal = ({
         },
       },
       bulkSelectionButtonLabel:
-        bulkSelectionForm.getValues('course-bundle').length > 0
-          ? __('Edit Selected Bundles', 'tutor')
-          : __('Select Specific Bundles', 'tutor'),
+        selectedBundles.length > 0 ? __('Edit Selected Bundles', 'tutor') : __('Select Specific Bundles', 'tutor'),
     },
     content_bank: {
       modal: {
@@ -236,7 +237,7 @@ const ExportModal = ({
         },
       },
       bulkSelectionButtonLabel:
-        bulkSelectionForm.getValues('content_bank').length > 0
+        selectedCollections.length > 0
           ? __('Edit Selected Content Bank Items', 'tutor')
           : __('Select Specific Content Bank Items', 'tutor'),
     },
@@ -254,13 +255,11 @@ const ExportModal = ({
           : {
               content_bank: data['content_bank'],
             }),
-        courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
-        'course-bundle__ids':
-          bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
-        content_bank__ids:
-          collections.length > 0 ? collections.map((collection) => collection.ID) : form.getValues('content_bank__ids'),
+        courses__ids: courses.length > 0 ? courses.map(getNumericId) : form.getValues('courses__ids'),
+        'course-bundle__ids': bundles.length > 0 ? bundles.map(getNumericId) : form.getValues('course-bundle__ids'),
+        content_bank__ids: collections.length > 0 ? collections.map(getNumericId) : form.getValues('content_bank__ids'),
       },
-      exportableContent: getExportableContentQuery.data || [],
+      exportableContent: exportableContent || [],
     });
   });
 
@@ -300,20 +299,11 @@ const ExportModal = ({
     ),
   };
 
-  const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
-
-  const disableExportButton = () => {
-    const formValues = form.getValues();
-
-    const mainContentTypesSelected = Object.entries(formValues).some(([key, value]) => {
-      if (!key.includes('__') && !EXCLUDED_KEYS.includes(key)) {
-        return value === true;
-      }
-      return false;
-    });
-
-    return !mainContentTypesSelected;
-  };
+  const isExportButtonDisabled =
+    !watchedFormValues ||
+    !Object.entries(watchedFormValues).some(
+      ([key, value]) => !key.includes('__') && !EXCLUDED_KEYS.includes(key) && value === true,
+    );
 
   return (
     <BasicModalWrapper
@@ -332,7 +322,7 @@ const ExportModal = ({
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="export" width={24} height={24} />}
-                disabled={currentStep === 'progress' || disableExportButton() || getExportableContentQuery.isLoading}
+                disabled={currentStep === 'progress' || isExportButtonDisabled || getExportableContentQuery.isLoading}
                 onClick={handleExport}
               >
                 {__('Export', 'tutor')}

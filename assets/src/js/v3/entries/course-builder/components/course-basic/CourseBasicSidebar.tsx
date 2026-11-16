@@ -58,7 +58,7 @@ const CourseBasicSidebar = () => {
   );
   const isMembershipOnlyMode = isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.membership_only_mode;
 
-  const currentAuthor = form.watch('post_author');
+  const currentAuthor = useWatch({ control: form.control, name: 'post_author' });
 
   const isInstructorVisible =
     isTutorPro && isMultiInstructorEnabled && (isAdministrator || (isInstructor && canInstructorMangeCoInstructors));

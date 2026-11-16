@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
@@ -45,7 +45,8 @@ const H5PContentListModal = ({
       search: '',
     },
   });
-  const search = useDebounce(form.watch('search'), 300);
+  const searchValue = useWatch({ control: form.control, name: 'search' }) ?? '';
+  const search = useDebounce(searchValue, 300);
   const getH5PQuizzesQuery = useGetH5PQuizContentsQuery(search, contentType);
   const getH5PContentsQuery = useGetH5PLessonContentsQuery(search, contentType);
   const [selectedContents, setSelectedContents] = useState<H5PContent[]>([]);

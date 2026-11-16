@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 
+import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
@@ -47,7 +48,6 @@ import {
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import Alert from '@TutorShared/atoms/Alert';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -157,6 +157,7 @@ const LessonModal = ({
     Number(totalDurationSeconds) === 0;
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
+  const isLessonPreviewEnabled = useWatch({ control: form.control, name: 'lesson_preview' });
 
   const hasRightSidebar = Boolean(
     contentDripType !== '' ||
@@ -621,7 +622,7 @@ const LessonModal = ({
                     />
                   )}
                 />
-                <Show when={form.watch('lesson_preview')}>
+                <Show when={isLessonPreviewEnabled}>
                   <div css={styles.previewInfo}>
                     {
                       // prettier-ignore

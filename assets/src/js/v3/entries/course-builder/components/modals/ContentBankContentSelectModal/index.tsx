@@ -1,4 +1,4 @@
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -81,7 +81,8 @@ const CollectionListModal = ({
     closeModal({ action: 'CONFIRM' });
   };
 
-  const selectedCollection = form.watch('selectedCollection');
+  const selectedCollection = useWatch({ control: form.control, name: 'selectedCollection' });
+  const contentsList = useWatch({ control: form.control, name: 'contents' }) ?? [];
 
   return (
     <FormProvider {...form}>
@@ -103,7 +104,7 @@ const CollectionListModal = ({
         >
           <CollectionListTable type={type} />
         </Show>
-        <Show when={form.watch('selectedCollection')}>
+        <Show when={selectedCollection}>
           <div css={styles.footer}>
             <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
               {__('Cancel', 'tutor')}
@@ -112,7 +113,7 @@ const CollectionListModal = ({
               size="small"
               variant="primary"
               onClick={form.handleSubmit(handleAddContent)}
-              disabled={form.watch('contents').length === 0}
+              disabled={contentsList.length === 0}
               loading={type === 'lesson_assignment' && addContentBankContentToCourseMutation.isPending}
               data-cy="add-content-button"
             >

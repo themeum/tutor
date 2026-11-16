@@ -1,7 +1,7 @@
-@import './social-share';
-@import './archive';
-@import './filter';
-@import './single-course-details';
+@use 'social-share';
+@use 'archive';
+@use 'filter';
+@use 'single-course-details';
 
 .tutor-course-author {
     img {
@@ -9,7 +9,7 @@
         height: 34px;
         border-radius: 50%;
         overflow: hidden;
-        margin-right: 8px;
+        margin-inline-end: 8px;
         vertical-align: middle;
     }
 

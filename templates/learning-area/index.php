@@ -68,7 +68,7 @@ if ( $subpage && ! empty( $subpages[ $subpage ]['title'] ) ) {
 	$learning_meta_title = sprintf( __( 'Quiz: %s', 'tutor' ), $content_title );
 }
 
-/* translators: %s: learning area meta title. */
+/* translators: 1: page title, 2: site name. */
 $page_meta_title = sprintf( __( '%1$s - %2$s', 'tutor' ), $learning_meta_title, $site_name );
 
 Dashboard::set_document_title( $page_meta_title );

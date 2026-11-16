@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -40,9 +41,9 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
   const [isFiltersPopoverOpen, setIsFiltersPopoverOpen] = useState(false);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
 
-  const order = form.watch('order') || 'asc';
-  const contentTypes = form.watch('contentTypes') || [];
-  const questionTypes = form.watch('questionTypes') || [];
+  const order = useWatch({ control: form.control, name: 'order' }) || 'asc';
+  const contentTypes = useWatch({ control: form.control, name: 'contentTypes' }) || [];
+  const questionTypes = useWatch({ control: form.control, name: 'questionTypes' }) || [];
   const isQuestionType = type === 'question';
 
   return (

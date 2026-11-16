@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -33,7 +34,8 @@ interface CourseListTableProps {
 
 const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch(type) || [], [form, type]);
+  const watchedItems = useWatch({ control: form.control, name: type });
+  const selectedItems = useMemo(() => watchedItems || [], [watchedItems]);
   const selectedItemIds = useMemo(() => selectedItems.map((course) => course.id), [selectedItems]);
   const queryParams = useMemo(
     () => ({

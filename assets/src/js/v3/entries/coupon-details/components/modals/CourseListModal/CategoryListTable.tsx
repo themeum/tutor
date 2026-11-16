@@ -1,4 +1,4 @@
-import type { UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn, useWatch } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -23,7 +23,7 @@ interface CategoryListTableProps {
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
-  const selectedCategories = form.watch('categories') ?? [];
+  const selectedCategories = useWatch({ control: form.control, name: 'categories' }) ?? [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const categoryListQuery = useAppliesToQuery({
     applies_to: 'specific_category',

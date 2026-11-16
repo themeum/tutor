@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -21,7 +21,8 @@ interface SearchFieldProps {
 
 const SearchField = ({ onFilterItems, initialSearchValue }: SearchFieldProps) => {
   const actionsForm = useFormWithGlobalError<FilterFormValues>({ defaultValues: { search: initialSearchValue || '' } });
-  const searchValue = useDebounce(actionsForm.watch('search'));
+  const search = useWatch({ control: actionsForm.control, name: 'search' }) ?? '';
+  const searchValue = useDebounce(search);
 
   useEffect(() => {
     onFilterItems({
