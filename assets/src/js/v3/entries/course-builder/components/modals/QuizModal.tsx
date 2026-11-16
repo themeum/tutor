@@ -169,6 +169,7 @@ const QuizModal = ({
         type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
       } | null>
     >,
+    setActiveQuestionId?: React.Dispatch<React.SetStateAction<ID>>,
   ) => {
     if (!data.quiz_title) {
       setActiveTab('details');
@@ -191,14 +192,26 @@ const QuizModal = ({
 
     const activeQuestion = data.questions[activeQuestionIndex];
 
-    const validation = validateQuizQuestion(activeQuestion);
+    const activeValidation = validateQuizQuestion(activeQuestion);
 
-    if (validation !== true) {
-      setValidationError(validation);
+    if (activeValidation !== true) {
+      setValidationError(activeValidation);
 
       setActiveTab('details');
 
       return;
+    }
+
+    for (let i = 0; i < data.questions.length; i++) {
+      const q = data.questions[i];
+      const validation = validateQuizQuestion(q);
+
+      if (validation !== true) {
+        setValidationError(validation);
+        setActiveQuestionId?.(q.question_id);
+        setActiveTab('details');
+        return;
+      }
     }
 
     setIsEdit(false);
@@ -256,7 +269,17 @@ const QuizModal = ({
                     icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
                   },
                 ]}
-                onChange={(tab) => setActiveTab(tab)}
+                onChange={(tab) => {
+                  if (tab === 'settings') {
+                    const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+                    const validation = validateQuizQuestion(currentActiveQuestion);
+                    if (validation !== true) {
+                      setValidationError(validation);
+                      return;
+                    }
+                  }
+                  setActiveTab(tab);
+                }}
               />
             }
             actions={
@@ -288,7 +311,17 @@ const QuizModal = ({
                         data-cy="quiz-next"
                         variant="primary"
                         size="small"
-                        onClick={() => setActiveTab('settings')}
+                        onClick={() => {
+                          const currentActiveQuestion = form.getValues(
+                            `questions.${activeQuestionIndex}` as 'questions.0',
+                          );
+                          const validation = validateQuizQuestion(currentActiveQuestion);
+                          if (validation !== true) {
+                            setValidationError(validation);
+                            return;
+                          }
+                          setActiveTab('settings');
+                        }}
                       >
                         {__('Next', 'tutor')}
                       </Button>
@@ -300,7 +333,7 @@ const QuizModal = ({
                       variant="primary"
                       size="small"
                       onClick={form.handleSubmit((data) =>
-                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError, setActiveQuestionId),
                       )}
                     >
                       {__('Save', 'tutor')}

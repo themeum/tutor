@@ -46,8 +46,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
-
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
     animateLayoutChanges,
@@ -90,7 +88,8 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
           return;
         }
 
-        const validation = validateQuizQuestion(activeQuestion);
+        const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+        const validation = validateQuizQuestion(currentActiveQuestion);
 
         if (validation !== true) {
           setValidationError(validation);
@@ -106,7 +105,8 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
             return;
           }
 
-          const validation = validateQuizQuestion(activeQuestion);
+          const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+          const validation = validateQuizQuestion(currentActiveQuestion);
 
           if (validation !== true) {
             setValidationError(validation);
@@ -143,7 +143,8 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         isOpen={isThreeDotOpen}
         onClick={(event) => {
           event.stopPropagation();
-          const validation = validateQuizQuestion(activeQuestion);
+          const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+          const validation = validateQuizQuestion(currentActiveQuestion);
           setIsThreeDotOpen(true);
           if (validation !== true) {
             setValidationError(validation);

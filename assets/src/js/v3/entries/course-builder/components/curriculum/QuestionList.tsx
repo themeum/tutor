@@ -104,10 +104,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   }, [activeSortId, questionFields]);
 
   const questions = form.watch('questions') || [];
-  const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
-    const validation = validateQuizQuestion(activeQuestion);
+    const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+    const validation = validateQuizQuestion(currentActiveQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -286,7 +286,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       question: QuizQuestion;
     })[],
   ) => {
-    const validation = validateQuizQuestion(activeQuestion);
+    const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+    const validation = validateQuizQuestion(currentActiveQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -319,6 +320,13 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
+    const currentActiveQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
+    const validation = validateQuizQuestion(currentActiveQuestion);
+    if (validation !== true) {
+      setValidationError(validation);
+      return;
+    }
+
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
     if (!currentQuestion || validationError) {

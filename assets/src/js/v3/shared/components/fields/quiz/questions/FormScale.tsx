@@ -107,9 +107,12 @@ const clearScaleRangeValidationError = (setValidationError: FormScaleProps['setV
   setValidationError?.((prev) => {
     const isScaleRangeError =
       prev?.type === 'question' &&
-      [scaleRangeErrorMessage, scaleLabelEntryRangeErrorMessage, scaleCorrectValueRangeErrorMessage].includes(
-        prev?.message,
-      );
+      [
+        __('This field is required', __TUTOR_TEXT_DOMAIN__),
+        scaleRangeErrorMessage,
+        scaleLabelEntryRangeErrorMessage,
+        scaleCorrectValueRangeErrorMessage,
+      ].includes(prev?.message);
 
     return isScaleRangeError ? null : prev;
   });
