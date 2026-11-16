@@ -155,11 +155,11 @@ export const uploadMedia = async (
   { reuse = true }: { reuse?: boolean } = {},
 ): Promise<void> => {
   const replaceButton = scope.getByTestId('replace-media').filter({ visible: true }).first();
-  if (await replaceButton.isVisible().catch(() => false)) {
+  if (await replaceButton.isVisible()) {
     await replaceButton.click();
   } else {
     const uploadButton = scope.getByTestId('upload-media').filter({ visible: true }).first();
-    if (await uploadButton.isVisible().catch(() => false)) {
+    if (await uploadButton.isVisible()) {
       await uploadButton.click();
     } else {
       await scope
@@ -178,12 +178,12 @@ export const uploadMedia = async (
 
   if (reuse) {
     const libraryTab = modal.locator('.media-frame-router .media-menu-item', { hasText: /Media Library/i }).first();
-    if (await libraryTab.isVisible().catch(() => false)) {
+    if (await libraryTab.isVisible()) {
       await libraryTab.click();
     }
 
     const search = modal.locator('#media-search-input');
-    if (await search.isVisible().catch(() => false)) {
+    if (await search.isVisible()) {
       const query = path.basename(file, path.extname(file));
       const searchResponse = page.waitForResponse((response) => {
         const body = decodeURIComponent(response.request().postData() ?? '');
@@ -194,8 +194,7 @@ export const uploadMedia = async (
 
       const existing = modal.locator('.attachments .attachment').first();
       const emptyState = modal.getByText('No items found.');
-      const resultsReady = async () =>
-        (await existing.count()) > 0 || (await emptyState.isVisible().catch(() => false));
+      const resultsReady = async () => (await existing.count()) > 0 || (await emptyState.isVisible());
       await expect.poll(resultsReady).toBe(true);
 
       if (await existing.count()) {
@@ -210,7 +209,7 @@ export const uploadMedia = async (
     }
   }
 
-  if (await uploadTab.isVisible().catch(() => false)) {
+  if (await uploadTab.isVisible()) {
     await uploadTab.click();
   }
 
@@ -243,7 +242,7 @@ export const setVideoUrl = async (
       await wrapper.getByTestId('add-from-url').click();
       await expect(sourceInput).toBeVisible();
     });
-  if (await sourceInput.isVisible().catch(() => false)) {
+  if (await sourceInput.isVisible()) {
     const current = await sourceInput.inputValue();
     if (current !== source) {
       const sourceOption = page.getByRole('button', { name: source, exact: true }).filter({ visible: true }).last();

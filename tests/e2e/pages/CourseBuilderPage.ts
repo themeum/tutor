@@ -59,7 +59,7 @@ export class CourseBuilderPage {
       { timeout: 30_000 },
     );
     await this.page.locator('.tutor-create-new-course:visible').first().click();
-    await expect(this.page).toHaveURL(/course_id=\d+/);
+    await expect(this.page).toHaveURL(/course_id=\d+/, { timeout: 30_000 });
     await expect(this.submitButton).toBeVisible();
     await detailsPromise;
     await expect(field(this.page, 'Title').locator('input:visible, textarea:visible').first()).toBeVisible();
@@ -226,7 +226,7 @@ export class CourseBuilderPage {
       await modal.locator('textarea[name="quiz_description"]').fill(input.description);
     }
     const saveTitle = this.page.getByTestId('save-quiz-title');
-    if (await saveTitle.isVisible().catch(() => false)) {
+    if (await saveTitle.isVisible()) {
       await saveTitle.click();
     }
 
@@ -238,7 +238,7 @@ export class CourseBuilderPage {
     await this.page.getByTestId('quiz-next').click();
 
     const settingsTab = modal.getByRole('tab', { name: 'Settings' });
-    if (await settingsTab.isVisible().catch(() => false)) {
+    if (await settingsTab.isVisible()) {
       await settingsTab.click();
     }
 

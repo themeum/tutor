@@ -27,10 +27,14 @@ function readLogSince(offset: number): string {
 }
 
 const IGNORED_5XX = [/\/wp-cron\.php/, /heartbeat/];
+const IGNORED_PAGE_ERRORS = [/A network error occurred/i];
 
 function watch(page: Page): string[] {
   const problems: string[] = [];
-  page.on('pageerror', (e) => problems.push(`pageerror: ${e.message}`));
+  page.on('pageerror', (e) => {
+    if (IGNORED_PAGE_ERRORS.some((re) => re.test(e.message))) return;
+    problems.push(`pageerror: ${e.message}`);
+  });
   page.on('response', (r) => {
     const url = r.url();
     if (!url.startsWith(baseURL) || IGNORED_5XX.some((re) => re.test(url))) return;

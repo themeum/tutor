@@ -56,7 +56,7 @@ export const payWithNativeCheckout = async (page: Page, email: string): Promise<
   await page.locator('input[name="billing_address"]').fill('42 Beacon St');
 
   const terms = page.locator('input[name="agree_to_terms"]');
-  if (await terms.isVisible().catch(() => false)) {
+  if (await terms.isVisible()) {
     await terms.check();
   }
 
@@ -83,7 +83,7 @@ export const payWithWooCommerceCheckout = async (page: Page, email: string): Pro
   // A returning customer's saved billing address collapses the form; open it
   // so the checkout is exercised with a known, valid address every time.
   const editBilling = page.getByRole('button', { name: 'Edit billing address' });
-  if (await editBilling.isVisible().catch(() => false)) {
+  if (await editBilling.isVisible()) {
     await editBilling.click();
   }
   await expect(page.locator('#billing-country')).toBeVisible();
