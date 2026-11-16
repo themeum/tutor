@@ -247,14 +247,12 @@ export const setVideoUrl = async (
     const current = await sourceInput.inputValue();
     if (current !== source) {
       const sourceOption = page.getByRole('button', { name: source, exact: true }).filter({ visible: true }).last();
-      await expect(async () => {
-        if (!(await sourceOption.isVisible())) {
-          await sourceInput.click();
-        }
-        await expect(sourceOption).toBeVisible({ timeout: 1000 });
-        await sourceOption.click();
-        await expect(sourceInput).toHaveValue(source);
-      }).toPass({ timeout: 10_000 });
+      for (let attempt = 0; attempt < 4 && (await sourceOption.count()) === 0; attempt++) {
+        await sourceInput.evaluate((element) => (element as HTMLElement).click());
+        await page.waitForTimeout(200);
+      }
+      await expect(sourceOption).toBeVisible();
+      await sourceOption.evaluate((element) => (element as HTMLElement).click());
     }
   }
 

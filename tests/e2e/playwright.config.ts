@@ -6,6 +6,10 @@ import { config as loadEnv } from 'dotenv';
 
 loadEnv({ path: process.env.E2E_ENV_FILE ?? resolve(__dirname, '../../.env') });
 
+if (process.env.GITHUB_WORKSPACE) {
+  process.env.GITHUB_WORKSPACE = resolve(__dirname, '../..');
+}
+
 const baseURL = process.env.E2E_BASE_URL ?? process.env.SITE_URL ?? 'http://localhost:8888';
 
 const proTestDir = resolve(__dirname, '../../../tutor-pro/tests/e2e');
