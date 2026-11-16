@@ -1,3 +1,5 @@
+@use '../../../../v2-library/src/scss/mixins/breakpoint';
+
 .tutor-qna-single-question {
 	table.tutor-table-data-td-target [data-td-target] {
 		padding: 12px !important;
@@ -75,11 +77,11 @@
 		z-index: 1;
 		background-color: #f5f5f5;
 
-		@include breakpoint-max(tablet) {
+		@include breakpoint.breakpoint-max(tablet) {
 			top: 46px;
 		}
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			top: 0;
 		}
 	}
@@ -91,11 +93,11 @@
 		z-index: 1;
 		background-color: #f5f5f5;
 
-		@include breakpoint-max(tablet) {
+		@include breakpoint.breakpoint-max(tablet) {
 			top: 103px;
 		}
 
-		@include breakpoint-max(mobile) {
+		@include breakpoint.breakpoint-max(mobile) {
 			top: 0;
 		}
 	}
