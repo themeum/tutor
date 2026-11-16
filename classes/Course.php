@@ -2117,6 +2117,13 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
+		if ( $topic_id ) {
+			$existing_topic = get_post( $topic_id );
+			if ( ! $existing_topic || tutor()->topics_post_type !== $existing_topic->post_type || (int) $existing_topic->post_parent !== $course_id ) {
+				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			}
+		}
+
 		// Create payload to create/update the topic.
 		$post_arr = array(
 			'post_type'    => 'topics',
@@ -2161,7 +2168,44 @@ class Course extends Tutor_Base {
 		tutor_utils()->check_nonce();
 
 		$topic_id = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+		if ( ! $topic_id ) {
+			$this->json_response(
+				__( 'Invalid topic id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$topic = get_post( $topic_id );
+		if ( ! $topic || tutor()->topics_post_type !== $topic->post_type ) {
+			$this->json_response(
+				__( 'Invalid topic id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$course_id          = (int) $topic->post_parent;
+		$provided_course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $provided_course_id > 0 && $provided_course_id !== $course_id ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		if ( ! $course_id || tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			$this->json_response(
+				__( 'Invalid course id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$current_user_id = get_current_user_id();
+		if ( ! tutor_utils()->can_user_edit_course( $current_user_id, $course_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			$this->json_response(
 				tutor_utils()->error_message(),
 				null,
@@ -2172,10 +2216,10 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		// Assign course ID to orphan content IDs since the topic will be deleted.
-		$course_id   = tutor_utils()->get_course_id_by( 'topic', $topic_id );
 		$content_ids = tutor_utils()->get_course_content_ids_by( null, 'topic', $topic_id );
 		foreach ( $content_ids as $content_id ) {
 			update_post_meta( $content_id, '_tutor_course_id_for_lesson', $course_id );
+			clean_post_cache( $content_id );
 			// Actually all kind of contents.
 			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibility.
 		}
