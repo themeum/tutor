@@ -10664,7 +10664,7 @@ class Utils {
 	 *
 	 * @return int
 	 */
-	public function get_admin_use_id(): int {
+	public function get_admin_user_id(): int {
 		$admin = get_users(
 			array(
 				'role'    => User::ADMIN,

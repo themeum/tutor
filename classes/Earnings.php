@@ -226,7 +226,7 @@ class Earnings extends Singleton {
 		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
 		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
 		$commission_type = 'percent';
-		$user_id         = empty( $course_id ) ? tutor_utils()->get_admin_use_id() : get_post_field( 'post_author', $course_id );
+		$user_id         = empty( $course_id ) ? tutor_utils()->get_admin_user_id() : get_post_field( 'post_author', $course_id );
 
 		// Prepare insertable earning data.
 		$earning_data = array(
