@@ -488,8 +488,7 @@ class Template extends Tutor_Base {
 
 						$can_access_instructor_item = tutor()->instructor_role === $auth_cap && User::can_view_instructor_dashboard();
 
-						if ( $auth_cap && ! User::is_admin() && ! current_user_can( $auth_cap ) && ! $can_access_instructor_item
-						) {
+						if ( $auth_cap && ! User::is_admin() && ! $can_access_instructor_item ) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
 
