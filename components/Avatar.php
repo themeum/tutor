@@ -151,11 +151,11 @@ class Avatar extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $size Avatar size, see size constants.
+	 * @param string|int $size Avatar size, see size constants.
 	 *
 	 * @return $this
 	 */
-	public function size( int $size ): self {
+	public function size( string|int $size ): self {
 		$this->size = sanitize_html_class( $size );
 		return $this;
 	}
