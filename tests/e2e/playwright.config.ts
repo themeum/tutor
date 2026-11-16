@@ -6,7 +6,9 @@ import { config as loadEnv } from 'dotenv';
 
 loadEnv({ path: process.env.E2E_ENV_FILE ?? resolve(__dirname, '../../.env') });
 
-if (process.env.GITHUB_WORKSPACE) {
+if (process.env.E2E_WORKSPACE) {
+  process.env.GITHUB_WORKSPACE = resolve(process.env.E2E_WORKSPACE);
+} else if (process.env.GITHUB_WORKSPACE) {
   process.env.GITHUB_WORKSPACE = resolve(__dirname, '../..');
 }
 
