@@ -51,13 +51,9 @@ export class CourseBuilderPage {
   /** Start a new course with the builder and return its ID. */
   async createNew(): Promise<number> {
     await this.page.goto(backendUrls.tutorDashboard);
-    const detailsPromise = this.page.waitForResponse((res) => res.url().includes('tutor_course_details') && res.ok(), {
-      timeout: 30_000,
-    });
     await this.page.locator('.tutor-create-new-course:visible').first().click();
     await expect(this.page).toHaveURL(/course_id=\d+/);
     await expect(this.submitButton).toBeVisible();
-    await detailsPromise;
     await expect(field(this.page, 'Title').locator('input:visible, textarea:visible').first()).toBeVisible();
 
     const courseId = Number(new URL(this.page.url()).searchParams.get('course_id'));

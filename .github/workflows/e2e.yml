@@ -96,6 +96,7 @@ jobs:
           SITE_URL: http://127.0.0.1:8888
           E2E_BASE_URL: http://127.0.0.1:8888
           WP_ROOT: ${{ env.WP_ROOT }}
+          GITHUB_WORKSPACE: ${{ env.PLUGIN_DIR }}
         run: |
           WP_TEST_ENV=1 PHP_CLI_SERVER_WORKERS=4 wp server --host=127.0.0.1 --port=8888 --path="$WP_ROOT" > "$RUNNER_TEMP/wp-server.log" 2>&1 &
           for _ in $(seq 1 60); do
