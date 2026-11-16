@@ -5,7 +5,7 @@
   width: 100%;
   height: $tutor-progress-height;
   background-color: $tutor-actions-gray-quaternary;
-  box-shadow: inset 0 0 1.75px rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 0 1.75px rgb(0 0 0 / 16%);
   border-radius: $tutor-radius-full;
   overflow: hidden;
   position: relative;
@@ -13,12 +13,14 @@
   &-fill {
     --tutor-progress-width: 0%;
     --tutor-progress-start: 0%;
+
     height: 100%;
     width: 100%;
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
     background-color: $tutor-actions-success-primary;
     border-radius: inherit;
     position: relative;
+
     @include tutor-transition(transform, 0.3s);
 
     [dir='rtl'] & {
@@ -42,8 +44,7 @@
       display: $tutor-progress-indicator-secondary-display;
       position: absolute;
       top: $tutor-progress-indicator-top;
-      inset-inline-start: $tutor-spacing-2;
-      inset-inline-end: calc(#{$tutor-spacing-2} + 8.16px + 1px);
+      inset-inline: $tutor-spacing-2 calc(#{$tutor-spacing-2} + 8.16px + 1px);
       height: $tutor-progress-indicator-height;
       background-color: $tutor-actions-success-secondary;
       border-radius: inherit;
@@ -96,6 +97,7 @@
   from {
     transform: translateX(calc(var(--tutor-progress-start, 0%) - 100%));
   }
+
   to {
     transform: translateX(calc(var(--tutor-progress-width) - 100%));
   }
@@ -105,6 +107,7 @@
   from {
     transform: translateX(calc(100% - var(--tutor-progress-start, 0%)));
   }
+
   to {
     transform: translateX(calc(100% - var(--tutor-progress-width)));
   }

@@ -2,13 +2,13 @@
 
 .ui-slider {
 	position: relative;
-	text-align: left;
+	text-align: start;
+
 	.ui-slider-handle {
 		position: absolute;
 		z-index: 2;
 		width: 15px;
 		height: 15px;
-		cursor: default;
 		top: -6px;
 		cursor: pointer;
 	}
@@ -32,11 +32,11 @@
   	}
 
 	.ui-slider-range-min {
-		left: 0;
+		inset-inline-start: 0;
 	}
 	
 	.ui-slider-range-max {
-		right: 0;
+		inset-inline-end: 0;
 	}
 }
   
@@ -45,13 +45,13 @@
 	height: 100px;
 
 	.ui-slider-handle {
-		left: -0.3em;
-		margin-left: 0;
+		inset-inline-start: -0.3em;
+		margin-inline-start: 0;
 		margin-bottom: -0.6em;
 	}
   
   	.ui-slider-range {
-		left: 0;
+		inset-inline-start: 0;
 		width: 100%;
 	}
   
@@ -100,7 +100,7 @@
         font-weight: 600;
         background: var(--tutor-color-primary);
         position: absolute;
-        right: 5px;
+        inset-inline-end: 5px;
         top: 50%;
         margin: 0;
         -webkit-transform: translateY(-50%);
@@ -111,22 +111,24 @@
         border-radius: 4px;
         color: #fff;
 
-        &:before {
+        &::before {
             content: "";
             position: absolute;
             border: 7px solid transparent;
             top: 50%;
-            border-right-color: var(--tutor-color-primary);
-            right: 100%;
+            border-inline-end-color: var(--tutor-color-primary);
+            inset-inline-end: 100%;
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
         }
     }
 }
+
 .tutor-quiz-slider {
 	.tutor-field-type-slider {
 		padding: 10px 0 10px 6px!important;
 	}
+
 	.tutor-field-type-slider .ui-widget-content {
 		top: 40% !important;
 		width: 85% !important;

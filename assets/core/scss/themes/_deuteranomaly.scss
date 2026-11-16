@@ -136,15 +136,15 @@
 
 [data-tutor-theme='light'][data-tutor-vision='deuteranomaly'],
 [data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
-  @include deuteranomaly-light-tokens;
+  @include deuteranomaly-light-tokens();
 }
 
 [data-tutor-theme='dark'][data-tutor-vision='deuteranomaly'] {
-  @include deuteranomaly-dark-tokens;
+  @include deuteranomaly-dark-tokens();
 }
 
 @media (prefers-color-scheme: dark) {
   [data-tutor-theme='system'][data-tutor-vision='deuteranomaly'] {
-    @include deuteranomaly-dark-tokens;
+    @include deuteranomaly-dark-tokens();
   }
 }

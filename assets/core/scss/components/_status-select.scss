@@ -3,6 +3,7 @@
 
 .tutor-status-select {
   @include tutor-typography(tiny, medium);
+
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -40,6 +41,7 @@
   &-icon,
   &-arrow {
     @include tutor-flex(row, center, center);
+
     pointer-events: none;
     z-index: $tutor-z-positive;
   }

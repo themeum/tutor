@@ -5,6 +5,7 @@
 
 .tutor-nav {
   @include tutor-flex(row, center);
+
   gap: $tutor-spacing-2;
   overflow-x: auto;
 
@@ -13,6 +14,7 @@
     @include tutor-button-reset();
     @include tutor-typography(small, medium, secondary);
     @include tutor-flex(row, center);
+
     border-radius: $tutor-tab-radius;
     font-weight: $tutor-tab-font-weight;
     box-shadow: none;
@@ -20,12 +22,14 @@
     padding: 10px $tutor-spacing-6;
     height: $tutor-tab-height;
     white-space: nowrap;
+
     @include tutor-transition((background-color, color, box-shadow));
 
     &:hover {
       color: $tutor-text-brand;
       background-color: $tutor-tab-l3-active;
       box-shadow: $tutor-tab-active-shadow;
+
       svg {
         color: $tutor-icon-brand;
       }
@@ -36,6 +40,7 @@
       background-color: $tutor-tab-l3-active;
       box-shadow: none;
       outline: none;
+
       svg {
         color: $tutor-icon-brand;
       }
@@ -43,6 +48,7 @@
 
     &:focus-visible {
       @include tutor-focus-ring('brand', true);
+
       outline-offset: -2px;
     }
 
@@ -50,6 +56,7 @@
       background-color: $tutor-tab-l3-active;
       color: $tutor-text-brand;
       box-shadow: $tutor-tab-active-shadow;
+
       svg {
         color: $tutor-icon-brand;
       }
@@ -62,16 +69,19 @@
 
   &-dropdown {
     @include tutor-flex(column);
+
     gap: $tutor-spacing-2;
     min-width: 170px;
-    padding: $tutor-spacing-2 0px;
+    padding: $tutor-spacing-2 0;
 
     &-item {
       @include tutor-button-reset();
       @include tutor-typography(small);
       @include tutor-flex(row, center);
+
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
+
       @include tutor-transition((background-color, color));
 
       &:hover {
@@ -105,6 +115,7 @@
   &.tutor-nav-secondary {
     .tutor-nav-item {
       border-bottom: 2px solid transparent;
+
       @include tutor-transition((border-color, background-color));
 
       &.active {
