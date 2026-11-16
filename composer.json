@@ -15,7 +15,8 @@
       "Tutor\\Traits\\": "traits/",
       "Tutor\\Ecommerce\\": "ecommerce/",
       "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways",
-      "Tutor\\GDPR\\": "GDPR/"
+      "Tutor\\GDPR\\": "GDPR/",
+      "Tutor\\Mcp\\": "mcp/"
     }
   },
   "autoload-dev": {

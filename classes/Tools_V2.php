@@ -338,6 +338,17 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
+			'tutor_mcp'      => array(
+				'label'     => __( 'MCP', 'tutor' ),
+				'slug'      => 'tutor_mcp',
+				'desc'      => __( 'Connect AI clients (Cursor, Claude) to Tutor', 'tutor' ),
+				'template'  => 'mcp',
+				'view_path' => tutor()->path . 'views/pages/tools/',
+				'icon'      => 'tutor-icon-api',
+				'blocks'    => array(
+					'block' => array(),
+				),
+			),
 			'settings_log'   => array(
 				'label'     => __( 'Settings Log', 'tutor' ),
 				'slug'      => 'settings_log',

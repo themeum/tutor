@@ -168,6 +168,18 @@ class RestAuth {
 	private static $verified_token_claims = null;
 
 	/**
+	 * Nesting depth for in-process MCP privileged REST context.
+	 *
+	 * When > 0 and a WP user is logged in, is_rest_authenticated() treats the
+	 * caller as an authenticated API client (no Tutor JWT required).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var int
+	 */
+	private static $mcp_context_depth = 0;
+
+	/**
 	 * Register hooks.
 	 *
 	 * @since 2.2.1
@@ -1909,13 +1921,59 @@ class RestAuth {
 	}
 
 	/**
+	 * Enter privileged MCP context for in-process REST controller calls.
+	 *
+	 * Must only be used after MCP Permissions have passed. Pair with
+	 * leave_mcp_context() (prefer try/finally).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return void
+	 */
+	public static function enter_mcp_context() {
+		++self::$mcp_context_depth;
+	}
+
+	/**
+	 * Leave privileged MCP context.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return void
+	 */
+	public static function leave_mcp_context() {
+		if ( self::$mcp_context_depth > 0 ) {
+			--self::$mcp_context_depth;
+		}
+	}
+
+	/**
+	 * Whether an MCP privileged REST context is active.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return bool
+	 */
+	public static function in_mcp_context() {
+		return self::$mcp_context_depth > 0;
+	}
+
+	/**
 	 * Whether this Tutor REST call has a valid access JWT (key permission).
 	 *
+	 * Also true during MCP privileged context when a WordPress user is already
+	 * authenticated (identity comes from WP auth, not a Tutor JWT).
+	 *
 	 * @since 4.2.0
+	 * @since 4.3.0 MCP in-process context support.
 	 *
 	 * @return bool
 	 */
 	public static function is_rest_authenticated() {
+		if ( self::in_mcp_context() && static::has_authenticated_user() ) {
+			return true;
+		}
+
 		return static::process_api_request();
 	}
 
