@@ -1,0 +1,120 @@
+/**
+ * Tools → MCP — only styles Tutor Tools does not already provide.
+ */
+
+.tutor-mcp-logos {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.tutor-mcp-logos-locked {
+	filter: grayscale(1);
+	opacity: 0.55;
+}
+
+.tutor-mcp-logo {
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	display: grid;
+	place-items: center;
+	flex: none;
+	background: var(--tutor-color-white);
+	border: 1px solid var(--tutor-border-color);
+	color: var(--tutor-body-color);
+
+	svg {
+		width: 58%;
+		height: 58%;
+	}
+
+	&.tutor-is-sm {
+		width: 24px;
+		height: 24px;
+		border-radius: 6px;
+	}
+
+	&.tutor-is-lg {
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+	}
+}
+
+.tutor-mcp-ability-row + .tutor-mcp-ability-row {
+	border-top: 1px solid var(--tutor-border-color);
+	margin-top: 4px;
+	padding-top: 4px;
+}
+
+.tutor-mcp-ability-row.is-open {
+	[data-mcp-ab-toggle] .tutor-icon-angle-right {
+		transform: rotate(90deg);
+		display: inline-block;
+	}
+
+	.tutor-mcp-tools {
+		display: block !important;
+	}
+}
+
+.tutor-mcp-dimmed {
+	opacity: 0.45;
+	pointer-events: none;
+}
+
+.tutor-mcp-client-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.tutor-mcp-client-tile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	gap: 6px;
+	padding: 12px 8px;
+	border-radius: 12px;
+	border: 1px solid var(--tutor-border-color);
+	background: var(--tutor-color-white);
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	transition: border-color 0.15s, background 0.15s;
+
+	&:hover {
+		border-color: var(--tutor-color-primary);
+		background: rgba(var(--tutor-color-primary-rgb), 0.1);
+	}
+}
+
+.tutor-mcp-tabs {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 12px;
+	flex-wrap: wrap;
+
+	button.is-active {
+		background: var(--tutor-body-bg);
+		font-weight: 500;
+	}
+}
+
+.tutor-mcp-code-box textarea.tutor-form-control {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+	line-height: 1.55;
+	min-height: 160px;
+	resize: vertical;
+}
+
+@include breakpoint-max(mobile) {
+	.tutor-mcp-client-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}

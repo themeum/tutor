@@ -411,6 +411,7 @@ final class Tutor extends Singleton {
 	public $q_and_a_list;
 	public $q_attempt;
 	public $rest_api;
+	public $mcp;
 	public $setup;
 	public $private_course_access;
 	public $course_filter;
@@ -520,6 +521,7 @@ final class Tutor extends Singleton {
 		$this->form_handler          = new FormHandler();
 		$this->frontend              = new Frontend();
 		$this->rest_api              = new RestAPI();
+		$this->mcp                   = new Mcp();
 		$this->setup                 = new Tutor_Setup();
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
