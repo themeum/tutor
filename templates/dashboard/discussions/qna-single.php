@@ -105,7 +105,6 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 				->flip_rtl()
 				->tag( 'a' )
 				->attr( 'href', esc_url( $action_url ) )
-				->attr( 'target', '_blank' )
 				->attr( 'rel', 'noopener noreferrer' )
 				->render();
 			?>
