@@ -13,12 +13,11 @@
 
 	.thumbnail-preview {
 		--width: 235px;
+
 		background: $color-gray-10;
 		border: 2px solid $color-gray-10;
 		border-radius: 3px;
 		position: relative;
-		width: 268px;
-		height: 98px;
 		width: var(--width);
 		height: calc(var(--width) / 1.775);
 		display: flex;
@@ -39,7 +38,9 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+
 				@include svg-image-uppoad;
+
 				background-repeat: no-repeat;
 				background-position: center;
 			}
@@ -51,13 +52,15 @@
 			width: 24px;
 			height: 24px;
 			border-radius: 50%;
+
 			@include svg-delete-icon;
+
 			background-color: $color-danger;
 			background-repeat: no-repeat;
 			background-position: 50%;
 			cursor: pointer;
 			top: -12px;
-			right: -12px;
+			inset-inline-end: -12px;
 
 			&:hover {
 				background-color: darken($color: $color-danger, $amount: 6);
@@ -68,6 +71,7 @@
 	.thumbnail-input {
 		input[type='file'] {
 			@include appearNone;
+
 			display: none;
 		}
 

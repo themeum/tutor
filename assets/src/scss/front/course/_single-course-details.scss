@@ -1,7 +1,8 @@
 .tutor-single-course-wrapper {
     overflow: auto;
+
     &>div{
-        float: left;
+        float: inline-start;
         width: 100%;
 
         @media(min-width:992px) {
@@ -11,7 +12,7 @@
 
             &:last-child{
                 width: 350px;
-                float: right;
+                float: inline-end;
             }
         }
     }
@@ -34,13 +35,13 @@
                     display: block;
                     font-size: 16px;
                     padding: 5px 0 20px;
-                    margin-right: 20px;
+                    margin-inline-end: 20px;
                     color: var(--tutor-color-muted);
                     border-bottom: 2px solid transparent;
                 }
 
                 &:not(:first-child) a {
-                    margin-left: 20px;
+                    margin-inline-start: 20px;
                 }
 
                 &.active a {
@@ -74,8 +75,8 @@
     .tutor-sidebar-card {
         .tutor-card-body {
             background-color: #F4F6F9;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
+            border-start-start-radius: 6px;
+            border-start-end-radius: 6px;
         }
     }
 
@@ -88,26 +89,27 @@
             padding: 16px 32px;
             margin: 0;
             background-color: #FCFCFD;
-            border-left: 1px solid var(--tutor-border-color);
-            border-right: 1px solid var(--tutor-border-color);
+            border-inline-start: 1px solid var(--tutor-border-color);
+            border-inline-end: 1px solid var(--tutor-border-color);
 
             &:first-child {
                 padding-top: 24px;
                 border-top: 1px solid var(--tutor-border-color);
-                border-top-left-radius: 6px;
-                border-top-right-radius: 6px;
+                border-start-start-radius: 6px;
+                border-start-end-radius: 6px;
             }
 
             &:last-child {
                 padding-bottom: 24px;
                 border-bottom: 1px solid var(--tutor-border-color);
-                border-bottom-left-radius: 6px;
-                border-bottom-right-radius: 6px;
+                border-end-start-radius: 6px;
+                border-end-end-radius: 6px;
             }
         }
 
         .tutor-course-details-instructors {
             padding-bottom: 24px;
+
             & + div {
                 border-top: 1px solid var(--tutor-border-color);
                 padding-top: 24px;

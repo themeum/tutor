@@ -41,7 +41,8 @@
     .tutor-certificate-preview-effect {
       position: absolute;
       bottom: 24px;
-      inset-inline-start: 50%;
+      /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the preview centered in RTL */
+      left: 50%;
       transform: translateX(-50%);
       width: 310px;
       height: 142px;
@@ -65,7 +66,8 @@
       border-radius: 50%;
       position: absolute;
       top: 0;
-      inset-inline-start: 50%;
+      /* stylelint-disable-next-line property-layout-mappings -- translateX(-50%) is physical, so left keeps the lock centered in RTL */
+      left: 50%;
       transform: translateX(-50%) translateY(-50%);
     }
   }

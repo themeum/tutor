@@ -1,9 +1,9 @@
 $variations: (
 	'default' var(--tutor-color-gray-10) var(--tutor-color-muted),
-	'primary' rgba(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary),
-	'success' rgba(var(--tutor-color-success-rgb), 0.15) #202223,
-	'warning' rgba(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning),
-	'danger' rgba(var(--tutor-color-danger-rgb), 0.15) var(--tutor-color-danger),
+	'primary' rgb(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary),
+	'success' rgb(var(--tutor-color-success-rgb), 0.15) #202223,
+	'warning' rgb(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning),
+	'danger' rgb(var(--tutor-color-danger-rgb), 0.15) var(--tutor-color-danger),
 );
 
 .tutor-tag {

@@ -52,15 +52,15 @@
 
 // @include breakpoint-minmax(tablet, desktop) { ... }
 @mixin breakpoint-minmax($sizemin, $sizemax) {
-	@if ($sizemin == mobile and $sizemax == tablet) {
+	@if $sizemin == mobile and $sizemax == tablet {
 		@media (min-width: 576px) and (max-width: 767.98px) {
 			@content;
 		}
-	} @else if ($sizemin == tablet and $sizemax == desktop) {
+	} @else if $sizemin == tablet and $sizemax == desktop {
 		@media (min-width: 768px) and (max-width: 991.98px) {
 			@content;
 		}
-	} @else if ($sizemin == desktop and $sizemax == desktop-lg) {
+	} @else if $sizemin == desktop and $sizemax == desktop-lg {
 		@media (min-width: 992px) and (max-width: 1199.98px) {
 			@content;
 		}
