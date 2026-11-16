@@ -296,7 +296,7 @@ if ( is_array( $attempt_info ) ) {
 
 						<?php elseif ( 'date' == $key ) : ?>
 							<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-						<?php elseif ( 'qeustion_count' === $key ) : ?>
+						<?php elseif ( 'question_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
 						<?php elseif ( 'quiz_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration ); ?>

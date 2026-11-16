@@ -7,7 +7,13 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var mixed $this
+ * @var array $field
+ * @var array $fields_group
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 $value = $this->get( $field['key'] );
 if ( isset( $field['default'] ) && empty( $value ) ) {

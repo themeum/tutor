@@ -9,6 +9,19 @@
  * @since 1.0.0
  */
 
+use Tutor\Core\Input;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Template variables provided by Tools_V2::load_tools_page().
+ *
+ * @var \Tutor\Tools_V2 $this
+ * @var array          $tools_fields
+ * @var string         $active_tab
+ */
+
+$current_page = Input::get( 'page', '' );
 ?>
 <div class="tutor-admin-wrap">
 	<div class="tutor-admin-header tutor-px-24 is-sticky" style="z-index: 9;">
@@ -20,11 +33,11 @@
 	<div class="tutor-admin-container">
 		<div class="tutor-row tutor-gx-lg-0 tutor-mb-24">
 			<div class="tutor-col-12 tutor-col-sm-auto tutor-col-lg-2 tutor-py-16">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v tutor-position-sticky" style="top: 110px;" data-page="<?php echo esc_attr( wp_unslash( $_GET['page'] ) ); ?>">
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v tutor-position-sticky" style="top: 110px;" data-page="<?php echo esc_attr( $current_page ); ?>">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
-						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
+						$active_class = $active_tab === $key ? ' is-active' : '';
 						$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
 						?>
 							<li class="tutor-nav-item">
@@ -47,7 +60,7 @@
 				<div class="tutor-option-tab-pages">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
-						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
+						$active_class = $active_tab === $key ? ' is-active' : '';
 						?>
 							<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 							<?php

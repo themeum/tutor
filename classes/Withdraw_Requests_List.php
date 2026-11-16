@@ -10,12 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\Models\WithdrawModel;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Handle withdraw request logic
  *
