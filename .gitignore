@@ -41,11 +41,6 @@ vendor/
 .phpunit.result.cache
 yarn.lock
 .env
-# Ignore Cypress screenshots
-cypress/screenshots/*
-# Ignore Cypress fixtures
-cypress/fixtures/*
-!cypress/fixtures/assets/tutor_bulk_enrollment_sample.csv
 # Ignore specific PNG files
 **/beforeEach*.png
 launch.json
@@ -65,6 +60,12 @@ storybook-static
 
 # Bruno Local Environment
 docs/api/environments/local.bru
+
+# E2E test artifacts
+.e2e/
+playwright-report/
+test-results/
+tests/e2e/.auth/
 
 # Test reports and outputs
 tests/e2e/report/

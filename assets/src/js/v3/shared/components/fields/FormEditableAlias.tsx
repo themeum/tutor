@@ -46,7 +46,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }:
               {!isEditing ? (
                 <>
                   <a
-                    data-cy="course-slug"
+                    data-testid="course-slug"
                     href={fieldValue}
                     target="_blank"
                     css={styles.link}

@@ -1,0 +1,92 @@
+name: Unit Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+      - 'release/**'
+
+concurrency:
+  group: unit-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  WP_VERSION: '7.1.3'
+  WP_ROOT: ${{ github.workspace }}/wordpress
+  PLUGIN_DIR: ${{ github.workspace }}/wordpress/wp-content/plugins/tutor
+  WP_TEST_DB_NAME: wordpress_test
+  WP_TEST_DB_USER: root
+  WP_TEST_DB_PASS: root
+  WP_TEST_DB_HOST: 127.0.0.1
+  WP_PHPUNIT_DB_NAME: wordpress_phpunit
+
+jobs:
+  unit-tests:
+    name: PHPUnit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: wordpress/wp-content/plugins/tutor
+
+      - name: Setup PHP, Composer & WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer, wp-cli
+          coverage: none
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          cache-dependency-path: wordpress/wp-content/plugins/tutor/pnpm-lock.yaml
+
+      - name: Install WordPress
+        run: |
+          wp core download --path="$WP_ROOT" --version="$WP_VERSION"
+          wp config create --path="$WP_ROOT" --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+
+      - name: Install dependencies
+        working-directory: ${{ env.PLUGIN_DIR }}
+        run: |
+          pnpm install
+          composer install --no-interaction --prefer-dist --no-scripts
+
+      - name: Install test environment
+        working-directory: ${{ env.PLUGIN_DIR }}
+        env:
+          SITE_URL: http://127.0.0.1:8888
+          WP_TEST_ACTIVE_PLUGINS: tutor
+        run: |
+          php tests/support/install.php --yes
+          php tests/support/preflight.php
+
+      - name: Run Unit tests
+        working-directory: ${{ env.PLUGIN_DIR }}
+        run: pnpm test:unit

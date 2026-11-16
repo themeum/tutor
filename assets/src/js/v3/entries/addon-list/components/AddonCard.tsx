@@ -81,6 +81,8 @@ function AddonCard({ addon }: { addon: Addon }) {
   return (
     <div
       css={styles.wrapper(isTutorPro)}
+      data-testid={`addon-card-${addon.basename}`}
+      data-addon-enabled={isAddonEnabled() ? '1' : '0'}
       onMouseEnter={() => hasToolTip && setIsTooltipVisible(true)}
       onMouseLeave={() => hasToolTip && setIsTooltipVisible(false)}
     >
@@ -90,7 +92,7 @@ function AddonCard({ addon }: { addon: Addon }) {
           <div css={styles.thumb}>
             <img src={addon.thumb_url || addon.url} alt={addon.name} />
           </div>
-          <div css={styles.addonAction(isTutorPro)} data-addon-action>
+          <div css={styles.addonAction(isTutorPro)} data-addon-action data-testid="addon-toggle">
             <Show
               when={isTutorPro}
               fallback={

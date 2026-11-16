@@ -8,7 +8,7 @@
       "Tutor\\Core\\": "core/",
       "Tutor\\Components\\": "components/",
       "Tutor\\Cache\\": "cache/",
-      "Tutor\\Migrations\\":"migrations/",
+      "Tutor\\Migrations\\": "migrations/",
       "Tutor\\Models\\": "models/",
       "Tutor\\Helpers\\": "helpers/",
       "Tutor\\Exceptions\\": "exceptions/",
@@ -56,9 +56,10 @@
       "if [ ! -d \"includes/kirki\" ]; then git clone https://github.com/themeum/tutor-kirki.git includes/kirki; else cd includes/kirki && git pull origin master; fi",
       "cd includes/kirki && composer update && npm install"
     ],
-    "test:unit": "vendor/bin/phpunit",
-    "test:unit:filter": "vendor/bin/phpunit --filter",
+    "test:unit": "php tests/support/preflight.php && vendor/bin/phpunit",
+    "test:unit:filter": "php tests/support/preflight.php && vendor/bin/phpunit --filter",
     "test:db:reset": "php tests/support/reset-test-db.php",
-    "test:install": "php tests/support/install.php"
+    "test:install": "php tests/support/install.php",
+    "test:uninstall": "php tests/support/install.php --uninstall --yes"
   }
 }
