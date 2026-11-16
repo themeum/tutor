@@ -27,8 +27,8 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 <div
 	data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>"
 	x-data="tutorQuestionOrdering({
-		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
-		onOrder: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+		questionId: 'question-<?php echo (int) $question['question_id']; ?>',
+		onOrder: (values) => setValue('<?php echo esc_js( $answer_field_name ); ?>', values, { shouldDirty: true }),
 	})"
 >
 	<div class="tutor-quiz-question-options">

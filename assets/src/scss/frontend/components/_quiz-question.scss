@@ -52,11 +52,9 @@
   &-title {
     @include tutor-flex(column);
     @include tutor-typography('medium', 'semibold');
+    @include tutor-text-wrap;
     gap: $tutor-spacing-4;
     flex: 1;
-    min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('p2', 'semibold');
@@ -225,7 +223,7 @@
 
       &:focus,
       &:focus-within {
-        &:not(:has(:checked)) {
+        &:not(:has(:checked)):not(:has(:disabled)) {
           border-color: $tutor-border-hover;
           background-color: $tutor-quiz-hover;
         }
@@ -281,7 +279,7 @@
         }
       }
 
-      &:focus-within:has(:checked) {
+      &:focus-within:has(:checked):not(:has(:disabled)) {
         font-weight: $tutor-font-weight-medium;
         border-color: $tutor-border-brand;
         background-color: $tutor-surface-brand-secondary;

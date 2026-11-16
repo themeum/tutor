@@ -40,7 +40,7 @@ use TUTOR\User;
 <div class="tutor-discussion-single-reply-list tutor-border-t">
 	<?php foreach ( $replies as $reply ) : ?>
 		<div class="tutor-discussion-reply-list-item">
-			<div class="tutor-flex tutor-gap-5 tutor-w-full" x-show="editingId !== <?php echo esc_attr( $reply->comment_ID ); ?>">
+			<div class="tutor-flex tutor-gap-5 tutor-w-full" x-show="editingId !== <?php echo (int) $reply->comment_ID; ?>">
 				<?php Avatar::make()->user( $reply->user_id )->size( Size::SIZE_40 )->render(); ?>
 				<div class="tutor-flex-1">
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
@@ -79,7 +79,7 @@ use TUTOR\User;
 						<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 							<div class="tutor-popover-menu" style="min-width: 110px;">
 								<?php if ( $can_edit ) : ?>
-									<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo esc_attr( $reply->comment_ID ); ?>, 'qna'); hide()">
+									<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>, 'qna'); hide()">
 										<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</button>
@@ -87,7 +87,7 @@ use TUTOR\User;
 								<?php if ( $can_delete ) : ?>
 									<button
 										class="tutor-popover-menu-item tutor-gap-5"
-										@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_attr( $reply->comment_ID ); ?>, context: 'reply' }); hide()"
+										@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo (int) $reply->comment_ID; ?>, context: 'reply' }); hide()"
 									>
 										<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 										<?php esc_html_e( 'Delete', 'tutor' ); ?>
@@ -100,7 +100,7 @@ use TUTOR\User;
 			</div>
 
 			<?php if ( $can_edit ) : ?>
-				<div x-show="editingId === <?php echo esc_attr( $reply->comment_ID ); ?>" x-cloak class="tutor-mt-5 tutor-w-full">
+				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
 						'dashboard.discussions.qna-form',

@@ -8,10 +8,17 @@
  * @since 2.0.0
  */
 
-use TUTOR\Input;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
+use Tutor\Core\Input;
 
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
-$question    = tutor_utils()->get_qa_question( $question_id );
+/**
+ * Question object.
+ *
+ * @var object $question
+ */
+$question = tutor_utils()->get_qa_question( $question_id );
 ?>
 
 <div class="wrap">

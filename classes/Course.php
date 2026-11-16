@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use InvalidArgumentException;
-
-defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -24,6 +24,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Tooltip;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
@@ -1004,7 +1005,8 @@ class Course extends Tutor_Base {
 	public function ajax_create_course() {
 		tutor_utils()->check_nonce();
 
-		$this->check_access();
+		$course_id = intval( wp_unslash( $_POST['ID'] ?? 0 ) );
+		$this->check_access( $course_id ); // Check user cap for the given id before processing.
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1211,15 +1213,16 @@ class Course extends Tutor_Base {
 
 		$this->check_access( $course_id );
 
-		$builder = Input::post( 'builder' );
+		$builder      = Input::post( 'builder' );
+		$post_content = (string) get_post_field( 'post_content', $course_id, 'raw' );
 		if ( 'elementor' === $builder ) {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
 			delete_post_meta( $course_id, 'droip_editor_mode' );
 		} elseif ( 'divi' === $builder ) {
-			$old_post_content     = get_post_meta( $course_id, '_et_pb_old_content', true );
+			$post_content         = get_post_meta( $course_id, '_et_pb_old_content', true );
 			$course               = get_post( $course_id );
-			$course->post_content = $old_post_content;
+			$course->post_content = $post_content;
 			$result               = wp_update_post( $course );
 
 			if ( $result && ! is_wp_error( $result ) ) {
@@ -1233,7 +1236,10 @@ class Course extends Tutor_Base {
 
 		$this->json_response(
 			__( 'Builder unlinked successfully.', 'tutor' ),
-			$course_id,
+			array(
+				'course_id'    => $course_id,
+				'post_content' => $post_content,
+			),
 			HttpHelper::STATUS_OK
 		);
 	}
@@ -1689,9 +1695,13 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function get_wc_products() {
+		tutor_utils()->checking_nonce();
+
 		$exclude                 = array();
 		$exclude_linked_products = Input::has( 'exclude_linked_products' );
 		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
 
 		if ( $exclude_linked_products ) {
 			$exclude = tutor_utils()->get_linked_product_ids();
@@ -1722,9 +1732,11 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$this->check_access( $course_id );
+
 		$product_id = Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
 
@@ -2205,6 +2217,10 @@ class Course extends Tutor_Base {
 		}
 
 		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
+
+		if ( ! $course_id ) {
+			return;
+		}
 
 		/**
 		 * TODO: need to check purchase information
@@ -3183,7 +3199,8 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
-		$course_id  = sanitize_text_field( $course_id );
+		$course_id = sanitize_text_field( $course_id );
+
 		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
 
 		if ( $course_id && $is_allowed ) {
@@ -3642,9 +3659,14 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			foreach ( $content_parent as $topic ) {
-				$provided_topic_ids[]   = $topic['parent_topic_id'];
-				$provided_content_ids[] = $topic['content_id'];
+			$parents = ( isset( $content_parent[0] ) && is_array( $content_parent[0] ) ) ? $content_parent : array( $content_parent );
+			foreach ( $parents as $item ) {
+				if ( isset( $item['parent_topic_id'] ) ) {
+					$provided_topic_ids[] = (int) $item['parent_topic_id'];
+				}
+				if ( isset( $item['content_id'] ) ) {
+					$provided_content_ids[] = (int) $item['content_id'];
+				}
 			}
 		}
 

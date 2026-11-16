@@ -10,7 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Earnings;
 use Tutor\Models\OrderModel;
 use TUTOR\Backend_Page_Trait;

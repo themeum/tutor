@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\EmptyState;

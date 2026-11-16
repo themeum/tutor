@@ -2,17 +2,15 @@
 /**
  * An abstract base class to make Singleton class
  *
- * @package Tutor\Classes
+ * @package Tutor\Core
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.0.0
  */
 
-namespace TUTOR;
+namespace Tutor\Core;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Singleton

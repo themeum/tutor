@@ -13,6 +13,8 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
@@ -3296,7 +3298,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int $course_id Course ID or Bundle ID.
 	 *
 	 * @return array|bool|null|object
 	 */
@@ -3349,7 +3351,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
-						   AND course.post_type = %s
+						   AND course.post_type IN (%s, %s)
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3362,6 +3364,7 @@ class Utils {
 			",
 				$course_id,
 				tutor()->course_post_type,
+				tutor()->bundle_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -4023,12 +4026,13 @@ class Utils {
 			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
-		$limit_offset    = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
-		$status_in       = array_map( 'esc_sql', (array) $status_in );
-		$status_in       = '"' . implode( '","', $status_in ) . '"';
-		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
-		$include_user_id = array_map( 'absint', $include_user_id );
-		$include_user_id = implode( ',', $include_user_id );
+		$start           = absint( $start );
+		$limit           = absint( $limit );
+		$limit_offset    = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
+		$status_in       = array_values( array_filter( array_map( 'sanitize_key', (array) $status_in ) ) );
+		$status_in_str   = count( $status_in ) ? QueryHelper::prepare_in_clause( $status_in ) : "''";
+		$include_user_id = array_values( array_filter( array_map( 'absint', (array) $include_user_id ) ) );
+		$user_id_in_str  = count( $include_user_id ) ? QueryHelper::prepare_in_clause( $include_user_id ) : '0';
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 		'_reviews.comment_ID,
@@ -4052,7 +4056,7 @@ class Utils {
 						ON _reviews.user_id = _reviewer.ID
 			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
-					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND (_reviews.comment_approved IN ({$status_in_str}) OR _reviews.user_id IN ({$user_id_in_str}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$object_id
@@ -4175,8 +4179,8 @@ class Utils {
 
 		$course_filter = '';
 		if ( $course_id ) {
-			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
+			$course_ids = array_filter( array_map( 'absint', $course_ids ) );
 			if ( ! empty( $course_ids ) ) {
 				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
 				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
@@ -4639,6 +4643,8 @@ class Utils {
 		// Sanitize args before process.
 		$args = Input::sanitize_array( $args );
 
+		$params = array( $search_term );
+
 		if ( ! $user_id && ! $asker_id && null === $question_id && empty( $args['course_id'] ) ) {
 			return $count_only ? 0 : array();
 		}
@@ -4648,7 +4654,7 @@ class Utils {
 		 * User query.
 		 */
 		if ( $asker_id ) {
-			$question_clause .= ' AND _question.user_id=' . (int) $asker_id;
+			$question_clause .= ' AND _question.user_id=' . absint( $asker_id );
 		}
 
 		if ( ! $user_id ) {
@@ -4657,31 +4663,32 @@ class Utils {
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
-			$args['course_id']   = intval( $args['course_id'] );
+			$args['course_id']   = absint( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
-			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
-			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
+			$my_course_ids       = array_filter( array_map( 'absint', (array) $this->get_course_id_by( 'instructor', $user_id ) ) );
+			$in_ids              = count( $my_course_ids ) ? QueryHelper::prepare_in_clause( $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query.
 		if ( isset( $args['course-id'] ) && is_numeric( $args['course-id'] ) ) {
-			$filter_clause .= ' AND _course.ID=' . $args['course-id'];
+			$filter_clause .= ' AND _course.ID=' . absint( $args['course-id'] );
 		}
 
-		if ( isset( $args['date'] ) ) {
-			$date           = esc_sql( $args['date'] );
-			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
+		if ( ! empty( $args['date'] ) ) {
+			$formatted_date = tutor_get_formated_date( 'Y-m-d', $args['date'] );
+			if ( '' !== $formatted_date ) {
+				$filter_clause .= ' AND DATE(_question.comment_date) = CAST(%s AS DATE)';
+				$params[]       = $formatted_date;
+			}
 		}
 
 		if ( isset( $args['order'] ) ) {
-			$order = strtolower( $args['order'] );
-			if ( 'asc' === $order || 'desc' === $order ) {
-				$order_condition = ' ORDER BY _question.comment_ID ' . $order . ' ';
-			}
+			$order           = QueryHelper::get_valid_sort_order( $args['order'] );
+			$order_condition = " ORDER BY _question.comment_ID {$order} ";
 		}
 
 		// Meta query.
@@ -4739,7 +4746,9 @@ class Utils {
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count";
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start;
+		$start        = absint( $start );
+		$limit        = absint( $limit );
+		$limit_offset = $count_only ? '' : " LIMIT {$limit} OFFSET {$start} ";
 
 		$query = $wpdb->prepare(
 			"SELECT  {$columns_select}
@@ -4762,7 +4771,7 @@ class Utils {
 					{$filter_clause}
 			{$order_condition}
 			{$limit_offset}",
-			$search_term
+			$params
 		);
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
@@ -4779,7 +4788,7 @@ class Utils {
 
 		// Assign meta data.
 		if ( count( $question_ids ) ) {
-			$q_ids      = implode( ',', $question_ids );
+			$q_ids      = QueryHelper::prepare_in_clause( array_map( 'absint', $question_ids ) );
 			$meta_array = $wpdb->get_results(
 				"SELECT comment_id, meta_key, meta_value
 				FROM {$wpdb->commentmeta}
@@ -5410,7 +5419,7 @@ class Utils {
 		$total_questions = (int) $attempt->total_questions;
 		$questions_order = $this->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
 
-		$order_by = 'RAND()';
+		$order_by = ! empty( $attempt->attempt_id ) ? 'RAND(' . (int) $attempt->attempt_id . ')' : 'RAND()';
 		$order    = '';
 
 		if ( 'asc' === $questions_order ) {
@@ -7674,6 +7683,7 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 *
 	 * @since 1.7.9
+	 * @since 4.2.1 tutor_announcements support added.
 	 *
 	 * @param int $content_id content id.
 	 *
@@ -7681,15 +7691,16 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'tutor_gm_course'    => 'tutor_gm_course',
-			'tutor_gm_topic'     => 'tutor_gm_topic',
-			'topics'             => 'topic',
-			'cb-lesson'          => 'cb-lesson',
+			'tutor_assignments'   => 'assignment',
+			'tutor_quiz'          => 'quiz',
+			'lesson'              => 'lesson',
+			'tutor_zoom_meeting'  => 'zoom_meeting',
+			'tutor_zoom_lesson'   => 'zoom_lesson',
+			'tutor_gm_course'     => 'tutor_gm_course',
+			'tutor_gm_topic'      => 'tutor_gm_topic',
+			'topics'              => 'topic',
+			'cb-lesson'           => 'cb-lesson',
+			'tutor_announcements' => 'announcement',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7753,14 +7764,15 @@ class Utils {
 			case 'review':
 			case 'qa_question':
 				// Just check if own content. Instructor privilege already checked in the earlier blocks.
-				$id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
-						$user_id,
-						$object_id
-					)
-				);
+				$comment_type = 'qa_question' === $content
+								? Q_And_A::COMMENT_TYPE
+								: Reviews::COURSE_RATING;
+
+				$id = DB::table( 'comments' )
+						->where( 'comment_type', $comment_type )
+						->where( 'user_id', $user_id )
+						->where( 'comment_ID', $object_id )
+						->value( 'comment_ID' );
 
 				return $id ? true : false;
 		}
@@ -9703,6 +9715,8 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
+	 * @since 4.2.0 Removed the total_enrollment count since no caller is using it
+	 *
 	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
@@ -9732,7 +9746,6 @@ class Utils {
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
 				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);
 
@@ -9746,7 +9759,6 @@ class Utils {
 					'tutor_quiz'        => array(),
 					'lesson'            => array(),
 					'topics'            => 0,
-					'tutor_enrolled'    => 0,
 				);
 			}
 
@@ -9773,7 +9785,6 @@ class Utils {
 			}
 		}
 
-		$course_meta = $this->assign_child_count( $course_meta, 'tutor_enrolled' );
 		$course_meta = $this->assign_child_count( $course_meta, 'topics' );
 
 		// Return single count if the course id was single.

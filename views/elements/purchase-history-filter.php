@@ -7,9 +7,13 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var array $data
  */
 
-use TUTOR\Input;
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
+use Tutor\Core\Input;
 
 ?>
 <div class="tutor-wp-dashboard-filter tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap tutor-align-center tutor-justify-between tutor-pb-40">

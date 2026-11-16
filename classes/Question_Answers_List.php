@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\Input;
 
 /**
  * Question_Answers_List

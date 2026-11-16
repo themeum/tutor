@@ -16,8 +16,8 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 <form method="post" class="tutor-reset-password-form tutor-ResetPassword lost_reset_password" style="padding: 10px;">
 	<?php tutor_nonce_field(); ?>
 	<input type="hidden" name="tutor_action" value="tutor_process_reset_password">
-	<input type="hidden" name="reset_key" value="<?php echo esc_attr( \TUTOR\Input::get( 'reset_key' ) ); ?>" />
-	<input type="hidden" name="user_id" value="<?php echo esc_attr( \TUTOR\Input::get( 'user_id' ) ); ?>" />
+	<input type="hidden" name="reset_key" value="<?php echo esc_attr( \Tutor\Core\Input::get( 'reset_key' ) ); ?>" />
+	<input type="hidden" name="user_id" value="<?php echo esc_attr( \Tutor\Core\Input::get( 'user_id' ) ); ?>" />
 
 	<p class="tutor-small tutor-mb-5">
 		<?php

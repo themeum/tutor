@@ -3,13 +3,13 @@
  * Container for managing dependencies and bindings.
  * Supports binding, singleton registration, and autowiring via reflection.
  *
- * @package TutorPro\Classes
+ * @package Tutor\Core
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.7.0
  */
 
-namespace TUTOR;
+namespace Tutor\Core;
 
 use ReflectionClass;
 

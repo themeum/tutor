@@ -6,6 +6,7 @@ import {
   type TutorToastOptions,
   type TutorToastType,
 } from '@Core/ts/types/toast';
+import { setSafeInlineHtml } from '@Core/ts/utils/security';
 
 interface TutorToastEntry {
   id: string;
@@ -261,9 +262,8 @@ export class TutorToastManager {
     liveRegion.textContent = '';
     requestAnimationFrame(() => {
       const text = description ? `${title}. ${description}` : title;
-      const tmp = document.createElement('div');
-      tmp.innerHTML = text;
-      liveRegion.textContent = tmp.textContent || '';
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      liveRegion.textContent = doc.body.textContent || '';
     });
   }
 
@@ -422,16 +422,16 @@ export class TutorToastManager {
   }
 
   private renderIcon(wrapper: HTMLElement, type: TutorToastType, override?: string | null): void {
-    wrapper.innerHTML = '';
+    wrapper.textContent = '';
 
-    const iconMarkup = override ?? TOAST_ICON_MARKUP[type] ?? TOAST_ICON_MARKUP.default;
-
-    if (iconMarkup?.trimStart().startsWith('<')) {
-      wrapper.innerHTML = iconMarkup;
+    if (override) {
+      // Caller-supplied icons are plain text (emoji / character), never markup
+      wrapper.textContent = override;
       return;
     }
 
-    wrapper.textContent = String(iconMarkup);
+    // Built-in icons are static constants, not user input
+    wrapper.innerHTML = TOAST_ICON_MARKUP[type] ?? TOAST_ICON_MARKUP.default;
   }
 
   private buildCard(id: string, title: string, options: NormalizedTutorToastOptions): HTMLElement {
@@ -466,7 +466,7 @@ export class TutorToastManager {
     if (options.description) {
       const description = document.createElement('p');
       description.className = TOAST_CLASS.description;
-      description.innerHTML = options.description;
+      setSafeInlineHtml(description, options.description);
       content.appendChild(description);
     }
 

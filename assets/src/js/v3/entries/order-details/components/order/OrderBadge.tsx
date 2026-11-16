@@ -2,6 +2,8 @@ import { __ } from '@wordpress/i18n';
 
 import { TutorBadge, type Variant } from '@TutorShared/atoms/TutorBadge';
 
+import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
+
 import type { OrderStatus } from '@OrderDetails/services/order';
 
 const badgeMap: Record<OrderStatus, { label: string; type: Variant }> = {
@@ -12,5 +14,9 @@ const badgeMap: Record<OrderStatus, { label: string; type: Variant }> = {
 };
 
 export function OrderBadge({ status }: { status: OrderStatus }) {
-  return <TutorBadge variant={badgeMap[status].type}>{badgeMap[status].label}</TutorBadge>;
+  return (
+    <TutorBadge variant={badgeMap[status]?.type || 'default'}>
+      {badgeMap[status]?.label || makeFirstCharacterUpperCase(status)}
+    </TutorBadge>
+  );
 }

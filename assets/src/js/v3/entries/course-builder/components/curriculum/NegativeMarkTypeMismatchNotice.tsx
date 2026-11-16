@@ -60,13 +60,16 @@ const NegativeMarkTypeMismatchNotice = () => {
   const negativeMarkingEnabled = form.watch('quiz_option.enable_negative_marking');
   const negativeMarkValue = form.watch('quiz_option.negative_mark_value');
 
+  const adminNegativeMarkEnabled = tutorConfig.settings?.enable_quiz_negative_marking === 'on';
   const adminNegativeMarkValue = tutorConfig.settings.quiz_negative_mark_value;
   const adminNegativeMarkType =
     tutorConfig.settings?.quiz_negative_mark_type === QUIZ_NEGATIVE_MARK_TYPES.FIXED
       ? QUIZ_NEGATIVE_MARK_TYPES.FIXED
       : QUIZ_NEGATIVE_MARK_TYPES.PERCENT;
 
-  const showMismatchNotice = Boolean(negativeMarkingEnabled && adminNegativeMarkType !== negativeMarkType);
+  const showMismatchNotice = Boolean(
+    adminNegativeMarkEnabled && negativeMarkingEnabled && adminNegativeMarkType !== negativeMarkType,
+  );
 
   if (!showMismatchNotice) {
     return null;

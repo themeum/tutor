@@ -121,11 +121,11 @@ $sortable_sections_defaults = array_reduce(
 
 $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) );
 ?>
-<form x-data='tutorForm({
-		id: "sortable-sections",
-		mode: "onBlur",
-		defaultValues: <?php echo wp_json_encode( $sortable_sections_defaults ); ?>
-	})' 
+<form x-data="tutorForm({
+		id: 'sortable-sections',
+		mode: 'onBlur',
+		defaultValues: <?php echo esc_attr( tutor_json_encode( $sortable_sections_defaults ) ); ?>
+	})" 
 	x-bind="getFormBindings()"
 	class="tutor-flex tutor-flex-column tutor-gap-6"
 	data-tutor-ajax-dashboard="true"
@@ -141,7 +141,7 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 			?>
 		<?php endif; ?>
 
-		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: '<?php echo esc_attr( $tutor_pro_enabled ? 'bottom-end' : 'bottom-start' ); ?>' })">
+		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: '<?php echo esc_js( $tutor_pro_enabled ? 'bottom-end' : 'bottom-start' ); ?>' })">
 			<button
 				type="button"
 				x-ref="trigger"
@@ -162,9 +162,9 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 			>
 				<div 
 					class="tutor-popover-menu"
-					x-data='tutorSortableSections(
-							<?php echo wp_json_encode( $sortable_sections_ids ); ?>
-						)'
+					x-data="tutorSortableSections(
+							<?php echo esc_attr( tutor_json_encode( $sortable_sections_ids ) ); ?>
+						)"
 				>
 					<?php foreach ( $sortable_sections as $section ) : ?>
 						<div
@@ -195,10 +195,10 @@ $sortable_sections_ids = array_values( array_column( $sortable_sections, 'id' ) 
 	<?php foreach ( $sortable_sections as $section ) : ?>
 		<div 
 			data-section-id="<?php echo esc_attr( $section['id'] ); ?>"
-			x-show="watch('<?php echo esc_attr( $section['id'] ); ?>') && (isLoading || hasData)"
+			x-show="watch('<?php echo esc_js( $section['id'] ); ?>') && (isLoading || hasData)"
 			<?php echo empty( $section['is_active'] ) ? 'style="display: none;"' : ''; ?>
 			x-data="tutorLazySection({
-				section: '<?php echo esc_attr( $section['id'] ); ?>',
+				section: '<?php echo esc_js( $section['id'] ); ?>',
 				dateDependent: <?php echo ! empty( $section['date_dependent'] ) ? 'true' : 'false'; ?>,
 				sortDependent: <?php echo ! empty( $section['sort_dependent'] ) ? 'true' : 'false'; ?>
 			})"

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
 use Tutor\GDPR\Controllers\LegalConsent;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 

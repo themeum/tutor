@@ -14,7 +14,7 @@ use AllowDynamicProperties;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\GDPR\Controllers\UserConsent;
 use Tutor\GDPR\DB\DB;
-use TUTOR\Singleton;
+use Tutor\Core\Singleton;
 
 defined( 'ABSPATH' ) || exit;
 

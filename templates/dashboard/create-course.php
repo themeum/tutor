@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 get_tutor_header( true );
 

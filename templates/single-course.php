@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\EnrollmentModel;
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 $course_id     = get_the_ID();
 $course_rating = tutor_utils()->get_course_rating( $course_id );

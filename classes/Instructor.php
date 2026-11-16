@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 use DateInterval;
 use DateTime;
+use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
@@ -103,6 +104,19 @@ class Instructor {
 	}
 
 	/**
+	 * Check if applying to become an instructor is allowed.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return bool
+	 */
+	public static function can_apply_for_instructor(): bool {
+		$is_enabled = (bool) tutor_utils()->get_option( 'enable_become_instructor_btn' );
+
+		return apply_filters( 'tutor_can_apply_for_instructor', $is_enabled );
+	}
+
+	/**
 	 * Template Redirect Callback
 	 * For Register new user and mark him as instructor
 	 *
@@ -165,8 +179,8 @@ class Instructor {
 			return;
 		}
 
-		$first_name = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name  = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
@@ -248,6 +262,10 @@ class Instructor {
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
+		if ( ! self::can_apply_for_instructor() ) {
+			wp_die( esc_html__( 'Become an instructor is currently disabled.', 'tutor' ), 403 );
+		}
+
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
 			if ( tutor_utils()->is_instructor() ) {
@@ -312,14 +330,14 @@ class Instructor {
 			wp_send_json_error( array( 'errors' => $validation_errors ) );
 		}
 
-		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$first_name              = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'first_name' ), ENT_QUOTES ) ) );
+		$last_name               = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email                   = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
+		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',
@@ -849,15 +867,12 @@ class Instructor {
 						WHERE {$earning_where_clause}
 						GROUP BY earnings.course_id";
 
-		$enrollment_sql = QueryHelper::prepare_raw_query(
-			"SELECT 
-				post_parent AS course_id, 
-				COUNT(DISTINCT post_author) AS total_student
-			FROM {$wpdb->posts}
-			WHERE {$enrollment_where_clause}
-			GROUP BY post_parent",
-			array()
-		);
+		$enrollment_sql = "SELECT 
+							post_parent AS course_id, 
+							COUNT(DISTINCT post_author) AS total_student
+						FROM {$wpdb->posts}
+						WHERE {$enrollment_where_clause}
+						GROUP BY post_parent";
 
 		//phpcs:disabled
 		$result = $wpdb->get_results(

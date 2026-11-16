@@ -9,7 +9,7 @@
  * @since 1.6.4
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
