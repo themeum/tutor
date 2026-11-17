@@ -21,6 +21,6 @@ $category = isset( $category ) ? $category : '';
 		</div>
 	<?php endif; ?>
 	<h3 class="tutor-progress-card-title tutor-line-clamp-2">
-		<?php the_title(); ?>
+		<?php echo esc_html( get_the_title() ); ?>
 	</h3>
 </div>

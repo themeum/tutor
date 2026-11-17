@@ -25,7 +25,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 	<div class="tutor-course-thumbnail">
 		<a href="<?php the_permalink(); ?>" class="tutor-d-block">
 			<div class="tutor-ratio tutor-ratio-16x9">
-				<img class="tutor-card-image-top" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+				<img class="tutor-card-image-top" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
 			</div>
 		</a>
 	</div>
@@ -50,9 +50,9 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 				<?php endif; ?>
 			</div>
 		</div>
-		<h3 class="tutor-course-name tutor-fs-5 tutor-fw-medium" title="Woocommerce Auto Cancel">
+		<h3 class="tutor-course-name tutor-fs-5 tutor-fw-medium" title="<?php the_title_attribute(); ?>">
 			<a href="<?php the_permalink(); ?>" target="_parent">
-				<?php the_title(); ?>
+				<?php echo esc_html( get_the_title() ); ?>
 			</a>
 		</h3>
 		<!-- course meta  -->
