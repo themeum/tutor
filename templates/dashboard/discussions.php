@@ -16,7 +16,7 @@ use Tutor\Components\Nav;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Lesson;
 use TUTOR\Q_And_A;
 

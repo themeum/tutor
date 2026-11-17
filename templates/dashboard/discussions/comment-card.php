@@ -47,7 +47,9 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0">
+					<?php echo esc_html( tutor_utils()->display_name( $lesson_comment->user_id ) ); ?>
+				</div>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
 					<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-min-w-0">
 						<span class="tutor-text-subdued tutor-flex-shrink-0"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
@@ -119,7 +121,7 @@ $single_url = UrlHelper::add_query_params(
 								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo (int) $lesson_comment->comment_ID; ?> }); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

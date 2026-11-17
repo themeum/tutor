@@ -278,9 +278,9 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 
 					<td>
 					<?php
-					add_filter( 'wp_kses_allowed_html', 'TUTOR\Input::allow_svg' );
+					add_filter( 'wp_kses_allowed_html', 'Tutor\Core\Input::allow_svg' );
 					echo wp_kses_post( $meta['content'] );
-					remove_filter( 'wp_kses_allowed_html', 'TUTOR\Input::allow_svg' );
+					remove_filter( 'wp_kses_allowed_html', 'Tutor\Core\Input::allow_svg' );
 					?>
 					</td>
 				</tr>

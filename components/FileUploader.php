@@ -565,6 +565,7 @@ class FileUploader extends BaseComponent {
 
 		// Remove Alpine specific attributes from HTML attributes.
 		unset( $uploader_attributes['onFileSelect'] );
+		unset( $uploader_attributes['onFileRemove'] );
 		unset( $uploader_attributes['onError'] );
 
 		$this->attributes = $uploader_attributes;

@@ -9,6 +9,15 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Group field settings.
+ *
+ * @var string $input_name
+ * @var mixed  $input_value
+ * @var string $label
+ */
 ?>
 <input type="number" class="tutor-form-control" name="<?php echo esc_attr( $input_name ); ?>" value="<?php echo esc_attr( $input_value ); ?>" min="0">
 <?php

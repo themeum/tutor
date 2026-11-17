@@ -10,11 +10,10 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\UrlHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Core\Input;
+use Tutor\Helpers\UrlHelper;
 
 /**
  * Handle template before include
@@ -142,7 +141,7 @@ class Template extends Tutor_Base {
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
+		add_filter( 'template_include', array( $this, 'load_learning_template' ), 99 );
 
 		$this->shortcode_obj = new Shortcode( false );
 	}
@@ -484,14 +483,12 @@ class Template extends Tutor_Base {
 						 * @since 1.3.4
 						 */
 						$query_var           = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
-						$dashboard_pages     = tutor_utils()->tutor_dashboard_pages();
-						$dashboard_page_item = tutor_utils()->array_get( $query_var, $dashboard_pages );
+						$dashboard_page_item = tutor_utils()->array_get( $query_var, $get_dashboard_config );
 						$auth_cap            = tutor_utils()->array_get( 'auth_cap', $dashboard_page_item );
 
 						$can_access_instructor_item = tutor()->instructor_role === $auth_cap && User::can_view_instructor_dashboard();
 
-						if ( $auth_cap && ! User::is_admin() && ! current_user_can( $auth_cap ) && ! $can_access_instructor_item
-						) {
+						if ( $auth_cap && ! User::is_admin() && ! $can_access_instructor_item ) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
 

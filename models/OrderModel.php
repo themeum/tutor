@@ -1028,7 +1028,6 @@ class OrderModel {
 	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC', $args = array() ) {
 		$user_id           = tutor_utils()->get_user_id( $user_id );
 		$order             = QueryHelper::get_valid_sort_order( $order );
-		$order_status      = esc_sql( $order_status );
 		$order_type_clause = '';
 
 		$response = array(
@@ -1038,12 +1037,19 @@ class OrderModel {
 
 		global $wpdb;
 
+		$params              = array( $user_id );
 		$time_period_clause  = '';
 		$date_range_clause   = '';
-		$order_status_clause = ( empty( $order_status ) || 'all' === $order_status ) ? '' : "AND o.order_status = '{$order_status}'";
+		$order_status_clause = '';
 
 		if ( $start_date && $end_date ) {
-			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
+			$formatted_start = tutor_get_formated_date( 'Y-m-d', $start_date );
+			$formatted_end   = tutor_get_formated_date( 'Y-m-d', $end_date );
+			if ( '' !== $formatted_start && '' !== $formatted_end ) {
+				$date_range_clause = 'AND DATE(created_at_gmt) BETWEEN CAST(%s AS DATE) AND CAST(%s AS DATE)';
+				$params[]          = $formatted_start;
+				$params[]          = $formatted_end;
+			}
 		} elseif ( $time_period ) {
 			if ( 'today' === $time_period ) {
 				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
@@ -1054,16 +1060,26 @@ class OrderModel {
 			}
 		}
 
-		if ( ! empty( $args['order_type'] ) ) {
-			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => esc_sql( $args['order_type'] ) ) );
+		if ( ! empty( $order_status ) && 'all' !== $order_status ) {
+			$order_status_clause = 'AND o.order_status = %s';
+			$params[]            = sanitize_key( $order_status );
 		}
+
+		if ( ! empty( $args['order_type'] ) ) {
+			$order_type_clause = ' AND ' . QueryHelper::prepare_where_clause( array( 'o.order_type' => sanitize_key( $args['order_type'] ) ) );
+		}
+
+		$limit    = absint( $limit );
+		$offset   = absint( $offset );
+		$params[] = $limit;
+		$params[] = $offset;
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
 				SQL_CALC_FOUND_ROWS
 				o.* 
-				FROM $this->table_name AS o
+				FROM {$this->table_name} AS o
 				WHERE o.user_id = %d
 				{$order_type_clause}
 				{$time_period_clause}
@@ -1072,9 +1088,7 @@ class OrderModel {
 				ORDER BY o.id {$order}
 				LIMIT %d OFFSET %d
 			",
-			$user_id,
-			$limit,
-			$offset
+			$params
 		);
 
 		$results = $wpdb->get_results( $query );
@@ -1199,7 +1213,10 @@ class OrderModel {
 			//phpcs:enable
 		} else {
 			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1242,6 +1259,8 @@ class OrderModel {
 			'total_discounts' => 0,
 		);
 
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
+
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
 				$total_discount  += $discount->total;
@@ -1250,13 +1269,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = User::is_admin() && is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = $is_backend_admin ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = User::is_admin() && is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = $is_backend_admin ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1317,11 +1336,7 @@ class OrderModel {
 			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 		}
 
-		if ( $course_id ) {
-			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
-		} elseif ( $user_id ) {
+		if ( $course_id && $user_id ) {
 			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
@@ -1379,9 +1394,11 @@ class OrderModel {
 			);
 			//phpcs:enable
 		} else {
-			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} WHERE user_id = {$user_id} LIMIT 1)";
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1408,21 +1425,22 @@ class OrderModel {
 			//phpcs:enable
 		}
 
-		$total_refund = 0;
+		$total_refund     = 0;
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
 
 		foreach ( $refunds as $refund ) {
 			$total_refund += $refund->total;
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = User::is_admin() && is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = $is_backend_admin ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => User::is_admin() && is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => $is_backend_admin ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
@@ -1979,11 +1997,23 @@ class OrderModel {
 	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
 
-		$order_clause = '';
+		$allowed_order_by = array(
+			'earning_id'         => 'statements.earning_id',
+			'order_id'           => 'statements.order_id',
+			'course_id'          => 'statements.course_id',
+			'course_price_total' => 'statements.course_price_total',
+			'order_total_price'  => 'order_total_price',
+			'instructor_amount'  => 'statements.instructor_amount',
+			'admin_amount'       => 'statements.admin_amount',
+			'created_at'         => 'statements.created_at',
+			'course_title'       => 'course.post_title',
+			'post_title'         => 'course.post_title',
+		);
 
-		if ( sanitize_sql_orderby( $order ) ) {
-			$order_clause = "ORDER BY {$order_by} {$order}";
-		}
+		$order_by_clean  = strtolower( trim( (string) $order_by ) );
+		$order_by_column = isset( $allowed_order_by[ $order_by_clean ] ) ? $allowed_order_by[ $order_by_clean ] : 'statements.earning_id';
+		$order_direction = QueryHelper::get_valid_sort_order( $order );
+		$order_clause    = "ORDER BY {$order_by_column} {$order_direction}";
 
 		//phpcs:disable
 		$statements = $wpdb->get_results(

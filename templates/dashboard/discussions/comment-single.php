@@ -25,7 +25,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Variant;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Lesson;
 use TUTOR\User;
 
@@ -67,7 +67,6 @@ $action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comm
 				->flip_rtl()
 				->tag( 'a' )
 				->attr( 'href', esc_url( $action_url ) )
-				->attr( 'target', '_blank' )
 				->attr( 'rel', 'noopener noreferrer' )
 				->render();
 			?>
@@ -78,7 +77,9 @@ $action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comm
 			<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_40 )->render(); ?>
 			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0">
+						<?php echo esc_html( tutor_utils()->display_name( $lesson_comment->user_id ) ); ?>
+					</span> 
 					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
 							/* translators: %s human-readable time difference. */
@@ -121,7 +122,7 @@ $action_url = add_query_arg( 'page_tab', 'comments', get_permalink( $lesson_comm
 								<?php SvgIcon::make()->name( Icon::EDIT_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }); hide()">
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('<?php echo esc_js( $comment_delete_modal_id ); ?>', { commentId: <?php echo (int) $lesson_comment->comment_ID; ?> }); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

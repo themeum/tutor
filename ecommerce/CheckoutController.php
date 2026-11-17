@@ -13,7 +13,7 @@ namespace Tutor\Ecommerce;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\GDPR\Controllers\LegalConsent;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
@@ -406,6 +406,11 @@ class CheckoutController {
 	 */
 	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
+		$item_ids = array_unique( array_map( 'intval', $item_ids ) );
+		if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			$item_ids = array_values( array_filter( $item_ids, array( CourseModel::class, 'is_course_accessible' ) ) );
+		}
+
 		$response = array();
 		$user_id  = get_current_user_id();
 
@@ -433,7 +438,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, 0, 0, $item_ids );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
@@ -624,6 +629,7 @@ class CheckoutController {
 			}
 		}
 
+		//phpcs:ignore
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			array_push( $errors, $validate_consent->get_error_message() );
@@ -645,20 +651,16 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		} elseif ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
 			foreach ( $object_ids as $object_id ) {
-				$can_buy = apply_filters( 'tutor_can_purchase_course', true, $object_id );
-				if ( is_wp_error( $can_buy ) ) {
-					array_push( $errors, $can_buy->get_error_message() );
+				$can_purchase = apply_filters( 'tutor_can_purchase_course', true, $object_id );
+				if ( is_wp_error( $can_purchase ) ) {
+					array_push( $errors, $can_purchase->get_error_message() );
 				}
 			}
 		} elseif ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-			$item_id = $object_ids[0] ?? 0;
-			if ( $item_id ) {
-				$plan = apply_filters( 'tutor_get_plan_info', null, $item_id );
-				if ( ! $plan ) {
-					array_push( $errors, __( 'Invalid plan', 'tutor' ) );
-				}
-			} else {
-				array_push( $errors, __( 'Invalid plan', 'tutor' ) );
+			$plan_id      = absint( $object_ids[0] ?? 0 );
+			$can_purchase = apply_filters( 'tutor_can_purchase_plan', true, $plan_id );
+			if ( is_wp_error( $can_purchase ) ) {
+				array_push( $errors, $can_purchase->get_error_message() );
 			}
 		} else {
 			array_push( $errors, __( 'Invalid order type', 'tutor' ) );
@@ -671,7 +673,7 @@ class CheckoutController {
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
+			$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $current_user_id ) );
 			if ( ! $update_billing ) {
 				array_push( $errors, __( 'Billing information update failed!', 'tutor' ) );
 			}
@@ -767,6 +769,20 @@ class CheckoutController {
 			}
 
 			if ( ! empty( $order_data ) ) {
+				$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
+				$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
+				if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
+					$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
+					if ( ! $reserved ) {
+						// Mark order cancelled and return error so student can re-try.
+						$order_model = new OrderModel();
+						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+						$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
+						set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, array( $err_msg ) );
+						return;
+					}
+				}
+
 				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
 				if ( 'automate' === $payment_type ) {
 					try {
@@ -860,7 +876,7 @@ class CheckoutController {
 				);
 			}
 
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( in_array( $order_type, array( OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ), true ) ) {
 				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;
@@ -887,6 +903,7 @@ class CheckoutController {
 			'subtotal'           => floatval( $subtotal_price ),
 			'total_price'        => floatval( $total_price ),
 			'order_id'           => $order_id,
+			'order_user_id'      => $order_user_id,
 			'store_name'         => $site_name,
 			'order_description'  => 'Tutor Order',
 			'tax'                => 0,
@@ -922,7 +939,7 @@ class CheckoutController {
 	public static function prepare_recurring_payment_data( int $order_id ) {
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		if ( ! $order_data ) {
-			throw new \Exception( __( 'Order not found!', 'tutor' ) );
+			throw new \Exception( esc_html( __( 'Order not found!', 'tutor' ) ) );
 		}
 
 		$amount = $order_data->total_price;
@@ -976,6 +993,7 @@ class CheckoutController {
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
 			'order_id'         => $order_id,
+			'order_user_id'    => $order_user_id,
 			'customer'         => (object) $customer_info,
 			'shipping_address' => (object) $shipping_and_billing,
 		);
@@ -1152,7 +1170,7 @@ class CheckoutController {
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
-							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
+							$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $order_data->user_id ) );
 
 							if ( ! $update_billing ) {
 								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
@@ -1178,7 +1196,26 @@ class CheckoutController {
 						}
 					}
 
-					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					// Revalidate coupon before proceeding to payment.
+					if ( ! empty( $order_data->coupon_code ) ) {
+						$coupon = $this->coupon_model->get_coupon_by_code( $order_data->coupon_code );
+						if ( ! $coupon || ! $this->coupon_model->is_coupon_valid( $coupon, (int) $order_data->user_id, (int) $order_id ) ) {
+							$err_msg = __( 'The coupon applied to this order is no longer valid or its usage limit has been reached.', 'tutor' );
+							tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $err_msg );
+							return;
+						}
+
+						// Renew reservation hold for this payment attempt.
+						$reserved = $this->coupon_model->reserve_coupon_usage( (int) $order_id, $order_data->coupon_code, (int) $order_data->user_id, 30 );
+						if ( ! $reserved ) {
+							$err_msg = __( 'The coupon applied to this order is no longer available.', 'tutor' );
+							tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $err_msg );
+							return;
+						}
+					}
+
+					// $payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					$payment_data = $this->prepare_payment_data( (array) $order_data );
 					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );

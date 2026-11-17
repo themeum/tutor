@@ -59,7 +59,20 @@ window.jQuery(document).ready(function($) {
 						}
 
 						if (redirect !== undefined) {
-							window.location.assign(redirect);
+							// Security fix: validate URL before navigating.
+							// Only allow http(s) same-origin redirects to prevent javascript: XSS
+							// and open redirect to external origins.
+							try {
+								const target = new URL(redirect, window.location.origin);
+								if (
+									(target.protocol === 'http:' || target.protocol === 'https:') &&
+									target.origin === window.location.origin
+								) {
+									window.location.assign(target.href);
+								}
+							} catch (e) {
+								// Invalid URL — ignore.
+							}
 						}
 						return;
 					}
@@ -97,15 +110,10 @@ window.jQuery(document).ready(function($) {
 		'input',
 		'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]',
 		function() {
-			var value = $(this).val(); 
-			if (value == '') {
-				$(this).val('');
-				return;
-			}
+			var value = $(this).val();
 			// Allow only 2 decimal places.
 			if (value.includes('.')) {
 				var decimal = String(value).split('.')[1].length;
-				console.log( decimal);
 				if (decimal > 2) {
 					$(this).val(parseFloat(value).toFixed(2));
 				}

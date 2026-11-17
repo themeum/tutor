@@ -15,7 +15,7 @@ use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 

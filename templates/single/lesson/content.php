@@ -78,7 +78,7 @@ tutor_load_template(
 		$json_data['lesson_completed']                = tutor_utils()->is_completed_lesson( $content_id, get_current_user_id() ) !== false;
 		$json_data['is_enrolled']                     = EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) !== false;
 		?>
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( wp_json_encode( $json_data ) ); ?>">
+		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( tutor_json_encode( $json_data ) ); ?>">
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
 		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>
@@ -88,7 +88,7 @@ tutor_load_template(
 	$referer_url        = wp_get_referer();
 	$referer_comment_id = explode( '#', filter_input( INPUT_SERVER, 'REQUEST_URI' ) ?? '' );
 	$url_components     = parse_url( $referer_url );
-	$page_tab           = \TUTOR\Input::get( 'page_tab', 'overview' );
+	$page_tab           = \Tutor\Core\Input::get( 'page_tab', 'overview' );
 
 	isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
 

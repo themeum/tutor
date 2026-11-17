@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 export type RevealQuestionType = (typeof QUIZ_REVEAL_CONFIG.SUPPORTED_TYPES)[number];
 
 export const QUIZ_REVEAL_CONFIG = {
-  ANSWER_CONTEXT_ID: 'tutor-quiz-context',
   DEFAULT_WAIT_MS: 2000,
   SUPPORTED_TYPES: ['true_false', 'single_choice', 'multiple_choice'] as const,
   OPTION_SELECTOR: '.tutor-quiz-question-option',
@@ -11,7 +10,6 @@ export const QUIZ_REVEAL_CONFIG = {
   EXPLANATION_SELECTOR: '[data-quiz-explanation]',
   EXPLANATION_TRIGGER_SELECTOR: '[data-quiz-explanation-toggle]',
   EXPLANATION_BODY_SELECTOR: '.tutor-quiz-explanation-body',
-  EXPLANATION_CONTENT_DATASET: 'quizExplanationContent',
   DATA_OPTION_ATTR: 'data-option',
   DATA_REVEALED_ATTR: 'data-revealed',
   DATA_RESULT_ATTR: 'data-reveal-result',

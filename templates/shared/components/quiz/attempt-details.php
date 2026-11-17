@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 use TUTOR\Quiz_Attempts_List;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Components\EmptyState;
 use Tutor\Models\QuizModel;
 use Tutor\Components\Button;

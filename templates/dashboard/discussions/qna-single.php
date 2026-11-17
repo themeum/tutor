@@ -23,7 +23,7 @@ use TUTOR\Icon;
 use Tutor\Components\SvgIcon;
 use Tutor\Components\Constants\Color;
 use Tutor\Components\Constants\Variant;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\User;
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );
@@ -55,7 +55,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 		<div class="tutor-flex tutor-gap-2">
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'solved')"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved'">
@@ -76,7 +76,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'important')"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important'">
@@ -105,7 +105,6 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 				->flip_rtl()
 				->tag( 'a' )
 				->attr( 'href', esc_url( $action_url ) )
-				->attr( 'target', '_blank' )
 				->attr( 'rel', 'noopener noreferrer' )
 				->render();
 			?>
@@ -116,7 +115,9 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 			<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
 			<div class="tutor-min-w-0 tutor-flex-1">
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author tutor-flex-shrink-0">
+						<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+					</span> 
 					<span class="tutor-text-secondary tutor-flex-shrink-0">
 						<?php
 							/* translators: %s human-readable time difference. */
@@ -156,7 +157,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 							<?php if ( User::is_instructor_view() ) : ?>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5"
-								@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'archived')"
+								@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'archived')"
 								:disabled="qnaSingleActionMutation?.isPending"
 							>
 								<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived'">
@@ -165,7 +166,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 								<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived')">
 									<?php SvgIcon::make()->name( Icon::ARCHIVE_2 )->size( 20 )->render(); ?> 
 								</template>
-								<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
+								<span x-text="isArchived ? <?php echo esc_attr( tutor_json_encode( __( 'Un-Archive', 'tutor' ) ) ); ?> : <?php echo esc_attr( tutor_json_encode( __( 'Archive', 'tutor' ) ) ); ?>"></span>
 							</button>
 							<?php endif; ?>
 							<?php if ( $is_user_asker ) : ?>
@@ -176,7 +177,7 @@ $action_url = add_query_arg( 'page_tab', 'qna', get_permalink( $question->commen
 							<?php endif; ?>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5"
-								@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo esc_html( $question->comment_ID ); ?> }); hide();"
+								@click="TutorCore.modal.showModal('<?php echo esc_js( $qna_delete_modal_id ); ?>', { question_id: <?php echo (int) $question->comment_ID; ?> }); hide();"
 							>
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

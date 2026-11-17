@@ -7,7 +7,12 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var mixed $this
+ * @var array $field
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );

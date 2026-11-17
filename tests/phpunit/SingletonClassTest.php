@@ -8,7 +8,7 @@
 
 namespace TutorTest;
 
-use TUTOR\Singleton;
+use Tutor\Core\Singleton;
 
 /**
  * MySingletonClass class

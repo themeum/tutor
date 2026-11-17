@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
          * @returns {object} JSON object.
          */
         function getCheckoutData() {
-            let jsonStr = document.querySelector('#checkout_data')?.value
-            return JSON.parse(jsonStr)
+            let jsonStr = document.querySelector('#checkout_data')?.value;
+            return jsonStr ? JSON.parse(jsonStr) : null;
         }
 
         /**
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkoutData = getCheckoutData();
 
             if (isTaxManagedByTutor(paymentMethodName)) {
-                grandTotal.innerHTML = checkoutData.formatted_total_price;
+                grandTotal.innerHTML = checkoutData?.formatted_total_price;
                 inclTaxLabels.forEach(label => label.classList.remove('tutor-d-none'));
                 taxAmount?.classList.remove('tutor-d-none');
             } else {
-                grandTotal.innerHTML = checkoutData.formatted_total_price_without_tax;
+                grandTotal.innerHTML = checkoutData?.formatted_total_price_without_tax;
                 inclTaxLabels.forEach(label => label.classList.add('tutor-d-none'));
                 taxAmount?.classList.add('tutor-d-none');
             }
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkoutData = getCheckoutData();
             const formData = new FormData(e.target);
 
-            if (checkoutData.payment_method_required && !formData.get('payment_method')) {
+            if (checkoutData?.payment_method_required && !formData.get('payment_method')) {
                 tutor_toast(__('Error', 'tutor'), __('Please select a payment method.', 'tutor'), 'error');
                 return;
             }
@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const formData = new FormData();
                 formData.set('billing_country', country);
+                formData.set('partial_update', '1');
 
                 await saveBilling(formData);
                 await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
@@ -311,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.set('billing_country', country);
                 formData.set('billing_state', state);
+                formData.set('partial_update', '1');
 
                 await saveBilling(formData);
                 await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
@@ -327,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
          */
         function handleSinglePaymentOptionSelection() {
             const checkoutData = getCheckoutData();
-            if (!checkoutData.payment_method_required) {
+            if (!checkoutData?.payment_method_required) {
                 return;
             }
 

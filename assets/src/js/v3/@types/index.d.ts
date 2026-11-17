@@ -4,7 +4,7 @@ import { type InjectionSlots } from '@TutorShared/utils/types';
 
 import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 
-export type { };
+export type {};
 
 interface Tutor {
   readonly CourseBuilder: {
@@ -199,6 +199,8 @@ declare global {
         enable_quiz_negative_marking: 'on' | 'off';
         quiz_negative_mark_type: 'percent' | 'fixed';
         quiz_negative_mark_value: string | number;
+        course_completion_process: 'flexible' | 'strict';
+        control_video_lesson_completion: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;

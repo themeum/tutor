@@ -42,7 +42,7 @@ use Tutor\Components\Constants\Color;
 				<div class="tutor-flex-1">
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 						<span class="tutor-discussion-card-author">
-							<?php echo esc_html( $reply->comment_author ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $reply->user_id ) ); ?>
 						</span>
 						<span class="tutor-text-secondary">
 							<?php
@@ -68,7 +68,7 @@ use Tutor\Components\Constants\Color;
 							</button>
 							<button 
 								class="tutor-popover-menu-item tutor-gap-5" 
-								@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $reply->comment_ID ); ?>, context: 'reply' }); hide()">
+								@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo (int) $reply->comment_ID; ?>, context: 'reply' }); hide()">
 								<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>

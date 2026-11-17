@@ -10,11 +10,10 @@
 
 namespace TUTOR;
 
-use Tutor\Models\CourseModel;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Core\Input;
+use Tutor\Models\CourseModel;
 
 /**
  * Short code class

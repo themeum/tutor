@@ -10,7 +10,7 @@
  * @since 1.0.0
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
 // Get the accessed user data.

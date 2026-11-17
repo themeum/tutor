@@ -16,7 +16,7 @@ use TUTOR\Course;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
@@ -916,6 +916,7 @@ class CouponController extends BaseController {
 	 * Store usage upon order completion
 	 *
 	 * @since 3.0.0
+	 * @since 4.2.0 Promote reserved usage or insert consumed usage.
 	 *
 	 * @param int $order_id Order id.
 	 *
@@ -927,19 +928,57 @@ class CouponController extends BaseController {
 		$order = $order_model->get_order_by_id( $order_id );
 		if ( $order ) {
 			if ( $order->coupon_amount > 0 && $order_model::ORDER_COMPLETED === $order->order_status ) {
-				// Store coupon usage.
-				$data = array(
-					'coupon_code' => $order->coupon_code,
-					'user_id'     => $order->user_id,
-				);
+				// Promote existing reservation.
+				$promoted = $this->model->promote_coupon_usage( $order_id );
 
-				try {
-					$this->model->store_coupon_usage( $data );
-				} catch ( \Throwable $th ) {
-					tutor_log( $th );
+				// Fallback if no reservation existed (e.g. legacy or direct order).
+				if ( ! $promoted || 0 === $this->model->get_order_usage_count( $order_id ) ) {
+					$data = array(
+						'coupon_code'    => $order->coupon_code,
+						'user_id'        => $order->user_id,
+						'order_id'       => $order_id,
+						'status'         => CouponModel::STATUS_CONSUMED,
+						'expires_at_gmt' => null,
+						'created_at_gmt' => current_time( 'mysql', true ),
+					);
+
+					try {
+						$this->model->store_coupon_usage( $data );
+					} catch ( \Throwable $th ) {
+						tutor_log( $th );
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Reserve coupon usage for an order
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int    $order_id Order id.
+	 * @param string $coupon_code Coupon code.
+	 * @param int    $user_id User id.
+	 * @param int    $ttl_minutes Expiry in minutes. Default 30.
+	 *
+	 * @return bool
+	 */
+	public function reserve_coupon_usage( int $order_id, string $coupon_code, int $user_id, int $ttl_minutes = 30 ): bool {
+		return $this->model->reserve_coupon_usage( $order_id, $coupon_code, $user_id, $ttl_minutes );
+	}
+
+	/**
+	 * Cancel coupon usage for an order
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool
+	 */
+	public function cancel_coupon_usage( int $order_id ): bool {
+		return $this->model->cancel_coupon_usage( $order_id );
 	}
 
 	/**

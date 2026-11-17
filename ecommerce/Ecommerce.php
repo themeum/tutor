@@ -12,7 +12,7 @@ namespace Tutor\Ecommerce;
 
 use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\CouponModel;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\PaymentGateways\GatewayFactory;

@@ -9,7 +9,7 @@
  * @since 1.6.4
  */
 
-use TUTOR\Input;
+use Tutor\Core\Input;
 use TUTOR\Quiz;
 
 $previous_attempts           = tutor_utils()->quiz_attempts();
@@ -50,18 +50,24 @@ tutor_load_template_from_custom_path(
 );
 
 if ( $can_retry_quiz && $previous_attempts ) {
-	do_action( 'tutor_quiz/start_form/before', $quiz_id );
-	?>
-	<div class="tutor-quiz-btn-grp tutor-mt-32">
-		<form id="tutor-start-quiz" method="post">
-			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+	$has_supported_questions = Quiz::has_supported_questions( $quiz_id );
+	if ( ! $has_supported_questions ) {
+		Quiz::render_unavailable_quiz_notice( 'tutor-mt-32' );
+	} else {
+		do_action( 'tutor_quiz/start_form/before', $quiz_id );
+		?>
+		<div class="tutor-quiz-btn-grp tutor-mt-32">
+			<form id="tutor-start-quiz" method="post">
+				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-			<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
-			<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+				<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
+				<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-			<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
-				<?php esc_html_e( 'Start Quiz', 'tutor' ); ?>
-			</button>
-		</form>
-	</div>
-<?php } ?>
+				<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
+					<?php esc_html_e( 'Start Quiz', 'tutor' ); ?>
+				</button>
+			</form>
+		</div>
+		<?php
+	}
+}

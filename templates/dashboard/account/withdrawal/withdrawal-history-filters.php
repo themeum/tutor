@@ -18,7 +18,7 @@ use Tutor\Components\DateFilter;
 use Tutor\Components\DropdownFilter;
 use Tutor\Components\Sorting;
 use TUTOR\Dashboard;
-use TUTOR\Input;
+use Tutor\Core\Input;
 use Tutor\Models\WithdrawModel;
 
 $status_filter_options = WithdrawModel::get_status_filter_options();

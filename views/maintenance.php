@@ -8,6 +8,8 @@
  * @since 1.5.8
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>

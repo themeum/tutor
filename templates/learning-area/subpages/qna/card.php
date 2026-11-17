@@ -54,7 +54,9 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
+				<div class="tutor-discussion-card-author">
+					<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+				</div>
 				<div class="tutor-text-tiny tutor-text-subdued">
 					<?php
 						/* translators: %s human-readable time difference. */
@@ -123,7 +125,7 @@ $single_url = UrlHelper::add_query_params(
 						</button>
 						<button
 							class="tutor-popover-menu-item tutor-gap-5 tutor-sm-border-t"
-							@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo esc_html( $question_id ); ?> });"
+							@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { question_id: <?php echo (int) $question_id; ?> });"
 						>
 							<?php SvgIcon::make()->name( Icon::DELETE_2 )->size( 20 )->render(); ?>
 							<?php esc_html_e( 'Delete', 'tutor' ); ?>

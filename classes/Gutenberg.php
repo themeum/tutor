@@ -10,9 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\Input;
 
 /**
  * Gutenberg class
@@ -49,7 +49,7 @@ class Gutenberg {
 	 */
 	public function author_list_dropdown( $prepared_args, $request ) {
 		$url   = $request->get_header( 'referer' );
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		if ( ! isset( $parts['query'] ) ) {
 			return $prepared_args;
 		}
@@ -61,9 +61,11 @@ class Gutenberg {
 			return $prepared_args;
 		}
 
-		$post = get_post( $post_id );
+		$post = $post_id ? get_post( $post_id ) : null;
 
-		if ( tutor()->course_post_type === $post->post_type && tutor_utils()->get_option( 'enable_gutenberg_course_edit' ) === true ) {
+		if ( $post
+			&& tutor()->course_post_type === $post->post_type
+			&& tutor_utils()->get_option( 'enable_gutenberg_course_edit' ) === true ) {
 			// Modify the wp/v2/users endpoint request from gutenberg editor.
 			unset( $prepared_args['who'] );
 			$prepared_args['role__in'] = array( 'administrator', 'tutor_instructor' );
@@ -90,7 +92,7 @@ class Gutenberg {
 		}
 
 		register_block_type(
-			'tutor-gutenberg/student-registration',
+			tutor()->path . 'assets/blocks/student-registration',
 			array(
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_student_registration' ),
@@ -98,7 +100,7 @@ class Gutenberg {
 		);
 
 		register_block_type(
-			'tutor-gutenberg/instructor-registration',
+			tutor()->path . 'assets/blocks/instructor-registration',
 			array(
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_tutor_instructor_registration_form' ),
