@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const formData = new FormData();
                 formData.set('billing_country', country);
+                formData.set('partial_update', '1');
 
                 await saveBilling(formData);
                 await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
@@ -311,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.set('billing_country', country);
                 formData.set('billing_state', state);
+                formData.set('partial_update', '1');
 
                 await saveBilling(formData);
                 await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);

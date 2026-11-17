@@ -1213,7 +1213,10 @@ class OrderModel {
 			//phpcs:enable
 		} else {
 			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1256,6 +1259,8 @@ class OrderModel {
 			'total_discounts' => 0,
 		);
 
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
+
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
 				$total_discount  += $discount->total;
@@ -1264,13 +1269,13 @@ class OrderModel {
 				// Split each discount.
 				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
 
-				$discount->total = User::is_admin() && is_admin() ? $admin_discount : $instructor_discount;
+				$discount->total = $is_backend_admin ? $admin_discount : $instructor_discount;
 			}
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response['discounts']       = $discount_items;
-			$response['total_discounts'] = User::is_admin() && is_admin() ? $admin_total : $instructor_total;
+			$response['total_discounts'] = $is_backend_admin ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -1331,11 +1336,7 @@ class OrderModel {
 			$select_query = " DATE_FORMAT(order_meta.created_at_gmt, '%%b') AS label_name ";
 		}
 
-		if ( $course_id ) {
-			if ( $user_id ) {
-				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
-		} elseif ( $user_id ) {
+		if ( $course_id && $user_id ) {
 			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
@@ -1393,9 +1394,11 @@ class OrderModel {
 			);
 			//phpcs:enable
 		} else {
-			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
-				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} WHERE user_id = {$user_id} LIMIT 1)";
+				$user_clause = $wpdb->prepare(
+					"AND EXISTS ( SELECT 1 FROM {$wpdb->tutor_earnings} AS earnings WHERE earnings.order_id = o.id AND earnings.user_id = %d )",
+					$user_id
+				);
 			}
 
 			//phpcs:disable
@@ -1422,21 +1425,22 @@ class OrderModel {
 			//phpcs:enable
 		}
 
-		$total_refund = 0;
+		$total_refund     = 0;
+		$is_backend_admin = User::is_admin() && is_admin() && ! wp_doing_ajax();
 
 		foreach ( $refunds as $refund ) {
 			$total_refund += $refund->total;
 
 			// Update total amount from list.
 			$split_refund  = (object) tutor_split_amounts( $refund->total );
-			$refund->total = User::is_admin() && is_admin() ? $split_refund->admin : $split_refund->instructor;
+			$refund->total = $is_backend_admin ? $split_refund->admin : $split_refund->instructor;
 		}
 
 		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => User::is_admin() && is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+			'total_refunds' => $is_backend_admin ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;

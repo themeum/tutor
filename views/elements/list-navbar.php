@@ -9,6 +9,8 @@
  * @since 3.5.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( isset( $data ) && count( $data ) ) : ?>
 <div class="tutor-wp-dashboard-header tutor-py-16">
 	<div class="tutor-admin-container tutor-admin-container-lg">
@@ -34,7 +36,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				if ( ! empty( $data['modal_target'] ) ) :
 					?>
 					<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-						<button class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_attr( $data['modal_target'] ); ?>">
 							<i class="tutor-icon-plus-light"></i>
 							<span><?php echo esc_html( $data['button_title'] ); ?></span>
 						</button>

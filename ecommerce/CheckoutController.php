@@ -406,6 +406,11 @@ class CheckoutController {
 	 */
 	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
+		$item_ids = array_unique( array_map( 'intval', $item_ids ) );
+		if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			$item_ids = array_values( array_filter( $item_ids, array( CourseModel::class, 'is_course_accessible' ) ) );
+		}
+
 		$response = array();
 		$user_id  = get_current_user_id();
 
@@ -433,7 +438,7 @@ class CheckoutController {
 			}
 		}
 
-		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
+		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon, 0, 0, $item_ids );
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
@@ -668,7 +673,7 @@ class CheckoutController {
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
+			$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $current_user_id ) );
 			if ( ! $update_billing ) {
 				array_push( $errors, __( 'Billing information update failed!', 'tutor' ) );
 			}
@@ -772,7 +777,7 @@ class CheckoutController {
 						// Mark order cancelled and return error so student can re-try.
 						$order_model = new OrderModel();
 						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
-						$err_msg = __( 'Coupon is no longer available or usage limit exceeded!', 'tutor' );
+						$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
 						set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, array( $err_msg ) );
 						return;
 					}
@@ -871,7 +876,7 @@ class CheckoutController {
 				);
 			}
 
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( in_array( $order_type, array( OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ), true ) ) {
 				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;
@@ -1165,7 +1170,7 @@ class CheckoutController {
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
-							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
+							$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $order_data->user_id ) );
 
 							if ( ! $update_billing ) {
 								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );

@@ -104,6 +104,19 @@ class Instructor {
 	}
 
 	/**
+	 * Check if applying to become an instructor is allowed.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return bool
+	 */
+	public static function can_apply_for_instructor(): bool {
+		$is_enabled = (bool) tutor_utils()->get_option( 'enable_become_instructor_btn' );
+
+		return apply_filters( 'tutor_can_apply_for_instructor', $is_enabled );
+	}
+
+	/**
 	 * Template Redirect Callback
 	 * For Register new user and mark him as instructor
 	 *
@@ -147,6 +160,7 @@ class Instructor {
 			}
 		}
 
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_INS_REG, $_POST );
 		if ( is_wp_error( $validate_consent ) ) {
 			$validation_errors[ $validate_consent->get_error_code() ] = $validate_consent->get_error_message();
@@ -170,7 +184,9 @@ class Instructor {
 		$last_name  = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
-		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
+
+		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = array(
 			'user_login' => $user_login,
@@ -184,6 +200,7 @@ class Instructor {
 		$wpdb->query( 'START TRANSACTION' );
 		$user_id = wp_insert_user( $userdata );
 		if ( is_wp_error( $user_id ) ) {
+			$wpdb->query( 'ROLLBACK' );
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
@@ -193,13 +210,13 @@ class Instructor {
 
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
-			do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
 			$reg_done = apply_filters( 'tutor_registration_done', true );
 			if ( ! $reg_done ) {
 				$wpdb->query( 'ROLLBACK' );
 				return;
 			} else {
 				$wpdb->query( 'COMMIT' );
+				do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
 			}
 		} else {
 			/**
@@ -249,6 +266,10 @@ class Instructor {
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
+		if ( ! self::can_apply_for_instructor() ) {
+			wp_die( esc_html__( 'Become an instructor is currently disabled.', 'tutor' ), 403 );
+		}
+
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
 			if ( tutor_utils()->is_instructor() ) {
@@ -264,7 +285,7 @@ class Instructor {
 			die( esc_html__( 'Permission denied', 'tutor' ) );
 		}
 
-		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
+		wp_safe_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
 		die();
 	}
 
@@ -318,9 +339,11 @@ class Instructor {
 		$email                   = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
-		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
 		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
+
+		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',
@@ -742,8 +765,8 @@ class Instructor {
 			$instructor_course_ids
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$row = $wpdb->get_row(
+			// phpcs:ignore -- sql are safely prepared.
 			$wpdb->prepare( $sql, $prepare_args ),
 			ARRAY_A
 		);

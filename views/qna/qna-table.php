@@ -9,11 +9,16 @@
  * @since 2.0.0
  */
 
-extract( $data ); // $qna_list, $context, $qna_pagination, $view_as
+defined( 'ABSPATH' ) || exit;
+
+$data           = isset( $data ) && is_array( $data ) ? $data : array();
+$qna_list       = $data['qna_list'] ?? array();
+$context        = $data['context'] ?? '';
+$qna_pagination = $data['qna_pagination'] ?? array();
+$view_as        = $data['view_as'] ?? ( is_admin() ? 'instructor' : 'student' );
 
 $page_key      = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
-$view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 'student' );
 ?>
 <?php if ( is_array( $qna_list ) && count( $qna_list ) ) : ?>
 	<div class="tutor-table-responsive">
@@ -21,8 +26,8 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 			<thead>
 				<tr>
 					<?php foreach ( $table_columns as $key => $column ) : ?>
-						<th style="<?php echo esc_attr( 'question' == $key ? 'width: 40%;' : '' ); ?>">
-							<?php echo ( 'action' != $key ? $column : '' ); //phpcs:ignore -- contain safe data ?>
+						<th style="<?php echo esc_attr( 'question' === $key ? 'width: 40%;' : '' ); ?>">
+							<?php echo ( 'action' !== $key ? $column : '' ); //phpcs:ignore -- contain safe data ?>
 						</th>
 					<?php endforeach; ?>
 				</tr>
@@ -35,23 +40,23 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 					$id_string_delete = 'tutor_delete_qna_' . $qna->comment_ID;
 					$row_id           = 'tutor_qna_row_' . $qna->comment_ID;
 					$menu_id          = 'tutor_qna_menu_id_' . $qna->comment_ID;
-					$is_self          = $current_user_id == $qna->user_id;
-					$key_slug         = 'frontend-dashboard-qna-table-student' == $context ? '_' . $current_user_id : '';
+					$is_self          = (int) $current_user_id === (int) $qna->user_id;
+					$key_slug         = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
 
-					$meta         = $qna->meta;
+					$meta         = is_array( $qna->meta ?? null ) ? $qna->meta : array();
 					$is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved' . $key_slug, $meta, 0 );
 					$is_important = (int) tutor_utils()->array_get( 'tutor_qna_important' . $key_slug, $meta, 0 );
 					$is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived' . $key_slug, $meta, 0 );
 					$is_read      = (int) tutor_utils()->array_get( 'tutor_qna_read' . $key_slug, $meta, 0 );
 					?>
-					<tr id="<?php echo esc_attr( $row_id ); ?>" data-question_id="<?php echo esc_attr( $qna->comment_ID ); ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
+					<tr id="<?php echo esc_attr( $row_id ); ?>" data-question_id="<?php echo esc_attr( (string) $qna->comment_ID ); ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
 					<?php foreach ( $table_columns as $key => $column ) : ?>
 							<td>
-								<?php if ( 'checkbox' == $key ) : ?>
+								<?php if ( 'checkbox' === $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center">
-										<input id="tutor-admin-list-<?php echo esc_attr( $qna->comment_ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $qna->comment_ID ); ?>" />
+										<input id="tutor-admin-list-<?php echo esc_attr( (string) $qna->comment_ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( (string) $qna->comment_ID ); ?>" />
 									</div>
-								<?php elseif ( 'student' == $key ) : ?>
+								<?php elseif ( 'student' === $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 										<div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
 											<span
@@ -80,12 +85,12 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<?php echo esc_html( $qna->display_name ); ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
-												<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $qna->comment_date ) ); ?>
 											</div>
 										</div>
 									</div>
-								<?php elseif ( 'question' == $key ) : ?>
-									<?php $content = ( stripslashes( $qna->comment_content ) ); ?>
+								<?php elseif ( 'question' === $key ) : ?>
+									<?php $content = wp_strip_all_tags( stripslashes( $qna->comment_content ), true ); ?>
 									<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>">
 										<div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
 											<i class="tutor-icon-bullet-point tutor-form-feedback-icon" aria-hidden="true"></i>
@@ -93,9 +98,9 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
 													<?php
 														$limit   = 60;
-														$content = strlen( $content ) > $limit ? substr( $content, 0, $limit ) . '...' : $content;
+														$content = mb_strlen( $content ) > $limit ? mb_substr( $content, 0, $limit ) . '...' : $content;
 
-                                                        echo $content //phpcs:ignore
+														echo tutor()->has_pro ? wp_kses_post( $content ) : nl2br( esc_html( $content ) );
 													?>
 												</div>
 												<div class="tutor-fs-7 tutor-color-secondary">
@@ -105,18 +110,24 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 											</div>
 										</div>
 									</a>
-								<?php elseif ( 'reply' == $key ) : ?>
+								<?php elseif ( 'reply' === $key ) : ?>
 									<?php echo esc_html( $qna->answer_count ); ?>
-								<?php elseif ( 'waiting_since' == $key ) : ?>
-									<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
-								<?php elseif ( 'status' == $key ) : ?>
+								<?php elseif ( 'waiting_since' === $key ) : ?>
+									<?php
+									if ( $is_solved || (int) $qna->answer_count > 0 ) {
+										echo '&mdash;';
+									} else {
+										echo esc_html( human_time_diff( strtotime( $qna->comment_date_gmt ) ) );
+									}
+									?>
+								<?php elseif ( 'status' === $key ) : ?>
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
 										<span class="tooltip-txt tooltip-top">
 											<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Unresolved', 'tutor' ); ?>
 										</span>
 									</div>
-								<?php elseif ( 'action' == $key ) : ?>
+								<?php elseif ( 'action' === $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 										<?php
 											$query_args = array( 'question_id' => $qna->comment_ID );
@@ -133,7 +144,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 											</button>
 											<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-												<?php if ( 'frontend-dashboard-qna-table-student' != $context ) : ?>
+												<?php if ( 'frontend-dashboard-qna-table-student' !== $context ) : ?>
 													<li class="tutor-qna-badges tutor-qna-badges-wrapper">
 														<a class="tutor-dropdown-item" href="#" data-action="archived" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php esc_attr_e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php esc_attr_e( 'Un-archive', 'tutor' ); ?>">
 															<span class="tutor-icon-archive tutor-mr-8" data-state-class></span>
@@ -181,7 +192,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 															<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 																<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 															</button>
-															<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo esc_attr( $qna->comment_ID ); ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+															<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo esc_attr( (string) $qna->comment_ID ); ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
 																<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 															</button>
 														</div>
@@ -198,14 +209,14 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 			</tbody>
 		</table>
 
-		<?php if ( $qna_pagination['total_items'] > $qna_pagination['per_page'] ) : ?>
+		<?php if ( isset( $qna_pagination['total_items'], $qna_pagination['per_page'] ) && $qna_pagination['total_items'] > $qna_pagination['per_page'] ) : ?>
 			<div class="tutor-mt-32">
 				<?php
 					$pagination_data     = array(
 						'base'        => ! empty( $qna_pagination['base'] ) ? $qna_pagination['base'] : null,
 						'total_items' => $qna_pagination['total_items'],
 						'per_page'    => $qna_pagination['per_page'],
-						'paged'       => $qna_pagination['paged'],
+						'paged'       => isset( $qna_pagination['paged'] ) ? $qna_pagination['paged'] : 1,
 					);
 					$pagination_template = tutor()->path . 'views/elements/pagination.php';
 					tutor_load_template_from_custom_path( $pagination_template, $pagination_data );

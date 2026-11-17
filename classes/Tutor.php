@@ -10,16 +10,15 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\Input;
 use Tutor\Core\Singleton;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Migrations\Migration;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Tutor final class

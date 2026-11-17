@@ -10,10 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Traits\JsonResponse;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Manage setup functionalities

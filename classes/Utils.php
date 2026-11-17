@@ -13,6 +13,8 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Core\Input;
+use Tutor\Core\DB;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
@@ -3296,7 +3298,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int $course_id Course ID or Bundle ID.
 	 *
 	 * @return array|bool|null|object
 	 */
@@ -3349,7 +3351,7 @@ class Utils {
 					INNER JOIN {$wpdb->posts} course
 							ON _user.ID = course.post_author
 						   AND course.ID = %d
-						   AND course.post_type = %s
+						   AND course.post_type IN (%s, %s)
 					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
 						    ON _user.ID = tutor_job_title.user_id
 						   AND tutor_job_title.meta_key = %s
@@ -3362,6 +3364,7 @@ class Utils {
 			",
 				$course_id,
 				tutor()->course_post_type,
+				tutor()->bundle_post_type,
 				'_tutor_profile_job_title',
 				'_tutor_profile_bio',
 				'_tutor_profile_photo'
@@ -4176,8 +4179,8 @@ class Utils {
 
 		$course_filter = '';
 		if ( $course_id ) {
-			$course_ids    = is_array( $course_id ) ? $course_id : array( $course_id );
-			$course_ids    = array_filter( array_map( 'absint', $course_ids ) );
+			$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
+			$course_ids = array_filter( array_map( 'absint', $course_ids ) );
 			if ( ! empty( $course_ids ) ) {
 				$course_ids_str = QueryHelper::prepare_in_clause( $course_ids );
 				$course_filter  = " AND _comment.comment_post_ID IN ($course_ids_str)";
@@ -7680,6 +7683,7 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 *
 	 * @since 1.7.9
+	 * @since 4.2.1 tutor_announcements support added.
 	 *
 	 * @param int $content_id content id.
 	 *
@@ -7687,15 +7691,16 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'tutor_gm_course'    => 'tutor_gm_course',
-			'tutor_gm_topic'     => 'tutor_gm_topic',
-			'topics'             => 'topic',
-			'cb-lesson'          => 'cb-lesson',
+			'tutor_assignments'   => 'assignment',
+			'tutor_quiz'          => 'quiz',
+			'lesson'              => 'lesson',
+			'tutor_zoom_meeting'  => 'zoom_meeting',
+			'tutor_zoom_lesson'   => 'zoom_lesson',
+			'tutor_gm_course'     => 'tutor_gm_course',
+			'tutor_gm_topic'      => 'tutor_gm_topic',
+			'topics'              => 'topic',
+			'cb-lesson'           => 'cb-lesson',
+			'tutor_announcements' => 'announcement',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7759,14 +7764,15 @@ class Utils {
 			case 'review':
 			case 'qa_question':
 				// Just check if own content. Instructor privilege already checked in the earlier blocks.
-				$id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
-						$user_id,
-						$object_id
-					)
-				);
+				$comment_type = 'qa_question' === $content
+								? Q_And_A::COMMENT_TYPE
+								: Reviews::COURSE_RATING;
+
+				$id = DB::table( 'comments' )
+						->where( 'comment_type', $comment_type )
+						->where( 'user_id', $user_id )
+						->where( 'comment_ID', $object_id )
+						->value( 'comment_ID' );
 
 				return $id ? true : false;
 		}
@@ -10257,10 +10263,10 @@ class Utils {
 	 * @since 3.0.0
 	 *
 	 * @param string $base64_image_str base64 image string.
-	 * @param string $filename         filename.
-	 * @param bool   $add_to_media     Optional. Whether to add the file to WordPress media library. Default true.
+	 * @param string $filename          filename.
+	 * @param bool   $add_to_wp_media   Optional. Whether to add the file to WordPress media library. Default true.
 	 *
-	 * @return object consist of id, title, url. When $add_to_media is false, id is 0.
+	 * @return object consist of id, title, url. When $add_to_wp_media is false, id is 0.
 	 *
 	 * @throws \Exception If upload failed.
 	 */
@@ -10268,13 +10274,35 @@ class Utils {
 		try {
 			$image_data = null;
 
+			// Validation policy: accepted formats and limits for the stored image and the remote fetch.
+			$allowed          = array(
+				IMAGETYPE_PNG  => 'png',
+				IMAGETYPE_JPEG => 'jpg',
+				IMAGETYPE_WEBP => 'webp',
+			);
+			$max_image_bytes  = 10 * MB_IN_BYTES;
+			$max_image_pixels = 25 * 1000 * 1000; // 25 megapixels.
+			$fetch_timeout    = 30;
+
 			// Handle remote URLs.
 			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
-				$temp_file = download_url( $base64_image_str );
-				if ( is_wp_error( $temp_file ) ) {
-					throw new \Exception( $temp_file->get_error_message() );
+				$temp_file = wp_tempnam();
+				$response  = wp_safe_remote_get(
+					$base64_image_str,
+					array(
+						'timeout'             => $fetch_timeout,
+						'stream'              => true,
+						'filename'            => $temp_file,
+						'limit_response_size' => $max_image_bytes,
+					)
+				);
+
+				if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+					@unlink( $temp_file );
+					throw new \Exception( is_wp_error( $response ) ? $response->get_error_message() : 'Unable to download the image' );
 				}
+
 				$image_data = file_get_contents( $temp_file );
 				@unlink( $temp_file );
 			} else {
@@ -10293,7 +10321,25 @@ class Utils {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			if ( strlen( $image_data ) > $max_image_bytes ) {
+				throw new \Exception( 'Image file is too large' );
+			}
+
+			// Only real, supported image content is stored, regardless of the supplied name or MIME label.
+			$image_info = @getimagesizefromstring( $image_data );
+			$extension  = $allowed[ $image_info[2] ?? 0 ] ?? '';
+			if ( empty( $extension ) ) {
+				throw new \Exception( 'Invalid image file' );
+			}
+
+			// Reject decompression bombs; the pixel cap bounds the memory GD needs later.
+			if ( $image_info[0] * $image_info[1] > $max_image_pixels ) {
+				throw new \Exception( 'Image dimensions are too large' );
+			}
+
+			// Keep the stored extension in sync with the detected image type.
+			$filename = empty( $filename ) ? uniqid( 'image-' ) : pathinfo( $filename, PATHINFO_FILENAME );
+			$filename .= '.' . $extension;
 			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
@@ -10649,5 +10695,25 @@ class Utils {
 	 */
 	public function is_multi_dimensional_array( array $data ): bool {
 		return isset( $data[0] ) && is_array( $data[0] );
+	}
+
+	/**
+	 * Get admin user id.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return int
+	 */
+	public function get_admin_user_id(): int {
+		$admin = get_users(
+			array(
+				'role'    => User::ADMIN,
+				'number'  => 1,
+				'orderby' => 'ID',
+				'order'   => 'ASC',
+			)
+		);
+
+		return ! empty( $admin ) ? $admin[0]->ID : 0;
 	}
 }
