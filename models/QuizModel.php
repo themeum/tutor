@@ -247,7 +247,7 @@ class QuizModel {
 			}
 
 			// Common formatting logic.
-			$start_time = DateTimeHelper::create( $quiz_attempt->attempt_started_at ?? '' )
+			$attempt_ended_time = DateTimeHelper::create( $quiz_attempt->attempt_ended_at ?? '' )
 				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 
 			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
@@ -267,7 +267,7 @@ class QuizModel {
 				'correct_answers'   => $correct_answers,
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
-				'date'              => $start_time ?? '',
+				'date'              => $attempt_ended_time ?? '',
 				'quiz_title'        => $quiz_title,
 				'course_title'      => $course_title,
 				'quiz_id'           => $quiz_attempt->quiz_id ?? 0,
