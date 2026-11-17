@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 
+import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
@@ -47,7 +48,6 @@ import {
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import Alert from '@TutorShared/atoms/Alert';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
