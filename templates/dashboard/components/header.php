@@ -42,12 +42,12 @@ $is_instructor_view = User::is_instructor_view();
 <div x-data="tutorHeader()" class="tutor-dashboard-header">
 	<div class="tutor-dashboard-header-inner">
 		<div class="tutor-dashboard-header-left">
-			<div class="tutor-h5 tutor-text-primary tutor-text-medium">
+			<h1 class="tutor-h5 tutor-text-primary tutor-text-medium">
 				<span class="tutor-text-subdued">
 					<?php echo esc_html_x( 'Hi,', 'greetings', 'tutor' ); ?>
 				</span>
 				<?php echo esc_html( $display_name . ' 👋' ); ?>
-			</div>
+			</h1>
 			<?php
 			if ( $is_instructor_view ) :
 				$course_post_type       = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );

@@ -126,14 +126,20 @@ if ( isset( $the_query ) ) {
 ?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
-	<?php if ( $has_course_filters ) : ?>
-		<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
-			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
-				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></span>
-				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
-			</div>
-		</div>
-	<?php endif; ?>
+	<div class="tutor-d-flex tutor-align-center tutor-justify-between tutor-mb-32">
+		<h1 class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-0">
+			<?php
+			if ( is_tax() ) {
+				single_term_title();
+			} else {
+				esc_html_e( 'Courses', 'tutor' );
+			}
+			?>
+		</h1>
+		<?php if ( $has_course_filters ) : ?>
+			<a href="#" class="tutor-d-xl-none tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter aria-label="<?php esc_attr_e( 'Filter courses', 'tutor' ); ?>"><span class="tutor-icon-slider-vertical" aria-hidden="true"></span></a>
+		<?php endif; ?>
+	</div>
 
 	<div class="tutor-row tutor-gx-xl-5">
 		<?php if ( $has_course_filters ) : ?>
