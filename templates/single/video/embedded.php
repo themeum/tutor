@@ -20,7 +20,6 @@ do_action( 'tutor_lesson/single/before/video/embedded' );
 ?>
 <?php if ( $video_info ) : ?>
 	<div class="tutor-video-player">
-		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ?? null ) ); ?>">
 		<div class="loading-spinner" aria-hidden="true"></div>
 		<div class="tutor-ratio tutor-ratio-16x9">
 			<?php
@@ -40,6 +39,7 @@ do_action( 'tutor_lesson/single/before/video/embedded' );
 				)
 			);
 			?>
+			<?php do_action( 'tutor_video_player/inside_skin' ); ?>
 		</div>
 	</div>
 <?php endif; ?>

@@ -85,6 +85,8 @@ function copy() {
         '!.claude',
         '!.cursor',
         '!docs/**',
+        '!.scratch/**',
+        '!.test-results/**',
       ],
       {
         allowEmpty: true,

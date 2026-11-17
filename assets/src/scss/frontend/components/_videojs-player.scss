@@ -1,0 +1,90 @@
+// Video.js lesson player engine (ticket 04).
+//
+// The packaged skin (`@videojs/html/video/skin`) sizes only native `<video>`/`<audio>`, so
+// embed media is sized here; the embed iframe stays unclickable below instead of cropping
+// it to hide YouTube's chrome (the crop zoomed every non-16:9 video).
+
+// Reserve the player's box before the engine upgrades the element (ADR-0010): an
+// unupgraded element and its fallback media occupy the same 16:9 box, so nothing
+// shifts when the deferred module defines the custom element.
+tutor-video-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.tutor-video-player {
+  --media-border-radius: 0;
+  --media-video-border-radius: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: inherit;
+  overflow: hidden;
+
+  tutor-video-player {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: inherit;
+    overflow: hidden;
+
+    &.is-fullscreen {
+      border-radius: 0 !important;
+    }
+  }
+
+  video-skin {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  youtube-video,
+  vimeo-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  youtube-video::part(iframe) {
+    pointer-events: none;
+  }
+
+  [data-availability="unavailable"],
+  [data-availability="unsupported"],
+  [data-hidden] {
+    display: none !important;
+  }
+
+  // Added by Pro only while the player is fullscreen, so this is the
+  // fullscreen position: top, clear of the control bar.
+  .tutor-video-lesson-take-note-button {
+    position: fixed;
+    z-index: 1000 !important;
+    top: 20px;
+    bottom: auto;
+    inset-inline-end: 20px;
+  }
+
+  .tutor-player-fullscreen {
+    z-index: 1001 !important;
+  }
+}

@@ -259,6 +259,15 @@ const createConfig = (env, options) => {
             },
           },
         }),
+        new rspack.SwcJsMinimizerRspackPlugin({
+          test: /tutor-player.*\.js(?:\?.*)?$/,
+          extractComments: false,
+          minimizerOptions: {
+            compress: true,
+            ecma: 2020,
+            mangle: true,
+          },
+        }),
         new rspack.LightningCssMinimizerRspackPlugin({
           minimizerOptions: {
             exclude: {
@@ -297,6 +306,7 @@ const createConfig = (env, options) => {
 const jsEntries = {
   tutor: './assets/src/js/v2/common.js',
   'tutor-core': './assets/core/ts/index.ts',
+  'tutor-player': './assets/core/ts/services/player/index.ts',
   'tutor-front': './assets/src/js/front/tutor-front.js',
   'tutor-admin': './assets/src/js/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/src/js/admin-dashboard/tutor-setup.js',
@@ -346,7 +356,6 @@ const resolveAliases = {
   '@AddonList': path.resolve(__dirname, './assets/src/js/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/src/js/v3/entries/import-export/'),
   '@FrontendComponents': path.resolve(__dirname, './assets/src/js/frontend/components'),
-  '@FrontendTypes': path.resolve(__dirname, './assets/src/js/frontend/types'),
   '@FrontendServices': path.resolve(__dirname, './assets/src/js/frontend/services'),
   '@FrontendDashboard': path.resolve(__dirname, './assets/src/js/frontend/dashboard'),
   '@LearningArea': path.resolve(__dirname, './assets/src/js/frontend/learning-area'),
@@ -375,21 +384,29 @@ export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const isDevelopment = options.mode === 'development';
   const isMakePot = env?.['make-pot'];
-
   const allEntries = { ...jsEntries, ...scssEntries };
 
   if (isDevelopment) {
-    return Object.entries(allEntries).map(([entryKey, entryPath]) => ({
+    return [
+      ...Object.entries(allEntries).map(([entryKey, entryPath]) => ({
+        ...baseConfig,
+        name: entryKey,
+        entry: {
+          [entryKey]: entryPath,
+        },
+      })),
+    ];
+  }
+
+  if (isMakePot) {
+    return {
       ...baseConfig,
-      name: entryKey,
-      entry: {
-        [entryKey]: entryPath,
-      },
-    }));
+      entry: jsEntries,
+    };
   }
 
   return {
     ...baseConfig,
-    entry: isMakePot ? jsEntries : allEntries,
+    entry: allEntries,
   };
 };
