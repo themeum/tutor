@@ -170,7 +170,12 @@ class Instructor {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 
-		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
+		// phpcs:disable -- Passwords are unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password              = wp_unslash( $_POST['password'] ?? '' );
+		$password_confirmation = wp_unslash( $_POST['password_confirmation'] ?? '' );
+		// phpcs:enable
+
+		if ( $password !== $password_confirmation ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
@@ -184,9 +189,6 @@ class Instructor {
 		$last_name  = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'last_name' ), ENT_QUOTES ) ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
-
-		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
-		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = array(
 			'user_login' => $user_login,
@@ -326,7 +328,13 @@ class Instructor {
 		if ( ! filter_var( tutor_utils()->input_old( 'email' ), FILTER_VALIDATE_EMAIL ) ) {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
-		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
+
+		// phpcs:disable -- Passwords are unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password              = wp_unslash( $_POST['password'] ?? '' );
+		$password_confirmation = wp_unslash( $_POST['password_confirmation'] ?? '' );
+		// phpcs:enable
+
+		if ( $password !== $password_confirmation ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
@@ -341,9 +349,6 @@ class Instructor {
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
 		$tutor_profile_job_title = sanitize_text_field( wp_strip_all_tags( wp_specialchars_decode( tutor_utils()->input_old( 'tutor_profile_job_title' ), ENT_QUOTES ) ) );
-
-		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
-		$password = wp_unslash( $_POST['password'] ?? '' );
 
 		$userdata = apply_filters(
 			'add_new_instructor_data',
