@@ -5442,10 +5442,8 @@ class Utils {
 			$query->where_not_in( 'question_type', $exclude_types );
 		}
 
-		$limit = $total_questions ? $total_questions : -1;
-
-		if ( $limit > 0 ) {
-			$query->limit( $limit );
+		if ( $total_questions > 0 ) {
+			$query->limit( $total_questions );
 		}
 
 		$questions = $query->get();
