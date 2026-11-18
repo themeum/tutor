@@ -557,7 +557,7 @@ class CheckoutController {
 	/**
 	 * Resolve checkout user id
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @return int
 	 */
@@ -624,7 +624,7 @@ class CheckoutController {
 	/**
 	 * Keep only the allowed keys from an array.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param array $data          The source array.
 	 * @param array $allowed_keys  The keys to retain.
@@ -638,7 +638,7 @@ class CheckoutController {
 	/**
 	 * Get allowed order fields.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @return array
 	 */
@@ -655,7 +655,7 @@ class CheckoutController {
 	/**
 	 * Save billing info.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param int   $user_id The user ID.
 	 * @param array $fields  The billing fields.
@@ -693,7 +693,7 @@ class CheckoutController {
 	/**
 	 * Validate cart items
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param array  $object_ids The object IDs.
 	 * @param string $order_type The order type.
@@ -736,7 +736,7 @@ class CheckoutController {
 	/**
 	 * Build the transient key used to store checkout errors for a user.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -749,7 +749,7 @@ class CheckoutController {
 	/**
 	 * Set checkout errors in transient.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param array $errors The errors array.
 	 * @param int   $user_id The user ID.
@@ -763,7 +763,7 @@ class CheckoutController {
 	/**
 	 * Get checkout errors from transient.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param int $user_id The user ID.
 	 *
@@ -785,7 +785,7 @@ class CheckoutController {
 	/**
 	 * Build the transient key used to store checkout alert message for a user.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -798,7 +798,7 @@ class CheckoutController {
 	/**
 	 * Set checkout alert message in transient.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string $type Alert type.
 	 * @param string $message Alert message.
@@ -817,7 +817,7 @@ class CheckoutController {
 	/**
 	 * Get checkout alert message from transient.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param int $user_id The user ID.
 	 *
