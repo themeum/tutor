@@ -485,25 +485,16 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function validate_options( $options ) {
-		$success = true;
-		$message = '';
-
 		$enable_sharing        = $options['enable_revenue_sharing'] ?? 'off';
-		$admin_commission      = (int) $options['earning_admin_commission'] ?? 0;
-		$instructor_commission = (int) $options['earning_instructor_commission'] ?? 0;
+		$admin_commission      = (int) ( $options['earning_admin_commission'] ?? 0 );
+		$instructor_commission = (int) ( $options['earning_instructor_commission'] ?? 0 );
 
-		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ) {
-			$success = false;
-			$message = __( 'Total share percentage must be 100% or less', 'tutor' );
+		if ( $admin_commission < 0 || $instructor_commission < 0 ) {
+			wp_send_json( array( 'success' => false, 'message' => __( 'Commission percentage cannot be negative', 'tutor' ) ) );
 		}
 
-		if ( ! $success ) {
-			wp_send_json(
-				array(
-					'success' => $success,
-					'message' => $message,
-				)
-			);
+		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ){
+			wp_send_json( array( 'success' => false, 'message' => __( 'Total share percentage must be 100% or less', 'tutor' ) ) );
 		}
 	}
 
