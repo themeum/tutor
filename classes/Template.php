@@ -505,6 +505,8 @@ class Template extends Tutor_Base {
 
 							if ( file_exists( $page_template ) ) {
 								$template = tutor_get_template( 'account' );
+							} else {
+								$template = tutor_get_template( 'permission-denied' );
 							}
 						}
 
