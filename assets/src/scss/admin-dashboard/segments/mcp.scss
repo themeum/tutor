@@ -1,0 +1,25 @@
+/**
+ * Tools → MCP — only styles Tutor Tools does not already provide.
+ */
+
+.tutor-mcp-ability-row + .tutor-mcp-ability-row {
+	border-top: 1px solid var(--tutor-border-color);
+	margin-top: 4px;
+	padding-top: 4px;
+}
+
+.tutor-mcp-ability-row.is-open {
+	[data-mcp-ab-toggle] .tutor-icon-angle-right {
+		transform: rotate(90deg);
+		display: inline-block;
+	}
+
+	.tutor-mcp-tools {
+		display: block !important;
+	}
+}
+
+.tutor-mcp-dimmed {
+	opacity: 0.45;
+	pointer-events: none;
+}
