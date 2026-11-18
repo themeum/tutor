@@ -117,6 +117,20 @@ class Instructor {
 	}
 
 	/**
+	 * Check if new instructor registration is allowed.
+	 * Requires both WordPress user registration and Tutor become-instructor to be enabled.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return bool
+	 */
+	public static function can_register_as_instructor(): bool {
+		$can_register = (bool) get_option( 'users_can_register', false ) && self::can_apply_for_instructor();
+
+		return apply_filters( 'tutor_can_register_as_instructor', $can_register );
+	}
+
+	/**
 	 * Template Redirect Callback
 	 * For Register new user and mark him as instructor
 	 *
@@ -125,7 +139,7 @@ class Instructor {
 	 */
 	public function register_instructor() {
 		// Here tutor_action checking required before nonce checking.
-		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) || ! get_option( 'users_can_register', false ) ) {
+		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) || ! self::can_register_as_instructor() ) {
 			return;
 		}
 
