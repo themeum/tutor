@@ -144,8 +144,8 @@ class Lesson extends Tutor_Base {
 		$comment    = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
 		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
 
-		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
-			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) || ! self::can_post_lesson_comment( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
