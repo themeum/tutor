@@ -373,7 +373,7 @@ class InstructorMetricsAdapter {
 		$review_args = array( 'comment_approved' => 'approved' );
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$review_args = self::date_range( $start_date, $end_date );
+			$review_args = array_merge( $review_args, self::date_range( $start_date, $end_date ) );
 		}
 
 		$reviews = tutor_utils()->get_reviews_by_instructor( $user_id, 0, $limit, '', '', $review_args );
