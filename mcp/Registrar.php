@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor MCP server + Phase 1–3 abilities (minimal surface).
+ * Tutor MCP server + Free read-only abilities (writes live in Tutor Pro).
  *
  * @package Tutor\Mcp
  * @author  Themeum <support@themeum.com>
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Registers tutor-mcp and read-only core abilities.
+ * Registers tutor-mcp and Free read-only core abilities.
  *
  * @since 4.3.0
  */
@@ -36,7 +36,7 @@ class Registrar {
 	const ADAPTER_GITHUB_URL   = 'https://github.com/WordPress/mcp-adapter';
 
 	/**
-	 * Tool ability IDs.
+	 * Free tool ability IDs (read-only). Writes register from Tutor Pro.
 	 *
 	 * @var string[]
 	 */
@@ -45,18 +45,8 @@ class Registrar {
 		'tutor-mcp/get-course',
 		'tutor-mcp/search-courses',
 		'tutor-mcp/get-course-contents',
-		'tutor-mcp/create-course',
-		'tutor-mcp/update-course',
-		'tutor-mcp/set-course-status',
-		'tutor-mcp/update-course-content-order',
-		'tutor-mcp/create-topic',
-		'tutor-mcp/update-topic',
 		'tutor-mcp/get-lesson',
-		'tutor-mcp/create-lesson',
-		'tutor-mcp/update-lesson',
 		'tutor-mcp/get-quiz',
-		'tutor-mcp/create-quiz',
-		'tutor-mcp/update-quiz',
 	);
 
 	/**
@@ -285,7 +275,7 @@ class Registrar {
 	}
 
 	/**
-	 * Admin UI catalog of current Phase 1–3 tools.
+	 * Admin UI catalog of Free (read-only) tools. Pro appends writes via filter.
 	 *
 	 * @since 4.3.0
 	 *
@@ -318,7 +308,7 @@ class Registrar {
 					array(
 						'id'    => 'course_tools',
 						'name'  => __( 'Course Tools', 'tutor' ),
-						'desc'  => __( 'Create/update draft courses, read details, and reorder curriculum.', 'tutor' ),
+						'desc'  => __( 'Read course details and curriculum. Create/update requires Tutor Pro.', 'tutor' ),
 						'tools' => array(
 							array(
 								'n' => 'tutor-mcp/get-course',
@@ -335,26 +325,6 @@ class Registrar {
 								'l' => __( 'Get course contents', 'tutor' ),
 								'r' => 'read',
 							),
-							array(
-								'n' => 'tutor-mcp/create-course',
-								'l' => __( 'Create course', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-course',
-								'l' => __( 'Update course', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/set-course-status',
-								'l' => __( 'Set course status', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-course-content-order',
-								'l' => __( 'Update content order', 'tutor' ),
-								'r' => 'write',
-							),
 						),
 					),
 				),
@@ -365,48 +335,18 @@ class Registrar {
 				'abilities' => array(
 					array(
 						'id'    => 'curriculum_tools',
-						'name'  => __( 'Topic, Lesson & Quiz', 'tutor' ),
-						'desc'  => __( 'Create and update topics, lessons, and quizzes for end-to-end course building.', 'tutor' ),
+						'name'  => __( 'Lesson & Quiz', 'tutor' ),
+						'desc'  => __( 'Read lessons and quizzes. Create/update requires Tutor Pro.', 'tutor' ),
 						'tools' => array(
-							array(
-								'n' => 'tutor-mcp/create-topic',
-								'l' => __( 'Create topic', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-topic',
-								'l' => __( 'Update topic', 'tutor' ),
-								'r' => 'write',
-							),
 							array(
 								'n' => 'tutor-mcp/get-lesson',
 								'l' => __( 'Get lesson', 'tutor' ),
 								'r' => 'read',
 							),
 							array(
-								'n' => 'tutor-mcp/create-lesson',
-								'l' => __( 'Create lesson', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-lesson',
-								'l' => __( 'Update lesson', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
 								'n' => 'tutor-mcp/get-quiz',
 								'l' => __( 'Get quiz', 'tutor' ),
 								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/create-quiz',
-								'l' => __( 'Create quiz', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-quiz',
-								'l' => __( 'Update quiz', 'tutor' ),
-								'r' => 'write',
 							),
 						),
 					),
@@ -552,7 +492,7 @@ class Registrar {
 	}
 
 	/**
-	 * Register Phase 3 abilities.
+	 * Register Free read abilities (+ Pro via action).
 	 *
 	 * @since 4.3.0
 	 *

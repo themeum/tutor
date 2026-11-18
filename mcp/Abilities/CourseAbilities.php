@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor MCP course tools.
+ * Tutor MCP course tools (Free read-only).
  *
  * @package Tutor\Mcp
  * @author  Themeum <support@themeum.com>
@@ -10,38 +10,24 @@
 
 namespace Tutor\Mcp\Abilities;
 
-use Tutor\Models\CourseModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
-use TUTOR\Course;
 use TUTOR\REST_Course;
-use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Course tool registration and execute handlers.
+ * Course read tool registration and execute handlers.
  *
  * @since 4.3.0
  */
 class CourseAbilities {
 
 	/**
-	 * Shared write-tool annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Register course abilities.
+	 * Register Free course abilities (read-only).
 	 *
 	 * @since 4.3.0
 	 *
@@ -113,138 +99,6 @@ class CourseAbilities {
 				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'get_course_contents' )
-		);
-
-		AbilityFactory::tool(
-			'tutor-mcp/create-course',
-			'tutor-mcp-courses',
-			__( 'Create Course', 'tutor' ),
-			__( 'Create a draft/pending course (never publishes). Same path as course builder draft create.', 'tutor' ),
-			array(
-				'type'       => 'object',
-				'required'   => array( 'title' ),
-				'properties' => array(
-					'title'   => array( 'type' => 'string' ),
-					'content' => array( 'type' => 'string' ),
-					'excerpt' => array( 'type' => 'string' ),
-				),
-			),
-			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || User::is_instructor() || Permissions::can_manage_courses() );
-			},
-			array( $this, 'create_course' ),
-			self::WRITE_HINTS
-		);
-
-		AbilityFactory::tool(
-			'tutor-mcp/update-course',
-			'tutor-mcp-courses',
-			__( 'Update Course', 'tutor' ),
-			__( 'Update course title/content/excerpt/taxonomies. Does not change publish status.', 'tutor' ),
-			array(
-				'type'       => 'object',
-				'required'   => array( 'course_id' ),
-				'properties' => array(
-					'course_id'         => array(
-						'type'    => 'integer',
-						'minimum' => 1,
-					),
-					'title'             => array( 'type' => 'string' ),
-					'content'           => array( 'type' => 'string' ),
-					'excerpt'           => array( 'type' => 'string' ),
-					'course_categories' => array(
-						'type'  => 'array',
-						'items' => array( 'type' => 'integer' ),
-					),
-					'course_tags'       => array(
-						'type'  => 'array',
-						'items' => array( 'type' => 'integer' ),
-					),
-					'thumbnail_id'      => array(
-						'type'    => 'integer',
-						'minimum' => 0,
-					),
-				),
-			),
-			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
-			},
-			array( $this, 'update_course' ),
-			self::WRITE_HINTS
-		);
-
-		AbilityFactory::tool(
-			'tutor-mcp/set-course-status',
-			'tutor-mcp-courses',
-			__( 'Set Course Status', 'tutor' ),
-			__( 'Set course status. Publishing requires confirm=true and publish capability.', 'tutor' ),
-			array(
-				'type'       => 'object',
-				'required'   => array( 'course_id', 'status' ),
-				'properties' => array(
-					'course_id' => array(
-						'type'    => 'integer',
-						'minimum' => 1,
-					),
-					'status'    => array(
-						'type' => 'string',
-						'enum' => array(
-							CourseModel::STATUS_DRAFT,
-							CourseModel::STATUS_PENDING,
-							CourseModel::STATUS_PRIVATE,
-							CourseModel::STATUS_PUBLISH,
-						),
-					),
-					'confirm'   => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-				),
-			),
-			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
-			},
-			array( $this, 'set_course_status' ),
-			self::WRITE_HINTS
-		);
-
-		AbilityFactory::tool(
-			'tutor-mcp/update-course-content-order',
-			'tutor-mcp-courses',
-			__( 'Update Course Content Order', 'tutor' ),
-			__( 'Reorder topics and nested contents (same as course builder content order).', 'tutor' ),
-			array(
-				'type'       => 'object',
-				'required'   => array( 'course_id', 'topics' ),
-				'properties' => array(
-					'course_id' => array(
-						'type'    => 'integer',
-						'minimum' => 1,
-					),
-					'topics'    => array(
-						'type'  => 'array',
-						'items' => array(
-							'type'       => 'object',
-							'required'   => array( 'topic_id' ),
-							'properties' => array(
-								'topic_id'   => array(
-									'type'    => 'integer',
-									'minimum' => 1,
-								),
-								'lesson_ids' => array(
-									'type'  => 'array',
-									'items' => array( 'type' => 'integer' ),
-								),
-							),
-						),
-					),
-				),
-			),
-			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
-			},
-			array( $this, 'update_course_content_order' ),
-			self::WRITE_HINTS
 		);
 	}
 
@@ -332,217 +186,6 @@ class CourseAbilities {
 		return array(
 			'course_id' => $course_id,
 			'topics'    => $topics,
-		);
-	}
-
-	/**
-	 * Create draft/pending course (mirrors tutor_create_new_draft_course + architecture draft policy).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $input Input.
-	 * @return array|\WP_Error
-	 */
-	public function create_course( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
-
-		$title   = sanitize_text_field( (string) ( $input['title'] ?? '' ) );
-		$content = wp_kses_post( (string) ( $input['content'] ?? '' ) );
-		$excerpt = sanitize_textarea_field( (string) ( $input['excerpt'] ?? '' ) );
-		if ( '' === $title ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Course title is required!', 'tutor' ) );
-		}
-
-		$status    = Permissions::default_course_status();
-		$course_id = wp_insert_post(
-			array(
-				'post_title'   => $title,
-				'post_content' => $content,
-				'post_excerpt' => $excerpt,
-				'post_type'    => tutor()->course_post_type,
-				'post_status'  => $status,
-				'post_author'  => get_current_user_id(),
-			),
-			true
-		);
-		if ( is_wp_error( $course_id ) ) {
-			return $course_id;
-		}
-		if ( ! $course_id ) {
-			return new \WP_Error( 'tutor_mcp_create_failed', __( 'Could not create course.', 'tutor' ) );
-		}
-
-		update_post_meta( $course_id, Course::COURSE_PRICE_TYPE_META, Course::PRICE_TYPE_FREE );
-		do_action( 'tutor_draft_course_created', $course_id );
-
-		return array(
-			'id'          => (int) $course_id,
-			'post_status' => $status,
-		);
-	}
-
-	/**
-	 * Update course fields (no status change).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $input Input.
-	 * @return array|\WP_Error
-	 */
-	public function update_course( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
-
-		$course_id = absint( $input['course_id'] ?? 0 );
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
-		}
-
-		$post = array( 'ID' => $course_id );
-		if ( isset( $input['title'] ) ) {
-			$post['post_title'] = sanitize_text_field( (string) $input['title'] );
-		}
-		if ( isset( $input['content'] ) ) {
-			$post['post_content'] = wp_kses_post( (string) $input['content'] );
-		}
-		if ( isset( $input['excerpt'] ) ) {
-			$post['post_excerpt'] = sanitize_textarea_field( (string) $input['excerpt'] );
-		}
-
-		if ( count( $post ) > 1 ) {
-			$updated = wp_update_post( $post, true );
-			if ( is_wp_error( $updated ) ) {
-				return $updated;
-			}
-		}
-
-		if ( isset( $input['course_categories'] ) && is_array( $input['course_categories'] ) ) {
-			wp_set_object_terms( $course_id, array_map( 'absint', $input['course_categories'] ), CourseModel::COURSE_CATEGORY );
-		}
-		if ( isset( $input['course_tags'] ) && is_array( $input['course_tags'] ) ) {
-			wp_set_object_terms( $course_id, array_map( 'absint', $input['course_tags'] ), CourseModel::COURSE_TAG );
-		}
-		if ( array_key_exists( 'thumbnail_id', $input ) ) {
-			$thumbnail_id = absint( $input['thumbnail_id'] );
-			if ( $thumbnail_id ) {
-				set_post_thumbnail( $course_id, $thumbnail_id );
-			} else {
-				delete_post_meta( $course_id, '_thumbnail_id' );
-			}
-		}
-
-		return array( 'id' => $course_id );
-	}
-
-	/**
-	 * Set course status with publish confirm gate.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $input Input.
-	 * @return array|\WP_Error
-	 */
-	public function set_course_status( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
-
-		$course_id = absint( $input['course_id'] ?? 0 );
-		$status    = sanitize_text_field( (string) ( $input['status'] ?? '' ) );
-		$allowed   = array(
-			CourseModel::STATUS_DRAFT,
-			CourseModel::STATUS_PENDING,
-			CourseModel::STATUS_PRIVATE,
-			CourseModel::STATUS_PUBLISH,
-		);
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
-		}
-		if ( ! in_array( $status, $allowed, true ) ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid course status.', 'tutor' ) );
-		}
-
-		if ( CourseModel::STATUS_PUBLISH === $status ) {
-			if ( empty( $input['confirm'] ) ) {
-				return new \WP_Error( 'tutor_mcp_confirm_required', __( 'Publishing requires confirm=true.', 'tutor' ) );
-			}
-			if ( ! current_user_can( 'publish_tutor_courses' ) && ! User::is_admin() && ! current_user_can( 'manage_tutor' ) ) {
-				return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
-			}
-			$instructor_can_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! User::is_admin() && ! current_user_can( 'manage_tutor' ) && ! $instructor_can_publish ) {
-				$status = CourseModel::STATUS_PENDING;
-			}
-		}
-
-		$updated = wp_update_post(
-			array(
-				'ID'          => $course_id,
-				'post_status' => $status,
-			),
-			true
-		);
-		if ( is_wp_error( $updated ) ) {
-			return $updated;
-		}
-
-		return array(
-			'id'          => $course_id,
-			'post_status' => get_post_status( $course_id ),
-		);
-	}
-
-	/**
-	 * Reorder course topics/contents via Course::save_course_content_order().
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $input Input.
-	 * @return array|\WP_Error
-	 */
-	public function update_course_content_order( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
-
-		$course_id = absint( $input['course_id'] ?? 0 );
-		$topics    = $input['topics'] ?? array();
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
-		}
-		if ( ! is_array( $topics ) || ! count( $topics ) ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Sorting order is required', 'tutor' ) );
-		}
-
-		$sort_order = array();
-		foreach ( $topics as $topic ) {
-			if ( ! is_array( $topic ) ) {
-				continue;
-			}
-			$topic_id = absint( $topic['topic_id'] ?? 0 );
-			if ( ! $topic_id || (int) wp_get_post_parent_id( $topic_id ) !== $course_id ) {
-				return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid topic for this course.', 'tutor' ) );
-			}
-			$sort_order[] = array(
-				'topic_id'   => $topic_id,
-				'lesson_ids' => isset( $topic['lesson_ids'] ) && is_array( $topic['lesson_ids'] )
-					? array_map( 'absint', $topic['lesson_ids'] )
-					: array(),
-			);
-		}
-
-		( new Course( false ) )->save_course_content_order( $sort_order );
-
-		return array(
-			'course_id' => $course_id,
-			'updated'   => true,
 		);
 	}
 }
