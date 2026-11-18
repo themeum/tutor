@@ -32,6 +32,7 @@ const Scale = () => {
         name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={(controllerProps) => (
           <FormScale
+            key={`${activeQuestionId}-${optionsFields[0]?.id || optionsFields[0]?.answer_id}`}
             {...controllerProps}
             questionId={activeQuestionId}
             validationError={validationError}

@@ -652,6 +652,50 @@ class Quiz {
 	}
 
 	/**
+	 * Check if the quiz has questions that can be attempted in the current learning mode.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int $quiz_id Quiz ID.
+	 *
+	 * @return bool
+	 */
+	public static function has_supported_questions( $quiz_id ) {
+		return tutor_utils()->count( tutor_utils()->get_questions_by_quiz( $quiz_id ) ) > 0;
+	}
+
+	/**
+	 * Message displayed when a quiz cannot be attempted.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return string
+	 */
+	public static function unavailable_quiz_message() {
+		return __( 'This quiz is currently unavailable. Please contact the site administrator.', 'tutor' );
+	}
+
+	/**
+	 * Render notice when a quiz cannot be attempted.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param string $class Additional CSS classes.
+	 *
+	 * @return void
+	 */
+	public static function render_unavailable_quiz_notice( $class = '' ) {
+		?>
+		<div class="tutor-alert tutor-warning <?php echo esc_attr( $class ); ?>">
+			<div class="tutor-alert-text">
+				<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" aria-hidden="true"></span>
+				<span><?php echo esc_html( self::unavailable_quiz_message() ); ?></span>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Start Quiz from here...
 	 *
 	 * @since 1.0.0
@@ -679,6 +723,10 @@ class Quiz {
 
 		// Check & die if don't have quiz access.
 		QuizModel::has_quiz_access( $quiz_id, $course->id );
+
+		if ( ! self::has_supported_questions( $quiz_id ) ) {
+			wp_die( esc_html( self::unavailable_quiz_message() ) );
+		}
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
@@ -795,6 +843,7 @@ class Quiz {
 		}
 
 		tutor_utils()->checking_nonce();
+
 		// submit quiz attempts.
 		if ( self::tutor_quiz_attempt_submit() ) {
 			wp_send_json_success();
@@ -843,6 +892,17 @@ class Quiz {
 		$attempt    = self::validate_attempt( $attempt_id, $user_id );
 
 		if ( ! $attempt ) {
+			$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+			if ( $quiz_id ) {
+				$started = tutor_utils()->is_started_quiz( $quiz_id );
+				if ( is_object( $started ) && (int) $started->user_id === $user_id ) {
+					$attempt    = $started;
+					$attempt_id = (int) $started->attempt_id;
+				}
+			}
+		}
+
+		if ( ! $attempt ) {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
 
@@ -883,6 +943,8 @@ class Quiz {
 		do_action( 'tutor_quiz/attempt_analysing/before', $attempt_id );
 
 		// Single quiz can have multiple question. So multiple answer should be saved.
+		$attempt_info = null;
+
 		foreach ( $attempt_answers as $posted_attempt_id => $attempt_answer ) {
 			if ( (int) $posted_attempt_id !== (int) $attempt_id ) {
 				die( 'Operation not allowed, attempt mismatch' );
@@ -1141,11 +1203,23 @@ class Quiz {
 				'attempt_status'           => $review_required ? QuizModel::REVIEW_REQUIRED : QuizModel::ATTEMPT_ENDED,
 				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
-
-			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
-
-			QuizModel::update_attempt_result( $attempt_id );
 		}
+
+		// No answers posted, e.g. legacy mode rendered no supported question: end with existing stats.
+		if ( ! $attempt_info ) {
+			$stats = QuizModel::get_attempt_answers_stats( (int) $attempt_id );
+
+			$attempt_info = array(
+				'total_answered_questions' => (int) $stats->total_answered_count,
+				'earned_marks'             => max( 0.0, (float) $stats->total_earned_marks ),
+				'attempt_status'           => QuizModel::ATTEMPT_ENDED,
+				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
+			);
+		}
+
+		$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_info, array( 'attempt_id' => $attempt_id ) );
+
+		QuizModel::update_attempt_result( $attempt_id );
 
 		// After hook.
 		do_action( 'tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id );
