@@ -486,13 +486,13 @@ class Lesson extends Tutor_Base {
 			'post_content'   => wp_slash( $post_content ),
 			'post_status'    => 'publish',
 			'comment_status' => 'open',
-			'post_author'    => get_current_user_id(),
 			'post_parent'    => $topic_id,
 		);
 
 		if ( ! $is_update ) {
-			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
-			$lesson_id                 = wp_insert_post( $lesson_data );
+			$lesson_data['post_author'] = get_current_user_id();
+			$lesson_data['menu_order']  = tutor_utils()->get_next_course_content_order_id( $topic_id );
+			$lesson_id                  = wp_insert_post( $lesson_data );
 
 			if ( $lesson_id ) {
 				do_action( 'tutor/lesson/created', $lesson_id );
