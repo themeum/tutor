@@ -8,6 +8,8 @@
  * @since 2.0.0
  */
 
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
+
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Add new instructor', 'tutor' ); ?></h1>

@@ -110,7 +110,7 @@ class Announcements {
 
 		// prevent instructor to delete admin announcement.
 		$bulk_ids = array_filter(
-			explode( ',', $bulk_ids ),
+			array_map( 'absint', explode( ',', $bulk_ids ) ),
 			function ( $announcement_id ) {
 				return $this->can_manage_announcement( $announcement_id );
 			}

@@ -343,7 +343,7 @@ class Q_And_A {
 		}
 
 		try {
-			DB::transaction(
+			return DB::transaction(
 				function () use ( $question_ids ) {
 					// Only IDs that really are Q&A questions.
 					$valid_ids = DB::table( 'comments' )
@@ -371,6 +371,8 @@ class Q_And_A {
 						clean_comment_cache( $all_ids );
 						return true;
 					}
+
+					return false;
 				}
 			);
 		} catch ( \Throwable $e ) {

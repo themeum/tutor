@@ -272,7 +272,7 @@ class Lesson extends Tutor_Base {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$comment_content = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$comment_content = wp_kses( Input::post( 'comment', '', Input::TYPE_TEXTAREA ), array() );
 		$user_id         = get_current_user_id();
 		$lesson_id       = $comment->comment_post_ID;
 
@@ -347,6 +347,22 @@ class Lesson extends Tutor_Base {
 				),
 				true
 			);
+
+			$duration_sec = absint( $video['duration_sec'] ?? 0 );
+			if ( ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
+				$runtime      = $video['runtime'];
+				$hours        = absint( $runtime['hours'] ?? 0 );
+				$minutes      = absint( $runtime['minutes'] ?? 0 );
+				$seconds      = absint( $runtime['seconds'] ?? 0 );
+				$duration_sec = $hours * HOUR_IN_SECONDS + $minutes * MINUTE_IN_SECONDS + $seconds;
+			}
+
+			if ( $duration_sec > 0 ) {
+				$video['duration_sec'] = $duration_sec;
+				$video['playtime']     = tutor_utils()->playtime_string( $duration_sec );
+				$video['runtime']      = tutor_utils()->playtime_array( $duration_sec );
+			}
+
 			update_post_meta( $post_ID, '_video', tutor_utils()->filter_video_meta( $video ) );
 		}
 
@@ -859,7 +875,7 @@ class Lesson extends Tutor_Base {
 				<div class="tutor-actual-comment tutor-mb-12">
 					<div class="tutor-comment-author">
 						<span class="tutor-fs-6 tutor-fw-bold">
-							<?php echo esc_html( $reply->comment_author ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $reply->user_id ) ); ?>
 						</span>
 						<span class="tutor-fs-7 tutor-ml-0 tutor-ml-sm-10">
 							<?php echo esc_html( human_time_diff( strtotime( $reply->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ) ); ?>
@@ -931,6 +947,11 @@ class Lesson extends Tutor_Base {
 			'comment_agent'        => 'Tutor',
 		);
 		$comment_data = wp_parse_args( $request, $default_data );
+
+		if ( ! empty( $comment_data['comment_content'] ) ) {
+			$comment_data['comment_content'] = wp_kses( $comment_data['comment_content'], array() );
+		}
+
 		return wp_insert_comment( $comment_data );
 	}
 

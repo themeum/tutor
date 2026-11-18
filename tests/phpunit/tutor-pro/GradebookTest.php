@@ -10,11 +10,13 @@ class GradebookTest extends \WP_UnitTestCase {
 	private $gradebook;
 
 	protected function setUp(): void {
-		$class = '/Applications/MAMP/htdocs/tutor-v2/wp-content/plugins/tutor-pro/addons/gradebook/classes/GradeBook.php';
+		parent::setUp();
+		$class = dirname( __DIR__, 3 ) . '/tutor-pro/addons/gradebook/classes/GradeBook.php';
 		if ( file_exists( $class ) ) {
 			include_once $class;
-		} else {
-			echo $class . ' File does not exists';
+		}
+		if ( ! class_exists( '\TUTOR_GB\Gradebook' ) ) {
+			$this->markTestSkipped( 'TUTOR_GB\Gradebook class not available.' );
 		}
 		$this->gradebook = new \TUTOR_GB\Gradebook();
 	}
