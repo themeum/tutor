@@ -215,41 +215,47 @@ class Lesson extends Tutor_Base {
 		}
 
 		$comment = get_comment( $comment_id );
-		if ( ! $comment ) {
+		if ( ! $comment || 'comment' !== $comment->comment_type ) {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$lesson_id = $comment->comment_post_ID;
-		$parent_id = $comment->comment_parent;
+		$lesson_id = (int) $comment->comment_post_ID;
+		$parent_id = (int) $comment->comment_parent;
 		$is_reply  = $parent_id > 0;
 
-		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+		if (
+		! self::is_comment_enabled_for_lesson( $lesson_id )
+		|| tutor()->lesson_post_type !== get_post_type( $lesson_id )
+		) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-			wp_delete_comment( $comment_id, true );
-
-			$total_comments = self::get_comments(
-				array(
-					'post_id' => $lesson_id,
-					'parent'  => 0,
-					'count'   => true,
-				)
-			);
-
-			wp_send_json_success(
-				array(
-					'message'    => __( 'Comment deleted successfully', 'tutor' ),
-					'count'      => $total_comments,
-					'is_reply'   => $is_reply,
-					'parent_id'  => $parent_id,
-					'comment_id' => $comment_id,
-				)
-			);
-		} else {
+		if (
+		get_current_user_id() !== (int) $comment->user_id
+		&& ! tutor_utils()->can_user_manage( 'lesson', $lesson_id )
+		) {
 			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
 		}
+
+		wp_delete_comment( $comment_id, true );
+
+		$total_comments = self::get_comments(
+			array(
+				'post_id' => $lesson_id,
+				'parent'  => 0,
+				'count'   => true,
+			)
+		);
+
+		wp_send_json_success(
+			array(
+				'message'    => __( 'Comment deleted successfully', 'tutor' ),
+				'count'      => $total_comments,
+				'is_reply'   => $is_reply,
+				'parent_id'  => $parent_id,
+				'comment_id' => $comment_id,
+			)
+		);
 	}
 
 	/**
