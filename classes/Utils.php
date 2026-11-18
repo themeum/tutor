@@ -5431,9 +5431,7 @@ class Utils {
 			$order    = 'ASC';
 		}
 
-		$query = DB::table( 'tutor_quiz_questions' )
-				->where( 'quiz_id', $quiz_id )
-				->order_by_raw( trim( $order_by . ' ' . $order ) );
+		$query = DB::table( 'tutor_quiz_questions' )->where( 'quiz_id', $quiz_id );
 
 		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
 
@@ -5446,7 +5444,7 @@ class Utils {
 			$query->limit( $total_questions );
 		}
 
-		$questions = $query->get();
+		$questions = $query->order_by_raw( trim( $order_by . ' ' . $order ) )->get();
 
 		return $questions;
 	}
