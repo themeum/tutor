@@ -19,6 +19,7 @@ use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Progress;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
@@ -1866,7 +1867,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @return void
 	 */
-	private function save_course_content_order( $sort_order = array() ) {
+	public function save_course_content_order( $sort_order = array() ) {
 		global $wpdb;
 
 		if ( ! tutor_utils()->count( $sort_order ) ) {

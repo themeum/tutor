@@ -70,7 +70,10 @@ class HealthAbility {
 	}
 
 	/**
-	 * Enabled addon basenames from tutor_addons_option.
+	 * Enabled addon short names from tutor_addons_config.
+	 *
+	 * Keys in the option look like `tutor-pro/addons/{slug}/{slug}.php`.
+	 * Returned values are short slugs (e.g. `tutor-assignments`) for agents.
 	 *
 	 * @since 4.3.0
 	 *
@@ -78,15 +81,23 @@ class HealthAbility {
 	 */
 	public static function enabled_addons(): array {
 		$addons = array();
-		$option = get_option( 'tutor_addons_option', array() );
+		$option = maybe_unserialize( get_option( 'tutor_addons_config', array() ) );
 		if ( ! is_array( $option ) ) {
 			return array();
 		}
 
 		foreach ( $option as $basename => $cfg ) {
-			if ( ! empty( $cfg['is_enable'] ) ) {
-				$addons[] = sanitize_text_field( (string) $basename );
+			if ( empty( $cfg['is_enable'] ) ) {
+				continue;
 			}
+
+			$basename = (string) $basename;
+			$short    = $basename;
+			if ( preg_match( '#tutor-pro/addons/([^/]+)/#', $basename, $matches ) ) {
+				$short = $matches[1];
+			}
+
+			$addons[] = sanitize_text_field( $short );
 		}
 
 		return array_values( array_unique( $addons ) );
