@@ -88,6 +88,8 @@ class Post_types {
 		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ), 10, 2 );
 		add_filter( 'the_content', array( $this, 'strip_protected_content_outside_single' ), 1 );
 		add_filter( 'get_the_excerpt', array( $this, 'strip_protected_excerpt' ), 1, 2 );
+
+		add_filter( 'map_meta_cap', array( $this, 'enforce_content_ownership' ), 10, 4 );
 	}
 
 	/**
@@ -514,10 +516,29 @@ class Post_types {
 			'public'             => false,
 			'publicly_queryable' => false,
 			'show_ui'            => false,
+			'show_in_rest'       => false,
 			'query_var'          => false,
 			'has_archive'        => false,
 			'hierarchical'       => false,
 			'menu_position'      => null,
+			'capability_type'    => 'tutor_enrolled',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
+				'edit_post'              => 'edit_tutor_enrolled',
+				'read_post'              => 'read_tutor_enrolled',
+				'delete_post'            => 'delete_tutor_enrolled',
+				'edit_posts'             => 'manage_tutor',
+				'edit_others_posts'      => 'manage_tutor',
+				'publish_posts'          => 'manage_tutor',
+				'read_private_posts'     => 'manage_tutor',
+				'create_posts'           => 'manage_tutor',
+				'delete_posts'           => 'manage_tutor',
+				'delete_others_posts'    => 'manage_tutor',
+				'delete_private_posts'   => 'manage_tutor',
+				'delete_published_posts' => 'manage_tutor',
+				'edit_published_posts'   => 'manage_tutor',
+				'edit_private_posts'     => 'manage_tutor',
+			),
 		);
 		register_post_type( tutor()->enrollment_post_type, $args );
 
@@ -717,5 +738,80 @@ class Post_types {
 		}
 
 		return $this->can_view_protected_content( $post ) ? $excerpt : '';
+	}
+
+	/**
+	 * Enforce course-level ownership for lessons, quizzes and assignments.
+	 *
+	 * These post types have `map_meta_cap` disabled because Tutor LMS manages
+	 * permissions through its own course-instructor relationships. Enabling
+	 * `map_meta_cap` would make WordPress rely on post-author ownership, which
+	 * does not account for co-instructors who are not the post author.
+	 *
+	 * Use this filter to enforce Tutor LMS ownership checks while preserving
+	 * existing capabilities for authorized users.
+	 *
+	 * Also protects content without an associated course by allowing only
+	 * the original post author to manage it.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param string[] $caps    Primitive capabilities required.
+	 * @param string   $cap     Capability being checked.
+	 * @param int      $user_id User ID.
+	 * @param array    $args    Additional arguments; $args[0] is the post ID.
+	 *
+	 * @return string[] Required capabilities.
+	 */
+	public function enforce_content_ownership( $caps, $cap, $user_id, $args ) {
+		if ( ! isset( $args[0] ) || ! is_numeric( $args[0] ) ) {
+			return $caps;
+		}
+
+		$post = get_post( (int) $args[0] );
+		if ( ! $post ) {
+			return $caps;
+		}
+
+		$content_types = array(
+			tutor()->lesson_post_type     => 'lesson',
+			tutor()->quiz_post_type       => 'quiz',
+			tutor()->assignment_post_type => 'assignment',
+		);
+
+		if ( ! isset( $content_types[ $post->post_type ] ) ) {
+			return $caps;
+		}
+
+		$pto = get_post_type_object( $post->post_type );
+		if ( ! $pto ) {
+			return $caps;
+		}
+
+		$guarded_caps = array(
+			'edit_post',
+			'delete_post',
+			$pto->cap->edit_post,
+			$pto->cap->delete_post,
+		);
+
+		if ( ! in_array( $cap, array_unique( $guarded_caps ), true ) ) {
+			return $caps;
+		}
+
+		$user_id = (int) $user_id;
+
+		if ( User::is_admin( $user_id ) ) {
+			return $caps;
+		}
+
+		$content_type = $content_types[ $post->post_type ];
+		$course_id    = (int) tutor_utils()->get_course_id_by( $content_type, $post->ID );
+
+		$is_owner = $course_id
+			? tutor_utils()->can_user_manage( $content_type, $post->ID, $user_id, false )
+			: (int) $post->post_author === $user_id;
+
+		return $is_owner ? $caps : array( 'do_not_allow' );
 	}
 }

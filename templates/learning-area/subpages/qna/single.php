@@ -48,7 +48,9 @@ $replies = tutor_utils()->get_qa_answer_by_question( $question_id, $replies_orde
 			<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 				<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_40 )->render(); ?>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author">
+						<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+					</span> 
 					<span class="tutor-text-secondary">
 						<?php
 							/* translators: %s human-readable time difference. */

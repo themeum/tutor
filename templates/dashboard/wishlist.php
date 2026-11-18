@@ -41,7 +41,7 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 					<a href="<?php the_permalink(); ?>" class="tutor-course-card-thumbnail">
 						<?php do_action( 'tutor_courses_card_before_thumbnail', $course_id ); ?>
 						<div class="tutor-ratio tutor-ratio-16x9">
-							<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy" />
+							<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute( array( 'post' => $course_id ) ); ?>" loading="lazy" />
 						</div>
 					</a>
 
@@ -66,7 +66,7 @@ $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 
 						<div class="tutor-course-card-title tutor-mt-2 tutor-line-clamp-3">
 							<a href="<?php the_permalink(); ?>">
-								<?php the_title(); ?>
+								<?php echo esc_html( get_the_title() ); ?>
 							</a>
 						</div>
 

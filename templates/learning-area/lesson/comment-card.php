@@ -48,7 +48,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 				<div>
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 						<span class="tutor-discussion-card-author">
-							<?php echo esc_html( $comment_item->comment_author ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $comment_item->user_id ) ); ?>
 						</span> 
 						<span class="tutor-text-subdued">
 							<?php
