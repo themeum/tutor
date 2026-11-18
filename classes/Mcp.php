@@ -34,6 +34,7 @@ class Mcp {
 	public function __construct() {
 		( new Registrar() )->hooks();
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
+		add_action( 'admin_init', array( $this, 'handle_access' ) );
 		add_action( 'admin_init', array( $this, 'guard_tools_page' ) );
 		add_action( 'init', array( $this, 'maybe_bootstrap_role' ), 5 );
 		// Outermost tools filter, late — keep MCP hidden even if other filters re-add it.
@@ -180,7 +181,7 @@ class Mcp {
 
 		$tools = array_values(
 			array_intersect(
-				Registrar::TOOLS,
+				Registrar::known_tools(),
 				array_map( 'sanitize_text_field', $tools_raw )
 			)
 		);
@@ -205,6 +206,46 @@ class Mcp {
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
+	 * Allow / revoke MCP access (Tools → MCP → Access).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return void
+	 */
+	public function handle_access() {
+		$action = Input::post( 'tutor_mcp_action', '' );
+		if ( ! in_array( $action, array( 'allow_access', 'revoke_access' ), true ) ) {
+			return;
+		}
+		if ( ! Permissions::can_manage_settings() ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
+		}
+		check_admin_referer( 'tutor_mcp_access' );
+
+		if ( 'allow_access' === $action ) {
+			$raw  = sanitize_text_field( Input::post( 'tutor_mcp_user', '' ) );
+			$user = ctype_digit( $raw ) ? get_userdata( (int) $raw ) : ( is_email( $raw ) ? get_user_by( 'email', $raw ) : get_user_by( 'login', $raw ) );
+			if ( $user instanceof \WP_User ) {
+				Permissions::set_allowed( (int) $user->ID, true );
+			}
+		} else {
+			Permissions::set_allowed( Input::post( 'tutor_mcp_user_id', 0, Input::TYPE_INT ), false );
+		}
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'     => 'tutor-tools',
+					'sub_page' => 'tutor_mcp',
+					'mcp_view' => 'access',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
 		exit;
 	}
 }

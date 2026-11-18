@@ -45,8 +45,18 @@ class Registrar {
 		'tutor-mcp/get-course',
 		'tutor-mcp/search-courses',
 		'tutor-mcp/get-course-contents',
+		'tutor-mcp/create-course',
+		'tutor-mcp/update-course',
+		'tutor-mcp/set-course-status',
+		'tutor-mcp/update-course-content-order',
+		'tutor-mcp/create-topic',
+		'tutor-mcp/update-topic',
 		'tutor-mcp/get-lesson',
+		'tutor-mcp/create-lesson',
+		'tutor-mcp/update-lesson',
 		'tutor-mcp/get-quiz',
+		'tutor-mcp/create-quiz',
+		'tutor-mcp/update-quiz',
 	);
 
 	/**
@@ -196,6 +206,56 @@ class Registrar {
 	}
 
 	/**
+	 * Canonical tool ability IDs (core + Pro via filter).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return string[]
+	 */
+	public static function known_tools(): array {
+		$tools = apply_filters( 'tutor_mcp_known_tools', self::TOOLS );
+		if ( ! is_array( $tools ) ) {
+			$tools = self::TOOLS;
+		}
+
+		$normalized = array();
+		foreach ( $tools as $tool_id ) {
+			$tool_id = sanitize_text_field( (string) $tool_id );
+			if ( '' === $tool_id ) {
+				continue;
+			}
+			$normalized[] = $tool_id;
+		}
+
+		return array_values( array_unique( $normalized ) );
+	}
+
+	/**
+	 * Resource ability IDs (core + Pro via filter).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return string[]
+	 */
+	public static function known_resources(): array {
+		$resources = apply_filters( 'tutor_mcp_resource_ids', self::RESOURCES );
+		if ( ! is_array( $resources ) ) {
+			$resources = self::RESOURCES;
+		}
+
+		$normalized = array();
+		foreach ( $resources as $resource_id ) {
+			$resource_id = sanitize_text_field( (string) $resource_id );
+			if ( '' === $resource_id ) {
+				continue;
+			}
+			$normalized[] = $resource_id;
+		}
+
+		return array_values( array_unique( $normalized ) );
+	}
+
+	/**
 	 * Tool ability IDs currently enabled for MCP exposure.
 	 *
 	 * @since 4.3.0
@@ -203,13 +263,13 @@ class Registrar {
 	 * @return string[]
 	 */
 	public static function enabled_tools(): array {
+		$known  = self::known_tools();
 		$stored = get_option( self::OPTION_ENABLED_TOOLS, null );
 		if ( ! is_array( $stored ) ) {
-			return self::TOOLS;
+			return $known;
 		}
 
-		$allowed = array_values( array_intersect( self::TOOLS, array_map( 'strval', $stored ) ) );
-		return $allowed;
+		return array_values( array_intersect( $known, array_map( 'strval', $stored ) ) );
 	}
 
 	/**
@@ -232,7 +292,7 @@ class Registrar {
 	 * @return array<int, array{id:string,name:string,abilities:array<int,array{id:string,name:string,desc:string,tools:array<int,array{n:string,l:string,r:string}>}>}>
 	 */
 	public static function tool_catalog(): array {
-		return array(
+		$catalog = array(
 			array(
 				'id'        => 'health',
 				'name'      => __( 'Health', 'tutor' ),
@@ -258,7 +318,7 @@ class Registrar {
 					array(
 						'id'    => 'course_tools',
 						'name'  => __( 'Course Tools', 'tutor' ),
-						'desc'  => __( 'Fetch course details, search published courses, and read curriculum trees.', 'tutor' ),
+						'desc'  => __( 'Create/update draft courses, read details, and reorder curriculum.', 'tutor' ),
 						'tools' => array(
 							array(
 								'n' => 'tutor-mcp/get-course',
@@ -275,6 +335,26 @@ class Registrar {
 								'l' => __( 'Get course contents', 'tutor' ),
 								'r' => 'read',
 							),
+							array(
+								'n' => 'tutor-mcp/create-course',
+								'l' => __( 'Create course', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/update-course',
+								'l' => __( 'Update course', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/set-course-status',
+								'l' => __( 'Set course status', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/update-course-content-order',
+								'l' => __( 'Update content order', 'tutor' ),
+								'r' => 'write',
+							),
 						),
 					),
 				),
@@ -285,71 +365,65 @@ class Registrar {
 				'abilities' => array(
 					array(
 						'id'    => 'curriculum_tools',
-						'name'  => __( 'Lesson & Quiz', 'tutor' ),
-						'desc'  => __( 'Read published lessons and quizzes (quiz answers remain gated).', 'tutor' ),
+						'name'  => __( 'Topic, Lesson & Quiz', 'tutor' ),
+						'desc'  => __( 'Create and update topics, lessons, and quizzes for end-to-end course building.', 'tutor' ),
 						'tools' => array(
+							array(
+								'n' => 'tutor-mcp/create-topic',
+								'l' => __( 'Create topic', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/update-topic',
+								'l' => __( 'Update topic', 'tutor' ),
+								'r' => 'write',
+							),
 							array(
 								'n' => 'tutor-mcp/get-lesson',
 								'l' => __( 'Get lesson', 'tutor' ),
 								'r' => 'read',
 							),
 							array(
+								'n' => 'tutor-mcp/create-lesson',
+								'l' => __( 'Create lesson', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/update-lesson',
+								'l' => __( 'Update lesson', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
 								'n' => 'tutor-mcp/get-quiz',
 								'l' => __( 'Get quiz', 'tutor' ),
 								'r' => 'read',
+							),
+							array(
+								'n' => 'tutor-mcp/create-quiz',
+								'l' => __( 'Create quiz', 'tutor' ),
+								'r' => 'write',
+							),
+							array(
+								'n' => 'tutor-mcp/update-quiz',
+								'l' => __( 'Update quiz', 'tutor' ),
+								'r' => 'write',
 							),
 						),
 					),
 				),
 			),
 		);
-	}
 
-	/**
-	 * STDIO client config for Cursor / Claude Desktop.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return array
-	 */
-	public static function stdio_config(): array {
-		return array(
-			'mcpServers' => array(
-				'tutor-mcp' => array(
-					'command' => 'wp',
-					'args'    => array(
-						'--path=' . untrailingslashit( ABSPATH ),
-						'mcp-adapter',
-						'serve',
-						'--server=' . self::SERVER_ID,
-						'--user=' . self::AGENT_USER,
-					),
-				),
-			),
-		);
-	}
+		/**
+		 * Filter the Tools → MCP abilities catalog (core + Pro groups).
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param array $catalog Catalog groups.
+		 */
+		$filtered = apply_filters( 'tutor_mcp_tool_catalog', $catalog );
 
-	/**
-	 * HTTP proxy client config (WooCommerce-style remote connection).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return array
-	 */
-	public static function http_config(): array {
-		return array(
-			'mcpServers' => array(
-				'tutor-mcp-http' => array(
-					'command' => 'npx',
-					'args'    => array( '-y', '@automattic/mcp-wordpress-remote@latest' ),
-					'env'     => array(
-						'WP_API_URL'      => self::endpoint(),
-						'WP_API_USERNAME' => self::AGENT_USER,
-						'WP_API_PASSWORD' => '${TUTOR_MCP_APP_PASSWORD}',
-					),
-				),
-			),
-		);
+		return is_array( $filtered ) ? $filtered : $catalog;
 	}
 
 	/**
@@ -374,11 +448,21 @@ class Registrar {
 	 * @return bool
 	 */
 	public static function is_adapter_plugin_active(): bool {
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if ( function_exists( 'is_plugin_active' ) ) {
+			return is_plugin_active( self::ADAPTER_PLUGIN_FILE );
 		}
 
-		return is_plugin_active( self::ADAPTER_PLUGIN_FILE );
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+		if ( in_array( self::ADAPTER_PLUGIN_FILE, $active_plugins, true ) ) {
+			return true;
+		}
+
+		if ( is_multisite() ) {
+			$network_plugins = (array) get_site_option( 'active_sitewide_plugins', array() );
+			return isset( $network_plugins[ self::ADAPTER_PLUGIN_FILE ] );
+		}
+
+		return false;
 	}
 
 	/**
@@ -389,12 +473,7 @@ class Registrar {
 	 * @return bool
 	 */
 	public static function is_adapter_plugin_installed(): bool {
-		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		$plugins = get_plugins();
-		return isset( $plugins[ self::ADAPTER_PLUGIN_FILE ] );
+		return file_exists( WP_PLUGIN_DIR . '/' . self::ADAPTER_PLUGIN_FILE );
 	}
 
 	/**
@@ -463,6 +542,13 @@ class Registrar {
 				)
 			);
 		}
+
+		/**
+		 * Register additional MCP ability categories (e.g. Tutor Pro).
+		 *
+		 * @since 4.3.0
+		 */
+		do_action( 'tutor_mcp_register_categories' );
 	}
 
 	/**
@@ -481,6 +567,13 @@ class Registrar {
 		$this->courses->register();
 		$this->curriculum->register();
 		$this->schema->register();
+
+		/**
+		 * Register additional MCP abilities (e.g. Tutor Pro tools).
+		 *
+		 * @since 4.3.0
+		 */
+		do_action( 'tutor_mcp_register_abilities' );
 	}
 
 	/**
@@ -507,7 +600,7 @@ class Registrar {
 		if ( ! is_array( $tools ) ) {
 			$tools = self::enabled_tools();
 		}
-		$tools = array_values( array_intersect( self::TOOLS, array_map( 'strval', $tools ) ) );
+		$tools = array_values( array_intersect( self::known_tools(), array_map( 'strval', $tools ) ) );
 
 		$adapter->create_server(
 			self::SERVER_ID,
@@ -520,10 +613,11 @@ class Registrar {
 			$error,
 			null,
 			$tools,
-			self::RESOURCES,
+			self::known_resources(),
 			array(),
 			static function (): bool {
-				return is_user_logged_in();
+				// Bool only — WP_Error falls through to is_user_logged_in() in the adapter.
+				return \Tutor\Mcp\Support\Permissions::can_connect();
 			}
 		);
 	}

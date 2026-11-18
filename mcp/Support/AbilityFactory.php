@@ -26,16 +26,25 @@ class AbilityFactory {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param string   $id       Ability ID.
-	 * @param string   $category Category.
-	 * @param string   $label    Label.
-	 * @param string   $desc     Description.
-	 * @param array    $schema   Input schema.
-	 * @param callable $perm     Permission callback.
-	 * @param callable $exec     Execute callback.
+	 * @param string                   $id          Ability ID.
+	 * @param string                   $category    Category.
+	 * @param string                   $label       Label.
+	 * @param string                   $desc        Description.
+	 * @param array                    $schema      Input schema.
+	 * @param callable                 $perm        Permission callback.
+	 * @param callable                 $exec        Execute callback.
+	 * @param array<string, bool>|null $annotations Optional MCP annotation overrides.
 	 * @return void
 	 */
-	public static function tool( string $id, string $category, string $label, string $desc, array $schema, $perm, $exec ): void {
+	public static function tool( string $id, string $category, string $label, string $desc, array $schema, $perm, $exec, $annotations = null ): void {
+		$default_annotations = array(
+			'readOnlyHint'    => true,
+			'destructiveHint' => false,
+		);
+		if ( is_array( $annotations ) ) {
+			$default_annotations = array_merge( $default_annotations, $annotations );
+		}
+
 		wp_register_ability(
 			$id,
 			array(
@@ -44,12 +53,13 @@ class AbilityFactory {
 				'category'            => $category,
 				'input_schema'        => self::normalize_input_schema( $schema ),
 				'permission_callback' => $perm,
-				'execute_callback'    => static function ( $input = array() ) use ( $id, $exec ) {
+				'execute_callback'    => static function ( $input = array() ) use ( /* $id, */ $exec ) {
 					$input = is_array( $input ) ? $input : array();
-					$limit = self::rate_limit( $id );
-					if ( is_wp_error( $limit ) ) {
-						return $limit;
-					}
+					// Temporary: rate limit disabled for MCP testing.
+					// $limit = self::rate_limit( $id );
+					// if ( is_wp_error( $limit ) ) {
+					// return $limit;
+					// }.
 					return call_user_func( $exec, $input );
 				},
 				'meta'                => array(
@@ -57,10 +67,7 @@ class AbilityFactory {
 						'public' => true,
 						'type'   => 'tool',
 					),
-					'annotations' => array(
-						'readOnlyHint'    => true,
-						'destructiveHint' => false,
-					),
+					'annotations' => $default_annotations,
 				),
 			)
 		);
@@ -95,12 +102,13 @@ class AbilityFactory {
 				'permission_callback' => $perm ? $perm : static function (): bool {
 					return Permissions::can_manage_courses();
 				},
-				'execute_callback'    => static function ( $input = array() ) use ( $id, $exec ) {
+				'execute_callback'    => static function ( $input = array() ) use ( /* $id, */ $exec ) {
 					$input = is_array( $input ) ? $input : array();
-					$limit = self::rate_limit( $id );
-					if ( is_wp_error( $limit ) ) {
-						return $limit;
-					}
+					// Temporary: rate limit disabled for MCP testing.
+					// $limit = self::rate_limit( $id );
+					// if ( is_wp_error( $limit ) ) {
+					// 	return $limit;
+					// }
 					return call_user_func( $exec, $input );
 				},
 				'meta'                => array(

@@ -83,6 +83,15 @@ class RestBridge {
 		}
 
 		$decoded = json_decode( wp_json_encode( $data ), true );
-		return is_array( $decoded ) ? $decoded : array();
+		if ( is_array( $decoded ) ) {
+			return $decoded;
+		}
+
+		// Create/update endpoints often return a scalar post/enrollment ID.
+		if ( is_int( $decoded ) || ( is_string( $decoded ) && is_numeric( $decoded ) ) ) {
+			return array( 'id' => (int) $decoded );
+		}
+
+		return array();
 	}
 }
