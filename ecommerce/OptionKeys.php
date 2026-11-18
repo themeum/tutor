@@ -35,6 +35,9 @@ class OptionKeys {
 	const BILLING_PHONE_NUMBER = 'billing_phone_number';
 	const BILLING_EMAIL        = 'billing_email';
 
+	// Whether the billing address field is required.
+	const IS_BILLING_ADDRESS_REQUIRED = 'is_billing_address_required';
+
 	// Ecommerce Policies.
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 

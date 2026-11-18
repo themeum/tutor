@@ -157,11 +157,11 @@ class Paypal extends BasePayment {
 		$returnData = array(
 			'purchase_units' => array(
 				array(
-					'custom_id'   => $data->order_id,
-					'items'       => $items,
-					'amount'      => $amount,
-					'payee'       => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
-					'description' => $description,
+					'custom_id'       => $data->order_id,
+					'items'           => $items,
+					'amount'          => $amount,
+					'payee'           => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
+					'soft_descriptor' => $description,
 				),
 			),
 			'intent'         => 'CAPTURE',

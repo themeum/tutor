@@ -593,6 +593,10 @@ class CheckoutController {
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
+		if ( Settings::is_billing_address_required() && '' === trim( (string) ( $billing_fillable_fields['billing_address'] ?? '' ) ) ) {
+			array_push( $errors, __( 'Billing address is required', 'tutor' ) );
+		}
+
 		$order_payment_fields = array(
 			'object_ids',
 			'coupon_code',

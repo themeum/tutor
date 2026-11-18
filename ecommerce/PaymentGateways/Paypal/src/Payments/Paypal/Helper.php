@@ -265,14 +265,14 @@ final class Helper {
 	 * @since  4.2.0 Uses Utils::splitAddress() instead of System::splitAddress().
 	 */
 	public static function getShippingInfo( $shipping ): array {
-		[$address1, $address2] = Utils::splitAddress( $shipping, 300 );
+		$address = Utils::splitAddress( $shipping, 300 );
 
 		return array(
 			'type'    => 'SHIPPING',
 			'name'    => array( 'full_name' => $shipping->name ),
 			'address' => array(
-				'address_line_1' => $address1,
-				'address_line_2' => $address2,
+				'address_line_1' => $address[0] ?? '',
+				'address_line_2' => $address[1] ?? '',
 				'admin_area_2'   => $shipping->city,
 				'admin_area_1'   => $shipping->region,
 				'postal_code'    => $shipping->postal_code,

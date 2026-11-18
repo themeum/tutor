@@ -238,13 +238,18 @@ class BillingController extends BaseController {
 			'first_name' => 'required',
 			'last_name'  => 'required',
 			'email'      => 'required|email',
-			'phone'      => 'required',
-			'zip_code'   => 'required',
-			'address'    => 'required',
+			'phone'      => '',
+			'zip_code'   => '',
+			'address'    => '',
 			'country'    => 'required',
 			'state'      => 'required',
 			'city'       => 'required',
 		);
+
+		if ( Settings::is_billing_address_required() ) {
+			$validation_rules['billing_address'] = 'required';
+			$data['billing_address']             = trim( (string) ( $data['billing_address'] ?? '' ) );
+		}
 
 		// Skip validation rules for not available fields in data.
 		foreach ( $validation_rules as $key => $value ) {

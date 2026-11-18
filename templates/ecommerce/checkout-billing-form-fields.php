@@ -10,6 +10,7 @@
  */
 
 use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\Settings;
 
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
@@ -111,7 +112,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>">
 		</div>
 	</div>
 
@@ -120,7 +121,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Phone', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>">
 		</div>
 	</div>
 
@@ -129,7 +130,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Address', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo Settings::is_billing_address_required() ? 'required' : ''; ?>>
 		</div>
 	</div>
 </div>

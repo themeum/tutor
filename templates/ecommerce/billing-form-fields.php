@@ -23,12 +23,14 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
 
-$show_close_button = $show_close_button ?? false;
-$close_action      = $close_action ?? 'editBilling = false';
-$country_options   = $country_options ?? array();
-$initial_states    = $initial_states ?? array();
+$show_close_button   = $show_close_button ?? false;
+$close_action        = $close_action ?? 'editBilling = false';
+$country_options     = $country_options ?? array();
+$initial_states      = $initial_states ?? array();
+$is_address_required = Settings::is_billing_address_required();
 ?>
 
 <?php if ( $show_close_button ) : ?>
@@ -98,7 +100,7 @@ $initial_states    = $initial_states ?? array();
 		->id( 'billing_phone' )
 		->required()
 		->placeholder( __( 'Enter your phone number', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_phone', { required: true })" )
+		->attr( 'x-bind', "register('billing_phone')" )
 		->render();
 
 	InputField::make()
@@ -143,7 +145,7 @@ $initial_states    = $initial_states ?? array();
 			->id( 'billing_zip_code' )
 			->required()
 			->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_zip_code', { required: true })" )
+			->attr( 'x-bind', "register('billing_zip_code')" )
 			->render();
 	?>
 </div>
@@ -155,8 +157,8 @@ $initial_states    = $initial_states ?? array();
 		->name( 'billing_address' )
 		->label( __( 'Address', 'tutor' ) )
 		->id( 'billing_address' )
-		->required()
+		->required( $is_address_required )
 		->placeholder( __( 'Enter your address', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_address', { required: true })" )
+		->attr( 'x-bind', $is_address_required ? "register('billing_address', { required: true })" : "register('billing_address')" )
 		->render();
 ?>
