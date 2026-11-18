@@ -667,7 +667,7 @@ class CheckoutController {
 		$billing_info  = $billing_model->get_info( $user_id );
 
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( wp_slash( $billing_fillable_fields ), array( 'user_id' => $current_user_id ) );
+			$update_billing = $billing_model->update( $fields, array( 'user_id' => $user_id ) );
 			if ( ! $update_billing ) {
 				return new WP_Error(
 					'billing_info_update_failed',
