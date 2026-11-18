@@ -6,8 +6,8 @@
 
 ## Testing
 
-- [ ] Tested
-- [ ] Not tested
+* [ ] Tested
+* [ ] Not tested
 
 ## Use of AI Tool
 
