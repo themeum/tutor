@@ -113,7 +113,7 @@ class Options_V2 {
 
 		if ( ! $this->options ) {
 			// Get if already not prepared.
-			$this->options = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+			$this->options = (array) get_option( 'tutor_option' );
 		}
 
 		$option = $this->options;
