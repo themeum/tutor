@@ -247,8 +247,11 @@ class QuizModel {
 			}
 
 			// Common formatting logic.
-			$attempt_ended_time = DateTimeHelper::create( $quiz_attempt->attempt_ended_at ?? '' )
+			$attempt_ended_time = '';
+			if ( ! empty( $quiz_attempt->attempt_ended_at ) ) {
+				$attempt_ended_time = DateTimeHelper::create( $quiz_attempt->attempt_ended_at )
 				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+			}
 
 			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
@@ -267,7 +270,7 @@ class QuizModel {
 				'correct_answers'   => $correct_answers,
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
-				'date'              => $attempt_ended_time ?? '',
+				'date'              => $attempt_ended_time,
 				'quiz_title'        => $quiz_title,
 				'course_title'      => $course_title,
 				'quiz_id'           => $quiz_attempt->quiz_id ?? 0,
