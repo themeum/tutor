@@ -118,7 +118,7 @@ class InstructorCapabilityMigrator extends BatchProcessor implements SingleProce
 			$user->add_cap( 'edit_published_posts' );
 		}
 
-		if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
+		if ( tutor_utils()->has_wc() ) {
 			if ( ! $user->has_cap( 'edit_published_products' ) ) {
 				$user->add_cap( 'edit_published_products' );
 			}
