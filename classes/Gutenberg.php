@@ -68,7 +68,8 @@ class Gutenberg {
 			&& tutor_utils()->get_option( 'enable_gutenberg_course_edit' ) === true ) {
 			// Modify the wp/v2/users endpoint request from gutenberg editor.
 			unset( $prepared_args['who'] );
-			$prepared_args['role__in'] = array( 'administrator', 'tutor_instructor' );
+			$prepared_args['role__in']   = array( 'administrator', 'tutor_instructor' );
+			$prepared_args['meta_query'] = Course::get_course_author_meta_query();
 		}
 
 		return $prepared_args;
