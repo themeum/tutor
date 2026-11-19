@@ -59,26 +59,6 @@ class Settings {
 	}
 
 	/**
-	 * Check whether the billing address field is required.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return boolean
-	 */
-	public static function is_billing_address_required() {
-		$is_required = (bool) tutor_utils()->get_option( OptionKeys::IS_BILLING_ADDRESS_REQUIRED, true );
-
-		/**
-		 * Filters whether the billing address field is required.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param bool $is_required Whether the billing address is required.
-		 */
-		return (bool) apply_filters( 'tutor_is_billing_address_required', $is_required );
-	}
-
-	/**
 	 * Add ecommerce settings
 	 *
 	 * @param array $fields Tutor setting fields.
@@ -264,7 +244,7 @@ class Settings {
 							'type'    => 'toggle_switch',
 							'label'   => __( 'Require Billing Address', 'tutor' ),
 							'default' => 'on',
-							'desc'    => __( 'Make the address related field (Postcode/Zip, Address) mandatory in the checkout billing form. Turn off to make it optional.', 'tutor' ),
+							'desc'    => __( 'Make billing address fields (Address, Postcode/ZIP) mandatory at checkout. Turn off to make them optional.', 'tutor' ),
 						),
 					),
 				),
@@ -530,5 +510,25 @@ class Settings {
 		}
 
 		return $config_fields;
+	}
+
+	/**
+	 * Check whether the billing address field is required.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_billing_address_required() {
+		$is_required = (bool) tutor_utils()->get_option( OptionKeys::IS_BILLING_ADDRESS_REQUIRED, true );
+
+		/**
+		 * Filters whether the billing address field is required.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param bool $is_required Whether the billing address is required.
+		 */
+		return (bool) apply_filters( 'tutor_is_billing_address_required', $is_required );
 	}
 }

@@ -31,6 +31,7 @@ $close_action        = $close_action ?? 'editBilling = false';
 $country_options     = $country_options ?? array();
 $initial_states      = $initial_states ?? array();
 $is_address_required = Settings::is_billing_address_required();
+$required_option     = $is_address_required ? ', { required: true }' : '';
 ?>
 
 <?php if ( $show_close_button ) : ?>
@@ -136,7 +137,7 @@ $is_address_required = Settings::is_billing_address_required();
 			->id( 'billing_city' )
 			->required()
 			->placeholder( __( 'Enter your city', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_city', { required: true })" )
+			->attr( 'x-bind', "register('billing_city' $required_option)" )
 			->render();
 
 		InputField::make()
@@ -145,7 +146,7 @@ $is_address_required = Settings::is_billing_address_required();
 			->id( 'billing_zip_code' )
 			->required()
 			->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_zip_code')" )
+			->attr( 'x-bind', "register('billing_zip_code' $required_option)" )
 			->render();
 	?>
 </div>
@@ -159,6 +160,6 @@ $is_address_required = Settings::is_billing_address_required();
 		->id( 'billing_address' )
 		->required( $is_address_required )
 		->placeholder( __( 'Enter your address', 'tutor' ) )
-		->attr( 'x-bind', $is_address_required ? "register('billing_address', { required: true })" : "register('billing_address')" )
+		->attr( 'x-bind', "register('billing_address' $required_option)" )
 		->render();
 ?>

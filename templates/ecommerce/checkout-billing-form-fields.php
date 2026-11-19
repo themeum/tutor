@@ -27,6 +27,9 @@ $billing_city       = $billing_info->billing_city ?? tutor_utils()->input_old( '
 
 $country_info = tutor_get_country_info_by_name( $billing_country );
 $states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : array();
+
+$is_address_required = Settings::is_billing_address_required();
+$required_option     = $is_address_required ? 'required' : '';
 ?>
 
 <div class="tutor-row <?php echo isset( $is_checkout_page ) ? 'tutor-g-0' : ''; ?>">
@@ -112,7 +115,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>">
+			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" <?php echo esc_attr( $required_option ); ?>>
 		</div>
 	</div>
 
@@ -130,7 +133,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Address', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo Settings::is_billing_address_required() ? 'required' : ''; ?>>
+			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo esc_attr( $required_option ); ?>>
 		</div>
 	</div>
 </div>
