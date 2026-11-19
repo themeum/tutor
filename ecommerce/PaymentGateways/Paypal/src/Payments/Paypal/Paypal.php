@@ -176,10 +176,6 @@ class Paypal extends BasePayment {
 			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload );
 		}
 
-		if ( isset( $data->shipping_address ) && ! empty( $data->shipping_address ) ) {
-			$returnData['purchase_units'][0]['shipping'] = Helper::getShippingInfo( $data->shipping_address );
-		}
-
 		return $returnData;
 	}
 

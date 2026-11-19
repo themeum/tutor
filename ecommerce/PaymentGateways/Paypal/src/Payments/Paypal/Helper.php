@@ -254,34 +254,6 @@ final class Helper {
 	}
 
 	/**
-	 * Creates the shipping information array for a payment request.
-	 *
-	 * This method constructs and returns an array containing the shipping type, receiver's full name,
-	 * and address for a payment request.
-	 *
-	 * @param  object $shipping The shipping data containing the receiver's name and address.
-	 * @return array        The formatted shipping information including type, name, and address.
-	 * @since  3.0.0
-	 * @since  4.2.0 Uses Utils::splitAddress() instead of System::splitAddress().
-	 */
-	public static function getShippingInfo( $shipping ): array {
-		$address = Utils::splitAddress( $shipping, 300 );
-
-		return array(
-			'type'    => 'SHIPPING',
-			'name'    => array( 'full_name' => $shipping->name ),
-			'address' => array(
-				'address_line_1' => $address[0] ?? '',
-				'address_line_2' => $address[1] ?? '',
-				'admin_area_2'   => $shipping->city,
-				'admin_area_1'   => $shipping->region,
-				'postal_code'    => $shipping->postal_code,
-				'country_code'   => $shipping->country->alpha_2,
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the URL from an array of links that matches a specified condition.
 	 *
 	 * This method filters the provided links array to find the link that matches the given
