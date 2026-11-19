@@ -43,6 +43,8 @@ class FormHandler {
 	public function tutor_retrieve_password() {
 		tutils()->checking_nonce();
 
+		$user_data = false;
+
 		/**
 		 * To check spam or other logic before form process.
 		 *
@@ -72,7 +74,7 @@ class FormHandler {
 
 		$errors = new \WP_Error();
 
-		do_action( 'lostpassword_post', $errors );
+		do_action( 'lostpassword_post', $errors, $user_data );
 
 		if ( $errors->get_error_code() ) {
 			tutor_flash_set( 'danger', $errors->get_error_message() );
