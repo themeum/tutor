@@ -34,7 +34,6 @@ class Mcp {
 	public function __construct() {
 		( new Registrar() )->hooks();
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
-		add_action( 'admin_init', array( $this, 'handle_access' ) );
 		add_action( 'admin_init', array( $this, 'guard_tools_page' ) );
 		add_action( 'init', array( $this, 'maybe_bootstrap_role' ), 5 );
 		// Outermost tools filter, late — keep MCP hidden even if other filters re-add it.
@@ -54,6 +53,7 @@ class Mcp {
 			Registrar::OPTION,
 			Registrar::OPTION_READ_ONLY,
 			Registrar::OPTION_ENABLED_TOOLS,
+			Registrar::OPTION_INSTRUCTOR_ACCESS,
 		);
 	}
 
@@ -167,9 +167,10 @@ class Mcp {
 
 		check_admin_referer( 'tutor_mcp_tools_save' );
 
-		$enabled   = (bool) Input::post( 'tutor_mcp_enabled', false, Input::TYPE_BOOL );
-		$read_only = (bool) Input::post( 'tutor_mcp_read_only', false, Input::TYPE_BOOL );
-		$tools_raw = Input::post( 'tutor_mcp_enabled_tools', array(), Input::TYPE_ARRAY );
+		$enabled           = (bool) Input::post( 'tutor_mcp_enabled', false, Input::TYPE_BOOL );
+		$read_only         = (bool) Input::post( 'tutor_mcp_read_only', false, Input::TYPE_BOOL );
+		$instructor_access = (bool) Input::post( 'tutor_mcp_instructor_access', false, Input::TYPE_BOOL );
+		$tools_raw         = Input::post( 'tutor_mcp_enabled_tools', array(), Input::TYPE_ARRAY );
 		if ( ! is_array( $tools_raw ) ) {
 			$tools_raw = array();
 		}
@@ -188,6 +189,7 @@ class Mcp {
 
 		update_option( Registrar::OPTION, $enabled ? 1 : 0, false );
 		update_option( Registrar::OPTION_READ_ONLY, $read_only ? 1 : 0, false );
+		update_option( Registrar::OPTION_INSTRUCTOR_ACCESS, $instructor_access ? 1 : 0, false );
 		update_option( Registrar::OPTION_ENABLED_TOOLS, $tools, false );
 
 		if ( $enabled ) {
@@ -206,46 +208,6 @@ class Mcp {
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'admin.php' ) ) );
-		exit;
-	}
-
-	/**
-	 * Allow / revoke MCP access (Tools → MCP → Access).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return void
-	 */
-	public function handle_access() {
-		$action = Input::post( 'tutor_mcp_action', '' );
-		if ( ! in_array( $action, array( 'allow_access', 'revoke_access' ), true ) ) {
-			return;
-		}
-		if ( ! Permissions::can_manage_settings() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
-		}
-		check_admin_referer( 'tutor_mcp_access' );
-
-		if ( 'allow_access' === $action ) {
-			$raw  = sanitize_text_field( Input::post( 'tutor_mcp_user', '' ) );
-			$user = ctype_digit( $raw ) ? get_userdata( (int) $raw ) : ( is_email( $raw ) ? get_user_by( 'email', $raw ) : get_user_by( 'login', $raw ) );
-			if ( $user instanceof \WP_User ) {
-				Permissions::set_allowed( (int) $user->ID, true );
-			}
-		} else {
-			Permissions::set_allowed( Input::post( 'tutor_mcp_user_id', 0, Input::TYPE_INT ), false );
-		}
-
-		wp_safe_redirect(
-			add_query_arg(
-				array(
-					'page'     => 'tutor-tools',
-					'sub_page' => 'tutor_mcp',
-					'mcp_view' => 'access',
-				),
-				admin_url( 'admin.php' )
-			)
-		);
 		exit;
 	}
 }

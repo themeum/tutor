@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var int      $total_tools
  * @var bool     $enabled
  * @var bool     $read_only
+ * @var bool     $instructor_access
  * @var array    $catalog
  * @var string[] $enabled_tools
  */
@@ -167,4 +168,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php endif; ?>
 <?php if ( $read_only ) : ?>
 	<input type="hidden" name="tutor_mcp_read_only" value="1">
+<?php endif; ?>
+<?php if ( ! empty( $instructor_access ) ) : ?>
+	<input type="hidden" name="tutor_mcp_instructor_access" value="1">
 <?php endif; ?>

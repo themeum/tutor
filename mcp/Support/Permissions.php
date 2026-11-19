@@ -26,15 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Permissions {
 
 	/**
-	 * User meta / capability key for MCP allowlist.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @var string
-	 */
-	const META_ALLOWED = 'tutor_mcp_allowed';
-
-	/**
 	 * Deny writes when Tools → MCP read-only is enabled.
 	 *
 	 * @since 4.3.0
@@ -52,7 +43,9 @@ class Permissions {
 	/**
 	 * Whether a user may connect to Tutor MCP (bool only for the adapter).
 	 *
-	 * Admins always; others need tutor_mcp_allowed meta/cap.
+	 * Site admins always can. Instructors / co-instructors can when an admin
+	 * enables Tools → MCP → Allow instructors. Individual tools still enforce
+	 * each user's Tutor capabilities.
 	 *
 	 * @since 4.3.0
 	 *
@@ -64,33 +57,16 @@ class Permissions {
 		if ( ! $user_id ) {
 			return false;
 		}
+
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		return (bool) get_user_meta( $user_id, self::META_ALLOWED, true ) || user_can( $user_id, self::META_ALLOWED );
-	}
 
-	/**
-	 * Allow or revoke MCP access for a user.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param int  $user_id User ID.
-	 * @param bool $allow   True to allow, false to revoke.
-	 * @return void
-	 */
-	public static function set_allowed( int $user_id, bool $allow ): void {
-		$user = get_userdata( $user_id );
-		if ( ! $user || user_can( $user_id, 'manage_options' ) ) {
-			return;
+		if ( ! Registrar::is_instructor_access_enabled() ) {
+			return false;
 		}
-		if ( $allow ) {
-			update_user_meta( $user_id, self::META_ALLOWED, 1 );
-			$user->add_cap( self::META_ALLOWED );
-			return;
-		}
-		delete_user_meta( $user_id, self::META_ALLOWED );
-		$user->remove_cap( self::META_ALLOWED );
+
+		return (bool) User::is_instructor( $user_id, true );
 	}
 
 	/**

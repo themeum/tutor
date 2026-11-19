@@ -33,14 +33,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Registrar {
 
-	const OPTION               = 'tutor_mcp_enabled';
-	const OPTION_READ_ONLY     = 'tutor_mcp_read_only';
-	const OPTION_ENABLED_TOOLS = 'tutor_mcp_enabled_tools';
-	const SERVER_ID            = 'tutor-mcp';
-	const AGENT_USER           = 'tutor-mcp-agent';
-	const ROLE                 = 'tutor_mcp_agent';
-	const ADAPTER_PLUGIN_FILE  = 'mcp-adapter/mcp-adapter.php';
-	const ADAPTER_GITHUB_URL   = 'https://github.com/WordPress/mcp-adapter';
+	const OPTION                   = 'tutor_mcp_enabled';
+	const OPTION_READ_ONLY         = 'tutor_mcp_read_only';
+	const OPTION_ENABLED_TOOLS     = 'tutor_mcp_enabled_tools';
+	const OPTION_INSTRUCTOR_ACCESS = 'tutor_mcp_instructor_access';
+	const SERVER_ID                = 'tutor-mcp';
+	const AGENT_USER               = 'tutor-mcp-agent';
+	const ROLE                     = 'tutor_mcp_agent';
+	const ADAPTER_PLUGIN_FILE      = 'mcp-adapter/mcp-adapter.php';
+	const ADAPTER_GITHUB_URL       = 'https://github.com/WordPress/mcp-adapter';
 
 	/**
 	 * Tool ability IDs.
@@ -289,6 +290,19 @@ class Registrar {
 		}
 
 		return (bool) $stored;
+	}
+
+	/**
+	 * Whether instructors / co-instructors may connect to Tutor MCP.
+	 *
+	 * Off by default — only site admins can connect until an admin enables this.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return bool
+	 */
+	public static function is_instructor_access_enabled(): bool {
+		return (bool) get_option( self::OPTION_INSTRUCTOR_ACCESS, false );
 	}
 
 	/**

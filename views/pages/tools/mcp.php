@@ -21,16 +21,17 @@ if ( ! Permissions::can_manage_settings() ) {
 	wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
 }
 
-$enabled       = Registrar::is_enabled();
-$read_only     = Registrar::is_read_only();
-$endpoint      = Registrar::endpoint();
-$enabled_tools = Registrar::enabled_tools();
-$catalog       = Registrar::tool_catalog();
-$total_tools   = count( Registrar::known_tools() );
-$on_count      = count( $enabled_tools );
-$updated       = (bool) Input::get( 'updated', false, Input::TYPE_BOOL );
-$mcp_view      = Input::get( 'mcp_view', '' );
-$abilities_url = add_query_arg(
+$enabled           = Registrar::is_enabled();
+$read_only         = Registrar::is_read_only();
+$instructor_access = Registrar::is_instructor_access_enabled();
+$endpoint          = Registrar::endpoint();
+$enabled_tools     = Registrar::enabled_tools();
+$catalog           = Registrar::tool_catalog();
+$total_tools       = count( Registrar::known_tools() );
+$on_count          = count( $enabled_tools );
+$updated           = (bool) Input::get( 'updated', false, Input::TYPE_BOOL );
+$mcp_view          = Input::get( 'mcp_view', '' );
+$abilities_url     = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',
@@ -38,15 +39,7 @@ $abilities_url = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-$access_url    = add_query_arg(
-	array(
-		'page'     => 'tutor-tools',
-		'sub_page' => 'tutor_mcp',
-		'mcp_view' => 'access',
-	),
-	admin_url( 'admin.php' )
-);
-$overview_url  = add_query_arg(
+$overview_url      = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',
@@ -59,14 +52,6 @@ $overview_url  = add_query_arg(
 	id="tutor-mcp-root"
 	data-has-adapter="<?php echo Registrar::has_adapter() ? '1' : '0'; ?>"
 >
-	<?php if ( 'access' === $mcp_view ) : ?>
-		<div class="tutor-option-main-title">
-			<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
-				<?php esc_html_e( 'Access', 'tutor' ); ?>
-			</div>
-		</div>
-		<?php require __DIR__ . '/mcp/access.php'; ?>
-	<?php else : ?>
 	<form method="post" id="tutor-mcp-form">
 		<?php wp_nonce_field( 'tutor_mcp_tools_save' ); ?>
 		<input type="hidden" name="tutor_mcp_action" value="save_settings">
@@ -182,6 +167,21 @@ $overview_url  = add_query_arg(
 
 					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
+							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Allow instructors', 'tutor' ); ?></div>
+							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+								<?php esc_html_e( 'Let instructors and co-instructors connect to MCP. They can only use tools within their normal Tutor LMS permissions. Admins always have access.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-option-field-input">
+							<label class="tutor-form-toggle">
+								<input type="checkbox" class="tutor-form-toggle-input" name="tutor_mcp_instructor_access" value="1" <?php checked( $instructor_access ); ?>>
+								<span class="tutor-form-toggle-control"></span>
+							</label>
+						</div>
+					</div>
+
+					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Abilities', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 								<?php esc_html_e( 'Choose what agents are allowed to do on this site.', 'tutor' ); ?>
@@ -197,21 +197,6 @@ $overview_url  = add_query_arg(
 									(int) $total_tools
 								);
 								?>
-								<span class="tutor-icon-angle-right tutor-ml-8" aria-hidden="true"></span>
-							</a>
-						</div>
-					</div>
-
-					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
-						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Access', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
-								<?php esc_html_e( 'Allow or revoke MCP for instructors and students.', 'tutor' ); ?>
-							</div>
-						</div>
-						<div class="tutor-option-field-input">
-							<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( $access_url ); ?>">
-								<?php esc_html_e( 'Manage', 'tutor' ); ?>
 								<span class="tutor-icon-angle-right tutor-ml-8" aria-hidden="true"></span>
 							</a>
 						</div>
@@ -243,6 +228,5 @@ $overview_url  = add_query_arg(
 		?>
 	</form>
 
-		<?php require __DIR__ . '/mcp/adapter-modal.php'; ?>
-	<?php endif; ?>
+	<?php require __DIR__ . '/mcp/adapter-modal.php'; ?>
 </div>
