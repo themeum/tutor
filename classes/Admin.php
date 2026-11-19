@@ -66,6 +66,8 @@ class Admin {
 
 		add_action( 'admin_notices', array( $this, 'show_offer_notice' ) );
 		add_action( 'wp_ajax_tutor_dismiss_offer_notice', array( $this, 'ajax_dismiss_offer_notice' ) );
+
+		new UninstallFeedback();
 	}
 
 	/**
