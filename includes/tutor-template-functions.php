@@ -1262,6 +1262,48 @@ if ( ! function_exists( 'tutor_lesson_video' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_video_subtitle_tracks' ) ) {
+	/**
+	 * Render subtitle track tags for the current video.
+	 *
+	 * Only Native Providers (html5, external_url) render these; the other player
+	 * adapters ignore `<track>` children.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param object|null $video_info video info from tutor_utils()->get_video_info().
+	 *
+	 * @return void
+	 */
+	function tutor_video_subtitle_tracks( $video_info = null ) {
+		if ( null === $video_info ) {
+			$video_info = tutor_utils()->get_video_info();
+		}
+
+		if ( ! is_object( $video_info ) || empty( $video_info->subtitles ) || ! is_array( $video_info->subtitles ) ) {
+			return;
+		}
+
+		foreach ( $video_info->subtitles as $track ) {
+			$attachment_id = absint( $track['attachment_id'] ?? 0 );
+			$srclang       = $track['srclang'] ?? '';
+			$url           = $attachment_id ? wp_get_attachment_url( $attachment_id ) : false;
+
+			if ( ! $url || '' === $srclang ) {
+				continue;
+			}
+
+			printf(
+				'<track kind="subtitles" src="%s" srclang="%s" label="%s"%s />',
+				esc_url( $url ),
+				esc_attr( $srclang ),
+				esc_attr( $track['label'] ?? $srclang ),
+				! empty( $track['default'] ) ? ' default' : ''
+			);
+		}
+	}
+}
+
 if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
 	/**
 	 * Get all lessons attachments.

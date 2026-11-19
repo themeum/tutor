@@ -23,6 +23,7 @@ type SelectProps<T> = {
   options: Option<T>[];
   value?: Option<T>;
   label?: string;
+  ariaLabel?: string;
   placeholder?: string;
   onChange?: (selectedOption: Option<T>) => void;
   clearOption?: () => void;
@@ -48,6 +49,7 @@ const Select = <T,>({
   onChange = noop,
   clearOption = noop,
   label,
+  ariaLabel,
   placeholder = '',
   readOnly,
   isSearchable = false,
@@ -120,6 +122,7 @@ const Select = <T,>({
         <div css={[styles.inputWrapper, inputCss]}>
           <input
             id={id}
+            aria-label={ariaLabel}
             onClick={() => setIsOpen((previousState) => !previousState)}
             css={styles.input({ isSearchable, size })}
             autoComplete="off"

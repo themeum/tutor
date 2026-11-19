@@ -1,6 +1,6 @@
 # Captions and Scrub Previews are capability-only in this migration
 
-**Status**: accepted
+**Status**: superseded for captions by ADR-0012; Storyboard Track remains capability-only
 
 ## Context
 

@@ -125,4 +125,94 @@ class UtilsTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'banana', tutor_utils()->avalue_dot( 'b', $obj ) );
 		$this->assertEquals( false, tutor_utils()->avalue_dot( 'c', $obj ) );
 	}
+
+	/**
+	 * Subtitle tracks are sanitized and only one can be default.
+	 *
+	 * @return void
+	 */
+	public function test_filter_video_meta_normalizes_subtitle_tracks() {
+		$utils = new Utils();
+		$video = $utils->filter_video_meta(
+			array(
+				'source'    => 'html5',
+				'subtitles' => array(
+					array(
+						'attachment_id' => '12',
+						'srclang'       => 'EN',
+						'label'         => 'English',
+						'default'       => '1',
+					),
+					array(
+						'attachment_id' => '34',
+						'srclang'       => 'de',
+						'label'         => '',
+						'default'       => '1',
+					),
+					array(
+						'attachment_id' => '0',
+						'srclang'       => 'fr',
+						'label'         => 'French',
+						'default'       => '1',
+					),
+					array(
+						'attachment_id' => '56',
+						'srclang'       => 'not a lang!',
+						'label'         => 'Bad',
+						'default'       => '1',
+					),
+				),
+			)
+		);
+
+		$this->assertSame( 'html5', $video['source'] );
+		$this->assertCount( 2, $video['subtitles'] );
+		$this->assertSame( 12, $video['subtitles'][0]['attachment_id'] );
+		$this->assertSame( 'en', $video['subtitles'][0]['srclang'] );
+		$this->assertTrue( $video['subtitles'][0]['default'] );
+		$this->assertSame( 'DE', $video['subtitles'][1]['label'] );
+		$this->assertFalse( $video['subtitles'][1]['default'] );
+	}
+
+	/**
+	 * Subtitle track count is capped to keep video meta bounded.
+	 *
+	 * @return void
+	 */
+	public function test_filter_video_meta_caps_subtitle_tracks() {
+		$utils  = new Utils();
+		$tracks = array();
+
+		for ( $i = 1; $i <= 51; $i++ ) {
+			$tracks[] = array(
+				'attachment_id' => $i,
+				'srclang'       => 'en',
+				'label'         => 'English',
+				'default'       => '0',
+			);
+		}
+
+		$video = $utils->filter_video_meta( array( 'subtitles' => $tracks ) );
+
+		$this->assertCount( 50, $video['subtitles'] );
+	}
+
+	/**
+	 * Invalid subtitle tracks are dropped entirely.
+	 *
+	 * @return void
+	 */
+	public function test_filter_video_meta_drops_invalid_subtitle_tracks() {
+		$utils = new Utils();
+		$video = $utils->filter_video_meta(
+			array(
+				'subtitles' => array(
+					array( 'attachment_id' => 0 ),
+					'not a track',
+				),
+			)
+		);
+
+		$this->assertArrayNotHasKey( 'subtitles', $video );
+	}
 }

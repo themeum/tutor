@@ -1645,6 +1645,7 @@ class Utils {
 				'runtime',
 				'duration_sec',
 				'playtime',
+				'subtitles',
 			)
 		);
 
@@ -1664,7 +1665,64 @@ class Utils {
 			}
 		}
 
+		if ( isset( $filtered['subtitles'] ) ) {
+			$subtitles = $this->normalize_video_subtitle_tracks( $filtered['subtitles'] );
+
+			if ( $subtitles ) {
+				$filtered['subtitles'] = $subtitles;
+			} else {
+				unset( $filtered['subtitles'] );
+			}
+		}
+
 		return $filtered;
+	}
+
+	/**
+	 * Normalize subtitle tracks stored in video meta.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param mixed $tracks raw subtitle tracks.
+	 *
+	 * @return array
+	 */
+	private function normalize_video_subtitle_tracks( $tracks ) {
+		if ( ! is_array( $tracks ) ) {
+			return array();
+		}
+
+		$normalized       = array();
+		$default_assigned = false;
+
+		foreach ( $tracks as $track ) {
+			if ( count( $normalized ) >= 50 ) {
+				break;
+			}
+
+			if ( ! is_array( $track ) ) {
+				continue;
+			}
+
+			$attachment_id = absint( $track['attachment_id'] ?? 0 );
+			$srclang       = strtolower( sanitize_text_field( $track['srclang'] ?? '' ) );
+			$label         = sanitize_text_field( $track['label'] ?? '' );
+			$is_default    = ! $default_assigned && in_array( $track['default'] ?? '', array( '1', 1, true ), true );
+
+			if ( ! $attachment_id || ! preg_match( '/^[a-z]{2,3}(?:-[a-z0-9]+)*$/', $srclang ) ) {
+				continue;
+			}
+
+			$normalized[]     = array(
+				'attachment_id' => $attachment_id,
+				'srclang'       => $srclang,
+				'label'         => '' !== $label ? $label : strtoupper( $srclang ),
+				'default'       => $is_default,
+			);
+			$default_assigned = $default_assigned || $is_default;
+		}
+
+		return $normalized;
 	}
 
 	/**

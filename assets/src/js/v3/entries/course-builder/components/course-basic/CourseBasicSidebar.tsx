@@ -232,7 +232,9 @@ const CourseBasicSidebar = () => {
             }
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INTRO_VIDEO}
-          />
+          >
+            <FormVideoInput.Subtitles />
+          </FormVideoInput>
         )}
       />
 

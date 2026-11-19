@@ -9,10 +9,19 @@ concepts (buffering, poster, autoplay) are out of scope here.
 The media attached to a lesson and shown inside that lesson's player.
 _Avoid_: Course video, lesson media
 
+**Course Intro Video**:
+The media attached to a course and shown on the course page, above the curriculum.
+_Avoid_: Course video (when the intro is meant), promo video
+
 **Provider**:
 The origin platform a Lesson Video is played from: a self-hosted file, an external URL,
 YouTube, Vimeo, an embedded iframe, or a shortcode embed.
 _Avoid_: Source, type
+
+**Native Provider**:
+A Provider whose media plays in the HTML `<video>` element: a self-hosted file (`html5`)
+or an external file URL (`external_url`). The only Providers that can use Subtitle Tracks.
+_Avoid_: HTML5 source, direct source
 
 **Lesson Player**:
 The on-page player that plays a Lesson Video and owns its controls and playback state.
@@ -48,8 +57,17 @@ _Avoid_: Thumbnail track, sprite sheet
 
 **Embedded Captions**:
 Captions supplied by the Provider itself, as opposed to captions uploaded and managed
-inside Tutor.
+inside Tutor. A Native Provider has no Embedded Captions.
 _Avoid_: Subtitles, CC
+
+**Subtitle Track**:
+A WebVTT caption file uploaded in Tutor and attached to a Native Provider video. Rendered
+as a `<track kind="subtitles">` inside the player.
+_Avoid_: Captions file, subtitle file, CC file
+
+**Default Subtitle Track**:
+The single Subtitle Track marked to turn on automatically when the video starts.
+_Avoid_: Auto captions, forced subtitles
 
 **Provider-Aware Control**:
 A Lesson Player control that is shown or hidden depending on the Provider — for example,

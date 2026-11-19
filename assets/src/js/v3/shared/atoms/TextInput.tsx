@@ -14,6 +14,7 @@ type Size = 'small' | 'regular';
 
 type TextInputProps = {
   label?: string;
+  ariaLabel?: string;
   isInlineLabel?: boolean;
   type?: 'number' | 'text';
   value?: string | number;
@@ -35,6 +36,7 @@ type TextInputProps = {
 
 const TextInput = ({
   label,
+  ariaLabel,
   isInlineLabel,
   type = 'text',
   value,
@@ -78,6 +80,7 @@ const TextInput = ({
           ref={inputRef}
           id={id}
           type="text"
+          aria-label={ariaLabel}
           css={[styles.input(variant, size), inputCss]}
           value={value || ''}
           autoFocus={autoFocus}

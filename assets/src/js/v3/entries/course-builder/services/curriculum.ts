@@ -12,6 +12,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
+import { videoMetaToFormEntries } from '@TutorShared/utils/video-payload';
 
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
@@ -175,14 +176,7 @@ export const convertLessonDataToPayload = (
     title: data.title,
     description: data.description,
     thumbnail_id: data.thumbnail?.id ?? null,
-    ...(data.video
-      ? Object.fromEntries(
-          Object.entries(data.video).map(([key, value]) => [
-            `video[${key}]`,
-            key === 'source' && !value ? '-1' : key === 'poster_url' && !data.video?.poster ? '' : value,
-          ]),
-        )
-      : {}),
+    ...(data.video ? videoMetaToFormEntries(data.video, '-1') : {}),
     'video[runtime][hours]': data.duration.hour || 0,
     'video[runtime][minutes]': data.duration.minute || 0,
     'video[runtime][seconds]': data.duration.second || 0,

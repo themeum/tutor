@@ -423,7 +423,9 @@ const LessonModal = ({
                     form.setValue('duration', { hour: hours, minute: minutes, second: seconds }, { shouldDirty: true });
                   }}
                   visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO}
-                />
+                >
+                  <FormVideoInput.Subtitles />
+                </FormVideoInput>
               )}
             />
             <Show when={isVideoPlaybackTimeVisible}>

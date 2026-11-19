@@ -28,6 +28,7 @@ import {
   type WPPostStatus,
 } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
+import { videoMetaToFormEntries } from '@TutorShared/utils/video-payload';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -534,14 +535,7 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
 
     _tutor_course_additional_data_edit: true,
     _tutor_attachments_main_edit: true,
-    ...(data.video.source
-      ? Object.fromEntries(
-          Object.entries(data.video).map(([key, value]) => [
-            `video[${key}]`,
-            key === 'poster_url' && !data.video.poster ? '' : value,
-          ]),
-        )
-      : {}),
+    ...(data.video.source ? videoMetaToFormEntries(data.video) : {}),
     tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
     ...(isBefore(new Date(), new Date(`${data.schedule_date} ${data.schedule_time}`)) && {
