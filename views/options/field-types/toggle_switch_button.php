@@ -9,22 +9,24 @@
  * @since 2.0.0
  */
 
-$field_default    = $field['default'];
-$field_key        = $field['key'];
-$field_event      = $field['event'];
-$field_label      = esc_attr( $field['label'] );
-$default          = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
-$option_value     = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
-$field_key_event  = sanitize_key( $field_key . '_' . $field_event );
-$field_key_title  = $field_key . ' --> ' . $field_event;
-$field_template   = sanitize_key( $field['template'] );
-$field_id         = sanitize_key( 'field_' . $field_key_event );
-$tooltip_desc     = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
-$send_test_button = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm send_test_email"
-data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-key="' . esc_attr( $field_event ) . '" data-template="' . esc_attr( $field_template ) . '"
->' . esc_attr( 'Send Test' ) . '</button>';
+defined( 'ABSPATH' ) || exit;
 
-$editable = $field['editable'] ?? true;
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_default   = $field['default'] ?? 'off';
+$field_key       = $field['key'] ?? '';
+$field_event     = $field['event'] ?? '';
+$field_label     = $field['label'] ?? '';
+$option_value    = $this->get( $field_key . '.' . $field_event, $field_default );
+$field_key_event = sanitize_key( $field_key . '_' . $field_event );
+$field_id        = 'field_' . $field_key_event;
+$tooltip_desc    = ! empty( $field['tooltip'] ) ? $field['tooltip'] : '';
+$editable        = $field['editable'] ?? true;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
@@ -33,7 +35,7 @@ $editable = $field['editable'] ?? true;
 		</div>
 		<?php if ( $tooltip_desc ) { ?>
 			<div class="tooltip-wrap tooltip-icon">
-				<span class="tooltip-txt tooltip-top"><?php echo esc_attr( $tooltip_desc ); ?></span>
+				<span class="tooltip-txt tooltip-top"><?php echo esc_html( $tooltip_desc ); ?></span>
 			</div>
 			<span style="white-space: nowrap;"></span>
 		<?php } ?>
@@ -44,10 +46,10 @@ $editable = $field['editable'] ?? true;
 		$total_btn = count( $field['buttons'] );
 
 		echo $total_btn ? '<div class="tutor-mr-16">' : '';
-		foreach ( $field['buttons'] as $key => $button ) {
-			if ( 'anchor' === $button['type'] ) {
+		foreach ( $field['buttons'] as $button ) {
+			if ( 'anchor' === ( $button['type'] ?? '' ) ) {
 				?>
-					<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
+					<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( $button['url'] ?? '' ); ?>"><?php echo esc_html( $button['text'] ?? '' ); ?></a>
 					<?php
 			}
 		}
@@ -57,8 +59,8 @@ $editable = $field['editable'] ?? true;
 	if ( $editable ) {
 		?>
 	<label class="tutor-form-toggle">
-		<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field['event'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
-		<input type="checkbox" value="on" <?php esc_attr( checked( $option_value, 'on' ) ); ?> class="tutor-form-toggle-input">
+		<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field_event ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
+		<input type="checkbox" value="on" <?php checked( $option_value, 'on' ); ?> class="tutor-form-toggle-input">
 		<span class="tutor-form-toggle-control"></span>
 	</label>
 	<?php } ?>

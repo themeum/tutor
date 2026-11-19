@@ -9,6 +9,8 @@
  * @since 2.2.1
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\DB;
 use TUTOR\RestAuth;
 

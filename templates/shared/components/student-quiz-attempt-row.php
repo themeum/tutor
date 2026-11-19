@@ -112,14 +112,28 @@ $hide_quiz_details = Quiz_Attempts_List::is_attempt_details_hidden();
 		<div class="tutor-quiz-marks-breakdown">
 			<div class="tutor-quiz-marks-correct">
 				<?php
-				/* translators: %d: number of correct answers */
-				echo esc_html( sprintf( __( '%d correct', 'tutor' ), $attempt['correct_answers'] ?? 0 ) );
+				$correct_answers = $attempt['correct_answers'] ?? 0;
+
+				echo esc_html(
+					sprintf(
+						/* translators: %d: number of correct answers */
+						_n( '%d correct', '%d correct', $correct_answers, 'tutor' ),
+						$correct_answers
+					)
+				);
 				?>
 			</div>
 			<div class="tutor-quiz-marks-incorrect">
 				<?php
-				/* translators: %d: number of incorrect answers */
-				echo esc_html( sprintf( __( '%d incorrect', 'tutor' ), $attempt['incorrect_answers'] ?? 0 ) );
+				$incorrect_answers = $attempt['incorrect_answers'] ?? 0;
+
+				echo esc_html(
+					sprintf(
+						/* translators: %d: number of incorrect answers */
+						_n( '%d incorrect', '%d incorrect', $incorrect_answers, 'tutor' ),
+						$incorrect_answers
+					)
+				);
 				?>
 			</div>
 		</div>
