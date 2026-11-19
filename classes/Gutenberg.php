@@ -71,7 +71,11 @@ class Gutenberg {
 			$prepared_args['role__in'] = array( 'administrator', 'tutor_instructor' );
 
 			$prepared_args['meta_query'] = ! empty( $prepared_args['meta_query'] )
-				? array( 'relation' => 'AND', $prepared_args['meta_query'], Course::get_course_author_meta_query() )
+				? array(
+					'relation' => 'AND',
+					$prepared_args['meta_query'],
+					Course::get_course_author_meta_query(),
+				)
 				: Course::get_course_author_meta_query();
 		}
 

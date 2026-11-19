@@ -3482,7 +3482,11 @@ class Course extends Tutor_Base {
 
 			if ( in_array( tutor()->instructor_role, $args['role__in'], true ) ) {
 				$args['meta_query'] = ! empty( $args['meta_query'] )
-					? array( 'relation' => 'AND', $args['meta_query'], self::get_course_author_meta_query() )
+					? array(
+						'relation' => 'AND',
+						$args['meta_query'],
+						self::get_course_author_meta_query(),
+					)
 					: self::get_course_author_meta_query();
 			}
 		}
