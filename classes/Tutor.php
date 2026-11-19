@@ -1149,6 +1149,10 @@ final class Tutor extends Singleton {
 				'upload_files',
 			);
 
+			if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
+				$instructor_cap[] = 'edit_published_products';
+			}
+
 			$instructor_cap = array_merge( $instructor_cap, $custom_post_type_permission );
 
 			$can_publish_course = (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
