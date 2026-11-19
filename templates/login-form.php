@@ -41,12 +41,12 @@ do_action( 'tutor_before_login_form' );
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
 	<div class="tutor-input-field tutor-mb-7">
-		<label class="tutor-d-block tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-8" for="tutor-login-form-username"><?php esc_html_e( 'Username or Email Address', 'tutor' ); ?></label>
+		<label class="screen-reader-text" for="tutor-login-form-username"><?php esc_html_e( 'Username or Email Address', 'tutor' ); ?></label>
 		<input id="tutor-login-form-username" type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_attr_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" autocomplete="username" required/>
 	</div>
 
 	<div class="tutor-mb-8" x-data="{ show: false, value: '' }">
-		<label class="tutor-d-block tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-8" for="tutor-login-form-password"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
+		<label class="screen-reader-text" for="tutor-login-form-password"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
 		<div class="tutor-input-field" style="position: relative;">
 			<span 
 				class="tutor-flex tutor-items-center tutor-justify-center"

@@ -10,10 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Alert;
 use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
-use TUTOR\Icon;
 use TUTOR\Template;
 use TUTOR\User;
 
@@ -113,6 +111,9 @@ $footer_links = array(
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
 		<div class="tutor-dashboard-body" role="main">
+			<?php if ( $meta_title ) : ?>
+				<h1 class="screen-reader-text"><?php echo esc_html( $meta_title ); ?></h1>
+			<?php endif; ?>
 			<div class="tutor-dashboard-page">
 				<?php
 				if ( User::used_instructor_registration() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
