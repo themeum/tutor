@@ -907,9 +907,16 @@ class Course extends Tutor_Base {
 		return array(
 			'relation' => 'OR',
 			array(
-				'key'     => '_tutor_instructor_status',
-				'value'   => 'approved',
-				'compare' => '=',
+				'relation' => 'AND',
+				array(
+					'key'     => '_tutor_instructor_status',
+					'value'   => 'approved',
+					'compare' => '=',
+				),
+				array(
+					'key'     => '_is_tutor_instructor',
+					'compare' => 'EXISTS',
+				),
 			),
 			array(
 				'key'     => $wpdb->get_blog_prefix() . 'capabilities',
@@ -1185,11 +1192,13 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		if ( empty( $params['post_author'] ) ) {
-			$params['post_author'] = $course->post_author;
-		}
-
-		if ( ! User::is_admin() && ! CourseModel::is_main_instructor( $course_id, $current_user_id ) ) {
+		$new_author = (int) ( $params['post_author'] ?? 0 );
+		if ( $new_author && $new_author !== (int) $course->post_author ) {
+			if ( ! ( User::is_admin() || CourseModel::is_main_instructor( $course_id, $current_user_id ) )
+				|| ! ( User::is_admin( $new_author ) || User::is_instructor( $new_author, true ) ) ) {
+				$this->json_response( __( 'Invalid course author', 'tutor' ), array( 'post_author' => __( 'Selected author is not eligible.', 'tutor' ) ), HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+			}
+		} else {
 			$params['post_author'] = $course->post_author;
 		}
 
@@ -2537,7 +2546,7 @@ class Course extends Tutor_Base {
 			return $data;
 		}
 
-		$author_id = (int) $data['post_author'];
+		$author_id = (int) ( $data['post_author'] ?? 0 );
 		$post_id   = (int) ( $postarr['ID'] ?? 0 );
 
 		$post_author = $post_id > 0 ? (int) get_post_field( 'post_author', $post_id ) : 0;
@@ -2550,6 +2559,20 @@ class Course extends Tutor_Base {
 		$data['post_author'] = $post_author > 0 ? $post_author : get_current_user_id();
 
 		return $data;
+	}
+
+	/**
+	 * Main author change from gutenberg editor (deprecated).
+	 *
+	 * @deprecated 4.3.0 Use restrict_course_author() instead.
+	 *
+	 * @param array $data Sanitized post data.
+	 * @param array $postarr Raw post data.
+	 *
+	 * @return array
+	 */
+	public function tutor_add_gutenberg_author( $data, $postarr ) {
+		return $this->restrict_course_author( $data, $postarr );
 	}
 
 
@@ -3458,7 +3481,9 @@ class Course extends Tutor_Base {
 			$args['role__in'] = array_map( 'sanitize_text_field', $filter->role );
 
 			if ( in_array( tutor()->instructor_role, $args['role__in'], true ) ) {
-				$args['meta_query'] = self::get_course_author_meta_query();
+				$args['meta_query'] = ! empty( $args['meta_query'] )
+					? array( 'relation' => 'AND', $args['meta_query'], self::get_course_author_meta_query() )
+					: self::get_course_author_meta_query();
 			}
 		}
 

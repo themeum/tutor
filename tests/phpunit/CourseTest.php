@@ -701,21 +701,23 @@ class CourseTest extends \WP_UnitTestCase {
 			)
 		);
 
-		$course = new Course( false );
-		$query  = new \WP_User_Query(
-			array_merge(
-				$course->user_list_args_for_instructor( array() ),
-				array( 'number' => -1 )
-			)
-		);
-		$ids    = array_map( 'intval', wp_list_pluck( $query->get_results(), 'ID' ) );
+		try {
+			$course = new Course( false );
+			$query  = new \WP_User_Query(
+				array_merge(
+					$course->user_list_args_for_instructor( array() ),
+					array( 'number' => -1 )
+				)
+			);
+			$ids    = array_map( 'intval', wp_list_pluck( $query->get_results(), 'ID' ) );
 
-		unset( $_POST['filter'] );
-
-		$this->assertContains( $admin_id, $ids );
-		$this->assertContains( $approved_id, $ids );
-		$this->assertNotContains( $pending_id, $ids );
-		$this->assertNotContains( $blocked_id, $ids );
+			$this->assertContains( $admin_id, $ids );
+			$this->assertContains( $approved_id, $ids );
+			$this->assertNotContains( $pending_id, $ids );
+			$this->assertNotContains( $blocked_id, $ids );
+		} finally {
+			unset( $_POST['filter'] );
+		}
 	}
 
 	/**
@@ -780,7 +782,7 @@ class CourseTest extends \WP_UnitTestCase {
 		);
 		$this->assertSame( $other_id, (int) get_post_field( 'post_author', $course_id ) );
 
-		// A different instructor cannot take the course back.
+		// Former author cannot take the course back.
 		wp_set_current_user( $author_id );
 		wp_update_post(
 			array(
@@ -789,6 +791,42 @@ class CourseTest extends \WP_UnitTestCase {
 			)
 		);
 		$this->assertSame( $other_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// Non-admin creating a new course cannot spoof another author.
+		wp_set_current_user( $author_id );
+		$spoofed_course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Non-admin spoof test',
+				'post_status' => 'draft',
+				'post_author' => $other_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $spoofed_course_id ) );
+
+		// Logged-out save (cron, CLI, imports) leaves post_author untouched.
+		wp_set_current_user( 0 );
+		$cli_course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Logged out save test',
+				'post_status' => 'publish',
+				'post_author' => $author_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $cli_course_id ) );
+
+		// Non-course post types are left alone.
+		wp_set_current_user( $author_id );
+		$post_id = wp_insert_post(
+			array(
+				'post_type'   => 'post',
+				'post_title'  => 'Regular post test',
+				'post_status' => 'draft',
+				'post_author' => $blocked_id,
+			)
+		);
+		$this->assertSame( $blocked_id, (int) get_post_field( 'post_author', $post_id ) );
 	}
 
 	/**
