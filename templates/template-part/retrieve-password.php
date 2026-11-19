@@ -30,7 +30,7 @@ if ( Input::get( 'reset_key' ) && Input::get( 'user_id' ) ) {
 			<p class="tutor-small tutor-mb-5"><?php echo apply_filters( 'tutor_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'tutor' ) ); ?></p><?php // @codingStandardsIgnoreLine ?>
 
 			<div class="tutor-input-field tutor-mb-8">
-				<label class="tutor-label"><?php esc_html_e( 'Username or email', 'tutor' ); ?></label>
+				<label class="tutor-label" for="user_login"><?php esc_html_e( 'Username or email', 'tutor' ); ?></label>
 				<div class="tutor-input-wrapper">
 					<input class="tutor-input" type="text" name="user_login" id="user_login" autocomplete="username">
 				</div>
@@ -38,7 +38,7 @@ if ( Input::get( 'reset_key' ) && Input::get( 'user_id' ) ) {
 
 			<?php do_action( 'tutor_lostpassword_form' ); ?>
 
-			<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>">
+			<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
 				<?php esc_html_e( 'Reset password', 'tutor' ); ?>
 			</button>
 		</form>

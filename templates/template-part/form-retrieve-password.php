@@ -31,14 +31,14 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 	</p>
 
 	<div class="tutor-input-field tutor-mb-5">
-		<label class="tutor-label"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
+		<label class="tutor-label" for="password"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
 		<div class="tutor-input-wrapper">
 			<input class="tutor-input" type="password" name="password" id="password">
 		</div>
 	</div>
 
 	<div class="tutor-input-field tutor-mb-8">
-		<label class="tutor-label"><?php esc_html_e( 'Confirm Password', 'tutor' ); ?></label>
+		<label class="tutor-label" for="confirm_password"><?php esc_html_e( 'Confirm Password', 'tutor' ); ?></label>
 		<div class="tutor-input-wrapper">
 			<input class="tutor-input" type="password" name="confirm_password" id="confirm_password">
 		</div>
@@ -46,7 +46,7 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 
 	<?php do_action( 'tutor_reset_password_form' ); ?>
 
-	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block" value="Reset password">
+	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
 		<?php esc_html_e( 'Reset password', 'tutor' ); ?>
 	</button>
 </form>
