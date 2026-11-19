@@ -17,7 +17,6 @@ use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\Course;
-use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -82,7 +81,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return User::is_admin() || current_user_can( 'manage_tutor' );
+				return Permissions::is_tutor_admin();
 			},
 			array( $this, 'list_orders' )
 		);
@@ -103,7 +102,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return User::is_admin() || current_user_can( 'manage_tutor' );
+				return Permissions::is_tutor_admin();
 			},
 			array( $this, 'get_order' )
 		);
@@ -129,7 +128,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || current_user_can( 'manage_tutor' ) );
+				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
 			},
 			array( $this, 'mark_order_paid' ),
 			self::WRITE_HINTS
@@ -159,7 +158,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return User::is_admin() || current_user_can( 'manage_tutor' );
+				return Permissions::is_tutor_admin();
 			},
 			array( $this, 'list_coupons' )
 		);
@@ -186,7 +185,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || current_user_can( 'manage_tutor' ) );
+				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
 			},
 			array( $this, 'create_coupon' ),
 			self::WRITE_HINTS
@@ -216,7 +215,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || current_user_can( 'manage_tutor' ) );
+				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
 			},
 			array( $this, 'update_coupon' ),
 			self::WRITE_HINTS
@@ -238,7 +237,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || current_user_can( 'manage_tutor' ) );
+				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
 			},
 			array( $this, 'expire_coupon' ),
 			self::DESTRUCTIVE_HINTS

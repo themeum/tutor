@@ -82,8 +82,15 @@ class EngagementAbilities {
 					),
 				),
 			),
-			static function (): bool {
-				return Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( ! Permissions::can_manage_courses() ) {
+					return false;
+				}
+				$course_id = absint( $input['course_id'] ?? 0 );
+				if ( $course_id ) {
+					return Permissions::can_view_course( $course_id );
+				}
+				return true;
 			},
 			array( $this, 'list_announcements' )
 		);
@@ -172,8 +179,15 @@ class EngagementAbilities {
 					),
 				),
 			),
-			static function (): bool {
-				return Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( ! Permissions::can_manage_courses() ) {
+					return false;
+				}
+				$course_id = absint( $input['course_id'] ?? 0 );
+				if ( $course_id ) {
+					return Permissions::can_view_course( $course_id );
+				}
+				return true;
 			},
 			array( $this, 'list_questions' )
 		);
@@ -194,8 +208,13 @@ class EngagementAbilities {
 					'content'     => array( 'type' => 'string' ),
 				),
 			),
-			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				$question_id = absint( $input['question_id'] ?? 0 );
+				return $question_id
+					&& ( Permissions::is_tutor_admin() || tutor_utils()->can_user_manage( 'qa_question', $question_id ) );
 			},
 			array( $this, 'reply_to_question' ),
 			self::WRITE_HINTS
@@ -220,8 +239,13 @@ class EngagementAbilities {
 					),
 				),
 			),
-			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				$question_id = absint( $input['question_id'] ?? 0 );
+				return $question_id
+					&& ( Permissions::is_tutor_admin() || tutor_utils()->can_user_manage( 'qa_question', $question_id ) );
 			},
 			array( $this, 'set_question_flags' ),
 			self::WRITE_HINTS
@@ -276,7 +300,21 @@ class EngagementAbilities {
 		);
 
 		if ( ! empty( $input['course_id'] ) ) {
-			$args['post_parent'] = absint( $input['course_id'] );
+			$course_id = absint( $input['course_id'] );
+			if ( ! Permissions::can_view_course( $course_id ) ) {
+				return array(
+					'announcements' => array(),
+					'total'         => 0,
+					'page'          => $bounds['page'],
+					'per_page'      => $bounds['per_page'],
+				);
+			}
+			$args['post_parent'] = $course_id;
+		}
+
+		// Match dashboard announcements: non-admins only see their own posts.
+		if ( ! Permissions::is_tutor_admin() ) {
+			$args['author'] = get_current_user_id();
 		}
 
 		$query  = Announcements::get_announcements( $args );

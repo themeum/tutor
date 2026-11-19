@@ -18,7 +18,6 @@ use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
 use TUTOR\Course;
 use TUTOR\REST_Course;
-use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -158,7 +157,7 @@ class CourseAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && ( User::is_admin() || User::is_instructor() || Permissions::can_manage_courses() );
+				return ! Registrar::is_read_only() && Permissions::can_create_course();
 			},
 			array( $this, 'create_course' ),
 			self::WRITE_HINTS
@@ -258,7 +257,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				return ! Registrar::is_read_only() && Permissions::can_trash_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'trash_course' ),
 			self::DESTRUCTIVE_HINTS
@@ -291,9 +290,10 @@ class CourseAbilities {
 	}
 
 	/**
-	 * Search courses with status/search/author support via WP_Query.
+	 * Search courses with status/search/author support.
 	 *
-	 * Falls back to REST bridge when no extra filters are used.
+	 * Admins: all courses. Instructors: own/co-instructed courses only
+	 * (CourseModel::get_courses_by_instructor — same as My Courses dashboard).
 	 *
 	 * @since 4.3.0
 	 *
@@ -301,47 +301,68 @@ class CourseAbilities {
 	 * @return array
 	 */
 	public function search_courses( array $input ): array {
-		$has_extra = ! empty( $input['status'] ) || ! empty( $input['search'] ) || ! empty( $input['author'] );
+		$bounds  = Pagination::bounds( $input );
+		$status  = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
+		$search  = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
+		$order   = sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) );
+		$statuses = 'any' === $status
+			? array( 'publish', 'draft', 'pending', 'private', 'trash' )
+			: array( $status );
 
-		if ( ! $has_extra ) {
-			$request = new \WP_REST_Request( 'GET' );
-			$request->set_param( 'paged', max( 1, absint( $input['page'] ?? 1 ) ) );
-
-			foreach ( array( 'order', 'orderby', 'categories', 'tags' ) as $param ) {
-				if ( ! empty( $input[ $param ] ) ) {
-					$request->set_param( $param, sanitize_text_field( (string) $input[ $param ] ) );
-				}
-			}
-
-			$data = RestBridge::unwrap_call(
-				static function () use ( $request ) {
-					return ( new REST_Course() )->course( $request );
-				}
+		if ( ! Permissions::is_tutor_admin() ) {
+			$instructor_id = get_current_user_id();
+			$courses       = CourseModel::get_courses_by_instructor(
+				$instructor_id,
+				$statuses,
+				$bounds['offset'],
+				$bounds['per_page'],
+				false,
+				array(),
+				$search,
+				$order
 			);
-			if ( is_wp_error( $data ) ) {
-				return array(
-					'posts'        => array(),
-					'total_course' => 0,
-					'total_page'   => 0,
-				);
+			$total = (int) CourseModel::get_courses_by_instructor(
+				$instructor_id,
+				$statuses,
+				0,
+				0,
+				true,
+				array(),
+				$search,
+				$order
+			);
+
+			$posts = array();
+			if ( is_array( $courses ) ) {
+				foreach ( $courses as $post ) {
+					$posts[] = array(
+						'ID'          => (int) $post->ID,
+						'post_title'  => $post->post_title,
+						'post_status' => $post->post_status,
+						'post_date'   => $post->post_date,
+						'post_author' => (int) $post->post_author,
+					);
+				}
 			}
 
-			return $data;
+			return array(
+				'posts'        => $posts,
+				'total_course' => $total,
+				'total_page'   => (int) ceil( $total / max( 1, $bounds['per_page'] ) ),
+			);
 		}
 
-		$bounds = Pagination::bounds( $input );
-		$status = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
-		$args   = array(
+		$args = array(
 			'post_type'      => tutor()->course_post_type,
-			'post_status'    => 'any' === $status ? array( 'publish', 'draft', 'pending', 'private', 'trash' ) : $status,
+			'post_status'    => $statuses,
 			'posts_per_page' => $bounds['per_page'],
 			'paged'          => $bounds['page'],
 			'orderby'        => sanitize_text_field( (string) ( $input['orderby'] ?? 'date' ) ),
-			'order'          => sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) ),
+			'order'          => $order,
 		);
 
-		if ( ! empty( $input['search'] ) ) {
-			$args['s'] = sanitize_text_field( (string) $input['search'] );
+		if ( '' !== $search ) {
+			$args['s'] = $search;
 		}
 		if ( ! empty( $input['author'] ) ) {
 			$args['author'] = absint( $input['author'] );
@@ -531,11 +552,11 @@ class CourseAbilities {
 			if ( empty( $input['confirm'] ) ) {
 				return new \WP_Error( 'tutor_mcp_confirm_required', __( 'Publishing requires confirm=true.', 'tutor' ) );
 			}
-			if ( ! current_user_can( 'publish_tutor_courses' ) && ! User::is_admin() && ! current_user_can( 'manage_tutor' ) ) {
+			if ( ! current_user_can( 'publish_tutor_courses' ) && ! Permissions::is_tutor_admin() ) {
 				return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
 			}
 			$instructor_can_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! User::is_admin() && ! current_user_can( 'manage_tutor' ) && ! $instructor_can_publish ) {
+			if ( ! Permissions::is_tutor_admin() && ! $instructor_can_publish ) {
 				$status = CourseModel::STATUS_PENDING;
 			}
 		}

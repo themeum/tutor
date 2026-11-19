@@ -86,8 +86,20 @@ class QuizAttemptAbilities {
 					),
 				),
 			),
-			static function (): bool {
-				return Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( ! Permissions::can_manage_courses() ) {
+					return false;
+				}
+				$course_id = absint( $input['course_id'] ?? 0 );
+				if ( $course_id ) {
+					return Permissions::can_view_course( $course_id );
+				}
+				$quiz_id = absint( $input['quiz_id'] ?? 0 );
+				if ( $quiz_id ) {
+					$quiz_course = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
+					return $quiz_course && Permissions::can_view_course( $quiz_course );
+				}
+				return true;
 			},
 			array( $this, 'list_quiz_attempts' )
 		);
@@ -183,52 +195,58 @@ class QuizAttemptAbilities {
 	/**
 	 * List quiz attempts.
 	 *
+	 * Uses QuizModel::get_quiz_attempts with instructor_id_check — same as
+	 * dashboard quiz-attempts.php (instructors only see their courses).
+	 *
 	 * @since 4.3.0
 	 *
 	 * @param array $input Input.
 	 * @return array
 	 */
 	public function list_quiz_attempts( array $input ): array {
-		$bounds     = Pagination::bounds( $input );
-		$course_ids = array();
+		$bounds       = Pagination::bounds( $input );
+		$course_filter = '';
 
 		if ( ! empty( $input['quiz_id'] ) ) {
 			$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', absint( $input['quiz_id'] ) );
 			if ( $course_id ) {
-				$course_ids = array( $course_id );
+				$course_filter = (string) $course_id;
 			}
 		} elseif ( ! empty( $input['course_id'] ) ) {
-			$course_ids = array( absint( $input['course_id'] ) );
+			$course_filter = (string) absint( $input['course_id'] );
 		}
 
-		$attempts = QuizModel::get_quiz_attempts_by_course_ids(
+		$attempts = QuizModel::get_quiz_attempts(
 			$bounds['offset'],
 			$bounds['per_page'],
-			$course_ids,
 			'',
+			$course_filter,
 			'',
 			'',
 			'DESC',
 			null,
 			false,
-			false
+			true
 		);
-		$total = (int) QuizModel::get_quiz_attempts_by_course_ids(
-			0,
-			0,
-			$course_ids,
+		$total    = (int) QuizModel::get_quiz_attempts(
+			$bounds['offset'],
+			$bounds['per_page'],
 			'',
+			$course_filter,
 			'',
 			'',
 			'DESC',
 			null,
 			true,
-			false
+			true
 		);
 
 		$rows = array();
 		if ( is_array( $attempts ) ) {
 			foreach ( $attempts as $attempt ) {
+				if ( ! empty( $input['quiz_id'] ) && absint( $input['quiz_id'] ) !== (int) $attempt->quiz_id ) {
+					continue;
+				}
 				$rows[] = array(
 					'attempt_id'         => (int) $attempt->attempt_id,
 					'quiz_id'            => (int) $attempt->quiz_id,

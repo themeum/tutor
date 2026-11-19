@@ -2,6 +2,9 @@
 /**
  * MCP course permission checks.
  *
+ * Mirrors Tutor plugin access: Course::check_access(), can_user_edit_course(),
+ * instructor_can_publish_course / instructor_can_delete_course options.
+ *
  * @package Tutor\Mcp
  * @author  Themeum <support@themeum.com>
  * @link    https://themeum.com
@@ -70,14 +73,38 @@ class Permissions {
 	}
 
 	/**
+	 * Whether the current user is a Tutor admin (WP admin or manage_tutor).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return bool
+	 */
+	public static function is_tutor_admin(): bool {
+		return User::is_admin() || current_user_can( 'manage_tutor' );
+	}
+
+	/**
+	 * Create course access — same as Course::check_access() without a course_id.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return bool
+	 */
+	public static function can_create_course(): bool {
+		return User::is_admin() || User::is_instructor();
+	}
+
+	/**
 	 * Default post status for MCP course create (never publish).
+	 *
+	 * Matches Course create/update publish option behavior.
 	 *
 	 * @since 4.3.0
 	 *
 	 * @return string
 	 */
 	public static function default_course_status(): string {
-		if ( User::is_admin() || current_user_can( 'manage_tutor' ) ) {
+		if ( self::is_tutor_admin() ) {
 			return CourseModel::STATUS_DRAFT;
 		}
 
@@ -86,7 +113,10 @@ class Permissions {
 	}
 
 	/**
-	 * Course view permission (admin/manage_tutor or can_user_edit_course).
+	 * Course manage/view access for MCP tools (instructor dashboard scope).
+	 *
+	 * Same ownership check as Course::check_access( $course_id ):
+	 * admin or instructor/co-instructor of the course.
 	 *
 	 * @since 4.3.0
 	 *
@@ -94,17 +124,11 @@ class Permissions {
 	 * @return bool
 	 */
 	public static function can_view_course( int $course_id ): bool {
-		if ( ! $course_id ) {
-			return false;
-		}
-		if ( ! current_user_can( 'edit_tutor_courses' ) && ! current_user_can( 'manage_tutor' ) && ! User::is_admin() ) {
-			return false;
-		}
-		return self::can_edit_course( $course_id ) || User::is_admin() || current_user_can( 'manage_tutor' );
+		return self::can_edit_course( $course_id );
 	}
 
 	/**
-	 * Course edit ownership.
+	 * Course edit ownership — same as Course::check_access( $course_id ).
 	 *
 	 * @since 4.3.0
 	 *
@@ -112,20 +136,51 @@ class Permissions {
 	 * @return bool
 	 */
 	public static function can_edit_course( int $course_id ): bool {
-		return User::is_admin()
-			|| current_user_can( 'manage_tutor' )
-			|| (bool) tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
+		if ( ! $course_id ) {
+			return false;
+		}
+
+		if ( self::is_tutor_admin() ) {
+			return true;
+		}
+
+		return (bool) tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 	}
 
 	/**
-	 * Whether the current user can manage Tutor courses broadly.
+	 * Trash course — matches Course_List / course update trash rules.
+	 *
+	 * Admin always; instructors only when instructor_can_delete_course is on.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id Course ID.
+	 * @return bool
+	 */
+	public static function can_trash_course( int $course_id ): bool {
+		if ( ! self::can_edit_course( $course_id ) ) {
+			return false;
+		}
+
+		if ( self::is_tutor_admin() ) {
+			return true;
+		}
+
+		return (bool) tutor_utils()->get_option( 'instructor_can_delete_course', false )
+			&& current_user_can( 'edit_tutor_courses' );
+	}
+
+	/**
+	 * Whether the current user can use instructor-level Tutor tools at all.
+	 *
+	 * Entry gate only — list handlers must still scope to owned courses.
 	 *
 	 * @since 4.3.0
 	 *
 	 * @return bool
 	 */
 	public static function can_manage_courses(): bool {
-		return current_user_can( 'edit_tutor_courses' ) || current_user_can( 'manage_tutor' ) || User::is_admin();
+		return current_user_can( 'edit_tutor_courses' ) || self::is_tutor_admin();
 	}
 
 	/**

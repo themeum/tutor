@@ -16,7 +16,6 @@ use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
-use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -73,8 +72,15 @@ class StudentAbilities {
 					),
 				),
 			),
-			static function (): bool {
-				return Permissions::can_manage_courses();
+			static function ( array $input ): bool {
+				if ( ! Permissions::can_manage_courses() ) {
+					return false;
+				}
+				$course_id = absint( $input['course_id'] ?? 0 );
+				if ( $course_id ) {
+					return Permissions::can_view_course( $course_id );
+				}
+				return true;
 			},
 			array( $this, 'list_students' )
 		);
@@ -83,7 +89,7 @@ class StudentAbilities {
 			'tutor-mcp/get-student',
 			'tutor-mcp-students',
 			__( 'Get Student', 'tutor' ),
-			__( 'Get student info and enrolled courses.', 'tutor' ),
+			__( 'Get student info and enrolled courses (instructors: only shared courses).', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'student_id' ),
@@ -152,7 +158,7 @@ class StudentAbilities {
 				if ( Registrar::is_read_only() ) {
 					return false;
 				}
-				return current_user_can( 'manage_tutor' ) || User::is_admin();
+				return Permissions::is_tutor_admin();
 			},
 			array( $this, 'unenroll_student' ),
 			self::DESTRUCTIVE_HINTS
@@ -162,19 +168,47 @@ class StudentAbilities {
 	/**
 	 * List students.
 	 *
+	 * Admin: all students (Students_List). Instructor: own course students
+	 * via get_students_by_instructor (same as Pro report students).
+	 *
 	 * @since 4.3.0
 	 *
 	 * @param array $input Input.
-	 * @return array
+	 * @return array|\WP_Error
 	 */
-	public function list_students( array $input ): array {
+	public function list_students( array $input ) {
 		$bounds    = Pagination::bounds( $input );
 		$search    = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
-		$course_id = ! empty( $input['course_id'] ) ? (string) absint( $input['course_id'] ) : '';
+		$course_id = ! empty( $input['course_id'] ) ? absint( $input['course_id'] ) : 0;
 
-		$students = tutor_utils()->get_students( $bounds['offset'], $bounds['per_page'], $search, $course_id );
-		$show_pii = current_user_can( 'manage_tutor' ) || User::is_admin();
+		if ( $course_id && ! Permissions::can_view_course( $course_id ) ) {
+			return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
+		}
+
+		$show_pii = Permissions::is_tutor_admin();
 		$rows     = array();
+
+		if ( Permissions::is_tutor_admin() ) {
+			$students = tutor_utils()->get_students(
+				$bounds['offset'],
+				$bounds['per_page'],
+				$search,
+				$course_id ? (string) $course_id : ''
+			);
+		} else {
+			$result   = tutor_utils()->get_students_by_instructor(
+				get_current_user_id(),
+				$bounds['offset'],
+				$bounds['per_page'],
+				$search,
+				$course_id ? (string) $course_id : '',
+				'',
+				'',
+				'DESC',
+				array( 'publish', 'private', 'draft', 'pending' )
+			);
+			$students = is_array( $result ) ? ( $result['students'] ?? array() ) : array();
+		}
 
 		if ( is_array( $students ) ) {
 			foreach ( $students as $student ) {
@@ -199,6 +233,9 @@ class StudentAbilities {
 	/**
 	 * Get student details.
 	 *
+	 * Instructors only see enrollments in courses they instruct
+	 * (get_courses_by_student_instructor_id).
+	 *
 	 * @since 4.3.0
 	 *
 	 * @param array $input Input.
@@ -211,7 +248,7 @@ class StudentAbilities {
 			return new \WP_Error( 'tutor_mcp_not_found', __( 'Student not found.', 'tutor' ) );
 		}
 
-		$show_pii = current_user_can( 'manage_tutor' ) || User::is_admin();
+		$show_pii = Permissions::is_tutor_admin();
 		$data     = array(
 			'ID'           => (int) $user->ID,
 			'display_name' => $user->display_name,
@@ -221,17 +258,37 @@ class StudentAbilities {
 			$data['user_email'] = $user->user_email;
 		}
 
-		$enrolled = EnrollmentModel::get_enrolled_data( $student_id );
-		$courses  = array();
-		if ( ! empty( $enrolled ) ) {
-			foreach ( $enrolled as $enrollment ) {
+		$courses = array();
+
+		if ( Permissions::is_tutor_admin() ) {
+			$enrolled = EnrollmentModel::get_enrolled_data( $student_id );
+			if ( ! empty( $enrolled ) ) {
+				foreach ( $enrolled as $enrollment ) {
+					$courses[] = array(
+						'course_id'   => (int) $enrollment->post_parent,
+						'status'      => $enrollment->post_status,
+						'enrolled_at' => $enrollment->post_date,
+					);
+				}
+			}
+		} else {
+			$shared = tutor_utils()->get_courses_by_student_instructor_id(
+				$student_id,
+				get_current_user_id(),
+				array( 'publish', 'private', 'draft', 'pending' )
+			);
+			if ( empty( $shared ) ) {
+				return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
+			}
+			foreach ( $shared as $course ) {
 				$courses[] = array(
-					'course_id'   => (int) $enrollment->post_parent,
-					'status'      => $enrollment->post_status,
-					'enrolled_at' => $enrollment->post_date,
+					'course_id'   => (int) $course->ID,
+					'status'      => $course->post_status,
+					'enrolled_at' => null,
 				);
 			}
 		}
+
 		$data['enrolled_courses'] = $courses;
 
 		return $data;
