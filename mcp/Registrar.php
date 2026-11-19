@@ -12,10 +12,15 @@
 
 namespace Tutor\Mcp;
 
+use Tutor\Mcp\Abilities\CommerceAbilities;
 use Tutor\Mcp\Abilities\CourseAbilities;
 use Tutor\Mcp\Abilities\CurriculumAbilities;
+use Tutor\Mcp\Abilities\EngagementAbilities;
+use Tutor\Mcp\Abilities\FinanceAbilities;
 use Tutor\Mcp\Abilities\HealthAbility;
+use Tutor\Mcp\Abilities\QuizAttemptAbilities;
 use Tutor\Mcp\Abilities\SchemaResources;
+use Tutor\Mcp\Abilities\StudentAbilities;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -44,21 +49,60 @@ class Registrar {
 	 */
 	const TOOLS = array(
 		'tutor-mcp/health-check',
+		// Courses.
 		'tutor-mcp/get-course',
 		'tutor-mcp/search-courses',
 		'tutor-mcp/get-course-contents',
 		'tutor-mcp/create-course',
 		'tutor-mcp/update-course',
 		'tutor-mcp/set-course-status',
-		'tutor-mcp/update-course-content-order',
+		'tutor-mcp/trash-course',
+		// Curriculum / lessons / quizzes (reorder intentionally omitted).
 		'tutor-mcp/create-topic',
 		'tutor-mcp/update-topic',
+		'tutor-mcp/delete-topic',
 		'tutor-mcp/get-lesson',
 		'tutor-mcp/create-lesson',
 		'tutor-mcp/update-lesson',
+		'tutor-mcp/attach-lesson-video',
+		'tutor-mcp/delete-lesson',
+		'tutor-mcp/list-quizzes',
 		'tutor-mcp/get-quiz',
 		'tutor-mcp/create-quiz',
 		'tutor-mcp/update-quiz',
+		'tutor-mcp/add-quiz-question',
+		'tutor-mcp/delete-quiz',
+		// Quiz attempts.
+		'tutor-mcp/list-quiz-attempts',
+		'tutor-mcp/get-quiz-attempt',
+		'tutor-mcp/review-quiz-attempt',
+		'tutor-mcp/delete-quiz-attempt',
+		// Students / progress.
+		'tutor-mcp/list-students',
+		'tutor-mcp/get-student',
+		'tutor-mcp/get-course-progress',
+		'tutor-mcp/unenroll-student',
+		// Finance reports.
+		'tutor-mcp/get-earnings',
+		'tutor-mcp/list-withdrawals',
+		// Engagement.
+		'tutor-mcp/list-announcements',
+		'tutor-mcp/create-announcement',
+		'tutor-mcp/delete-announcement',
+		'tutor-mcp/list-questions',
+		'tutor-mcp/reply-to-question',
+		'tutor-mcp/set-question-flags',
+		'tutor-mcp/list-reviews',
+		// Native commerce.
+		'tutor-mcp/list-orders',
+		'tutor-mcp/get-order',
+		'tutor-mcp/mark-order-paid',
+		'tutor-mcp/list-coupons',
+		'tutor-mcp/create-coupon',
+		'tutor-mcp/update-coupon',
+		'tutor-mcp/expire-coupon',
+		'tutor-mcp/get-course-price',
+		'tutor-mcp/set-course-price',
 	);
 
 	/**
@@ -96,6 +140,41 @@ class Registrar {
 	private CurriculumAbilities $curriculum;
 
 	/**
+	 * Quiz attempt abilities.
+	 *
+	 * @var QuizAttemptAbilities
+	 */
+	private QuizAttemptAbilities $quiz_attempts;
+
+	/**
+	 * Student abilities.
+	 *
+	 * @var StudentAbilities
+	 */
+	private StudentAbilities $students;
+
+	/**
+	 * Finance abilities.
+	 *
+	 * @var FinanceAbilities
+	 */
+	private FinanceAbilities $finance;
+
+	/**
+	 * Engagement abilities.
+	 *
+	 * @var EngagementAbilities
+	 */
+	private EngagementAbilities $engagement;
+
+	/**
+	 * Commerce abilities.
+	 *
+	 * @var CommerceAbilities
+	 */
+	private CommerceAbilities $commerce;
+
+	/**
 	 * Schema resources.
 	 *
 	 * @var SchemaResources
@@ -108,10 +187,15 @@ class Registrar {
 	 * @since 4.3.0
 	 */
 	public function __construct() {
-		$this->health     = new HealthAbility();
-		$this->courses    = new CourseAbilities();
-		$this->curriculum = new CurriculumAbilities();
-		$this->schema     = new SchemaResources( $this->courses );
+		$this->health        = new HealthAbility();
+		$this->courses       = new CourseAbilities();
+		$this->curriculum    = new CurriculumAbilities();
+		$this->quiz_attempts = new QuizAttemptAbilities();
+		$this->students      = new StudentAbilities();
+		$this->finance       = new FinanceAbilities();
+		$this->engagement    = new EngagementAbilities();
+		$this->commerce      = new CommerceAbilities();
+		$this->schema        = new SchemaResources( $this->courses );
 	}
 
 	/**
@@ -294,6 +378,14 @@ class Registrar {
 	 * @return array<int, array{id:string,name:string,abilities:array<int,array{id:string,name:string,desc:string,tools:array<int,array{n:string,l:string,r:string}>}>}>
 	 */
 	public static function tool_catalog(): array {
+		$t = static function ( string $id, string $label, string $risk ): array {
+			return array(
+				'n' => $id,
+				'l' => $label,
+				'r' => $risk,
+			);
+		};
+
 		$catalog = array(
 			array(
 				'id'        => 'health',
@@ -304,11 +396,7 @@ class Registrar {
 						'name'  => __( 'Site Health', 'tutor' ),
 						'desc'  => __( 'WP + Tutor versions and addon flags. No secrets.', 'tutor' ),
 						'tools' => array(
-							array(
-								'n' => 'tutor-mcp/health-check',
-								'l' => __( 'Health check', 'tutor' ),
-								'r' => 'read',
-							),
+							$t( 'tutor-mcp/health-check', __( 'Health check', 'tutor' ), 'read' ),
 						),
 					),
 				),
@@ -320,43 +408,15 @@ class Registrar {
 					array(
 						'id'    => 'course_tools',
 						'name'  => __( 'Course Tools', 'tutor' ),
-						'desc'  => __( 'Create/update draft courses, read details, and reorder curriculum.', 'tutor' ),
+						'desc'  => __( 'Search, create, update, publish, and trash courses.', 'tutor' ),
 						'tools' => array(
-							array(
-								'n' => 'tutor-mcp/get-course',
-								'l' => __( 'Get course details', 'tutor' ),
-								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/search-courses',
-								'l' => __( 'Search courses', 'tutor' ),
-								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/get-course-contents',
-								'l' => __( 'Get course contents', 'tutor' ),
-								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/create-course',
-								'l' => __( 'Create course', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-course',
-								'l' => __( 'Update course', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/set-course-status',
-								'l' => __( 'Set course status', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-course-content-order',
-								'l' => __( 'Update content order', 'tutor' ),
-								'r' => 'write',
-							),
+							$t( 'tutor-mcp/get-course', __( 'Get course details', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/search-courses', __( 'Search courses', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-course-contents', __( 'Get course contents', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/create-course', __( 'Create course', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-course', __( 'Update course', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/set-course-status', __( 'Set course status', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/trash-course', __( 'Trash course', 'tutor' ), 'destructive' ),
 						),
 					),
 				),
@@ -368,48 +428,113 @@ class Registrar {
 					array(
 						'id'    => 'curriculum_tools',
 						'name'  => __( 'Topic, Lesson & Quiz', 'tutor' ),
-						'desc'  => __( 'Create and update topics, lessons, and quizzes for end-to-end course building.', 'tutor' ),
+						'desc'  => __( 'Build curriculum; reorder is intentionally disabled.', 'tutor' ),
 						'tools' => array(
-							array(
-								'n' => 'tutor-mcp/create-topic',
-								'l' => __( 'Create topic', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-topic',
-								'l' => __( 'Update topic', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/get-lesson',
-								'l' => __( 'Get lesson', 'tutor' ),
-								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/create-lesson',
-								'l' => __( 'Create lesson', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-lesson',
-								'l' => __( 'Update lesson', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/get-quiz',
-								'l' => __( 'Get quiz', 'tutor' ),
-								'r' => 'read',
-							),
-							array(
-								'n' => 'tutor-mcp/create-quiz',
-								'l' => __( 'Create quiz', 'tutor' ),
-								'r' => 'write',
-							),
-							array(
-								'n' => 'tutor-mcp/update-quiz',
-								'l' => __( 'Update quiz', 'tutor' ),
-								'r' => 'write',
-							),
+							$t( 'tutor-mcp/create-topic', __( 'Create topic', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-topic', __( 'Update topic', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-topic', __( 'Delete topic', 'tutor' ), 'destructive' ),
+							$t( 'tutor-mcp/get-lesson', __( 'Get lesson', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/create-lesson', __( 'Create lesson', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-lesson', __( 'Update lesson', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/attach-lesson-video', __( 'Attach lesson video', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-lesson', __( 'Delete lesson', 'tutor' ), 'destructive' ),
+							$t( 'tutor-mcp/list-quizzes', __( 'List quizzes', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-quiz', __( 'Get quiz', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/create-quiz', __( 'Create quiz', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-quiz', __( 'Update quiz', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/add-quiz-question', __( 'Add quiz question', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-quiz', __( 'Delete quiz', 'tutor' ), 'destructive' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'quiz_attempts',
+				'name'      => __( 'Quiz Attempts', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'quiz_attempt_tools',
+						'name'  => __( 'Attempt Tools', 'tutor' ),
+						'desc'  => __( 'List, review, and delete quiz attempts.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/list-quiz-attempts', __( 'List attempts', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-quiz-attempt', __( 'Get attempt', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/review-quiz-attempt', __( 'Review attempt', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-quiz-attempt', __( 'Delete attempt', 'tutor' ), 'destructive' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'students',
+				'name'      => __( 'Students', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'student_tools',
+						'name'  => __( 'Student Tools', 'tutor' ),
+						'desc'  => __( 'Student directory, progress, and unenroll.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/list-students', __( 'List students', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-student', __( 'Get student', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-course-progress', __( 'Get course progress', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/unenroll-student', __( 'Unenroll student', 'tutor' ), 'destructive' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'finance',
+				'name'      => __( 'Finance', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'finance_tools',
+						'name'  => __( 'Earnings & Withdrawals', 'tutor' ),
+						'desc'  => __( 'Read-only earnings aggregates and withdrawal list (no approve/reject).', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/get-earnings', __( 'Get earnings', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/list-withdrawals', __( 'List withdrawals', 'tutor' ), 'read' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'engagement',
+				'name'      => __( 'Engagement', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'engagement_tools',
+						'name'  => __( 'Announcements, Q&A, Reviews', 'tutor' ),
+						'desc'  => __( 'Announcements + Q&A flags/reply; reviews are list-only.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/list-announcements', __( 'List announcements', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/create-announcement', __( 'Create announcement', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-announcement', __( 'Delete announcement', 'tutor' ), 'destructive' ),
+							$t( 'tutor-mcp/list-questions', __( 'List questions', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/reply-to-question', __( 'Reply to question', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/set-question-flags', __( 'Set question flags', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/list-reviews', __( 'List reviews', 'tutor' ), 'read' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'commerce',
+				'name'      => __( 'Commerce', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'commerce_tools',
+						'name'  => __( 'Orders, Coupons & Price', 'tutor' ),
+						'desc'  => __( 'Tutor native ecommerce only. No refunds.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/list-orders', __( 'List orders', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-order', __( 'Get order', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/mark-order-paid', __( 'Mark order paid', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/list-coupons', __( 'List coupons', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/create-coupon', __( 'Create coupon', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-coupon', __( 'Update coupon', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/expire-coupon', __( 'Expire coupon', 'tutor' ), 'destructive' ),
+							$t( 'tutor-mcp/get-course-price', __( 'Get course price', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/set-course-price', __( 'Set course price', 'tutor' ), 'write' ),
 						),
 					),
 				),
@@ -531,10 +656,15 @@ class Registrar {
 		}
 
 		foreach ( array(
-			'tutor-mcp-health'     => __( 'Tutor MCP Health', 'tutor' ),
-			'tutor-mcp-schema'     => __( 'Tutor MCP Schema', 'tutor' ),
-			'tutor-mcp-courses'    => __( 'Tutor MCP Courses', 'tutor' ),
-			'tutor-mcp-curriculum' => __( 'Tutor MCP Curriculum', 'tutor' ),
+			'tutor-mcp-health'        => __( 'Tutor MCP Health', 'tutor' ),
+			'tutor-mcp-schema'        => __( 'Tutor MCP Schema', 'tutor' ),
+			'tutor-mcp-courses'       => __( 'Tutor MCP Courses', 'tutor' ),
+			'tutor-mcp-curriculum'    => __( 'Tutor MCP Curriculum', 'tutor' ),
+			'tutor-mcp-quiz-attempts' => __( 'Tutor MCP Quiz Attempts', 'tutor' ),
+			'tutor-mcp-students'      => __( 'Tutor MCP Students', 'tutor' ),
+			'tutor-mcp-finance'       => __( 'Tutor MCP Finance', 'tutor' ),
+			'tutor-mcp-engagement'    => __( 'Tutor MCP Engagement', 'tutor' ),
+			'tutor-mcp-commerce'      => __( 'Tutor MCP Commerce', 'tutor' ),
 		) as $slug => $label ) {
 			wp_register_ability_category(
 				$slug,
@@ -568,6 +698,11 @@ class Registrar {
 		$this->health->register();
 		$this->courses->register();
 		$this->curriculum->register();
+		$this->quiz_attempts->register();
+		$this->students->register();
+		$this->finance->register();
+		$this->engagement->register();
+		$this->commerce->register();
 		$this->schema->register();
 
 		/**

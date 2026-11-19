@@ -13,6 +13,7 @@ namespace Tutor\Mcp\Abilities;
 use Tutor\Models\CourseModel;
 use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
+use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
 use TUTOR\Course;
@@ -38,6 +39,18 @@ class CourseAbilities {
 	private const WRITE_HINTS = array(
 		'readOnlyHint'    => false,
 		'destructiveHint' => false,
+	);
+
+	/**
+	 * Destructive-write annotations.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array<string, bool>
+	 */
+	private const DESTRUCTIVE_HINTS = array(
+		'readOnlyHint'    => false,
+		'destructiveHint' => true,
 	);
 
 	/**
@@ -73,7 +86,7 @@ class CourseAbilities {
 			'tutor-mcp/search-courses',
 			'tutor-mcp-courses',
 			__( 'Search Courses', 'tutor' ),
-			__( 'Paginated published course list (same as REST /courses).', 'tutor' ),
+			__( 'Paginated course list. Supports status, search term, author filters.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'properties' => array(
@@ -81,6 +94,21 @@ class CourseAbilities {
 						'type'    => 'integer',
 						'minimum' => 1,
 						'default' => 1,
+					),
+					'per_page'   => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+						'maximum' => 50,
+						'default' => 20,
+					),
+					'status'     => array(
+						'type' => 'string',
+						'enum' => array( 'publish', 'draft', 'pending', 'private', 'trash', 'any' ),
+					),
+					'search'     => array( 'type' => 'string' ),
+					'author'     => array(
+						'type'    => 'integer',
+						'minimum' => 1,
 					),
 					'order'      => array( 'type' => 'string' ),
 					'orderby'    => array( 'type' => 'string' ),
@@ -208,43 +236,32 @@ class CourseAbilities {
 			self::WRITE_HINTS
 		);
 
+		// update-course-content-order intentionally not registered (dropped from keep set).
+
 		AbilityFactory::tool(
-			'tutor-mcp/update-course-content-order',
+			'tutor-mcp/trash-course',
 			'tutor-mcp-courses',
-			__( 'Update Course Content Order', 'tutor' ),
-			__( 'Reorder topics and nested contents (same as course builder content order).', 'tutor' ),
+			__( 'Trash Course', 'tutor' ),
+			__( 'Move a course to trash. Requires confirm=true. Does NOT permanently delete.', 'tutor' ),
 			array(
 				'type'       => 'object',
-				'required'   => array( 'course_id', 'topics' ),
+				'required'   => array( 'course_id', 'confirm' ),
 				'properties' => array(
 					'course_id' => array(
 						'type'    => 'integer',
 						'minimum' => 1,
 					),
-					'topics'    => array(
-						'type'  => 'array',
-						'items' => array(
-							'type'       => 'object',
-							'required'   => array( 'topic_id' ),
-							'properties' => array(
-								'topic_id'   => array(
-									'type'    => 'integer',
-									'minimum' => 1,
-								),
-								'lesson_ids' => array(
-									'type'  => 'array',
-									'items' => array( 'type' => 'integer' ),
-								),
-							),
-						),
+					'confirm'   => array(
+						'type'    => 'boolean',
+						'default' => false,
 					),
 				),
 			),
 			static function ( array $input ): bool {
 				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
-			array( $this, 'update_course_content_order' ),
-			self::WRITE_HINTS
+			array( $this, 'trash_course' ),
+			self::DESTRUCTIVE_HINTS
 		);
 	}
 
@@ -274,7 +291,9 @@ class CourseAbilities {
 	}
 
 	/**
-	 * Search courses.
+	 * Search courses with status/search/author support via WP_Query.
+	 *
+	 * Falls back to REST bridge when no extra filters are used.
 	 *
 	 * @since 4.3.0
 	 *
@@ -282,29 +301,69 @@ class CourseAbilities {
 	 * @return array
 	 */
 	public function search_courses( array $input ): array {
-		$request = new \WP_REST_Request( 'GET' );
-		$request->set_param( 'paged', max( 1, absint( $input['page'] ?? 1 ) ) );
+		$has_extra = ! empty( $input['status'] ) || ! empty( $input['search'] ) || ! empty( $input['author'] );
 
-		foreach ( array( 'order', 'orderby', 'categories', 'tags' ) as $param ) {
-			if ( ! empty( $input[ $param ] ) ) {
-				$request->set_param( $param, sanitize_text_field( (string) $input[ $param ] ) );
+		if ( ! $has_extra ) {
+			$request = new \WP_REST_Request( 'GET' );
+			$request->set_param( 'paged', max( 1, absint( $input['page'] ?? 1 ) ) );
+
+			foreach ( array( 'order', 'orderby', 'categories', 'tags' ) as $param ) {
+				if ( ! empty( $input[ $param ] ) ) {
+					$request->set_param( $param, sanitize_text_field( (string) $input[ $param ] ) );
+				}
 			}
+
+			$data = RestBridge::unwrap_call(
+				static function () use ( $request ) {
+					return ( new REST_Course() )->course( $request );
+				}
+			);
+			if ( is_wp_error( $data ) ) {
+				return array(
+					'posts'        => array(),
+					'total_course' => 0,
+					'total_page'   => 0,
+				);
+			}
+
+			return $data;
 		}
 
-		$data = RestBridge::unwrap_call(
-			static function () use ( $request ) {
-				return ( new REST_Course() )->course( $request );
-			}
+		$bounds = Pagination::bounds( $input );
+		$status = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
+		$args   = array(
+			'post_type'      => tutor()->course_post_type,
+			'post_status'    => 'any' === $status ? array( 'publish', 'draft', 'pending', 'private', 'trash' ) : $status,
+			'posts_per_page' => $bounds['per_page'],
+			'paged'          => $bounds['page'],
+			'orderby'        => sanitize_text_field( (string) ( $input['orderby'] ?? 'date' ) ),
+			'order'          => sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) ),
 		);
-		if ( is_wp_error( $data ) ) {
-			return array(
-				'posts'        => array(),
-				'total_course' => 0,
-				'total_page'   => 0,
+
+		if ( ! empty( $input['search'] ) ) {
+			$args['s'] = sanitize_text_field( (string) $input['search'] );
+		}
+		if ( ! empty( $input['author'] ) ) {
+			$args['author'] = absint( $input['author'] );
+		}
+
+		$query = new \WP_Query( $args );
+		$posts = array();
+		foreach ( $query->posts as $post ) {
+			$posts[] = array(
+				'ID'          => (int) $post->ID,
+				'post_title'  => $post->post_title,
+				'post_status' => $post->post_status,
+				'post_date'   => $post->post_date,
+				'post_author' => (int) $post->post_author,
 			);
 		}
 
-		return $data;
+		return array(
+			'posts'        => $posts,
+			'total_course' => (int) $query->found_posts,
+			'total_page'   => (int) $query->max_num_pages,
+		);
 	}
 
 	/**
@@ -495,6 +554,40 @@ class CourseAbilities {
 		return array(
 			'id'          => $course_id,
 			'post_status' => get_post_status( $course_id ),
+		);
+	}
+
+	/**
+	 * Trash a course (soft delete).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Input.
+	 * @return array|\WP_Error
+	 */
+	public function trash_course( array $input ) {
+		$deny = Permissions::allow_write();
+		if ( is_wp_error( $deny ) ) {
+			return $deny;
+		}
+
+		if ( empty( $input['confirm'] ) ) {
+			return new \WP_Error( 'tutor_mcp_confirm_required', __( 'Trashing requires confirm=true.', 'tutor' ) );
+		}
+
+		$course_id = absint( $input['course_id'] ?? 0 );
+		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
+		}
+
+		$result = wp_trash_post( $course_id );
+		if ( ! $result ) {
+			return new \WP_Error( 'tutor_mcp_trash_failed', __( 'Could not trash course.', 'tutor' ) );
+		}
+
+		return array(
+			'id'          => $course_id,
+			'post_status' => 'trash',
 		);
 	}
 
