@@ -34,7 +34,7 @@ class InstructorCapabilityMigrator extends BatchProcessor implements SingleProce
 	 *
 	 * @var string
 	 */
-	protected $name = 'Instructor Capability Migrator';
+	protected $name = 'Instructor Capability Migration';
 
 	/**
 	 * Action
@@ -116,6 +116,12 @@ class InstructorCapabilityMigrator extends BatchProcessor implements SingleProce
 		$user = new \WP_User( $item->ID );
 		if ( ! $user->has_cap( 'edit_published_posts' ) ) {
 			$user->add_cap( 'edit_published_posts' );
+		}
+
+		if ( 'wc' === tutor_utils()->get_option( 'monetize_by' ) ) {
+			if ( ! $user->has_cap( 'edit_published_products' ) ) {
+				$user->add_cap( 'edit_published_products' );
+			}
 		}
 	}
 
