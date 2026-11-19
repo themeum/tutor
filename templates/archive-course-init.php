@@ -126,16 +126,14 @@ if ( isset( $the_query ) ) {
 ?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
-	<div class="tutor-d-flex tutor-align-center tutor-justify-between tutor-mb-32">
-		<?php if ( $has_course_filters ) : ?>
-			<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
-				<div class="tutor-d-flex tutor-align-center tutor-justify-between">
-					<h1 class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></h1>
-					<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
-				</div>
+	<?php if ( $has_course_filters ) : ?>
+		<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
+			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+				<h1 class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></h1>
+				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
 			</div>
-		<?php endif; ?>
-	</div>
+		</div>
+	<?php endif; ?>
 
 	<div class="tutor-row tutor-gx-xl-5">
 		<?php if ( $has_course_filters ) : ?>
