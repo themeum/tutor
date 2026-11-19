@@ -464,7 +464,7 @@ class Template extends Tutor_Base {
 				$target_dashboard_page = tutor_utils()->array_get( $dashboard_page, $get_dashboard_config );
 
 				if ( isset( $target_dashboard_page['login_require'] ) && false === $target_dashboard_page['login_require'] ) {
-					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
+					$template = tutor_get_template_path( "template-part.{$dashboard_page}" );
 				} else {
 
 					/**
@@ -612,11 +612,11 @@ class Template extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $template template to load.
+	 * @param mixed $template template to load.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function load_learning_template( string $template ): string {
+	public function load_learning_template( $template ) {
 		if ( tutor_utils()->is_learning_area() ) {
 			$user_id   = get_current_user_id();
 			$post_type = get_post_type();
