@@ -53,6 +53,11 @@ $page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_pa
 $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
+$page_title = isset( $page_meta['page_data']['title'] ) ? $page_meta['page_data']['title'] : '';
+if ( __( 'Home', 'tutor' ) === $page_title ) {
+	$page_title = __( 'Dashboard', 'tutor' );
+}
+
 $is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
 $site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
 $show_dashboard_site_header = $site_shell['show_site_header'];
@@ -111,8 +116,8 @@ $footer_links = array(
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
 		<div class="tutor-dashboard-body" role="main">
-			<?php if ( $meta_title ) : ?>
-				<h1 class="screen-reader-text"><?php echo esc_html( $meta_title ); ?></h1>
+			<?php if ( $page_title ) : ?>
+				<h1 class="screen-reader-text"><?php echo esc_html( $page_title ); ?></h1>
 			<?php endif; ?>
 			<div class="tutor-dashboard-page">
 				<?php
