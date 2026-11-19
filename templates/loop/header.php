@@ -32,9 +32,12 @@
 			$login_url_attr = 'data-login_url="' . esc_url( wp_login_url() ) . '"';
 		}
 	}
+
+	$bookmark_label = $is_wish_listed ? __( 'Remove from wishlist', 'tutor' ) : __( 'Add to wishlist', 'tutor' );
+	$bookmark_icon  = $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line';
 	//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $login_url_attr contain safe data
-	echo '<a href="javascript:;" ' . $login_url_attr . ' class="' . esc_attr( $action_class ) . ' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="' . esc_attr( $course_id ) . '">
-		<i class="' . ( $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line' ) . '"></i>
+	echo '<a href="javascript:;" ' . $login_url_attr . ' class="' . esc_attr( $action_class ) . ' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="' . esc_attr( $course_id ) . '" aria-label="' . esc_attr( $bookmark_label ) . '">
+		<i class="' . esc_attr( $bookmark_icon ) . '" aria-hidden="true"></i>
 	</a>';
 	?>
 </div>
