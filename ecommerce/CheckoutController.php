@@ -844,7 +844,7 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function pay_now() {
 		$errors = array();
@@ -855,7 +855,8 @@ class CheckoutController {
 		$is_guest_user   = ! is_user_logged_in();
 
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			return self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
+			self::set_checkout_alert( 'danger', tutor_utils()->error_message( 'nonce' ), $current_user_id );
+			return;
 		}
 
 		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
@@ -864,7 +865,8 @@ class CheckoutController {
 		if ( ! $is_guest_user && $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
-				return self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
+				self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
+				return;
 			}
 		}
 
@@ -888,7 +890,8 @@ class CheckoutController {
 		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
 		if ( true !== $validate_cart_items ) {
 			$errors = array_merge( $errors, (array) $validate_cart_items );
-			return $this->set_checkout_errors( $errors, $current_user_id );
+			$this->set_checkout_errors( $errors, $current_user_id );
+			return;
 		}
 
 		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
@@ -908,7 +911,8 @@ class CheckoutController {
 		}
 
 		if ( ! empty( $errors ) ) {
-			return $this->set_checkout_errors( $errors, $current_user_id );
+			$this->set_checkout_errors( $errors, $current_user_id );
+			return;
 		}
 
 		$items = array();
@@ -941,7 +945,8 @@ class CheckoutController {
 
 				// translators: wp error message.
 				$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-				return $this->set_checkout_errors( array( $error_msg ), $current_user_id );
+				$this->set_checkout_errors( array( $error_msg ), $current_user_id );
+				return;
 			} else {
 				$current_user_id = $guest_user;
 			}
