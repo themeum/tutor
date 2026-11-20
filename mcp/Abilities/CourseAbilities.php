@@ -147,7 +147,7 @@ class CourseAbilities {
 			'tutor-mcp/create-course',
 			'tutor-mcp-courses',
 			__( 'Create Course', 'tutor' ),
-			__( 'Create a draft/pending course (never publishes). Same path as course builder draft create.', 'tutor' ),
+			__( 'Create a draft/pending course (never publishes). Do not publish unless the user explicitly asks — then use set-course-status with confirm=true. Always tell the user the course is in draft/pending mode.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'title' ),
@@ -205,7 +205,7 @@ class CourseAbilities {
 			'tutor-mcp/set-course-status',
 			'tutor-mcp-courses',
 			__( 'Set Course Status', 'tutor' ),
-			__( 'Set course status. Publishing requires confirm=true and publish capability.', 'tutor' ),
+			__( 'Set course status. Only publish when the user explicitly asks. Publishing requires confirm=true and publish capability.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'course_id', 'status' ),
@@ -472,9 +472,18 @@ class CourseAbilities {
 		update_post_meta( $course_id, Course::COURSE_PRICE_TYPE_META, Course::PRICE_TYPE_FREE );
 		do_action( 'tutor_draft_course_created', $course_id );
 
+		$status_label = CourseModel::STATUS_PENDING === $status
+			? __( 'pending review', 'tutor' )
+			: __( 'draft', 'tutor' );
+
 		return array(
 			'id'          => (int) $course_id,
 			'post_status' => $status,
+			'message'     => sprintf(
+				/* translators: %s: draft or pending review */
+				__( 'Course created in %s mode (not published). Tell the user it is unpublished. Only call set-course-status to publish if they explicitly asked.', 'tutor' ),
+				$status_label
+			),
 		);
 	}
 

@@ -56,6 +56,48 @@ class CurriculumAbilities {
 	);
 
 	/**
+	 * Free (core) quiz question types allowed via MCP.
+	 *
+	 * Pro types are appended by Tutor Pro through
+	 * {@see 'tutor_mcp_allowed_quiz_question_types'}.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array<int, string>
+	 */
+	private const QUIZ_QUESTION_TYPES_FREE = array(
+		QuizModel::QUESTION_TYPE_TRUE_FALSE,
+		QuizModel::QUESTION_TYPE_SINGLE_CHOICE,
+		QuizModel::QUESTION_TYPE_MULTIPLE_CHOICE,
+		QuizModel::QUESTION_TYPE_OPEN_ENDED,
+		QuizModel::QUESTION_TYPE_FILL_IN_THE_BLANK,
+	);
+
+	/**
+	 * Allowed quiz question types for MCP (Free + Pro filter).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array<int, string>
+	 */
+	public static function allowed_quiz_question_types(): array {
+		$types = apply_filters( 'tutor_mcp_allowed_quiz_question_types', self::QUIZ_QUESTION_TYPES_FREE );
+		if ( ! is_array( $types ) ) {
+			return self::QUIZ_QUESTION_TYPES_FREE;
+		}
+
+		$types = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'strval', $types )
+				)
+			)
+		);
+
+		return $types ? $types : self::QUIZ_QUESTION_TYPES_FREE;
+	}
+
+	/**
 	 * Register curriculum abilities.
 	 *
 	 * @since 4.3.0
@@ -409,7 +451,7 @@ class CurriculumAbilities {
 			'tutor-mcp/add-quiz-question',
 			'tutor-mcp-curriculum',
 			__( 'Add Quiz Question', 'tutor' ),
-			__( 'Add a question to an existing quiz.', 'tutor' ),
+			__( 'Add a question to an existing quiz. Free types always; Pro types when Tutor Pro is active. Image Marking, Range, Pin, Graph, and Puzzle are not supported.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'quiz_id', 'question_title', 'question_type' ),
@@ -421,7 +463,7 @@ class CurriculumAbilities {
 					'question_title'   => array( 'type' => 'string' ),
 					'question_type'    => array(
 						'type' => 'string',
-						'enum' => array( 'true_false', 'single_choice', 'multiple_choice', 'fill_in_the_blank', 'open_ended' ),
+						'enum' => self::allowed_quiz_question_types(),
 					),
 					'question_mark'    => array(
 						'type'    => 'number',
@@ -793,7 +835,10 @@ class CurriculumAbilities {
 			}
 
 			$question_id = absint( $question['question_id'] ?? 0 );
-			$type        = sanitize_text_field( (string) ( $question['question_type'] ?? 'true_false' ) );
+			$type        = sanitize_text_field( (string) ( $question['question_type'] ?? QuizModel::QUESTION_TYPE_TRUE_FALSE ) );
+			if ( ! in_array( $type, self::allowed_quiz_question_types(), true ) ) {
+				continue;
+			}
 
 			if ( empty( $question[ QuizBuilder::TRACKING_KEY ] ) ) {
 				$question[ QuizBuilder::TRACKING_KEY ] = $question_id
@@ -1014,17 +1059,20 @@ class CurriculumAbilities {
 			return new \WP_Error( 'tutor_mcp_not_found', __( 'Quiz not found.', 'tutor' ) );
 		}
 
-		$type    = sanitize_text_field( (string) ( $input['question_type'] ?? 'true_false' ) );
-		$allowed = array( 'true_false', 'single_choice', 'multiple_choice', 'fill_in_the_blank', 'open_ended' );
-		if ( ! in_array( $type, $allowed, true ) ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid question type.', 'tutor' ) );
+		$type = sanitize_text_field( (string) ( $input['question_type'] ?? QuizModel::QUESTION_TYPE_TRUE_FALSE ) );
+		if ( ! in_array( $type, self::allowed_quiz_question_types(), true ) ) {
+			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid or unsupported question type for MCP.', 'tutor' ) );
 		}
 
+		$question_mark     = isset( $input['question_mark'] ) ? (float) $input['question_mark'] : 1;
+		$question_settings = Quiz::get_default_question_settings( $type );
+		$question_settings['question_mark'] = $question_mark;
+
 		$question = array(
-			'question_title'    => sanitize_text_field( (string) ( $input['question_title'] ?? '' ) ),
-			'question_type'     => $type,
-			'question_mark'     => isset( $input['question_mark'] ) ? (float) $input['question_mark'] : 1,
-			'question_settings' => Quiz::get_default_question_settings( $type ),
+			'question_title'          => sanitize_text_field( (string) ( $input['question_title'] ?? '' ) ),
+			'question_type'           => $type,
+			'question_mark'           => $question_mark,
+			'question_settings'       => $question_settings,
 			QuizBuilder::TRACKING_KEY => QuizBuilder::FLAG_NEW,
 		);
 

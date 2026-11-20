@@ -758,7 +758,7 @@ class Registrar {
 			'mcp',
 			self::SERVER_ID,
 			__( 'Tutor MCP Server', 'tutor' ),
-			__( 'Tutor LMS MCP tools.', 'tutor' ),
+			__( 'Tutor LMS MCP tools. New courses are always draft/pending — never publish unless the user explicitly asks, then use set-course-status with confirm=true. After creating a course, tell the user it is in draft mode.', 'tutor' ),
 			defined( 'TUTOR_VERSION' ) ? TUTOR_VERSION : '1.0.0',
 			array( \WP\MCP\Transport\HttpTransport::class ),
 			$error,
