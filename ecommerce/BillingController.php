@@ -290,7 +290,7 @@ class BillingController extends BaseController {
 		$validation = ValidationHelper::validate( $validation_rules, $data );
 
 		// Format checks run only on fields that passed the rules above.
-		$format_errors = array_diff_key( self::validate_field_formats( $data ), $validation->errors );
+		$format_errors = array_diff_key( BillingModel::validate_field_formats( $data ), $validation->errors );
 		if ( ! empty( $format_errors ) ) {
 			$validation->errors  = array_merge( $validation->errors, $format_errors );
 			$validation->success = false;
@@ -367,54 +367,6 @@ class BillingController extends BaseController {
 	}
 
 	/**
-	 * Allowed character formats for billing fields.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return array<string, array{pattern: string, message: string}>
-	 */
-	public static function get_field_formats(): array {
-		// Matches one or more letters (any language), combining marks, spaces, apostrophes, dots, or hyphens.
-		$name_pattern = "[\\p{L}\\p{M}\\s'.\\-]+";
-
-		$formats = array(
-			'billing_first_name' => array(
-				'pattern' => $name_pattern,
-				'message' => __( 'First name can only contain letters, spaces, apostrophes, dots and hyphens.', 'tutor' ),
-			),
-			'billing_last_name'  => array(
-				'pattern' => $name_pattern,
-				'message' => __( 'Last name can only contain letters, spaces, apostrophes, dots and hyphens.', 'tutor' ),
-			),
-			'billing_phone'      => array(
-				'pattern' => '\\+?[0-9\\s\\(\\)\\-]{6,20}',
-				'message' => __( 'Phone can only contain digits, spaces, parentheses, hyphens and a leading +.', 'tutor' ),
-			),
-			'billing_city'       => array(
-				'pattern' => $name_pattern,
-				'message' => __( 'City can only contain letters, spaces, apostrophes, periods and hyphens.', 'tutor' ),
-			),
-			'billing_zip_code'   => array(
-				'pattern' => '[A-Za-z0-9\\s\\-]{2,12}',
-				'message' => __( 'Postcode/ZIP can only contain letters, digits, spaces and hyphens.', 'tutor' ),
-			),
-			'billing_address'    => array(
-				'pattern' => "[\\p{L}\\p{M}\\p{N}\\s,.#'\\/\\(\\)\\-]+",
-				'message' => __( 'Address can only contain letters, digits, spaces and , . # / \' ( ) -', 'tutor' ),
-			),
-		);
-
-		/**
-		 * Filters the allowed character formats for billing fields.
-		 *
-		 * @since 4.3.0
-		 *
-		 * @param array $formats Field name => array( 'pattern' => string, 'message' => string ).
-		 */
-		return apply_filters( 'tutor_billing_field_formats', $formats );
-	}
-
-	/**
 	 * Print HTML `pattern` and `title` attributes for a billing input.
 	 *
 	 * @since 4.3.0
@@ -424,7 +376,7 @@ class BillingController extends BaseController {
 	 * @return void
 	 */
 	public static function render_pattern_attrs( string $field ): void {
-		$formats = self::get_field_formats();
+		$formats = BillingModel::get_field_formats();
 		if ( ! isset( $formats[ $field ] ) ) {
 			return;
 		}
@@ -434,32 +386,6 @@ class BillingController extends BaseController {
 			esc_attr( $formats[ $field ]['pattern'] ),
 			esc_attr( $formats[ $field ]['message'] )
 		);
-	}
-
-	/**
-	 * Check billing values against their allowed formats.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $data Unslashed billing data keyed by field name.
-	 *
-	 * @return array<string, string[]> Errors keyed by field name.
-	 */
-	public static function validate_field_formats( array $data ): array {
-		$errors = array();
-
-		foreach ( self::get_field_formats() as $field => $format ) {
-			$value = trim( (string) ( $data[ $field ] ?? '' ) );
-			if ( '' === $value ) {
-				continue;
-			}
-
-			if ( ! preg_match( '~^(?:' . $format['pattern'] . ')$~u', $value ) ) {
-				$errors[ $field ][] = $format['message'];
-			}
-		}
-
-		return $errors;
 	}
 
 	/**
@@ -474,7 +400,7 @@ class BillingController extends BaseController {
 	 */
 	public static function get_client_rules( string $field, bool $required ): string {
 		$rules   = array();
-		$formats = self::get_field_formats();
+		$formats = BillingModel::get_field_formats();
 
 		if ( $required ) {
 			$rules[] = 'required: true';

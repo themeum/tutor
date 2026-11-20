@@ -598,7 +598,7 @@ class CheckoutController {
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
-		foreach ( BillingController::validate_field_formats( $billing_fillable_fields ) as $field_errors ) {
+		foreach ( BillingModel::validate_field_formats( $billing_fillable_fields ) as $field_errors ) {
 			array_push( $errors, ...$field_errors );
 		}
 
@@ -1165,7 +1165,7 @@ class CheckoutController {
 			exit;
 		}
 
-		$format_errors = BillingController::validate_field_formats( $billing_fillable_fields );
+		$format_errors = BillingModel::validate_field_formats( $billing_fillable_fields );
 		if ( ! empty( $format_errors ) ) {
 			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, implode( ' ', array_merge( ...array_values( $format_errors ) ) ) );
 		}
