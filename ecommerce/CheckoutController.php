@@ -572,6 +572,7 @@ class CheckoutController {
 
 			// Generate a temporary identifier for the guest user.
 			$current_user_id = wp_rand();
+			add_filter( 'tutor_checkout_user_id', fn() => $current_user_id );
 		}
 
 		return $current_user_id;
@@ -602,10 +603,10 @@ class CheckoutController {
 			'payment_method' => 'required',
 		);
 
-		// Skip validation rules for not available fields in data.
-		foreach ( $validation_rules as $key => $value ) {
+		// If fields need default empty values for ValidationHelper:
+		foreach ( array_keys( $validation_rules ) as $key ) {
 			if ( ! array_key_exists( $key, $data ) ) {
-				unset( $validation_rules[ $key ] );
+				$data[ $key ] = '';
 			}
 		}
 
@@ -869,7 +870,7 @@ class CheckoutController {
 
 		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
 		$validated    = $this->validate_pay_now_request( $order_fields );
-		if ( ! $validated ) {
+		if ( true !== $validated ) {
 			$errors = array_merge( $errors, (array) $validated );
 		}
 
@@ -885,7 +886,7 @@ class CheckoutController {
 		$order_type     = $order_fields['order_type'];
 
 		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
-		if ( ! $validate_cart_items ) {
+		if ( true !== $validate_cart_items ) {
 			$errors = array_merge( $errors, (array) $validate_cart_items );
 			return $this->set_checkout_errors( $errors, $current_user_id );
 		}
@@ -930,80 +931,78 @@ class CheckoutController {
 			)
 		);
 
-		if ( empty( $errors ) ) {
-			if ( $is_guest_user ) {
-				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
-				if ( is_wp_error( $guest_user ) ) {
-					// Delete the billing info if user registration failed.
-					DB::table( 'tutor_customers' )->where( 'user_id', $current_user_id )->delete();
+		if ( $is_guest_user ) {
+			$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
+			if ( is_wp_error( $guest_user ) ) {
+				// Delete the billing info if user registration failed.
+				DB::table( 'tutor_customers' )->where( 'user_id', $current_user_id )->delete();
 
-					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
+				add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
 
-					// translators: wp error message.
-					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-					return $this->set_checkout_errors( array( $error_msg ), $current_user_id );
-				} else {
-					$current_user_id = $guest_user;
+				// translators: wp error message.
+				$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
+				return $this->set_checkout_errors( array( $error_msg ), $current_user_id );
+			} else {
+				$current_user_id = $guest_user;
+			}
+		}
+
+		if ( ! empty( $order_data ) ) {
+			$order_data = $this->order_ctrl->update_order(
+				$order_id,
+				$current_user_id,
+				$items,
+				OrderModel::PAYMENT_UNPAID,
+				$order_type,
+				$checkout_data->coupon_code,
+				$args,
+				true
+			);
+		} else {
+			$order_data = $this->order_ctrl->create_order(
+				$current_user_id,
+				$items,
+				OrderModel::PAYMENT_UNPAID,
+				$order_type,
+				$checkout_data->coupon_code,
+				$args,
+				false
+			);
+		}
+
+		if ( ! empty( $order_data ) ) {
+			$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
+			$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
+			if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
+				$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
+				if ( ! $reserved ) {
+					// Mark order cancelled and return error so student can re-try.
+					$order_model = new OrderModel();
+					$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+					$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
+					$this->set_checkout_errors( array( $err_msg ), $current_user_id );
+					return;
 				}
 			}
 
-			if ( ! empty( $order_data ) ) {
-				$order_data = $this->order_ctrl->update_order(
-					$order_id,
-					$current_user_id,
-					$items,
-					OrderModel::PAYMENT_UNPAID,
-					$order_type,
-					$checkout_data->coupon_code,
-					$args,
-					true
-				);
-			} else {
-				$order_data = $this->order_ctrl->create_order(
-					$current_user_id,
-					$items,
-					OrderModel::PAYMENT_UNPAID,
-					$order_type,
-					$checkout_data->coupon_code,
-					$args,
-					false
-				);
-			}
-
-			if ( ! empty( $order_data ) ) {
-				$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
-				$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
-				if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
-					$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
-					if ( ! $reserved ) {
-						// Mark order cancelled and return error so student can re-try.
-						$order_model = new OrderModel();
-						$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
-						$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
-						$this->set_checkout_errors( array( $err_msg ), $current_user_id );
-						return;
-					}
-				}
-
-				do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
-				if ( 'automate' === $payment_type ) {
-					try {
-						$payment_data = self::prepare_payment_data( $order_data );
-						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
-					} catch ( \Throwable $th ) {
-						tutor_log( $th );
-						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
-					}
-				} else {
-					// Set alert message session.
-					$this->set_pay_now_alert_msg( $order_data );
-					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'] );
+			do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+			if ( 'automate' === $payment_type ) {
+				try {
+					$payment_data = self::prepare_payment_data( $order_data );
+					$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
 				}
 			} else {
-				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-				$this->set_checkout_errors( $errors, $current_user_id );
+				// Set alert message session.
 				$this->set_pay_now_alert_msg( $order_data );
+				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'] );
 			}
+		} else {
+			array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
+			$this->set_checkout_errors( $errors, $current_user_id );
+			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
 
