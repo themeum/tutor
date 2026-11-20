@@ -1475,12 +1475,6 @@ final class Tutor extends Singleton {
 			return;
 		}
 
-		if ( tutor_utils()->has_wc() ) {
-			if ( ! $role->has_cap( 'edit_published_products' ) ) {
-				$role->add_cap( 'edit_published_products' );
-			}
-		}
-
 		if ( ! $is_removed_edit_other_items_permissions ) {
 
 			$caps_to_be_removed = array(
