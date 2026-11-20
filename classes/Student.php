@@ -408,6 +408,6 @@ class Student {
 			),
 		);
 
-		return $courses_tab;
+		return apply_filters( 'tutor_dashboard_courses_tab', $courses_tab, $active_tab );
 	}
 }

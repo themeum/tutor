@@ -3508,11 +3508,15 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int    $course_id    course id.
 	 *
 	 * @return void
 	 */
 	public function render_course_action_btn( int $course_id ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
+			return;
+		}
+
 		$is_completed = tutor_utils()->is_completed_course( $course_id );
 		if ( $is_completed ) {
 			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
