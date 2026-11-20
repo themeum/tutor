@@ -45,7 +45,7 @@ $earned_marks         = (float) $attempt_data->earned_marks;
 $pass_marks           = ( $total_marks * $passing_grade ) / 100;
 $earned_percentage    = (float) QuizModel::calculate_attempt_earned_percentage( $attempt_data );
 $attempt_result       = QuizModel::get_attempt_result( $attempt_id );
-$attempted_at_label   = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) );
+$attempted_at_label   = date_i18n( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_ended_at ) );
 $is_manually_reviewed = ! empty( $attempt_data->is_manually_reviewed );
 
 $timing                 = QuizModel::get_quiz_attempt_timing( $attempt_data );
