@@ -2561,20 +2561,6 @@ class Course extends Tutor_Base {
 		return $data;
 	}
 
-	/**
-	 * Main author change from gutenberg editor (deprecated).
-	 *
-	 * @deprecated 4.3.0 Use restrict_course_author() instead.
-	 *
-	 * @param array $data Sanitized post data.
-	 * @param array $postarr Raw post data.
-	 *
-	 * @return array
-	 */
-	public function tutor_add_gutenberg_author( $data, $postarr ) {
-		return $this->restrict_course_author( $data, $postarr );
-	}
-
 
 	/**
 	 * Attach product with course when course save from frontend or backend.
