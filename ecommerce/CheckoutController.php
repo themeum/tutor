@@ -952,6 +952,33 @@ class CheckoutController {
 			}
 		}
 
+		$order_data = $this->place_order( $current_user_id, $items, $order_type, $checkout_data->coupon_code, $args, $order_data, $order_id );
+
+		if ( ! $order_data ) {
+			return;
+		}
+
+		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+
+		$this->process_payment( $order_data, $payment_method, $payment_type, $order_type );
+	}
+
+	/**
+	 * Place order by creating or updating order and reserving coupon.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int    $current_user_id Current user ID.
+	 * @param array  $items           Order items.
+	 * @param string $order_type      Order type.
+	 * @param string $coupon_code     Applied coupon code.
+	 * @param array  $args            Additional order creation args.
+	 * @param mixed  $order_data      Existing incomplete order data (if any).
+	 * @param int    $order_id        Existing incomplete order ID (if any).
+	 *
+	 * @return array|false Placed order data array, or false on failure.
+	 */
+	protected function place_order( $current_user_id, array $items, string $order_type, string $coupon_code = '', array $args = array(), $order_data = null, int $order_id = 0 ) {
 		if ( ! empty( $order_data ) ) {
 			$order_data = $this->order_ctrl->update_order(
 				$order_id,
@@ -959,7 +986,7 @@ class CheckoutController {
 				$items,
 				OrderModel::PAYMENT_UNPAID,
 				$order_type,
-				$checkout_data->coupon_code,
+				$coupon_code,
 				$args,
 				true
 			);
@@ -969,34 +996,48 @@ class CheckoutController {
 				$items,
 				OrderModel::PAYMENT_UNPAID,
 				$order_type,
-				$checkout_data->coupon_code,
+				$coupon_code,
 				$args,
 				false
 			);
 		}
 
 		if ( empty( $order_data ) ) {
-			array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-			$this->set_checkout_errors( $errors, $current_user_id );
+			$this->set_checkout_errors( array( __( 'Failed to place order!', 'tutor' ) ), $current_user_id );
 			$this->set_pay_now_alert_msg( $order_data );
-			return;
+			return false;
 		}
 
 		$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
-		$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
-		if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
-			$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
+		$applied_coupon  = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $coupon_code;
+		if ( $placed_order_id && ! empty( $applied_coupon ) && $this->coupon_model->is_reservation_required( $applied_coupon ) ) {
+			$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $applied_coupon, (int) $current_user_id, 30 );
 			if ( ! $reserved ) {
 				// Mark order cancelled and return error so student can re-try.
 				$order_model = new OrderModel();
 				$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
 				$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
 				$this->set_checkout_errors( array( $err_msg ), $current_user_id );
-				return;
+				return false;
 			}
 		}
 
-		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+		return $order_data;
+	}
+
+	/**
+	 * Process payment for the placed order.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array  $order_data     Order data.
+	 * @param string $payment_method Payment method.
+	 * @param string $payment_type   Payment type (automate|manual).
+	 * @param string $order_type     Order type.
+	 *
+	 * @return void
+	 */
+	protected function process_payment( array $order_data, string $payment_method, string $payment_type, string $order_type ) {
 		if ( 'automate' === $payment_type ) {
 			try {
 				$payment_data = self::prepare_payment_data( $order_data );
