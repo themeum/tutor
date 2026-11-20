@@ -975,39 +975,40 @@ class CheckoutController {
 			);
 		}
 
-		if ( ! empty( $order_data ) ) {
-			$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
-			$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
-			if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
-				$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
-				if ( ! $reserved ) {
-					// Mark order cancelled and return error so student can re-try.
-					$order_model = new OrderModel();
-					$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
-					$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
-					$this->set_checkout_errors( array( $err_msg ), $current_user_id );
-					return;
-				}
-			}
-
-			do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
-			if ( 'automate' === $payment_type ) {
-				try {
-					$payment_data = self::prepare_payment_data( $order_data );
-					$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
-				} catch ( \Throwable $th ) {
-					tutor_log( $th );
-					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
-				}
-			} else {
-				// Set alert message session.
-				$this->set_pay_now_alert_msg( $order_data );
-				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'] );
-			}
-		} else {
+		if ( empty( $order_data ) ) {
 			array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
 			$this->set_checkout_errors( $errors, $current_user_id );
 			$this->set_pay_now_alert_msg( $order_data );
+			return;
+		}
+
+		$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
+		$coupon_code     = is_array( $order_data ) && isset( $order_data['coupon_code'] ) ? $order_data['coupon_code'] : $checkout_data->coupon_code;
+		if ( $placed_order_id && ! empty( $coupon_code ) && $this->coupon_model->is_reservation_required( $coupon_code ) ) {
+			$reserved = $this->coupon_model->reserve_coupon_usage( $placed_order_id, $coupon_code, (int) $current_user_id, 30 );
+			if ( ! $reserved ) {
+				// Mark order cancelled and return error so student can re-try.
+				$order_model = new OrderModel();
+				$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
+				$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
+				$this->set_checkout_errors( array( $err_msg ), $current_user_id );
+				return;
+			}
+		}
+
+		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+		if ( 'automate' === $payment_type ) {
+			try {
+				$payment_data = self::prepare_payment_data( $order_data );
+				$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
+			} catch ( \Throwable $th ) {
+				tutor_log( $th );
+				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
+			}
+		} else {
+			// Set alert message session.
+			$this->set_pay_now_alert_msg( $order_data );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'] );
 		}
 	}
 
