@@ -155,7 +155,7 @@ class Avatar extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function size( string|int $size ): self {
+	public function size( $size ): self {
 		$this->size = sanitize_html_class( $size );
 		return $this;
 	}
