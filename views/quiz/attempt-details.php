@@ -481,7 +481,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											$answer_titles              = maybe_unserialize( $answer->given_answer );
 											$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
 
-											echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+											tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
 										}
 
 											// Open ended or short answer.
@@ -657,7 +657,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$answer_titles              = explode( '|', stripslashes( $correct_answer ) );
 												$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
 
-												echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+												tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
 											}
 
 											// Ordering.
