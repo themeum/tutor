@@ -58,7 +58,7 @@ if ( ! $course_learning_url ) {
 		</div>
 	</div>
 
-	<div class="tutor-progress-card-actions">
-		<?php do_action( 'tutor_course_action_btn', $course_id ); ?>
+	<div class="tutor-progress-card-actions" @click.stop>
+		<?php do_action( 'tutor_course_action_btn', $course_id, $active_tab ?? '' ); ?>
 	</div>
 </div>
