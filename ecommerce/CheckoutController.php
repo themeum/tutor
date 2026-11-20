@@ -598,6 +598,10 @@ class CheckoutController {
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
+		foreach ( BillingController::validate_field_formats( $billing_fillable_fields ) as $field_errors ) {
+			array_push( $errors, ...$field_errors );
+		}
+
 		$order_payment_fields = array(
 			'object_ids',
 			'coupon_code',
@@ -1159,6 +1163,11 @@ class CheckoutController {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
 			exit;
+		}
+
+		$format_errors = BillingController::validate_field_formats( $billing_fillable_fields );
+		if ( ! empty( $format_errors ) ) {
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, implode( ' ', array_merge( ...array_values( $format_errors ) ) ) );
 		}
 
 		if ( $order_id ) {

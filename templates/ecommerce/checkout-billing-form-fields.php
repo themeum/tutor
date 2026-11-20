@@ -38,7 +38,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'First Name', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_first_name" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_first_name ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_first_name" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_first_name ); ?>" required <?php BillingController::render_pattern_attrs( 'billing_first_name' ); ?>>
 		</div>
 	</div>
 
@@ -47,7 +47,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_last_name" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_last_name ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_last_name" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_last_name ); ?>" required <?php BillingController::render_pattern_attrs( 'billing_last_name' ); ?>>
 		</div>
 	</div>
 
@@ -106,7 +106,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'City', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_city" placeholder="<?php esc_attr_e( 'City', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_city ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_city" placeholder="<?php esc_attr_e( 'City', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_city ); ?>" required <?php BillingController::render_pattern_attrs( 'billing_city' ); ?>>
 		</div>
 	</div>
 
@@ -115,7 +115,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" <?php echo esc_attr( $required_option ); ?>>
+			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" <?php echo esc_attr( $required_option ); ?><?php BillingController::render_pattern_attrs( 'billing_zip_code' ); ?>>
 		</div>
 	</div>
 
@@ -124,7 +124,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Phone', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>">
+			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>"<?php BillingController::render_pattern_attrs( 'billing_phone' ); ?>>
 		</div>
 	</div>
 
@@ -133,7 +133,7 @@ $required_option     = $is_address_required ? 'required' : '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Address', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo esc_attr( $required_option ); ?>>
+			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo esc_attr( $required_option ); ?><?php BillingController::render_pattern_attrs( 'billing_address' ); ?>>
 		</div>
 	</div>
 </div>

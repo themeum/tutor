@@ -23,6 +23,7 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
+use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
 
@@ -31,7 +32,6 @@ $close_action        = $close_action ?? 'editBilling = false';
 $country_options     = $country_options ?? array();
 $initial_states      = $initial_states ?? array();
 $is_address_required = Settings::is_billing_address_required();
-$required_option     = $is_address_required ? ', { required: true }' : '';
 ?>
 
 <?php if ( $show_close_button ) : ?>
@@ -70,7 +70,7 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 			->id( 'billing_first_name' )
 			->required()
 			->placeholder( __( 'Enter your first name', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_first_name', { required: true })" )
+			->attr( 'x-bind', "register('billing_first_name', " . BillingController::get_client_rules( 'billing_first_name', true ) . ')' )
 			->render();
 
 		InputField::make()
@@ -79,7 +79,7 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 			->id( 'billing_last_name' )
 			->required()
 			->placeholder( __( 'Enter your last name', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_last_name', { required: true })" )
+			->attr( 'x-bind', "register('billing_last_name', " . BillingController::get_client_rules( 'billing_last_name', true ) . ')' )
 			->render();
 	?>
 </div>
@@ -100,7 +100,7 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 		->label( __( 'Phone', 'tutor' ) )
 		->id( 'billing_phone' )
 		->placeholder( __( 'Enter your phone number', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_phone')" )
+		->attr( 'x-bind', "register('billing_phone', " . BillingController::get_client_rules( 'billing_phone', false ) . ')' )
 		->render();
 
 	InputField::make()
@@ -134,9 +134,9 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 			->name( 'billing_city' )
 			->label( __( 'City', 'tutor' ) )
 			->id( 'billing_city' )
-			->required( $is_address_required )
+			->required()
 			->placeholder( __( 'Enter your city', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_city', { required: true })" )
+			->attr( 'x-bind', "register('billing_city', " . BillingController::get_client_rules( 'billing_city', true ) . ')' )
 			->render();
 
 		InputField::make()
@@ -145,7 +145,7 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 			->id( 'billing_zip_code' )
 			->required( $is_address_required )
 			->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_zip_code' $required_option)" )
+			->attr( 'x-bind', "register('billing_zip_code', " . BillingController::get_client_rules( 'billing_zip_code', $is_address_required ) . ')' )
 			->render();
 	?>
 </div>
@@ -159,6 +159,6 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 		->id( 'billing_address' )
 		->required( $is_address_required )
 		->placeholder( __( 'Enter your address', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_address' $required_option)" )
+		->attr( 'x-bind', "register('billing_address', " . BillingController::get_client_rules( 'billing_address', $is_address_required ) . ')' )
 		->render();
 ?>
