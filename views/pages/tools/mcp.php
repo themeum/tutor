@@ -11,13 +11,12 @@
 
 use Tutor\Core\Input;
 use Tutor\Mcp\Registrar;
-use Tutor\Mcp\Support\Permissions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! Permissions::can_manage_settings() ) {
+if ( ! current_user_can( 'manage_options' ) ) {
 	wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
 }
 

@@ -1,9 +1,10 @@
 <?php
 /**
- * MCP course permission checks.
+ * MCP permission helpers.
  *
- * Mirrors Tutor plugin access: Course::check_access(), can_user_edit_course(),
- * instructor_can_publish_course / instructor_can_delete_course options.
+ * Prefer calling Tutor helpers directly (User::is_admin(), can_user_edit_course(),
+ * current_user_can()). This class only holds MCP-specific gates and a few
+ * Course::check_access / Course_List equivalents used repeatedly.
  *
  * @package Tutor\Mcp
  * @author  Themeum <support@themeum.com>
@@ -13,7 +14,6 @@
 
 namespace Tutor\Mcp\Support;
 
-use Tutor\Models\CourseModel;
 use Tutor\Mcp\Registrar;
 use TUTOR\User;
 
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Course view/edit permission helpers for MCP abilities.
+ * MCP permission helpers.
  *
  * @since 4.3.0
  */
@@ -61,7 +61,7 @@ class Permissions {
 			return false;
 		}
 
-		if ( user_can( $user_id, 'manage_options' ) ) {
+		if ( User::is_admin( $user_id ) ) {
 			return true;
 		}
 
@@ -73,62 +73,10 @@ class Permissions {
 	}
 
 	/**
-	 * Whether the current user is a Tutor admin (WP admin or manage_tutor).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return bool
-	 */
-	public static function is_tutor_admin(): bool {
-		return User::is_admin() || current_user_can( 'manage_tutor' );
-	}
-
-	/**
-	 * Create course access — same as Course::check_access() without a course_id.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return bool
-	 */
-	public static function can_create_course(): bool {
-		return User::is_admin() || User::is_instructor();
-	}
-
-	/**
-	 * Default post status for MCP course create (never publish).
-	 *
-	 * Matches Course create/update publish option behavior.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return string
-	 */
-	public static function default_course_status(): string {
-		if ( self::is_tutor_admin() ) {
-			return CourseModel::STATUS_DRAFT;
-		}
-
-		$can_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-		return $can_publish ? CourseModel::STATUS_DRAFT : CourseModel::STATUS_PENDING;
-	}
-
-	/**
-	 * Course manage/view access for MCP tools (instructor dashboard scope).
-	 *
-	 * Same ownership check as Course::check_access( $course_id ):
-	 * admin or instructor/co-instructor of the course.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param int $course_id Course ID.
-	 * @return bool
-	 */
-	public static function can_view_course( int $course_id ): bool {
-		return self::can_edit_course( $course_id );
-	}
-
-	/**
 	 * Course edit ownership — same as Course::check_access( $course_id ).
+	 *
+	 * Rejects empty course_id so admins do not pass on missing IDs
+	 * (can_user_edit_course short-circuits true for admins).
 	 *
 	 * @since 4.3.0
 	 *
@@ -140,15 +88,11 @@ class Permissions {
 			return false;
 		}
 
-		if ( self::is_tutor_admin() ) {
-			return true;
-		}
-
 		return (bool) tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 	}
 
 	/**
-	 * Trash course — matches Course_List / course update trash rules.
+	 * Trash course — matches Course_List trash rules.
 	 *
 	 * Admin always; instructors only when instructor_can_delete_course is on.
 	 *
@@ -162,7 +106,7 @@ class Permissions {
 			return false;
 		}
 
-		if ( self::is_tutor_admin() ) {
+		if ( User::is_admin() ) {
 			return true;
 		}
 
@@ -171,29 +115,15 @@ class Permissions {
 	}
 
 	/**
-	 * Whether the current user can use instructor-level Tutor tools at all.
+	 * Instructor-level entry gate — same as Course::check_access() without a course_id.
 	 *
-	 * Entry gate only — list handlers must still scope to owned courses.
+	 * List handlers must still scope to owned courses.
 	 *
 	 * @since 4.3.0
 	 *
 	 * @return bool
 	 */
 	public static function can_manage_courses(): bool {
-		return current_user_can( 'edit_tutor_courses' ) || self::is_tutor_admin();
-	}
-
-	/**
-	 * Whether the current user can manage Tools → MCP settings.
-	 *
-	 * Admin-only: site administrators (manage_options). Instructors and other
-	 * roles must not view or change MCP enablement, tools, or agent options.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return bool
-	 */
-	public static function can_manage_settings(): bool {
-		return current_user_can( 'manage_options' );
+		return User::is_admin() || User::is_instructor();
 	}
 }

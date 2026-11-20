@@ -81,7 +81,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return Permissions::is_tutor_admin();
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'list_orders' )
 		);
@@ -102,7 +102,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return Permissions::is_tutor_admin();
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'get_order' )
 		);
@@ -128,7 +128,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
+				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'mark_order_paid' ),
 			self::WRITE_HINTS
@@ -158,7 +158,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return Permissions::is_tutor_admin();
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'list_coupons' )
 		);
@@ -185,7 +185,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
+				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'create_coupon' ),
 			self::WRITE_HINTS
@@ -215,7 +215,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
+				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'update_coupon' ),
 			self::WRITE_HINTS
@@ -237,7 +237,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::is_tutor_admin();
+				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'expire_coupon' ),
 			self::DESTRUCTIVE_HINTS
@@ -259,7 +259,7 @@ class CommerceAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'get_course_price' )
 		);

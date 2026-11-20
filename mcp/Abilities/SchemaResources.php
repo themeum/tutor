@@ -84,7 +84,7 @@ class SchemaResources {
 			__( 'Course Resource', 'tutor' ),
 			array( $this->courses, 'get_course' ),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array(
 				'type'       => 'object',

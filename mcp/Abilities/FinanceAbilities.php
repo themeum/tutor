@@ -14,6 +14,7 @@ use Tutor\Models\WithdrawModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
+use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -99,7 +100,7 @@ class FinanceAbilities {
 	 * @return array|\WP_Error
 	 */
 	public function get_earnings( array $input ) {
-		$is_admin = Permissions::is_tutor_admin();
+		$is_admin = User::is_admin();
 		$user_id  = ! empty( $input['user_id'] ) && $is_admin
 			? absint( $input['user_id'] )
 			: get_current_user_id();
@@ -134,7 +135,7 @@ class FinanceAbilities {
 	 */
 	public function list_withdrawals( array $input ): array {
 		$bounds   = Pagination::bounds( $input );
-		$is_admin = Permissions::is_tutor_admin();
+		$is_admin = User::is_admin();
 		$user_id  = ! empty( $input['user_id'] ) && $is_admin
 			? absint( $input['user_id'] )
 			: ( $is_admin ? 0 : get_current_user_id() );

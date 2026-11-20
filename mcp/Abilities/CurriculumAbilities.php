@@ -133,7 +133,7 @@ class CurriculumAbilities {
 			static function ( array $input ): bool {
 				$lesson_id = absint( $input['lesson_id'] ?? 0 );
 				$course_id = (int) tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
-				return $course_id && Permissions::can_view_course( $course_id );
+				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'get_lesson' )
 		);
@@ -216,7 +216,7 @@ class CurriculumAbilities {
 			static function ( array $input ): bool {
 				$quiz_id   = absint( $input['quiz_id'] ?? 0 );
 				$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
-				return $course_id && Permissions::can_view_course( $course_id );
+				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'get_quiz' )
 		);
@@ -400,7 +400,7 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'list_quizzes' )
 		);

@@ -92,12 +92,12 @@ class QuizAttemptAbilities {
 				}
 				$course_id = absint( $input['course_id'] ?? 0 );
 				if ( $course_id ) {
-					return Permissions::can_view_course( $course_id );
+					return Permissions::can_edit_course( $course_id );
 				}
 				$quiz_id = absint( $input['quiz_id'] ?? 0 );
 				if ( $quiz_id ) {
 					$quiz_course = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
-					return $quiz_course && Permissions::can_view_course( $quiz_course );
+					return $quiz_course && Permissions::can_edit_course( $quiz_course );
 				}
 				return true;
 			},

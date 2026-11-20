@@ -13,7 +13,6 @@ namespace TUTOR;
 use Tutor\Core\Input;
 use Tutor\Mcp\Agent;
 use Tutor\Mcp\Registrar;
-use Tutor\Mcp\Support\Permissions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -83,7 +82,7 @@ class Mcp {
 			return $pages;
 		}
 
-		if ( ! Permissions::can_manage_settings() ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			unset( $pages['tutor_mcp'] );
 		}
 
@@ -109,7 +108,7 @@ class Mcp {
 			return;
 		}
 
-		if ( Permissions::can_manage_settings() ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -142,7 +141,7 @@ class Mcp {
 			return $value;
 		}
 
-		if ( Permissions::can_manage_settings() ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			return $value;
 		}
 
@@ -161,7 +160,7 @@ class Mcp {
 			return;
 		}
 
-		if ( ! Permissions::can_manage_settings() ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
 		}
 

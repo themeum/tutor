@@ -18,6 +18,7 @@ use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
 use TUTOR\Course;
 use TUTOR\REST_Course;
+use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,7 +77,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'get_course' )
 		);
@@ -137,7 +138,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'get_course_contents' )
 		);
@@ -157,7 +158,7 @@ class CourseAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::can_create_course();
+				return ! Registrar::is_read_only() && Permissions::can_manage_courses();
 			},
 			array( $this, 'create_course' ),
 			self::WRITE_HINTS
@@ -309,7 +310,7 @@ class CourseAbilities {
 			? array( 'publish', 'draft', 'pending', 'private', 'trash' )
 			: array( $status );
 
-		if ( ! Permissions::is_tutor_admin() ) {
+		if ( ! User::is_admin() ) {
 			$instructor_id = get_current_user_id();
 			$courses       = CourseModel::get_courses_by_instructor(
 				$instructor_id,
@@ -436,7 +437,12 @@ class CourseAbilities {
 			return new \WP_Error( 'tutor_mcp_invalid', __( 'Course title is required!', 'tutor' ) );
 		}
 
-		$status    = Permissions::default_course_status();
+		// Match Course create flow: admins get draft; instructors pending unless they can publish.
+		$status = CourseModel::STATUS_DRAFT;
+		if ( ! User::is_admin() && ! tutor_utils()->get_option( 'instructor_can_publish_course', false ) ) {
+			$status = CourseModel::STATUS_PENDING;
+		}
+
 		$course_id = wp_insert_post(
 			array(
 				'post_title'   => $title,
@@ -552,11 +558,11 @@ class CourseAbilities {
 			if ( empty( $input['confirm'] ) ) {
 				return new \WP_Error( 'tutor_mcp_confirm_required', __( 'Publishing requires confirm=true.', 'tutor' ) );
 			}
-			if ( ! current_user_can( 'publish_tutor_courses' ) && ! Permissions::is_tutor_admin() ) {
+			if ( ! current_user_can( 'publish_tutor_courses' ) && ! User::is_admin() ) {
 				return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
 			}
 			$instructor_can_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! Permissions::is_tutor_admin() && ! $instructor_can_publish ) {
+			if ( ! User::is_admin() && ! $instructor_can_publish ) {
 				$status = CourseModel::STATUS_PENDING;
 			}
 		}

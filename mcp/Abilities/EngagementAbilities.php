@@ -88,7 +88,7 @@ class EngagementAbilities {
 				}
 				$course_id = absint( $input['course_id'] ?? 0 );
 				if ( $course_id ) {
-					return Permissions::can_view_course( $course_id );
+					return Permissions::can_edit_course( $course_id );
 				}
 				return true;
 			},
@@ -185,7 +185,7 @@ class EngagementAbilities {
 				}
 				$course_id = absint( $input['course_id'] ?? 0 );
 				if ( $course_id ) {
-					return Permissions::can_view_course( $course_id );
+					return Permissions::can_edit_course( $course_id );
 				}
 				return true;
 			},
@@ -214,7 +214,7 @@ class EngagementAbilities {
 				}
 				$question_id = absint( $input['question_id'] ?? 0 );
 				return $question_id
-					&& ( Permissions::is_tutor_admin() || tutor_utils()->can_user_manage( 'qa_question', $question_id ) );
+					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
 			},
 			array( $this, 'reply_to_question' ),
 			self::WRITE_HINTS
@@ -245,7 +245,7 @@ class EngagementAbilities {
 				}
 				$question_id = absint( $input['question_id'] ?? 0 );
 				return $question_id
-					&& ( Permissions::is_tutor_admin() || tutor_utils()->can_user_manage( 'qa_question', $question_id ) );
+					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
 			},
 			array( $this, 'set_question_flags' ),
 			self::WRITE_HINTS
@@ -278,7 +278,7 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'list_reviews' )
 		);
@@ -301,7 +301,7 @@ class EngagementAbilities {
 
 		if ( ! empty( $input['course_id'] ) ) {
 			$course_id = absint( $input['course_id'] );
-			if ( ! Permissions::can_view_course( $course_id ) ) {
+			if ( ! Permissions::can_edit_course( $course_id ) ) {
 				return array(
 					'announcements' => array(),
 					'total'         => 0,
@@ -313,7 +313,7 @@ class EngagementAbilities {
 		}
 
 		// Match dashboard announcements: non-admins only see their own posts.
-		if ( ! Permissions::is_tutor_admin() ) {
+		if ( ! User::is_admin() ) {
 			$args['author'] = get_current_user_id();
 		}
 

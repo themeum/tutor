@@ -16,6 +16,7 @@ use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
+use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -78,7 +79,7 @@ class StudentAbilities {
 				}
 				$course_id = absint( $input['course_id'] ?? 0 );
 				if ( $course_id ) {
-					return Permissions::can_view_course( $course_id );
+					return Permissions::can_edit_course( $course_id );
 				}
 				return true;
 			},
@@ -126,7 +127,7 @@ class StudentAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return Permissions::can_view_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'get_course_progress' )
 		);
@@ -135,7 +136,7 @@ class StudentAbilities {
 			'tutor-mcp/unenroll-student',
 			'tutor-mcp-students',
 			__( 'Unenroll Student', 'tutor' ),
-			__( 'Unenroll a student from a course and clear progress. Admin only. Requires confirm=true.', 'tutor' ),
+			__( 'Unenroll a student from a course and clear progress. Same as Students_List admin delete — administrator only. Requires confirm=true.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'course_id', 'student_id', 'confirm' ),
@@ -158,7 +159,7 @@ class StudentAbilities {
 				if ( Registrar::is_read_only() ) {
 					return false;
 				}
-				return Permissions::is_tutor_admin();
+				return User::is_admin();
 			},
 			array( $this, 'unenroll_student' ),
 			self::DESTRUCTIVE_HINTS
@@ -181,14 +182,14 @@ class StudentAbilities {
 		$search    = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
 		$course_id = ! empty( $input['course_id'] ) ? absint( $input['course_id'] ) : 0;
 
-		if ( $course_id && ! Permissions::can_view_course( $course_id ) ) {
+		if ( $course_id && ! Permissions::can_edit_course( $course_id ) ) {
 			return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
 		}
 
-		$show_pii = Permissions::is_tutor_admin();
+		$show_pii = User::is_admin();
 		$rows     = array();
 
-		if ( Permissions::is_tutor_admin() ) {
+		if ( User::is_admin() ) {
 			$students = tutor_utils()->get_students(
 				$bounds['offset'],
 				$bounds['per_page'],
@@ -248,7 +249,7 @@ class StudentAbilities {
 			return new \WP_Error( 'tutor_mcp_not_found', __( 'Student not found.', 'tutor' ) );
 		}
 
-		$show_pii = Permissions::is_tutor_admin();
+		$show_pii = User::is_admin();
 		$data     = array(
 			'ID'           => (int) $user->ID,
 			'display_name' => $user->display_name,
@@ -260,7 +261,7 @@ class StudentAbilities {
 
 		$courses = array();
 
-		if ( Permissions::is_tutor_admin() ) {
+		if ( User::is_admin() ) {
 			$enrolled = EnrollmentModel::get_enrolled_data( $student_id );
 			if ( ! empty( $enrolled ) ) {
 				foreach ( $enrolled as $enrollment ) {
