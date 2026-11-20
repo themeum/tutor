@@ -99,7 +99,6 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 		->name( 'billing_phone' )
 		->label( __( 'Phone', 'tutor' ) )
 		->id( 'billing_phone' )
-		->required()
 		->placeholder( __( 'Enter your phone number', 'tutor' ) )
 		->attr( 'x-bind', "register('billing_phone')" )
 		->render();
@@ -135,16 +134,16 @@ $required_option     = $is_address_required ? ', { required: true }' : '';
 			->name( 'billing_city' )
 			->label( __( 'City', 'tutor' ) )
 			->id( 'billing_city' )
-			->required()
+			->required( $is_address_required )
 			->placeholder( __( 'Enter your city', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_city' $required_option)" )
+			->attr( 'x-bind', "register('billing_city', { required: true })" )
 			->render();
 
 		InputField::make()
 			->name( 'billing_zip_code' )
 			->label( __( 'Postcode/ Zip', 'tutor' ) )
 			->id( 'billing_zip_code' )
-			->required()
+			->required( $is_address_required )
 			->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
 			->attr( 'x-bind', "register('billing_zip_code' $required_option)" )
 			->render();
