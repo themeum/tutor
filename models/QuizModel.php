@@ -1333,6 +1333,10 @@ class QuizModel {
 
 		! is_array( $answer_id ) ? $answer_id = array( $answer_id ) : 0;
 
+		if ( empty( $answer_id )) {
+			return array();
+		}
+		
 		$answer_id = array_map(
 			function ( $id ) {
 				return "'" . esc_sql( $id ) . "'";
