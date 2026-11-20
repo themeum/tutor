@@ -940,7 +940,8 @@ class CurriculumAbilities {
 			return new \WP_Error( 'tutor_mcp_not_found', __( 'Lesson not found.', 'tutor' ) );
 		}
 
-		do_action( 'tutor_before_delete_course_content', $lesson_id );
+		// Match Lesson::delete_lesson / CourseModel: ( course_id, lesson_id ). H5P listens with 2 args.
+		do_action( 'tutor_before_delete_course_content', 0, $lesson_id );
 		wp_delete_post( $lesson_id, true );
 
 		return array(

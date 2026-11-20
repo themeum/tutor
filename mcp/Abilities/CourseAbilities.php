@@ -398,7 +398,11 @@ class CourseAbilities {
 	 */
 	public function get_course_contents( array $input ) {
 		$course_id = absint( $input['course_id'] ?? 0 );
-		$request   = new \WP_REST_Request( 'GET' );
+		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
+		}
+
+		$request = new \WP_REST_Request( 'GET' );
 		$request->set_param( 'id', $course_id );
 
 		$topics = RestBridge::unwrap_call(
@@ -406,13 +410,17 @@ class CourseAbilities {
 				return ( new REST_Course() )->course_contents( $request );
 			}
 		);
+		// REST returns 404 when a course has no topics; empty outline is a valid MCP result.
 		if ( is_wp_error( $topics ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
+			return array(
+				'course_id' => $course_id,
+				'topics'    => array(),
+			);
 		}
 
 		return array(
 			'course_id' => $course_id,
-			'topics'    => $topics,
+			'topics'    => is_array( $topics ) ? $topics : array(),
 		);
 	}
 
