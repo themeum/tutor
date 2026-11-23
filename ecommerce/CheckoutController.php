@@ -635,30 +635,24 @@ class CheckoutController {
 
 		$validation = ValidationHelper::validate( $validation_rules, $request );
 
-		if ( ! $validation->success ) {
-			foreach ( $validation->errors as $error ) {
-				$errors = array_merge( $errors, (array) $error );
-			}
+		if ( $validation->success ) {
+			// Validate cart items.
+			$object_ids = array_unique( array_filter( array_map( 'absint', explode( ',', $request['object_ids'] ) ) ) );
+			$cart_check = $this->validate_cart_items( $object_ids, $request['order_type'] );
+
+			$errors = true === $cart_check ? array() : (array) $cart_check;
+		} else {
+			$errors = array_merge( array(), ...array_map( fn( $error ) => (array) $error, $validation->errors ) );
 		}
 
 		// Validate the billing country and state to prevent tax reduction abuse.
-		$billing_country = Input::post( 'billing_country', '' );
-		$billing_state   = Input::post( 'billing_state', '' );
-		$country_info    = tutor_get_country_info_by_name( $billing_country );
-
-		if ( ! $country_info ) {
-			$errors[] = __( 'Invalid country', 'tutor' );
-		} else {
-			$states = $country_info['states'] ?? array();
-
-			if ( ! empty( $states ) ) {
-				$state_names = array_column( $states, 'name' );
-
-				if ( ! in_array( $billing_state, $state_names, true ) ) {
-					$errors[] = __( 'Invalid state', 'tutor' );
-				}
-			}
-		}
+		$errors = array_merge(
+			$errors,
+			$this->billing_model->validate_billing_location(
+				$request['billing_country'],
+				$request['billing_state']
+			)
+		);
 
 		// Validate incomplete order if user is not guest.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
@@ -677,16 +671,6 @@ class CheckoutController {
 			$errors[] = $validate_consent->get_error_message();
 		} else {
 			$this->validated_consent = (array) $validate_consent;
-		}
-
-		// Validate cart items.
-		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
-		if ( ! empty( $order_fields['object_ids'] ) && ! empty( $order_fields['order_type'] ) ) {
-			$object_ids          = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
-			$validate_cart_items = $this->validate_cart_items( $object_ids, $order_fields['order_type'] );
-			if ( true !== $validate_cart_items ) {
-				$errors = array_merge( $errors, (array) $validate_cart_items );
-			}
 		}
 
 		return empty( $errors ) ? true : $errors;
