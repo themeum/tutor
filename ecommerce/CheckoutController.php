@@ -623,30 +623,17 @@ class CheckoutController {
 		$this->order_data        = null;
 		$this->validated_consent = array();
 
-		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
-
-		$order_types = array(
-			OrderModel::TYPE_SINGLE_ORDER,
-			OrderModel::TYPE_SUBSCRIPTION,
-			OrderModel::TYPE_RENEWAL,
+		$order_types_str  = implode( ',', array( OrderModel::TYPE_SINGLE_ORDER, OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ) );
+		$validation_rules = array_merge(
+			array(
+				'object_ids'     => 'required',
+				'order_type'     => "required|match_string:{$order_types_str}",
+				'payment_method' => 'required',
+			),
+			$this->billing_model->get_validation_rules()
 		);
 
-		$order_types = implode( ',', $order_types );
-
-		$validation_rules = array(
-			'object_ids'     => 'required',
-			'order_type'     => "required|match_string:{$order_types}",
-			'payment_method' => 'required',
-		);
-
-		// If fields need default empty values for ValidationHelper:
-		foreach ( array_keys( $validation_rules ) as $key ) {
-			if ( ! array_key_exists( $key, $order_fields ) ) {
-				$order_fields[ $key ] = '';
-			}
-		}
-
-		$validation = ValidationHelper::validate( $validation_rules, $order_fields );
+		$validation = ValidationHelper::validate( $validation_rules, $request );
 
 		if ( ! $validation->success ) {
 			foreach ( $validation->errors as $error ) {
@@ -674,6 +661,7 @@ class CheckoutController {
 		}
 
 		// Validate cart items.
+		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
 		if ( ! empty( $order_fields['object_ids'] ) && ! empty( $order_fields['order_type'] ) ) {
 			$object_ids          = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
 			$validate_cart_items = $this->validate_cart_items( $object_ids, $order_fields['order_type'] );

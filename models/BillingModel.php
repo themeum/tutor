@@ -84,6 +84,27 @@ class BillingModel {
 	}
 
 	/**
+	 * Get validation rules
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array Validation rules.
+	 */
+	public function get_validation_rules() {
+		return [
+			'billing_first_name' => 'required',
+			'billing_last_name' => 'required',
+			'billing_email' => 'required|email',
+			'billing_phone' => 'required',
+			'billing_zip_code' => 'required',
+			'billing_address' => 'required',
+			'billing_country' => 'required',
+			'billing_state' => 'required',
+			'billing_city' => 'required',
+		];
+	}
+
+	/**
 	 * Insert billing info
 	 *
 	 * @param array $data Bulling info data.
