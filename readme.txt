@@ -343,7 +343,6 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 Update: Display WordPress display names instead of usernames in Tutor LMS assignments, comments, and Q&A.
 Update: Improved translation coverage and compatibility.
 Update: Improved overall performance and strengthened security measures.
-
 Fix: Resolved an issue where range-type questions became inaccessible and prevented users from exiting quizzes after switching from the Modern to Legacy layout. (Pro)
 Fix: Resolved an issue where instructor analytics displayed the wrong student profile page. (Pro)
 Fix: Corrected inaccurate refund and discount totals in the Frontend Analytics graph. (Pro)
