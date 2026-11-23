@@ -26,9 +26,10 @@ foreach ( $login_errors as $login_error ) {
 			array(
 				'strong' => true,
 				'a'      => array(
-					'href'  => true,
-					'class' => true,
-					'id'    => true,
+					'href'             => true,
+					'class'            => true,
+					'id'               => true,
+					'data-clear-token' => true,
 				),
 				'p'      => array(
 					'class' => true,
