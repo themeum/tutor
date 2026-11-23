@@ -479,6 +479,7 @@ const AssignmentModal = ({
                   {...controllerProps}
                   type="number"
                   label={__('Maximum File Size Limit', 'tutor')}
+                  helpText={__('Set maximum file size. Input 0 to use the default limit.', 'tutor')}
                   placeholder="0"
                   content={__('MB', 'tutor')}
                   contentPosition="right"
