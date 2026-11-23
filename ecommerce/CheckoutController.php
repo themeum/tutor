@@ -642,7 +642,7 @@ class CheckoutController {
 		}
 
 		// Validate incomplete order if user is not guest.
-		$order_id = intval( $request['order_id'] ?? 0 );
+		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 		if ( $current_user_id > 0 && $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id, true );
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
@@ -908,11 +908,9 @@ class CheckoutController {
 			return;
 		}
 
-		$request             = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
-		$order_id            = Input::get( 'order_id', 0, Input::TYPE_INT );
-		$request['order_id'] = $order_id;
-
+		$request   = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$validated = $this->validate_pay_now_request( $request, $current_user_id );
+
 		if ( true !== $validated ) {
 			$this->set_checkout_errors( (array) $validated, $current_user_id );
 			return;
@@ -953,8 +951,7 @@ class CheckoutController {
 			$payment_method,
 			$is_guest_user,
 			$billing_fillable_fields,
-			$this->order_data,
-			$order_id
+			$this->order_data
 		);
 
 		if ( is_wp_error( $order_data ) ) {
@@ -979,11 +976,10 @@ class CheckoutController {
 	 * @param bool   $is_guest_user           Whether user is guest.
 	 * @param array  $billing_fillable_fields Fillable billing fields.
 	 * @param mixed  $order_data              Existing incomplete order data (if any).
-	 * @param int    $order_id                Existing incomplete order ID (if any).
 	 *
 	 * @return array|WP_Error Placed order data array, or WP_Error on failure.
 	 */
-	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null, int $order_id = 0 ) {
+	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null) {
 		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
@@ -1024,6 +1020,7 @@ class CheckoutController {
 
 		try {
 			if ( ! empty( $order_data ) ) {
+				$order_id   = $order_data->id;
 				$order_data = $this->order_ctrl->update_order(
 					$order_id,
 					$current_user_id,
