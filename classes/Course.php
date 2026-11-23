@@ -636,12 +636,20 @@ class Course extends Tutor_Base {
 	 *
 	 * @return bool
 	 */
-	public function validate_wc_product_author( $product_id, $course_id ) {
-		$author_id        = (int) get_post_field( 'post_author', $product_id );
-		$is_co_instructor = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
-		$instructor_id    = $is_co_instructor ? (int) get_post_field( 'post_author', $course_id ) : get_current_user_id();
-
-		return ! User::is_admin() && $author_id !== $instructor_id;
+	public function is_valid_wc_product_author( $product_id, $course_id ) {
+		if ( User::is_admin() ) {
+			return true;
+		}
+		$product_author  = (int) get_post_field( 'post_author', $product_id );
+		$current_user_id = get_current_user_id();
+		if ( $product_author === $current_user_id ) {
+			return true;
+		}
+		$course_author = (int) get_post_field( 'post_author', $course_id );
+		if ( $product_author === $course_author && tutor_utils()->is_instructor_of_this_course( $current_user_id, $course_id ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -670,7 +678,7 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
-						if ( $this->validate_wc_product_author( $product_id, $course_id ) ) {
+						if ( ! $this->is_valid_wc_product_author( $product_id, $course_id ) ) {
 							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
 						}
 
@@ -2615,7 +2623,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-			$is_update = ( $product_id && wc_get_product( $product_id ) && ! $this->validate_wc_product_author( $product_id, $post_ID ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) && $this->is_valid_wc_product_author( $product_id, $post_ID ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
