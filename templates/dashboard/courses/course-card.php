@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Models\CourseModel;
+use Tutor\Models\EnrollmentModel;
 
 $course_permalink = get_the_permalink();
 $course_title     = get_the_title();
@@ -25,7 +26,8 @@ $category_names    = is_array( $course_categories ) ? wp_list_pluck( $course_cat
 $category          = implode( ', ', $category_names );
 
 $course_learning_url = tutor_utils()->get_course_first_lesson();
-if ( get_post_type() !== tutor()->course_post_type ) {
+
+if ( get_post_type() !== tutor()->course_post_type || ! EnrollmentModel::is_enrolled( $course_id ) ) {
 	$course_learning_url = get_permalink();
 }
 
