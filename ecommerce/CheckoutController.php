@@ -641,6 +641,25 @@ class CheckoutController {
 			}
 		}
 
+		// Validate the billing country and state to prevent tax reduction abuse.
+		$billing_country = Input::post( 'billing_country', '' );
+		$billing_state   = Input::post( 'billing_state', '' );
+		$country_info    = tutor_get_country_info_by_name( $billing_country );
+
+		if ( ! $country_info ) {
+			$errors[] = __( 'Invalid country', 'tutor' );
+		} else {
+			$states = $country_info['states'] ?? array();
+
+			if ( ! empty( $states ) ) {
+				$state_names = array_column( $states, 'name' );
+
+				if ( ! in_array( $billing_state, $state_names, true ) ) {
+					$errors[] = __( 'Invalid state', 'tutor' );
+				}
+			}
+		}
+
 		// Validate incomplete order if user is not guest.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 		if ( $current_user_id > 0 && $order_id ) {
@@ -979,7 +998,7 @@ class CheckoutController {
 	 *
 	 * @return array|WP_Error Placed order data array, or WP_Error on failure.
 	 */
-	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null) {
+	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null ) {
 		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
