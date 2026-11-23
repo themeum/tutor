@@ -626,7 +626,7 @@ class CheckoutController {
 		$order_types_str  = implode( ',', array( OrderModel::TYPE_SINGLE_ORDER, OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ) );
 		$validation_rules = array_merge(
 			array(
-				'object_ids'     => 'required',
+				'object_ids'     => 'required|regex:/^[0-9]+(,[0-9]+)*$/',
 				'order_type'     => "required|match_string:{$order_types_str}",
 				'payment_method' => 'required',
 			),
