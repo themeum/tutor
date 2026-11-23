@@ -863,7 +863,7 @@ class CheckoutController {
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 
 		if ( ! $is_guest_user && $order_id ) {
-			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
+			$order_data = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id, true );
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
 				self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
 				return;
@@ -915,9 +915,19 @@ class CheckoutController {
 			return;
 		}
 
-		$order_data = $this->place_order( $current_user_id, $checkout_data, $order_type, $payment_method, $is_guest_user, $billing_fillable_fields, $order_data, $order_id );
+		$order_data = $this->place_order(
+			$current_user_id,
+			$checkout_data,
+			$order_type,
+			$payment_method,
+			$is_guest_user,
+			$billing_fillable_fields,
+			$order_data,
+			$order_id
+		);
 
-		if ( ! $order_data ) {
+		if ( is_wp_error( $order_data ) ) {
+			$this->set_checkout_errors( array( $order_data->get_error_message() ), $current_user_id );
 			return;
 		}
 
@@ -933,16 +943,16 @@ class CheckoutController {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param int         $current_user_id         Current user ID.
-	 * @param object      $checkout_data           Prepared checkout data.
-	 * @param string      $order_type              Order type.
-	 * @param string      $payment_method          Payment method.
-	 * @param bool        $is_guest_user           Whether user is guest.
-	 * @param array       $billing_fillable_fields Fillable billing fields.
-	 * @param mixed       $order_data              Existing incomplete order data (if any).
-	 * @param int         $order_id                Existing incomplete order ID (if any).
+	 * @param int    $current_user_id         Current user ID.
+	 * @param object $checkout_data           Prepared checkout data.
+	 * @param string $order_type              Order type.
+	 * @param string $payment_method          Payment method.
+	 * @param bool   $is_guest_user           Whether user is guest.
+	 * @param array  $billing_fillable_fields Fillable billing fields.
+	 * @param mixed  $order_data              Existing incomplete order data (if any).
+	 * @param int    $order_id                Existing incomplete order ID (if any).
 	 *
-	 * @return array|false Placed order data array, or false on failure.
+	 * @return array|WP_Error Placed order data array, or WP_Error on failure.
 	 */
 	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null, int $order_id = 0 ) {
 		$items = array();
@@ -975,42 +985,43 @@ class CheckoutController {
 
 				// translators: wp error message.
 				$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
-				$this->set_checkout_errors( array( $error_msg ), $current_user_id );
-				return false;
-			} else {
-				$current_user_id = $guest_user;
+				return new WP_Error( 'guest_registration_failed', $error_msg );
 			}
+
+			$current_user_id = $guest_user;
 		}
 
 		$coupon_code = isset( $checkout_data->coupon_code ) ? $checkout_data->coupon_code : '';
 
-		if ( ! empty( $order_data ) ) {
-			$order_data = $this->order_ctrl->update_order(
-				$order_id,
-				$current_user_id,
-				$items,
-				OrderModel::PAYMENT_UNPAID,
-				$order_type,
-				$coupon_code,
-				$args,
-				true
-			);
-		} else {
-			$order_data = $this->order_ctrl->create_order(
-				$current_user_id,
-				$items,
-				OrderModel::PAYMENT_UNPAID,
-				$order_type,
-				$coupon_code,
-				$args,
-				false
-			);
+		try {
+			if ( ! empty( $order_data ) ) {
+				$order_data = $this->order_ctrl->update_order(
+					$order_id,
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$coupon_code,
+					$args,
+					true
+				);
+			} else {
+				$order_data = $this->order_ctrl->create_order(
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$coupon_code,
+					$args,
+					false
+				);
+			}
+		} catch ( \Throwable $th ) {
+			return new WP_Error( 'order_placement_failed', $th->getMessage() );
 		}
 
 		if ( empty( $order_data ) ) {
-			$this->set_checkout_errors( array( __( 'Failed to place order!', 'tutor' ) ), $current_user_id );
-			$this->set_pay_now_alert_msg( $order_data );
-			return false;
+			return new WP_Error( 'order_placement_failed', __( 'Failed to place order!', 'tutor' ) );
 		}
 
 		$placed_order_id = (int) is_array( $order_data ) && isset( $order_data['id'] ) ? $order_data['id'] : 0;
@@ -1022,8 +1033,7 @@ class CheckoutController {
 				$order_model = new OrderModel();
 				$order_model->update_order( $placed_order_id, array( 'order_status' => OrderModel::ORDER_CANCELLED ) );
 				$err_msg = __( 'This coupon is no longer available, its usage limit has been reached, or an order already exists for this course.', 'tutor' );
-				$this->set_checkout_errors( array( $err_msg ), $current_user_id );
-				return false;
+				return new WP_Error( 'coupon_reservation_failed', $err_msg );
 			}
 		}
 
