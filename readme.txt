@@ -338,7 +338,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.2 - 20 Nov, 2026
+= 4.2.2 - 24 Nov, 2026
 
 Update: Display WordPress display names instead of usernames in Tutor LMS assignments, comments, and Q&A.
 Update: Improved translation coverage and compatibility.
