@@ -140,7 +140,7 @@ $footer_links = array(
 					 * @since version 1.9.3
 					 */
 					$other_location      = '';
-					$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
+					$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location, $dashboard_page_name );
 
 					if ( '' == $from_other_location ) {
 						tutor_load_template( 'dashboard.' . $dashboard_page_name );
