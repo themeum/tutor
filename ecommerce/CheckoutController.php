@@ -80,6 +80,33 @@ class CheckoutController {
 	public $coupon_model;
 
 	/**
+	 * Billing model instance.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var BillingModel
+	 */
+	public $billing_model;
+
+	/**
+	 * Existing incomplete order data if order_id is provided and valid.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var object|null
+	 */
+	protected $order_data = null;
+
+	/**
+	 * Validated legal consent fields.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array
+	 */
+	protected $validated_consent = array();
+
+	/**
 	 * Instance of order controller.
 	 *
 	 * @since 3.5.0
@@ -102,8 +129,9 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->coupon_model = new CouponModel();
-		$this->order_ctrl   = new OrderController( false );
+		$this->billing_model = new BillingModel();
+		$this->coupon_model  = new CouponModel();
+		$this->order_ctrl    = new OrderController( false );
 
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
@@ -579,15 +607,23 @@ class CheckoutController {
 	}
 
 	/**
-	 * Validate pay now request
+	 * Validate pay now request.
 	 *
 	 * @since 3.0.0
+	 * @since 4.3.0 Added consent, incomplete order, and cart items validation.
 	 *
-	 * @param array $data The data array to validate.
+	 * @param array $request         The request data array.
+	 * @param int   $current_user_id Current user ID.
 	 *
 	 * @return array|true If validation fails return error messages array else validation passed return true.
 	 */
-	protected function validate_pay_now_request( array $data ) {
+	protected function validate_pay_now_request( array $request, int $current_user_id = 0 ) {
+		// Reset on new validation request.
+		$errors                  = array();
+		$this->order_data        = null;
+		$this->validated_consent = array();
+
+		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
 
 		$order_types = array(
 			OrderModel::TYPE_SINGLE_ORDER,
@@ -605,17 +641,44 @@ class CheckoutController {
 
 		// If fields need default empty values for ValidationHelper:
 		foreach ( array_keys( $validation_rules ) as $key ) {
-			if ( ! array_key_exists( $key, $data ) ) {
-				$data[ $key ] = '';
+			if ( ! array_key_exists( $key, $order_fields ) ) {
+				$order_fields[ $key ] = '';
 			}
 		}
 
-		$errors     = array();
-		$validation = ValidationHelper::validate( $validation_rules, $data );
+		$validation = ValidationHelper::validate( $validation_rules, $order_fields );
 
 		if ( ! $validation->success ) {
 			foreach ( $validation->errors as $error ) {
 				$errors = array_merge( $errors, (array) $error );
+			}
+		}
+
+		// Validate incomplete order if user is not guest.
+		$order_id = intval( $request['order_id'] ?? 0 );
+		if ( $current_user_id > 0 && $order_id ) {
+			$order_data = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id, true );
+			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
+				$errors[] = __( 'Invalid order', 'tutor' );
+			} else {
+				$this->order_data = $order_data;
+			}
+		}
+
+		// Validate consent, If it's configured for checkout.
+		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
+		if ( is_wp_error( $validate_consent ) ) {
+			$errors[] = $validate_consent->get_error_message();
+		} else {
+			$this->validated_consent = (array) $validate_consent;
+		}
+
+		// Validate cart items.
+		if ( ! empty( $order_fields['object_ids'] ) && ! empty( $order_fields['order_type'] ) ) {
+			$object_ids          = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
+			$validate_cart_items = $this->validate_cart_items( $object_ids, $order_fields['order_type'] );
+			if ( true !== $validate_cart_items ) {
+				$errors = array_merge( $errors, (array) $validate_cart_items );
 			}
 		}
 
@@ -849,8 +912,6 @@ class CheckoutController {
 	public function pay_now() {
 		$errors = array();
 
-		$order_data      = null;
-		$billing_model   = new BillingModel();
 		$current_user_id = $this->resolve_checkout_user_id();
 		$is_guest_user   = ! is_user_logged_in();
 
@@ -859,42 +920,24 @@ class CheckoutController {
 			return;
 		}
 
-		$request  = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
-		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$request             = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
+		$order_id            = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$request['order_id'] = $order_id;
 
-		if ( ! $is_guest_user && $order_id ) {
-			$order_data = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id, true );
-			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
-				self::set_checkout_errors( array( __( 'Invalid order', 'tutor' ) ), $current_user_id );
-				return;
-			}
-		}
-
-		$order_fields = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
-		$validated    = $this->validate_pay_now_request( $order_fields );
+		$validated = $this->validate_pay_now_request( $request, $current_user_id );
 		if ( true !== $validated ) {
-			$errors = array_merge( $errors, (array) $validated );
+			$this->set_checkout_errors( (array) $validated, $current_user_id );
+			return;
 		}
 
-		$validate_consent = LegalConsent::validate_consent( LegalConsent::DISPLAY_ON_CHECKOUT, $request );
-		if ( is_wp_error( $validate_consent ) ) {
-			$errors[] = $validate_consent->get_error_message();
-		}
-
+		$order_fields   = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
 		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $order_fields['coupon_code'] ) ? $order_fields['coupon_code'] : '';
 		$payment_method = $order_fields['payment_method'];
 		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
 		$order_type     = $order_fields['order_type'];
 
-		$validate_cart_items = $this->validate_cart_items( $object_ids, $order_type );
-		if ( true !== $validate_cart_items ) {
-			$errors = array_merge( $errors, (array) $validate_cart_items );
-			$this->set_checkout_errors( $errors, $current_user_id );
-			return;
-		}
-
-		$billing_fillable_fields = $this->filter_allowed_keys( $request, $billing_model->get_fillable_fields() );
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $this->billing_model->get_fillable_fields() );
 		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
 		if ( is_wp_error( $save_billing_info ) ) {
 			$errors[] = $save_billing_info->get_error_message();
@@ -922,7 +965,7 @@ class CheckoutController {
 			$payment_method,
 			$is_guest_user,
 			$billing_fillable_fields,
-			$order_data,
+			$this->order_data,
 			$order_id
 		);
 
@@ -931,9 +974,7 @@ class CheckoutController {
 			return;
 		}
 
-		$current_user_id = $order_data['user_id'] ?? $current_user_id;
-
-		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+		do_action( 'tutor_after_checkout_consent', $order_data['user_id'], $this->validated_consent );
 
 		$this->process_payment( $order_data, $payment_method, $payment_type, $order_type );
 	}
