@@ -652,7 +652,8 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
-						if ( ! current_user_can( 'edit_post', $product_id ) ) {
+						$author_id = (int) get_post_field( 'post_author', $product_id );
+						if ( ! User::is_admin() && get_current_user_id() !== $author_id ) {
 							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
 						}
 
@@ -2597,8 +2598,8 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-
-			$is_update = ( $product_id && wc_get_product( $product_id ) && current_user_can( 'edit_post', $product_id ) ) ? true : false;
+			$author_id = (int) get_post_field( 'post_author', $product_id );
+			$is_update = ( $product_id && wc_get_product( $product_id ) && ( User::is_admin() || get_current_user_id() === $author_id ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
@@ -3508,11 +3509,15 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int    $course_id    course id.
 	 *
 	 * @return void
 	 */
 	public function render_course_action_btn( int $course_id ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
+			return;
+		}
+
 		$is_completed = tutor_utils()->is_completed_course( $course_id );
 		if ( $is_completed ) {
 			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );

@@ -5875,18 +5875,21 @@ class Utils {
 				'share_class' => 's_facebook',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-x-twitter"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on X', 'tutor' ),
 				'color'       => '#000000',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on LinkedIn', 'tutor' ),
 				'color'       => '#3967B6',
 			),
 		);

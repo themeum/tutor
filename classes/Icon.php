@@ -181,6 +181,7 @@ final class Icon {
 	const EMAIL                      = 'email';
 	const EMAIL_NOTIFICATION         = 'email-notification';
 	const ENERGY                     = 'energy';
+	const ENROLL                     = 'enroll';
 	const ENROLLED                   = 'enrolled';
 	const ENTER                      = 'enter';
 	const ERASER                     = 'eraser';
