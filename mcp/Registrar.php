@@ -21,6 +21,10 @@ use Tutor\Mcp\Abilities\HealthAbility;
 use Tutor\Mcp\Abilities\QuizAttemptAbilities;
 use Tutor\Mcp\Abilities\SchemaResources;
 use Tutor\Mcp\Abilities\StudentAbilities;
+use Tutor\Mcp\Support\Permissions;
+use WP\MCP\Core\McpAdapter;
+use WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler;
+use WP\MCP\Transport\HttpTransport;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -256,11 +260,11 @@ class Registrar {
 	 * @return void
 	 */
 	public function boot_adapter(): void {
-		if ( ! self::is_enabled() || ! class_exists( '\WP\MCP\Core\McpAdapter' ) ) {
+		if ( ! self::is_enabled() || ! class_exists( McpAdapter::class ) ) {
 			return;
 		}
 
-		\WP\MCP\Core\McpAdapter::instance();
+		McpAdapter::instance();
 	}
 
 	/**
@@ -739,12 +743,12 @@ class Registrar {
 		if ( ! self::is_enabled() || ! is_object( $adapter ) || ! method_exists( $adapter, 'create_server' ) ) {
 			return;
 		}
-		if ( ! class_exists( '\WP\MCP\Transport\HttpTransport' ) ) {
+		if ( ! class_exists( HttpTransport::class ) ) {
 			return;
 		}
 
-		$error = class_exists( '\WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler' )
-			? \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class
+		$error = class_exists( ErrorLogMcpErrorHandler::class )
+			? ErrorLogMcpErrorHandler::class
 			: null;
 
 		$tools = apply_filters( 'tutor_mcp_ability_ids', self::enabled_tools() );
@@ -760,7 +764,7 @@ class Registrar {
 			__( 'Tutor MCP Server', 'tutor' ),
 			__( 'Tutor LMS MCP tools. New courses are always draft/pending — never publish unless the user explicitly asks, then use set-course-status with confirm=true. After creating a course, tell the user it is in draft mode.', 'tutor' ),
 			defined( 'TUTOR_VERSION' ) ? TUTOR_VERSION : '1.0.0',
-			array( \WP\MCP\Transport\HttpTransport::class ),
+			array( HttpTransport::class ),
 			$error,
 			null,
 			$tools,
@@ -768,7 +772,7 @@ class Registrar {
 			array(),
 			static function (): bool {
 				// Bool only — WP_Error falls through to is_user_logged_in() in the adapter.
-				return \Tutor\Mcp\Support\Permissions::can_connect();
+				return Permissions::can_connect();
 			}
 		);
 	}
