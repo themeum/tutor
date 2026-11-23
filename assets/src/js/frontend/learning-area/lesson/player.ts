@@ -208,6 +208,8 @@ class LessonPlayer {
   private initPlyr() {
     if (typeof window.Plyr === 'undefined') return;
 
+    this.element.removeAttribute('data-plyr-config');
+
     const requiredPercentage = this.isRequiredPercentage();
     const config: Plyr.Options = {
       keyboard: {
