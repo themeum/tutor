@@ -627,6 +627,32 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Validate WC product author
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int $product_id product id.
+	 * @param int $course_id course id.
+	 *
+	 * @return bool
+	 */
+	public function is_valid_wc_product_author( $product_id, $course_id ) {
+		if ( User::is_admin() ) {
+			return true;
+		}
+		$product_author  = (int) get_post_field( 'post_author', $product_id );
+		$current_user_id = get_current_user_id();
+		if ( $product_author === $current_user_id ) {
+			return true;
+		}
+		$course_author = (int) get_post_field( 'post_author', $course_id );
+		if ( $product_author === $course_author && tutor_utils()->is_instructor_of_this_course( $current_user_id, $course_id ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Validate price
 	 *
 	 * @since 3.0.0
@@ -652,8 +678,7 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
-						$author_id = (int) get_post_field( 'post_author', $product_id );
-						if ( ! User::is_admin() && get_current_user_id() !== $author_id ) {
+						if ( ! $this->is_valid_wc_product_author( $product_id, $course_id ) ) {
 							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
 						}
 
@@ -2598,8 +2623,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-			$author_id = (int) get_post_field( 'post_author', $product_id );
-			$is_update = ( $product_id && wc_get_product( $product_id ) && ( User::is_admin() || get_current_user_id() === $author_id ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) && $this->is_valid_wc_product_author( $product_id, $post_ID ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
@@ -3509,7 +3533,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int    $course_id    course id.
+	 * @param int $course_id    course id.
 	 *
 	 * @return void
 	 */
