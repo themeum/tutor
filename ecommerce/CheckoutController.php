@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Core\DB;
 use Tutor\GDPR\Controllers\LegalConsent;
 use Tutor\Core\Input;
+use TUTOR\Course;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
@@ -139,6 +140,8 @@ class CheckoutController {
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
 			add_action( 'tutor_before_checkout_order_details', array( $this, 'add_warning_alert' ) );
+
+			add_filter( 'tutor_can_purchase_course', array( $this, 'filter_can_purchase_course' ), 10, 2 );
 		}
 	}
 
@@ -743,6 +746,36 @@ class CheckoutController {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Filter whether a course can be purchased as a single order.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param bool|WP_Error $can_purchase Result of earlier checks.
+	 * @param int           $course_id    Course ID.
+	 *
+	 * @return bool|WP_Error True/false from earlier checks, or WP_Error when single purchase isn't allowed.
+	 */
+	public function filter_can_purchase_course( $can_purchase, $course_id ) {
+		// Respect an earlier failure instead of overwriting its reason.
+		if ( true !== $can_purchase ) {
+			return $can_purchase;
+		}
+
+		if ( Course::is_single_purchase_allowed( $course_id ) ) {
+			return $can_purchase;
+		}
+
+		return new WP_Error(
+			'course_single_purchase_disabled',
+			sprintf(
+				/* translators: %s: course title. */
+				__( '"%s" is not available for single purchase.', 'tutor' ),
+				get_the_title( $course_id )
+			)
+		);
 	}
 
 	/**

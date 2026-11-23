@@ -472,6 +472,20 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Check if course is eligible for single purchase.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool true if course is eligible for single purchase, false otherwise.
+	 */
+	public static function is_single_purchase_allowed( $course_id ): bool {
+		$option = self::get_selling_option( $course_id );
+		return empty( $option ) || in_array( $option, array( self::SELLING_OPTION_ONE_TIME, self::SELLING_OPTION_BOTH ), true );
+	}
+
+	/**
 	 * Validate video source
 	 *
 	 * @since 3.0.0
