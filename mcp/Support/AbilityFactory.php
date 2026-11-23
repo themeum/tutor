@@ -10,9 +10,7 @@
 
 namespace Tutor\Mcp\Support;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Shared wp_register_ability helpers for Tutor MCP.

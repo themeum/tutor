@@ -14,9 +14,7 @@ use Tutor\Core\Input;
 use Tutor\Mcp\Agent;
 use Tutor\Mcp\Registrar;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Thin MCP entry: hooks + Tools form save.

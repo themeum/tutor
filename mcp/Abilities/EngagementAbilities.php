@@ -18,9 +18,7 @@ use TUTOR\Announcements;
 use TUTOR\Q_And_A;
 use TUTOR\User;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Engagement tool registration and execute handlers.

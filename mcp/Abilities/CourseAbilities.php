@@ -20,9 +20,7 @@ use TUTOR\Course;
 use TUTOR\REST_Course;
 use TUTOR\User;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Course tool registration and execute handlers.

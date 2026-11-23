@@ -10,9 +10,7 @@
 
 namespace Tutor\Mcp;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Least-privilege agent identity for STDIO/HTTP MCP.

@@ -22,9 +22,7 @@ use TUTOR\QuizBuilder;
 use TUTOR\REST_Lesson;
 use TUTOR\REST_Quiz;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Topic, lesson, and quiz tool registration and execute handlers.
