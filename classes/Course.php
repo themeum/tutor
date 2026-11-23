@@ -652,8 +652,11 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
-						$author_id = (int) get_post_field( 'post_author', $product_id );
-						if ( ! User::is_admin() && get_current_user_id() !== $author_id ) {
+						$author_id        = (int) get_post_field( 'post_author', $product_id );
+						$is_co_instructor = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
+						$instructor_id    = $is_co_instructor ? (int) get_post_field( 'post_author', $course_id ) : (int) get_current_user_id();
+
+						if ( ! User::is_admin() && $author_id !== $instructor_id ) {
 							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
 						}
 
@@ -2598,8 +2601,11 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-			$author_id = (int) get_post_field( 'post_author', $product_id );
-			$is_update = ( $product_id && wc_get_product( $product_id ) && ( User::is_admin() || get_current_user_id() === $author_id ) ) ? true : false;
+			$author_id        = (int) get_post_field( 'post_author', $product_id );
+			$is_co_instructor = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $post_ID );
+			$instructor_id    = $is_co_instructor ? (int) get_post_field( 'post_author', $post_ID ) : (int) get_current_user_id();
+
+			$is_update = ( $product_id && wc_get_product( $product_id ) && ( User::is_admin() || $instructor_id === $author_id ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
