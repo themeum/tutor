@@ -915,6 +915,36 @@ class CheckoutController {
 			return;
 		}
 
+		$order_data = $this->place_order( $current_user_id, $checkout_data, $order_type, $payment_method, $is_guest_user, $billing_fillable_fields, $order_data, $order_id );
+
+		if ( ! $order_data ) {
+			return;
+		}
+
+		$current_user_id = $order_data['user_id'] ?? $current_user_id;
+
+		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
+
+		$this->process_payment( $order_data, $payment_method, $payment_type, $order_type );
+	}
+
+	/**
+	 * Place order by creating or updating order and reserving coupon.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int         $current_user_id         Current user ID.
+	 * @param object      $checkout_data           Prepared checkout data.
+	 * @param string      $order_type              Order type.
+	 * @param string      $payment_method          Payment method.
+	 * @param bool        $is_guest_user           Whether user is guest.
+	 * @param array       $billing_fillable_fields Fillable billing fields.
+	 * @param mixed       $order_data              Existing incomplete order data (if any).
+	 * @param int         $order_id                Existing incomplete order ID (if any).
+	 *
+	 * @return array|false Placed order data array, or false on failure.
+	 */
+	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null, int $order_id = 0 ) {
 		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
@@ -946,39 +976,14 @@ class CheckoutController {
 				// translators: wp error message.
 				$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
 				$this->set_checkout_errors( array( $error_msg ), $current_user_id );
-				return;
+				return false;
 			} else {
 				$current_user_id = $guest_user;
 			}
 		}
 
-		$order_data = $this->place_order( $current_user_id, $items, $order_type, $checkout_data->coupon_code, $args, $order_data, $order_id );
+		$coupon_code = isset( $checkout_data->coupon_code ) ? $checkout_data->coupon_code : '';
 
-		if ( ! $order_data ) {
-			return;
-		}
-
-		do_action( 'tutor_after_checkout_consent', $current_user_id, $validate_consent );
-
-		$this->process_payment( $order_data, $payment_method, $payment_type, $order_type );
-	}
-
-	/**
-	 * Place order by creating or updating order and reserving coupon.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param int    $current_user_id Current user ID.
-	 * @param array  $items           Order items.
-	 * @param string $order_type      Order type.
-	 * @param string $coupon_code     Applied coupon code.
-	 * @param array  $args            Additional order creation args.
-	 * @param mixed  $order_data      Existing incomplete order data (if any).
-	 * @param int    $order_id        Existing incomplete order ID (if any).
-	 *
-	 * @return array|false Placed order data array, or false on failure.
-	 */
-	protected function place_order( $current_user_id, array $items, string $order_type, string $coupon_code = '', array $args = array(), $order_data = null, int $order_id = 0 ) {
 		if ( ! empty( $order_data ) ) {
 			$order_data = $this->order_ctrl->update_order(
 				$order_id,
