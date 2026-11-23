@@ -294,8 +294,8 @@ if ( is_array( $attempt_info ) ) {
 								</div>
 							</div>
 
-						<?php elseif ( 'date' == $key ) : ?>
-							<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_ended_at ) ) ); ?>
+						<?php elseif ( 'date' === $key ) : ?>
+							<?php echo esc_html( QuizModel::get_attempt_date( $attempt_data ) ); ?>
 						<?php elseif ( 'question_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
 						<?php elseif ( 'quiz_time' === $key ) : ?>

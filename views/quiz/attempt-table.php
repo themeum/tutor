@@ -99,11 +99,11 @@ if ( 'course-single-previous-attempts' === $context && is_array( $attempt_list )
 										<input id="tutor-admin-list-<?php echo esc_attr( $attempt->attempt_id ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $attempt->attempt_id ); ?>" />
 									</div>
 								<?php elseif ( 'date' === $key ) : ?>
-									<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ) ); ?>
+									<?php echo esc_html( QuizModel::get_attempt_date( $attempt ) ); ?>
 								<?php elseif ( 'quiz_info' === $key ) : ?>
 									<div>
 										<div class="tutor-fs-7 tutor-fw-normal">
-											<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ) ); ?>
+											<?php echo esc_html( QuizModel::get_attempt_date( $attempt ) ); ?>
 										</div>
 										<div class="tutor-mt-4">
 											<?php

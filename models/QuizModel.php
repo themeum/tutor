@@ -246,13 +246,6 @@ class QuizModel {
 				continue;
 			}
 
-			// Common formatting logic.
-			$attempt_ended_time = '';
-			if ( ! empty( $quiz_attempt->attempt_ended_at ) ) {
-				$attempt_ended_time = DateTimeHelper::create( $quiz_attempt->attempt_ended_at )
-				->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
-			}
-
 			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ?? '' ) - strtotime( $quiz_attempt->attempt_started_at ?? '' );
 			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
 
@@ -270,7 +263,7 @@ class QuizModel {
 				'correct_answers'   => $correct_answers,
 				'incorrect_answers' => $incorrect_answers,
 				'time_taken'        => $attempt_time ?? '',
-				'date'              => $attempt_ended_time,
+				'date'              => self::get_attempt_date( $quiz_attempt ),
 				'quiz_title'        => $quiz_title,
 				'course_title'      => $course_title,
 				'quiz_id'           => $quiz_attempt->quiz_id ?? 0,
@@ -1333,10 +1326,11 @@ class QuizModel {
 
 		! is_array( $answer_id ) ? $answer_id = array( $answer_id ) : 0;
 
-		if ( empty( $answer_id )) {
+		$answer_id = array_filter( (array) $answer_id );
+		if ( empty( $answer_id ) ) {
 			return array();
 		}
-		
+
 		$answer_id = array_map(
 			function ( $id ) {
 				return "'" . esc_sql( $id ) . "'";
@@ -1364,6 +1358,31 @@ class QuizModel {
 		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		return $answer;
+	}
+
+	/**
+	 * Get formatted quiz attempt date.
+	 *
+	 * Uses attempt end date if available; falls back to start date.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param object|array $attempt_data Attempt data object or array.
+	 * @param string       $format       Optional date format.
+	 *
+	 * @return string Formatted date or empty string.
+	 */
+	public static function get_attempt_date( $attempt_data, string $format = '' ): string {
+		$attempt_data = (object) $attempt_data;
+		$date         = ! empty( $attempt_data->attempt_ended_at )
+			? $attempt_data->attempt_ended_at
+			: ( ! empty( $attempt_data->attempt_started_at ) ? $attempt_data->attempt_started_at : '' );
+
+		if ( empty( $date ) ) {
+			return '';
+		}
+
+		return tutor_i18n_get_formated_date( $date, $format );
 	}
 
 	/**
