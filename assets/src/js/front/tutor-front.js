@@ -362,6 +362,9 @@ jQuery(document).ready(function($) {
 			}
 		},
 		init: function(element) {
+			if (element && typeof element.removeAttribute === 'function') {
+				element.removeAttribute('data-plyr-config');
+			}
 			this.player_DOM = element;
 			this.track_player();
 			if (this.isRequiredPercentage()) {
@@ -374,7 +377,8 @@ jQuery(document).ready(function($) {
 	 * Fire TUTOR video
 	 * @since v.1.0.0
 	 */
-	$('.tutorPlayer').each(function() {
+	$('.tutor-video-player .tutorPlayer').each(function() {
+		this.removeAttribute('data-plyr-config');
 		videoPlayer.init(this);
 	});
 

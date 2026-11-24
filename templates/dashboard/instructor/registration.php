@@ -16,7 +16,7 @@ use TUTOR\Icon;
 
 ?>
 
-<?php if ( ! get_option( 'users_can_register', false ) ) : ?>
+<?php if ( ! \TUTOR\Instructor::can_register_as_instructor() ) : ?>
 	<?php
 	$args = array(
 		'image_path'  => tutor()->url . 'assets/images/construction.png',

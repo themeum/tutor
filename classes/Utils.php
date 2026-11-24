@@ -5408,8 +5408,6 @@ class Utils {
 	 * @return array|null|object
 	 */
 	public function get_random_questions_by_quiz( $quiz_id = 0 ) {
-		global $wpdb;
-
 		$quiz_id = $this->get_post_id( $quiz_id );
 		$attempt = $this->is_started_quiz( $quiz_id );
 		if ( ! $attempt ) {
@@ -5433,26 +5431,20 @@ class Utils {
 			$order    = 'ASC';
 		}
 
-		$where = array(
-			'quiz_id' => $quiz_id,
-		);
+		$query = DB::table( 'tutor_quiz_questions' )->where( 'quiz_id', $quiz_id );
 
 		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
 
 		if ( tutor_utils()->count( $exclude_types ) ) {
-			$exclude_types          = array_unique( $exclude_types );
-			$where['question_type'] = array( 'NOT IN', $exclude_types );
+			$exclude_types = array_unique( $exclude_types );
+			$query->where_not_in( 'question_type', $exclude_types );
 		}
 
-		$limit = $total_questions ? $total_questions : -1;
+		if ( $total_questions > 0 ) {
+			$query->limit( $total_questions );
+		}
 
-		$questions = QueryHelper::get_all(
-			'tutor_quiz_questions',
-			$where,
-			$order_by,
-			$limit,
-			$order
-		);
+		$questions = $query->order_by_raw( trim( $order_by . ' ' . $order ) )->get();
 
 		return $questions;
 	}
@@ -5883,18 +5875,21 @@ class Utils {
 				'share_class' => 's_facebook',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-x-twitter"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on X', 'tutor' ),
 				'color'       => '#000000',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on LinkedIn', 'tutor' ),
 				'color'       => '#3967B6',
 			),
 		);
