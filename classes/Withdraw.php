@@ -376,7 +376,7 @@ class Withdraw {
 
 			$value = ( 'email' === $field_type )
 				? sanitize_email( wp_unslash( $raw_value ) )
-				: sanitize_text_field( html_entity_decode( wp_unslash( $raw_value ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+				: sanitize_text_field( wp_unslash( $raw_value ) );
 
 			if ( $this->is_dangerous_value( $value ) ) {
 				$errors[] = sprintf(
