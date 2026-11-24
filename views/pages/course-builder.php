@@ -38,10 +38,9 @@ if ( is_admin() ) {
 <body data-tutor-theme='light' <?php body_class(); ?>>
 	<div id="tutor-course-builder"></div>
 	<?php do_action( 'tutor_course_builder_footer' ); ?>
+	<?php wp_footer(); ?>
 </body>
 </html>
-
 	<?php
-	wp_footer();
 	exit;
 } ?>
