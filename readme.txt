@@ -340,7 +340,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.2.2 - 24 Nov, 2026
 
-New: Added a Membership tab to display all courses purchased through membership plans.
+New: Added a Membership tab to display all courses purchased through membership plans. (Pro)
 Update: Assignments, comments, and Q&A now show users' WordPress display names instead of their usernames.
 Update: Improved translation coverage and compatibility.
 Update: Optimized overall performance and implemented additional security enhancements.
