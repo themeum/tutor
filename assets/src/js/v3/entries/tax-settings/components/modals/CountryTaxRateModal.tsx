@@ -23,14 +23,14 @@ interface CountryTaxRateModalProps extends ModalProps {
 }
 
 interface TaxRateForm {
-  selectedOption: string;
+  selectedOption: number;
   taxRate: number;
 }
 
 const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalProps) => {
   const taxRateForm = useFormWithGlobalError<TaxRateForm>({
     defaultValues: {
-      selectedOption: '',
+      selectedOption: 0,
       taxRate: 0,
     },
   });
@@ -61,7 +61,7 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
                   states: [
                     ...rate.states,
                     {
-                      id: taxRateForm.getValues('selectedOption'),
+                      id: Number(selectedOption),
                       rate: taxRateForm.getValues('taxRate'),
                       apply_on_shipping: false,
                     },
