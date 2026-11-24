@@ -244,6 +244,15 @@ class Shortcode {
 		}
 		$a['posts_per_page'] = (int) $a['count'];
 
+		/**
+		 * Include scheduled courses, same as the course archive filter.
+		 *
+		 * @since 4.2.2
+		 *
+		 * @param array $a query arguments.
+		 */
+		$a = apply_filters( 'tutor_course_filter_args', $a );
+
 		wp_reset_query();
 		$the_query = new \WP_Query( $a );
 
