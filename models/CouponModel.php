@@ -578,7 +578,6 @@ class CouponModel {
 	 * @return bool
 	 */
 	private function counts_toward_usage_limit( object $result, string $now_gmt, int $exclude_order_id = 0, array $applicable_item_ids = array(), int $same_cart_user_id = 0 ): bool {
-		// Legacy rows without order_id always count.
 		if ( ! property_exists( $result, 'order_id' ) || ! (int) $result->order_id ) {
 			return true;
 		}
