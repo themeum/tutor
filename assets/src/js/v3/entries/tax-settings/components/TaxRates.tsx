@@ -244,12 +244,12 @@ export default function TaxRates() {
                       onClick={() => {
                         const updatedRates = rates.map((rate) => {
                           if (String(rate.country) === String(activeCountry)) {
-                            rate.states = rate.states.filter((state) => state.id !== item.locationId);
+                            rate.states = rate.states.filter((state) => String(state.id) !== String(item.locationId));
                           }
                           return rate;
                         });
 
-                        form.setValue('rates', updatedRates);
+                        form.setValue('rates', updatedRates, { shouldDirty: true });
                       }}
                     />
                   </div>
