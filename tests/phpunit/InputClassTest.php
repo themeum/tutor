@@ -169,4 +169,19 @@ class InputClassTest extends \WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $sanitized_data );
 	}
+
+	/**
+	 * Ensure input has no html tags and attributes
+	 * Run by: composer test:unit:filter InputClassTest::test_html_decode_value
+	 *
+	 * @return void
+	 */
+	public function test_html_decode_value() {
+		$unsanitized_val = 'Test &lt;img src=x onerror=alert(1)&gt;';
+		$_POST['name']   = $unsanitized_val;
+		$val             = Input::post( 'name', '', Input::TYPE_HTML_DECODE );
+
+		$expected = 'Test';
+		$this->assertEquals( $expected, $val );
+	}
 }

@@ -115,7 +115,7 @@ class Student {
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 
-		$userdata   = array(
+		$userdata = array(
 			'user_login' => $user_login,
 			'user_email' => $email,
 			'first_name' => $first_name,
@@ -202,13 +202,13 @@ class Student {
 		$user_id = get_current_user_id();
 		do_action( 'tutor_profile_update_before', $user_id );
 
-		$first_name              = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'last_name' ) );
-		$phone_number            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'phone_number' ) );
+		$first_name              = Input::post( 'first_name', '', Input::TYPE_HTML_DECODE );
+		$last_name               = Input::post( 'last_name', '', Input::TYPE_HTML_DECODE );
+		$phone_number            = Input::post( 'phone_number', '', Input::TYPE_HTML_DECODE );
+		$tutor_profile_job_title = Input::post( 'tutor_profile_job_title', '', Input::TYPE_HTML_DECODE );
+		$timezone                = Input::post( 'timezone', '', Input::TYPE_HTML_DECODE );
+		$display_name            = Input::post( 'display_name', '', Input::TYPE_HTML_DECODE );
 		$tutor_profile_bio       = wp_kses( Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST ), tutor_utils()->allowed_profile_bio_tags() );
-		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
-		$timezone                = Input::sanitize_with_strip_tags( Input::post( 'timezone', '' ) );
-		$display_name            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'display_name' ) );
 
 		$userdata = array(
 			'ID'           => $user_id,
