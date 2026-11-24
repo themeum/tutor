@@ -274,6 +274,7 @@
         }
 
         [data-title] {
+          @include tutor-text-wrap();
           padding: $tutor-spacing-3 $tutor-spacing-4;
           text-align: left;
         }

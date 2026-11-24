@@ -683,4 +683,205 @@ class CourseTest extends \WP_UnitTestCase {
 			remove_filter( 'tutor_course_contents_post_types', $filter_callback );
 		}
 	}
+
+	/**
+	 * Test that the course author query only returns administrators and approved instructors.
+	 *
+	 * @return void
+	 */
+	public function test_course_author_query_excludes_ineligible_instructors(): void {
+		$admin_id    = $this->create_role_user( 'administrator' );
+		$approved_id = $this->create_role_user( tutor()->instructor_role, 'approved' );
+		$pending_id  = $this->create_role_user( tutor()->instructor_role, 'pending' );
+		$blocked_id  = $this->create_role_user( tutor()->instructor_role, 'blocked' );
+
+		$_POST['filter'] = wp_json_encode(
+			array(
+				'role' => array( 'administrator', tutor()->instructor_role ),
+			)
+		);
+
+		try {
+			$course = new Course( false );
+			$query  = new \WP_User_Query(
+				array_merge(
+					$course->user_list_args_for_instructor( array() ),
+					array( 'number' => -1 )
+				)
+			);
+			$ids    = array_map( 'intval', wp_list_pluck( $query->get_results(), 'ID' ) );
+
+			$this->assertContains( $admin_id, $ids );
+			$this->assertContains( $approved_id, $ids );
+			$this->assertNotContains( $pending_id, $ids );
+			$this->assertNotContains( $blocked_id, $ids );
+		} finally {
+			unset( $_POST['filter'] );
+		}
+	}
+
+	/**
+	 * Test who may reassign a course author and which authors are allowed.
+	 *
+	 * @return void
+	 */
+	public function test_course_save_restricts_author_to_eligible_users(): void {
+		$admin_id   = $this->create_role_user( 'administrator' );
+		$author_id  = $this->create_role_user( tutor()->instructor_role, 'approved' );
+		$other_id   = $this->create_role_user( tutor()->instructor_role, 'approved' );
+		$pending_id = $this->create_role_user( tutor()->instructor_role, 'pending' );
+		$blocked_id = $this->create_role_user( tutor()->instructor_role, 'blocked' );
+
+		wp_set_current_user( $admin_id );
+
+		// A new course cannot be created under an ineligible author.
+		$course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Author eligibility test',
+				'post_status' => 'draft',
+				'post_author' => $pending_id,
+			)
+		);
+		$this->assertSame( $admin_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// An ineligible author cannot be assigned on update.
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_author' => $blocked_id,
+			)
+		);
+		$this->assertSame( $admin_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// An administrator can assign an approved instructor.
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_author' => $author_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// The course author cannot hand the course to an ineligible user.
+		wp_set_current_user( $author_id );
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_author' => $blocked_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// The course author can hand the course to another approved instructor.
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_author' => $other_id,
+			)
+		);
+		$this->assertSame( $other_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// Former author cannot take the course back.
+		wp_set_current_user( $author_id );
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_author' => $author_id,
+			)
+		);
+		$this->assertSame( $other_id, (int) get_post_field( 'post_author', $course_id ) );
+
+		// Non-admin creating a new course cannot spoof another author.
+		wp_set_current_user( $author_id );
+		$spoofed_course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Non-admin spoof test',
+				'post_status' => 'draft',
+				'post_author' => $other_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $spoofed_course_id ) );
+
+		// Logged-out save (cron, CLI, imports) leaves post_author untouched.
+		wp_set_current_user( 0 );
+		$cli_course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Logged out save test',
+				'post_status' => 'publish',
+				'post_author' => $author_id,
+			)
+		);
+		$this->assertSame( $author_id, (int) get_post_field( 'post_author', $cli_course_id ) );
+
+		// Non-course post types are left alone.
+		wp_set_current_user( $author_id );
+		$post_id = wp_insert_post(
+			array(
+				'post_type'   => 'post',
+				'post_title'  => 'Regular post test',
+				'post_status' => 'draft',
+				'post_author' => $blocked_id,
+			)
+		);
+		$this->assertSame( $blocked_id, (int) get_post_field( 'post_author', $post_id ) );
+	}
+
+	/**
+	 * Test that a legacy course keeps its ineligible author when saved.
+	 *
+	 * @return void
+	 */
+	public function test_legacy_course_author_is_kept_on_save(): void {
+		global $wpdb;
+
+		$admin_id   = $this->create_role_user( 'administrator' );
+		$blocked_id = $this->create_role_user( tutor()->instructor_role, 'blocked' );
+
+		wp_set_current_user( $admin_id );
+
+		$course_id = wp_insert_post(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Legacy author test',
+				'post_status' => 'publish',
+				'post_author' => $admin_id,
+			)
+		);
+
+		// Simulate a course saved before the author rule existed.
+		$wpdb->update( $wpdb->posts, array( 'post_author' => $blocked_id ), array( 'ID' => $course_id ) );
+		clean_post_cache( $course_id );
+
+		wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_title'  => 'Legacy author test updated',
+				'post_author' => $blocked_id,
+			)
+		);
+
+		$this->assertSame( $blocked_id, (int) get_post_field( 'post_author', $course_id ) );
+	}
+
+	/**
+	 * Create a user with the given role and instructor status.
+	 *
+	 * @param string      $role   User role.
+	 * @param string|null $status Instructor status.
+	 *
+	 * @return int
+	 */
+	private function create_role_user( $role, $status = null ) {
+		$user_id = (int) self::factory()->user->create( array( 'role' => $role ) );
+
+		if ( null !== $status ) {
+			update_user_meta( $user_id, '_tutor_instructor_status', $status );
+			update_user_meta( $user_id, '_is_tutor_instructor', time() );
+		}
+
+		return $user_id;
+	}
 }

@@ -42,8 +42,8 @@ class Gutenberg {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @param array           $prepared_args arguments.
-	 * @param WP_REST_Request $request WP REST request object.
+	 * @param array            $prepared_args arguments.
+	 * @param \WP_REST_Request $request WP REST request object.
 	 *
 	 * @return array
 	 */
@@ -69,6 +69,14 @@ class Gutenberg {
 			// Modify the wp/v2/users endpoint request from gutenberg editor.
 			unset( $prepared_args['who'] );
 			$prepared_args['role__in'] = array( 'administrator', 'tutor_instructor' );
+
+			$prepared_args['meta_query'] = ! empty( $prepared_args['meta_query'] )
+				? array(
+					'relation' => 'AND',
+					$prepared_args['meta_query'],
+					Course::get_course_author_meta_query(),
+				)
+				: Course::get_course_author_meta_query();
 		}
 
 		return $prepared_args;
