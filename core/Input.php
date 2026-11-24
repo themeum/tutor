@@ -19,13 +19,14 @@ defined( 'ABSPATH' ) || exit;
  */
 class Input {
 
-	const TYPE_STRING    = 'string';
-	const TYPE_INT       = 'int';
-	const TYPE_NUMERIC   = 'numeric';
-	const TYPE_BOOL      = 'bool';
-	const TYPE_ARRAY     = 'array';
-	const TYPE_TEXTAREA  = 'textarea';
-	const TYPE_KSES_POST = 'kses-post';
+	const TYPE_STRING      = 'string';
+	const TYPE_INT         = 'int';
+	const TYPE_NUMERIC     = 'numeric';
+	const TYPE_BOOL        = 'bool';
+	const TYPE_ARRAY       = 'array';
+	const TYPE_TEXTAREA    = 'textarea';
+	const TYPE_KSES_POST   = 'kses-post';
+	const TYPE_HTML_DECODE = 'html_decode';
 
 	const GET_REQUEST  = 'get';
 	const POST_REQUEST = 'post';
@@ -73,6 +74,7 @@ class Input {
 			case self::TYPE_INT:
 			case self::TYPE_NUMERIC:
 			case self::TYPE_BOOL:
+			case self::TYPE_HTML_DECODE:
 			default:
 				$sanitized_value = sanitize_text_field( wp_unslash( self::get_value( $request_method, $_GET, $_POST, $key, $value ) ) );
 				if ( self::TYPE_INT === $type ) {
@@ -83,6 +85,9 @@ class Input {
 				}
 				if ( self::TYPE_BOOL === $type ) {
 					$sanitized_value = in_array( strtolower( $sanitized_value ), array( '1', 'true', 'on' ), true );
+				}
+				if ( self::TYPE_HTML_DECODE === $type ) {
+					$sanitized_value = wp_strip_all_tags( html_entity_decode( $sanitized_value, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
 				}
 
 				break;
