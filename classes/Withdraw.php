@@ -214,10 +214,10 @@ class Withdraw {
 	 */
 	private function is_dangerous_value( string $value ): bool {
 
-		$decoded = html_entity_decode( $value );
+		$decoded = html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 
 		// Check for PHP / script tags on the DECODED string.
-		if ( preg_match( '/<\?(?:php)?|<script/i', $decoded ) ) {
+		if ( preg_match( '/<[a-z!?\/]/i', $decoded ) ) {
 			return true;
 		}
 
@@ -309,7 +309,7 @@ class Withdraw {
 		$user_id = get_current_user_id();
 
 		// Withdraw account settings are for instructors only.
-		if ( ! tutor_utils()->is_instructor( $user_id ) ) {
+		if ( ! tutor_utils()->is_instructor( $user_id, true ) ) {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
@@ -438,7 +438,7 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		if ( ! User::is_instructor( $user_id ) ) {
+		if ( ! User::is_instructor( $user_id, true ) ) {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
