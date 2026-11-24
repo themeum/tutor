@@ -959,12 +959,6 @@ class CheckoutController {
 		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
 		$order_type     = $order_fields['order_type'];
 
-		$billing_fillable_fields = $this->filter_allowed_keys( $request, $this->billing_model->get_fillable_fields() );
-		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
-		if ( is_wp_error( $save_billing_info ) ) {
-			$errors[] = $save_billing_info->get_error_message();
-		}
-
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 		if ( ! isset( $checkout_data->items ) || ! tutor_utils()->count( $checkout_data->items ) ) {
@@ -973,6 +967,12 @@ class CheckoutController {
 
 		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
 			$errors[] = __( 'Select a payment method', 'tutor' );
+		}
+
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $this->billing_model->get_fillable_fields() );
+		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
+		if ( is_wp_error( $save_billing_info ) ) {
+			$errors[] = $save_billing_info->get_error_message();
 		}
 
 		if ( ! empty( $errors ) ) {

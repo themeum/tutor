@@ -482,7 +482,15 @@ class Course extends Tutor_Base {
 	 */
 	public static function is_single_purchase_allowed( $course_id ): bool {
 		$option = self::get_selling_option( $course_id );
-		return empty( $option ) || in_array( $option, array( self::SELLING_OPTION_ONE_TIME, self::SELLING_OPTION_BOTH ), true );
+		return empty( $option ) || in_array(
+			$option,
+			array(
+				self::SELLING_OPTION_ALL,
+				self::SELLING_OPTION_ONE_TIME,
+				self::SELLING_OPTION_BOTH,
+			),
+			true
+		);
 	}
 
 	/**
