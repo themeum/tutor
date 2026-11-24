@@ -71,7 +71,7 @@ if ( $topics->have_posts() ) {
 				<div class="tutor-row tutor-gx-1">
 					<div class="tutor-col">
 						<div class="tutor-course-topic-title">
-							<?php the_title(); ?>
+							<?php echo esc_html( get_the_title() ); ?>
 							<?php if ( true ) : ?>
 								<?php if ( trim( $topic_summery ) ) : ?>
 									<div class="tutor-course-topic-title-info tutor-ml-8">
@@ -262,7 +262,7 @@ if ( $topics->have_posts() ) {
 									);
 									?>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
-										<?php the_title(); ?>
+										<?php echo esc_html( get_the_title() ); ?>
 									</span>
 								</div>
 

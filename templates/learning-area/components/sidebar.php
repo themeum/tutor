@@ -162,8 +162,8 @@ $reset_modal_id        = 'tutor-course-reset-progress-modal';
 									->render();
 								?>
 							</div>
-							<div class="tutor-learning-nav-header-title" title="<?php the_title(); ?>">
-								<?php the_title(); ?>
+							<div class="tutor-learning-nav-header-title" title="<?php the_title_attribute(); ?>">
+								<?php echo esc_html( get_the_title() ); ?>
 							</div>
 							<div class="tutor-learning-nav-header-actions">
 								<?php if ( ! empty( $topic_summery ) ) : ?>

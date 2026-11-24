@@ -5408,8 +5408,6 @@ class Utils {
 	 * @return array|null|object
 	 */
 	public function get_random_questions_by_quiz( $quiz_id = 0 ) {
-		global $wpdb;
-
 		$quiz_id = $this->get_post_id( $quiz_id );
 		$attempt = $this->is_started_quiz( $quiz_id );
 		if ( ! $attempt ) {
@@ -5433,26 +5431,20 @@ class Utils {
 			$order    = 'ASC';
 		}
 
-		$where = array(
-			'quiz_id' => $quiz_id,
-		);
+		$query = DB::table( 'tutor_quiz_questions' )->where( 'quiz_id', $quiz_id );
 
 		$exclude_types = apply_filters( 'tutor_filter_unsupported_quiz_question_types', array() );
 
 		if ( tutor_utils()->count( $exclude_types ) ) {
-			$exclude_types          = array_unique( $exclude_types );
-			$where['question_type'] = array( 'NOT IN', $exclude_types );
+			$exclude_types = array_unique( $exclude_types );
+			$query->where_not_in( 'question_type', $exclude_types );
 		}
 
-		$limit = $total_questions ? $total_questions : -1;
+		if ( $total_questions > 0 ) {
+			$query->limit( $total_questions );
+		}
 
-		$questions = QueryHelper::get_all(
-			'tutor_quiz_questions',
-			$where,
-			$order_by,
-			$limit,
-			$order
-		);
+		$questions = $query->order_by_raw( trim( $order_by . ' ' . $order ) )->get();
 
 		return $questions;
 	}
@@ -5883,18 +5875,21 @@ class Utils {
 				'share_class' => 's_facebook',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-x-twitter"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on X', 'tutor' ),
 				'color'       => '#000000',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
 				'text'        => '',
+				'label'       => __( 'Share on LinkedIn', 'tutor' ),
 				'color'       => '#3967B6',
 			),
 		);
@@ -10263,10 +10258,10 @@ class Utils {
 	 * @since 3.0.0
 	 *
 	 * @param string $base64_image_str base64 image string.
-	 * @param string $filename         filename.
-	 * @param bool   $add_to_media     Optional. Whether to add the file to WordPress media library. Default true.
+	 * @param string $filename          filename.
+	 * @param bool   $add_to_wp_media   Optional. Whether to add the file to WordPress media library. Default true.
 	 *
-	 * @return object consist of id, title, url. When $add_to_media is false, id is 0.
+	 * @return object consist of id, title, url. When $add_to_wp_media is false, id is 0.
 	 *
 	 * @throws \Exception If upload failed.
 	 */
@@ -10274,13 +10269,35 @@ class Utils {
 		try {
 			$image_data = null;
 
+			// Validation policy: accepted formats and limits for the stored image and the remote fetch.
+			$allowed          = array(
+				IMAGETYPE_PNG  => 'png',
+				IMAGETYPE_JPEG => 'jpg',
+				IMAGETYPE_WEBP => 'webp',
+			);
+			$max_image_bytes  = 10 * MB_IN_BYTES;
+			$max_image_pixels = 25 * 1000 * 1000; // 25 megapixels.
+			$fetch_timeout    = 30;
+
 			// Handle remote URLs.
 			if ( preg_match( '/^https?:\/\//i', $base64_image_str ) ) {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
-				$temp_file = download_url( $base64_image_str );
-				if ( is_wp_error( $temp_file ) ) {
-					throw new \Exception( $temp_file->get_error_message() );
+				$temp_file = wp_tempnam();
+				$response  = wp_safe_remote_get(
+					$base64_image_str,
+					array(
+						'timeout'             => $fetch_timeout,
+						'stream'              => true,
+						'filename'            => $temp_file,
+						'limit_response_size' => $max_image_bytes,
+					)
+				);
+
+				if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+					@unlink( $temp_file );
+					throw new \Exception( is_wp_error( $response ) ? $response->get_error_message() : 'Unable to download the image' );
 				}
+
 				$image_data = file_get_contents( $temp_file );
 				@unlink( $temp_file );
 			} else {
@@ -10299,7 +10316,25 @@ class Utils {
 				throw new \Exception( 'Invalid base64 string' );
 			}
 
-			$filename = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			if ( strlen( $image_data ) > $max_image_bytes ) {
+				throw new \Exception( 'Image file is too large' );
+			}
+
+			// Only real, supported image content is stored, regardless of the supplied name or MIME label.
+			$image_info = @getimagesizefromstring( $image_data );
+			$extension  = $allowed[ $image_info[2] ?? 0 ] ?? '';
+			if ( empty( $extension ) ) {
+				throw new \Exception( 'Invalid image file' );
+			}
+
+			// Reject decompression bombs; the pixel cap bounds the memory GD needs later.
+			if ( $image_info[0] * $image_info[1] > $max_image_pixels ) {
+				throw new \Exception( 'Image dimensions are too large' );
+			}
+
+			// Keep the stored extension in sync with the detected image type.
+			$filename = empty( $filename ) ? uniqid( 'image-' ) : pathinfo( $filename, PATHINFO_FILENAME );
+			$filename .= '.' . $extension;
 			$uploaded = wp_upload_bits( $filename, null, $image_data );
 
 			if ( ! empty( $uploaded['error'] ) ) {
@@ -10655,5 +10690,25 @@ class Utils {
 	 */
 	public function is_multi_dimensional_array( array $data ): bool {
 		return isset( $data[0] ) && is_array( $data[0] );
+	}
+
+	/**
+	 * Get admin user id.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return int
+	 */
+	public function get_admin_user_id(): int {
+		$admin = get_users(
+			array(
+				'role'    => User::ADMIN,
+				'number'  => 1,
+				'orderby' => 'ID',
+				'order'   => 'ASC',
+			)
+		);
+
+		return ! empty( $admin ) ? $admin[0]->ID : 0;
 	}
 }

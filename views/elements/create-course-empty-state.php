@@ -9,6 +9,8 @@
  * @since 3.7.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="tutor-divider tutor-radius-12 tutor-overflow-hidden">
 	<div class="tutor-px-32 tutor-py-36 tutor-bg-white tutor-d-flex tutor-flex-column tutor-flex-sm-row tutor-gap-2 tutor-align-center tutor-justify-between">
@@ -27,7 +29,7 @@
 			</div>
 		</div>
 		<div class="tutor-pr-lg-40">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/course-empty-state.svg' ); ?>" alt="Create Course">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/course-empty-state.svg' ); ?>" alt="<?php esc_attr_e( 'Create Course', 'tutor' ); ?>">
 		</div>
 	</div>
 	<div class="tutor-px-32 tutor-py-40 tutor-divider-top" style="background-color: #f8f8f8;">

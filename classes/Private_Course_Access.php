@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Cache\TutorCache;
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Register Tutor's post types

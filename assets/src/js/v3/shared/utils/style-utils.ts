@@ -348,6 +348,15 @@ export const styleUtils = {
     `,
   },
   text: {
+    // Kept in sync with @mixin tutor-text-wrap in assets/core/scss/mixins/_typography.scss.
+    wrap: css`
+      min-width: 0;
+      overflow-wrap: break-word;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+      hyphenate-limit-chars: 6 3 3;
+      text-wrap: pretty;
+    `,
     ellipsis: (lines = 1) => css`
       white-space: normal;
       display: -webkit-box;

@@ -76,7 +76,9 @@ $single_url = UrlHelper::add_query_params(
 		<?php Avatar::make()->user( $question->user_id )->size( Size::SIZE_32 )->render(); ?>
 		<div class="tutor-discussion-card-content">
 			<div class="tutor-discussion-card-top">
-				<div class="tutor-discussion-card-author tutor-flex-shrink-0"><?php echo esc_html( $question->comment_author ); ?></div>
+				<div class="tutor-discussion-card-author tutor-flex-shrink-0">
+					<?php echo esc_html( tutor_utils()->display_name( $question->user_id ) ); ?>
+				</div>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
 					<span class="tutor-text-subdued tutor-text-subdued tutor-flex-shrink-0"><?php echo esc_html__( 'asked in', 'tutor' ); ?></span>
 					<div class="tutor-min-w-0 tutor-flex-1">
