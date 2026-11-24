@@ -91,6 +91,9 @@ class BillingModel {
 	 * @return array Validation rules.
 	 */
 	public function get_validation_rules() {
+		/**
+		 * The `billing_state` field is excluded because not all countries have states.
+		 */
 		return array(
 			'billing_first_name' => 'required',
 			'billing_last_name'  => 'required',
@@ -99,7 +102,6 @@ class BillingModel {
 			'billing_zip_code'   => 'required',
 			'billing_address'    => 'required',
 			'billing_country'    => 'required',
-			'billing_state'      => 'required',
 			'billing_city'       => 'required',
 		);
 	}
