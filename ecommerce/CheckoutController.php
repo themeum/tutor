@@ -632,6 +632,7 @@ class CheckoutController {
 				'object_ids'     => 'required|regex:/^[0-9]+(,[0-9]+)*$/',
 				'order_type'     => "required|match_string:{$order_types_str}",
 				'payment_method' => 'required',
+				'payment_type'   => 'if_input|match_string:automate,manual'
 			),
 			$this->billing_model->get_validation_rules()
 		);
@@ -654,7 +655,7 @@ class CheckoutController {
 
 			$errors = array_merge( $errors, true === $cart_check ? array() : (array) $cart_check );
 		} else {
-			$errors = array_merge( array(), ...array_map( fn( $error ) => (array) $error, $validation->errors ) );
+			$errors = array_merge( array(), ...array_values( array_map( fn( $error ) => (array) $error, $validation->errors ) ) );
 		}
 
 		// Validate incomplete order if user is not guest.
@@ -721,11 +722,10 @@ class CheckoutController {
 	 * @return array An array of error messages.
 	 */
 	protected function save_billing_info( $user_id, $fields ) {
-		$billing_model = new BillingModel();
-		$billing_info  = $billing_model->get_info( $user_id );
+		$billing_info  = $this->billing_model->get_info( $user_id );
 
 		if ( $billing_info ) {
-			$update_billing = $billing_model->update( $fields, array( 'user_id' => $user_id ) );
+			$update_billing = $this->billing_model->update( $fields, array( 'user_id' => $user_id ) );
 			if ( ! $update_billing ) {
 				return new WP_Error(
 					'billing_info_update_failed',
@@ -736,7 +736,7 @@ class CheckoutController {
 			// Save billing info.
 			$fields['user_id'] = $user_id;
 
-			$save = $billing_model->insert( $fields );
+			$save = $this->billing_model->insert( $fields );
 			if ( ! $save ) {
 				return new WP_Error(
 					'billing_info_save_failed',
