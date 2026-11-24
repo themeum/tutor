@@ -16,6 +16,8 @@ type TextInputProps = {
   label?: string;
   isInlineLabel?: boolean;
   type?: 'number' | 'text';
+  allowNegative?: boolean;
+  whole?: boolean;
   value?: string | number;
   disabled?: boolean;
   readOnly?: boolean;
@@ -37,6 +39,8 @@ const TextInput = ({
   label,
   isInlineLabel,
   type = 'text',
+  allowNegative = false,
+  whole = false,
   value,
   disabled,
   readOnly,
@@ -84,7 +88,8 @@ const TextInput = ({
           onChange={(event) => {
             const { value } = event.target;
 
-            const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+            const fieldValue: string | number =
+              type === 'number' ? parseNumberOnly(value, allowNegative, whole) : value;
             onChange(fieldValue);
           }}
           onKeyDown={(event) => {
@@ -93,7 +98,8 @@ const TextInput = ({
           onBlur={(event) => {
             const { value } = event.target;
 
-            const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+            const fieldValue: string | number =
+              type === 'number' ? parseNumberOnly(value, allowNegative, whole) : value;
             onBlur?.(fieldValue);
           }}
           onFocus={(event) => {
@@ -141,22 +147,26 @@ const styles = {
     gap: ${spacing[4]};
     width: 100%;
 
-    ${isInlineLabel &&
-    css`
-      flex-direction: row;
-      align-items: center;
-      gap: ${spacing[12]};
-      justify-content: space-between;
-      height: 32px;
-    `}
+    ${
+      isInlineLabel &&
+      css`
+        flex-direction: row;
+        align-items: center;
+        gap: ${spacing[12]};
+        justify-content: space-between;
+        height: 32px;
+      `
+    }
   `,
   label: (isInlineLabel = false) => css`
     ${typography.caption()}
 
-    ${isInlineLabel &&
-    css`
-      color: ${colorTokens.text.primary};
-    `}
+    ${
+      isInlineLabel &&
+      css`
+        color: ${colorTokens.text.primary};
+      `
+    }
   `,
   inputWrapper: css`
     position: relative;
@@ -189,16 +199,20 @@ const styles = {
         color: ${colorTokens.text.subdued};
       }
 
-      ${variant === 'search' &&
-      css`
-        padding-left: ${spacing[36]};
-      `}
+      ${
+        variant === 'search' &&
+        css`
+          padding-left: ${spacing[36]};
+        `
+      }
 
-      ${size === 'small' &&
-      css`
-        height: 32px;
-        min-height: 32px;
-      `}
+      ${
+        size === 'small' &&
+        css`
+          height: 32px;
+          min-height: 32px;
+        `
+      }
     }
   `,
   rightIconButton: css`

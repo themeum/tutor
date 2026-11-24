@@ -268,21 +268,14 @@ When you run `composer test:install` in a terminal, it:
 1. Locates `wp-config.php` five levels above `tests/support`.
 2. Reads the live DB values from the fallback arguments of
    `TutorTestConfig::db(...)` or from `define(...)` in `wp-config.php`.
-3. Prepares `.env` (preview only at this point).
-4. Resolves the test DB settings: process env, then `.env`, then
+3. Resolves the test DB settings: process env, then `.env`, then
    `<live>_test` and `<live>_phpunit`.
-5. Syncs missing keys into `.env`. An active key is only overwritten when the
-   same key is set in the process environment; otherwise the existing value is
-   preserved.
-6. Prints the plan.
-7. Asks: `Apply these changes? This modifies wp-config.php, creates the test
+4. Asks: `Apply these changes? This modifies wp-config.php, creates the test
    databases, and seeds fixtures. (y/N)`.
-8. On `y`, runs the steps again with writes enabled.
-9. Prints a green check per step and stops at the first failure.
-10. Offers to run `composer test:unit:filter DBTest` as a verification.
-
-The first pass is a real preview: every write is guarded by `$this->apply`, so
-it does not create `.env`, databases, backups, or links.
+5. On `y`, applies the changes: creates `.env`, syncs DB keys, creates test
+   databases, routes `wp-config.php`, guards `wp-settings.php`, links test
+   mu-plugins, seeds fixtures, and verifies the test database (`DBTest`).
+6. Prints a green check per step and stops at the first failure.
 
 ### 4.3 Flags
 

@@ -16,6 +16,7 @@ namespace TUTOR;
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Core\Input;
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\InstructorMetricsAdapter;
 use Tutor\Traits\JsonResponse;
 
@@ -87,11 +88,15 @@ class DashboardSectionManager {
 	 */
 	public static function get_section_data( string $section_id, array $params = array() ) {
 		$user_id    = isset( $params['user_id'] ) ? (int) $params['user_id'] : get_current_user_id();
-		$start_date = ! empty( $params['start_date'] ) ? sanitize_text_field( $params['start_date'] ) : '';
-		$end_date   = ! empty( $params['end_date'] ) ? sanitize_text_field( $params['end_date'] ) : '';
 		$type       = ! empty( $params['type'] ) ? sanitize_text_field( $params['type'] ) : 'revenue';
 		$type       = in_array( $type, array( 'revenue', 'student' ), true ) ? $type : 'revenue';
 		$limit      = isset( $params['limit'] ) ? (int) $params['limit'] : 3;
+		$start_date = ! empty( $params['start_date'] )
+						? DateTimeHelper::create( $params['start_date'] )->start_of_day()->to_date_time_string()
+						: '';
+		$end_date   = ! empty( $params['end_date'] )
+						? DateTimeHelper::create( $params['end_date'] )->end_of_day()->to_date_time_string()
+						: '';
 
 		switch ( $section_id ) {
 			case 'current_stats':

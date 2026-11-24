@@ -146,9 +146,9 @@ final class Tutor_Test_Installer {
 
 		$this->step( 'Locate wp-config.php', array( $this, 'locate_wp_config' ) );
 		$this->step( 'Read database settings from wp-config.php', array( $this, 'read_live_db' ) );
+		$this->step( 'Resolve test database settings', array( $this, 'resolve_db' ) );
 
 		if ( $uninstall ) {
-			$this->step( 'Resolve test database settings', array( $this, 'resolve_db' ) );
 			$this->step( 'Restore wp-config.php', array( $this, 'restore_wp_config' ) );
 			$this->step( 'Remove test mu-plugins', array( $this, 'unlink_mu_plugins' ) );
 			$this->step( 'Drop generated test databases', array( $this, 'drop_databases' ) );
@@ -160,14 +160,7 @@ final class Tutor_Test_Installer {
 			return;
 		}
 
-		$this->install_steps();
-
-		if ( ! $this->apply ) {
-			if ( ! $interactive ) {
-				$this->finish( false );
-				return;
-			}
-
+		if ( $interactive ) {
 			$question = ' Apply these changes? This modifies wp-config.php, creates the test databases, and seeds fixtures. (y/N) ';
 			if ( ! $this->confirm( $question ) ) {
 				Console::line();
@@ -178,11 +171,10 @@ final class Tutor_Test_Installer {
 
 			$this->apply = true;
 			Console::line();
-			Console::title( 'Applying changes' );
-			$this->install_steps();
 		}
 
-		$this->finish( true );
+		$this->install_steps();
+		$this->finish( $this->apply );
 	}
 
 	/**
@@ -190,17 +182,17 @@ final class Tutor_Test_Installer {
 	 */
 	private function install_steps(): void {
 		$this->step( 'Prepare .env file', array( $this, 'prepare_env' ) );
-		$this->step( 'Resolve test database settings', array( $this, 'resolve_db' ) );
 		$this->step( 'Sync test database variables in .env', array( $this, 'sync_env_keys' ) );
 		$this->step( 'Create test databases', array( $this, 'create_databases' ) );
 		$this->step( 'Route wp-config.php to test database', array( $this, 'route_wp_config' ) );
 		$this->step( 'Guard wp-settings.php during tests', array( $this, 'guard_wp_settings' ) );
 		$this->step( 'Link test mu-plugins', array( $this, 'link_mu_plugins' ) );
 		$this->step( 'Reset database and seed fixtures', array( $this, 'reset_database' ) );
+		$this->step( 'Verify test database', array( $this, 'verify_database' ) );
 	}
 
 	/**
-	 * Print the result and verify an applied install.
+	 * Print the result of the install.
 	 *
 	 * @param bool $applied Whether the install was applied.
 	 */
@@ -209,10 +201,6 @@ final class Tutor_Test_Installer {
 		$done = $applied ? 'Test environment installed successfully!' : 'Dry run complete. Re-run with --yes to apply.';
 		Console::line( ' ' . Console::green( '✔' ) . ' ' . Console::bold( Console::green( $done ) ) );
 		Console::line();
-
-		if ( $applied ) {
-			$this->verify();
-		}
 	}
 
 	/**
@@ -649,37 +637,18 @@ PHP,
 		return 'fixtures seeded';
 	}
 
-	/**
-	 * Optional verification test.
-	 */
-	private function verify(): void {
-		$command        = 'test:unit:filter DBTest';
-		$is_interactive = function_exists( 'stream_isatty' ) ? stream_isatty( STDIN ) : true;
-
-		if ( ! $is_interactive ) {
-			Console::line( Console::dim( " Check that it works: composer {$command}" ) );
-			Console::line();
-			return;
+	private function verify_database(): string {
+		if ( ! $this->apply ) {
+			return 'would run composer test:unit:filter DBTest';
 		}
 
-		if ( ! $this->confirm( ' Run a unit test to verify the configuration? (y/n) [y]: ', true ) ) {
-			Console::line();
-			Console::line( Console::dim( " Skipped. Run it any time with: composer {$command}" ) );
-			Console::line();
-			return;
+		$code = $this->composer( 'test:unit:filter DBTest', $output );
+
+		if ( 0 !== $code ) {
+			throw new RuntimeException( "composer test:unit:filter DBTest exited with code {$code}\n" . $output );
 		}
 
-		Console::line();
-		$code = $this->composer( $command, $output );
-
-		if ( 0 === $code ) {
-			Console::ok( 'Verification test passed', 'DBTest' );
-		} else {
-			Console::fail( 'Verification test failed', $output );
-		}
-		Console::line();
-
-		exit( $code );
+		return 'DBTest';
 	}
 
 	/* ---------------------------------------------------------------------
