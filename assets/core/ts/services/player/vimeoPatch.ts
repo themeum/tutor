@@ -15,10 +15,6 @@ interface HookedVimeoPlayer {
   setCurrentTime?: (time: number) => Promise<number>;
   getCurrentTime?: () => Promise<number>;
   getDuration?: () => Promise<number>;
-  getPaused?: () => Promise<boolean>;
-  play?: () => Promise<void>;
-  pause?: () => Promise<void>;
-  __tutorEnsureEnd?: () => void;
   /** Installed by `hookVimeoPlayer`: the embed finished loading, so re-check a pending seek. */
   __tutorSeekSettled?: () => void;
 }
@@ -26,17 +22,32 @@ interface HookedVimeoPlayer {
 interface VimeoAdapterProto {
   attach(target: Element | null): void;
   load(): Promise<void>;
-  currentTime: number;
-  duration: number;
   engine: HookedVimeoPlayer | null;
-  dispatchEvent(e: Event): boolean;
 }
+
+export interface VimeoSeekClampResult {
+  shouldSeek: boolean;
+  targetTime: number;
+  clampedAtEnd: boolean;
+}
+
+export interface VimeoLikeAdapter extends EventTarget {
+  currentTime: number;
+  readonly duration: number;
+  readonly readyState?: number;
+  readonly error?: unknown;
+}
+
+const DEFAULT_END_BUFFER_SECONDS = 1.0;
+const SHORT_CLIP_BUFFER_RATIO = 0.15;
+const SHORT_CLIP_THRESHOLD_SECONDS = 2.0;
+const END_PROXIMITY_EPSILON = 0.05;
+const SPURIOUS_SEEK_ERROR_WINDOW_MS = 1500;
 
 // A seek posted while the embed is still initializing is dropped, or acknowledged and then reset
 // to 0 by the pending `loadVideo` (the resume seek at `loadedmetadata` is the usual victim).
 // The player never reports either, so a requested seek is checked against the real position
 // and re-applied until it sticks.
-const SEEK_END_WAIT_MS = 1500;
 const SEEK_VERIFY_MS = 1000;
 const SEEK_MAX_REAPPLIES = 3;
 const SEEK_MAX_CHECKS = 10;
@@ -47,14 +58,169 @@ const isOutOfRange = (err: unknown): boolean =>
   typeof err === 'object' && err !== null && (err as VimeoMethodError).name === 'RangeError';
 
 /**
- * Vimeo's only documented `setCurrentTime` failure is a `RangeError`: the time was below 0 or
- * past the video's duration. The vendor adapter treats every player `error` as fatal, so a
- * skip-forward near the end would show the error UI.
+ * Computes a Vimeo-safe seek target strictly below `duration`.
  *
- * 1. Replaces the unconditional fatal error handler with one that ignores `RangeError`.
- * 2. Turns a rejected out-of-range seek into a seek to the end instead of dropping it.
- * 3. Makes a seek to the end finish the video (Vimeo never fires `ended` for it).
- * 4. Re-applies a seek that was dropped or reset while the embed was still loading.
+ * Vimeo's Player SDK (`setCurrentTime`) rejects seeks at or beyond the actual media duration
+ * with a `RangeError`, and an accepted seek to the exact end parks the video without ever firing
+ * `ended`. Vimeo's reported `getDuration()` can also round slightly above the playable end, so
+ * forward seeks are clamped inside a small buffer before `duration`: the video then plays out
+ * the last moments and Vimeo fires its own `ended`, like the other providers.
+ */
+export function clampVimeoSeekTime(
+  targetSeconds: number,
+  duration: number,
+  currentSeconds = 0,
+  endBufferSeconds = DEFAULT_END_BUFFER_SECONDS,
+): VimeoSeekClampResult {
+  if (!Number.isFinite(targetSeconds) || targetSeconds <= 0) {
+    return { shouldSeek: true, targetTime: 0, clampedAtEnd: false };
+  }
+
+  if (!Number.isFinite(duration) || duration <= 0) {
+    return { shouldSeek: true, targetTime: targetSeconds, clampedAtEnd: false };
+  }
+
+  const effectiveBuffer =
+    duration > SHORT_CLIP_THRESHOLD_SECONDS
+      ? Math.min(endBufferSeconds, duration * 0.25)
+      : Math.min(0.25, duration * SHORT_CLIP_BUFFER_RATIO);
+
+  const maxSafeTime = Math.max(0, duration - effectiveBuffer);
+
+  if (targetSeconds < maxSafeTime) {
+    return { shouldSeek: true, targetTime: targetSeconds, clampedAtEnd: false };
+  }
+
+  // Already at or past the safe end boundary and seeking forward (or to the end):
+  // avoid issuing an out-of-range seek or jumping backwards.
+  const safeCurrent = Number.isFinite(currentSeconds) ? currentSeconds : 0;
+  if (safeCurrent >= maxSafeTime - END_PROXIMITY_EPSILON && targetSeconds >= safeCurrent) {
+    return { shouldSeek: false, targetTime: safeCurrent, clampedAtEnd: true };
+  }
+
+  return { shouldSeek: true, targetTime: maxSafeTime, clampedAtEnd: true };
+}
+
+const guardedAdapters = new WeakSet<object>();
+
+/**
+ * Guards a mounted `VimeoAdapter` instance so seeks that reach or cross the video's total
+ * duration never trigger Vimeo's out-of-range playback error.
+ */
+export function attachSafeVimeoSeekGuard(
+  adapter: VimeoLikeAdapter | null | undefined,
+  options?: { now?: () => number; endBufferSeconds?: number },
+): void {
+  if (!adapter || guardedAdapters.has(adapter)) {
+    return;
+  }
+
+  const proto = Object.getPrototypeOf(adapter);
+  const currentTimeDesc = proto ? Object.getOwnPropertyDescriptor(proto, 'currentTime') : undefined;
+
+  if (!currentTimeDesc?.get || !currentTimeDesc?.set) {
+    return;
+  }
+
+  const errorDesc = proto ? Object.getOwnPropertyDescriptor(proto, 'error') : undefined;
+  const protoDispatch = EventTarget.prototype.dispatchEvent;
+  const now = options?.now ?? (() => Date.now());
+  const endBufferSeconds = options?.endBufferSeconds ?? DEFAULT_END_BUFFER_SECONDS;
+
+  let lastNearEndSeekAt = 0;
+  let suppressAdapterError = false;
+
+  const emitSeekSettled = (): void => {
+    queueMicrotask(() => {
+      protoDispatch.call(adapter, new Event('seeked'));
+      protoDispatch.call(adapter, new Event('timeupdate'));
+    });
+  };
+
+  Object.defineProperty(adapter, 'currentTime', {
+    configurable: true,
+    enumerable: true,
+    get() {
+      return currentTimeDesc.get!.call(adapter);
+    },
+    set(value: number) {
+      if (!Number.isFinite(value)) {
+        return;
+      }
+
+      const current = currentTimeDesc.get!.call(adapter) as number;
+      const result = clampVimeoSeekTime(value, adapter.duration, current, endBufferSeconds);
+
+      if (result.clampedAtEnd) {
+        lastNearEndSeekAt = now();
+      }
+
+      if (!result.shouldSeek) {
+        emitSeekSettled();
+        return;
+      }
+
+      // The vendor setter returns early when the time is unchanged; still resolve the Video.js
+      // store's pending `seeked` listener so `seeking` does not hang.
+      if (Math.abs(result.targetTime - current) < 0.001) {
+        emitSeekSettled();
+        return;
+      }
+
+      currentTimeDesc.set!.call(adapter, result.targetTime);
+    },
+  });
+
+  if (errorDesc?.get) {
+    Object.defineProperty(adapter, 'error', {
+      configurable: true,
+      enumerable: true,
+      get() {
+        if (suppressAdapterError) {
+          return null;
+        }
+        return errorDesc.get!.call(adapter);
+      },
+      // Keep assignment from throwing in strict mode; the vendor stores its error privately.
+      set(value: unknown) {
+        errorDesc.set?.call(adapter, value);
+      },
+    });
+  }
+
+  Object.defineProperty(adapter, 'dispatchEvent', {
+    configurable: true,
+    writable: true,
+    value(event: Event) {
+      if (event.type === 'emptied' || event.type === 'loadstart') {
+        lastNearEndSeekAt = 0;
+        suppressAdapterError = false;
+      }
+
+      if (event.type === 'error') {
+        const withinSeekWindow = lastNearEndSeekAt > 0 && now() - lastNearEndSeekAt <= SPURIOUS_SEEK_ERROR_WINDOW_MS;
+        const hasLoadedMetadata = typeof adapter.readyState === 'number' && adapter.readyState >= 1;
+
+        if (withinSeekWindow && hasLoadedMetadata) {
+          suppressAdapterError = true;
+          emitSeekSettled();
+          return false;
+        }
+        suppressAdapterError = false;
+      }
+
+      return protoDispatch.call(adapter, event);
+    },
+  });
+
+  guardedAdapters.add(adapter);
+}
+
+/**
+ * Hooks the underlying Vimeo player:
+ * 1. Replaces the vendor's unconditional fatal `error` handler with one that ignores `RangeError`.
+ * 2. Re-applies a seek that was dropped or reset while the embed was still loading.
+ * 3. Turns a rejected out-of-range seek into one retry just before the end instead of dropping it.
  */
 export const hookVimeoPlayer = (adapter: {
   engine?: HookedVimeoPlayer | null;
@@ -87,164 +253,112 @@ export const hookVimeoPlayer = (adapter: {
     });
   }
 
-  if (typeof player.setCurrentTime === 'function') {
-    const originalSetCurrentTime = player.setCurrentTime;
+  if (typeof player.setCurrentTime !== 'function') {
+    return;
+  }
 
-    let wanted: number | null = null;
-    let endedSeen = false;
-    let endTimer: ReturnType<typeof setTimeout> | undefined;
+  const originalSetCurrentTime = player.setCurrentTime;
+  let wanted: number | null = null;
 
-    for (const type of ['play', 'playing', 'seeking']) {
-      player.on?.(type, () => {
-        (adapter as unknown as { __tutorEnded?: boolean }).__tutorEnded = false;
+  // A rejected out-of-range seek (cached duration missing or stale) gets one retry just before
+  // the real end, so the seek lands instead of being dropped, and never rejects unhandled.
+  const send = (time: number): Promise<number> =>
+    Promise.resolve(originalSetCurrentTime.call(player, time)).catch(async (err: unknown) => {
+      if (!isOutOfRange(err)) {
+        throw err;
+      }
+
+      const duration = await Promise.resolve(player.getDuration?.()).catch(() => NaN);
+      if (!Number.isFinite(duration) || (duration as number) <= 0) {
+        return time; // duration unknown: the verify loop re-sends once the embed has loaded
+      }
+
+      const { targetTime } = clampVimeoSeekTime(time, duration as number);
+      if (wanted === time) {
+        wanted = targetTime;
+      }
+      return Promise.resolve(originalSetCurrentTime.call(player, targetTime)).catch((retryErr: unknown) => {
+        if (isOutOfRange(retryErr)) {
+          wanted = null; // unreachable: stop chasing it
+          return targetTime;
+        }
+        throw retryErr;
       });
-    }
-    player.on?.('ended', () => {
-      endedSeen = true;
-      clearTimeout(endTimer);
     });
 
-    // Other providers fire `ended` when a seek reaches the end, which advances the lesson. Vimeo
-    // only fires it when playback runs out, so a seek to the end (accepted or clamped) leaves the
-    // lesson stuck. Let it play out; if no real `ended` arrives, raise it ourselves.
-    const ensureEnd = async (): Promise<void> => {
-      endedSeen = false;
-      const paused = await Promise.resolve(player.getPaused?.()).catch(() => false);
-      if (paused) {
-        void Promise.resolve(player.play?.()).catch(() => undefined);
-      }
-      clearTimeout(endTimer);
-      endTimer = setTimeout(() => {
-        if (endedSeen) {
-          return;
-        }
-        void Promise.resolve(player.pause?.()).catch(() => undefined);
-        // The adapter's `ended`/`paused` getters read private fields that only Vimeo's own
-        // events update, so mark the state ourselves or the player never sees the end.
-        (adapter as unknown as { __tutorEnded?: boolean }).__tutorEnded = true;
-        adapter.dispatchEvent?.(new Event('ended'));
-      }, SEEK_END_WAIT_MS);
-    };
-    player.__tutorEnsureEnd = () => void ensureEnd();
+  let settled = false;
+  let reapplies = 0;
+  let checks = 0;
+  let verifyTimer: ReturnType<typeof setTimeout> | undefined;
 
-    // Vimeo rejects a seek past the end with a RangeError. Land on the end instead of dropping
-    // the seek: ask for the real duration and step back from the end until a time is accepted.
-    const send = (time: number): Promise<number> =>
-      Promise.resolve(originalSetCurrentTime.call(player, time)).catch(async (err: unknown) => {
-        if (!isOutOfRange(err)) {
-          throw err;
-        }
+  const scheduleVerify = (): void => {
+    clearTimeout(verifyTimer);
+    verifyTimer = setTimeout(() => void verify(), SEEK_VERIFY_MS);
+  };
 
-        const duration = await Promise.resolve(player.getDuration?.()).catch(() => NaN);
-        if (!Number.isFinite(duration) || (duration as number) <= 0) {
-          // Duration unknown (still loading): the verify loop re-sends once the embed has loaded.
-          return time;
-        }
+  const verify = async (): Promise<void> => {
+    const target = wanted;
+    if (target === null || typeof player.getCurrentTime !== 'function') {
+      return;
+    }
 
-        const end = Math.min(time, duration as number);
-        for (const target of [end, end - 0.1, end - 0.5, end - 1]) {
-          if (target <= 0) {
-            break;
-          }
-          if (target === time) {
-            continue; // this exact value was just rejected
-          }
+    const current = await Promise.resolve(player.getCurrentTime()).catch(() => NaN);
+    // A newer seek replaced this one while we waited; it owns the verification now.
+    if (wanted !== target) {
+      return;
+    }
 
-          try {
-            const landed = await Promise.resolve(originalSetCurrentTime.call(player, target));
-            // The verify loop must chase the time that was accepted, not the unreachable one.
-            if (wanted === time) {
-              wanted = target;
-            }
-            if (time >= (duration as number)) {
-              void ensureEnd();
-            }
-            return landed;
-          } catch (retryErr) {
-            if (!isOutOfRange(retryErr)) {
-              throw retryErr;
-            }
-          }
-        }
+    checks += 1;
+    const honored = Number.isFinite(current) && current + SEEK_TOLERANCE >= target;
 
-        return time;
-      });
-
-    let settled = false;
-    let reapplies = 0;
-    let checks = 0;
-    let verifyTimer: ReturnType<typeof setTimeout> | undefined;
-
-    const scheduleVerify = (): void => {
-      clearTimeout(verifyTimer);
-      verifyTimer = setTimeout(() => void verify(), SEEK_VERIFY_MS);
-    };
-
-    const verify = async (): Promise<void> => {
-      const target = wanted;
-      if (target === null || typeof player.getCurrentTime !== 'function') {
-        return;
-      }
-
-      const current = await Promise.resolve(player.getCurrentTime()).catch(() => NaN);
-      // A newer seek replaced this one while we waited; it owns the verification now.
-      if (wanted !== target) {
-        return;
-      }
-
-      checks += 1;
-      const honored = Number.isFinite(current) && current + SEEK_TOLERANCE >= target;
-
-      if (honored) {
-        // Keep watching until the embed has finished loading: its `loadVideo` can still reset us.
-        if (settled || checks >= SEEK_MAX_CHECKS) {
-          wanted = null;
-          return;
-        }
-        scheduleVerify();
-        return;
-      }
-
-      if (!Number.isFinite(current) || reapplies >= SEEK_MAX_REAPPLIES || checks >= SEEK_MAX_CHECKS) {
+    if (honored) {
+      // Keep watching until the embed has finished loading: its `loadVideo` can still reset us.
+      if (settled || checks >= SEEK_MAX_CHECKS) {
         wanted = null;
         return;
       }
-
-      reapplies += 1;
-      send(target).catch(() => undefined);
       scheduleVerify();
-    };
-
-    // The adapter calls this once the embed is loaded (and on its `loaded` event).
-    player.__tutorSeekSettled = (): void => {
-      settled = true;
-      if (wanted !== null) {
-        void verify();
-      }
-    };
-
-    if (typeof player.on === 'function') {
-      player.on('loaded', () => player.__tutorSeekSettled?.());
+      return;
     }
 
-    player.setCurrentTime = function (time: number): Promise<number> {
-      if (Number.isFinite(time)) {
-        wanted = Math.max(0, time);
-        reapplies = 0;
-        checks = 0;
-        scheduleVerify();
-      }
-      return send(time);
-    };
+    if (!Number.isFinite(current) || reapplies >= SEEK_MAX_REAPPLIES || checks >= SEEK_MAX_CHECKS) {
+      wanted = null;
+      return;
+    }
+
+    reapplies += 1;
+    send(target).catch(() => undefined);
+    scheduleVerify();
+  };
+
+  // The adapter calls this once the embed is loaded (and on its `loaded` event).
+  player.__tutorSeekSettled = (): void => {
+    settled = true;
+    if (wanted !== null) {
+      void verify();
+    }
+  };
+
+  if (typeof player.on === 'function') {
+    player.on('loaded', () => player.__tutorSeekSettled?.());
   }
+
+  player.setCurrentTime = function (time: number): Promise<number> {
+    if (Number.isFinite(time)) {
+      wanted = Math.max(0, time);
+      reapplies = 0;
+      checks = 0;
+      scheduleVerify();
+    }
+    return send(time);
+  };
 };
 
 /**
- * Patches VimeoAdapter prototype to:
- * - Clamp and validate currentTime assignments, and finish the video on a seek to the end.
- * - Auto-hook VimeoPlayer instances created during attach and load.
- * - Clear a previously reported fatal error / ended state when a new load starts.
- * - Let a synthetic `ended` be reflected by the adapter's `ended` / `paused` getters.
+ * Patches the VimeoAdapter prototype to:
+ * - Guard each adapter instance's seeks against the video's end (`attachSafeVimeoSeekGuard`).
+ * - Auto-hook the Vimeo player created during attach and load.
+ * - Clear a previously reported fatal error when a new load starts.
  */
 export const patchVimeoProvider = (): void => {
   if (isPatched) {
@@ -256,27 +370,6 @@ export const patchVimeoProvider = (): void => {
   const originalAttach = proto.attach;
   const originalLoad = proto.load;
 
-  if (typeof originalAttach === 'function') {
-    proto.attach = function (target: Element | null): void {
-      const result = originalAttach.call(this, target);
-      hookVimeoPlayer(this);
-      return result;
-    };
-  }
-
-  if (typeof originalLoad === 'function') {
-    proto.load = async function (): Promise<void> {
-      // A stale error / ended state from the previous source must not stick across a reload.
-      (this as unknown as { __tutorFatalError?: unknown }).__tutorFatalError = undefined;
-      (this as unknown as { __tutorEnded?: boolean }).__tutorEnded = false;
-      const result = await originalLoad.call(this);
-      hookVimeoPlayer(this);
-      // `loadVideo` has settled: a resume seek it reset can be re-applied now.
-      this.engine?.__tutorSeekSettled?.();
-      return result;
-    };
-  }
-
   const findDescriptor = (target: object | null, key: string): PropertyDescriptor | undefined => {
     for (let current = target; current; current = Object.getPrototypeOf(current)) {
       const descriptor = Object.getOwnPropertyDescriptor(current, key);
@@ -287,60 +380,42 @@ export const patchVimeoProvider = (): void => {
     return undefined;
   };
 
+  // Must be installed before any instance guard reads the prototype's `error` descriptor.
   const origErrorDesc = findDescriptor(proto, 'error');
   Object.defineProperty(proto, 'error', {
     configurable: true,
     enumerable: true,
-    get(this: VimeoAdapterProto & { __tutorFatalError?: unknown }) {
+    get(this: { __tutorFatalError?: unknown }) {
       if (this.__tutorFatalError) {
         return this.__tutorFatalError;
       }
       return origErrorDesc?.get ? origErrorDesc.get.call(this) : null;
     },
     // Keep the vendor's inherited setter reachable so `this.error = ...` cannot throw.
-    set(this: VimeoAdapterProto & { __tutorFatalError?: unknown }, value: unknown) {
+    set(this: { __tutorFatalError?: unknown }, value: unknown) {
       this.__tutorFatalError = value;
       origErrorDesc?.set?.call(this, value);
     },
   });
 
-  for (const key of ['ended', 'paused'] as const) {
-    const orig = findDescriptor(proto, key);
-    if (orig?.get) {
-      Object.defineProperty(proto, key, {
-        configurable: true,
-        enumerable: orig.enumerable,
-        get(this: VimeoAdapterProto & { __tutorEnded?: boolean }) {
-          if (this.__tutorEnded) {
-            return true;
-          }
-          return orig.get!.call(this);
-        },
-      });
-    }
+  if (typeof originalAttach === 'function') {
+    proto.attach = function (this: VimeoAdapterProto & VimeoLikeAdapter, target: Element | null): void {
+      const result = originalAttach.call(this, target);
+      attachSafeVimeoSeekGuard(this);
+      hookVimeoPlayer(this);
+      return result;
+    };
   }
 
-  const desc = Object.getOwnPropertyDescriptor(proto, 'currentTime');
-  if (desc && desc.set) {
-    const originalSet = desc.set;
-    Object.defineProperty(proto, 'currentTime', {
-      ...desc,
-      set(this: VimeoAdapterProto, value: number) {
-        if (!Number.isFinite(value)) {
-          return;
-        }
-        let safeValue = Math.max(0, value);
-        const duration = this.duration;
-        if (Number.isFinite(duration) && duration > 0) {
-          safeValue = Math.min(safeValue, duration);
-        }
-        originalSet.call(this, safeValue);
-        // A seek that reaches the end (what `Player.seek` sends when you skip past it) is accepted
-        // by Vimeo without ever firing `ended`.
-        if (Number.isFinite(duration) && duration > 0 && safeValue >= duration - 0.05) {
-          this.engine?.__tutorEnsureEnd?.();
-        }
-      },
-    });
+  if (typeof originalLoad === 'function') {
+    proto.load = async function (this: VimeoAdapterProto): Promise<void> {
+      // A stale error from the previous source must not stick across a reload.
+      (this as unknown as { __tutorFatalError?: unknown }).__tutorFatalError = undefined;
+      const result = await originalLoad.call(this);
+      hookVimeoPlayer(this);
+      // `loadVideo` has settled: a resume seek it reset can be re-applied now.
+      this.engine?.__tutorSeekSettled?.();
+      return result;
+    };
   }
 };
