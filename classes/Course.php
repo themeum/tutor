@@ -1203,11 +1203,7 @@ class Course extends Tutor_Base {
 			$current_status = get_post_status( $course_id );
 			if ( $params['post_status'] !== $current_status ) {
 				if ( ! CourseModel::can_user_update_status( $course_id, $params['post_status'] ) ) {
-					if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-						$params['post_status'] = CourseModel::STATUS_PENDING;
-					} else {
-						unset( $params['post_status'] );
-					}
+					$params['post_status'] = CourseModel::STATUS_PENDING;
 				}
 			}
 		}
