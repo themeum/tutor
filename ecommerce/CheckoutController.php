@@ -639,23 +639,23 @@ class CheckoutController {
 		$validation = ValidationHelper::validate( $validation_rules, $request );
 
 		if ( $validation->success ) {
+			// Validate the billing country and state to prevent tax reduction abuse.
+			$errors = array_merge(
+				$errors,
+				$this->billing_model->validate_billing_location(
+					$request['billing_country'],
+					$request['billing_state']
+				)
+			);
+
 			// Validate cart items.
-			$object_ids = array_unique( array_filter( array_map( 'absint', explode( ',', $request['object_ids'] ) ) ) );
+			$object_ids = $this->parse_object_ids( $request['object_ids'] );
 			$cart_check = $this->validate_cart_items( $object_ids, $request['order_type'] );
 
-			$errors = true === $cart_check ? array() : (array) $cart_check;
+			$errors = array_merge( $errors, true === $cart_check ? array() : (array) $cart_check );
 		} else {
 			$errors = array_merge( array(), ...array_map( fn( $error ) => (array) $error, $validation->errors ) );
 		}
-
-		// Validate the billing country and state to prevent tax reduction abuse.
-		$errors = array_merge(
-			$errors,
-			$this->billing_model->validate_billing_location(
-				$request['billing_country'],
-				$request['billing_state']
-			)
-		);
 
 		// Validate incomplete order if user is not guest.
 		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
@@ -925,6 +925,19 @@ class CheckoutController {
 	}
 
 	/**
+	 * Parse object IDs.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $object_ids The object IDs.
+	 *
+	 * @return array
+	 */
+	protected function parse_object_ids( string $object_ids ): array {
+		return array_unique( array_filter( array_map( 'absint', explode( ',', $object_ids ) ) ) );
+	}
+
+	/**
 	 * Handle the checkout form submission.
 	 *
 	 * Creates a pending order, prepares the payment data, and proceeds to the payment gateway.
@@ -953,7 +966,7 @@ class CheckoutController {
 		}
 
 		$order_fields   = $this->filter_allowed_keys( $request, $this->get_allowed_order_fields() );
-		$object_ids     = array_filter( explode( ',', $order_fields['object_ids'] ), 'is_numeric' );
+		$object_ids     = $this->parse_object_ids( $request['object_ids'] );
 		$coupon_code    = isset( $order_fields['coupon_code'] ) ? $order_fields['coupon_code'] : '';
 		$payment_method = $order_fields['payment_method'];
 		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $order_fields['payment_type'];
@@ -969,12 +982,6 @@ class CheckoutController {
 			$errors[] = __( 'Select a payment method', 'tutor' );
 		}
 
-		$billing_fillable_fields = $this->filter_allowed_keys( $request, $this->billing_model->get_fillable_fields() );
-		$save_billing_info       = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
-		if ( is_wp_error( $save_billing_info ) ) {
-			$errors[] = $save_billing_info->get_error_message();
-		}
-
 		if ( ! empty( $errors ) ) {
 			$this->set_checkout_errors( $errors, $current_user_id );
 			return;
@@ -986,8 +993,8 @@ class CheckoutController {
 			$order_type,
 			$payment_method,
 			$is_guest_user,
-			$billing_fillable_fields,
-			$this->order_data
+			$this->order_data,
+			$request
 		);
 
 		if ( is_wp_error( $order_data ) ) {
@@ -1010,12 +1017,12 @@ class CheckoutController {
 	 * @param string $order_type              Order type.
 	 * @param string $payment_method          Payment method.
 	 * @param bool   $is_guest_user           Whether user is guest.
-	 * @param array  $billing_fillable_fields Fillable billing fields.
 	 * @param mixed  $order_data              Existing incomplete order data (if any).
+	 * @param array  $request                 Request data.
 	 *
 	 * @return array|WP_Error Placed order data array, or WP_Error on failure.
 	 */
-	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, array $billing_fillable_fields = array(), $order_data = null ) {
+	protected function place_order( $current_user_id, $checkout_data, string $order_type, string $payment_method, bool $is_guest_user = false, $order_data = null, $request = array() ) {
 		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
@@ -1036,6 +1043,8 @@ class CheckoutController {
 			)
 		);
 
+		$billing_fillable_fields = $this->filter_allowed_keys( $request, $this->billing_model->get_fillable_fields() );
+
 		if ( $is_guest_user ) {
 			$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
 			if ( is_wp_error( $guest_user ) ) {
@@ -1055,6 +1064,11 @@ class CheckoutController {
 		$coupon_code = isset( $checkout_data->coupon_code ) ? $checkout_data->coupon_code : '';
 
 		try {
+			$save_billing_info = $this->save_billing_info( $current_user_id, $billing_fillable_fields );
+			if ( is_wp_error( $save_billing_info ) ) {
+				return new WP_Error( 'save_billing_info_failed', $save_billing_info->get_error_message() );
+			}
+
 			if ( ! empty( $order_data ) ) {
 				$order_id   = $order_data->id;
 				$order_data = $this->order_ctrl->update_order(
