@@ -2,14 +2,9 @@ name: Unit Tests
 
 on:
   pull_request:
-  push:
-    branches:
-      - master
-      - dev
-      - 'release/**'
 
 concurrency:
-  group: unit-tests-${{ github.event.pull_request.number || github.ref }}
+  group: unit-tests-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 env:
