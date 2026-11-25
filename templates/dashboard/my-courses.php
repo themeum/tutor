@@ -176,7 +176,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					<div class="tutor-my-courses-card-body">
 						<div class="tutor-my-courses-card-thumb">
 							<?php do_action( 'tutor_my_courses_before_thumbnail', $post->ID ); ?>
-							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon" aria-label="<?php esc_attr_e( 'Edit Course', 'tutor' ); ?>">
 									<?php SvgIcon::make()->name( Icon::EDIT_2 )->render(); ?>
@@ -195,7 +195,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							</div>
 
 							<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-p2 tutor-font-medium tutor-line-clamp-3">
-								<?php the_title(); ?>
+								<?php echo esc_html( get_the_title() ); ?>
 							</a>
 
 							<?php if ( ! empty( $course_duration ) || ! empty( $course_students ) ) : ?>

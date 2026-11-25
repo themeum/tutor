@@ -513,7 +513,6 @@ class CouponModel {
 	public function get_coupon_usage_count( $coupon_code, int $exclude_order_id = 0, array $applicable_item_ids = array() ) {
 		$now_gmt = current_time( 'mysql', true );
 		$count   = 0;
-
 		$user_id = get_current_user_id();
 
 		$results = DB::table( $this->coupon_usage_table )
@@ -521,38 +520,7 @@ class CouponModel {
 			->get();
 
 		foreach ( $results as $result ) {
-			// Check if the table schema is 4.2.0+.
-			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
-				$order_id       = (int) $result->order_id;
-				$status         = $result->status;
-				$expires_at_gmt = $result->expires_at_gmt;
-
-				// Continue for the exclude order.
-				if ( $order_id === $exclude_order_id ) {
-					continue;
-				}
-
-				if ( self::STATUS_CONSUMED === $status ) {
-					++$count;
-				} elseif ( self::STATUS_RESERVED === $status ) {
-					if ( $expires_at_gmt > $now_gmt ) {
-						// If the current user holds this reservation, check if it is for the exact same items.
-						if ( $user_id === (int) $result->user_id && ! empty( $applicable_item_ids ) ) {
-							$item_ids = DB::table( 'tutor_order_items' )->where( 'order_id', $order_id )->pluck( 'id' );
-
-							$is_same_items = count( $applicable_item_ids ) === count( $item_ids )
-								&& 0 === count( array_diff( $applicable_item_ids, $item_ids ) );
-
-							if ( $is_same_items ) {
-								// User is continuing checkout on the exact same cart; allow them to proceed.
-								continue;
-							}
-						}
-
-						++$count;
-					}
-				}
-			} else {
+			if ( $this->counts_toward_usage_limit( $result, $now_gmt, $exclude_order_id, $applicable_item_ids, $user_id ) ) {
 				++$count;
 			}
 		}
@@ -565,15 +533,19 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 * @since 4.2.0 Added exclude_order_id and active status filter.
+	 * @since 4.2.2 Count non-expired reserved holds toward the per-user limit.
 	 *
 	 * @param mixed $coupon_code Coupon code.
 	 * @param int   $user_id User id.
 	 * @param int   $exclude_order_id Optional order ID to exclude from count.
+	 * @param array $applicable_item_ids Optional cart item ids for same-cart skip.
 	 *
 	 * @return int
 	 */
-	public function get_user_usage_count( $coupon_code, $user_id, int $exclude_order_id = 0 ) {
-		$count = 0;
+	public function get_user_usage_count( $coupon_code, $user_id, int $exclude_order_id = 0, array $applicable_item_ids = array() ) {
+		$now_gmt = current_time( 'mysql', true );
+		$count   = 0;
+		$user_id = (int) $user_id;
 
 		$results = DB::table( $this->coupon_usage_table )
 			->where( 'coupon_code', $coupon_code )
@@ -581,25 +553,84 @@ class CouponModel {
 			->get();
 
 		foreach ( $results as $result ) {
-			// Check if the table schema is 4.2.0+.
-			if ( property_exists( $result, 'order_id' ) && $result->order_id > 0 ) {
-				$order_id = (int) $result->order_id;
-				$status   = $result->status;
-
-				// Continue for the exclude order.
-				if ( $order_id === $exclude_order_id ) {
-					continue;
-				}
-
-				if ( self::STATUS_CONSUMED === $status ) {
-					++$count;
-				}
-			} else {
+			if ( $this->counts_toward_usage_limit( $result, $now_gmt, $exclude_order_id, $applicable_item_ids, $user_id ) ) {
 				++$count;
 			}
 		}
 
 		return $count;
+	}
+
+	/**
+	 * Whether a coupon usage row should count toward a usage limit.
+	 *
+	 * Counts consumed rows and non-expired reserved holds. Skips the excluded order
+	 * and same-cart reservations held by $same_cart_user_id.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param object $result Usage row.
+	 * @param string $now_gmt Current GMT datetime.
+	 * @param int    $exclude_order_id Order ID to exclude.
+	 * @param array  $applicable_item_ids Cart item ids for same-cart skip.
+	 * @param int    $same_cart_user_id User id allowed to skip their same-cart hold.
+	 *
+	 * @return bool
+	 */
+	private function counts_toward_usage_limit( object $result, string $now_gmt, int $exclude_order_id = 0, array $applicable_item_ids = array(), int $same_cart_user_id = 0 ): bool {
+		if ( ! property_exists( $result, 'order_id' ) || ! (int) $result->order_id ) {
+			return true;
+		}
+
+		$order_id = (int) $result->order_id;
+		if ( $order_id === $exclude_order_id ) {
+			return false;
+		}
+
+		$status = $result->status;
+		if ( self::STATUS_CONSUMED === $status ) {
+			return true;
+		}
+
+		if ( self::STATUS_RESERVED !== $status ) {
+			return false;
+		}
+
+		$expires_at_gmt = $result->expires_at_gmt ?? null;
+		if ( ! ( $expires_at_gmt > $now_gmt ) ) {
+			return false;
+		}
+
+		// Same-cart skip: user continuing checkout on the exact same items.
+		if ( $same_cart_user_id
+			&& $same_cart_user_id === (int) $result->user_id
+			&& $this->is_same_cart_reservation( $order_id, $applicable_item_ids )
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check whether reserved order items match the current cart items.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int   $order_id Reserved order id.
+	 * @param array $applicable_item_ids Current cart item ids.
+	 *
+	 * @return bool
+	 */
+	private function is_same_cart_reservation( int $order_id, array $applicable_item_ids ): bool {
+		if ( empty( $applicable_item_ids ) ) {
+			return false;
+		}
+
+		$item_ids = DB::table( 'tutor_order_items' )->where( 'order_id', $order_id )->pluck( 'item_id' );
+
+		return count( $applicable_item_ids ) === count( $item_ids )
+			&& 0 === count( array_diff( $applicable_item_ids, $item_ids ) );
 	}
 
 	/**
@@ -1136,7 +1167,7 @@ class CouponModel {
 		}
 
 		if ( $user_usage_limit > 0 && $user_id ) {
-			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id, $exclude_order_id );
+			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id, $exclude_order_id, $applicable_item_ids );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit = false;
 				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
@@ -1325,14 +1356,26 @@ class CouponModel {
 				->first();
 
 			if ( $existing ) {
-				$update_status = self::STATUS_CONSUMED === $existing->status ? self::STATUS_CONSUMED : self::STATUS_RESERVED;
-				DB::table( $this->coupon_usage_table )
-					->where( 'id', $existing->id )
-					->update(
-						array(
-							'status' => $update_status,
-						)
-					);
+				if ( self::STATUS_CONSUMED === $existing->status ) {
+					DB::table( $this->coupon_usage_table )
+						->where( 'id', $existing->id )
+						->update(
+							array(
+								'status' => self::STATUS_CONSUMED,
+							)
+						);
+				} else {
+					// Refresh TTL so pay-again / re-reserve keeps an active hold.
+					DB::table( $this->coupon_usage_table )
+						->where( 'id', $existing->id )
+						->update(
+							array(
+								'status'         => self::STATUS_RESERVED,
+								'user_id'        => $user_id,
+								'expires_at_gmt' => $expires_gmt,
+							)
+						);
+				}
 			} else {
 				DB::table( $this->coupon_usage_table )
 					->insert(
