@@ -5,9 +5,7 @@ against isolated databases: what each file does, how a request chooses a
 database, how the installer and seeder work, and the exact steps to set up,
 run, reset, and troubleshoot the environment.
 
-For the short command reference, see [Testing Tutor LMS](./testing.md). For the
-historical migration plan, see
-[E2E migration: isolated test database](./e2e-test-db-migration.md).
+For the short command reference, see [Testing Tutor LMS](./testing.md).
 
 ## Contents
 

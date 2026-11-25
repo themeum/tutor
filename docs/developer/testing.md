@@ -25,10 +25,10 @@ Playwright lifecycle, factories, and safety guards work, see
 Run the installer once:
 
 ```bash
-pnpm test:setup
+pnpm test:setup           # installer prompt, then Chromium
 ```
 
-`test:setup` runs the installer and installs Chromium. The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only.
+`test:setup` runs the installer and installs Chromium. The installer prints what it will do and asks before modifying `wp-config.php`. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting, or `--dry-run` to preview only. `pnpm test:uninstall` (or `composer test:uninstall`) restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
 
 To run only the installer:
 
@@ -129,25 +129,62 @@ vendor/bin/phpunit --testsuite=query-helper-test
 
 ## Running Playwright E2E tests
 
+The browser suite runs against a real WordPress site whose test requests are routed to a dedicated database (`local_test`). Core tests are always run, and Pro tests (`../tutor-pro/tests/e2e`) or External tests (`tests/e2e/external`) are automatically included when present.
+
 Make sure your local WordPress development site is running (e.g. in Local,
 Valet, Docker) and that `SITE_URL` in `.env` matches your site URL (e.g.
-`http://localhost:8888` or `http://themeum-tutor.local`). Playwright sends the
-`X-WP-Test-Env: playwright` header, which routes test requests to your isolated
-test database (`local_test`).
+`http://localhost:8888` or `http://themeum-tutor.local`). Rebuild assets after pulling source changes (`pnpm exec rspack --mode=production` in this plugin, and in `../tutor-pro` when running Pro tests).
 
 ```bash
-# All E2E tests (headless)
-pnpm run test:e2e
+# All E2E tests (core + pro when present)
+pnpm test:e2e
 
-# Interactive Playwright UI
-pnpm run test:e2e:ui
+# Smoke / journey subsets
+pnpm test:e2e:smoke     # @smoke
+pnpm test:e2e:journey   # @journey
 
-# Debug mode
-pnpm run test:e2e:debug
+# Interactive Playwright UI / debug
+pnpm test:e2e:ui
+pnpm test:e2e:debug
 
 # PHPUnit + E2E
 pnpm test
 ```
+
+### How isolation works
+
+- Every test command runs `tests/support/preflight.php` first and fails fast if the live, E2E, and PHPUnit database names collide, if the E2E database does not end in `_test`, or if the configured host is not in `WP_TEST_HOSTS`.
+- Playwright config, global setup, and per-role fixtures send `X-WP-Test-Env: playwright` (accepted only on hosts in `WP_TEST_HOSTS`, defaulting to `localhost,127.0.0.1,::1,*.local`).
+- `tests/support/test-config.php` swaps `DB_NAME` for `WP_TEST_DB_NAME` and sets `UPLOADS` to `wp-content/uploads-e2e`.
+- `WP_TEST_ENV=1` selects `WP_TEST_DB_NAME` for WP-CLI, `reset-test-db.php`, and CI `wp server`.
+- `WP_RUNNING_TESTS` selects `WP_PHPUNIT_DB_NAME` for PHPUnit.
+
+### E2E layout & conventions
+
+```text
+tests/e2e/
+  playwright.config.ts # the only Playwright config
+  global-setup.ts      # UI login, one storage state per seeded role
+  support/             # env, auth, role fixtures, factories, selectors
+  smoke/               # @smoke
+  feature/             # @feature (new areas go here)
+  journey/             # @journey (one serial spec per journey)
+  admin/               # dashboard coverage
+  external/            # @external, auto-included when present
+tests/support/
+  test-config.php      # request-scoped database selector
+  install.php          # interactive installer and uninstaller
+  preflight.php        # fail-fast database safety checks
+  seed.php             # shared five-role seeder
+  reset-test-db.php    # drop, install, seed
+tests/e2e/bin/
+  factories.php        # per-spec courses/lessons/enrollments
+  mu-plugins/          # mail log and HTTP stub (test requests only)
+```
+
+- **Selectors**: Use lowercase `data-testid` (`getByTestId()`) for plugin UI, and labels, roles, or stable IDs for WordPress core screens.
+- **Flake policy**: Retries are disabled (`retries: 0`). Quarantine a flaky test with `test.fixme` and `@quarantine` with owner and failing run link in a comment, and fix or remove within two weeks.
+- **Notes**: `E2E_BASE_URL` overrides `SITE_URL` (fallback `http://localhost:8888`); the Pro license gate is bypassed on `localhost`/`.local`.
 
 ## Troubleshooting
 
