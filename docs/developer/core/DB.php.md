@@ -84,7 +84,7 @@ class DB {
     public function right_join( string $table, $first, string $operator = '', string $second = '' ): self;
 
     // Where Clauses
-    public function where( string $column, $operator_or_val, $val = null ): self;
+    public function where( $column, $operator_or_val = null, $val = null ): self;
     public function or_where( string $column, $operator_or_val, $val = null ): self;
     public function where_in( string $column, array $values ): self;
     public function or_where_in( string $column, array $values ): self;
@@ -290,16 +290,77 @@ DB::table('users')
 
 ## Where Clauses
 
-### 1. Basic Where
-Supports both 2-argument (assumes `=`) and 3-argument syntax.
+### 1. Basic Where (Single Condition)
+Supports both 2-argument (assumes `=`) and 3-argument syntax with custom operators:
 
 ```php
-DB::table('users')->where('user_status', 0);           // user_status = 0
+DB::table('users')->where('user_status', 0);                // user_status = 0
 DB::table('tutor_orders')->where('total_price', '>=', 100); // total_price >= 100
-DB::table('users')->or_where('user_login', 'admin');   // OR user_login = 'admin'
+DB::table('users')->where('deleted_at', null);              // deleted_at IS NULL
+DB::table('users')->or_where('user_login', 'admin');        // OR user_login = 'admin'
 ```
 
-### 2. IN / NOT IN
+### 2. Array-Based Where Conditions
+Pass multiple conditions as an array to `where()`. Conditions within the array are combined using `AND`. Both associative and numeric array formats are supported:
+
+#### Associative Array (Column-Value Pairs)
+Matches column-value pairs with the `=` operator. Passing `null` as a value automatically converts to `IS NULL`:
+
+```php
+DB::table('users')->where([
+    'status' => 'active',
+    'role'   => 'admin',
+]);
+// Generates: WHERE status = 'active' AND role = 'admin'
+
+DB::table('tutor_orders')->where([
+    'order_status' => 'completed',
+    'deleted_at'   => null,
+]);
+// Generates: WHERE order_status = 'completed' AND deleted_at IS NULL
+```
+
+#### Numeric Array (Operator / Tuple Conditions)
+Allows explicit conditions as nested arrays. Supports 3-element `[column, operator, value]` or 2-element `[column, value]` (defaults to `=`) tuples:
+
+```php
+DB::table('tutor_orders')->where([
+    ['order_status', '=', 'completed'],
+    ['total_price', '>=', 50],
+    ['user_id', '!=', 5],
+]);
+// Generates: WHERE order_status = 'completed' AND total_price >= 50 AND user_id != 5
+
+// 2-element tuples:
+DB::table('users')->where([
+    ['status', 'active'],
+    ['role', 'admin'],
+]);
+// Generates: WHERE status = 'active' AND role = 'admin'
+
+// Null handling in numeric arrays:
+DB::table('tutor_orders')->where([
+    ['deleted_at', '=', null],    // deleted_at IS NULL
+    ['completed_at', '!=', null], // completed_at IS NOT NULL
+]);
+```
+
+#### Chaining Array & Single Conditions
+Array syntax seamlessly chains with existing single-condition calls and other query builder methods:
+
+```php
+DB::table('tutor_orders')
+    ->where([
+        'order_status' => 'completed',
+    ])
+    ->where('user_id', 10)
+    ->where('total_price', '>', 50);
+```
+
+> [!NOTE]
+> All column identifiers in arrays are strictly validated against SQL injection patterns (`is_valid_column`), comparison operators are checked against whitelisted operators (`is_valid_operator`), and values are safely bound via `$wpdb->prepare()`. Empty arrays `where([])` or invalid formats are safely skipped without breaking query generation.
+
+### 3. IN / NOT IN
 ```php
 DB::table('posts')->where_in('ID', [10, 20, 30]);
 DB::table('posts')->where_not_in('post_status', ['trash', 'auto-draft']);
@@ -307,7 +368,7 @@ DB::table('posts')->or_where_in('ID', [40, 50]);
 DB::table('posts')->or_where_not_in('post_type', ['attachment']);
 ```
 
-### 3. NULL / NOT NULL
+### 4. NULL / NOT NULL
 ```php
 DB::table('posts')->where_null('post_parent');
 DB::table('posts')->where_not_null('post_password');
@@ -315,13 +376,13 @@ DB::table('posts')->or_where_null('post_excerpt');
 DB::table('posts')->or_where_not_null('to_ping');
 ```
 
-### 4. BETWEEN
+### 5. BETWEEN
 ```php
 DB::table('tutor_orders')->where_between('created_at', '2024-01-01', '2024-12-31');
 DB::table('tutor_orders')->where_not_between('total_price', 10, 50);
 ```
 
-### 5. LIKE
+### 6. LIKE
 Automatically wraps the search term with `%` wildcards and escapes internal characters using `$wpdb->esc_like()` to prevent LIKE-injection vulnerabilities.
 
 ```php
@@ -331,7 +392,7 @@ DB::table('posts')->where_like('post_title', 'WordPress');
 DB::table('posts')->where_not_like('post_content', 'deprecated');
 ```
 
-### 6. Raw WHERE
+### 7. Raw WHERE
 For advanced or database-native functions. Use `$wpdb->prepare()` placeholders (`%s`, `%d`, `%f`) in expressions.
 
 ```php
