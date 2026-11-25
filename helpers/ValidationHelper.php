@@ -168,6 +168,13 @@ class ValidationHelper {
 								self::add_error( $key, sprintf( __( '%s user does not exist', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
+						case 'regex':
+							if ( ! preg_match( $nested_rules[1], $data[ $key ] ) ) {
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s is not valid', 'tutor' ), self::humanize_key( $key ) ) );
+							}
+							break;
+
 						default:
 							// code...
 							break;
