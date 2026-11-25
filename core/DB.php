@@ -198,7 +198,7 @@ class DB {
 	/**
 	 * Supported comparison operators for column-to-column and scalar comparisons.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @var string[]
 	 */
@@ -306,7 +306,7 @@ class DB {
 	/**
 	 * Set a derived table subquery as the FROM source.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Alias for the derived table.
@@ -363,7 +363,7 @@ class DB {
 	/**
 	 * Internal helper to validate and append a single SELECT column or alias.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string $column Column name or aliased expression.
 	 *
@@ -405,7 +405,7 @@ class DB {
 	/**
 	 * Add a subquery expression to the SELECT columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Column alias.
@@ -538,7 +538,7 @@ class DB {
 	 *
 	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self   $subquery Subquery closure or DB instance.
 	 * @param string         $alias    Alias for the subquery table.
@@ -574,7 +574,7 @@ class DB {
 	/**
 	 * Add a CROSS JOIN subquery clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Alias for the subquery table.
@@ -597,7 +597,7 @@ class DB {
 	/**
 	 * Internal method to parse and prepare a join table with optional alias.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string $table Table name, may include alias e.g., 'users AS u'.
 	 *
@@ -751,7 +751,7 @@ class DB {
 	/**
 	 * Internal method to add a JOIN subquery clause.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string         $type     Join type (INNER, LEFT, RIGHT).
 	 * @param Closure|self   $subquery Subquery closure or DB instance.
@@ -839,7 +839,7 @@ class DB {
 	/**
 	 * Add an OR WHERE condition comparing two columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string      $first              First column name.
 	 * @param string      $operator_or_second Operator (if 3 args) or second column (if 2 args).
@@ -854,7 +854,7 @@ class DB {
 	/**
 	 * Add a WHERE IN condition or subquery.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string             $column Column name.
 	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
@@ -990,7 +990,7 @@ class DB {
 	/**
 	 * Add a WHERE EXISTS subquery condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 *
@@ -1003,7 +1003,7 @@ class DB {
 	/**
 	 * Add an OR WHERE EXISTS subquery condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 *
@@ -1016,7 +1016,7 @@ class DB {
 	/**
 	 * Add a WHERE NOT EXISTS subquery condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 *
@@ -1029,7 +1029,7 @@ class DB {
 	/**
 	 * Add an OR WHERE NOT EXISTS subquery condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 *
@@ -1870,7 +1870,7 @@ class DB {
 	 *
 	 * Supports both associative column-value pairs and numeric array triples/tuples.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param array  $conditions Array of conditions.
 	 * @param string $boolean    Boolean connector (AND or OR).
@@ -1901,7 +1901,7 @@ class DB {
 	/**
 	 * Internal dispatcher for where() and or_where().
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param mixed  $column            Column name, array of conditions, or LHS subquery.
 	 * @param mixed  $operator_or_value Operator or value.
@@ -1934,7 +1934,7 @@ class DB {
 	/**
 	 * Internal method to add a WHERE condition with a subquery on the left-hand side.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery          Subquery closure or DB instance.
 	 * @param mixed        $operator_or_value Operator or value.
@@ -1980,7 +1980,7 @@ class DB {
 	/**
 	 * Shared helper to format and append a WHERE condition for a validated LHS expression.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string $lhs              Validated column or parenthesized subquery.
 	 * @param mixed  $operator_or_value Operator or value.
@@ -2088,7 +2088,7 @@ class DB {
 	/**
 	 * Internal method to add WHERE EXISTS / NOT EXISTS condition.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $type     EXISTS or NOT EXISTS.
@@ -2111,7 +2111,7 @@ class DB {
 	/**
 	 * Internal method to add a WHERE condition comparing two columns.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string      $first              First column name.
 	 * @param string      $operator_or_second Operator or second column if 2 args.
@@ -2512,7 +2512,7 @@ class DB {
 	/**
 	 * Resolve a subquery from a Closure or DB instance into a SQL string.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param mixed $query Closure or DB instance.
 	 *
