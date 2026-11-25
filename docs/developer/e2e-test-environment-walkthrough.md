@@ -1022,6 +1022,7 @@ idempotent: check for an existing entity before creating one. Run
 | Command | What it does |
 | --- | --- |
 | `pnpm test:setup` | Installer prompt, then Chromium |
+| `pnpm test:uninstall` | Restore config, remove links, drop test DBs |
 | `pnpm test` | PHPUnit, then full E2E |
 | `pnpm test:unit` | PHPUnit |
 | `pnpm test:e2e` | Full E2E (core + Pro when present) |

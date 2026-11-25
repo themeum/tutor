@@ -19,6 +19,7 @@
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "composer test:unit",
     "test:setup": "composer test:install && playwright install chromium",
+    "test:uninstall": "composer test:uninstall",
     "test:e2e": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts",
     "test:e2e:smoke": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --grep @smoke",
     "test:e2e:journey": "php tests/support/preflight.php && playwright test -c tests/e2e/playwright.config.ts --grep @journey",
@@ -53,14 +54,14 @@
     "@rsbuild/core": "^1.6.2",
     "@rsbuild/plugin-react": "^1.4.6",
     "@rsdoctor/rspack-plugin": "^1.5.12",
-    "@rspack/cli": "^1.6.2",
-    "@rspack/core": "^1.6.2",
+    "@rspack/cli": "1.6.5",
+    "@rspack/core": "1.6.5",
     "@storybook/addon-a11y": "^10.4.2",
     "@storybook/addon-docs": "^10.4.2",
     "@storybook/addon-themes": "^10.4.2",
     "@svgr/webpack": "^8.1.0",
     "@swc/helpers": "^0.5.17",
-    "@swc/plugin-emotion": "^12.0.0",
+    "@swc/plugin-emotion": "12.0.0",
     "@types/alpinejs": "^3.13.11",
     "@types/alpinejs__collapse": "^3.13.4",
     "@types/alpinejs__focus": "^3.13.4",
@@ -138,6 +139,6 @@
     "stylis-plugin-rtl": "^2.1.1",
     "typescript": "5.8.3",
     "uuid": "^9.0.1",
-    "vanilla-calendar-pro": "^3.0.5"
+    "vanilla-calendar-pro": "3.0.5"
   }
 }

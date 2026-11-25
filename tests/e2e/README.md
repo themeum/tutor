@@ -10,7 +10,7 @@ For the full explanation of the databases, installer, seeder, Playwright lifecyc
 pnpm test:setup           # installer prompt, then Chromium
 ```
 
-`test:setup` runs the installer, which previews the changes and asks before modifying `wp-config.php`, then installs Chromium. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. `composer test:uninstall` restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
+`test:setup` runs the installer, which previews the changes and asks before modifying `wp-config.php`, then installs Chromium. Pass `--yes` to the installer (`composer test:install -- --yes`) to apply without prompting or `--dry-run` to preview only. `pnpm test:uninstall` (or `composer test:uninstall`) restores `wp-config.php.bak`, removes the mu-plugin links, and drops both test databases.
 
 ## Commands
 

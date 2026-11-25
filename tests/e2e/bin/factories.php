@@ -721,6 +721,19 @@ function e2e_factory_wc_product( array $input ): array {
 		WP_CLI::error( 'Could not create WooCommerce product.' );
 	}
 
+	if ( ! empty( $input['author'] ) ) {
+		$author = get_user_by( 'login', (string) $input['author'] );
+		if ( ! $author ) {
+			WP_CLI::error( sprintf( 'Author user "%s" not found.', $input['author'] ) );
+		}
+		wp_update_post(
+			array(
+				'ID'          => $product_id,
+				'post_author' => $author->ID,
+			)
+		);
+	}
+
 	return array(
 		'productId' => (int) $product_id,
 		'title'     => $product->get_name(),

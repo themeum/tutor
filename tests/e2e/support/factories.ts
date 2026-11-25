@@ -377,7 +377,9 @@ export interface WcProductFactoryResult {
   price: number;
 }
 
-export function createWcProduct(input: { title?: string; price?: number } = {}): WcProductFactoryResult {
+export function createWcProduct(
+  input: { title?: string; price?: number; author?: string } = {},
+): WcProductFactoryResult {
   return runFactory<WcProductFactoryResult>('wc_product', input as FactoryInput);
 }
 
