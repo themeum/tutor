@@ -2991,42 +2991,23 @@ class Quiz {
 	}
 
 	/**
-	 * Get True/False question option metadata (translated title, icon, is_true flag).
+	 * Get True/False question option translated title.
 	 *
-	 * @param array|object $answer Answer data.
+	 * @param array|object|string $answer Answer data or title string.
 	 *
-	 * @return array{title: string, icon: string|null, is_true: bool, is_false: bool}
+	 * @return string
 	 *
 	 * @since 4.3.0
 	 */
-	public static function get_true_false_meta( $answer ): array {
-		$raw_title = is_array( $answer ) ? ( $answer['answer_title'] ?? '' ) : ( $answer->answer_title ?? '' );
-
-		$raw_title  = wp_unslash( (string) $raw_title );
+	public static function get_true_false_title( $answer ): string {
+		$raw_title  = is_array( $answer ) ? ( $answer['answer_title'] ?? '' ) : ( is_object( $answer ) ? ( $answer->answer_title ?? '' ) : (string) $answer );
+		$raw_title  = wp_unslash( $raw_title );
 		$normalized = strtolower( trim( $raw_title ) );
 
-		$translated_true  = strtolower( trim( tutor_utils()->translate_dynamic_text( 'true' ) ) );
-		$translated_false = strtolower( trim( tutor_utils()->translate_dynamic_text( 'false' ) ) );
-
-		$is_true  = 'true' === $normalized || $normalized === $translated_true;
-		$is_false = 'false' === $normalized || $normalized === $translated_false;
-
-		$title = $raw_title;
-		$icon  = null;
-
-		if ( $is_true ) {
-			$title = tutor_utils()->translate_dynamic_text( 'true' );
-			$icon  = Icon::CHECK_2;
-		} elseif ( $is_false ) {
-			$title = tutor_utils()->translate_dynamic_text( 'false' );
-			$icon  = Icon::CROSS;
+		if ( 'true' === $normalized || 'false' === $normalized ) {
+			return tutor_utils()->translate_dynamic_text( $normalized );
 		}
 
-		return array(
-			'title'    => $title,
-			'icon'     => $icon,
-			'is_true'  => $is_true,
-			'is_false' => $is_false,
-		);
+		return $raw_title;
 	}
 }

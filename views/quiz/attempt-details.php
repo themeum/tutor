@@ -466,10 +466,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 											$answer_titles = array_map( 'stripslashes', $answer_titles );
 											$answer_titles = array_map(
-												function ( $title ) {
-													$meta = Quiz::get_true_false_meta( array( 'answer_title' => $title ) );
-													return $meta['title'];
-												},
+												array( 'TUTOR\Quiz', 'get_true_false_title' ),
 												$answer_titles
 											);
 
@@ -613,10 +610,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$answer->question_id
 													)
 												);
-												$meta = Quiz::get_true_false_meta( array( 'answer_title' => $correct_answer ) );
-
 												echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-														esc_html( $meta['title'] ) .
+														esc_html( Quiz::get_true_false_title( $correct_answer ) ) .
 													'</span>';
 											}
 

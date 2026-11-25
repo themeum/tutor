@@ -478,35 +478,13 @@ export const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], de
   };
 };
 
-export const getTrueFalseOptionMeta = (
-  answer?: {
-    answer_title?: string;
-  } | null,
-) => {
-  const rawTitle = answer?.answer_title ?? '';
-  const normalized = rawTitle.trim().toLowerCase();
-
-  const currentTranslatedTrue = __('True', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
-  const currentTranslatedFalse = __('False', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
-
-  const isTrue = normalized === 'true' || normalized === currentTranslatedTrue;
-  const isFalse = normalized === 'false' || normalized === currentTranslatedFalse;
-
-  let label = rawTitle;
-  let icon: 'check2' | 'cross' | null = null;
-
-  if (isTrue) {
-    label = __('True', __TUTOR_TEXT_DOMAIN__);
-    icon = 'check2';
-  } else if (isFalse) {
-    label = __('False', __TUTOR_TEXT_DOMAIN__);
-    icon = 'cross';
+export const getTrueFalseOptionTitle = (title?: string): string => {
+  const normalized = title?.trim().toLowerCase();
+  if (normalized === 'true') {
+    return __('True', __TUTOR_TEXT_DOMAIN__);
   }
-
-  return {
-    label,
-    icon,
-    isTrue,
-    isFalse,
-  };
+  if (normalized === 'false') {
+    return __('False', __TUTOR_TEXT_DOMAIN__);
+  }
+  return title ?? '';
 };
