@@ -340,20 +340,21 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 4.2.2 - 24 Nov, 2026
 
-Update: Display WordPress display names instead of usernames in Tutor LMS assignments, comments, and Q&A.
+New: Added a Membership tab to display all courses purchased through membership plans.
+Update: Assignments, comments, and Q&A now show users' WordPress display names instead of their usernames.
 Update: Improved translation coverage and compatibility.
-Update: Improved overall performance and strengthened security measures.
-Fix: Resolved an issue where range-type questions became inaccessible and prevented users from exiting quizzes after switching from the Modern to Legacy layout. (Pro)
-Fix: Resolved an issue where instructor analytics displayed the wrong student profile page. (Pro)
+Update: Optimized overall performance and implemented additional security enhancements.
+Fix: Fixed an issue where Range-type questions became inaccessible and prevented learners from exiting quizzes after switching from the Modern to Legacy layout. (Pro)
+Fix: Fixed incorrect learner profile links in Instructor Analytics. (Pro)
 Fix: Corrected inaccurate refund and discount totals in the Frontend Analytics graph. (Pro)
-Fix: Prevented unapproved and blocked instructors from submitting withdrawal requests and accessing restricted dashboard sections. (Pro)
-Fix: Resolved an issue where coupon minimum requirements could be bypassed during checkout.
-Fix: Resolved a DivisionByZeroError when processing $0 orders.
-Fix: Resolved an issue where clearing a logged-in device did not work on the WordPress login page. (Pro)
-Fix: Resolved category text causing layout misalignment.
-Fix: Resolved an issue where quizzes retained the previous Modern mode time limit after switching to Legacy mode and setting a new time limit in the Course Builder.
-Fix: Resolved an issue where quiz question text wrapped onto two lines unexpectedly.
-Fix: Corrected the "Waiting Since" time displayed in the Q&A list.
+Fix: Prevented unapproved and blocked instructors from submitting withdrawal requests or accessing restricted dashboard sections. (Pro)
+Fix: Fixed an issue where minimum coupon requirements could be bypassed during checkout.
+Fix: Fixed a division-by-zero error that occurred when processing orders with a total of $0.
+Fix: Fixed an issue where clearing a logged-in device from the WordPress login page did not work as expected. (Pro)
+Fix: Fixed a layout alignment issue caused by category text.
+Fix: Fixed an issue where quizzes retained their previous time limit after switching from Modern to Legacy mode and setting a new time limit in the Course Builder.
+Fix: Fixed unexpected line wrapping in quiz question text.
+Fix: Corrected the inaccurate "Waiting Since" time displayed in the Q&A list.
 
 = 4.2.1 - 09 Nov, 2026
 
