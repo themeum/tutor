@@ -474,11 +474,80 @@ class CurriculumAbilities {
 				if ( Registrar::is_read_only() ) {
 					return false;
 				}
-				$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', absint( $input['quiz_id'] ?? 0 ) );
-				return $course_id && Permissions::can_edit_course( $course_id );
+				$quiz_id = absint( $input['quiz_id'] ?? 0 );
+				return $quiz_id && tutor_utils()->can_user_manage( 'quiz', $quiz_id );
 			},
 			array( $this, 'add_quiz_question' ),
 			self::WRITE_HINTS
+		);
+
+		AbilityFactory::tool(
+			'tutor-mcp/update-quiz-question',
+			'tutor-mcp-curriculum',
+			__( 'Update Quiz Question', 'tutor' ),
+			__( 'Update an existing quiz question (title, type, mark, answers). Same allowlist as add-quiz-question. Passing question_answers replaces all answers.', 'tutor' ),
+			array(
+				'type'       => 'object',
+				'required'   => array( 'question_id' ),
+				'properties' => array(
+					'question_id'      => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+					'question_title'   => array( 'type' => 'string' ),
+					'question_type'    => array(
+						'type' => 'string',
+						'enum' => self::allowed_quiz_question_types(),
+					),
+					'question_mark'    => array( 'type' => 'number' ),
+					'question_answers' => array( 'type' => 'array' ),
+				),
+			),
+			static function ( array $input ): bool {
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				$question = QuizModel::get_question( absint( $input['question_id'] ?? 0 ) );
+				if ( ! $question || empty( $question->quiz_id ) ) {
+					return false;
+				}
+				return (bool) tutor_utils()->can_user_manage( 'quiz', (int) $question->quiz_id );
+			},
+			array( $this, 'update_quiz_question' ),
+			self::WRITE_HINTS
+		);
+
+		AbilityFactory::tool(
+			'tutor-mcp/delete-quiz-question',
+			'tutor-mcp-curriculum',
+			__( 'Delete Quiz Question', 'tutor' ),
+			__( 'Delete one quiz question and its answers (same as course builder). Requires confirm=true.', 'tutor' ),
+			array(
+				'type'       => 'object',
+				'required'   => array( 'question_id', 'confirm' ),
+				'properties' => array(
+					'question_id' => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+					'confirm'     => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
+			),
+			static function ( array $input ): bool {
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				$question = QuizModel::get_question( absint( $input['question_id'] ?? 0 ) );
+				if ( ! $question || empty( $question->quiz_id ) ) {
+					return false;
+				}
+				return (bool) tutor_utils()->can_user_manage( 'quiz', (int) $question->quiz_id );
+			},
+			array( $this, 'delete_quiz_question' ),
+			self::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -1099,6 +1168,161 @@ class CurriculumAbilities {
 		return array(
 			'quiz_id' => $quiz_id,
 			'added'   => true,
+		);
+	}
+
+	/**
+	 * Update an existing quiz question via QuizBuilder::save_questions().
+	 *
+	 * When question_answers is provided, existing answers are replaced
+	 * (same idea as Pro REST QuizQuestionController::update).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Input.
+	 * @return array|\WP_Error
+	 */
+	public function update_quiz_question( array $input ) {
+		$deny = Permissions::allow_write();
+		if ( is_wp_error( $deny ) ) {
+			return $deny;
+		}
+
+		$question_id = absint( $input['question_id'] ?? 0 );
+		$existing    = QuizModel::get_question( $question_id );
+		if ( ! $existing || empty( $existing->quiz_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Question not found.', 'tutor' ) );
+		}
+
+		$quiz_id = (int) $existing->quiz_id;
+		if ( tutor()->quiz_post_type !== get_post_type( $quiz_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Quiz not found.', 'tutor' ) );
+		}
+
+		$type = array_key_exists( 'question_type', $input )
+			? sanitize_text_field( (string) $input['question_type'] )
+			: sanitize_text_field( (string) ( $existing->question_type ?? QuizModel::QUESTION_TYPE_TRUE_FALSE ) );
+		if ( ! in_array( $type, self::allowed_quiz_question_types(), true ) ) {
+			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid or unsupported question type for MCP.', 'tutor' ) );
+		}
+
+		$question_mark = array_key_exists( 'question_mark', $input )
+			? (float) $input['question_mark']
+			: (float) ( $existing->question_mark ?? 1 );
+
+		$existing_settings = maybe_unserialize( $existing->question_settings ?? '' );
+		if ( ! is_array( $existing_settings ) ) {
+			$existing_settings = Quiz::get_default_question_settings( $type );
+		}
+		$existing_settings['question_mark'] = $question_mark;
+
+		$question = array(
+			'question_id'             => $question_id,
+			'question_title'          => array_key_exists( 'question_title', $input )
+				? sanitize_text_field( (string) $input['question_title'] )
+				: sanitize_text_field( (string) ( $existing->question_title ?? '' ) ),
+			'question_description'    => (string) ( $existing->question_description ?? '' ),
+			'question_type'           => $type,
+			'question_mark'           => $question_mark,
+			'question_settings'       => $existing_settings,
+			QuizBuilder::TRACKING_KEY => QuizBuilder::FLAG_UPDATE,
+			'question_answers'        => array(),
+		);
+
+		$builder            = new QuizBuilder( false );
+		$replace_answers    = array_key_exists( 'question_answers', $input ) && is_array( $input['question_answers'] );
+		$deleted_answer_ids = array();
+
+		if ( $replace_answers ) {
+			$current_answers = QuizModel::get_question_answers( $question_id, (string) ( $existing->question_type ?? '' ) );
+			foreach ( $current_answers as $answer_row ) {
+				$deleted_answer_ids[] = (int) ( $answer_row->answer_id ?? 0 );
+			}
+			$deleted_answer_ids = array_values( array_filter( $deleted_answer_ids ) );
+
+			$answers = $input['question_answers'];
+			foreach ( $answers as $index => $answer ) {
+				if ( ! is_array( $answer ) ) {
+					unset( $answers[ $index ] );
+					continue;
+				}
+				$answer[ QuizBuilder::TRACKING_KEY ] = QuizBuilder::FLAG_NEW;
+				unset( $answer['answer_id'] );
+				$answers[ $index ] = $answer;
+			}
+			$question['question_answers'] = array_values( $answers );
+		}
+
+		try {
+			if ( $deleted_answer_ids ) {
+				$builder->handle_delete( array(), $deleted_answer_ids );
+			}
+			$builder->save_questions( $quiz_id, array( $question ) );
+		} catch ( \Throwable $th ) {
+			return new \WP_Error( 'tutor_mcp_quiz_failed', $th->getMessage() );
+		}
+
+		return array(
+			'question_id' => $question_id,
+			'quiz_id'     => $quiz_id,
+			'updated'     => true,
+		);
+	}
+
+	/**
+	 * Delete one quiz question via QuizBuilder::handle_delete().
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Input.
+	 * @return array|\WP_Error
+	 */
+	public function delete_quiz_question( array $input ) {
+		$deny = Permissions::allow_write();
+		if ( is_wp_error( $deny ) ) {
+			return $deny;
+		}
+
+		if ( empty( $input['confirm'] ) ) {
+			return new \WP_Error( 'tutor_mcp_confirm_required', __( 'Deleting requires confirm=true.', 'tutor' ) );
+		}
+
+		$question_id = absint( $input['question_id'] ?? 0 );
+		$existing    = QuizModel::get_question( $question_id );
+		if ( ! $existing || empty( $existing->quiz_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Question not found.', 'tutor' ) );
+		}
+
+		$quiz_id = (int) $existing->quiz_id;
+		if ( tutor()->quiz_post_type !== get_post_type( $quiz_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Quiz not found.', 'tutor' ) );
+		}
+
+		$answer_ids = array();
+		$answers    = QuizModel::get_question_answers( $question_id, (string) ( $existing->question_type ?? '' ) );
+		foreach ( $answers as $answer_row ) {
+			$answer_ids[] = (int) ( $answer_row->answer_id ?? 0 );
+		}
+		$answer_ids = array_values( array_filter( $answer_ids ) );
+
+		$builder = new QuizBuilder( false );
+		$builder->handle_delete( array( $question_id ), $answer_ids );
+
+		$still_exists = QuizModel::get_question( $question_id );
+		if ( $still_exists ) {
+			/*
+			 * Content-bank linked rows keep content_id set; builder only deletes
+			 * content_id IS NULL. Fall back to Pro REST-style hard delete.
+			 */
+			QueryHelper::delete( 'tutor_quiz_question_answers', array( 'belongs_question_id' => $question_id ) );
+			QueryHelper::delete( 'tutor_quiz_questions', array( 'question_id' => $question_id ) );
+			do_action( 'tutor_deleted_quiz_question_ids', array( $question_id ) );
+		}
+
+		return array(
+			'question_id' => $question_id,
+			'quiz_id'     => $quiz_id,
+			'deleted'     => true,
 		);
 	}
 

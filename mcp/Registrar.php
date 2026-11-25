@@ -74,6 +74,8 @@ class Registrar {
 		'tutor-mcp/create-quiz',
 		'tutor-mcp/update-quiz',
 		'tutor-mcp/add-quiz-question',
+		'tutor-mcp/update-quiz-question',
+		'tutor-mcp/delete-quiz-question',
 		'tutor-mcp/delete-quiz',
 		// Quiz attempts.
 		'tutor-mcp/list-quiz-attempts',
@@ -459,6 +461,8 @@ class Registrar {
 							$t( 'tutor-mcp/create-quiz', __( 'Create quiz', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-quiz', __( 'Update quiz', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/add-quiz-question', __( 'Add quiz question', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-quiz-question', __( 'Update quiz question', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/delete-quiz-question', __( 'Delete quiz question', 'tutor' ), 'destructive' ),
 							$t( 'tutor-mcp/delete-quiz', __( 'Delete quiz', 'tutor' ), 'destructive' ),
 						),
 					),
