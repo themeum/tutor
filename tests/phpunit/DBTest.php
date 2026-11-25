@@ -1612,4 +1612,765 @@ class DBTest extends \WP_UnitTestCase {
 		DB::set_db( null );
 		$this->assertSame( $wpdb, $method->invoke( null ) );
 	}
+
+	// ─── prepare_table_name & prefixing ─────────────────────────────────────
+
+	/**
+	 * Test DB::get_table_prefix.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return void
+	 */
+	public function test_get_table_prefix() {
+		global $wpdb;
+
+		$this->assertSame( $wpdb->prefix, DB::get_table_prefix() );
+
+		$orig_prefix = $wpdb->prefix;
+		try {
+			$wpdb->prefix = 'wp_custom_';
+			$this->assertSame( 'wp_custom_', DB::get_table_prefix() );
+		} finally {
+			$wpdb->prefix = $orig_prefix;
+		}
+	}
+
+	// ─── Subquery Tests ─────────────────────────────────────────────────────
+
+	/**
+	 * Test WHERE comparison operators with subqueries.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_where_subquery_comparison() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// 3-argument syntax with closure.
+		$sql = DB::table( 'tutor_orders' )
+			->where(
+				'total_price',
+				'>',
+				function ( $q ) {
+					$q->from( 'tutor_orders' )->select_raw( 'AVG(total_price)' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE total_price > (SELECT AVG(total_price) FROM {$prefix}tutor_orders)";
+		$this->assertSame( $expected, $sql );
+
+		// 3-argument syntax with DB instance.
+		$sub = DB::table( 'tutor_orders' )->select_raw( 'AVG(total_price)' );
+		$sql = DB::table( 'tutor_orders' )
+			->where( 'total_price', '>=', $sub )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE total_price >= (SELECT AVG(total_price) FROM {$prefix}tutor_orders)";
+		$this->assertSame( $expected, $sql );
+
+		// 2-argument syntax with closure (defaults operator to '=').
+		$sql = DB::table( 'users' )
+			->where(
+				'id',
+				function ( $q ) {
+					$q->from( 'posts' )->select( 'post_author' )->where( 'id', 1 );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users WHERE id = (SELECT post_author FROM {$prefix}posts WHERE id = 1)";
+		$this->assertSame( $expected, $sql );
+
+		// or_where with subquery.
+		$sql = DB::table( 'tutor_orders' )
+			->where( 'total_price', '>', $sub )
+			->or_where(
+				'total_price',
+				'<',
+				function ( $q ) {
+					$q->from( 'tutor_orders' )->select_raw( 'MIN(total_price)' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE total_price > (SELECT AVG(total_price) FROM {$prefix}tutor_orders) OR total_price < (SELECT MIN(total_price) FROM {$prefix}tutor_orders)";
+		$this->assertSame( $expected, $sql );
+
+		// Array conditions with subquery.
+		$sql = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'total_price' => $sub,
+					array( 'total_price', '>=', $sub ),
+				)
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE total_price = (SELECT AVG(total_price) FROM {$prefix}tutor_orders) AND total_price >= (SELECT AVG(total_price) FROM {$prefix}tutor_orders)";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test WHERE IN and WHERE NOT IN with subqueries.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_where_in_and_not_in_subquery() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// where_in with closure.
+		$sql = DB::table( 'users' )
+			->where_in(
+				'id',
+				function ( $q ) {
+					$q->from( 'tutor_orders' )
+						->select( 'user_id' )
+						->where( 'order_status', 'completed' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users WHERE id IN (SELECT user_id FROM {$prefix}tutor_orders WHERE order_status = 'completed')";
+		$this->assertSame( $expected, $sql );
+
+		// where_in with DB instance.
+		$sub = DB::table( 'tutor_orders' )
+			->select( 'user_id' )
+			->where( 'order_status', 'completed' );
+
+		$sql = DB::table( 'users' )
+			->where_in( 'id', $sub )
+			->to_sql();
+
+		$this->assertSame( $expected, $sql );
+
+		// where_not_in with closure.
+		$sql = DB::table( 'users' )
+			->where_not_in(
+				'id',
+				function ( $q ) {
+					$q->from( 'tutor_orders' )->select( 'user_id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users WHERE id NOT IN (SELECT user_id FROM {$prefix}tutor_orders)";
+		$this->assertSame( $expected, $sql );
+
+		// or_where_in and or_where_not_in.
+		$sql = DB::table( 'users' )
+			->where( 'user_status', 0 )
+			->or_where_in( 'id', $sub )
+			->or_where_not_in(
+				'id',
+				function ( $q ) {
+					$q->from( 'posts' )->select( 'post_author' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users WHERE user_status = 0 OR id IN (SELECT user_id FROM {$prefix}tutor_orders WHERE order_status = 'completed') OR id NOT IN (SELECT post_author FROM {$prefix}posts)";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test WHERE EXISTS and WHERE NOT EXISTS subqueries.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_where_exists_and_not_exists() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// where_exists with closure.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->where_exists(
+				function ( $q ) {
+					$q->from( 'tutor_orders', 'o' )
+						->where_column( 'o.user_id', '=', 'u.id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u WHERE EXISTS (SELECT * FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id)";
+		$this->assertSame( $expected, $sql );
+
+		// where_not_exists with DB instance.
+		$sub = DB::table( 'tutor_orders', 'o' )
+			->where_column( 'o.user_id', '=', 'u.id' );
+
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->where_not_exists( $sub )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u WHERE NOT EXISTS (SELECT * FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id)";
+		$this->assertSame( $expected, $sql );
+
+		// or_where_exists and or_where_not_exists.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->where( 'u.status', 'active' )
+			->or_where_exists( $sub )
+			->or_where_not_exists(
+				function ( $q ) {
+					$q->from( 'posts' )->where_column( 'post_author', '=', 'u.id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u WHERE u.status = 'active' OR EXISTS (SELECT * FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) OR NOT EXISTS (SELECT * FROM {$prefix}posts WHERE post_author = u.id)";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test SELECT subquery via select_sub().
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_select_subquery() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// select_sub with closure.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->select( 'u.id', 'u.user_login' )
+			->select_sub(
+				function ( $q ) {
+					$q->from( 'tutor_orders', 'o' )
+						->select_raw( 'COUNT(*)' )
+						->where_column( 'o.user_id', '=', 'u.id' );
+				},
+				'order_count'
+			)
+			->to_sql();
+
+		$expected = "SELECT u.id, u.user_login, (SELECT COUNT(*) FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) AS order_count FROM {$prefix}users AS u";
+		$this->assertSame( $expected, $sql );
+
+		// select_sub with DB instance.
+		$sub = DB::table( 'tutor_orders' )->select_raw( 'MAX(total_price)' );
+		$sql = DB::table( 'users' )
+			->select( 'id' )
+			->select_sub( $sub, 'max_spent' )
+			->to_sql();
+
+		$expected = "SELECT id, (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS max_spent FROM {$prefix}users";
+		$this->assertSame( $expected, $sql );
+
+		// Invalid alias rejection.
+		$sql = DB::table( 'users' )
+			->select( 'id' )
+			->select_sub( $sub, 'invalid alias;--' )
+			->to_sql();
+
+		$this->assertSame( "SELECT id FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test FROM derived table subquery.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_from_subquery() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// DB::table( Closure, alias )
+		$sql = DB::table(
+			function ( $q ) {
+				$q->from( 'tutor_orders' )->where( 'order_status', 'completed' );
+			},
+			'completed_orders'
+		)
+			->select( 'id', 'total_price' )
+			->to_sql();
+
+		$expected = "SELECT id, total_price FROM (SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed') AS completed_orders";
+		$this->assertSame( $expected, $sql );
+
+		// DB::table( DB, alias )
+		$sub = DB::table( 'users' )->where( 'user_status', 0 );
+		$sql = DB::table( $sub, 'active_users' )
+			->select( 'id', 'user_email' )
+			->to_sql();
+
+		$expected = "SELECT id, user_email FROM (SELECT * FROM {$prefix}users WHERE user_status = 0) AS active_users";
+		$this->assertSame( $expected, $sql );
+
+		// from_sub() method on existing query.
+		$sql = DB::table( 'dummy' )
+			->from_sub( $sub, 'active_users' )
+			->to_sql();
+
+		$expected = "SELECT * FROM (SELECT * FROM {$prefix}users WHERE user_status = 0) AS active_users";
+		$this->assertSame( $expected, $sql );
+
+		// Invalid alias rejection.
+		$sql = DB::table( 'users' )
+			->from_sub( $sub, 'invalid alias;--' )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test JOIN subqueries (join_sub, left_join_sub, right_join_sub).
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_join_subquery() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		$sub = DB::table( 'tutor_orders' )
+			->select( 'user_id' )
+			->select_raw( 'SUM(total_price) as total_spent' )
+			->group_by( 'user_id' );
+
+		// INNER JOIN subquery with 4 arguments.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->select( 'u.id', 's.total_spent' )
+			->join_sub( $sub, 's', 'u.id', '=', 's.user_id' )
+			->to_sql();
+
+		$expected = "SELECT u.id, s.total_spent FROM {$prefix}users AS u INNER JOIN (SELECT user_id, SUM(total_price) as total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id";
+		$this->assertSame( $expected, $sql );
+
+		// LEFT JOIN subquery with 4 arguments.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->select( 'u.id', 's.total_spent' )
+			->left_join_sub( $sub, 's', 'u.id', '=', 's.user_id' )
+			->to_sql();
+
+		$expected = "SELECT u.id, s.total_spent FROM {$prefix}users AS u LEFT JOIN (SELECT user_id, SUM(total_price) as total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id";
+		$this->assertSame( $expected, $sql );
+
+		// RIGHT JOIN subquery with 4 arguments.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->select( 'u.id', 's.total_spent' )
+			->right_join_sub( $sub, 's', 'u.id', '=', 's.user_id' )
+			->to_sql();
+
+		$expected = "SELECT u.id, s.total_spent FROM {$prefix}users AS u RIGHT JOIN (SELECT user_id, SUM(total_price) as total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id";
+		$this->assertSame( $expected, $sql );
+
+		// JOIN subquery with closure ON condition.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->left_join_sub(
+				$sub,
+				's',
+				function ( $join ) {
+					$join->on( 'u.id', '=', 's.user_id' )
+						->on( 's.total_spent', '>', 'u.id' );
+				}
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u LEFT JOIN (SELECT user_id, SUM(total_price) as total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id AND s.total_spent > u.id";
+		$this->assertSame( $expected, $sql );
+
+		// Invalid alias rejection.
+		$sql = DB::table( 'users' )
+			->join_sub( $sub, 'invalid alias;--', 'u.id', '=', 's.user_id' )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test nested subqueries and live database execution with subqueries.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_nested_subqueries_and_live_execution() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Nested subquery: WHERE IN (subquery with WHERE IN (subquery)).
+		$inner  = DB::table( 'tutor_orders' )->select( 'user_id' )->where( 'total_price', '>', 50 );
+		$middle = DB::table( 'users' )->select( 'id' )->where_in( 'id', $inner );
+		$outer  = DB::table( 'posts' )->where_in( 'post_author', $middle )->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}posts WHERE post_author IN (SELECT id FROM {$prefix}users WHERE id IN (SELECT user_id FROM {$prefix}tutor_orders WHERE total_price > 50))";
+		$this->assertSame( $expected, $outer );
+
+		// Live execution test with options table.
+		$key1 = 'subquery_test_key_1_' . time() . '_' . wp_rand( 1000, 9999 );
+		$key2 = 'subquery_test_key_2_' . time() . '_' . wp_rand( 1000, 9999 );
+
+		DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $key1,
+				'option_value' => 'active_val',
+				'autoload'     => 'no',
+			)
+		);
+		DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $key2,
+				'option_value' => 'inactive_val',
+				'autoload'     => 'no',
+			)
+		);
+
+		// Query using subquery.
+		$result = DB::table( 'options' )
+			->where_in(
+				'option_name',
+				function ( $q ) use ( $key1 ) {
+					$q->from( 'options' )
+						->select( 'option_name' )
+						->where( 'option_name', $key1 );
+				}
+			)
+			->first();
+
+		$this->assertNotNull( $result );
+		$this->assertSame( $key1, $result->option_name );
+		$this->assertSame( 'active_val', $result->option_value );
+
+		// Clean up.
+		DB::table( 'options' )->where( 'option_name', $key1 )->delete();
+		DB::table( 'options' )->where( 'option_name', $key2 )->delete();
+	}
+
+	/**
+	 * Test empty, uninitialized, and invalid subquery inputs and operators.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_subquery_empty_and_invalid_inputs() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$empty_closure = function ( $q ) {
+			// Intentionally left empty.
+		};
+		$empty_db = new DB();
+
+		// Empty closure and uninitialized DB instance should be ignored.
+		$sql = DB::table( 'users' )
+			->where_in( 'id', $empty_closure )
+			->where_not_in( 'id', $empty_db )
+			->where_exists( $empty_closure )
+			->where_not_exists( $empty_db )
+			->select_sub( $empty_closure, 'empty_col' )
+			->join_sub( $empty_closure, 's', 'users.id', '=', 's.id' )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+
+		// Non-Closure / non-DB values passed to subquery methods should be ignored.
+		$sql = DB::table( 'users' )
+			->where_exists( 'SELECT 1' )
+			->select_sub( 123, 'num_col' )
+			->from_sub( 'invalid', 'sub' )
+			->join_sub( 'invalid', 's', 'users.id', '=', 's.id' )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+
+		// Invalid operators for subquery comparison in where() should be rejected.
+		$valid_sub = DB::table( 'tutor_orders' )->select( 'id' );
+		$sql       = DB::table( 'users' )
+			->where( 'id', 'BETWEEN', $valid_sub )
+			->where( 'id', 'IS', $valid_sub )
+			->where( 'id', 'INVALID_OP', $valid_sub )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test from(), DB::table() with subquery without alias, and scalar subqueries.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_from_and_table_subquery_chaining() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sub    = DB::table( 'users' )->where( 'user_status', 0 );
+
+		// DB::table( $sub ) chained with ->as( 'alias' ).
+		$sql = DB::table( $sub )->as( 'active_users' )->select( 'id' )->to_sql();
+		$this->assertSame( "SELECT id FROM (SELECT * FROM {$prefix}users WHERE user_status = 0) AS active_users", $sql );
+
+		// Direct from() with table and alias.
+		$sql = ( new DB() )->from( 'tutor_orders', 'o' )->select( 'o.id' )->to_sql();
+		$this->assertSame( "SELECT o.id FROM {$prefix}tutor_orders AS o", $sql );
+
+		// Non-string table safely ignored.
+		$sql = DB::table( new \stdClass() )->to_sql();
+		$this->assertSame( 'SELECT *', $sql );
+
+		// Scalar subquery without FROM clause.
+		$sql = DB::table( 'users' )
+			->select_sub(
+				function ( $q ) {
+					$q->select_raw( '1' );
+				},
+				'one_val'
+			)
+			->to_sql();
+
+		$this->assertSame( "SELECT (SELECT 1) AS one_val FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test where_column() and or_where_column().
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_where_column_and_or_where_column() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// 2-arg and 3-arg where_column and or_where_column.
+		$sql = DB::table( 'posts' )
+			->where_column( 'post_modified', 'post_date' )
+			->where_column( 'post_modified_gmt', '>', 'post_date_gmt' )
+			->or_where_column( 'post_author', 'post_parent' )
+			->or_where_column( 'ID', '!=', 'post_parent' )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}posts WHERE post_modified = post_date AND post_modified_gmt > post_date_gmt OR post_author = post_parent OR ID != post_parent";
+		$this->assertSame( $expected, $sql );
+
+		// Invalid columns and non-comparison operators should be rejected.
+		$sql = DB::table( 'posts' )
+			->where_column( '1=1; --', '=', 'post_date' )
+			->where_column( 'post_date', '=', '1=1; --' )
+			->where_column( 'post_date', 'BETWEEN', 'post_modified' )
+			->where_column( 'post_date', 'IN', 'post_modified' )
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}posts", $sql );
+	}
+
+	/**
+	 * Test subquery value escaping, or_where array support, and DELETE with subquery.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_subquery_escaping_and_mutations() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Subquery with SQL injection payload and LIKE inside where_in().
+		$sql = DB::table( 'users' )
+			->where_in(
+				'user_login',
+				function ( $q ) {
+					$q->from( 'usermeta' )
+						->select( 'meta_key' )
+						->where( 'meta_value', "val' OR '1'='1" );
+				}
+			)
+			->to_sql();
+
+		$this->assertSame(
+			"SELECT * FROM {$prefix}users WHERE user_login IN (SELECT meta_key FROM {$prefix}usermeta WHERE meta_value = 'val\' OR \'1\'=\'1')",
+			$sql
+		);
+
+		// or_where() with array conditions.
+		$sql = DB::table( 'users' )
+			->where( 'user_status', 0 )
+			->or_where(
+				array(
+					'user_login' => 'admin',
+					array( 'ID', '>', 5 ),
+				)
+			)
+			->to_sql();
+
+		$this->assertSame(
+			"SELECT * FROM {$prefix}users WHERE user_status = 0 OR user_login = 'admin' OR ID > 5",
+			$sql
+		);
+
+		// Live DELETE with subquery.
+		$key = 'subquery_del_test_' . time() . '_' . wp_rand( 1000, 9999 );
+		DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $key,
+				'option_value' => 'to_delete',
+				'autoload'     => 'no',
+			)
+		);
+
+		$deleted = DB::table( 'options' )
+			->where_in(
+				'option_name',
+				function ( $q ) use ( $key ) {
+					$q->from(
+						function ( $inner ) use ( $key ) {
+							$inner->from( 'options' )
+								->select( 'option_name' )
+								->where( 'option_name', $key );
+						},
+						'sub'
+					)->select( 'option_name' );
+				}
+			)
+			->delete();
+
+		$this->assertSame( 1, $deleted );
+		$this->assertNull( DB::table( 'options' )->where( 'option_name', $key )->first() );
+	}
+
+	/**
+	 * Test left-hand-side subqueries in where() and or_where().
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_where_lhs_subquery() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// 3-arg LHS subquery with Closure.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->where(
+				function ( $q ) {
+					$q->from( 'tutor_orders', 'o' )
+						->select_raw( 'COUNT(*)' )
+						->where_column( 'o.user_id', '=', 'u.id' );
+				},
+				'>',
+				5
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u WHERE (SELECT COUNT(*) FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) > 5";
+		$this->assertSame( $expected, $sql );
+
+		// 2-arg LHS subquery with DB instance (defaults to '=') and or_where.
+		$sub = DB::table( 'tutor_orders', 'o' )
+			->select( 'o.order_status' )
+			->where_column( 'o.user_id', 'u.id' )
+			->limit( 1 );
+
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->where( $sub, 'completed' )
+			->or_where( $sub, '!=', 'cancelled' )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u WHERE (SELECT o.order_status FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id LIMIT 1 OFFSET 0) = 'completed' OR (SELECT o.order_status FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id LIMIT 1 OFFSET 0) != 'cancelled'";
+		$this->assertSame( $expected, $sql );
+
+		// 1-arg Closure or empty LHS subquery should be safely ignored.
+		$sql = DB::table( 'users' )
+			->where(
+				function ( $q ) {
+					$q->from( 'tutor_orders' );
+				}
+			)
+			->where(
+				function ( $q ) {
+					// Empty subquery.
+				},
+				'=',
+				1
+			)
+			->to_sql();
+
+		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+	}
+
+	/**
+	 * Test select() array shorthand for columns and subqueries, and cross_join_sub() / join_sub() $type.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return void
+	 */
+	public function test_select_array_subquery_and_cross_join_sub() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+		$sub    = DB::table( 'tutor_orders' )->select_raw( 'MAX(total_price)' );
+
+		// select() with array of columns and alias => subquery pairs.
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->select(
+				array( 'u.id', 'u.user_login' ),
+				array(
+					'order_count' => function ( $q ) {
+						$q->from( 'tutor_orders', 'o' )
+							->select_raw( 'COUNT(*)' )
+							->where_column( 'o.user_id', '=', 'u.id' );
+					},
+					'max_spent'   => $sub,
+					'bad alias;'  => $sub,
+				)
+			)
+			->to_sql();
+
+		$expected = "SELECT u.id, u.user_login, (SELECT COUNT(*) FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) AS order_count, (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS max_spent FROM {$prefix}users AS u";
+		$this->assertSame( $expected, $sql );
+
+		// join_sub() with explicit $type parameter and cross_join_sub().
+		$agg = DB::table( 'tutor_orders' )
+			->select( 'user_id' )
+			->select_raw( 'SUM(total_price) AS total_spent' )
+			->group_by( 'user_id' );
+
+		$sql = DB::table( 'users' )
+			->as( 'u' )
+			->join_sub( $agg, 's', 'u.id', '=', 's.user_id', 'LEFT' )
+			->cross_join_sub( $sub, 'm' )
+			->cross_join_sub( $sub, 'invalid alias;' )
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}users AS u LEFT JOIN (SELECT user_id, SUM(total_price) AS total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id CROSS JOIN (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS m";
+		$this->assertSame( $expected, $sql );
+	}
 }
