@@ -642,6 +642,10 @@ PHP,
 			return 'would run composer test:unit:filter DBTest';
 		}
 
+		if ( ! file_exists( $this->plugin_dir . '/vendor/bin/phpunit' ) ) {
+			return 'skipped (phpunit not installed)';
+		}
+
 		$code = $this->composer( 'test:unit:filter DBTest', $output );
 
 		if ( 0 !== $code ) {
