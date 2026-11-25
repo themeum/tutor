@@ -38,7 +38,7 @@ const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
                 checked={selectedAnswer === answerId}
                 onChange={() => setSelectedAnswer(answerId)}
               />
-              <SVGIcon name={meta.icon} width={20} height={20} />
+              {meta.icon && <SVGIcon name={meta.icon} width={20} height={20} />}
               {meta.label}
             </label>
           );

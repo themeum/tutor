@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
 use Tutor\Components\SvgIcon;
-use TUTOR\Icon;
 
 $field_name         = $question_field_name_base ?? '';
 $register_rules     = '';
@@ -71,7 +70,9 @@ if ( $is_committed ) {
 						<?php echo $is_checked ? 'checked="checked"' : ''; ?>
 					<?php endif; ?>
 				>
-				<?php SvgIcon::make()->name( $meta['icon'] )->size( 20 )->render(); ?>
+				<?php if ( ! empty( $meta['icon'] ) ) : ?>
+					<?php SvgIcon::make()->name( $meta['icon'] )->size( 20 )->render(); ?>
+				<?php endif; ?>
 				<?php echo esc_html( Quiz::sanitize_quiz_content( $meta['title'] ) ); ?>
 			</label>
 		<?php endforeach; ?>

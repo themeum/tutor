@@ -2995,7 +2995,7 @@ class Quiz {
 	 *
 	 * @param array|object $answer Answer data.
 	 *
-	 * @return array{title: string, icon: string, is_true: bool}
+	 * @return array{title: string, icon: string|null, is_true: bool, is_false: bool}
 	 *
 	 * @since 4.3.0
 	 */
@@ -3005,18 +3005,28 @@ class Quiz {
 		$raw_title  = wp_unslash( (string) $raw_title );
 		$normalized = strtolower( trim( $raw_title ) );
 
-		$translated_true = strtolower( trim( tutor_utils()->translate_dynamic_text( 'true' ) ) );
-		$is_true         = 'true' === $normalized || $normalized === $translated_true;
+		$translated_true  = strtolower( trim( tutor_utils()->translate_dynamic_text( 'true' ) ) );
+		$translated_false = strtolower( trim( tutor_utils()->translate_dynamic_text( 'false' ) ) );
+
+		$is_true  = 'true' === $normalized || $normalized === $translated_true;
+		$is_false = 'false' === $normalized || $normalized === $translated_false;
 
 		$title = $raw_title;
-		if ( 'true' === $normalized || 'false' === $normalized ) {
-			$title = tutor_utils()->translate_dynamic_text( $normalized );
+		$icon  = null;
+
+		if ( $is_true ) {
+			$title = tutor_utils()->translate_dynamic_text( 'true' );
+			$icon  = Icon::CHECK_2;
+		} elseif ( $is_false ) {
+			$title = tutor_utils()->translate_dynamic_text( 'false' );
+			$icon  = Icon::CROSS;
 		}
 
 		return array(
-			'title'   => $title,
-			'icon'    => $is_true ? Icon::CHECK_2 : Icon::CROSS,
-			'is_true' => $is_true,
+			'title'    => $title,
+			'icon'     => $icon,
+			'is_true'  => $is_true,
+			'is_false' => $is_false,
 		);
 	}
 }

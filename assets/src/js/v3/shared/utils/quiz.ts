@@ -486,19 +486,27 @@ export const getTrueFalseOptionMeta = (
   const rawTitle = answer?.answer_title ?? '';
   const normalized = rawTitle.trim().toLowerCase();
 
-  const translatedTrue = __('True', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
-  const isTrue = normalized === 'true' || normalized === translatedTrue;
+  const currentTranslatedTrue = __('True', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
+  const currentTranslatedFalse = __('False', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
+
+  const isTrue = normalized === 'true' || normalized === currentTranslatedTrue;
+  const isFalse = normalized === 'false' || normalized === currentTranslatedFalse;
 
   let label = rawTitle;
-  if (normalized === 'true') {
+  let icon: 'check2' | 'cross' | null = null;
+
+  if (isTrue) {
     label = __('True', __TUTOR_TEXT_DOMAIN__);
-  } else if (normalized === 'false') {
+    icon = 'check2';
+  } else if (isFalse) {
     label = __('False', __TUTOR_TEXT_DOMAIN__);
+    icon = 'cross';
   }
 
   return {
     label,
-    icon: isTrue ? ('check2' as const) : ('cross' as const),
+    icon,
     isTrue,
+    isFalse,
   };
 };
