@@ -28,26 +28,6 @@ defined( 'ABSPATH' ) || exit;
 class EngagementAbilities {
 
 	/**
-	 * Write annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Destructive annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Register engagement abilities.
 	 *
 	 * @since 4.3.0
@@ -143,7 +123,7 @@ class EngagementAbilities {
 				return (bool) tutor_utils()->can_user_manage( 'course', absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'create_announcement' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -186,7 +166,7 @@ class EngagementAbilities {
 				return true;
 			},
 			array( $this, 'update_announcement' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -215,7 +195,7 @@ class EngagementAbilities {
 				return self::can_manage_announcement( absint( $input['announcement_id'] ?? 0 ) );
 			},
 			array( $this, 'delete_announcement' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -281,7 +261,7 @@ class EngagementAbilities {
 					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
 			},
 			array( $this, 'reply_to_question' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -312,7 +292,7 @@ class EngagementAbilities {
 					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
 			},
 			array( $this, 'set_question_flags' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(

@@ -30,28 +30,6 @@ defined( 'ABSPATH' ) || exit;
 class CourseAbilities {
 
 	/**
-	 * Shared write-tool annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Destructive-write annotations.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Register course abilities.
 	 *
 	 * @since 4.3.0
@@ -159,7 +137,7 @@ class CourseAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_manage_courses();
 			},
 			array( $this, 'create_course' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -196,7 +174,7 @@ class CourseAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'update_course' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -231,7 +209,7 @@ class CourseAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'set_course_status' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		// update-course-content-order intentionally not registered (dropped from keep set).
@@ -259,7 +237,7 @@ class CourseAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_trash_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'trash_course' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 	}
 

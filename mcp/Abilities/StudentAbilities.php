@@ -28,16 +28,6 @@ defined( 'ABSPATH' ) || exit;
 class StudentAbilities {
 
 	/**
-	 * Destructive annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Register student abilities.
 	 *
 	 * @since 4.3.0
@@ -160,7 +150,7 @@ class StudentAbilities {
 				return User::is_admin();
 			},
 			array( $this, 'unenroll_student' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 	}
 

@@ -28,26 +28,6 @@ defined( 'ABSPATH' ) || exit;
 class CommerceAbilities {
 
 	/**
-	 * Write annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Destructive annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Register commerce abilities.
 	 *
 	 * @since 4.3.0
@@ -129,7 +109,7 @@ class CommerceAbilities {
 				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'mark_order_paid' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -186,7 +166,7 @@ class CommerceAbilities {
 				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'create_coupon' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -216,7 +196,7 @@ class CommerceAbilities {
 				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'update_coupon' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -238,7 +218,7 @@ class CommerceAbilities {
 				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
 			},
 			array( $this, 'expire_coupon' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -287,7 +267,7 @@ class CommerceAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'set_course_price' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 	}
 

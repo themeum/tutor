@@ -28,26 +28,6 @@ defined( 'ABSPATH' ) || exit;
 class QuizAttemptAbilities {
 
 	/**
-	 * Write annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Destructive annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Register quiz attempt abilities.
 	 *
 	 * @since 4.3.0
@@ -156,7 +136,7 @@ class QuizAttemptAbilities {
 				return $attempt_id && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 			},
 			array( $this, 'review_quiz_attempt' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -186,7 +166,7 @@ class QuizAttemptAbilities {
 				return $attempt_id && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 			},
 			array( $this, 'delete_quiz_attempt' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 	}
 

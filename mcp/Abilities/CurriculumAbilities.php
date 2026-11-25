@@ -32,28 +32,6 @@ defined( 'ABSPATH' ) || exit;
 class CurriculumAbilities {
 
 	/**
-	 * Shared write-tool annotations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private const WRITE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => false,
-	);
-
-	/**
-	 * Destructive-write annotations.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @var array<string, bool>
-	 */
-	private const DESTRUCTIVE_HINTS = array(
-		'readOnlyHint'    => false,
-		'destructiveHint' => true,
-	);
-
-	/**
 	 * Free (core) quiz question types allowed via MCP.
 	 *
 	 * Pro types are appended by Tutor Pro through
@@ -124,7 +102,7 @@ class CurriculumAbilities {
 				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'create_topic' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -152,7 +130,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'update_topic' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -203,7 +181,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'create_lesson' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -235,7 +213,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'update_lesson' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -288,7 +266,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'create_quiz' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -322,7 +300,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'update_quiz' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -361,7 +339,7 @@ class CurriculumAbilities {
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
 			array( $this, 'attach_lesson_video' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -391,7 +369,7 @@ class CurriculumAbilities {
 				return $topic_id && tutor_utils()->can_user_manage( 'topic', $topic_id );
 			},
 			array( $this, 'delete_topic' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -421,7 +399,7 @@ class CurriculumAbilities {
 				return $lesson_id && tutor_utils()->can_user_manage( 'lesson', $lesson_id );
 			},
 			array( $this, 'delete_lesson' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -478,7 +456,7 @@ class CurriculumAbilities {
 				return $quiz_id && tutor_utils()->can_user_manage( 'quiz', $quiz_id );
 			},
 			array( $this, 'add_quiz_question' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -514,7 +492,7 @@ class CurriculumAbilities {
 				return (bool) tutor_utils()->can_user_manage( 'quiz', (int) $question->quiz_id );
 			},
 			array( $this, 'update_quiz_question' ),
-			self::WRITE_HINTS
+			AbilityFactory::WRITE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -547,7 +525,7 @@ class CurriculumAbilities {
 				return (bool) tutor_utils()->can_user_manage( 'quiz', (int) $question->quiz_id );
 			},
 			array( $this, 'delete_quiz_question' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 
 		AbilityFactory::tool(
@@ -577,7 +555,7 @@ class CurriculumAbilities {
 				return $quiz_id && tutor_utils()->can_user_manage( 'quiz', $quiz_id );
 			},
 			array( $this, 'delete_quiz' ),
-			self::DESTRUCTIVE_HINTS
+			AbilityFactory::DESTRUCTIVE_HINTS
 		);
 	}
 

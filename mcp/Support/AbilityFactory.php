@@ -20,6 +20,42 @@ defined( 'ABSPATH' ) || exit;
 class AbilityFactory {
 
 	/**
+	 * Default read-only tool annotations.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array<string, bool>
+	 */
+	public const READ_HINTS = array(
+		'readOnlyHint'    => true,
+		'destructiveHint' => false,
+	);
+
+	/**
+	 * Shared write-tool annotations (non-destructive mutation).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array<string, bool>
+	 */
+	public const WRITE_HINTS = array(
+		'readOnlyHint'    => false,
+		'destructiveHint' => false,
+	);
+
+	/**
+	 * Shared destructive-tool annotations.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var array<string, bool>
+	 */
+	public const DESTRUCTIVE_HINTS = array(
+		'readOnlyHint'    => false,
+		'destructiveHint' => true,
+	);
+
+	/**
 	 * Register a tool ability with rate limit wrapper.
 	 *
 	 * @since 4.3.0
@@ -35,10 +71,7 @@ class AbilityFactory {
 	 * @return void
 	 */
 	public static function tool( string $id, string $category, string $label, string $desc, array $schema, $perm, $exec, $annotations = null ): void {
-		$default_annotations = array(
-			'readOnlyHint'    => true,
-			'destructiveHint' => false,
-		);
+		$default_annotations = self::READ_HINTS;
 		if ( is_array( $annotations ) ) {
 			$default_annotations = array_merge( $default_annotations, $annotations );
 		}
