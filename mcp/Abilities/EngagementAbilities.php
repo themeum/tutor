@@ -94,10 +94,31 @@ class EngagementAbilities {
 		);
 
 		AbilityFactory::tool(
+			'tutor-mcp/get-announcement',
+			'tutor-mcp-engagement',
+			__( 'Get Announcement', 'tutor' ),
+			__( 'Fetch a single course announcement by ID.', 'tutor' ),
+			array(
+				'type'       => 'object',
+				'required'   => array( 'announcement_id' ),
+				'properties' => array(
+					'announcement_id' => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+				),
+			),
+			static function ( array $input ): bool {
+				return self::can_manage_announcement( absint( $input['announcement_id'] ?? 0 ) );
+			},
+			array( $this, 'get_announcement' )
+		);
+
+		AbilityFactory::tool(
 			'tutor-mcp/create-announcement',
 			'tutor-mcp-engagement',
 			__( 'Create Announcement', 'tutor' ),
-			__( 'Create a course announcement. notify_students defaults false (emails may fire if true).', 'tutor' ),
+			__( 'Create a course announcement (same path as tutor_announcement_create). notify_students defaults false.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'required'   => array( 'course_id', 'title', 'content' ),
@@ -115,9 +136,56 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				// Match Ajax::create_or_update_announcement — can_user_manage( 'course', … ).
+				return (bool) tutor_utils()->can_user_manage( 'course', absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'create_announcement' ),
+			self::WRITE_HINTS
+		);
+
+		AbilityFactory::tool(
+			'tutor-mcp/update-announcement',
+			'tutor-mcp-engagement',
+			__( 'Update Announcement', 'tutor' ),
+			__( 'Update a course announcement (same path as tutor_announcement_create). notify_students defaults false.', 'tutor' ),
+			array(
+				'type'       => 'object',
+				'required'   => array( 'announcement_id' ),
+				'properties' => array(
+					'announcement_id' => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+					'course_id'       => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+					'title'           => array( 'type' => 'string' ),
+					'content'         => array( 'type' => 'string' ),
+					'notify_students' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
+			),
+			static function ( array $input ): bool {
+				if ( Registrar::is_read_only() ) {
+					return false;
+				}
+				$announcement_id = absint( $input['announcement_id'] ?? 0 );
+				if ( ! self::can_manage_announcement( $announcement_id ) ) {
+					return false;
+				}
+				$course_id = absint( $input['course_id'] ?? 0 );
+				if ( $course_id ) {
+					return (bool) tutor_utils()->can_user_manage( 'course', $course_id );
+				}
+				return true;
+			},
+			array( $this, 'update_announcement' ),
 			self::WRITE_HINTS
 		);
 
@@ -144,9 +212,7 @@ class EngagementAbilities {
 				if ( Registrar::is_read_only() ) {
 					return false;
 				}
-				$post = get_post( absint( $input['announcement_id'] ?? 0 ) );
-				return $post && tutor()->announcement_post_type === $post->post_type
-					&& tutor_utils()->can_user_manage( 'announcement', $post->ID );
+				return self::can_manage_announcement( absint( $input['announcement_id'] ?? 0 ) );
 			},
 			array( $this, 'delete_announcement' ),
 			self::DESTRUCTIVE_HINTS
@@ -319,13 +385,7 @@ class EngagementAbilities {
 		$result = array();
 		if ( $query->have_posts() ) {
 			foreach ( $query->posts as $post ) {
-				$result[] = array(
-					'id'        => (int) $post->ID,
-					'title'     => $post->post_title,
-					'content'   => $post->post_content,
-					'course_id' => (int) $post->post_parent,
-					'date'      => $post->post_date,
-				);
+				$result[] = $this->format_announcement( $post );
 			}
 		}
 
@@ -338,7 +398,26 @@ class EngagementAbilities {
 	}
 
 	/**
+	 * Get a single announcement.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Input.
+	 * @return array|\WP_Error
+	 */
+	public function get_announcement( array $input ) {
+		$post = $this->resolve_announcement( absint( $input['announcement_id'] ?? 0 ) );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		return $this->format_announcement( $post );
+	}
+
+	/**
 	 * Create a course announcement.
+	 *
+	 * Mirrors Ajax::create_or_update_announcement create path.
 	 *
 	 * @since 4.3.0
 	 *
@@ -346,46 +425,21 @@ class EngagementAbilities {
 	 * @return array|\WP_Error
 	 */
 	public function create_announcement( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
+		return $this->save_announcement( $input, 0 );
+	}
 
-		$course_id = absint( $input['course_id'] ?? 0 );
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
-		}
-
-		$title   = sanitize_text_field( (string) ( $input['title'] ?? '' ) );
-		$content = wp_kses_post( (string) ( $input['content'] ?? '' ) );
-		if ( '' === $title ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Announcement title is required.', 'tutor' ) );
-		}
-
-		$post_id = wp_insert_post(
-			array(
-				'post_type'    => tutor()->announcement_post_type,
-				'post_title'   => $title,
-				'post_content' => $content,
-				'post_status'  => 'publish',
-				'post_author'  => get_current_user_id(),
-				'post_parent'  => $course_id,
-			),
-			true
-		);
-
-		if ( is_wp_error( $post_id ) ) {
-			return $post_id;
-		}
-
-		if ( ! empty( $input['notify_students'] ) ) {
-			do_action( 'tutor_announcements/after/save', $post_id, array( 'course_id' => $course_id ) );
-		}
-
-		return array(
-			'id'        => (int) $post_id,
-			'course_id' => $course_id,
-		);
+	/**
+	 * Update a course announcement.
+	 *
+	 * Mirrors Ajax::create_or_update_announcement update path.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Input.
+	 * @return array|\WP_Error
+	 */
+	public function update_announcement( array $input ) {
+		return $this->save_announcement( $input, absint( $input['announcement_id'] ?? 0 ) );
 	}
 
 	/**
@@ -413,6 +467,166 @@ class EngagementAbilities {
 			'announcement_id' => $id,
 			'deleted'         => true,
 		);
+	}
+
+	/**
+	 * Whether the current user can manage an announcement CPT.
+	 *
+	 * Same gate as Ajax delete/update and Announcements::can_manage_announcement().
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $announcement_id Announcement post ID.
+	 * @return bool
+	 */
+	private static function can_manage_announcement( int $announcement_id ): bool {
+		if ( ! $announcement_id ) {
+			return false;
+		}
+
+		$post = get_post( $announcement_id );
+		return $post
+			&& tutor()->announcement_post_type === $post->post_type
+			&& tutor_utils()->can_user_manage( 'announcement', $announcement_id );
+	}
+
+	/**
+	 * Resolve and validate an announcement post.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $announcement_id Announcement post ID.
+	 * @return \WP_Post|\WP_Error
+	 */
+	private function resolve_announcement( int $announcement_id ) {
+		$post = get_post( $announcement_id );
+		if ( ! $post || tutor()->announcement_post_type !== $post->post_type ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Announcement not found.', 'tutor' ) );
+		}
+
+		return $post;
+	}
+
+	/**
+	 * Format announcement for MCP responses.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WP_Post $post Announcement post.
+	 * @return array
+	 */
+	private function format_announcement( \WP_Post $post ): array {
+		return array(
+			'id'        => (int) $post->ID,
+			'title'     => $post->post_title,
+			'content'   => $post->post_content,
+			'course_id' => (int) $post->post_parent,
+			'date'      => $post->post_date,
+			'author_id' => (int) $post->post_author,
+		);
+	}
+
+	/**
+	 * Create or update an announcement (Ajax::create_or_update_announcement without JSON exit).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input           Input.
+	 * @param int   $announcement_id Existing ID for update; 0 for create.
+	 * @return array|\WP_Error
+	 */
+	private function save_announcement( array $input, int $announcement_id ) {
+		$deny = Permissions::allow_write();
+		if ( is_wp_error( $deny ) ) {
+			return $deny;
+		}
+
+		$existing = null;
+		if ( $announcement_id ) {
+			$existing = $this->resolve_announcement( $announcement_id );
+			if ( is_wp_error( $existing ) ) {
+				return $existing;
+			}
+		}
+
+		$course_id = absint( $input['course_id'] ?? 0 );
+		if ( ! $course_id && $existing ) {
+			$course_id = (int) $existing->post_parent;
+		}
+
+		// Match Ajax::create_or_update_announcement permission + validation.
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
+			return new \WP_Error( 'tutor_mcp_forbidden', __( 'Access Denied', 'tutor' ) );
+		}
+
+		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
+		}
+
+		if ( $announcement_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
+				return new \WP_Error( 'tutor_mcp_forbidden', tutor_utils()->error_message() );
+			}
+		}
+
+		$title   = array_key_exists( 'title', $input )
+			? sanitize_text_field( (string) $input['title'] )
+			: ( $existing ? (string) $existing->post_title : '' );
+		$content = array_key_exists( 'content', $input )
+			? wp_kses_post( (string) $input['content'] )
+			: ( $existing ? (string) $existing->post_content : '' );
+
+		if ( '' === $title ) {
+			return new \WP_Error( 'tutor_mcp_invalid', __( 'Announcement title required', 'tutor' ) );
+		}
+		if ( '' === $content ) {
+			return new \WP_Error( 'tutor_mcp_invalid', __( 'Announcement summary required', 'tutor' ) );
+		}
+
+		$form_data = array(
+			'post_type'    => tutor()->announcement_post_type,
+			'post_title'   => $title,
+			'post_content' => $content,
+			'post_parent'  => $course_id,
+			'post_status'  => 'publish',
+		);
+
+		if ( $announcement_id ) {
+			$form_data['ID'] = $announcement_id;
+		} else {
+			$form_data['post_author'] = get_current_user_id();
+		}
+
+		$post_id = wp_insert_post( $form_data, true );
+		if ( is_wp_error( $post_id ) ) {
+			return $post_id;
+		}
+		if ( ! $post_id ) {
+			return new \WP_Error( 'tutor_mcp_save_failed', __( 'Something Went Wrong!', 'tutor' ) );
+		}
+
+		$action_type  = $announcement_id ? 'update' : 'create';
+		$announcement = get_post( $post_id );
+
+		// Opt-in notify — same hook signature as Ajax (emails fire only when true).
+		if ( ! empty( $input['notify_students'] ) && $announcement ) {
+			/**
+			 * Fires after an announcement is created or updated.
+			 *
+			 * @since 1.7.9
+			 *
+			 * @param int      $post_id      Announcement post ID.
+			 * @param \WP_Post $announcement Announcement post object.
+			 * @param string   $action_type  create|update.
+			 */
+			do_action( 'tutor_announcements/after/save', $post_id, $announcement, $action_type ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		}
+
+		if ( ! $announcement instanceof \WP_Post ) {
+			return new \WP_Error( 'tutor_mcp_save_failed', __( 'Something Went Wrong!', 'tutor' ) );
+		}
+
+		return $this->format_announcement( $announcement );
 	}
 
 	/**

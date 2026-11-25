@@ -92,7 +92,9 @@ class Registrar {
 		'tutor-mcp/list-withdrawals',
 		// Engagement.
 		'tutor-mcp/list-announcements',
+		'tutor-mcp/get-announcement',
 		'tutor-mcp/create-announcement',
+		'tutor-mcp/update-announcement',
 		'tutor-mcp/delete-announcement',
 		'tutor-mcp/list-questions',
 		'tutor-mcp/reply-to-question',
@@ -524,10 +526,12 @@ class Registrar {
 					array(
 						'id'    => 'engagement_tools',
 						'name'  => __( 'Announcements, Q&A, Reviews', 'tutor' ),
-						'desc'  => __( 'Announcements + Q&A flags/reply; reviews are list-only.', 'tutor' ),
+						'desc'  => __( 'Announcements full CPT CRUD + Q&A flags/reply; reviews are list-only.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-announcements', __( 'List announcements', 'tutor' ), 'read' ),
+							$t( 'tutor-mcp/get-announcement', __( 'Get announcement', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-announcement', __( 'Create announcement', 'tutor' ), 'write' ),
+							$t( 'tutor-mcp/update-announcement', __( 'Update announcement', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/delete-announcement', __( 'Delete announcement', 'tutor' ), 'destructive' ),
 							$t( 'tutor-mcp/list-questions', __( 'List questions', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/reply-to-question', __( 'Reply to question', 'tutor' ), 'write' ),
