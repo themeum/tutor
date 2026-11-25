@@ -8,6 +8,8 @@
  * @since 1.5.8
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $tutor_social_share_icons = tutor_utils()->tutor_social_share_icons();
 if ( ! tutor_utils()->count( $tutor_social_share_icons ) ) {
 	return;
@@ -38,8 +40,8 @@ $share_config = array(
 					<?php esc_html_e( 'Page Link', 'tutor' ); ?>
 				</div>
 				<div class="tutor-mb-32 tutor-position-relative">
-					<input class="tutor-form-control" value="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Course Link', 'tutor' ); ?>" readonly />
-					<button class="tutor-btn tutor-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Copy link', 'tutor' ); ?>">
+					<input class="tutor-form-control" value="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Course Link', 'tutor' ); ?>" readonly />
+					<button class="tutor-btn tutor-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>" aria-label="<?php esc_attr_e( 'Copy link', 'tutor' ); ?>">
 						<span class="icon tutor-icon-copy" aria-hidden="true"></span>
 					</button>
 				</div>
@@ -47,13 +49,17 @@ $share_config = array(
 					<div class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-mb-16">
 						<?php esc_html_e( 'Share On Social Media', 'tutor' ); ?>
 					</div>
-					<div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr( wp_json_encode( $share_config ) ); ?>">
+					<div class="tutor-social-share-wrap" role="group" aria-label="<?php esc_attr_e( 'Share on social media', 'tutor' ); ?>" data-social-share-config="<?php echo esc_attr( wp_json_encode( $share_config ) ); ?>">
 						<?php foreach ( $tutor_social_share_icons as $icon ) : ?>
-							<button class="tutor_share <?php echo esc_attr( $icon['share_class'] ); ?>" style="background: <?php echo esc_attr( $icon['color'] ); ?>">
-								<?php echo wp_kses( $icon['icon_html'], tutor_utils()->allowed_icon_tags() ); ?>
-								<span>
-									<?php echo esc_html( $icon['text'] ); ?>
-								</span>
+							<?php
+							$share_text = isset( $icon['text'] ) ? $icon['text'] : '';
+							$share_name = '' !== $share_text ? '' : ( isset( $icon['label'] ) ? $icon['label'] : '' );
+							?>
+							<button type="button" class="tutor_share <?php echo esc_attr( $icon['share_class'] ); ?>" style="background: <?php echo esc_attr( $icon['color'] ); ?>" <?php echo '' !== $share_name ? 'aria-label="' . esc_attr( $share_name ) . '"' : ''; ?>>
+								<span aria-hidden="true"><?php echo wp_kses( $icon['icon_html'], tutor_utils()->allowed_icon_tags() ); ?></span>
+								<?php if ( '' !== $share_text ) : ?>
+									<span><?php echo esc_html( $share_text ); ?></span>
+								<?php endif; ?>
 							</button>
 						<?php endforeach; ?>
 					</div>

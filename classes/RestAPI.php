@@ -10,11 +10,9 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\HttpHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Helpers\HttpHelper;
 
 /**
  * Initialize REST API
@@ -22,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.5.0
  */
 class RestAPI {
-
-	/**
-	 * Custom validation trait
-	 */
-	use Custom_Validation;
 
 	/**
 	 * API namespace
@@ -194,8 +187,9 @@ class RestAPI {
 			);
 		}
 
-		// Prevent access to non-publish posts, only author / course managers can access.
-		if ( 'publish' !== $post->post_status && ! $can_edit ) {
+		// Non-publish: editors always; readers only when can_view_course_content allows
+		// (private + enrolled/public/IA — not draft/pending/trash via enrollment alone).
+		if ( 'publish' !== $post->post_status && ! $can_edit && ! RestAuth::can_view_course_content( $id ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
 				tutor_utils()->error_message(),
@@ -317,7 +311,7 @@ class RestAPI {
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 
@@ -487,7 +481,7 @@ class RestAPI {
 				'args'                => array(
 					'id' => $this->get_id_arg_schema(),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'permission_optional_access_token' ),
 			)
 		);
 

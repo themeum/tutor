@@ -9,8 +9,17 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Group field settings.
+ *
+ * @var string $input_name
+ * @var mixed  $input_value
+ * @var string $label
+ */
 ?>
 <label>
-	<input type="checkbox" name="<?php echo esc_attr( $input_name ); ?>" value="1" <?php echo wp_kses_post( checked( $input_value, '1' ) ); ?> >
+	<input type="checkbox" name="<?php echo esc_attr( $input_name ); ?>" value="1" <?php checked( (string) $input_value, '1' ); ?> >
 	<?php echo esc_html( $label ); ?>
 </label>

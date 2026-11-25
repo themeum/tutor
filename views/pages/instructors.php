@@ -253,27 +253,27 @@ $filters = array(
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-		</div>
-		<?php else : ?>
-			<?php tutils()->render_list_empty_state(); ?>
-		<?php endif; ?>
 
-		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
-			<?php
+			<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
+				<?php
 				/**
 				 * Prepare pagination data & load template
 				 */
-			if ( $total > $per_page_data ) {
-				$pagination_data     = array(
-					'total_items' => $total,
-					'per_page'    => $per_page_data,
-					'paged'       => $selected_page,
-				);
-				$pagination_template = tutor()->path . 'views/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
+				if ( $total > $per_page_data ) {
+					$pagination_data     = array(
+						'total_items' => $total,
+						'per_page'    => $per_page_data,
+						'paged'       => $selected_page,
+					);
+					$pagination_template = tutor()->path . 'views/elements/pagination.php';
+					tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+				}
+				?>
+			</div>
 		</div>
+		<?php else : ?>
+			<?php tutor_utils()->render_list_empty_state(); ?>
+		<?php endif; ?>
 	</div>
 </div>
 

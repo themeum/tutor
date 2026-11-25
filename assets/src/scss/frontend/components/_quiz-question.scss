@@ -58,11 +58,9 @@
   &-title {
     @include tutor-flex(column);
     @include tutor-typography('medium', 'semibold');
-
+    @include tutor-text-wrap;
     gap: $tutor-spacing-4;
     flex: 1;
-    min-width: 0;
-    overflow-wrap: break-word;
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('p2', 'semibold');
@@ -295,6 +293,7 @@
         }
 
         [data-title] {
+          @include tutor-text-wrap();
           padding: $tutor-spacing-3 $tutor-spacing-4;
           text-align: start;
         }

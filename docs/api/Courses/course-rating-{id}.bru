@@ -22,16 +22,18 @@ auth:bearer {
 docs {
   # GET /course-rating/{id}
   
-  Retrieves rating summary and reviews for a published course.
+  Retrieves rating summary and reviews for a course.
   
   ## HTTP Method & Route
   - **Method:** `GET`
   - **Route:** `/wp-json/tutor/v1/course-rating/:id`
   
   ## Authentication
-  - **Public** (`__return_true`). Bearer JWT optional.
+  - **Public** (`permission_optional_access_token`) for **published** courses. Bearer JWT optional.
+  - Present but invalid access token → `rest_invalid_access_token` (does not fall back to guest data).
+  - **Private** courses: requires a valid access token and enrolled / course-content access (same as plugin UI). Otherwise `401`/`403` from the global course privacy gate (or `404` from the rating handler if reached without access).
   - Guests get a reduced review payload (display name, content, date, rating only).
-  - Authenticated callers get the full rating object (including `rating_sum`) and full approved review rows (`comment_author_email` omitted unless the caller may view private user fields).
+  - Authenticated callers get the full rating object (including `rating_sum`), full approved review rows (`comment_author_email` omitted unless the caller may view private user fields), plus `my_rating` (own review with status `approved` or `hold`, or `null`).
   
   ## Path Parameters
   
@@ -101,7 +103,16 @@ docs {
           "comment_date_gmt": "2026-01-10 12:00:00",
           "rating": 5
         }
-      ]
+      ],
+      "my_rating": {
+        "comment_ID": "55",
+        "comment_post_ID": "1",
+        "user_id": "20",
+        "display_name": "Sam",
+        "comment_content": "Helpful lessons.",
+        "comment_status": "approved",
+        "rating": 5
+      }
     }
   }
   ```
@@ -116,4 +127,5 @@ docs {
     }
   }
   ```
+  Returned when the course is missing, not a course post type, not `publish`/`private`, or is `private` without enrolled / content access.
 }

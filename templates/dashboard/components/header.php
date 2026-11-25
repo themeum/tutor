@@ -21,6 +21,7 @@ use Tutor\Components\Constants\Color;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
 use TUTOR\User;
+use TUTOR\Instructor;
 use Tutor\Models\CourseModel;
 
 $menu_items           = Dashboard::get_account_pages();
@@ -34,7 +35,7 @@ $active_nav                   = '';
 $user_id                      = get_current_user_id();
 $display_name                 = tutor_utils()->display_name( $user_id );
 $edit_profile_url             = Dashboard::get_account_page_url( 'settings' ) . '?tab=account';
-$is_become_instructor_enabled = tutor_utils()->get_option( 'enable_become_instructor_btn' );
+$is_become_instructor_enabled = Instructor::can_apply_for_instructor();
 
 $is_instructor_view = User::is_instructor_view();
 ?>

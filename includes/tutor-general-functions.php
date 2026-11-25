@@ -703,6 +703,25 @@ if ( ! function_exists( 'tutor_flash_set' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_unserialize' ) ) {
+	/**
+	 * Unserialize data.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string $data Data to unserialize.
+	 *
+	 * @return array
+	 */
+	function tutor_unserialize( $data ) {
+		if ( is_serialized( $data ) ) {
+			return @unserialize( trim( $data ), array( 'allowed_classes' => false ) );
+		}
+
+		return $data;
+	}
+}
+
 if ( ! function_exists( 'tutor_flash_get' ) ) {
 	/**
 	 * Get flash message.

@@ -11,11 +11,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Core\Input;
 use Tutor\Models\CourseModel;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Register Tutor's post types
  *
@@ -76,6 +76,19 @@ class Post_types {
 		 * @since v2.0.0
 		 */
 		add_action( 'admin_menu', array( $this, 'remove_course_post_menu' ) );
+
+		/**
+		 * Block public listing of protected types lesson, assignment and quiz.
+		 * Block scope: RSS, Comment feed and public query. outside single page.
+		 *
+		 * @since 4.2.1
+		 */
+		add_action( 'pre_get_posts', array( $this, 'block_public_listing_of_protected_types' ) );
+		add_filter( 'comment_feed_where', array( $this, 'exclude_protected_types_from_comment_feed' ), 10, 2 );
+		add_filter( 'the_content', array( $this, 'strip_protected_content_outside_single' ), 1 );
+		add_filter( 'get_the_excerpt', array( $this, 'strip_protected_excerpt' ), 1, 2 );
+
+		add_filter( 'map_meta_cap', array( $this, 'enforce_content_ownership' ), 10, 4 );
 	}
 
 	/**
@@ -86,7 +99,6 @@ class Post_types {
 	 * @return void
 	 */
 	public function register_course_post_types() {
-		$course_post_type = $this->course_post_type;
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -114,7 +126,7 @@ class Post_types {
 			// 'show_in_menu'              => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array(
-				'slug'       => tutor_utils()->get_option( 'course_permalink_base', $course_post_type ),
+				'slug'       => tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type ),
 				'with_front' => true,
 			),
 			'menu_icon'          => 'dashicons-book-alt',
@@ -140,7 +152,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( $course_post_type, $args );
+		register_post_type( tutor()->course_post_type, $args );
 
 		/**
 		 * Taxonomy
@@ -249,7 +261,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $lesson_base_slug ),
 			'menu_icon'           => 'dashicons-list-view',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor', 'comments' ),
@@ -316,7 +328,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'           => 'dashicons-editor-help',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor' ),
@@ -334,7 +346,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( 'tutor_quiz', $args );
+		register_post_type( tutor()->quiz_post_type, $args );
 	}
 
 	/**
@@ -356,7 +368,7 @@ class Post_types {
 			'hierarchical'       => false,
 			'menu_position'      => null,
 		);
-		register_post_type( 'topics', $args );
+		register_post_type( tutor()->topics_post_type, $args );
 	}
 
 	/**
@@ -395,7 +407,7 @@ class Post_types {
 			'rewrite'             => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'           => 'dashicons-editor-help',
 			'capability_type'     => 'post',
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'hierarchical'        => false,
 			'menu_position'       => null,
 			'supports'            => array( 'title', 'editor' ),
@@ -413,7 +425,7 @@ class Post_types {
 			),
 		);
 
-		register_post_type( 'tutor_assignments', $args );
+		register_post_type( tutor()->assignment_post_type, $args );
 	}
 
 	/**
@@ -479,14 +491,12 @@ class Post_types {
 	 * Gutenberg can edit post filter handler
 	 *
 	 * @since 1.0.0
+	 * @since 1.3.4 Enable / Disable Gutenberg Editor.
 	 *
 	 * @param bool   $can_edit use block editor.
 	 * @param string $post_type post type.
 	 *
 	 * @return bool
-	 *
-	 * Enable / Disable Gutenberg Editor
-	 * @since v.1.3.4
 	 */
 	public function gutenberg_can_edit_post_type( $can_edit, $post_type ) {
 		$enable_gutenberg = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
@@ -505,21 +515,276 @@ class Post_types {
 			'public'             => false,
 			'publicly_queryable' => false,
 			'show_ui'            => false,
+			'show_in_rest'       => false,
 			'query_var'          => false,
 			'has_archive'        => false,
 			'hierarchical'       => false,
 			'menu_position'      => null,
+			'capability_type'    => 'tutor_enrolled',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
+				'edit_post'              => 'edit_tutor_enrolled',
+				'read_post'              => 'read_tutor_enrolled',
+				'delete_post'            => 'delete_tutor_enrolled',
+				'edit_posts'             => 'manage_tutor',
+				'edit_others_posts'      => 'manage_tutor',
+				'publish_posts'          => 'manage_tutor',
+				'read_private_posts'     => 'manage_tutor',
+				'create_posts'           => 'manage_tutor',
+				'delete_posts'           => 'manage_tutor',
+				'delete_others_posts'    => 'manage_tutor',
+				'delete_private_posts'   => 'manage_tutor',
+				'delete_published_posts' => 'manage_tutor',
+				'edit_published_posts'   => 'manage_tutor',
+				'edit_private_posts'     => 'manage_tutor',
+			),
 		);
-		register_post_type( 'tutor_enrolled', $args );
+		register_post_type( tutor()->enrollment_post_type, $args );
 	}
 
 	/**
 	 * Remove course post menu
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
-	 * @since v2.0.0
 	 */
 	public function remove_course_post_menu() {
 		remove_menu_page( 'edit.php?post_type=' . tutor()->course_post_type );
+	}
+
+	/**
+	 * Post types whose content depends on course enrollment.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @return string[]
+	 */
+	private function get_protected_post_types() {
+		$post_types = array(
+			tutor()->lesson_post_type,
+			tutor()->quiz_post_type,
+			tutor()->assignment_post_type,
+		);
+
+		return apply_filters( 'tutor_content_protected_post_types', $post_types );
+	}
+
+	/**
+	 * Remove enrollment-protected post types from archives, search and feeds.
+	 *
+	 * Mixed queries (e.g. ['courses', 'lesson']) keep working for the public
+	 * types. The request is only 404'd when no public post type remains.
+	 * Normal singular requests are left to the single-template enrollment check.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param \WP_Query $query Query object.
+	 *
+	 * @return void
+	 */
+	public function block_public_listing_of_protected_types( $query ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+
+		$requested = array_filter( (array) $query->get( 'post_type' ) );
+		if ( empty( $requested ) ) {
+			return;
+		}
+
+		$protected = array_intersect( $requested, $this->get_protected_post_types() );
+		if ( empty( $protected ) ) {
+			return;
+		}
+
+		// Normal single lesson/quiz/assignment page: handled by the template flow.
+		if ( $query->is_singular() && ! $query->is_feed() && ! $query->is_comment_feed() ) {
+			return;
+		}
+
+		$remaining = array_values( array_diff( $requested, $protected ) );
+
+		if ( ! empty( $remaining ) ) {
+			$query->set( 'post_type', $remaining );
+			return;
+		}
+
+		$query->set_404();
+		$query->set( 'post__in', array( 0 ) );
+		status_header( 404 );
+		nocache_headers();
+	}
+
+	/**
+	 * Keep comments (Q&A) on protected post types out of /comments/feed/.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string    $where SQL where clause.
+	 * @param \WP_Query $query Query object.
+	 *
+	 * @return string
+	 */
+	public function exclude_protected_types_from_comment_feed( $where, $query ) {
+		global $wpdb;
+
+		if ( $query instanceof \WP_Query && $query->is_singular ) {
+			return $where;
+		}
+
+		$post_types = $this->get_protected_post_types();
+
+		if ( empty( $post_types ) ) {
+			return $where;
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
+
+		$where .= $wpdb->prepare(
+			//phpcs:ignore -- safely passed $placeholders variable.
+			" AND {$wpdb->posts}.post_type NOT IN ({$placeholders})",
+			$post_types
+		);
+
+		return $where;
+	}
+
+	/**
+	 * Whether protected content of the given post may be view right now.
+	 *
+	 * True only when the post is the singular post being viewed (the
+	 * enrollment check for that view lives in the single template flow),
+	 * or when the current user can edit it (instructors, admins).
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return bool
+	 */
+	private function can_view_protected_content( $post ) {
+		if ( is_admin() ) {
+			// Course builder, admin screens and admin-ajax.
+			return true;
+		}
+
+		if ( current_user_can( 'edit_post', $post->ID ) ) {
+			return true;
+		}
+
+		return is_singular( $post->post_type )
+		&& ! is_feed()
+		&& get_queried_object_id() === (int) $post->ID;
+	}
+
+	/**
+	 * Never output protected post content or excerpts outside the single view.
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param string $content Content or excerpt.
+	 *
+	 * @return string
+	 */
+	public function strip_protected_content_outside_single( $content ) {
+		$post = get_post();
+		if ( ! $post || ! in_array( $post->post_type, $this->get_protected_post_types(), true ) ) {
+			return $content;
+		}
+
+		return $this->can_view_protected_content( $post ) ? $content : '';
+	}
+
+	/**
+	 * Same rule for get_the_excerpt(), which block themes and Query Loop
+	 * call directly without running the the_excerpt filter.
+	 *
+	 * @param string        $excerpt Excerpt.
+	 * @param \WP_Post|null $post    Post object.
+	 * @return string
+	 */
+	public function strip_protected_excerpt( $excerpt, $post = null ) {
+		$post = get_post( $post );
+		if ( ! $post || ! in_array( $post->post_type, $this->get_protected_post_types(), true ) ) {
+			return $excerpt;
+		}
+
+		return $this->can_view_protected_content( $post ) ? $excerpt : '';
+	}
+
+	/**
+	 * Enforce course-level ownership for lessons, quizzes and assignments.
+	 *
+	 * These post types have `map_meta_cap` disabled because Tutor LMS manages
+	 * permissions through its own course-instructor relationships. Enabling
+	 * `map_meta_cap` would make WordPress rely on post-author ownership, which
+	 * does not account for co-instructors who are not the post author.
+	 *
+	 * Use this filter to enforce Tutor LMS ownership checks while preserving
+	 * existing capabilities for authorized users.
+	 *
+	 * Also protects content without an associated course by allowing only
+	 * the original post author to manage it.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param string[] $caps    Primitive capabilities required.
+	 * @param string   $cap     Capability being checked.
+	 * @param int      $user_id User ID.
+	 * @param array    $args    Additional arguments; $args[0] is the post ID.
+	 *
+	 * @return string[] Required capabilities.
+	 */
+	public function enforce_content_ownership( $caps, $cap, $user_id, $args ) {
+		if ( ! isset( $args[0] ) || ! is_numeric( $args[0] ) ) {
+			return $caps;
+		}
+
+		$post = get_post( (int) $args[0] );
+		if ( ! $post ) {
+			return $caps;
+		}
+
+		$content_types = array(
+			tutor()->lesson_post_type     => 'lesson',
+			tutor()->quiz_post_type       => 'quiz',
+			tutor()->assignment_post_type => 'assignment',
+		);
+
+		if ( ! isset( $content_types[ $post->post_type ] ) ) {
+			return $caps;
+		}
+
+		$pto = get_post_type_object( $post->post_type );
+		if ( ! $pto ) {
+			return $caps;
+		}
+
+		$guarded_caps = array(
+			'edit_post',
+			'delete_post',
+			$pto->cap->edit_post,
+			$pto->cap->delete_post,
+		);
+
+		if ( ! in_array( $cap, array_unique( $guarded_caps ), true ) ) {
+			return $caps;
+		}
+
+		$user_id = (int) $user_id;
+
+		if ( User::is_admin( $user_id ) ) {
+			return $caps;
+		}
+
+		$content_type = $content_types[ $post->post_type ];
+		$course_id    = (int) tutor_utils()->get_course_id_by( $content_type, $post->ID );
+
+		$is_owner = $course_id
+			? tutor_utils()->can_user_manage( $content_type, $post->ID, $user_id, false )
+			: (int) $post->post_author === $user_id;
+
+		return $is_owner ? $caps : array( 'do_not_allow' );
 	}
 }

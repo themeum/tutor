@@ -10,10 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Components\Alert;
 use Tutor\Components\EmptyState;
 use TUTOR\Dashboard;
-use TUTOR\Icon;
 use TUTOR\Template;
 use TUTOR\User;
 
@@ -55,15 +53,20 @@ $page_meta = Dashboard::get_page_meta_data( $dashboard_page_slug ? $dashboard_pa
 $meta_title = $page_meta['meta_title'];
 Dashboard::set_document_title( $meta_title );
 
+$page_title = isset( $page_meta['page_data']['title'] ) ? $page_meta['page_data']['title'] : '';
+if ( __( 'Home', 'tutor' ) === $page_title ) {
+	$page_title = __( 'Dashboard', 'tutor' );
+}
+
 $is_by_short_code           = isset( $is_shortcode ) && true === $is_shortcode;
 $site_shell                 = Template::get_site_shell_data( Template::SITE_SHELL_CONTEXT_DASHBOARD );
 $show_dashboard_site_header = $site_shell['show_site_header'];
 $show_dashboard_site_footer = $site_shell['show_site_footer'];
-$has_dashboard_site_shell   = ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) && $site_shell['has_site_shell'];
+$has_dashboard_site_shell   = ! $is_by_short_code && $site_shell['has_site_shell'];
 $has_dashboard_site_footer  = $has_dashboard_site_shell && $show_dashboard_site_footer;
 $theme_header_selector      = $site_shell['theme_header_selector'];
 
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
+if ( ! $is_by_short_code ) :
 	tutor_utils()->tutor_custom_header( $show_dashboard_site_header );
 endif;
 
@@ -113,6 +116,9 @@ $footer_links = array(
 	<div class="tutor-dashboard-main">
 		<?php tutor_load_template( 'dashboard.components.header' ); ?>
 		<div class="tutor-dashboard-body" role="main">
+			<?php if ( $page_title ) : ?>
+				<h1 class="screen-reader-text"><?php echo esc_html( $page_title ); ?></h1>
+			<?php endif; ?>
 			<div class="tutor-dashboard-page">
 				<?php
 				if ( User::used_instructor_registration() && User::has_pending_instructor_application() && $dashboard_page_slug ) {
@@ -134,7 +140,7 @@ $footer_links = array(
 					 * @since version 1.9.3
 					 */
 					$other_location      = '';
-					$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
+					$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location, $dashboard_page_name );
 
 					if ( '' == $from_other_location ) {
 						tutor_load_template( 'dashboard.' . $dashboard_page_name );
@@ -168,6 +174,6 @@ $footer_links = array(
 <?php endif; ?>
 	
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-<?php if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) : ?>
+<?php if ( ! $is_by_short_code ) : ?>
 	<?php tutor_utils()->tutor_custom_footer( $show_dashboard_site_footer ); ?>
 <?php endif; ?>

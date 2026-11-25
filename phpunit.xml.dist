@@ -33,5 +33,11 @@
 		<testsuite name="course-test">
 			<directory>tests/phpunit/CourseTest.php</directory>
 		</testsuite>
+		<testsuite name="coupon-model-test">
+			<directory>tests/phpunit/CouponModelTest.php</directory>
+		</testsuite>
+		<testsuite name="enrollment-security-test">
+			<directory>tests/phpunit/EnrollmentSecurityTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

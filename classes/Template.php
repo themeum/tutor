@@ -10,11 +10,10 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\UrlHelper;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Core\Input;
+use Tutor\Helpers\UrlHelper;
 
 /**
  * Handle template before include
@@ -142,7 +141,7 @@ class Template extends Tutor_Base {
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
+		add_filter( 'template_include', array( $this, 'load_learning_template' ), 99 );
 
 		$this->shortcode_obj = new Shortcode( false );
 	}
@@ -465,7 +464,7 @@ class Template extends Tutor_Base {
 				$target_dashboard_page = tutor_utils()->array_get( $dashboard_page, $get_dashboard_config );
 
 				if ( isset( $target_dashboard_page['login_require'] ) && false === $target_dashboard_page['login_require'] ) {
-					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
+					$template = tutor_get_template_path( "template-part.{$dashboard_page}" );
 				} else {
 
 					/**
@@ -484,14 +483,12 @@ class Template extends Tutor_Base {
 						 * @since 1.3.4
 						 */
 						$query_var           = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
-						$dashboard_pages     = tutor_utils()->tutor_dashboard_pages();
-						$dashboard_page_item = tutor_utils()->array_get( $query_var, $dashboard_pages );
+						$dashboard_page_item = tutor_utils()->array_get( $query_var, $get_dashboard_config );
 						$auth_cap            = tutor_utils()->array_get( 'auth_cap', $dashboard_page_item );
 
 						$can_access_instructor_item = tutor()->instructor_role === $auth_cap && User::can_view_instructor_dashboard();
 
-						if ( $auth_cap && ! User::is_admin() && ! current_user_can( $auth_cap ) && ! $can_access_instructor_item
-						) {
+						if ( $auth_cap && ! User::is_admin() && ! $can_access_instructor_item ) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
 
@@ -508,6 +505,8 @@ class Template extends Tutor_Base {
 
 							if ( file_exists( $page_template ) ) {
 								$template = tutor_get_template( 'account' );
+							} else {
+								$template = tutor_get_template( 'permission-denied' );
 							}
 						}
 
@@ -613,11 +612,11 @@ class Template extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $template template to load.
+	 * @param mixed $template template to load.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function load_learning_template( string $template ): string {
+	public function load_learning_template( $template ) {
 		if ( tutor_utils()->is_learning_area() ) {
 			$user_id   = get_current_user_id();
 			$post_type = get_post_type();

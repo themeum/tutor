@@ -62,18 +62,19 @@ if ( 0 !== $attempted_count ) {
 
 			$committed_attempt_answers = QuizModel::get_committed_answers_by_attempt( (int) $is_started_quiz->attempt_id );
 
-			$last_answered_index = 0;
+			$first_unanswered_index = 0;
 			if ( is_array( $questions ) ) {
 				foreach ( $questions as $question_index => $question ) {
-					if ( isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
-						$last_answered_index = $question_index + 1;
+					if ( ! isset( $committed_attempt_answers[ (int) $question->question_id ] ) ) {
+						$first_unanswered_index = $question_index + 1;
+						break;
 					}
 				}
 			}
 
-			$start_question_index = $last_answered_index > 0
-				? min( count( $questions ), $last_answered_index + 1 )
-				: 1;
+			$start_question_index = $first_unanswered_index > 0
+				? $first_unanswered_index
+				: max( 1, count( $questions ) );
 
 			/* Quiz Meta */
 			require __DIR__ . '/parts/meta.php';

@@ -52,8 +52,13 @@ class REST_Rating {
 	/**
 	 * Retrieve course ratings via REST API.
 	 *
+	 * Mirrors plugin UI reviews access:
+	 * - Published courses: public (guest reduced payload).
+	 * - Private courses: enrolled / course-content access only.
+	 * - Authenticated callers get their own rating (approved or hold).
+	 *
 	 * @since 1.7.1
-	 * @since 4.2.0 Guest payload matches reviews UI; require published course.
+	 * @since 4.2.0 Guest payload matches reviews UI; private courses for enrolled viewers; expose my_rating.
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 *
@@ -67,7 +72,7 @@ class REST_Rating {
 		$offset = ! empty( $offset ) ? $offset : 0;
 		$limit  = ! empty( $limit ) ? min( $limit, 100 ) : 10;
 
-		if ( ! CourseModel::get_post_types( $this->post_id ) || 'publish' !== get_post_status( $this->post_id ) ) {
+		if ( ! $this->can_read_course_rating( $this->post_id ) ) {
 			return $this->response(
 				'tutor_read_rating',
 				__( 'Course not found', 'tutor' ),
@@ -76,10 +81,18 @@ class REST_Rating {
 			);
 		}
 
-		$ratings = tutor_utils()->get_course_rating( $this->post_id );
-		$reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
+		$is_guest        = ! RestAuth::is_rest_authenticated();
+		$current_user_id = $is_guest ? 0 : (int) tutor_utils()->get_user_id();
 
-		$is_guest = ! RestAuth::is_rest_authenticated();
+		$ratings = tutor_utils()->get_course_rating( $this->post_id );
+		$reviews = tutor_utils()->get_course_reviews(
+			$this->post_id,
+			$offset,
+			$limit,
+			false,
+			array( 'approved' ),
+			$current_user_id
+		);
 
 		if ( $is_guest ) {
 			$payload = (object) array(
@@ -108,7 +121,17 @@ class REST_Rating {
 			);
 		}
 
-		$ratings->reviews = is_array( $reviews ) ? $reviews : array();
+		$my_rating = tutor_utils()->get_reviews_by_user(
+			$current_user_id,
+			0,
+			1,
+			false,
+			$this->post_id,
+			array( 'approved', 'hold' )
+		);
+
+		$ratings->reviews   = is_array( $reviews ) ? $reviews : array();
+		$ratings->my_rating = $my_rating ? $my_rating : null;
 
 		foreach ( $ratings->reviews as $review ) {
 			$user_id = isset( $review->user_id ) ? (int) $review->user_id : 0;
@@ -117,11 +140,45 @@ class REST_Rating {
 			}
 		}
 
+		if ( $ratings->my_rating && ! RestAuth::can_view_user_private_fields( $current_user_id ) ) {
+			unset( $ratings->my_rating->comment_author_email );
+		}
+
 		return $this->response(
 			'tutor_read_rating',
 			__( 'Course rating retrieved successfully', 'tutor' ),
 			$ratings,
 			HttpHelper::STATUS_OK
 		);
+	}
+
+	/**
+	 * Whether the caller may read ratings for the course.
+	 *
+	 * Matches UI: publish is public; private requires enrolled / content access.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return bool
+	 */
+	private function can_read_course_rating( $course_id ) {
+		$course_id = absint( $course_id );
+		if ( ! $course_id || ! CourseModel::get_post_types( $course_id ) ) {
+			return false;
+		}
+
+		$status = get_post_status( $course_id );
+
+		if ( CourseModel::STATUS_PUBLISH === $status ) {
+			return true;
+		}
+
+		if ( CourseModel::STATUS_PRIVATE === $status ) {
+			return RestAuth::is_rest_authenticated() && RestAuth::can_view_course_content( $course_id );
+		}
+
+		return false;
 	}
 }

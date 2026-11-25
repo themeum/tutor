@@ -7,7 +7,11 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.5.0
+ *
+ * @var array $field
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 ?>
 

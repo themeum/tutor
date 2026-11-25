@@ -170,6 +170,7 @@
 
     width: 100%;
     padding: $tutor-spacing-4 $tutor-spacing-5;
+    min-height: 58px;
 
     &:hover {
       background-color: $tutor-surface-base;
@@ -312,6 +313,7 @@
 
 [data-section-id='top_performing_courses'] {
   view-transition-name: top-performing-courses;
+  min-height: 346px;
 }
 
 [data-section-id='upcoming_tasks_and_activity'] {

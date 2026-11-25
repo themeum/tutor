@@ -19,12 +19,19 @@
     "tutor-kirki": "cd includes/kirki && npm run build && cp -r dist/* ../../includes/kirki",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run",
+    "test:unit": "vendor/bin/phpunit",
+    "test:e2e": "playwright test -c tests/e2e/playwright.config.ts",
+    "test:e2e:ui": "playwright test -c tests/e2e/playwright.config.ts --ui",
+    "test:e2e:debug": "playwright test -c tests/e2e/playwright.config.ts --debug",
+    "test:e2e:reset": "php tests/support/reset-test-db.php",
+    "test:e2e:install": "playwright install chromium",
     "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
-    "replace-svg-colors": "tsx ./assets/core/ts/utils/replace-svg-colors.ts ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
-    "replace-svg-colors:dry": "tsx ./assets/core/ts/utils/replace-svg-colors.ts --dry-run ./assets/images/illustrations ../tutor-pro/assets/images/illustrations"
+    "replace-svg-colors": "tsx scripts/replace-svg-colors.ts ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
+    "replace-svg-colors:dry": "tsx scripts/replace-svg-colors.ts --dry-run ./assets/images/illustrations ../tutor-pro/assets/images/illustrations",
+    "svgo-optimize": "tsx scripts/svgo-optimize.ts"
   },
   "keywords": [
     "lms",
@@ -42,6 +49,7 @@
     "@eslint/js": "^9.15.0",
     "@faker-js/faker": "^9.5.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
+    "@playwright/test": "^1.50.1",
     "@rsbuild/core": "^1.6.2",
     "@rsbuild/plugin-react": "^1.4.6",
     "@rsdoctor/rspack-plugin": "^1.5.12",
@@ -93,6 +101,7 @@
     "style-loader": "^4.0.0",
     "stylelint": "^17.16.0",
     "stylelint-config-standard-scss": "17.0.0",
+    "svgo": "^4.1.0",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.37.0",
     "webpack-node-externals": "^3.0.0"
