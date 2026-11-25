@@ -64,7 +64,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 							disabled
 						>
 						<label class="tutor-label" for="<?php echo esc_attr( 'attempt-review-' . $question->question_id . '-' . $index ); ?>">
-							<?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>
+							<span><?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?></span>
 						</label>
 					</div>
 				</div>

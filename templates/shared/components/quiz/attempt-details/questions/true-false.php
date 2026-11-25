@@ -50,7 +50,7 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 					->size( 20 )
 					->render();
 			?>
-			<?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>
+			<span><?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?></span>
 		</div>
 	<?php endforeach; ?>
 </div>

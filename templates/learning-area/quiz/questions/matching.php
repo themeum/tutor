@@ -55,7 +55,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 							<div class="tutor-quiz-question-option-number">
 								<?php echo esc_html( $answer['answer_order'] ); ?>
 							</div>
-							<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
+							<span><?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?></span>
 						</div>
 					<?php endif; ?>
 					<div
@@ -115,7 +115,7 @@ $register_attr = "register('{$answer_field_name}'{$register_rules})";
 					data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				>
 					<div data-title>
-						<?php echo esc_html( $draggable_title ); ?>
+						<span><?php echo esc_html( $draggable_title ); ?></span>
 					</div>
 					<button type="button" data-grab-handle tabindex="-1" aria-label="<?php esc_attr_e( 'Drag matching option', 'tutor' ); ?>">
 						<?php SvgIcon::make()->name( Icon::GRAB_HANDLE )->size( 24 )->render(); ?>
