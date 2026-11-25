@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( isset( $data ) && count( $data ) ) : ?>
 	<div class="tutor-wp-dashboard-header">
 		<div class="tutor-admin-container tutor-admin-container-lg">
@@ -32,7 +34,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 						if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
 							?>
 							<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
+								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_attr( $data['modal_target'] ); ?>">
 									<span class="tutor-icon-plus-o tutor-mr-8"></span>
 									<span><?php echo esc_html( $data['button_title'] ); ?></span>
 								</button>
@@ -54,11 +56,11 @@ if ( isset( $data ) && count( $data ) ) : ?>
 						<ul class="tutor-nav tutor-nav-admin" tutor-priority-nav>
 							<?php foreach ( $data['tabs'] as $key => $v ) : ?>
 								<li class="tutor-nav-item">
-									<a class="tutor-nav-link<?php echo esc_attr( $data['active'] == $v['key'] ? ' is-active' : '' ); ?>" data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>">
+									<a class="tutor-nav-link<?php echo esc_attr( $data['active'] == $v['key'] ? ' is-active' : '' ); ?>" data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_url( $v['url'] ); ?>">
 										<span><?php echo isset( $v['title'] ) ? esc_html( $v['title'] ) : ''; ?></span>
 										<?php if ( isset( $v['value'] ) ) : ?>
 											<span class="tutor-ml-4">
-												(<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>)
+												(<?php echo isset( $v['value'] ) ? esc_html( $v['value'] ) : ''; ?>)
 											</span>
 										<?php endif; ?>
 									</a>

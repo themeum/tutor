@@ -7,7 +7,11 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
+ *
+ * @var array $data
  */
+
+// @TODO: Check if this file is unused/deprecated and can be removed in a future release.
 
 use Tutor\Core\Input;
 

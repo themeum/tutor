@@ -119,23 +119,33 @@ do_action( 'tutor_quiz/single/before/top' );
 		</div>
 
 		<?php
+		$has_supported_questions = Quiz::has_supported_questions( $quiz_id );
+
+		if ( ! $has_supported_questions ) :
+			Quiz::render_unavailable_quiz_notice( 'tutor-mb-24' );
+		endif;
+		?>
+
+		<?php
 		if ( 0 === $attempted_count || $can_retry_quiz ) :
-			do_action( 'tutor_quiz/start_form/before', $quiz_id );
 			$skip_url = get_the_permalink( $next_id ? $next_id : $course_id );
 			?>
 			<div class="tutor-quiz-btn-group">
-				<form id="tutor-start-quiz" method="post">
-				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+				<?php if ( $has_supported_questions ) : ?>
+					<?php do_action( 'tutor_quiz/start_form/before', $quiz_id ); ?>
+					<form id="tutor-start-quiz" method="post">
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-					<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
-					<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+						<input type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>" name="quiz_id"/>
+						<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-					<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
-					<?php esc_html_e( 'Start Quiz', 'tutor' ); ?>
-					</button>
-				</form>
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
+						<?php esc_html_e( 'Start Quiz', 'tutor' ); ?>
+						</button>
+					</form>
+				<?php endif; ?>
 
-				<button class="tutor-btn tutor-btn-ghost tutor-btn-md skip-quiz-btn tutor-ml-24" data-tutor-modal-target="tutor-quiz-skip-to-next">
+				<button class="tutor-btn tutor-btn-ghost tutor-btn-md skip-quiz-btn <?php echo $has_supported_questions ? 'tutor-ml-24' : ''; ?>" data-tutor-modal-target="tutor-quiz-skip-to-next">
 				<?php esc_html_e( 'Skip Quiz', 'tutor' ); ?>
 				</button>
 			</div>

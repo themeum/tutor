@@ -22,12 +22,12 @@ use Tutor\Components\SvgIcon;
  */
 $items    = $field['items'] ?? array();
 $columns  = $field['columns'] ?? array();
-$field_id = 'field_' . $field['key'];
+$field_id = 'field_' . ( $field['key'] ?? '' );
 ?>
 <div class="tutor-option-field-row tutor-d-block tutor-toggle-matrix-field" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label">
-		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_html( $field['label'] ); ?></div>
-		<div class="tutor-fs-7 tutor-color-muted"><?php echo esc_html( $field['desc'] ); ?></div>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_html( $field['label'] ?? '' ); ?></div>
+		<div class="tutor-fs-7 tutor-color-muted"><?php echo esc_html( $field['desc'] ?? '' ); ?></div>
 	</div>
 
 	<div class="tutor-toggle-matrix">
@@ -48,7 +48,7 @@ $field_id = 'field_' . $field['key'];
 							?>
 						</span>
 					<?php endif; ?>
-					<?php echo esc_html( $column['label'] ); ?>
+					<?php echo esc_html( $column['label'] ?? '' ); ?>
 				</span>
 			<?php endforeach; ?>
 		</div>
@@ -60,17 +60,19 @@ $field_id = 'field_' . $field['key'];
 			++$item_index;
 			?>
 			<div class="tutor-toggle-matrix-row">
-				<div class="tutor-fs-6"><?php echo esc_html( $item['label'] ); ?></div>
+				<div class="tutor-fs-6"><?php echo esc_html( $item['label'] ?? '' ); ?></div>
 				<?php foreach ( array_keys( $columns ) as $position ) : ?>
 					<?php
-						$setting      = $item[ $position ];
-						$option_value = get_tutor_option( $setting['key'], $setting['default'] );
-						$is_enabled   = 'on' === $option_value || true === $option_value || 1 === (int) $option_value;
+						$setting         = $item[ $position ] ?? array();
+						$setting_key     = $setting['key'] ?? '';
+						$setting_default = $setting['default'] ?? '';
+						$option_value    = get_tutor_option( $setting_key, $setting_default );
+						$is_enabled      = 'on' === $option_value || true === $option_value || 1 === (int) $option_value;
 					?>
 					<label class="tutor-form-toggle tutor-toggle-matrix-toggle">
 						<input
 							type="hidden"
-							name="tutor_option[<?php echo esc_attr( $setting['key'] ); ?>]"
+							name="tutor_option[<?php echo esc_attr( $setting_key ); ?>]"
 							value="<?php echo esc_attr( $is_enabled ? 'on' : 'off' ); ?>"
 						>
 						<input
@@ -82,7 +84,7 @@ $field_id = 'field_' . $field['key'];
 									sprintf(
 										// translators: %1$s: item label, %2$s: position (header/footer).
 										__( '%1$s %2$s', 'tutor' ),
-										$item['label'],
+										$item['label'] ?? '',
 										ucfirst( $position )
 									)
 								);

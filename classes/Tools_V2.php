@@ -10,12 +10,10 @@
 
 namespace Tutor;
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Admin;
 use Tutor\Core\Input;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Tools class

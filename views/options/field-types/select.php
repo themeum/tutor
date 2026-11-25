@@ -9,14 +9,23 @@
  * @since 2.0.0
  */
 
-$field_key     = sanitize_key( $field['key'] );
-$field_id      = sanitize_key( 'field_' . $field_key );
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Field settings.
+ *
+ * @var mixed $this  Options_V2 or Tools_V2 instance.
+ * @var array $field
+ */
+
+$field_key     = sanitize_key( $field['key'] ?? '' );
+$field_id      = 'field_' . $field_key;
 $is_searchable = isset( $field['searchable'] ) && $field['searchable'] ? true : false;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
-		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select" <?php echo esc_attr( $is_searchable ? 'data-searchable' : '' ); ?>>
+		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select" <?php echo $is_searchable ? 'data-searchable' : ''; ?>>
 			<?php
 			if ( ! isset( $field['select_options'] ) || false !== $field['select_options'] ) {
 				echo '<option value="-1">' . esc_html__( 'Select Option', 'tutor' ) . '</option>';
@@ -24,7 +33,7 @@ $is_searchable = isset( $field['searchable'] ) && $field['searchable'] ? true : 
 			if ( ! empty( $field['options'] ) ) {
 				foreach ( $field['options'] as $option_key => $option ) {
 					?>
-					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $this->get( $field['key'], ( isset( $field['default'] ) ? $field['default'] : null ) ), $option_key ); ?>><?php echo esc_attr( $option ); ?></option>
+					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $this->get( $field_key, $field['default'] ?? null ), $option_key ); ?>><?php echo esc_html( $option ); ?></option>
 					<?php
 				}
 			}

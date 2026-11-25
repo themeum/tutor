@@ -984,7 +984,7 @@ class User {
 		if ( self::is_instructor( $current_user_id ) ) {
 			$enrolled_courses = CourseModel::get_enrolled_courses_by_user( $user_id );
 			if ( $enrolled_courses ) {
-				$course_author_ids = array_column( $enrolled_courses->get_posts(), 'post_author' );
+				$course_author_ids = array_map( 'intval', array_column( $enrolled_courses->get_posts(), 'post_author' ) );
 				if ( in_array( $current_user_id, $course_author_ids, true ) ) {
 					return true;
 				}
