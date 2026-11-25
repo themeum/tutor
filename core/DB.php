@@ -581,21 +581,34 @@ class DB {
 	// ─────────────────────────────────────────────
 
 	/**
-	 * Add a WHERE condition.
+	 * Add a WHERE condition or multiple conditions.
 	 *
-	 * Two-argument form uses '=' operator: where('col', 'value').
-	 * Three-argument form uses custom operator: where('col', '>=', 5).
-	 * Passing null as value auto-converts to IS NULL / IS NOT NULL.
+	 * Supports single-condition syntax:
+	 *   Two-argument form uses '=' operator: where('col', 'value').
+	 *   Three-argument form uses custom operator: where('col', '>=', 5).
+	 *   Passing null as value auto-converts to IS NULL / IS NOT NULL.
+	 *
+	 * Supports array syntax (conditions combined with AND):
+	 *   Associative array: where(['status' => 'active', 'role' => 'admin'])
+	 *   Numeric array: where([['status', '=', 'active'], ['role', '!=', 'guest']])
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column           Column name.
-	 * @param mixed  $operator_or_value Operator (if 3 args) or value (if 2 args).
-	 * @param mixed  $value            Value when operator is specified.
+	 * @param string|array $column            Column name, or array of conditions.
+	 * @param mixed        $operator_or_value Operator (if 3 args) or value (if 2 args).
+	 * @param mixed        $value             Value when operator is specified.
 	 *
 	 * @return self
 	 */
-	public function where( string $column, $operator_or_value, $value = null ): self {
+	public function where( $column, $operator_or_value = null, $value = null ): self {
+		if ( is_array( $column ) ) {
+			return $this->add_array_where( $column );
+		}
+
+		if ( ! is_string( $column ) ) {
+			return $this;
+		}
+
 		return $this->add_where( $column, $operator_or_value, $value, 'AND', func_num_args() < 3 );
 	}
 
@@ -1575,6 +1588,38 @@ class DB {
 	// ─────────────────────────────────────────────
 	// Internal WHERE helpers
 	// ─────────────────────────────────────────────
+
+	/**
+	 * Internal method to add array-based WHERE conditions combined with AND.
+	 *
+	 * Supports both associative column-value pairs and numeric array triples/tuples.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param array $conditions Array of conditions.
+	 *
+	 * @return self
+	 */
+	private function add_array_where( array $conditions ): self {
+		foreach ( $conditions as $key => $val ) {
+			if ( is_string( $key ) ) {
+				// Associative array: column => value.
+				$this->add_where( $key, $val, null, 'AND', true );
+			} elseif ( is_array( $val ) ) {
+				// Numeric array: ['col', 'val'] or ['col', 'op', 'val'].
+				$items = array_values( $val );
+				$count = count( $items );
+
+				if ( 2 === $count && is_string( $items[0] ) ) {
+					$this->add_where( $items[0], $items[1], null, 'AND', true );
+				} elseif ( 3 === $count && is_string( $items[0] ) ) {
+					$this->add_where( $items[0], $items[1], $items[2], 'AND', false );
+				}
+			}
+		}
+
+		return $this;
+	}
 
 	/**
 	 * Internal method to add a basic WHERE condition.

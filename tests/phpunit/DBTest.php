@@ -126,6 +126,317 @@ class DBTest extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Test WHERE with associative array conditions.
+	 *
+	 * @return void
+	 */
+	public function test_where_with_associative_array() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Multiple column-value pairs combined with AND.
+		$sql = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'order_status' => 'completed',
+					'user_id'      => 10,
+					'total_price'  => 99.5,
+				)
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND user_id = 10 AND total_price = 99.5";
+		$this->assertSame( $expected, $sql );
+
+		// Associative array with null value (auto-converts to IS NULL).
+		$sql_null = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'order_status' => 'completed',
+					'deleted_at'   => null,
+				)
+			)
+			->to_sql();
+
+		$expected_null = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND deleted_at IS NULL";
+		$this->assertSame( $expected_null, $sql_null );
+
+		// Chaining associative array with existing single-condition syntax.
+		$sql_chained = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'order_status' => 'completed',
+				)
+			)
+			->where( 'user_id', 10 )
+			->where( 'total_price', '>', 50 )
+			->to_sql();
+
+		$expected_chained = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND user_id = 10 AND total_price > 50";
+		$this->assertSame( $expected_chained, $sql_chained );
+	}
+
+	/**
+	 * Test WHERE with numeric array conditions.
+	 *
+	 * @return void
+	 */
+	public function test_where_with_numeric_array() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// 3-element format: [column, operator, value].
+		$sql = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'order_status', '=', 'completed' ),
+					array( 'total_price', '>', 50 ),
+					array( 'user_id', '!=', 5 ),
+				)
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND total_price > 50 AND user_id != 5";
+		$this->assertSame( $expected, $sql );
+
+		// 2-element format: [column, value] defaulting to '='.
+		$sql_two_elem = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'order_status', 'completed' ),
+					array( 'user_id', 10 ),
+				)
+			)
+			->to_sql();
+
+		$expected_two_elem = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND user_id = 10";
+		$this->assertSame( $expected_two_elem, $sql_two_elem );
+
+		// Numeric array with null values.
+		$sql_null = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'deleted_at', '=', null ),
+					array( 'completed_at', '!=', null ),
+				)
+			)
+			->to_sql();
+
+		$expected_null = "SELECT * FROM {$prefix}tutor_orders WHERE deleted_at IS NULL AND completed_at IS NOT NULL";
+		$this->assertSame( $expected_null, $sql_null );
+	}
+
+	/**
+	 * Test WHERE array with various supported comparison operators.
+	 *
+	 * @return void
+	 */
+	public function test_where_array_supported_operators() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		$sql = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'total_price', '>=', 20 ),
+					array( 'total_price', '<=', 100 ),
+					array( 'total_price', '<', 200 ),
+					array( 'user_id', '<>', 0 ),
+					array( 'order_status', 'LIKE', '%paid%' ),
+					array( 'order_status', 'NOT LIKE', '%failed%' ),
+				)
+			)
+			->to_sql();
+
+		$expected = "SELECT * FROM {$prefix}tutor_orders WHERE total_price >= 20 AND total_price <= 100 AND total_price < 200 AND user_id <> 0 AND order_status LIKE '%paid%' AND order_status NOT LIKE '%failed%'";
+		$this->assertSame( $expected, $sql );
+	}
+
+	/**
+	 * Test WHERE with empty arrays and invalid condition formats.
+	 *
+	 * @return void
+	 */
+	public function test_where_empty_and_invalid_array_formats() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Empty array produces no WHERE clause.
+		$sql_empty = DB::table( 'tutor_orders' )
+			->where( array() )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_empty );
+
+		// Empty nested array ignored.
+		$sql_nested_empty = DB::table( 'tutor_orders' )
+			->where( array( array() ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_nested_empty );
+
+		// Sub-array with 1 element ignored.
+		$sql_one_elem = DB::table( 'tutor_orders' )
+			->where( array( array( 'order_status' ) ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_one_elem );
+
+		// Sub-array with 4 elements ignored.
+		$sql_four_elem = DB::table( 'tutor_orders' )
+			->where( array( array( 'order_status', '=', 'completed', 'extra' ) ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_four_elem );
+
+		// Non-array scalar item in indexed array ignored.
+		$sql_scalar = DB::table( 'tutor_orders' )
+			->where( array( 123, 'random_string' ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_scalar );
+
+		// Non-string column in sub-array ignored.
+		$sql_non_string_col = DB::table( 'tutor_orders' )
+			->where( array( array( 123, '=', 'active' ) ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_non_string_col );
+
+		// Invalid operator in sub-array ignored.
+		$sql_invalid_op = DB::table( 'tutor_orders' )
+			->where( array( array( 'order_status', 'INVALID_OP', 'completed' ) ) )
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_invalid_op );
+
+		// Valid conditions mixed with invalid condition formats.
+		$sql_mixed = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'order_status' => 'completed',
+					array(),
+					array( 'invalid_op_col', 'BAD_OPERATOR', 'foo' ),
+					array( 'total_price', '>', 50 ),
+					999,
+				)
+			)
+			->to_sql();
+		$expected_mixed = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND total_price > 50";
+		$this->assertSame( $expected_mixed, $sql_mixed );
+	}
+
+	/**
+	 * Test SQL injection protection and value escaping in array conditions.
+	 *
+	 * @return void
+	 */
+	public function test_where_array_sql_injection_and_escaping() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Malicious column attempt in associative key should be rejected.
+		$sql_assoc_col = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'1=1; --'      => 'val',
+					'order_status' => 'completed',
+				)
+			)
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed'", $sql_assoc_col );
+
+		// Malicious column attempt in numeric array should be rejected.
+		$sql_num_col = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'id; DROP TABLE tutor_orders;--', '=', '1' ),
+					array( 'order_status', '=', 'completed' ),
+				)
+			)
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed'", $sql_num_col );
+
+		// Malicious operator attempt in numeric array should be rejected.
+		$sql_op = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'order_status', '= 1; DROP TABLE tutor_orders;--', 'completed' ),
+					array( 'user_id', '=', 10 ),
+				)
+			)
+			->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE user_id = 10", $sql_op );
+
+		// Value with SQL injection payload is properly escaped.
+		$malicious_val = "active' OR '1'='1";
+		$sql_val       = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					'order_status' => $malicious_val,
+				)
+			)
+			->to_sql();
+		$expected_val  = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'active\' OR \'1\'=\'1'";
+		$this->assertSame( $expected_val, $sql_val );
+
+		// Numeric array value with SQL injection payload is properly escaped.
+		$sql_num_val  = DB::table( 'tutor_orders' )
+			->where(
+				array(
+					array( 'order_status', '=', $malicious_val ),
+				)
+			)
+			->to_sql();
+		$this->assertSame( $expected_val, $sql_num_val );
+
+		// Live execution test with associative and numeric array conditions.
+		$key1 = 'where_arr_test_1_' . time() . '_' . wp_rand( 1000, 9999 );
+		$key2 = 'where_arr_test_2_' . time() . '_' . wp_rand( 1000, 9999 );
+
+		DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $key1,
+				'option_value' => 'val1',
+				'autoload'     => 'no',
+			)
+		);
+		DB::table( 'options' )->insert(
+			array(
+				'option_name'  => $key2,
+				'option_value' => 'val2',
+				'autoload'     => 'no',
+			)
+		);
+
+		// Query with associative array.
+		$res1 = DB::table( 'options' )
+			->where(
+				array(
+					'option_name' => $key1,
+					'autoload'    => 'no',
+				)
+			)
+			->first();
+		$this->assertNotNull( $res1 );
+		$this->assertSame( 'val1', $res1->option_value );
+
+		// Query with numeric array.
+		$res2 = DB::table( 'options' )
+			->where(
+				array(
+					array( 'option_name', '=', $key2 ),
+					array( 'autoload', '=', 'no' ),
+				)
+			)
+			->first();
+		$this->assertNotNull( $res2 );
+		$this->assertSame( 'val2', $res2->option_value );
+
+		// Clean up.
+		DB::table( 'options' )->where( 'option_name', $key1 )->delete();
+		DB::table( 'options' )->where( 'option_name', $key2 )->delete();
+	}
+
+	/**
 	 * Test OR WHERE conditions.
 	 *
 	 * @return void
