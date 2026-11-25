@@ -130,7 +130,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 answer_id: nanoid(),
                 _data_status: QuizDataStatus.NEW,
                 is_saved: true,
-                answer_title: __('True', 'tutor'),
+                // Do not translate; stored as canonical value.
+                answer_title: 'True',
                 is_correct: '1',
                 answer_order: 1,
                 answer_two_gap_match: '',
@@ -142,7 +143,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 answer_id: nanoid(),
                 is_saved: true,
                 _data_status: QuizDataStatus.NEW,
-                answer_title: __('False', 'tutor'),
+                // Do not translate; stored as canonical value.
+                answer_title: 'False',
                 is_correct: '0',
                 answer_order: 2,
                 answer_two_gap_match: '',

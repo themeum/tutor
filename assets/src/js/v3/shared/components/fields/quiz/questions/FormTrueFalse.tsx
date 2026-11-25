@@ -8,6 +8,7 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { getTrueFalseOptionMeta } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
@@ -51,7 +52,7 @@ const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false, questio
         <SVGIcon name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />
       </button>
       <div css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isDragging, isOverlay })}>
-        <span>{inputValue.answer_title}</span>
+        <span>{getTrueFalseOptionMeta(inputValue).label}</span>
 
         <button
           {...listeners}

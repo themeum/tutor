@@ -2915,4 +2915,34 @@ class Quiz {
 
 		return wp_strip_all_tags( wp_unslash( (string) $content ) );
 	}
+
+	/**
+	 * Get True/False question option metadata (translated title, icon, is_true flag).
+	 *
+	 * @param array|object $answer Answer data.
+	 *
+	 * @return array{title: string, icon: string, is_true: bool}
+	 *
+	 * @since 4.3.0
+	 */
+	public static function get_true_false_meta( $answer ): array {
+		$raw_title = is_array( $answer ) ? ( $answer['answer_title'] ?? '' ) : ( $answer->answer_title ?? '' );
+
+		$raw_title  = wp_unslash( (string) $raw_title );
+		$normalized = strtolower( trim( $raw_title ) );
+
+		$translated_true = strtolower( trim( tutor_utils()->translate_dynamic_text( 'true' ) ) );
+		$is_true         = 'true' === $normalized || $normalized === $translated_true;
+
+		$title = $raw_title;
+		if ( 'true' === $normalized || 'false' === $normalized ) {
+			$title = tutor_utils()->translate_dynamic_text( $normalized );
+		}
+
+		return array(
+			'title'   => $title,
+			'icon'    => $is_true ? Icon::CHECK_2 : Icon::CROSS,
+			'is_true' => $is_true,
+		);
+	}
 }

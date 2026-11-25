@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import For from '@TutorShared/controls/For';
+import { getTrueFalseOptionMeta } from '@TutorShared/utils/quiz';
 import { type QuizQuestionOption } from '@TutorShared/utils/types';
 
 const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
@@ -21,6 +21,7 @@ const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
       <For each={answers}>
         {(answer, index) => {
           const answerId = String(answer.answer_id || index);
+          const meta = getTrueFalseOptionMeta(answer);
           return (
             <label
               key={answer.answer_id || index}
@@ -37,8 +38,8 @@ const TrueFalsePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
                 checked={selectedAnswer === answerId}
                 onChange={() => setSelectedAnswer(answerId)}
               />
-              <SVGIcon name={__('True', 'tutor') === answer.answer_title ? 'check2' : 'cross'} width={20} height={20} />
-              {answer.answer_title}
+              <SVGIcon name={meta.icon} width={20} height={20} />
+              {meta.label}
             </label>
           );
         }}

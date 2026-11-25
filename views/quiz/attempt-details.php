@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
+use TUTOR\Quiz;
 
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 if ( ! is_admin() && ! current_user_can( 'tutor_instructor' ) && true === $enabled_hide_quiz_details ) {
@@ -464,6 +465,13 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
 											$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 											$answer_titles = array_map( 'stripslashes', $answer_titles );
+											$answer_titles = array_map(
+												function ( $title ) {
+													$meta = Quiz::get_true_false_meta( array( 'answer_title' => $title ) );
+													return $meta['title'];
+												},
+												$answer_titles
+											);
 
 											echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
 													implode( '</p><p>', $answer_titles ) .  //phpcs:ignore
@@ -605,9 +613,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$answer->question_id
 													)
 												);
+												$meta = Quiz::get_true_false_meta( array( 'answer_title' => $correct_answer ) );
 
 												echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-														esc_html( $correct_answer ) .
+														esc_html( $meta['title'] ) .
 													'</span>';
 											}
 

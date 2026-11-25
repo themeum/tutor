@@ -363,3 +363,28 @@ export const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], de
     deletedAnswerIds: Array.from(deletedAnswerIdsSet),
   };
 };
+
+export const getTrueFalseOptionMeta = (
+  answer?: {
+    answer_title?: string;
+  } | null,
+) => {
+  const rawTitle = answer?.answer_title ?? '';
+  const normalized = rawTitle.trim().toLowerCase();
+
+  const translatedTrue = __('True', __TUTOR_TEXT_DOMAIN__).trim().toLowerCase();
+  const isTrue = normalized === 'true' || normalized === translatedTrue;
+
+  let label = rawTitle;
+  if (normalized === 'true') {
+    label = __('True', __TUTOR_TEXT_DOMAIN__);
+  } else if (normalized === 'false') {
+    label = __('False', __TUTOR_TEXT_DOMAIN__);
+  }
+
+  return {
+    label,
+    icon: isTrue ? ('check2' as const) : ('cross' as const),
+    isTrue,
+  };
+};
