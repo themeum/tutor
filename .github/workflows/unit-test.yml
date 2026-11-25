@@ -84,4 +84,4 @@ jobs:
 
       - name: Run Unit tests
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: composer test:unit -- --filter '/^((?!MeetingSecurityTest).)*$/'
+        run: pnpm test:unit
