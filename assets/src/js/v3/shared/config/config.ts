@@ -105,6 +105,8 @@ const defaultTutorConfig = {
     enable_quiz_negative_marking: 'off',
     quiz_negative_mark_type: 'percent',
     quiz_negative_mark_value: 15,
+    course_completion_process: 'flexible',
+    control_video_lesson_completion: 'off',
   },
   tutor_currency: {
     symbol: '',

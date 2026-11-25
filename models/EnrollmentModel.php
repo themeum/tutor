@@ -185,6 +185,8 @@ class EnrollmentModel {
 		$status_clause = '';
 		if ( $is_complete ) {
 			$status_clause = $wpdb->prepare( 'AND post_status = %s ', self::STATUS_COMPLETED );
+		} else {
+			$status_clause = $wpdb->prepare( 'AND post_status IN (%s, %s) ', self::STATUS_COMPLETED, self::STATUS_PENDING );
 		}
 
 		//phpcs:disable

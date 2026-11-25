@@ -41,24 +41,28 @@ do_action( 'tutor_before_login_form' );
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
 	<div class="tutor-input-field tutor-mb-7">
-		<input type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
+		<label class="screen-reader-text" for="tutor-login-form-username"><?php esc_html_e( 'Username or Email Address', 'tutor' ); ?></label>
+		<input id="tutor-login-form-username" type="text" class="tutor-form-control tutor-input" placeholder="<?php esc_attr_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" autocomplete="username" required/>
 	</div>
 
-	<div class="tutor-input-field tutor-mb-8" x-data="{ show: false, value: '' }" style="position: relative;">
-		<span 
-			class="tutor-flex tutor-items-center tutor-justify-center"
-			style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
-			x-show="value.length"
-			@click="show = !show"
-		>
-			<template x-if="!show">
-				<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
-			</template>
-			<template x-if="show">
-				<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
-			</template>
-		</span>
-		<input :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;" autocomplete="off"/>
+	<div class="tutor-mb-8" x-data="{ show: false, value: '' }">
+		<label class="screen-reader-text" for="tutor-login-form-password"><?php esc_html_e( 'Password', 'tutor' ); ?></label>
+		<div class="tutor-input-field" style="position: relative;">
+			<span 
+				class="tutor-flex tutor-items-center tutor-justify-center"
+				style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
+				x-show="value.length > 0"
+				@click="show = !show"
+			>
+				<template x-if="!show">
+					<?php SvgIcon::make()->name( Icon::EYE )->size( 20 )->render(); ?>
+				</template>
+				<template x-if="show">
+					<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
+				</template>
+			</span>
+			<input id="tutor-login-form-password" :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;" autocomplete="current-password"/>
+		</div>
 	</div>
 
 	<div class="tutor-login-error" role="alert" aria-live="polite"></div>

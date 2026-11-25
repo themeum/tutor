@@ -295,9 +295,9 @@ if ( is_array( $attempt_info ) ) {
 								</div>
 							</div>
 
-						<?php elseif ( 'date' == $key ) : ?>
-							<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-						<?php elseif ( 'qeustion_count' === $key ) : ?>
+						<?php elseif ( 'date' === $key ) : ?>
+							<?php echo esc_html( QuizModel::get_attempt_date( $attempt_data ) ); ?>
+						<?php elseif ( 'question_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
 						<?php elseif ( 'quiz_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration ); ?>
@@ -489,7 +489,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											$answer_titles              = maybe_unserialize( $answer->given_answer );
 											$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
 
-											echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+											tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
 										}
 
 											// Open ended or short answer.
@@ -666,7 +666,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$answer_titles              = explode( '|', stripslashes( $correct_answer ) );
 												$get_db_answers_by_question = QuizModel::get_answers_by_quiz_question( $answer->question_id );
 
-												echo tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
+												tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $answer_titles ); //phpcs:ignore --contain safe data
 											}
 
 											// Ordering.

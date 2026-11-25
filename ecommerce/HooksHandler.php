@@ -480,8 +480,12 @@ class HooksHandler {
 		}
 
 		// Update earnings.
-		$earnings->prepare_order_earnings( $order_id );
-		$earnings->remove_before_store_earnings();
+		try {
+			$earnings->prepare_order_earnings( $order_id );
+			$earnings->remove_before_store_earnings();
+		} catch ( \Exception $e ) {
+			tutor_log( $e->getMessage() );
+		}
 	}
 
 	/**
@@ -551,9 +555,13 @@ class HooksHandler {
 			$this->coupon_ctrl->store_coupon_usage( $order_id );
 
 			// Free orders never get a payment webhook, so recording their (zero) earnings.
-			$earnings = Earnings::get_instance();
-			$earnings->prepare_order_earnings( $order_id );
-			$earnings->remove_before_store_earnings();
+			try {
+				$earnings = Earnings::get_instance();
+				$earnings->prepare_order_earnings( $order_id );
+				$earnings->remove_before_store_earnings();
+			} catch ( \Exception $e ) {
+				tutor_log( $e->getMessage() );
+			}
 		}
 		return $order_data;
 	}
@@ -631,7 +639,7 @@ class HooksHandler {
 		OrderMetaModel::add_meta(
 			$order_id,
 			OrderModel::META_KEY_BILLING_ADDRESS,
-			$meta_value
+			wp_slash( $meta_value )
 		);
 	}
 

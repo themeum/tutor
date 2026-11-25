@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -337,6 +337,23 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 4.2.2 - 24 Nov, 2026
+
+Update: Display WordPress display names instead of usernames in Tutor LMS assignments, comments, and Q&A.
+Update: Improved translation coverage and compatibility.
+Update: Improved overall performance and strengthened security measures.
+Fix: Resolved an issue where range-type questions became inaccessible and prevented users from exiting quizzes after switching from the Modern to Legacy layout. (Pro)
+Fix: Resolved an issue where instructor analytics displayed the wrong student profile page. (Pro)
+Fix: Corrected inaccurate refund and discount totals in the Frontend Analytics graph. (Pro)
+Fix: Prevented unapproved and blocked instructors from submitting withdrawal requests and accessing restricted dashboard sections. (Pro)
+Fix: Resolved an issue where coupon minimum requirements could be bypassed during checkout.
+Fix: Resolved a DivisionByZeroError when processing $0 orders.
+Fix: Resolved an issue where clearing a logged-in device did not work on the WordPress login page. (Pro)
+Fix: Resolved category text causing layout misalignment.
+Fix: Resolved an issue where quizzes retained the previous Modern mode time limit after switching to Legacy mode and setting a new time limit in the Course Builder.
+Fix: Resolved an issue where quiz question text wrapped onto two lines unexpectedly.
+Fix: Corrected the "Waiting Since" time displayed in the Q&A list.
 
 = 4.2.1 - 09 Nov, 2026
 

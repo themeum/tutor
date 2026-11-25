@@ -47,7 +47,7 @@ $navbar_data = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'  => tutor_utils()->has_user_role( 'administrator' ) ? $students->bulk_action : false,
+	'bulk_action'  => current_user_can( 'manage_options' ) ? $students->bulk_action : false,
 	'bulk_actions' => $students->prpare_bulk_actions(),
 	'ajax_action'  => 'tutor_student_bulk_action',
 	'filters'      => array(
