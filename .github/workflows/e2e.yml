@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WP_VERSION: '7.1.3'
+  WP_VERSION: '7.1.5'
   WP_ROOT: ${{ github.workspace }}/wordpress
   PLUGIN_DIR: ${{ github.workspace }}/wordpress/wp-content/plugins/tutor
   WP_TEST_DB_NAME: wordpress_test
