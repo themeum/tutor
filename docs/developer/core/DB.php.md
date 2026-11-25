@@ -33,16 +33,17 @@ The `DB` class provides a fluent, chainable query builder interface for WordPres
 4. [Select Clauses](#select-clauses)
 5. [Joins](#joins)
 6. [Where Clauses](#where-clauses)
-7. [Ordering & Grouping](#ordering--grouping)
-8. [Conditional Queries (`when`)](#conditional-queries-when)
-9. [Retrieving Data](#retrieving-data)
-10. [Pagination](#pagination)
-11. [Data Mutations (CRUD)](#data-mutations-crud)
-12. [Row Locking](#row-locking)
-13. [Transactions](#transactions)
-14. [Schema Validation](#schema-validation)
-15. [Debugging & Raw Queries](#debugging--raw-queries)
-16. [Security Architecture](#security-architecture)
+7. [Subqueries](#subqueries)
+8. [Ordering & Grouping](#ordering--grouping)
+9. [Conditional Queries (`when`)](#conditional-queries-when)
+10. [Retrieving Data](#retrieving-data)
+11. [Pagination](#pagination)
+12. [Data Mutations (CRUD)](#data-mutations-crud)
+13. [Row Locking](#row-locking)
+14. [Transactions](#transactions)
+15. [Schema Validation](#schema-validation)
+16. [Debugging & Raw Queries](#debugging--raw-queries)
+17. [Security Architecture](#security-architecture)
 
 ---
 
@@ -69,11 +70,14 @@ $courses = DB::table('posts')
 
 ```php
 class DB {
-    // Factory
-    public static function table( string $table ): self;
+    // Factory & From
+    public static function table( $table, ?string $alias = null ): self;
+    public function from( $table, ?string $alias = null ): self;
+    public function from_sub( $subquery, string $alias ): self;
 
     // Selection & Projection
-    public function select( string ...$columns ): self;
+    public function select( ...$columns ): self;
+    public function select_sub( $subquery, string $alias ): self;
     public function select_raw( string $expression, array $bindings = [] ): self;
     public function distinct(): self;
     public function as( string $alias ): self;
@@ -82,14 +86,24 @@ class DB {
     public function join( string $table, $first, string $operator = '', string $second = '' ): self;
     public function left_join( string $table, $first, string $operator = '', string $second = '' ): self;
     public function right_join( string $table, $first, string $operator = '', string $second = '' ): self;
+    public function join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '', string $type = 'INNER' ): self;
+    public function left_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self;
+    public function right_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self;
+    public function cross_join_sub( $subquery, string $alias ): self;
 
     // Where Clauses
     public function where( $column, $operator_or_val = null, $val = null ): self;
-    public function or_where( string $column, $operator_or_val, $val = null ): self;
-    public function where_in( string $column, array $values ): self;
-    public function or_where_in( string $column, array $values ): self;
-    public function where_not_in( string $column, array $values ): self;
-    public function or_where_not_in( string $column, array $values ): self;
+    public function or_where( $column, $operator_or_val = null, $val = null ): self;
+    public function where_column( string $first, string $operator_or_second, ?string $second = null ): self;
+    public function or_where_column( string $first, string $operator_or_second, ?string $second = null ): self;
+    public function where_in( string $column, $values ): self;
+    public function or_where_in( string $column, $values ): self;
+    public function where_not_in( string $column, $values ): self;
+    public function or_where_not_in( string $column, $values ): self;
+    public function where_exists( $subquery ): self;
+    public function or_where_exists( $subquery ): self;
+    public function where_not_exists( $subquery ): self;
+    public function or_where_not_exists( $subquery ): self;
     public function where_null( string $column ): self;
     public function or_where_null( string $column ): self;
     public function where_not_null( string $column ): self;
@@ -400,6 +414,189 @@ DB::table('tutor_orders')
     ->where_raw('DATE(created_at) = CURDATE()')
     ->or_where_raw('TIMESTAMPDIFF(DAY, created_at, NOW()) <= %d', [7]);
 ```
+
+### 8. Comparing Two Columns (`where_column`)
+Compares two database columns directly without quoting the second argument as a literal value. Essential for column-to-column constraints and correlated subqueries:
+
+```php
+DB::table('users')->where_column('updated_at', '>', 'created_at');
+DB::table('orders')->as('o')->where_column('o.user_id', '=', 'u.id');
+```
+
+---
+
+## Subqueries
+
+The query builder supports subqueries across all major SQL clauses: `WHERE`, `SELECT`, `FROM`, and `JOIN`. Subqueries can be passed as a `Closure (function (DB $query) { ... })` or as a pre-constructed `DB` query instance.
+
+### 1. WHERE Subqueries
+
+#### Comparison Subqueries
+Pass a subquery as the comparison value in `where()` or `or_where()`:
+
+```php
+// Using a Closure:
+DB::table('tutor_orders')
+    ->where('total_price', '>', function ($query) {
+        $query->from('tutor_orders')->select_raw('AVG(total_price)');
+    })
+    ->get();
+// Generates: WHERE total_price > (SELECT AVG(total_price) FROM wp_tutor_orders)
+
+// Using a DB instance:
+$avg_subquery = DB::table('tutor_orders')->select_raw('AVG(total_price)');
+DB::table('tutor_orders')
+    ->where('total_price', '>=', $avg_subquery)
+    ->get();
+
+// 2-argument shortcut defaults to '=':
+DB::table('users')
+    ->where('id', function ($query) {
+        $query->from('posts')->select('post_author')->where('id', 1);
+    })
+    ->first();
+
+// Left-hand-side subquery (comparing a correlated subquery result to a value):
+DB::table('users')
+    ->as('u')
+    ->where(function ($query) {
+        $query->from('tutor_orders', 'o')
+            ->select_raw('COUNT(*)')
+            ->where_column('o.user_id', '=', 'u.id');
+    }, '>', 5)
+    ->get();
+```
+
+#### Array Conditions with Subqueries
+Subqueries work seamlessly within associative and numeric array conditions:
+
+```php
+DB::table('tutor_orders')->where([
+    'total_price' => DB::table('tutor_orders')->select_raw('MAX(total_price)'),
+    ['total_price', '>=', $avg_subquery],
+]);
+```
+
+#### IN / NOT IN Subqueries
+Pass a subquery directly to `where_in()`, `where_not_in()`, `or_where_in()`, or `or_where_not_in()`:
+
+```php
+$active_users = DB::table('users')
+    ->where_in('id', function ($query) {
+        $query->from('tutor_orders')
+            ->select('user_id')
+            ->where('order_status', 'completed');
+    })
+    ->get();
+// Generates: WHERE id IN (SELECT user_id FROM wp_tutor_orders WHERE order_status = 'completed')
+```
+
+#### EXISTS / NOT EXISTS Subqueries
+Check for the existence of records using `where_exists()`, `where_not_exists()`, `or_where_exists()`, or `or_where_not_exists()`:
+
+```php
+DB::table('users')
+    ->as('u')
+    ->where_exists(function ($query) {
+        $query->from('tutor_orders', 'o')
+            ->where_column('o.user_id', '=', 'u.id');
+    })
+    ->get();
+// Generates: WHERE EXISTS (SELECT * FROM wp_tutor_orders AS o WHERE o.user_id = u.id)
+```
+
+---
+
+### 2. SELECT Subqueries
+
+Use `select_sub()` or pass an associative `['alias' => $subquery]` array to `select()` to add computed scalar subqueries to the `SELECT` projection list:
+
+```php
+$users = DB::table('users')
+    ->as('u')
+    ->select('u.id', 'u.user_login')
+    ->select_sub(function ($query) {
+        $query->from('tutor_orders', 'o')
+            ->select_raw('COUNT(*)')
+            ->where_column('o.user_id', '=', 'u.id');
+    }, 'order_count')
+    ->get();
+// Generates: SELECT u.id, u.user_login, (SELECT COUNT(*) FROM wp_tutor_orders AS o WHERE o.user_id = u.id) AS order_count FROM wp_users AS u
+
+// Shorthand via select():
+$users = DB::table('users')
+    ->as('u')
+    ->select(['u.id', 'u.user_login', 'order_count' => function ($query) {
+        $query->from('tutor_orders', 'o')
+            ->select_raw('COUNT(*)')
+            ->where_column('o.user_id', '=', 'u.id');
+    }])
+    ->get();
+```
+
+---
+
+### 3. FROM / Derived Table Subqueries
+
+Use a subquery as the primary table source in the `FROM` clause using `DB::table($subquery, $alias)` or `$query->from_sub($subquery, $alias)`:
+
+```php
+// Via DB::table():
+$orders = DB::table(function ($query) {
+    $query->from('tutor_orders')->where('order_status', 'completed');
+}, 'completed_orders')
+    ->select('id', 'total_price')
+    ->get();
+// Generates: SELECT id, total_price FROM (SELECT * FROM wp_tutor_orders WHERE order_status = 'completed') AS completed_orders
+
+// Via DB::table() chained with as():
+$orders = DB::table(function ($query) {
+    $query->from('tutor_orders')->where('order_status', 'completed');
+})->as('completed_orders')->get();
+
+// Via from_sub() on a new or existing DB instance:
+$sub = DB::table('users')->where('user_status', 0);
+$active = (new DB())->from_sub($sub, 'active_users')->get();
+```
+
+---
+
+### 4. JOIN Subqueries
+
+Join against derived tables using `join_sub()`, `left_join_sub()`, `right_join_sub()`, or `cross_join_sub()`. Both standard 4-argument and closure-based multiple ON conditions are supported:
+
+```php
+// Aggregated subquery:
+$spending = DB::table('tutor_orders')
+    ->select('user_id')
+    ->select_raw('SUM(total_price) AS total_spent')
+    ->group_by('user_id');
+
+// Join with standard 4-argument syntax:
+$users = DB::table('users')
+    ->as('u')
+    ->select('u.id', 'u.user_login', 's.total_spent')
+    ->left_join_sub($spending, 's', 'u.id', '=', 's.user_id')
+    ->get();
+// Generates: SELECT u.id, u.user_login, s.total_spent FROM wp_users AS u LEFT JOIN (SELECT user_id, SUM(total_price) AS total_spent FROM wp_tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id
+
+// Join with closure for multiple ON conditions:
+DB::table('users')
+    ->as('u')
+    ->left_join_sub($spending, 's', function ($join) {
+        $join->on('u.id', '=', 's.user_id')
+             ->on('s.total_spent', '>', 'u.id');
+    })
+    ->get();
+
+// CROSS JOIN subquery (no ON clause required):
+DB::table('users')
+    ->cross_join_sub(DB::table('tutor_orders')->select_raw('MAX(total_price) AS max_price'), 'm')
+    ->get();
+```
+
+> [!NOTE]
+> All subquery identifiers and aliases are strictly validated against SQL injection patterns (`is_valid_identifier`). Inner subquery parameters are securely escaped and prepared inline before being merged into the parent query.
 
 ---
 
