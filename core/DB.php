@@ -195,6 +195,25 @@ class DB {
 		'NOT BETWEEN',
 	);
 
+	/**
+	 * Supported comparison operators for column-to-column and scalar comparisons.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @var string[]
+	 */
+	private static $comparison_operators = array(
+		'=',
+		'!=',
+		'<>',
+		'<',
+		'>',
+		'<=',
+		'>=',
+		'LIKE',
+		'NOT LIKE',
+	);
+
 	// ─────────────────────────────────────────────
 	// Factory & Database Accessors
 	// ─────────────────────────────────────────────
@@ -230,22 +249,76 @@ class DB {
 	}
 
 	/**
-	 * Create a new DB query instance for the given table.
+	 * Create a new DB query instance for the given table or subquery.
 	 *
 	 * The table name will be automatically prefixed with the WordPress
-	 * table prefix if not already present.
+	 * table prefix if not already present. If a Closure or DB instance is
+	 * provided, it will be treated as a derived table subquery.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $table Table name (without prefix is fine).
+	 * @param string|Closure|self $table Table name or subquery.
+	 * @param string|null         $alias Optional table alias.
 	 *
 	 * @return self
 	 */
-	public static function table( string $table ): self {
-		$instance        = new self();
-		$instance->table = self::prepare_table_name( $table );
+	public static function table( $table, ?string $alias = null ): self {
+		return ( new self() )->from( $table, $alias );
+	}
 
-		return $instance;
+	/**
+	 * Set the primary table for the query.
+	 *
+	 * Alias for setting the table on an existing instance, commonly used
+	 * inside subquery closures: function( $q ) { $q->from('orders'); }
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string|Closure|self $table Table name or subquery.
+	 * @param string|null         $alias Optional table alias.
+	 *
+	 * @return self
+	 */
+	public function from( $table, ?string $alias = null ): self {
+		if ( $table instanceof Closure || $table instanceof self ) {
+			$sub_sql = self::resolve_subquery( $table );
+			if ( ! empty( $sub_sql ) ) {
+				$this->table = "({$sub_sql})";
+				if ( null !== $alias && self::is_valid_identifier( $alias ) ) {
+					$this->alias = $alias;
+				}
+			}
+			return $this;
+		}
+
+		if ( ! is_string( $table ) || '' === trim( $table ) ) {
+			return $this;
+		}
+
+		$this->table = self::prepare_table_name( $table );
+		if ( null !== $alias && self::is_valid_identifier( $alias ) ) {
+			$this->alias = $alias;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set a derived table subquery as the FROM source.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 * @param string       $alias    Alias for the derived table.
+	 *
+	 * @return self
+	 */
+	public function from_sub( $subquery, string $alias ): self {
+		if ( ! ( $subquery instanceof Closure || $subquery instanceof self ) || ! self::is_valid_identifier( $alias ) ) {
+			return $this;
+		}
+
+		return $this->from( $subquery, $alias );
 	}
 
 	// ─────────────────────────────────────────────
@@ -255,25 +328,54 @@ class DB {
 	/**
 	 * Set the columns to select.
 	 *
-	 * Accepts one or more column names. Multiple calls are additive.
+	 * Accepts column names or associative arrays mapping aliases to subqueries:
+	 *   select('id', 'name')
+	 *   select(['id', 'total_orders' => function($q) { ... }])
+	 * Multiple calls are additive.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string ...$columns Column names to select.
+	 * @param string|array ...$columns Column names or alias => subquery arrays.
 	 *
 	 * @return self
 	 */
-	public function select( string ...$columns ): self {
+	public function select( ...$columns ): self {
 		foreach ( $columns as $column ) {
-			$aliased = self::parse_column_alias( $column );
-			if ( null !== $aliased ) {
-				$this->columns[] = $aliased;
-			} elseif ( self::is_valid_column( $column ) ) {
-				$this->columns[] = $column;
+			if ( is_array( $column ) ) {
+				foreach ( $column as $key => $val ) {
+					if ( is_string( $key ) && ( $val instanceof Closure || $val instanceof self ) ) {
+						$this->select_sub( $val, $key );
+					} elseif ( is_string( $val ) ) {
+						$this->add_select_column( $val );
+					}
+				}
+				continue;
+			}
+
+			if ( is_string( $column ) ) {
+				$this->add_select_column( $column );
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Internal helper to validate and append a single SELECT column or alias.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $column Column name or aliased expression.
+	 *
+	 * @return void
+	 */
+	private function add_select_column( string $column ): void {
+		$aliased = self::parse_column_alias( $column );
+		if ( null !== $aliased ) {
+			$this->columns[] = $aliased;
+		} elseif ( self::is_valid_column( $column ) ) {
+			$this->columns[] = $column;
+		}
 	}
 
 	/**
@@ -296,6 +398,29 @@ class DB {
 		}
 
 		$this->raw_columns[] = $expression;
+
+		return $this;
+	}
+
+	/**
+	 * Add a subquery expression to the SELECT columns.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 * @param string       $alias    Column alias.
+	 *
+	 * @return self
+	 */
+	public function select_sub( $subquery, string $alias ): self {
+		if ( ! self::is_valid_identifier( $alias ) ) {
+			return $this;
+		}
+
+		$sub_sql = self::resolve_subquery( $subquery );
+		if ( ! empty( $sub_sql ) ) {
+			$this->raw_columns[] = "({$sub_sql}) AS {$alias}";
+		}
 
 		return $this;
 	}
@@ -349,11 +474,7 @@ class DB {
 	 * @return self
 	 */
 	public function join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( $first instanceof Closure ) {
-			return $this->add_join_closure( 'INNER', $table, $first );
-		}
-
-		return $this->add_join( 'INNER', $table, $first, $operator, $second );
+		return $this->compile_join( 'INNER', $this->parse_join_table( $table ), $first, $operator, $second );
 	}
 
 	/**
@@ -371,11 +492,7 @@ class DB {
 	 * @return self
 	 */
 	public function left_join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( $first instanceof Closure ) {
-			return $this->add_join_closure( 'LEFT', $table, $first );
-		}
-
-		return $this->add_join( 'LEFT', $table, $first, $operator, $second );
+		return $this->compile_join( 'LEFT', $this->parse_join_table( $table ), $first, $operator, $second );
 	}
 
 	/**
@@ -393,11 +510,88 @@ class DB {
 	 * @return self
 	 */
 	public function right_join( string $table, $first, string $operator = '', string $second = '' ): self {
-		if ( $first instanceof Closure ) {
-			return $this->add_join_closure( 'RIGHT', $table, $first );
+		return $this->compile_join( 'RIGHT', $this->parse_join_table( $table ), $first, $operator, $second );
+	}
+
+	/**
+	 * Add a JOIN subquery clause.
+	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self   $subquery Subquery closure or DB instance.
+	 * @param string         $alias    Alias for the subquery table.
+	 * @param string|Closure $first    First column in ON condition, or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column in ON condition.
+	 * @param string         $type     Join type (INNER, LEFT, RIGHT, CROSS). Default 'INNER'.
+	 *
+	 * @return self
+	 */
+	public function join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '', string $type = 'INNER' ): self {
+		return $this->add_subquery_join( $type, $subquery, $alias, $first, $operator, $second );
+	}
+
+	/**
+	 * Add a LEFT JOIN subquery clause.
+	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self   $subquery Subquery closure or DB instance.
+	 * @param string         $alias    Alias for the subquery table.
+	 * @param string|Closure $first    First column or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column.
+	 *
+	 * @return self
+	 */
+	public function left_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self {
+		return $this->add_subquery_join( 'LEFT', $subquery, $alias, $first, $operator, $second );
+	}
+
+	/**
+	 * Add a RIGHT JOIN subquery clause.
+	 *
+	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self   $subquery Subquery closure or DB instance.
+	 * @param string         $alias    Alias for the subquery table.
+	 * @param string|Closure $first    First column or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column.
+	 *
+	 * @return self
+	 */
+	public function right_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self {
+		return $this->add_subquery_join( 'RIGHT', $subquery, $alias, $first, $operator, $second );
+	}
+
+	/**
+	 * Add a CROSS JOIN subquery clause.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 * @param string       $alias    Alias for the subquery table.
+	 *
+	 * @return self
+	 */
+	public function cross_join_sub( $subquery, string $alias ): self {
+		if ( ! self::is_valid_identifier( $alias ) ) {
+			return $this;
 		}
 
-		return $this->add_join( 'RIGHT', $table, $first, $operator, $second );
+		$sub_sql = self::resolve_subquery( $subquery );
+		if ( ! empty( $sub_sql ) ) {
+			$this->joins[] = "CROSS JOIN ({$sub_sql}) AS {$alias}";
+		}
+
+		return $this;
 	}
 
 	/**
@@ -420,45 +614,6 @@ class DB {
 		}
 
 		return $table_expr;
-	}
-
-	/**
-	 * Internal method to add a JOIN clause using a closure collector.
-	 *
-	 * @since 4.2.0
-	 *
-	 * @param string   $type     Join type (INNER, LEFT, RIGHT, CROSS).
-	 * @param string   $table    Table name, may include alias.
-	 * @param callable $callback Closure to configure join conditions.
-	 *
-	 * @return self
-	 */
-	private function add_join_closure( string $type, string $table, callable $callback ): self {
-		$type = strtoupper( $type );
-
-		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
-		if ( ! in_array( $type, $allowed_types, true ) ) {
-			return $this;
-		}
-
-		$table_expr = $this->parse_join_table( $table );
-		$collector  = self::create_join_collector();
-
-		$callback( $collector );
-
-		if ( ! empty( $collector->conditions ) ) {
-			$on_parts = '';
-			foreach ( $collector->conditions as $index => $condition ) {
-				if ( 0 === $index ) {
-					$on_parts .= $condition['sql'];
-				} else {
-					$on_parts .= " {$condition['boolean']} {$condition['sql']}";
-				}
-			}
-			$this->joins[] = "{$type} JOIN {$table_expr} ON {$on_parts}";
-		}
-
-		return $this;
 	}
 
 	/**
@@ -540,22 +695,21 @@ class DB {
 	}
 
 	/**
-	 * Internal method to add a JOIN clause.
+	 * Internal method to compile a JOIN clause for a table or subquery expression.
 	 *
-	 * Validates join type, table alias, columns, and operator before
-	 * adding to the query.
+	 * Validates join type, columns, and operator before adding to the query.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $type     Join type (INNER, LEFT, RIGHT, CROSS).
-	 * @param string $table    Table name, may include alias e.g., 'users AS u'.
-	 * @param string $first    First column in the ON condition.
-	 * @param string $operator Comparison operator.
-	 * @param string $second   Second column in the ON condition.
+	 * @param string         $type       Join type (INNER, LEFT, RIGHT, CROSS).
+	 * @param string         $table_expr Prepared table or subquery expression with optional alias.
+	 * @param string|Closure $first      First column in ON condition, or Closure.
+	 * @param string         $operator   Comparison operator.
+	 * @param string         $second     Second column in ON condition.
 	 *
 	 * @return self
 	 */
-	private function add_join( string $type, string $table, string $first, string $operator, string $second ): self {
+	private function compile_join( string $type, string $table_expr, $first, string $operator, string $second ): self {
 		$type = strtoupper( $type );
 
 		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
@@ -563,9 +717,27 @@ class DB {
 			return $this;
 		}
 
-		$table_expr = $this->parse_join_table( $table );
+		if ( $first instanceof Closure ) {
+			$collector = self::create_join_collector();
+			$first( $collector );
 
-		if ( self::is_valid_column( $first )
+			if ( ! empty( $collector->conditions ) ) {
+				$on_parts = '';
+				foreach ( $collector->conditions as $index => $condition ) {
+					if ( 0 === $index ) {
+						$on_parts .= $condition['sql'];
+					} else {
+						$on_parts .= " {$condition['boolean']} {$condition['sql']}";
+					}
+				}
+				$this->joins[] = "{$type} JOIN {$table_expr} ON {$on_parts}";
+			}
+
+			return $this;
+		}
+
+		if ( is_string( $first )
+			&& self::is_valid_column( $first )
 			&& self::is_valid_operator( $operator )
 			&& self::is_valid_column( $second )
 		) {
@@ -574,6 +746,33 @@ class DB {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Internal method to add a JOIN subquery clause.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string         $type     Join type (INNER, LEFT, RIGHT).
+	 * @param Closure|self   $subquery Subquery closure or DB instance.
+	 * @param string         $alias    Alias for the subquery table.
+	 * @param string|Closure $first    First column in ON condition, or Closure.
+	 * @param string         $operator Comparison operator.
+	 * @param string         $second   Second column in ON condition.
+	 *
+	 * @return self
+	 */
+	private function add_subquery_join( string $type, $subquery, string $alias, $first, string $operator, string $second ): self {
+		if ( ! self::is_valid_identifier( $alias ) ) {
+			return $this;
+		}
+
+		$sub_sql = self::resolve_subquery( $subquery );
+		if ( empty( $sub_sql ) ) {
+			return $this;
+		}
+
+		return $this->compile_join( $type, "({$sub_sql}) AS {$alias}", $first, $operator, $second );
 	}
 
 	// ─────────────────────────────────────────────
@@ -601,85 +800,110 @@ class DB {
 	 * @return self
 	 */
 	public function where( $column, $operator_or_value = null, $value = null ): self {
-		if ( is_array( $column ) ) {
-			return $this->add_array_where( $column );
-		}
-
-		if ( ! is_string( $column ) ) {
-			return $this;
-		}
-
-		return $this->add_where( $column, $operator_or_value, $value, 'AND', func_num_args() < 3 );
+		return $this->dispatch_where( $column, $operator_or_value, $value, 'AND', func_num_args() );
 	}
 
 	/**
-	 * Add an OR WHERE condition.
+	 * Add an OR WHERE condition or multiple conditions.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column           Column name.
-	 * @param mixed  $operator_or_value Operator or value.
-	 * @param mixed  $value            Value when operator is specified.
+	 * @param string|array|Closure|self $column            Column name, array of conditions, or LHS subquery.
+	 * @param mixed                     $operator_or_value Operator or value.
+	 * @param mixed                     $value             Value when operator is specified.
 	 *
 	 * @return self
 	 */
-	public function or_where( string $column, $operator_or_value, $value = null ): self {
-		return $this->add_where( $column, $operator_or_value, $value, 'OR', func_num_args() < 3 );
+	public function or_where( $column, $operator_or_value = null, $value = null ): self {
+		return $this->dispatch_where( $column, $operator_or_value, $value, 'OR', func_num_args() );
 	}
 
 	/**
-	 * Add a WHERE IN condition.
+	 * Add a WHERE condition comparing two columns.
+	 *
+	 * Useful for correlated subqueries where an inner subquery column is compared
+	 * to an outer table column: where_column('o.user_id', '=', 'u.id').
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column Column name.
-	 * @param array  $values Array of values.
+	 * @param string      $first              First column name.
+	 * @param string      $operator_or_second Operator (if 3 args) or second column (if 2 args).
+	 * @param string|null $second             Second column name when operator is specified.
 	 *
 	 * @return self
 	 */
-	public function where_in( string $column, array $values ): self {
+	public function where_column( string $first, string $operator_or_second, ?string $second = null ): self {
+		return $this->add_where_column( $first, $operator_or_second, $second, 'AND' );
+	}
+
+	/**
+	 * Add an OR WHERE condition comparing two columns.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string      $first              First column name.
+	 * @param string      $operator_or_second Operator (if 3 args) or second column (if 2 args).
+	 * @param string|null $second             Second column name when operator is specified.
+	 *
+	 * @return self
+	 */
+	public function or_where_column( string $first, string $operator_or_second, ?string $second = null ): self {
+		return $this->add_where_column( $first, $operator_or_second, $second, 'OR' );
+	}
+
+	/**
+	 * Add a WHERE IN condition or subquery.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string             $column Column name.
+	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
+	 *
+	 * @return self
+	 */
+	public function where_in( string $column, $values ): self {
 		return $this->add_where_in( $column, $values, 'IN', 'AND' );
 	}
 
 	/**
-	 * Add a WHERE NOT IN condition.
+	 * Add a WHERE NOT IN condition or subquery.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column Column name.
-	 * @param array  $values Array of values.
+	 * @param string             $column Column name.
+	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
 	 *
 	 * @return self
 	 */
-	public function where_not_in( string $column, array $values ): self {
+	public function where_not_in( string $column, $values ): self {
 		return $this->add_where_in( $column, $values, 'NOT IN', 'AND' );
 	}
 
 	/**
-	 * Add an OR WHERE IN condition.
+	 * Add an OR WHERE IN condition or subquery.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column Column name.
-	 * @param array  $values Array of values.
+	 * @param string             $column Column name.
+	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
 	 *
 	 * @return self
 	 */
-	public function or_where_in( string $column, array $values ): self {
+	public function or_where_in( string $column, $values ): self {
 		return $this->add_where_in( $column, $values, 'IN', 'OR' );
 	}
 
 	/**
-	 * Add an OR WHERE NOT IN condition.
+	 * Add an OR WHERE NOT IN condition or subquery.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column Column name.
-	 * @param array  $values Array of values.
+	 * @param string             $column Column name.
+	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
 	 *
 	 * @return self
 	 */
-	public function or_where_not_in( string $column, array $values ): self {
+	public function or_where_not_in( string $column, $values ): self {
 		return $this->add_where_in( $column, $values, 'NOT IN', 'OR' );
 	}
 
@@ -761,6 +985,58 @@ class DB {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Add a WHERE EXISTS subquery condition.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 *
+	 * @return self
+	 */
+	public function where_exists( $subquery ): self {
+		return $this->add_where_exists( $subquery, 'EXISTS', 'AND' );
+	}
+
+	/**
+	 * Add an OR WHERE EXISTS subquery condition.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 *
+	 * @return self
+	 */
+	public function or_where_exists( $subquery ): self {
+		return $this->add_where_exists( $subquery, 'EXISTS', 'OR' );
+	}
+
+	/**
+	 * Add a WHERE NOT EXISTS subquery condition.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 *
+	 * @return self
+	 */
+	public function where_not_exists( $subquery ): self {
+		return $this->add_where_exists( $subquery, 'NOT EXISTS', 'AND' );
+	}
+
+	/**
+	 * Add an OR WHERE NOT EXISTS subquery condition.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 *
+	 * @return self
+	 */
+	public function or_where_not_exists( $subquery ): self {
+		return $this->add_where_exists( $subquery, 'NOT EXISTS', 'OR' );
 	}
 
 	/**
@@ -1590,35 +1866,91 @@ class DB {
 	// ─────────────────────────────────────────────
 
 	/**
-	 * Internal method to add array-based WHERE conditions combined with AND.
+	 * Internal method to add array-based WHERE conditions.
 	 *
 	 * Supports both associative column-value pairs and numeric array triples/tuples.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param array $conditions Array of conditions.
+	 * @param array  $conditions Array of conditions.
+	 * @param string $boolean    Boolean connector (AND or OR).
 	 *
 	 * @return self
 	 */
-	private function add_array_where( array $conditions ): self {
+	private function add_array_where( array $conditions, string $boolean = 'AND' ): self {
 		foreach ( $conditions as $key => $val ) {
 			if ( is_string( $key ) ) {
 				// Associative array: column => value.
-				$this->add_where( $key, $val, null, 'AND', true );
+				$this->add_where( $key, $val, null, $boolean, true );
 			} elseif ( is_array( $val ) ) {
 				// Numeric array: ['col', 'val'] or ['col', 'op', 'val'].
 				$items = array_values( $val );
 				$count = count( $items );
 
 				if ( 2 === $count && is_string( $items[0] ) ) {
-					$this->add_where( $items[0], $items[1], null, 'AND', true );
+					$this->add_where( $items[0], $items[1], null, $boolean, true );
 				} elseif ( 3 === $count && is_string( $items[0] ) ) {
-					$this->add_where( $items[0], $items[1], $items[2], 'AND', false );
+					$this->add_where( $items[0], $items[1], $items[2], $boolean, false );
 				}
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Internal dispatcher for where() and or_where().
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed  $column            Column name, array of conditions, or LHS subquery.
+	 * @param mixed  $operator_or_value Operator or value.
+	 * @param mixed  $value             Value when operator is specified.
+	 * @param string $boolean           AND or OR.
+	 * @param int    $arg_count         Number of arguments passed to the caller.
+	 *
+	 * @return self
+	 */
+	private function dispatch_where( $column, $operator_or_value, $value, string $boolean, int $arg_count ): self {
+		if ( is_array( $column ) ) {
+			return $this->add_array_where( $column, $boolean );
+		}
+
+		if ( $column instanceof Closure || $column instanceof self ) {
+			if ( $arg_count < 2 ) {
+				return $this;
+			}
+
+			return $this->add_where_sub( $column, $operator_or_value, $value, $boolean, $arg_count < 3 );
+		}
+
+		if ( ! is_string( $column ) ) {
+			return $this;
+		}
+
+		return $this->add_where( $column, $operator_or_value, $value, $boolean, $arg_count < 3 );
+	}
+
+	/**
+	 * Internal method to add a WHERE condition with a subquery on the left-hand side.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery          Subquery closure or DB instance.
+	 * @param mixed        $operator_or_value Operator or value.
+	 * @param mixed        $value             Value when operator is specified.
+	 * @param string       $boolean           AND or OR.
+	 * @param bool         $is_two_arg        Whether this is a two-argument call.
+	 *
+	 * @return self
+	 */
+	private function add_where_sub( $subquery, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
+		$sub_sql = self::resolve_subquery( $subquery );
+		if ( empty( $sub_sql ) ) {
+			return $this;
+		}
+
+		return $this->append_where_condition( "({$sub_sql})", $operator_or_value, $value, $boolean, $is_two_arg );
 	}
 
 	/**
@@ -1642,6 +1974,23 @@ class DB {
 			return $this;
 		}
 
+		return $this->append_where_condition( $column, $operator_or_value, $value, $boolean, $is_two_arg );
+	}
+
+	/**
+	 * Shared helper to format and append a WHERE condition for a validated LHS expression.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $lhs              Validated column or parenthesized subquery.
+	 * @param mixed  $operator_or_value Operator or value.
+	 * @param mixed  $value            Value (null when in two-arg form).
+	 * @param string $boolean          AND or OR.
+	 * @param bool   $is_two_arg       Whether this is a two-argument call.
+	 *
+	 * @return self
+	 */
+	private function append_where_condition( string $lhs, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
 		// Determine operator and value.
 		if ( $is_two_arg ) {
 			$value    = $operator_or_value;
@@ -1650,11 +1999,29 @@ class DB {
 			$operator = strtoupper( (string) $operator_or_value );
 		}
 
+		// Handle subquery value.
+		if ( $value instanceof Closure || $value instanceof self ) {
+			$allowed_subquery_ops = array_merge( self::$comparison_operators, array( 'IN', 'NOT IN' ) );
+			if ( ! in_array( $operator, $allowed_subquery_ops, true ) ) {
+				return $this;
+			}
+
+			$sub_sql = self::resolve_subquery( $value );
+			if ( ! empty( $sub_sql ) ) {
+				$this->wheres[] = array(
+					'sql'     => "{$lhs} {$operator} ({$sub_sql})",
+					'boolean' => $boolean,
+				);
+			}
+
+			return $this;
+		}
+
 		// Handle null values → IS NULL / IS NOT NULL.
 		if ( is_null( $value ) ) {
 			$null_op        = in_array( $operator, array( '!=', '<>' ), true ) ? 'IS NOT' : 'IS';
 			$this->wheres[] = array(
-				'sql'     => "{$column} {$null_op} NULL",
+				'sql'     => "{$lhs} {$null_op} NULL",
 				'boolean' => $boolean,
 			);
 
@@ -1668,7 +2035,7 @@ class DB {
 		$prepared_value = self::prepare_value( $value );
 
 		$this->wheres[] = array(
-			'sql'     => "{$column} {$operator} {$prepared_value}",
+			'sql'     => "{$lhs} {$operator} {$prepared_value}",
 			'boolean' => $boolean,
 		);
 
@@ -1676,19 +2043,35 @@ class DB {
 	}
 
 	/**
-	 * Internal method to add WHERE IN / NOT IN conditions.
+	 * Internal method to add WHERE IN / NOT IN conditions or subqueries.
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $column  Column name.
-	 * @param array  $values  Array of values.
-	 * @param string $type    IN or NOT IN.
-	 * @param string $boolean AND or OR.
+	 * @param string             $column  Column name.
+	 * @param array|Closure|self $values  Array of values, Closure, or DB subquery.
+	 * @param string             $type    IN or NOT IN.
+	 * @param string             $boolean AND or OR.
 	 *
 	 * @return self
 	 */
-	private function add_where_in( string $column, array $values, string $type, string $boolean ): self {
-		if ( ! self::is_valid_column( $column ) || empty( $values ) ) {
+	private function add_where_in( string $column, $values, string $type, string $boolean ): self {
+		if ( ! self::is_valid_column( $column ) ) {
+			return $this;
+		}
+
+		if ( $values instanceof Closure || $values instanceof self ) {
+			$sub_sql = self::resolve_subquery( $values );
+			if ( ! empty( $sub_sql ) ) {
+				$this->wheres[] = array(
+					'sql'     => "{$column} {$type} ({$sub_sql})",
+					'boolean' => $boolean,
+				);
+			}
+
+			return $this;
+		}
+
+		if ( ! is_array( $values ) || empty( $values ) ) {
 			return $this;
 		}
 
@@ -1698,6 +2081,62 @@ class DB {
 			'sql'     => "{$column} {$type} ({$escaped_values})",
 			'boolean' => $boolean,
 		);
+
+		return $this;
+	}
+
+	/**
+	 * Internal method to add WHERE EXISTS / NOT EXISTS condition.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param Closure|self $subquery Subquery closure or DB instance.
+	 * @param string       $type     EXISTS or NOT EXISTS.
+	 * @param string       $boolean  AND or OR.
+	 *
+	 * @return self
+	 */
+	private function add_where_exists( $subquery, string $type, string $boolean ): self {
+		$sub_sql = self::resolve_subquery( $subquery );
+		if ( ! empty( $sub_sql ) ) {
+			$this->wheres[] = array(
+				'sql'     => "{$type} ({$sub_sql})",
+				'boolean' => $boolean,
+			);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Internal method to add a WHERE condition comparing two columns.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string      $first              First column name.
+	 * @param string      $operator_or_second Operator or second column if 2 args.
+	 * @param string|null $second             Second column name if 3 args.
+	 * @param string      $boolean            AND or OR.
+	 *
+	 * @return self
+	 */
+	private function add_where_column( string $first, string $operator_or_second, ?string $second, string $boolean ): self {
+		if ( null === $second ) {
+			$operator = '=';
+			$second   = $operator_or_second;
+		} else {
+			$operator = strtoupper( $operator_or_second );
+		}
+
+		if ( self::is_valid_column( $first )
+			&& in_array( $operator, self::$comparison_operators, true )
+			&& self::is_valid_column( $second )
+		) {
+			$this->wheres[] = array(
+				'sql'     => "{$first} {$operator} {$second}",
+				'boolean' => $boolean,
+			);
+		}
 
 		return $this;
 	}
@@ -1822,7 +2261,9 @@ class DB {
 		}
 
 		$parts[] = $select;
-		$parts[] = "FROM {$from}";
+		if ( ! empty( $from ) ) {
+			$parts[] = "FROM {$from}";
+		}
 
 		if ( ! empty( $join ) ) {
 			$parts[] = $join;
@@ -2067,6 +2508,35 @@ class DB {
 	// ─────────────────────────────────────────────
 	// Value Preparation & DB Utilities (Self-Contained)
 	// ─────────────────────────────────────────────
+
+	/**
+	 * Resolve a subquery from a Closure or DB instance into a SQL string.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param mixed $query Closure or DB instance.
+	 *
+	 * @return string|null The SQL string, or null if invalid.
+	 */
+	public static function resolve_subquery( $query ): ?string {
+		if ( $query instanceof Closure ) {
+			$sub    = new self();
+			$result = $query( $sub );
+			$query  = ( $result instanceof self ) ? $result : $sub;
+		}
+
+		if ( ! $query instanceof self ) {
+			return null;
+		}
+
+		if ( empty( $query->table ) && empty( $query->raw_columns ) ) {
+			return null;
+		}
+
+		$sql = $query->to_sql();
+
+		return ! empty( $sql ) ? $sql : null;
+	}
 
 	/**
 	 * Prepare a single value for safe SQL inclusion using $wpdb->prepare().
