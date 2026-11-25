@@ -42,6 +42,10 @@ class MeetingSecurityTest extends WP_UnitTestCase {
 		);
 
 		$pro_dir = dirname( __DIR__, 3 ) . '/tutor-pro';
+		if ( ! file_exists( $pro_dir . '/tutor-pro.php' ) ) {
+			$this->markTestSkipped( 'Requires tutor-pro plugin checkout.' );
+		}
+
 		if ( file_exists( $pro_dir . '/tutor-pro.php' ) ) {
 			if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 				require_once $pro_dir . '/vendor/autoload.php';
