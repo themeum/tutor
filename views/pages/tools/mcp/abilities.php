@@ -87,9 +87,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	}
 	?>
-	<div class="tutor-option-single-item tutor-mcp-abilities tutor-mb-32">
-		<div class="tutor-option-group-title tutor-mb-16">
-			<div class="tutor-fs-6 tutor-color-muted">
+	<div class="tutor-option-single-item tutor-mcp-abilities tutor-mb-24">
+		<div class="tutor-option-group-title tutor-mb-12">
+			<div class="tutor-fs-6 tutor-color-subdued">
 				<?php echo esc_html( $group['name'] ); ?>
 				<span class="tutor-ml-8" data-mcp-group-count>(<?php echo esc_html( (string) $group_on ); ?>/<?php echo esc_html( (string) $group_total ); ?>)</span>
 			</div>

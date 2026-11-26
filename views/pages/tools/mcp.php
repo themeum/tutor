@@ -106,7 +106,7 @@ $overview_url  = add_query_arg(
 		<?php else : ?>
 
 			<div class="tutor-option-single-item tutor-mcp-config tutor-mb-32">
-				<div class="tutor-option-group-title tutor-mb-16">
+				<div class="tutor-option-group-title tutor-mb-8">
 					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Configuration', 'tutor' ); ?></div>
 				</div>
 				<div class="tutor-mcp-config-fields">
