@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 	<nav class="tutor-pagination">
 		<div class="tutor-pagination-hints">
@@ -19,26 +21,26 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 				</span>
 				<?php esc_html_e( 'of', 'tutor' ); ?>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-					<?php echo esc_html( ceil( 0 < $data['per_page'] ) ? ceil( $data['total_items'] / $data['per_page'] ) : '' ); ?>
+					<?php echo esc_html( (int) ( $data['per_page'] ?? 0 ) > 0 ? ceil( (int) $data['total_items'] / (int) $data['per_page'] ) : '' ); ?>
 				</span>
 			</div>
 		</div>
 		<ul class="tutor-pagination-numbers">
 			<?php
 			// Pagination.
-			$paged    = $data['paged'];
-			$per_page = (int) $data['per_page'];
-			$big      = 999999999;
-			$base     = str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) );
+			$big  = PHP_INT_MAX;
+			$base = str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) );
 
-			echo paginate_links(
-				array(
-					'base'      => ! empty( $data['base'] ) ? $data['base'] : $base,
-					'format'    => '?paged=%#%',
-					'current'   => $paged,
-					'total'     => $per_page ? ceil( $data['total_items'] / $per_page ) : 1,
-					'prev_text' => '<span class="tutor-icon-angle-left"></span>',
-					'next_text' => '<span class="tutor-icon-angle-right"></span>',
+			echo wp_kses_post(
+				paginate_links(
+					array(
+						'base'      => ! empty( $data['base'] ) ? $data['base'] : $base,
+						'format'    => '?paged=%#%',
+						'current'   => (int) $data['paged'],
+						'total'     => $data['per_page'] ? ceil( $data['total_items'] / (int) $data['per_page'] ) : 1,
+						'prev_text' => '<span class="tutor-icon-angle-left"></span>',
+						'next_text' => '<span class="tutor-icon-angle-right"></span>',
+					)
 				)
 			);
 			?>

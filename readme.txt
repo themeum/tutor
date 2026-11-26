@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -338,12 +338,31 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.2.1 - 06 Nov, 2026
+= 4.2.2 - 24 Nov, 2026
 
-Update: Improved WPML compatibility.
+New: Added a Membership tab to display all courses purchased through membership plans.
+Update: Assignments, comments, and Q&A now show users' WordPress display names instead of their usernames.
+Update: Improved translation coverage and compatibility.
+Update: Optimized overall performance and implemented additional security enhancements.
+Fix: Fixed an issue where Range-type questions became inaccessible and prevented learners from exiting quizzes after switching from the Modern to Legacy layout. (Pro)
+Fix: Fixed incorrect learner profile links in Instructor Analytics. (Pro)
+Fix: Corrected inaccurate refund and discount totals in the Frontend Analytics graph. (Pro)
+Fix: Prevented unapproved and blocked instructors from submitting withdrawal requests or accessing restricted dashboard sections. (Pro)
+Fix: Fixed an issue where minimum coupon requirements could be bypassed during checkout.
+Fix: Fixed a division-by-zero error that occurred when processing orders with a total of $0.
+Fix: Fixed an issue where clearing a logged-in device from the WordPress login page did not work as expected. (Pro)
+Fix: Fixed a layout alignment issue caused by category text.
+Fix: Fixed an issue where quizzes retained their previous time limit after switching from Modern to Legacy mode and setting a new time limit in the Course Builder.
+Fix: Fixed unexpected line wrapping in quiz question text.
+Fix: Corrected the inaccurate "Waiting Since" time displayed in the Q&A list.
+
+= 4.2.1 - 09 Nov, 2026
+
+Update: Improved WPML compatibility. (Pro)
 Fix: Resolved an issue where post content disappeared when switching from a page builder to the native WordPress editor.
-Fix: Resolved an issue where period filters were not applied correctly to the earnings graph and dashboard reports.
-Fix: Corrected inaccurate course counts in the course export process.
+Fix: Resolved an issue where period filters were not applied correctly to the earnings graph and dashboard reports. (Pro)
+Fix: Corrected inaccurate course counts in the course export process. (Pro)
+Fix: Resolved an issue where students could enroll in paused courses under certain circumstances. (Pro)
 Fix: Strengthened overall security measures.
 
 = 4.2.0 - 27 Oct, 2026

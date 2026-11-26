@@ -12,7 +12,6 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Core\DB;
 use Tutor\Core\Input;
 use Tutor\Core\Singleton;
 use Tutor\Database\TableManager;

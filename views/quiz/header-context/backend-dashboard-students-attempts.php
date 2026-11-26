@@ -8,6 +8,16 @@
  * @since 2.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Header data.
+ *
+ * @var string $back_url     Back URL.
+ * @var string $course_title Course title.
+ * @var string $quiz_title   Quiz title.
+ */
+
 if ( empty( $back_url ) ) {
 	return;
 }

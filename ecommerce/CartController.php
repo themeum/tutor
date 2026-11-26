@@ -226,7 +226,7 @@ class CartController {
 
 		$can_buy = apply_filters( 'tutor_can_purchase_course', true, $course_id );
 		if ( is_wp_error( $can_buy ) ) {
-			$this->response_bad_request( __( 'Cannot add to cart, enrollment is currently paused.', 'tutor' ) );
+			$this->response_bad_request( $can_buy->get_error_message() );
 		}
 
 		// Check if the course already exists in the cart or not.
