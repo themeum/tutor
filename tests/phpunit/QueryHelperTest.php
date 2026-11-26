@@ -707,7 +707,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	/**
 	 * Test prepare_table_name handles global tables in single site.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -726,7 +726,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	/**
 	 * Test prepare_table_name for site-specific tables in multisite.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -760,7 +760,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	/**
 	 * Test prepare_table_name for global tables in multisite.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -810,7 +810,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	/**
 	 * Test prepare_table_name for custom tables starting with global table names.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -838,7 +838,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	/**
 	 * Test get_table_prefix.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */

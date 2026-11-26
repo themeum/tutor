@@ -1307,7 +1307,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::prepare_table_name in single site environment.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -1332,7 +1332,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::prepare_table_name for site-specific tables in multisite.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -1367,7 +1367,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::prepare_table_name for global tables in multisite.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -1417,7 +1417,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::prepare_table_name for custom tables starting with global table names.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -1445,7 +1445,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::table() query generation under multisite conditions.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
@@ -1476,7 +1476,7 @@ class DBTest extends \WP_UnitTestCase {
 	/**
 	 * Test DB::get_table_prefix.
 	 *
-	 * @since 4.2.1
+	 * @since 4.3.0
 	 *
 	 * @return void
 	 */

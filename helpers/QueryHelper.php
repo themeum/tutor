@@ -1391,7 +1391,7 @@ class QueryHelper {
 	 * Supports both single-site and multisite installations.
 	 *
 	 * @since 3.7.0
-	 * @since 4.2.1 Added multisite base prefix support.
+	 * @since 4.3.0 Added multisite base prefix support.
 	 *
 	 * @param string $table_name table name.
 	 *
