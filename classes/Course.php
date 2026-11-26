@@ -155,9 +155,9 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_delete_dashboard_course', array( $this, 'tutor_delete_dashboard_course' ) );
 
 		/**
-		 * Gutenberg author support
+		 * Course author support
 		 */
-		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'restrict_course_author' ), 99, 2 );
 
 		/**
 		 * Do Stuff for the course save from frontend
@@ -469,6 +469,28 @@ class Course extends Tutor_Base {
 	 */
 	public static function get_selling_option( $course_id ) {
 		return get_post_meta( $course_id, self::COURSE_SELLING_OPTION_META, true );
+	}
+
+	/**
+	 * Check if course is eligible for single purchase.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool true if course is eligible for single purchase, false otherwise.
+	 */
+	public static function is_single_purchase_allowed( $course_id ): bool {
+		$option = self::get_selling_option( $course_id );
+		return empty( $option ) || in_array(
+			$option,
+			array(
+				self::SELLING_OPTION_ALL,
+				self::SELLING_OPTION_ONE_TIME,
+				self::SELLING_OPTION_BOTH,
+			),
+			true
+		);
 	}
 
 	/**
@@ -925,6 +947,38 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Meta query for users who can author a course.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array
+	 */
+	public static function get_course_author_meta_query() {
+		global $wpdb;
+
+		return array(
+			'relation' => 'OR',
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_tutor_instructor_status',
+					'value'   => 'approved',
+					'compare' => '=',
+				),
+				array(
+					'key'     => '_is_tutor_instructor',
+					'compare' => 'EXISTS',
+				),
+			),
+			array(
+				'key'     => $wpdb->get_blog_prefix() . 'capabilities',
+				'value'   => '"administrator"',
+				'compare' => 'LIKE',
+			),
+		);
+	}
+
+	/**
 	 * Create new draft course
 	 *
 	 * @since 3.0.0
@@ -1186,7 +1240,13 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		if ( ! User::is_admin() || ! CourseModel::is_main_instructor( $course_id, $current_user_id ) ) {
+		$new_author = (int) ( $params['post_author'] ?? 0 );
+		if ( $new_author && $new_author !== (int) $course->post_author ) {
+			if ( ! ( User::is_admin() || CourseModel::is_main_instructor( $course_id, $current_user_id ) )
+				|| ! ( User::is_admin( $new_author ) || User::is_instructor( $new_author, true ) ) ) {
+				$this->json_response( __( 'Invalid course author', 'tutor' ), array( 'post_author' => __( 'Selected author is not eligible.', 'tutor' ) ), HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+			}
+		} else {
 			$params['post_author'] = $course->post_author;
 		}
 
@@ -2053,19 +2113,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Adding author to instructor automatically
 		 */
-		$requested_author_id = Input::post( 'post_author_override', 0, Input::TYPE_INT );
-
-		/**
-		 * Only accept the requested author override if it targets a real,approved instructor or admin
-		 *
-		 * @since 4.0.4
-		 */
 		$author_id = $post->post_author;
-		if ( $requested_author_id && ( User::is_admin() || User::is_instructor() ) ) {
-			if ( User::is_admin( $requested_author_id ) || User::is_instructor( $requested_author_id, true ) ) {
-				$author_id = $requested_author_id;
-			}
-		}
 
 		$attached = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -2526,38 +2574,37 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Main author change from gutenberg editor
+	 * Keep the course author eligible on every save path.
+	 *
+	 * Administrators and the course's current author can reassign the author,
+	 * and only to an eligible user. Everyone else keeps the existing author,
+	 * so instructors can still edit and save their own courses. Saves without
+	 * a logged-in user (imports, cron) are left untouched.
 	 *
 	 * @since 2.0.0
+	 * @since 4.3.0 Applies to all course saves, not just Gutenberg.
 	 *
-	 * @param array $data data.
-	 * @param array $postarr post array.
+	 * @param array $data Sanitized post data.
+	 * @param array $postarr Raw post data.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function tutor_add_gutenberg_author( $data, $postarr ) {
-		$gutenberg_enabled = tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
-		$post_type         = $postarr['post_type'];
-		$courses_post_type = tutor()->course_post_type;
-
-		if ( false === is_admin() || false === $gutenberg_enabled || $post_type !== $courses_post_type ) {
+	public function restrict_course_author( $data, $postarr ) {
+		if ( tutor()->course_post_type !== ( $postarr['post_type'] ?? '' ) || ! is_user_logged_in() ) {
 			return $data;
 		}
 
-		/**
-		 * Only admin can change main author
-		 */
-		if ( $courses_post_type === $post_type && ! User::is_admin() ) {
-			global $wpdb;
-			$post_ID     = (int) tutor_utils()->avalue_dot( 'ID', $postarr );
-			$post_author = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID ) );
+		$author_id = (int) ( $data['post_author'] ?? 0 );
+		$post_id   = (int) ( $postarr['ID'] ?? 0 );
 
-			if ( $post_author > 0 ) {
-				$data['post_author'] = $post_author;
-			} else {
-				$data['post_author'] = get_current_user_id();
-			}
+		$post_author = $post_id > 0 ? (int) get_post_field( 'post_author', $post_id ) : 0;
+		$is_author   = $post_author > 0 && get_current_user_id() === $post_author;
+
+		if ( ( User::is_admin() || $is_author ) && ( User::is_admin( $author_id ) || User::is_instructor( $author_id, true ) ) ) {
+			return $data;
 		}
+
+		$data['post_author'] = $post_author > 0 ? $post_author : get_current_user_id();
 
 		return $data;
 	}
@@ -3465,6 +3512,16 @@ class Course extends Tutor_Base {
 		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
 		if ( isset( $filter->role ) && is_array( $filter->role ) ) {
 			$args['role__in'] = array_map( 'sanitize_text_field', $filter->role );
+
+			if ( in_array( tutor()->instructor_role, $args['role__in'], true ) ) {
+				$args['meta_query'] = ! empty( $args['meta_query'] )
+					? array(
+						'relation' => 'AND',
+						$args['meta_query'],
+						self::get_course_author_meta_query(),
+					)
+					: self::get_course_author_meta_query();
+			}
 		}
 
 		return $args;

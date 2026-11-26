@@ -84,6 +84,59 @@ class BillingModel {
 	}
 
 	/**
+	 * Get validation rules
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array Validation rules.
+	 */
+	public function get_validation_rules() {
+		/**
+		 * The `billing_state` field is excluded because not all countries have states.
+		 */
+		return array(
+			'billing_first_name' => 'required',
+			'billing_last_name'  => 'required',
+			'billing_email'      => 'required|email',
+			'billing_phone'      => 'required',
+			'billing_zip_code'   => 'required',
+			'billing_address'    => 'required',
+			'billing_country'    => 'required',
+			'billing_city'       => 'required',
+		);
+	}
+
+	/**
+	 * Validate the billing country and state.
+	 *
+	 * Prevents tax reduction abuse by rejecting unknown countries and states
+	 * that don't belong to the given country.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $country Billing country name.
+	 * @param string $state   Billing state name.
+	 *
+	 * @return string[] List of error messages, empty when valid.
+	 */
+	public function validate_billing_location( string $country, string $state ): array {
+		$country_info = tutor_get_country_info_by_name( $country );
+
+		if ( ! $country_info ) {
+			return array( __( 'Invalid country', 'tutor' ) );
+		}
+
+		$state_names = array_column( $country_info['states'] ?? array(), 'name' );
+
+		// Countries without states don't require one.
+		if ( ! empty( $state_names ) && ! in_array( $state, $state_names, true ) ) {
+			return array( __( 'Invalid state', 'tutor' ) );
+		}
+
+		return array();
+	}
+
+	/**
 	 * Insert billing info
 	 *
 	 * @param array $data Bulling info data.
