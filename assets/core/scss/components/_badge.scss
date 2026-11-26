@@ -2,7 +2,7 @@
 @use '../mixins' as *;
 
 .tutor-badge {
-  @include tutor-badge-base;
+  @include tutor-badge-base();
 
   &-primary {
     @include tutor-badge-variant(primary);

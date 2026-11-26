@@ -3,16 +3,16 @@
 @use '../mixins' as *;
 
 .tutor-avatar {
-  @include tutor-avatar-base;
+  @include tutor-avatar-base();
   @include tutor-avatar-size(48);
 }
 
 .tutor-avatar-image {
-  @include tutor-avatar-image;
+  @include tutor-avatar-image();
 }
 
 .tutor-avatar-initials {
-  @include tutor-avatar-initials;
+  @include tutor-avatar-initials();
 }
 
 // Avatar sizes

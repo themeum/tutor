@@ -3,8 +3,8 @@
 	flex-shrink: 0;
 	height: 36px;
 	width: 36px;
-	background-color: #FFFFFF;
-	box-shadow: 0px 0px 0px 1px var(--tutor-border-color);
+	background-color: #FFF;
+	box-shadow: 0 0 0 1px var(--tutor-border-color);
 	border-radius: 100px;
 	overflow: hidden;
 
@@ -12,13 +12,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: rgba(255, 255, 255, 0.80);
+		color: rgb(255 255 255 / 80%);
 		background-color: var(--tutor-color-primary);
 	}
 
 	&-xl {
 		width: 96px;
 		height: 96px;
+
 		.tutor-avatar-text {
 			font-size: 24px;
 			font-weight: 500;
