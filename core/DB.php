@@ -479,12 +479,16 @@ class DB {
 	 *
 	 * @param string $alias Alias for the primary table.
 	 *
+	 * @throws InvalidArgumentException If alias is invalid.
+	 *
 	 * @return self
 	 */
 	public function as( string $alias ): self {
-		if ( self::is_valid_identifier( $alias ) ) {
-			$this->alias = $alias;
+		if ( ! self::is_valid_identifier( $alias ) ) {
+			throw new InvalidArgumentException( 'Invalid table alias.' );
 		}
+
+		$this->alias = $alias;
 
 		return $this;
 	}
@@ -974,14 +978,7 @@ class DB {
 	 * @return self
 	 */
 	public function where_null( string $column ): self {
-		if ( self::is_valid_column( $column ) ) {
-			$this->wheres[] = array(
-				'sql'     => "{$column} IS NULL",
-				'boolean' => 'AND',
-			);
-		}
-
-		return $this;
+		return $this->add_where_null( $column, 'IS NULL', 'AND' );
 	}
 
 	/**
@@ -991,17 +988,12 @@ class DB {
 	 *
 	 * @param string $column Column name.
 	 *
+	 * @throws InvalidArgumentException If column name is invalid.
+	 *
 	 * @return self
 	 */
 	public function where_not_null( string $column ): self {
-		if ( self::is_valid_column( $column ) ) {
-			$this->wheres[] = array(
-				'sql'     => "{$column} IS NOT NULL",
-				'boolean' => 'AND',
-			);
-		}
-
-		return $this;
+		return $this->add_where_null( $column, 'IS NOT NULL', 'AND' );
 	}
 
 	/**
@@ -1011,17 +1003,12 @@ class DB {
 	 *
 	 * @param string $column Column name.
 	 *
+	 * @throws InvalidArgumentException If column name is invalid.
+	 *
 	 * @return self
 	 */
 	public function or_where_null( string $column ): self {
-		if ( self::is_valid_column( $column ) ) {
-			$this->wheres[] = array(
-				'sql'     => "{$column} IS NULL",
-				'boolean' => 'OR',
-			);
-		}
-
-		return $this;
+		return $this->add_where_null( $column, 'IS NULL', 'OR' );
 	}
 
 	/**
@@ -1031,15 +1018,36 @@ class DB {
 	 *
 	 * @param string $column Column name.
 	 *
+	 * @throws InvalidArgumentException If column name is invalid.
+	 *
 	 * @return self
 	 */
 	public function or_where_not_null( string $column ): self {
-		if ( self::is_valid_column( $column ) ) {
-			$this->wheres[] = array(
-				'sql'     => "{$column} IS NOT NULL",
-				'boolean' => 'OR',
-			);
+		return $this->add_where_null( $column, 'IS NOT NULL', 'OR' );
+	}
+
+	/**
+	 * Internal helper to add an IS NULL / IS NOT NULL condition.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $column  Column name.
+	 * @param string $null_op 'IS NULL' or 'IS NOT NULL'.
+	 * @param string $boolean 'AND' or 'OR'.
+	 *
+	 * @throws InvalidArgumentException If column name is invalid.
+	 *
+	 * @return self
+	 */
+	private function add_where_null( string $column, string $null_op, string $boolean ): self {
+		if ( ! self::is_valid_column( $column ) ) {
+			throw new InvalidArgumentException( 'Invalid column name in where_null().' );
 		}
+
+		$this->wheres[] = array(
+			'sql'     => "{$column} {$null_op}",
+			'boolean' => $boolean,
+		);
 
 		return $this;
 	}
@@ -2115,7 +2123,7 @@ class DB {
 	 */
 	private function add_where( string $column, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
 		if ( ! self::is_valid_column( $column ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Invalid column name in where().' );
 		}
 
 		return $this->append_where_condition( $column, $operator_or_value, $value, $boolean, $is_two_arg );
@@ -2178,7 +2186,7 @@ class DB {
 		}
 
 		if ( ! self::is_valid_operator( $operator ) ) {
-			return $this;
+			throw new InvalidArgumentException( "Invalid operator '{$operator}'." );
 		}
 
 		$prepared_value = self::prepare_value( $value );

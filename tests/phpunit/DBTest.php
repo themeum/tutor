@@ -306,11 +306,12 @@ class DBTest extends \WP_UnitTestCase {
 			}
 		);
 
-		// Invalid operator in sub-array ignored.
-		$sql_invalid_op = DB::table( 'tutor_orders' )
-			->where( array( array( 'order_status', 'INVALID_OP', 'completed' ) ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_invalid_op );
+		// Invalid operator in sub-array throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( array( 'order_status', 'INVALID_OP', 'completed' ) ) );
+			}
+		);
 	}
 
 	/**
@@ -339,38 +340,41 @@ class DBTest extends \WP_UnitTestCase {
 
 		$prefix = $wpdb->prefix;
 
-		// Malicious column attempt in associative key should be rejected.
-		$sql_assoc_col = DB::table( 'tutor_orders' )
-			->where(
-				array(
-					'1=1; --'      => 'val',
-					'order_status' => 'completed',
-				)
-			)
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed'", $sql_assoc_col );
+		// Malicious column attempt in associative key should throw.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where(
+					array(
+						'1=1; --'      => 'val',
+						'order_status' => 'completed',
+					)
+				);
+			}
+		);
 
-		// Malicious column attempt in numeric array should be rejected.
-		$sql_num_col = DB::table( 'tutor_orders' )
-			->where(
-				array(
-					array( 'id; DROP TABLE tutor_orders;--', '=', '1' ),
-					array( 'order_status', '=', 'completed' ),
-				)
-			)
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed'", $sql_num_col );
+		// Malicious column attempt in numeric array should throw.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where(
+					array(
+						array( 'id; DROP TABLE tutor_orders;--', '=', '1' ),
+						array( 'order_status', '=', 'completed' ),
+					)
+				);
+			}
+		);
 
-		// Malicious operator attempt in numeric array should be rejected.
-		$sql_op = DB::table( 'tutor_orders' )
-			->where(
-				array(
-					array( 'order_status', '= 1; DROP TABLE tutor_orders;--', 'completed' ),
-					array( 'user_id', '=', 10 ),
-				)
-			)
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders WHERE user_id = 10", $sql_op );
+		// Malicious operator attempt in numeric array should throw.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where(
+					array(
+						array( 'order_status', '= 1; DROP TABLE tutor_orders;--', 'completed' ),
+						array( 'user_id', '=', 10 ),
+					)
+				);
+			}
+		);
 
 		// Value with SQL injection payload is properly escaped.
 		$malicious_val = "active' OR '1'='1";
@@ -651,13 +655,18 @@ class DBTest extends \WP_UnitTestCase {
 
 		$prefix = $wpdb->prefix;
 
-		// Malicious column attempt should be ignored.
+		// Malicious select column attempt should be ignored; malicious where column should throw.
 		$sql = DB::table( 'tutor_orders' )
 			->select( 'id', 'status; DROP TABLE tutor_orders; --' )
-			->where( '1=1; --', 'val' )
 			->to_sql();
 
 		$this->assertSame( "SELECT id FROM {$prefix}tutor_orders", $sql );
+
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( '1=1; --', 'val' );
+			}
+		);
 	}
 
 	/**
