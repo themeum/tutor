@@ -353,10 +353,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     {...controllerProps}
                     disabled={!adminPartialEnabled}
                     label={__('Partial marking', 'tutor')}
-                    helpText={__(
-                      'Applies to question types with multiple answer parts, including Matching, Ordering, Image Matching, Fill in the Blanks, and Multiple Choice with multiple correct answers',
-                      'tutor',
-                    )}
+                    helpText={__('Award points for correct sub-answers on multi-part questions', 'tutor')}
                   />
                 )}
               />
@@ -403,7 +400,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       {...controllerProps}
                       type="number"
                       size="small"
-                      label={__('Penalty per incorrect answer', 'tutor')}
+                      label={__('Penalty per question', 'tutor')}
                       isInlineLabel
                       disabled={!adminNegativeEnabled}
                       wrapperCss={styles.negativeMarkingInput}

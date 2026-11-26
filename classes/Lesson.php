@@ -12,6 +12,7 @@ namespace TUTOR;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -346,6 +347,22 @@ class Lesson extends Tutor_Base {
 				),
 				true
 			);
+
+			$duration_sec = absint( $video['duration_sec'] ?? 0 );
+			if ( ! empty( $video['runtime'] ) && is_array( $video['runtime'] ) ) {
+				$runtime      = $video['runtime'];
+				$hours        = absint( $runtime['hours'] ?? 0 );
+				$minutes      = absint( $runtime['minutes'] ?? 0 );
+				$seconds      = absint( $runtime['seconds'] ?? 0 );
+				$duration_sec = $hours * HOUR_IN_SECONDS + $minutes * MINUTE_IN_SECONDS + $seconds;
+			}
+
+			if ( $duration_sec > 0 ) {
+				$video['duration_sec'] = $duration_sec;
+				$video['playtime']     = tutor_utils()->playtime_string( $duration_sec );
+				$video['runtime']      = tutor_utils()->playtime_array( $duration_sec );
+			}
+
 			update_post_meta( $post_ID, '_video', tutor_utils()->filter_video_meta( $video ) );
 		}
 
