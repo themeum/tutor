@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Core\Input;
 use Tutor\Core\Singleton;
 use Tutor\Database\TableManager;
+use Tutor\Database\Tables\EarningsTable;
+use Tutor\Database\Tables\WithdrawsTable;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\GDPR\GDPR;
@@ -989,54 +991,8 @@ final class Tutor extends Singleton {
 	 * @since 1.2.0
 	 */
 	public static function create_withdraw_database() {
-		global $wpdb;
-
-		$charset_collate = $wpdb->get_charset_collate();
-
-		/**
-		 * Table SQL
-		 *
-		 * {$wpdb->prefix}tutor_earnings
-		 * {$wpdb->prefix}tutor_withdraws
-		 *
-		 * @since 1.2.0
-		 */
-
-		$earning_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_earnings (
-			earning_id bigint(20) NOT NULL AUTO_INCREMENT,
-			user_id bigint(20) DEFAULT NULL,
-			course_id bigint(20) DEFAULT NULL,
-			order_id bigint(20) DEFAULT NULL,
-			order_status varchar(50) DEFAULT NULL,
-			course_price_total decimal(16,2) DEFAULT NULL,
-			course_price_grand_total decimal(16,2) DEFAULT NULL,
-			instructor_amount decimal(16,2) DEFAULT NULL,
-			instructor_rate decimal(16,2) DEFAULT NULL,
-			admin_amount decimal(16,2) DEFAULT NULL,
-			admin_rate decimal(16,2) DEFAULT NULL,
-			commission_type varchar(20) DEFAULT NULL,
-			deduct_fees_amount decimal(16,2) DEFAULT NULL,
-			deduct_fees_name varchar(250) DEFAULT NULL,
-			deduct_fees_type varchar(20) DEFAULT NULL,
-			process_by varchar(20) DEFAULT NULL,
-			created_at datetime DEFAULT NULL,
-			PRIMARY KEY (earning_id)
-		) $charset_collate;";
-
-		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
-			withdraw_id bigint(20) NOT NULL AUTO_INCREMENT,
-			user_id bigint(20) DEFAULT NULL,
-			amount decimal(16,2) DEFAULT NULL,
-			method_data text DEFAULT NULL,
-			status varchar(50) DEFAULT NULL,
-			updated_at datetime DEFAULT NULL,
-			created_at datetime DEFAULT NULL,
-			PRIMARY KEY (withdraw_id)
-		) $charset_collate;";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $earning_table );
-		dbDelta( $withdraw_table );
+		EarningsTable::create();
+		WithdrawsTable::create();
 
 		/**
 		 * Setting previous dashboard to new dashboard
