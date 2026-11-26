@@ -46,7 +46,7 @@ if ( is_null( $course_rating ) ) {
 
 	<h1 class="tutor-course-details-title tutor-fs-4 tutor-fw-bold tutor-color-black tutor-mt-12 tutor-mb-0">
 		<?php do_action( 'tutor_course/single/title/before' ); ?>
-		<span><?php the_title(); ?></span>
+		<span><?php echo esc_html( get_the_title() ); ?></span>
 	</h1>
 
 	<div class="tutor-course-details-top tutor-mt-16">
