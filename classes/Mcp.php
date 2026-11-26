@@ -11,8 +11,10 @@
 namespace TUTOR;
 
 use Tutor\Core\Input;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Mcp\Agent;
 use Tutor\Mcp\Registrar;
+use Tutor\Traits\JsonResponse;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +25,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Mcp {
 
+	use JsonResponse;
+
 	/**
 	 * Constructor.
 	 *
@@ -30,7 +34,7 @@ class Mcp {
 	 */
 	public function __construct() {
 		( new Registrar() )->hooks();
-		add_action( 'admin_init', array( $this, 'save_settings' ) );
+		add_action( 'wp_ajax_tutor_mcp_save_settings', array( $this, 'ajax_save_settings' ) );
 		add_action( 'admin_init', array( $this, 'guard_tools_page' ) );
 		add_action( 'init', array( $this, 'maybe_bootstrap_role' ), 5 );
 		// Outermost tools filter, late — keep MCP hidden even if other filters re-add it.
@@ -147,22 +151,22 @@ class Mcp {
 	}
 
 	/**
-	 * Save Tools → MCP settings.
+	 * AJAX: save Tools → MCP settings without a full page reload.
 	 *
 	 * @since 4.3.0
 	 *
 	 * @return void
 	 */
-	public function save_settings() {
-		if ( 'save_settings' !== Input::post( 'tutor_mcp_action', '' ) ) {
-			return;
-		}
+	public function ajax_save_settings() {
+		tutor_utils()->checking_nonce();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
+			$this->json_response(
+				tutor_utils()->error_message( 'forbidden' ),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
-
-		check_admin_referer( 'tutor_mcp_tools_save' );
 
 		$enabled           = (bool) Input::post( 'tutor_mcp_enabled', false, Input::TYPE_BOOL );
 		$read_only         = (bool) Input::post( 'tutor_mcp_read_only', false, Input::TYPE_BOOL );
@@ -193,18 +197,14 @@ class Mcp {
 			Agent::ensure_agent_user();
 		}
 
-		$redirect = array(
-			'page'     => 'tutor-tools',
-			'sub_page' => 'tutor_mcp',
-			'updated'  => '1',
+		$this->json_response(
+			__( 'MCP settings saved.', 'tutor' ),
+			array(
+				'enabled'           => $enabled,
+				'read_only'         => $read_only,
+				'instructor_access' => $instructor_access,
+				'tools'             => $tools,
+			)
 		);
-
-		$mcp_view = Input::post( 'tutor_mcp_view', '' );
-		if ( 'abilities' === $mcp_view ) {
-			$redirect['mcp_view'] = 'abilities';
-		}
-
-		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'admin.php' ) ) );
-		exit;
 	}
 }

@@ -41,7 +41,6 @@ foreach ( $catalog as $group ) {
 		}
 	}
 }
-$updated       = (bool) Input::get( 'updated', false, Input::TYPE_BOOL );
 $mcp_view      = Input::get( 'mcp_view', '' );
 $abilities_url = add_query_arg(
 	array(
@@ -65,29 +64,11 @@ $overview_url  = add_query_arg(
 	data-has-adapter="<?php echo Registrar::has_adapter() ? '1' : '0'; ?>"
 >
 	<form method="post" id="tutor-mcp-form">
-		<?php wp_nonce_field( 'tutor_mcp_tools_save' ); ?>
-		<input type="hidden" name="tutor_mcp_action" value="save_settings">
-		<input type="hidden" name="tutor_mcp_view" value="<?php echo esc_attr( 'abilities' === $mcp_view ? 'abilities' : '' ); ?>">
-
-		<div class="tutor-option-main-title tutor-d-flex tutor-align-center tutor-justify-between">
+		<div class="tutor-option-main-title">
 			<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
 				<?php echo 'abilities' === $mcp_view ? esc_html__( 'Abilities', 'tutor' ) : esc_html__( 'MCP', 'tutor' ); ?>
 			</div>
-			<div class="tutor-d-flex tutor-align-center tutor-gap-2">
-				<span class="tutor-fs-7 tutor-color-warning tutor-d-none" data-mcp-dirty>
-					<?php esc_html_e( 'Unsaved changes', 'tutor' ); ?>
-				</span>
-				<button type="submit" class="tutor-btn tutor-btn-primary" data-mcp-save disabled>
-					<?php esc_html_e( 'Save Changes', 'tutor' ); ?>
-				</button>
-			</div>
 		</div>
-
-		<?php if ( $updated ) : ?>
-			<div class="tutor-alert tutor-success tutor-mb-24">
-				<?php esc_html_e( 'MCP settings saved.', 'tutor' ); ?>
-			</div>
-		<?php endif; ?>
 
 		<?php if ( ! Registrar::has_abilities_api() ) : ?>
 			<div class="tutor-alert tutor-danger tutor-mb-24">

@@ -30,14 +30,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div>
 		<a class="tutor-btn tutor-btn-ghost tutor-btn-sm" href="<?php echo esc_url( $overview_url ); ?>">
 			<span class="tutor-icon-angle-left tutor-mr-8" aria-hidden="true"></span>
-			<?php
-			printf(
-				/* translators: 1: enabled ability count, 2: total abilities */
-				esc_html__( 'Abilities (%1$d/%2$d)', 'tutor' ),
-				(int) $abilities_on,
-				(int) $abilities_total
-			);
-			?>
+			<span data-mcp-abilities-summary>
+				<?php
+				printf(
+					/* translators: 1: enabled ability count, 2: total abilities */
+					esc_html__( 'Abilities (%1$d/%2$d)', 'tutor' ),
+					(int) $abilities_on,
+					(int) $abilities_total
+				);
+				?>
+			</span>
 		</a>
 	</div>
 	<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" data-mcp-reset-default>
@@ -89,7 +91,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tutor-option-group-title tutor-mb-16">
 			<div class="tutor-fs-6 tutor-color-muted">
 				<?php echo esc_html( $group['name'] ); ?>
-				<span class="tutor-ml-8">(<?php echo esc_html( (string) $group_on ); ?>/<?php echo esc_html( (string) $group_total ); ?>)</span>
+				<span class="tutor-ml-8" data-mcp-group-count>(<?php echo esc_html( (string) $group_on ); ?>/<?php echo esc_html( (string) $group_total ); ?>)</span>
 			</div>
 		</div>
 		<div class="tutor-mcp-ability-fields">
