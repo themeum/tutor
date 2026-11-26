@@ -218,6 +218,11 @@ select.tutor-form-control,
 	background-position: right 0.75rem center;
 	background-size: 16px 12px;
 	padding-inline-end: 36px;
+
+	[dir='rtl'] &,
+	.rtl & {
+		background-position: left 0.75rem center;
+	}
 }
 
 .tutor-input-group {

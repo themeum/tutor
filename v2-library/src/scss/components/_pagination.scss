@@ -66,6 +66,13 @@
 					color: var(--tutor-color-white);
 					background: var(--tutor-color-primary);
 				}
+
+				[dir='rtl'] &,
+				.rtl & {
+					span[class*='tutor-icon-angle-'] {
+						transform: scaleX(-1);
+					}
+				}
 			}
 			
 			@include breakpoint.breakpoint-min(desktop-lg) {

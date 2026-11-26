@@ -291,48 +291,8 @@
 			.tutor-comment-textarea,
 			.tutor-actual-comment {
 				&::before {
-					inset-inline-start: initial;
-					inset-inline-end: -6px;
 					transform: rotate(220deg);
 					border-radius: 0 3px 0 0;
-				}
-
-				&::after {
-					inset-inline-start: initial;
-					inset-inline-end: -2px;
-				}
-			}
-
-			.tutor-comments-list {
-				.tutor-single-comment {
-					.tutor-comment-actions {
-						span {
-							&:not(:last-child) {
-								margin-inline-end: initial;
-								margin-inline-start: 23px;
-							}
-						}
-					}
-				}
-			}
-
-			.tutor-comments-list.tutor-parent-comment {
-				.tutor-comment-line {
-					inset-inline-start: initial;
-					inset-inline-end: 24px;
-				}
-
-				.tutor-child-comment {
-					&::after {
-						inset-inline-start: initial;
-						inset-inline-end: -45px;
-					}
-
-					&::before {
-						inset-inline-start: initial;
-						inset-inline-end: -68px;
-						transform: rotate(90deg);
-					}
 				}
 			}
 		}

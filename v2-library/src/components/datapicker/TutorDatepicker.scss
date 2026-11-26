@@ -270,11 +270,6 @@
 			width: unset;
 			border-inline-start: 1px solid #c0c3cb;
 
-			.rtl & {
-				border-inline-start: 0;
-				border-inline-end: 1px solid #c0c3cb;
-			}
-
 			.react-datepicker-time {
 				&__input {
 					margin-inline-start: 0;
@@ -501,11 +496,6 @@
 		background: var(--color) !important;
 		color: #fff;
 		border-color: var(--color) !important;
-
-		.rtl & {
-			inset-inline-end: auto;
-			inset-inline-start: 10px;
-		}
 
 		&:hover {
 			--color: hsl(0deg 0% 50%);

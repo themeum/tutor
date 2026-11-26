@@ -8,16 +8,8 @@
   &-wrap {
     margin-inline-start: -20px;
 
-    .rtl & {
-      margin-inline: 0 -20px;
-    }
-
     @include breakpoint.breakpoint-max(782) {
       margin-inline-start: -10px;
-
-      .rtl & {
-        margin-inline: 0 -10px;
-      }
     }
 
     // reset
@@ -116,18 +108,10 @@
     &-icon {
       &:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
         padding-inline-start: 40px !important;
-
-        .rtl & {
-          padding-inline: 16px 40px !important;
-        }
       }
 
       &-reverse ~ .tutor-form-control {
         padding-inline-end: 40px !important;
-
-        .rtl & {
-          padding-inline: 40px 16px !important;
-        }
       }
     }
   }
@@ -551,12 +535,9 @@ body.tutor-backend-tutor_settings #wpbody-content {
 
 .tutor-option-field {
   display: block;
-  margin: 0 0 0 200px;
+  margin: 0;
+  margin-inline-start: 200px;
   max-width: 800px;
-}
-
-.rtl .tutor-option-field {
-  margin: 0 200px 0 0;
 }
 
 .tutor_lesson_modal_form .tutor-option-field {
@@ -569,10 +550,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
   display: block;
   float: inline-start;
   width: 200px;
-}
-
-.rtl .tutor-option-field-label {
-  float: inline-end;
 }
 
 .tutor_lesson_modal_form .tutor-option-field-label {
@@ -797,15 +774,15 @@ a.addon-buynow-link {
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc,
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name {
-  margin-inline-end: 148px !important;
+  margin-inline-start: 148px !important;
 }
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc {
-  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
 }
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name {
-  margin-inline-start: 53px !important;
+  margin-inline-end: 53px !important;
 }
 
 .required-plugin-cards {
@@ -2100,20 +2077,10 @@ h2.tutor-page-heading {
       &:first-child {
         border-inline-start: 1px solid #e6e6e6;
         padding: 16px;
-
-        .rtl & {
-          border-inline-start: none;
-          border-inline-end: 1px solid #e6e6e6;
-        }
       }
 
       &:last-child {
         border-inline-end: 1px solid #e6e6e6;
-
-        .rtl & {
-          border-inline-end: none;
-          border-inline-start: 1px solid #e6e6e6;
-        }
       }
 
       &:nth-child(2) {
@@ -2128,20 +2095,10 @@ h2.tutor-page-heading {
       &:first-child {
         border-inline-start: 1px solid #e6e6e6;
         padding: 16px;
-
-        .rtl & {
-          border-inline-start: none;
-          border-inline-end: 1px solid #e6e6e6;
-        }
       }
 
       &:last-child {
         border-inline-end: 1px solid #e6e6e6;
-
-        .rtl & {
-          border-inline-end: none;
-          border-inline-start: 1px solid #e6e6e6;
-        }
       }
 
       &:nth-child(2) {

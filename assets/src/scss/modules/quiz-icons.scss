@@ -12,10 +12,6 @@
         font-size: 20px;
         vertical-align: middle;
         background-color: var(--tutor-color-primary);
-
-        .rtl & {
-            margin-inline: 8px 0;
-        }
     }
 
     &-boolean {

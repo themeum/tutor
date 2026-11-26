@@ -34,10 +34,6 @@
 
 		.tutor-option-submenu-nav {
 			margin-inline-start: 36px;
-			
-			.rtl & {
-				margin-inline: 0 36px;
-			}
 
 			.tutor-nav-link {
 				padding: 8px 12px;
@@ -53,10 +49,6 @@
 
 			@include breakpoint.breakpoint-max(mobile) {
 				margin-inline-start: 20px;
-
-				.rtl & {
-					margin-inline: 0 20px;
-				}
 			}
 		}
 	}

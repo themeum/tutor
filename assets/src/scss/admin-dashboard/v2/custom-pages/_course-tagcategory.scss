@@ -8,6 +8,11 @@
 		select {
 			padding-inline: 20px 40px;
 			background-position: right 10px top 55%;
+
+			[dir='rtl'] &,
+			.rtl & {
+				background-position: left 10px top 55%;
+			}
 		}
 
 		.button,

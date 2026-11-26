@@ -57,7 +57,8 @@
 
 	select.tutor-form-select {
 		min-width: 137px;
-		padding: 0 40px 0 20px;
+		padding-block: 0;
+		padding-inline: 20px 40px;
 	}
 
 	select.tutor-form-select,

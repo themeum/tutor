@@ -14,6 +14,7 @@
 
     .tutor-label {
       @include tutor-text-wrap();
+
       margin: 0;
     }
 
@@ -249,7 +250,7 @@
       @include left($tutor-spacing-4);
     }
 
-    &.tutor-input-content-right {
+    .tutor-input-content-right {
       @include right($tutor-spacing-4);
     }
   }

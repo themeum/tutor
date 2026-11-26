@@ -157,11 +157,6 @@
 
 		padding-inline-end: var(--padding);
 
-		body.rtl & {
-			padding-inline-start: var(--padding);
-			padding-inline-end: 0;
-		}
-
 		&-item {
 			display: none;
 
