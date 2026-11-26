@@ -7,6 +7,13 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
+ *
+ * Variables provided by the Q_And_A::load_replies
+ *
+ * @var array   $replies
+ * @var int     $user_id
+ * @var string  $replies_order
+ * @var bool    $has_access
  */
 
 defined( 'ABSPATH' ) || exit;
