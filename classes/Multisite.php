@@ -32,7 +32,7 @@ class Multisite {
 		}
 
 		add_action( 'wp_initialize_site', array( $this, 'on_initialize_site' ), 10, 2 );
-		add_action( 'wp_uninitialize_site', array( $this, 'on_uninitialize_site' ) );
+		add_action( 'wp_uninitialize_site', array( $this, 'on_uninitialize_site' ), 5 );
 		add_action( 'init', array( $this, 'ensure_admin_capabilities' ) );
 	}
 
