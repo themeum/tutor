@@ -26,11 +26,24 @@ $instructor_access = Registrar::is_instructor_access_enabled();
 $endpoint          = Registrar::endpoint();
 $enabled_tools     = Registrar::enabled_tools();
 $catalog           = Registrar::tool_catalog();
-$total_tools       = count( Registrar::known_tools() );
-$on_count          = count( $enabled_tools );
-$updated           = (bool) Input::get( 'updated', false, Input::TYPE_BOOL );
-$mcp_view          = Input::get( 'mcp_view', '' );
-$abilities_url     = add_query_arg(
+$abilities_total   = 0;
+$abilities_on      = 0;
+foreach ( $catalog as $group ) {
+	$group_abilities = isset( $group['abilities'] ) && is_array( $group['abilities'] ) ? $group['abilities'] : array();
+	foreach ( $group_abilities as $ability ) {
+		++$abilities_total;
+		$tools = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
+		foreach ( $tools as $tool ) {
+			if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
+				++$abilities_on;
+				break;
+			}
+		}
+	}
+}
+$updated       = (bool) Input::get( 'updated', false, Input::TYPE_BOOL );
+$mcp_view      = Input::get( 'mcp_view', '' );
+$abilities_url = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',
@@ -38,7 +51,7 @@ $abilities_url     = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-$overview_url      = add_query_arg(
+$overview_url  = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',
@@ -190,10 +203,10 @@ $overview_url      = add_query_arg(
 							<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( $abilities_url ); ?>">
 								<?php
 								printf(
-									/* translators: 1: enabled count, 2: total count */
+									/* translators: 1: enabled ability count, 2: total abilities */
 									esc_html__( '%1$d of %2$d on', 'tutor' ),
-									(int) $on_count,
-									(int) $total_tools
+									(int) $abilities_on,
+									(int) $abilities_total
 								);
 								?>
 								<span class="tutor-icon-angle-right tutor-ml-8" aria-hidden="true"></span>

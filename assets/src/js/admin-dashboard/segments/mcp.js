@@ -57,6 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	};
 
+	const setAbilityTools = (row, on) => {
+		if (!row) {
+			return;
+		}
+		row.querySelectorAll('input[name="tutor_mcp_enabled_tools[]"]').forEach((input) => {
+			input.checked = on;
+		});
+	};
+
 	root.addEventListener('change', (e) => {
 		if (!e.target || !e.target.matches('input, select, textarea')) {
 			return;
@@ -71,42 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		if (e.target.matches('[data-mcp-ability-toggle]')) {
-			const row = e.target.closest('.tutor-mcp-ability-row');
-			const on = e.target.checked;
-			if (row) {
-				row.querySelectorAll('input[name="tutor_mcp_enabled_tools[]"]').forEach((input) => {
-					input.checked = on;
-				});
-				const tools = row.querySelector('.tutor-mcp-tools');
-				if (tools) {
-					tools.classList.toggle('tutor-mcp-dimmed', !on);
-				}
-			}
-		}
-
-		if (e.target.matches('input[name="tutor_mcp_enabled_tools[]"]')) {
-			const abRow = e.target.closest('.tutor-mcp-ability-row');
-			if (abRow) {
-				const toolsInputs = abRow.querySelectorAll('input[name="tutor_mcp_enabled_tools[]"]');
-				let any = false;
-				let all = true;
-				toolsInputs.forEach((input) => {
-					if (input.checked) {
-						any = true;
-					} else {
-						all = false;
-					}
-				});
-				const master = abRow.querySelector('[data-mcp-ability-toggle]');
-				if (master) {
-					master.checked = any;
-					master.indeterminate = any && !all;
-				}
-				const toolsWrap = abRow.querySelector('.tutor-mcp-tools');
-				if (toolsWrap) {
-					toolsWrap.classList.toggle('tutor-mcp-dimmed', !any);
-				}
-			}
+			setAbilityTools(e.target.closest('.tutor-mcp-ability-row'), e.target.checked);
 		}
 
 		markDirty();
@@ -114,16 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	root.addEventListener('click', (e) => {
-		const chev = e.target.closest('[data-mcp-ab-toggle]');
-		if (!chev) {
+		const resetBtn = e.target.closest('[data-mcp-reset-default]');
+		if (!resetBtn) {
 			return;
 		}
 		e.preventDefault();
-		const row = chev.closest('.tutor-mcp-ability-row');
-		if (row) {
-			row.classList.toggle('is-open');
-			chev.setAttribute('aria-expanded', row.classList.contains('is-open') ? 'true' : 'false');
-		}
+		root.querySelectorAll('[data-mcp-ability-toggle]').forEach((toggle) => {
+			toggle.checked = true;
+			setAbilityTools(toggle.closest('.tutor-mcp-ability-row'), true);
+		});
+		markDirty();
 	});
 
 	toggleEnabledRows();

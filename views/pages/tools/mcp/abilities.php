@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Variables expected from parent mcp.php:
  *
  * @var string   $overview_url
- * @var int      $on_count
- * @var int      $total_tools
+ * @var int      $abilities_on
+ * @var int      $abilities_total
  * @var bool     $enabled
  * @var bool     $read_only
  * @var bool     $instructor_access
@@ -26,21 +26,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var string[] $enabled_tools
  */
 ?>
-<div class="tutor-mb-24">
-	<a class="tutor-btn tutor-btn-ghost tutor-btn-sm" href="<?php echo esc_url( $overview_url ); ?>">
-		<span class="tutor-icon-angle-left tutor-mr-8" aria-hidden="true"></span>
-		<?php esc_html_e( 'Back to MCP', 'tutor' ); ?>
-	</a>
-	<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
-		<?php
-		printf(
-			/* translators: 1: enabled count, 2: total count */
-			esc_html__( '%1$d of %2$d tools enabled', 'tutor' ),
-			(int) $on_count,
-			(int) $total_tools
-		);
-		?>
+<div class="tutor-mb-24 tutor-d-flex tutor-align-center tutor-justify-between tutor-flex-wrap tutor-gap-2">
+	<div>
+		<a class="tutor-btn tutor-btn-ghost tutor-btn-sm" href="<?php echo esc_url( $overview_url ); ?>">
+			<span class="tutor-icon-angle-left tutor-mr-8" aria-hidden="true"></span>
+			<?php
+			printf(
+				/* translators: 1: enabled ability count, 2: total abilities */
+				esc_html__( 'Abilities (%1$d/%2$d)', 'tutor' ),
+				(int) $abilities_on,
+				(int) $abilities_total
+			);
+			?>
+		</a>
 	</div>
+	<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" data-mcp-reset-default>
+		<span class="tutor-icon-refresh tutor-mr-8" aria-hidden="true"></span>
+		<?php esc_html_e( 'Reset to default', 'tutor' ); ?>
+	</button>
 </div>
 
 <?php if ( ! $enabled ) : ?>
@@ -69,13 +72,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php foreach ( $catalog as $group ) : ?>
 	<?php
-	$group_on    = 0;
-	$group_total = 0;
-	foreach ( $group['abilities'] as $ability ) {
-		$group_total += count( $ability['tools'] );
-		foreach ( $ability['tools'] as $tool ) {
-			if ( in_array( $tool['n'], $enabled_tools, true ) ) {
+	$group_abilities = isset( $group['abilities'] ) && is_array( $group['abilities'] ) ? $group['abilities'] : array();
+	$group_total     = count( $group_abilities );
+	$group_on        = 0;
+	foreach ( $group_abilities as $ability ) {
+		$tools = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
+		foreach ( $tools as $tool ) {
+			if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
 				++$group_on;
+				break;
 			}
 		}
 	}
@@ -88,45 +93,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 		<div class="item-wrapper">
-			<?php foreach ( $group['abilities'] as $ability ) : ?>
+			<?php foreach ( $group_abilities as $ability ) : ?>
 				<?php
+				$tools    = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
 				$tools_on = 0;
-				foreach ( $ability['tools'] as $tool ) {
-					if ( in_array( $tool['n'], $enabled_tools, true ) ) {
+				foreach ( $tools as $tool ) {
+					if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
 						++$tools_on;
 					}
 				}
 				$ability_on = $tools_on > 0;
+				$is_pro     = ! empty( $ability['pro'] );
 				?>
 				<div class="tutor-mcp-ability-row">
 					<div class="tutor-option-field-row">
-						<div class="tutor-option-field-label tutor-d-flex tutor-align-start tutor-gap-1">
-							<button type="button" class="tutor-iconic-btn tutor-flex-shrink-0" data-mcp-ab-toggle aria-expanded="false" aria-label="<?php esc_attr_e( 'Show tools', 'tutor' ); ?>">
-								<span class="tutor-icon-angle-right" aria-hidden="true"></span>
-							</button>
-							<div>
+						<div class="tutor-option-field-label">
+							<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 								<div class="tutor-fs-6 tutor-fw-medium"><?php echo esc_html( $ability['name'] ); ?></div>
-								<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $ability['desc'] ); ?></div>
-								<div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
-									<?php
-									if ( $tools_on < count( $ability['tools'] ) && $ability_on ) {
-										printf(
-											/* translators: 1: enabled tools, 2: total tools */
-											esc_html__( '%1$d of %2$d tools on', 'tutor' ),
-											(int) $tools_on,
-											count( $ability['tools'] )
-										);
-									} else {
-										printf(
-											/* translators: %d: tool count */
-											esc_html( _n( '%d tool', '%d tools', count( $ability['tools'] ), 'tutor' ) ),
-											count( $ability['tools'] )
-										);
-									}
-									?>
-									· <?php esc_html_e( 'read', 'tutor' ); ?>
-								</div>
+								<?php if ( $is_pro ) : ?>
+									<span class="tutor-pro-badge"><?php esc_html_e( 'Pro', 'tutor' ); ?></span>
+								<?php endif; ?>
 							</div>
+							<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $ability['desc'] ); ?></div>
 						</div>
 						<div class="tutor-option-field-input">
 							<label class="tutor-form-toggle">
@@ -135,26 +123,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</label>
 						</div>
 					</div>
-					<div class="tutor-mcp-tools tutor-d-none <?php echo $ability_on ? '' : 'tutor-mcp-dimmed'; ?>">
-						<?php foreach ( $ability['tools'] as $tool ) : ?>
-							<div class="tutor-option-field-row">
-								<div class="tutor-option-field-label">
-									<code class="tutor-fs-7"><?php echo esc_html( $tool['n'] ); ?></code>
-									<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $tool['l'] ); ?></div>
-								</div>
-								<div class="tutor-option-field-input">
-									<label class="tutor-form-toggle">
-										<input
-											type="checkbox"
-											class="tutor-form-toggle-input"
-											name="tutor_mcp_enabled_tools[]"
-											value="<?php echo esc_attr( $tool['n'] ); ?>"
-											<?php checked( in_array( $tool['n'], $enabled_tools, true ) ); ?>
-										>
-										<span class="tutor-form-toggle-control"></span>
-									</label>
-								</div>
-							</div>
+					<div class="tutor-mcp-tools tutor-d-none" aria-hidden="true">
+						<?php foreach ( $tools as $tool ) : ?>
+							<input
+								type="checkbox"
+								class="tutor-form-toggle-input"
+								name="tutor_mcp_enabled_tools[]"
+								value="<?php echo esc_attr( $tool['n'] ); ?>"
+								<?php checked( in_array( $tool['n'], $enabled_tools, true ) ); ?>
+							>
 						<?php endforeach; ?>
 					</div>
 				</div>

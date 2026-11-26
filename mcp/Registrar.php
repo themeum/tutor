@@ -391,73 +391,163 @@ class Registrar {
 	}
 
 	/**
-	 * Admin UI catalog of current Phase 1–3 tools.
+	 * Build a catalog tool entry.
 	 *
 	 * @since 4.3.0
 	 *
-	 * @return array<int, array{id:string,name:string,abilities:array<int,array{id:string,name:string,desc:string,tools:array<int,array{n:string,l:string,r:string}>}>}>
+	 * @param string $id    Tool ability ID.
+	 * @param string $label Admin label.
+	 * @param string $risk  read|write|destructive.
+	 * @return array{n:string,l:string,r:string}
+	 */
+	public static function catalog_tool( string $id, string $label, string $risk ): array {
+		return array(
+			'n' => $id,
+			'l' => $label,
+			'r' => $risk,
+		);
+	}
+
+	/**
+	 * Find a catalog group index by id.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array  $catalog Catalog groups.
+	 * @param string $group_id Group id.
+	 * @return int|null
+	 */
+	public static function catalog_group_index( array $catalog, string $group_id ): ?int {
+		foreach ( $catalog as $index => $group ) {
+			if ( isset( $group['id'] ) && $group_id === $group['id'] ) {
+				return (int) $index;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Upsert an ability into a catalog group (append tools if ability exists).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array  $catalog  Catalog groups.
+	 * @param string $group_id Group id.
+	 * @param array  $ability  Ability payload (id, name, desc, tools, pro?).
+	 * @param array  $group    Optional group meta when creating (name required).
+	 * @return array
+	 */
+	public static function catalog_upsert_ability( array $catalog, string $group_id, array $ability, array $group = array() ): array {
+		$group_index = self::catalog_group_index( $catalog, $group_id );
+		if ( null === $group_index ) {
+			$catalog[] = array(
+				'id'        => $group_id,
+				'name'      => isset( $group['name'] ) ? $group['name'] : $group_id,
+				'abilities' => array( $ability ),
+			);
+			return $catalog;
+		}
+
+		if ( ! isset( $catalog[ $group_index ]['abilities'] ) || ! is_array( $catalog[ $group_index ]['abilities'] ) ) {
+			$catalog[ $group_index ]['abilities'] = array();
+		}
+
+		$ability_id = isset( $ability['id'] ) ? (string) $ability['id'] : '';
+		foreach ( $catalog[ $group_index ]['abilities'] as $a_index => $existing ) {
+			if ( ! isset( $existing['id'] ) || $ability_id !== $existing['id'] ) {
+				continue;
+			}
+
+			$existing_tools = isset( $existing['tools'] ) && is_array( $existing['tools'] ) ? $existing['tools'] : array();
+			$new_tools      = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
+			$by_id          = array();
+			foreach ( array_merge( $existing_tools, $new_tools ) as $tool ) {
+				if ( ! isset( $tool['n'] ) ) {
+					continue;
+				}
+				$by_id[ (string) $tool['n'] ] = $tool;
+			}
+			$catalog[ $group_index ]['abilities'][ $a_index ]['tools'] = array_values( $by_id );
+			if ( ! empty( $ability['pro'] ) ) {
+				$catalog[ $group_index ]['abilities'][ $a_index ]['pro'] = true;
+			}
+			if ( isset( $ability['name'] ) ) {
+				$catalog[ $group_index ]['abilities'][ $a_index ]['name'] = $ability['name'];
+			}
+			if ( isset( $ability['desc'] ) ) {
+				$catalog[ $group_index ]['abilities'][ $a_index ]['desc'] = $ability['desc'];
+			}
+
+			return $catalog;
+		}
+
+		$catalog[ $group_index ]['abilities'][] = $ability;
+		return $catalog;
+	}
+
+	/**
+	 * Admin UI catalog grouped like Tools → MCP → Abilities.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array<int, array{id:string,name:string,abilities:array<int,array{id:string,name:string,desc:string,pro?:bool,tools:array<int,array{n:string,l:string,r:string}>}>}>
 	 */
 	public static function tool_catalog(): array {
-		$t = static function ( string $id, string $label, string $risk ): array {
-			return array(
-				'n' => $id,
-				'l' => $label,
-				'r' => $risk,
-			);
-		};
+		$t = array( self::class, 'catalog_tool' );
 
 		$catalog = array(
 			array(
-				'id'        => 'health',
-				'name'      => __( 'Health', 'tutor' ),
+				'id'        => 'course',
+				'name'      => __( 'Course Content', 'tutor' ),
 				'abilities' => array(
 					array(
-						'id'    => 'health_check',
-						'name'  => __( 'Site Health', 'tutor' ),
-						'desc'  => __( 'WP + Tutor versions and addon flags. No secrets.', 'tutor' ),
-						'tools' => array(
-							$t( 'tutor-mcp/health-check', __( 'Health check', 'tutor' ), 'read' ),
-						),
-					),
-				),
-			),
-			array(
-				'id'        => 'courses',
-				'name'      => __( 'Courses', 'tutor' ),
-				'abilities' => array(
-					array(
-						'id'    => 'course_tools',
-						'name'  => __( 'Course Tools', 'tutor' ),
-						'desc'  => __( 'Search, create, update, publish, and trash courses.', 'tutor' ),
+						'id'    => 'course_management',
+						'name'  => __( 'Course Management', 'tutor' ),
+						'desc'  => __( 'Create, update, publish, duplicate, trash and retrieve courses.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/get-course', __( 'Get course details', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/search-courses', __( 'Search courses', 'tutor' ), 'read' ),
-							$t( 'tutor-mcp/get-course-contents', __( 'Get course contents', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-course', __( 'Create course', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-course', __( 'Update course', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/set-course-status', __( 'Set course status', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/trash-course', __( 'Trash course', 'tutor' ), 'destructive' ),
 						),
 					),
-				),
-			),
-			array(
-				'id'        => 'curriculum',
-				'name'      => __( 'Curriculum', 'tutor' ),
-				'abilities' => array(
 					array(
-						'id'    => 'curriculum_tools',
-						'name'  => __( 'Topic, Lesson & Quiz', 'tutor' ),
-						'desc'  => __( 'Build curriculum; reorder is intentionally disabled.', 'tutor' ),
+						'id'    => 'curriculum',
+						'name'  => __( 'Curriculum Builder', 'tutor' ),
+						'desc'  => __( 'Add and remove topics; reorder is intentionally disabled.', 'tutor' ),
 						'tools' => array(
+							$t( 'tutor-mcp/get-course-contents', __( 'Get course contents', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-topic', __( 'Create topic', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-topic', __( 'Update topic', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/delete-topic', __( 'Delete topic', 'tutor' ), 'destructive' ),
+						),
+					),
+					array(
+						'id'    => 'lesson_content',
+						'name'  => __( 'Lesson Content', 'tutor' ),
+						'desc'  => __( 'Write lesson content, attach videos, and manage lessons.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/get-lesson', __( 'Get lesson', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-lesson', __( 'Create lesson', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-lesson', __( 'Update lesson', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/attach-lesson-video', __( 'Attach lesson video', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/delete-lesson', __( 'Delete lesson', 'tutor' ), 'destructive' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'assessment',
+				'name'      => __( 'Assessment', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'quiz_builder',
+						'name'  => __( 'Quiz Builder', 'tutor' ),
+						'desc'  => __( 'Create quizzes and questions, and configure quiz settings.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/list-quizzes', __( 'List quizzes', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/get-quiz', __( 'Get quiz', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-quiz', __( 'Create quiz', 'tutor' ), 'write' ),
@@ -468,15 +558,9 @@ class Registrar {
 							$t( 'tutor-mcp/delete-quiz', __( 'Delete quiz', 'tutor' ), 'destructive' ),
 						),
 					),
-				),
-			),
-			array(
-				'id'        => 'quiz_attempts',
-				'name'      => __( 'Quiz Attempts', 'tutor' ),
-				'abilities' => array(
 					array(
-						'id'    => 'quiz_attempt_tools',
-						'name'  => __( 'Attempt Tools', 'tutor' ),
+						'id'    => 'quiz_tools',
+						'name'  => __( 'Quiz & Assessment Tools', 'tutor' ),
 						'desc'  => __( 'List, review, and delete quiz attempts.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-quiz-attempts', __( 'List attempts', 'tutor' ), 'read' ),
@@ -489,29 +573,36 @@ class Registrar {
 			),
 			array(
 				'id'        => 'students',
-				'name'      => __( 'Students', 'tutor' ),
+				'name'      => __( 'Students & Enrollment', 'tutor' ),
 				'abilities' => array(
 					array(
-						'id'    => 'student_tools',
-						'name'  => __( 'Student Tools', 'tutor' ),
-						'desc'  => __( 'Student directory, progress, and unenroll.', 'tutor' ),
+						'id'    => 'student_enrollment',
+						'name'  => __( 'Student & Enrollment', 'tutor' ),
+						'desc'  => __( 'List students, view profiles, and unenroll from courses.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-students', __( 'List students', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/get-student', __( 'Get student', 'tutor' ), 'read' ),
-							$t( 'tutor-mcp/get-course-progress', __( 'Get course progress', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/unenroll-student', __( 'Unenroll student', 'tutor' ), 'destructive' ),
+						),
+					),
+					array(
+						'id'    => 'progress',
+						'name'  => __( 'Progress & Completion', 'tutor' ),
+						'desc'  => __( 'Check course progress for students.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/get-course-progress', __( 'Get course progress', 'tutor' ), 'read' ),
 						),
 					),
 				),
 			),
 			array(
-				'id'        => 'finance',
-				'name'      => __( 'Finance', 'tutor' ),
+				'id'        => 'instructors',
+				'name'      => __( 'Instructors', 'tutor' ),
 				'abilities' => array(
 					array(
-						'id'    => 'finance_tools',
+						'id'    => 'earnings',
 						'name'  => __( 'Earnings & Withdrawals', 'tutor' ),
-						'desc'  => __( 'Read-only earnings aggregates and withdrawal list (no approve/reject).', 'tutor' ),
+						'desc'  => __( 'View instructor earnings and withdrawal requests (read-only).', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/get-earnings', __( 'Get earnings', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/list-withdrawals', __( 'List withdrawals', 'tutor' ), 'read' ),
@@ -524,18 +615,32 @@ class Registrar {
 				'name'      => __( 'Engagement', 'tutor' ),
 				'abilities' => array(
 					array(
-						'id'    => 'engagement_tools',
-						'name'  => __( 'Announcements, Q&A, Reviews', 'tutor' ),
-						'desc'  => __( 'Announcements full CPT CRUD + Q&A flags/reply; reviews are list-only.', 'tutor' ),
+						'id'    => 'announcements',
+						'name'  => __( 'Announcements', 'tutor' ),
+						'desc'  => __( 'Draft, update, and delete course announcements.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-announcements', __( 'List announcements', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/get-announcement', __( 'Get announcement', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-announcement', __( 'Create announcement', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-announcement', __( 'Update announcement', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/delete-announcement', __( 'Delete announcement', 'tutor' ), 'destructive' ),
+						),
+					),
+					array(
+						'id'    => 'qna',
+						'name'  => __( 'Q&A', 'tutor' ),
+						'desc'  => __( 'Find student questions, reply, and set flags.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/list-questions', __( 'List questions', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/reply-to-question', __( 'Reply to question', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/set-question-flags', __( 'Set question flags', 'tutor' ), 'write' ),
+						),
+					),
+					array(
+						'id'    => 'reviews',
+						'name'  => __( 'Reviews', 'tutor' ),
+						'desc'  => __( 'List course reviews.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/list-reviews', __( 'List reviews', 'tutor' ), 'read' ),
 						),
 					),
@@ -546,19 +651,47 @@ class Registrar {
 				'name'      => __( 'Commerce', 'tutor' ),
 				'abilities' => array(
 					array(
-						'id'    => 'commerce_tools',
-						'name'  => __( 'Orders, Coupons & Price', 'tutor' ),
-						'desc'  => __( 'Tutor native ecommerce only. No refunds.', 'tutor' ),
+						'id'    => 'orders',
+						'name'  => __( 'Orders', 'tutor' ),
+						'desc'  => __( 'List orders, view details, and mark as paid. No refunds.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-orders', __( 'List orders', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/get-order', __( 'Get order', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/mark-order-paid', __( 'Mark order paid', 'tutor' ), 'write' ),
+						),
+					),
+					array(
+						'id'    => 'coupons',
+						'name'  => __( 'Coupons', 'tutor' ),
+						'desc'  => __( 'Create, update and expire discount coupons.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/list-coupons', __( 'List coupons', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-coupon', __( 'Create coupon', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/update-coupon', __( 'Update coupon', 'tutor' ), 'write' ),
 							$t( 'tutor-mcp/expire-coupon', __( 'Expire coupon', 'tutor' ), 'destructive' ),
+						),
+					),
+					array(
+						'id'    => 'pricing',
+						'name'  => __( 'Pricing & Subscriptions', 'tutor' ),
+						'desc'  => __( 'Get and set native course prices.', 'tutor' ),
+						'tools' => array(
 							$t( 'tutor-mcp/get-course-price', __( 'Get course price', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/set-course-price', __( 'Set course price', 'tutor' ), 'write' ),
+						),
+					),
+				),
+			),
+			array(
+				'id'        => 'site',
+				'name'      => __( 'Site & Settings', 'tutor' ),
+				'abilities' => array(
+					array(
+						'id'    => 'site_health',
+						'name'  => __( 'Site Health', 'tutor' ),
+						'desc'  => __( 'WP + Tutor versions and addon flags. No secrets.', 'tutor' ),
+						'tools' => array(
+							$t( 'tutor-mcp/health-check', __( 'Health check', 'tutor' ), 'read' ),
 						),
 					),
 				),
