@@ -112,8 +112,8 @@ $overview_url  = add_query_arg(
 				<div class="tutor-mcp-config-fields">
 					<div class="tutor-mcp-config-row">
 						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Tutor LMS MCP', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Tutor LMS MCP', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
 								<?php esc_html_e( 'Let AI apps manage your eLearning platform through the Model Context Protocol.', 'tutor' ); ?>
 							</div>
 						</div>
@@ -127,8 +127,8 @@ $overview_url  = add_query_arg(
 
 					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Server URL', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Server URL', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
 								<?php esc_html_e( 'AI apps connect to this address with a WordPress username and Application Password.', 'tutor' ); ?>
 							</div>
 						</div>
@@ -144,8 +144,8 @@ $overview_url  = add_query_arg(
 
 					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Read-only mode', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Read-only mode', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
 								<?php esc_html_e( 'Agents can look things up but can’t create, change or delete anything. Applies to every connection.', 'tutor' ); ?>
 							</div>
 						</div>
@@ -159,8 +159,8 @@ $overview_url  = add_query_arg(
 
 					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Allow instructors', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Allow instructors', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
 								<?php esc_html_e( 'Let instructors and co-instructors connect to MCP. They can only use tools within their normal Tutor LMS permissions. Admins always have access.', 'tutor' ); ?>
 							</div>
 						</div>
@@ -174,22 +174,24 @@ $overview_url  = add_query_arg(
 
 					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
-							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Abilities', 'tutor' ); ?></div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Abilities', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
 								<?php esc_html_e( 'Choose what agents are allowed to do on this site.', 'tutor' ); ?>
 							</div>
 						</div>
-						<div class="tutor-option-field-input">
-							<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( $abilities_url ); ?>">
-								<?php
-								printf(
-									/* translators: 1: enabled ability count, 2: total abilities */
-									esc_html__( '%1$d of %2$d on', 'tutor' ),
-									(int) $abilities_on,
-									(int) $abilities_total
-								);
-								?>
-								<span class="tutor-icon-angle-right tutor-ml-8" aria-hidden="true"></span>
+						<div class="tutor-d-flex tutor-align-center">
+							<a class="tutor-mcp-abilities-link" href="<?php echo esc_url( $abilities_url ); ?>">
+								<span class="tutor-mcp-abilities-count">
+									<?php
+									printf(
+										/* translators: 1: enabled ability count, 2: total abilities */
+										esc_html__( '%1$d of %2$d on', 'tutor' ),
+										(int) $abilities_on,
+										(int) $abilities_total
+									);
+									?>
+								</span>
+								<span class="tutor-icon-angle-right" aria-hidden="true"></span>
 							</a>
 						</div>
 					</div>

@@ -2,6 +2,20 @@
  * Tools → MCP — only styles Tutor Tools does not already provide.
  */
 
+.tutor-mcp-field-title {
+	font-size: 16px;
+	line-height: 1.5;
+	font-weight: 500;
+}
+
+.tutor-mcp-field-desc {
+	margin-top: 2px;
+	font-size: 13px;
+	line-height: 16px;
+	font-weight: 400;
+	color: #5B616F;
+}
+
 .tutor-mcp-pro-badge {
 	background: rgba(var(--tutor-color-primary-rgb), 0.15);
 	color: var(--tutor-color-primary);
@@ -11,7 +25,7 @@
 .tutor-mcp-config-fields,
 .tutor-mcp-ability-fields {
 	background-color: var(--tutor-color-white);
-	border: 1px solid var(--tutor-border-color);
+	border: 1px solid #ECECED;
 	border-radius: 6px;
 }
 
@@ -24,7 +38,7 @@
 	grid-gap: 16px;
 	min-width: 0;
 	padding: 16px 20px;
-	border-bottom: 1px solid var(--tutor-border-color);
+	border-bottom: 1px solid #F5F5F5;
 
 	&:last-child {
 		border-bottom: none;
@@ -33,6 +47,27 @@
 	.tutor-option-field-input {
 		justify-self: end;
 		text-align: right;
+	}
+}
+
+.tutor-mcp-abilities-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: #5B616F;
+	text-decoration: none;
+	line-height: 1;
+
+	.tutor-mcp-abilities-count {
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 400;
+	}
+
+	&:hover,
+	&:focus {
+		color: var(--tutor-color-primary);
+		text-decoration: none;
 	}
 }
 
@@ -48,9 +83,10 @@
 		width: 100%;
 
 		.tutor-form-control {
-			min-width: 0;
-			width: 100%;
-			padding-right: 40px;
+			height: 34px !important;
+			min-width: 266px;
+			padding: 7px 6px !important;
+			padding-inline-end: 28px !important;
 			border: 1px solid var(--tutor-border-color);
 			font-size: 13px !important;
 			font-weight: 400 !important;
@@ -64,12 +100,13 @@
 			}
 		}
 
-		.tutor-mcp-server-url-copy {
+		.tutor-mcp-server-url-copy.tutor-btn {
 			position: absolute;
 			inset-inline-end: 2px;
 			top: 50%;
 			transform: translateY(-50%);
 			background-color: var(--tutor-color-white);
+			padding: 0 !important;
 		}
 	}
 }
