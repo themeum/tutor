@@ -112,7 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php echo esc_html( $ability['name'] ); ?></div>
 							<?php if ( $is_pro ) : ?>
-								<span class="tutor-pro-badge"><?php esc_html_e( 'Pro', 'tutor' ); ?></span>
+								<span class="tutor-pro-badge tutor-mcp-pro-badge"><?php esc_html_e( 'Pro', 'tutor' ); ?></span>
 							<?php endif; ?>
 						</div>
 						<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $ability['desc'] ); ?></div>
