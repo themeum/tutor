@@ -477,3 +477,14 @@ export const normalizeSingleMaskQuestionAnswers = (questions: QuizQuestion[], de
     deletedAnswerIds: Array.from(deletedAnswerIdsSet),
   };
 };
+
+export const getTrueFalseOptionTitle = (title?: string): string => {
+  const normalized = title?.trim().toLowerCase();
+  if (normalized === 'true') {
+    return __('True', __TUTOR_TEXT_DOMAIN__);
+  }
+  if (normalized === 'false') {
+    return __('False', __TUTOR_TEXT_DOMAIN__);
+  }
+  return title ?? '';
+};

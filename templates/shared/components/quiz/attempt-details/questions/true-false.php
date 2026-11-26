@@ -10,8 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
-use TUTOR\Icon;
-use Tutor\Components\SvgIcon;
 use Tutor\Models\QuizModel;
 
 if ( ! isset( $question ) || ! is_object( $question ) ) {
@@ -42,15 +40,10 @@ $given_ids = array_map( 'intval', array_filter( $given_ids ) );
 		} elseif ( ! $is_selected && $is_correct ) {
 			$option_attr = 'correct';
 		}
+		$title = Quiz::get_true_false_title( $answer->answer_title ?? '' );
 		?>
 		<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $option_attr ); ?>" data-readonly="true">
-			<?php
-				SvgIcon::make()
-					->name( ! empty( $answer->is_correct ) ? Icon::CHECK_2 : Icon::CROSS )
-					->size( 20 )
-					->render();
-			?>
-			<?php echo esc_html( Quiz::sanitize_quiz_content( $answer->answer_title ?? '' ) ); ?>
+			<?php echo esc_html( Quiz::sanitize_quiz_content( $title ) ); ?>
 		</div>
 	<?php endforeach; ?>
 </div>

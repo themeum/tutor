@@ -11,7 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Quiz;
-use TUTOR\Icon;
 
 $field_name         = $question_field_name_base ?? '';
 $register_rules     = '';
@@ -37,6 +36,7 @@ if ( $is_committed ) {
 	<?php if ( tutor_utils()->count( $question['question_answers'] ) ) : ?>
 		<?php foreach ( $question['question_answers'] ?? array() as $answer ) : ?>
 			<?php
+			$answer_title  = Quiz::get_true_false_title( $answer['answer_title'] ?? '' );
 			$answer_id_str = (string) ( $answer['answer_id'] ?? '' );
 			$is_checked    = $is_committed && in_array( $answer_id_str, $given_answers, true );
 			$option_state  = '';
@@ -69,7 +69,7 @@ if ( $is_committed ) {
 						<?php echo $is_checked ? 'checked="checked"' : ''; ?>
 					<?php endif; ?>
 				>
-				<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
+				<?php echo esc_html( Quiz::sanitize_quiz_content( $answer_title ) ); ?>
 			</label>
 		<?php endforeach; ?>
 	<?php endif; ?>

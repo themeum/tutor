@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Models\QuizModel;
 use Tutor\Components\SvgIcon;
 use TUTOR\Icon;
+use TUTOR\Quiz;
 
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 if ( ! is_admin() && ! current_user_can( 'tutor_instructor' ) && true === $enabled_hide_quiz_details ) {
@@ -464,6 +465,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
 											$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 											$answer_titles = array_map( 'stripslashes', $answer_titles );
+											$answer_titles = array_map(
+												array( 'TUTOR\Quiz', 'get_true_false_title' ),
+												$answer_titles
+											);
 
 											echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
 													implode( '</p><p>', $answer_titles ) .  //phpcs:ignore
@@ -599,15 +604,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_var(
 													$wpdb->prepare(
 														"SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='true_false'
-																																AND is_correct = 1",
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='true_false'
+														AND is_correct = 1",
 														$answer->question_id
 													)
 												);
 
 												echo '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-														esc_html( $correct_answer ) .
+														esc_html( Quiz::get_true_false_title( $correct_answer ) ) .
 													'</span>';
 											}
 
@@ -616,10 +621,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_view_format
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='single_choice' AND 
-																																is_correct = 1",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='single_choice' AND 
+														is_correct = 1",
 														$answer->question_id
 													)
 												);
@@ -632,10 +637,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_view_format
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='multiple_choice'
-																																AND is_correct = 1 ;",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='multiple_choice'
+														AND is_correct = 1 ;",
 														$answer->question_id
 													)
 												);
@@ -648,8 +653,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_var(
 													$wpdb->prepare(
 														"SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='fill_in_the_blank'",
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='fill_in_the_blank'",
 														$answer->question_id
 													)
 												);
@@ -665,10 +670,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_view_format
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='ordering'
-																														ORDER BY answer_order ASC;",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='ordering'
+														ORDER BY answer_order ASC;",
 														$answer->question_id
 													)
 												);
@@ -683,10 +688,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_two_gap_match, answer_view_format
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='matching'
-																														ORDER BY answer_order ASC;",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='matching'
+														ORDER BY answer_order ASC;",
 														$answer->question_id
 													)
 												);
@@ -709,10 +714,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_two_gap_match
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='image_matching'
-																														ORDER BY answer_order ASC;",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='image_matching'
+														ORDER BY answer_order ASC;",
 														$answer->question_id
 													)
 												);
@@ -726,10 +731,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												$correct_answer = $wpdb->get_results(
 													$wpdb->prepare(
 														"SELECT answer_title, image_id, answer_two_gap_match
-																														FROM {$wpdb->prefix}tutor_quiz_question_answers
-																														WHERE belongs_question_id = %d
-																																AND belongs_question_type='image_answering'
-																														ORDER BY answer_order ASC;",
+														FROM {$wpdb->prefix}tutor_quiz_question_answers
+														WHERE belongs_question_id = %d
+														AND belongs_question_type='image_answering'
+														ORDER BY answer_order ASC;",
 														$answer->question_id
 													)
 												);
@@ -739,11 +744,11 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												echo '<div class="answer-image-matched-wrap">';
 												foreach ( $correct_answer as $image_answer ) {
 													?>
-															<div class="image-matching-item">
-																<p class="dragged-img-rap"><img src="<?php echo esc_url( wp_get_attachment_image_url( $image_answer->image_id ) ); ?>" /> </p>
-																<p class="dragged-caption"><?php echo esc_html( $image_answer->answer_title ); ?></p>
-															</div>
-														<?php
+														<div class="image-matching-item">
+															<p class="dragged-img-rap"><img src="<?php echo esc_url( wp_get_attachment_image_url( $image_answer->image_id ) ); ?>" /> </p>
+															<p class="dragged-caption"><?php echo esc_html( $image_answer->answer_title ); ?></p>
+														</div>
+													<?php
 												}
 												echo '</div>';
 											} else {

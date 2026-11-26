@@ -2989,4 +2989,25 @@ class Quiz {
 
 		return wp_strip_all_tags( wp_unslash( (string) $content ) );
 	}
+
+	/**
+	 * Get True/False question option translated title.
+	 *
+	 * @param array|object|string $answer Answer data or title string.
+	 *
+	 * @return string
+	 *
+	 * @since 4.3.0
+	 */
+	public static function get_true_false_title( $answer ): string {
+		$raw_title  = is_array( $answer ) ? ( $answer['answer_title'] ?? '' ) : ( is_object( $answer ) ? ( $answer->answer_title ?? '' ) : (string) $answer );
+		$raw_title  = wp_unslash( $raw_title );
+		$normalized = strtolower( trim( $raw_title ) );
+
+		if ( 'true' === $normalized || 'false' === $normalized ) {
+			return tutor_utils()->translate_dynamic_text( $normalized );
+		}
+
+		return $raw_title;
+	}
 }
