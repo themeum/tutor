@@ -783,7 +783,7 @@ final class Tutor extends Singleton {
 	 * Create database
 	 *
 	 * @since 1.0.0
-	 * @since 4.3.0 Delegated to SchemaManager for multisite support.
+	 * @since 4.3.0 Database table creation delegated to TableManager.
 	 *
 	 * @return void
 	 */
