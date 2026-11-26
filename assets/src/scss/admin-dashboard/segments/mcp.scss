@@ -3,15 +3,15 @@
  */
 
 .tutor-mcp-pro-badge {
-	background: rgba(228, 235, 252, 1);
-	color: rgba(62, 100, 222, 1);
+	background: rgba(var(--tutor-color-primary-rgb), 0.15);
+	color: var(--tutor-color-primary);
 	font-weight: 500;
 }
 
 .tutor-mcp-config-fields,
 .tutor-mcp-ability-fields {
-	background-color: rgba(255, 255, 255, 1);
-	border: 1px solid rgba(236, 236, 237, 1);
+	background-color: var(--tutor-color-white);
+	border: 1px solid var(--tutor-border-color);
 	border-radius: 6px;
 }
 
@@ -24,7 +24,7 @@
 	grid-gap: 16px;
 	min-width: 0;
 	padding: 16px 20px;
-	border-bottom: 1px solid rgba(236, 236, 237, 1);
+	border-bottom: 1px solid var(--tutor-border-color);
 
 	&:last-child {
 		border-bottom: none;
@@ -51,15 +51,15 @@
 			min-width: 0;
 			width: 100%;
 			padding-right: 40px;
-			border: 1px solid rgba(236, 236, 237, 1);
-			font-size: 13px;
-			font-weight: 400;
-			line-height: 18px;
-			color: rgba(118, 124, 142, 1);
+			border: 1px solid var(--tutor-border-color);
+			font-size: 13px !important;
+			font-weight: 400 !important;
+			line-height: 18px !important;
+			color: var(--tutor-color-hints);
 			background-color: var(--tutor-color-white);
 
 			&:focus {
-				border-color: rgba(236, 236, 237, 1);
+				border-color: var(--tutor-border-color);
 				box-shadow: none;
 			}
 		}

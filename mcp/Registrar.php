@@ -441,11 +441,21 @@ class Registrar {
 	public static function catalog_upsert_ability( array $catalog, string $group_id, array $ability, array $group = array() ): array {
 		$group_index = self::catalog_group_index( $catalog, $group_id );
 		if ( null === $group_index ) {
-			$catalog[] = array(
+			$new_group = array(
 				'id'        => $group_id,
 				'name'      => isset( $group['name'] ) ? $group['name'] : $group_id,
 				'abilities' => array( $ability ),
 			);
+
+			if ( ! empty( $group['before'] ) ) {
+				$before_index = self::catalog_group_index( $catalog, (string) $group['before'] );
+				if ( null !== $before_index ) {
+					array_splice( $catalog, $before_index, 0, array( $new_group ) );
+					return $catalog;
+				}
+			}
+
+			$catalog[] = $new_group;
 			return $catalog;
 		}
 
@@ -504,7 +514,7 @@ class Registrar {
 					array(
 						'id'    => 'course_management',
 						'name'  => __( 'Course Management', 'tutor' ),
-						'desc'  => __( 'Create, update, publish, duplicate, trash and retrieve courses.', 'tutor' ),
+						'desc'  => __( 'Create, update, publish, trash and retrieve courses.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/get-course', __( 'Get course details', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/search-courses', __( 'Search courses', 'tutor' ), 'read' ),
@@ -577,7 +587,7 @@ class Registrar {
 				'abilities' => array(
 					array(
 						'id'    => 'student_enrollment',
-						'name'  => __( 'Student & Enrollment', 'tutor' ),
+						'name'  => __( 'Students', 'tutor' ),
 						'desc'  => __( 'List students, view profiles, and unenroll from courses.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/list-students', __( 'List students', 'tutor' ), 'read' ),
@@ -673,7 +683,7 @@ class Registrar {
 					),
 					array(
 						'id'    => 'pricing',
-						'name'  => __( 'Pricing & Subscriptions', 'tutor' ),
+						'name'  => __( 'Pricing', 'tutor' ),
 						'desc'  => __( 'Get and set native course prices.', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/get-course-price', __( 'Get course price', 'tutor' ), 'read' ),
