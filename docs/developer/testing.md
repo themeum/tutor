@@ -186,6 +186,17 @@ tests/e2e/bin/
 - **Flake policy**: Retries are disabled (`retries: 0`). Quarantine a flaky test with `test.fixme` and `@quarantine` with owner and failing run link in a comment, and fix or remove within two weeks.
 - **Notes**: `E2E_BASE_URL` overrides `SITE_URL` (fallback `http://localhost:8888`); the Pro license gate is bypassed on `localhost`/`.local`.
 
+## Pro PRs & CI
+
+When opening a pull request in `tutor-pro`, its E2E workflow checks out `themeum/tutor` using the first match in this order:
+
+1. Manual `workflow_dispatch` `core_ref` input.
+2. PR description directive: add `Core: <branch>` (or `Core-Ref: <branch>`) in the PR body—for example, `Core: feat/my-branch`.
+3. A branch with the same name as the Pro PR branch on `themeum/tutor`.
+4. Fallback to `dev`.
+
+By default, Pro PRs run `--grep @smoke`. Add `Suite: full` (or `Full-Suite: true`) to the PR description to run the full Pro E2E suite.
+
 ## Troubleshooting
 
 | Problem                                    | Fix                                                                                                      |
