@@ -85,6 +85,8 @@ function copy() {
         '!.claude',
         '!.cursor',
         '!docs/**',
+        '!svgo.config.ts',
+        '!scripts/**',
       ],
       {
         allowEmpty: true,
