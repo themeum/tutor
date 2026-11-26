@@ -44,6 +44,8 @@ class TableManager {
 	/**
 	 * Core table classes created on initial installation or new subsite provisioning.
 	 *
+	 * @since 4.3.0
+	 *
 	 * @var array<class-string<\Tutor\Core\Table>>
 	 */
 	const CORE_TABLE_CLASSES = array(

@@ -24,6 +24,8 @@ class OrderItemmetaTable extends Table {
 	/**
 	 * Base table name.
 	 *
+	 * @since 4.3.0
+	 *
 	 * @var string
 	 */
 	protected static $table = 'tutor_order_itemmeta';
