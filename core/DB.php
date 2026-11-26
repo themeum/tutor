@@ -13,6 +13,7 @@
 namespace Tutor\Core;
 
 use Closure;
+use InvalidArgumentException;
 use Tutor\Exceptions\DatabaseException;
 
 /**
@@ -59,6 +60,15 @@ class DB {
 	 * @var string
 	 */
 	private $alias = '';
+
+	/**
+	 * Whether the primary FROM source is a derived table subquery.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @var bool
+	 */
+	private $is_derived = false;
 
 	/**
 	 * Columns to select.
@@ -253,12 +263,17 @@ class DB {
 	 *
 	 * The table name will be automatically prefixed with the WordPress
 	 * table prefix if not already present. If a Closure or DB instance is
-	 * provided, it will be treated as a derived table subquery.
+	 * provided, it will be treated as a derived table subquery (which requires
+	 * an alias before the query is built). Note: DB subquery instances are
+	 * compiled eagerly when passed.
 	 *
 	 * @since 4.2.0
+	 * @since 4.3.0 Added subquery and alias support.
 	 *
 	 * @param string|Closure|self $table Table name or subquery.
 	 * @param string|null         $alias Optional table alias.
+	 *
+	 * @throws InvalidArgumentException If table name, subquery, or alias is invalid.
 	 *
 	 * @return self
 	 */
@@ -272,31 +287,41 @@ class DB {
 	 * Alias for setting the table on an existing instance, commonly used
 	 * inside subquery closures: function( $q ) { $q->from('orders'); }
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string|Closure|self $table Table name or subquery.
 	 * @param string|null         $alias Optional table alias.
 	 *
+	 * @throws InvalidArgumentException If table name, subquery, or alias is invalid.
+	 *
 	 * @return self
 	 */
 	public function from( $table, ?string $alias = null ): self {
+		if ( null !== $alias && ! self::is_valid_identifier( $alias ) ) {
+			throw new InvalidArgumentException( 'Invalid table alias.' );
+		}
+
 		if ( $table instanceof Closure || $table instanceof self ) {
-			$sub_sql = self::resolve_subquery( $table );
-			if ( ! empty( $sub_sql ) ) {
-				$this->table = "({$sub_sql})";
-				if ( null !== $alias && self::is_valid_identifier( $alias ) ) {
-					$this->alias = $alias;
-				}
-			}
+			$sub_sql          = self::resolve_subquery( $table );
+			$this->table      = "({$sub_sql})";
+			$this->is_derived = true;
+			$this->alias      = null !== $alias ? $alias : '';
+
 			return $this;
 		}
 
 		if ( ! is_string( $table ) || '' === trim( $table ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Table name must be a non-empty string.' );
 		}
 
-		$this->table = self::prepare_table_name( $table );
-		if ( null !== $alias && self::is_valid_identifier( $alias ) ) {
+		$prepared_table = self::prepare_table_name( trim( $table ) );
+		if ( ! self::is_valid_identifier( $prepared_table ) ) {
+			throw new InvalidArgumentException( 'Invalid table name.' );
+		}
+
+		$this->table      = $prepared_table;
+		$this->is_derived = false;
+		if ( null !== $alias ) {
 			$this->alias = $alias;
 		}
 
@@ -311,11 +336,17 @@ class DB {
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Alias for the derived table.
 	 *
+	 * @throws InvalidArgumentException If subquery or alias is invalid.
+	 *
 	 * @return self
 	 */
 	public function from_sub( $subquery, string $alias ): self {
-		if ( ! ( $subquery instanceof Closure || $subquery instanceof self ) || ! self::is_valid_identifier( $alias ) ) {
-			return $this;
+		if ( ! ( $subquery instanceof Closure || $subquery instanceof self ) ) {
+			throw new InvalidArgumentException( 'Subquery must be a Closure or DB instance.' );
+		}
+
+		if ( ! self::is_valid_identifier( $alias ) ) {
+			throw new InvalidArgumentException( 'Derived table alias must be a valid identifier.' );
 		}
 
 		return $this->from( $subquery, $alias );
@@ -345,6 +376,11 @@ class DB {
 				foreach ( $column as $key => $val ) {
 					if ( is_string( $key ) && ( $val instanceof Closure || $val instanceof self ) ) {
 						$this->select_sub( $val, $key );
+					} elseif ( is_string( $key ) && is_string( $val ) ) {
+						if ( ! self::is_valid_column( $val ) || ! self::is_valid_identifier( $key ) ) {
+							throw new InvalidArgumentException( 'Invalid column or alias in select().' );
+						}
+						$this->columns[] = "{$val} AS {$key}";
 					} elseif ( is_string( $val ) ) {
 						$this->add_select_column( $val );
 					}
@@ -414,13 +450,11 @@ class DB {
 	 */
 	public function select_sub( $subquery, string $alias ): self {
 		if ( ! self::is_valid_identifier( $alias ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Invalid column alias in select_sub().' );
 		}
 
-		$sub_sql = self::resolve_subquery( $subquery );
-		if ( ! empty( $sub_sql ) ) {
-			$this->raw_columns[] = "({$sub_sql}) AS {$alias}";
-		}
+		$sub_sql             = self::resolve_subquery( $subquery );
+		$this->raw_columns[] = "({$sub_sql}) AS {$alias}";
 
 		return $this;
 	}
@@ -518,7 +552,7 @@ class DB {
 	 *
 	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self   $subquery Subquery closure or DB instance.
 	 * @param string         $alias    Alias for the subquery table.
@@ -526,6 +560,8 @@ class DB {
 	 * @param string         $operator Comparison operator.
 	 * @param string         $second   Second column in ON condition.
 	 * @param string         $type     Join type (INNER, LEFT, RIGHT, CROSS). Default 'INNER'.
+	 *
+	 * @throws InvalidArgumentException If join type, alias, or subquery is invalid.
 	 *
 	 * @return self
 	 */
@@ -557,7 +593,7 @@ class DB {
 	 *
 	 * Supports standard 4-argument syntax or a closure for multiple ON conditions.
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param Closure|self   $subquery Subquery closure or DB instance.
 	 * @param string         $alias    Alias for the subquery table.
@@ -579,17 +615,17 @@ class DB {
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Alias for the subquery table.
 	 *
+	 * @throws InvalidArgumentException If alias or subquery is invalid.
+	 *
 	 * @return self
 	 */
 	public function cross_join_sub( $subquery, string $alias ): self {
 		if ( ! self::is_valid_identifier( $alias ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Invalid alias in cross_join_sub().' );
 		}
 
-		$sub_sql = self::resolve_subquery( $subquery );
-		if ( ! empty( $sub_sql ) ) {
-			$this->joins[] = "CROSS JOIN ({$sub_sql}) AS {$alias}";
-		}
+		$sub_sql       = self::resolve_subquery( $subquery );
+		$this->joins[] = "CROSS JOIN ({$sub_sql}) AS {$alias}";
 
 		return $this;
 	}
@@ -597,19 +633,28 @@ class DB {
 	/**
 	 * Internal method to parse and prepare a join table with optional alias.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.0
 	 *
 	 * @param string $table Table name, may include alias e.g., 'users AS u'.
+	 *
+	 * @throws InvalidArgumentException If table name or alias is invalid.
 	 *
 	 * @return string
 	 */
 	private function parse_join_table( string $table ): string {
-		$parts       = preg_split( '/\s+(?:AS\s+)?/i', $table, 2 );
+		$parts       = preg_split( '/\s+(?:AS\s+)?/i', trim( $table ), 2 );
 		$table_name  = self::prepare_table_name( trim( $parts[0] ) );
 		$table_alias = isset( $parts[1] ) ? trim( $parts[1] ) : '';
 
+		if ( ! self::is_valid_identifier( $table_name ) ) {
+			throw new InvalidArgumentException( 'Invalid join table name.' );
+		}
+
 		$table_expr = $table_name;
-		if ( ! empty( $table_alias ) && self::is_valid_identifier( $table_alias ) ) {
+		if ( '' !== $table_alias ) {
+			if ( ! self::is_valid_identifier( $table_alias ) ) {
+				throw new InvalidArgumentException( 'Invalid join table alias.' );
+			}
 			$table_expr .= " AS {$table_alias}";
 		}
 
@@ -678,11 +723,12 @@ class DB {
 			 * @return self
 			 */
 			private function add_on( string $first, string $operator, string $second, string $boolean ): self {
-				if ( DB::is_valid_column( $first )
-					&& DB::is_valid_operator( $operator )
-					&& DB::is_valid_column( $second )
-				) {
-					$operator           = strtoupper( $operator );
+				$operator = strtoupper( $operator );
+				if ( ! DB::is_valid_comparison_operator( $operator ) ) {
+					throw new InvalidArgumentException( "Invalid JOIN ON operator '{$operator}'." );
+				}
+
+				if ( DB::is_valid_column( $first ) && DB::is_valid_column( $second ) ) {
 					$this->conditions[] = array(
 						'sql'     => "{$first} {$operator} {$second}",
 						'boolean' => $boolean,
@@ -707,6 +753,8 @@ class DB {
 	 * @param string         $operator   Comparison operator.
 	 * @param string         $second     Second column in ON condition.
 	 *
+	 * @throws InvalidArgumentException If join type or operator is invalid.
+	 *
 	 * @return self
 	 */
 	private function compile_join( string $type, string $table_expr, $first, string $operator, string $second ): self {
@@ -714,7 +762,7 @@ class DB {
 
 		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
 		if ( ! in_array( $type, $allowed_types, true ) ) {
-			return $this;
+			throw new InvalidArgumentException( "Invalid join type '{$type}'." );
 		}
 
 		if ( $first instanceof Closure ) {
@@ -736,12 +784,15 @@ class DB {
 			return $this;
 		}
 
+		$operator = strtoupper( $operator );
+		if ( ! self::is_valid_comparison_operator( $operator ) ) {
+			throw new InvalidArgumentException( "Invalid JOIN operator '{$operator}'." );
+		}
+
 		if ( is_string( $first )
 			&& self::is_valid_column( $first )
-			&& self::is_valid_operator( $operator )
 			&& self::is_valid_column( $second )
 		) {
-			$operator      = strtoupper( $operator );
 			$this->joins[] = "{$type} JOIN {$table_expr} ON {$first} {$operator} {$second}";
 		}
 
@@ -753,24 +804,29 @@ class DB {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param string         $type     Join type (INNER, LEFT, RIGHT).
+	 * @param string         $type     Join type (INNER, LEFT, RIGHT, CROSS).
 	 * @param Closure|self   $subquery Subquery closure or DB instance.
 	 * @param string         $alias    Alias for the subquery table.
 	 * @param string|Closure $first    First column in ON condition, or Closure.
 	 * @param string         $operator Comparison operator.
 	 * @param string         $second   Second column in ON condition.
 	 *
+	 * @throws InvalidArgumentException If join type, alias, or subquery is invalid.
+	 *
 	 * @return self
 	 */
 	private function add_subquery_join( string $type, $subquery, string $alias, $first, string $operator, string $second ): self {
+		$type          = strtoupper( $type );
+		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
+		if ( ! in_array( $type, $allowed_types, true ) ) {
+			throw new InvalidArgumentException( "Invalid join type '{$type}'." );
+		}
+
 		if ( ! self::is_valid_identifier( $alias ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Invalid alias in join_sub().' );
 		}
 
 		$sub_sql = self::resolve_subquery( $subquery );
-		if ( empty( $sub_sql ) ) {
-			return $this;
-		}
 
 		return $this->compile_join( $type, "({$sub_sql}) AS {$alias}", $first, $operator, $second );
 	}
@@ -824,7 +880,7 @@ class DB {
 	 * Useful for correlated subqueries where an inner subquery column is compared
 	 * to an outer table column: where_column('o.user_id', '=', 'u.id').
 	 *
-	 * @since 4.2.0
+	 * @since 4.3.0
 	 *
 	 * @param string      $first              First column name.
 	 * @param string      $operator_or_second Operator (if 3 args) or second column (if 2 args).
@@ -854,7 +910,8 @@ class DB {
 	/**
 	 * Add a WHERE IN condition or subquery.
 	 *
-	 * @since 4.3.0
+	 * @since 4.2.0
+	 * @since 4.3.0 Added subquery support.
 	 *
 	 * @param string             $column Column name.
 	 * @param array|Closure|self $values Array of values, Closure, or DB subquery.
@@ -1667,6 +1724,10 @@ class DB {
 	 * @return int Inserted row ID.
 	 */
 	public function insert( array $data, array $format = array() ): int {
+		if ( $this->is_derived ) {
+			throw new InvalidArgumentException( 'Insert operations are not allowed on a derived table.' );
+		}
+
 		$db = self::get_db();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -1694,6 +1755,10 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function insert_multiple( array $rows ): bool {
+		if ( $this->is_derived ) {
+			throw new InvalidArgumentException( 'Insert operations are not allowed on a derived table.' );
+		}
+
 		if ( empty( $rows ) ) {
 			return false;
 		}
@@ -1756,6 +1821,10 @@ class DB {
 	 * @return bool True on success.
 	 */
 	public function update( array $data ): bool {
+		if ( $this->is_derived ) {
+			throw new InvalidArgumentException( 'Update operations are not allowed on a derived table.' );
+		}
+
 		if ( empty( $data ) ) {
 			return false;
 		}
@@ -1812,6 +1881,10 @@ class DB {
 	 * @return int Number of affected rows.
 	 */
 	public function delete(): int {
+		if ( $this->is_derived ) {
+			throw new InvalidArgumentException( 'Delete operations are not allowed on a derived table.' );
+		}
+
 		$where_clause = $this->build_where_sql();
 
 		if ( ! empty( $this->alias ) ) {
@@ -1878,20 +1951,66 @@ class DB {
 	 * @return self
 	 */
 	private function add_array_where( array $conditions, string $boolean = 'AND' ): self {
+		if ( empty( $conditions ) ) {
+			return $this;
+		}
+
+		$saved_wheres = $this->wheres;
+		$this->wheres = array();
+
 		foreach ( $conditions as $key => $val ) {
 			if ( is_string( $key ) ) {
-				// Associative array: column => value.
-				$this->add_where( $key, $val, null, $boolean, true );
+				if ( is_array( $val ) ) {
+					$this->add_where_in( $key, $val, 'IN', 'AND' );
+				} else {
+					// Associative array: column => value.
+					$this->add_where( $key, $val, null, 'AND', true );
+				}
 			} elseif ( is_array( $val ) ) {
 				// Numeric array: ['col', 'val'] or ['col', 'op', 'val'].
 				$items = array_values( $val );
 				$count = count( $items );
 
 				if ( 2 === $count && is_string( $items[0] ) ) {
-					$this->add_where( $items[0], $items[1], null, $boolean, true );
+					if ( is_array( $items[1] ) ) {
+						$this->add_where_in( $items[0], $items[1], 'IN', 'AND' );
+					} else {
+						$this->add_where( $items[0], $items[1], null, 'AND', true );
+					}
 				} elseif ( 3 === $count && is_string( $items[0] ) ) {
-					$this->add_where( $items[0], $items[1], $items[2], $boolean, false );
+					$this->add_where( $items[0], $items[1], $items[2], 'AND', false );
+				} else {
+					$this->wheres = $saved_wheres;
+					throw new InvalidArgumentException( 'Invalid condition tuple in where() array.' );
 				}
+			} else {
+				$this->wheres = $saved_wheres;
+				throw new InvalidArgumentException( 'Invalid condition format in where() array.' );
+			}
+		}
+
+		$group_wheres = $this->wheres;
+		$this->wheres = $saved_wheres;
+
+		if ( empty( $group_wheres ) ) {
+			return $this;
+		}
+
+		if ( 'OR' === $boolean && count( $group_wheres ) > 1 ) {
+			$parts = array();
+			foreach ( $group_wheres as $index => $where ) {
+				$parts[] = 0 === $index ? $where['sql'] : "{$where['boolean']} {$where['sql']}";
+			}
+			$this->wheres[] = array(
+				'sql'     => '(' . implode( ' ', $parts ) . ')',
+				'boolean' => 'OR',
+			);
+		} else {
+			foreach ( $group_wheres as $index => $where ) {
+				$this->wheres[] = array(
+					'sql'     => $where['sql'],
+					'boolean' => 0 === $index ? $boolean : 'AND',
+				);
 			}
 		}
 
@@ -1903,11 +2022,13 @@ class DB {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param mixed  $column            Column name, array of conditions, or LHS subquery.
+	 * @param mixed  $column            Column name, array of conditions, Closure, or LHS subquery.
 	 * @param mixed  $operator_or_value Operator or value.
 	 * @param mixed  $value             Value when operator is specified.
 	 * @param string $boolean           AND or OR.
 	 * @param int    $arg_count         Number of arguments passed to the caller.
+	 *
+	 * @throws InvalidArgumentException If arguments are invalid or closure produces no conditions.
 	 *
 	 * @return self
 	 */
@@ -1916,16 +2037,40 @@ class DB {
 			return $this->add_array_where( $column, $boolean );
 		}
 
-		if ( $column instanceof Closure || $column instanceof self ) {
+		if ( $column instanceof Closure ) {
 			if ( $arg_count < 2 ) {
+				$sub = new self();
+				$column( $sub );
+				$group_sql = $sub->build_where_sql();
+				if ( '' === $group_sql ) {
+					throw new InvalidArgumentException( 'Where closure produced no conditions.' );
+				}
+
+				$this->wheres[] = array(
+					'sql'     => "({$group_sql})",
+					'boolean' => $boolean,
+				);
+
 				return $this;
 			}
 
 			return $this->add_where_sub( $column, $operator_or_value, $value, $boolean, $arg_count < 3 );
 		}
 
+		if ( $column instanceof self ) {
+			if ( $arg_count < 2 ) {
+				throw new InvalidArgumentException( 'Subquery in where() requires an operator and value.' );
+			}
+
+			return $this->add_where_sub( $column, $operator_or_value, $value, $boolean, $arg_count < 3 );
+		}
+
 		if ( ! is_string( $column ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Column name must be a string, array, or Closure.' );
+		}
+
+		if ( $arg_count < 2 ) {
+			throw new InvalidArgumentException( 'where() requires at least 2 arguments when column is a string.' );
 		}
 
 		return $this->add_where( $column, $operator_or_value, $value, $boolean, $arg_count < 3 );
@@ -1946,9 +2091,6 @@ class DB {
 	 */
 	private function add_where_sub( $subquery, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
 		$sub_sql = self::resolve_subquery( $subquery );
-		if ( empty( $sub_sql ) ) {
-			return $this;
-		}
 
 		return $this->append_where_condition( "({$sub_sql})", $operator_or_value, $value, $boolean, $is_two_arg );
 	}
@@ -1966,6 +2108,8 @@ class DB {
 	 * @param mixed  $value            Value (null when in two-arg form).
 	 * @param string $boolean          AND or OR.
 	 * @param bool   $is_two_arg       Whether this is a two-argument call.
+	 *
+	 * @throws InvalidArgumentException If column name is invalid.
 	 *
 	 * @return self
 	 */
@@ -1988,6 +2132,8 @@ class DB {
 	 * @param string $boolean          AND or OR.
 	 * @param bool   $is_two_arg       Whether this is a two-argument call.
 	 *
+	 * @throws InvalidArgumentException If operator or value is invalid.
+	 *
 	 * @return self
 	 */
 	private function append_where_condition( string $lhs, $operator_or_value, $value, string $boolean, bool $is_two_arg ): self {
@@ -2003,18 +2149,21 @@ class DB {
 		if ( $value instanceof Closure || $value instanceof self ) {
 			$allowed_subquery_ops = array_merge( self::$comparison_operators, array( 'IN', 'NOT IN' ) );
 			if ( ! in_array( $operator, $allowed_subquery_ops, true ) ) {
-				return $this;
+				throw new InvalidArgumentException( "Invalid operator '{$operator}' for subquery comparison." );
 			}
 
-			$sub_sql = self::resolve_subquery( $value );
-			if ( ! empty( $sub_sql ) ) {
-				$this->wheres[] = array(
-					'sql'     => "{$lhs} {$operator} ({$sub_sql})",
-					'boolean' => $boolean,
-				);
-			}
+			$allow_limit    = ! in_array( $operator, array( 'IN', 'NOT IN' ), true );
+			$sub_sql        = self::resolve_subquery( $value, $allow_limit );
+			$this->wheres[] = array(
+				'sql'     => "{$lhs} {$operator} ({$sub_sql})",
+				'boolean' => $boolean,
+			);
 
 			return $this;
+		}
+
+		if ( is_array( $value ) ) {
+			throw new InvalidArgumentException( 'Array values are not supported in scalar where() comparisons; use where_in() instead.' );
 		}
 
 		// Handle null values → IS NULL / IS NOT NULL.
@@ -2052,27 +2201,27 @@ class DB {
 	 * @param string             $type    IN or NOT IN.
 	 * @param string             $boolean AND or OR.
 	 *
+	 * @throws InvalidArgumentException If column, values, or subquery is invalid.
+	 *
 	 * @return self
 	 */
 	private function add_where_in( string $column, $values, string $type, string $boolean ): self {
 		if ( ! self::is_valid_column( $column ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'Invalid column name in where_in().' );
 		}
 
 		if ( $values instanceof Closure || $values instanceof self ) {
-			$sub_sql = self::resolve_subquery( $values );
-			if ( ! empty( $sub_sql ) ) {
-				$this->wheres[] = array(
-					'sql'     => "{$column} {$type} ({$sub_sql})",
-					'boolean' => $boolean,
-				);
-			}
+			$sub_sql        = self::resolve_subquery( $values, false );
+			$this->wheres[] = array(
+				'sql'     => "{$column} {$type} ({$sub_sql})",
+				'boolean' => $boolean,
+			);
 
 			return $this;
 		}
 
 		if ( ! is_array( $values ) || empty( $values ) ) {
-			return $this;
+			throw new InvalidArgumentException( 'where_in() values must be a non-empty array or subquery.' );
 		}
 
 		$escaped_values = self::prepare_in_clause( $values );
@@ -2094,16 +2243,16 @@ class DB {
 	 * @param string       $type     EXISTS or NOT EXISTS.
 	 * @param string       $boolean  AND or OR.
 	 *
+	 * @throws InvalidArgumentException If subquery is invalid or empty.
+	 *
 	 * @return self
 	 */
 	private function add_where_exists( $subquery, string $type, string $boolean ): self {
-		$sub_sql = self::resolve_subquery( $subquery );
-		if ( ! empty( $sub_sql ) ) {
-			$this->wheres[] = array(
-				'sql'     => "{$type} ({$sub_sql})",
-				'boolean' => $boolean,
-			);
-		}
+		$sub_sql        = self::resolve_subquery( $subquery );
+		$this->wheres[] = array(
+			'sql'     => "{$type} ({$sub_sql})",
+			'boolean' => $boolean,
+		);
 
 		return $this;
 	}
@@ -2118,6 +2267,8 @@ class DB {
 	 * @param string|null $second             Second column name if 3 args.
 	 * @param string      $boolean            AND or OR.
 	 *
+	 * @throws InvalidArgumentException If columns or operator are invalid.
+	 *
 	 * @return self
 	 */
 	private function add_where_column( string $first, string $operator_or_second, ?string $second, string $boolean ): self {
@@ -2128,15 +2279,17 @@ class DB {
 			$operator = strtoupper( $operator_or_second );
 		}
 
-		if ( self::is_valid_column( $first )
-			&& in_array( $operator, self::$comparison_operators, true )
-			&& self::is_valid_column( $second )
+		if ( ! self::is_valid_column( $first )
+			|| ! self::is_valid_comparison_operator( $operator )
+			|| ! self::is_valid_column( $second )
 		) {
-			$this->wheres[] = array(
-				'sql'     => "{$first} {$operator} {$second}",
-				'boolean' => $boolean,
-			);
+			throw new InvalidArgumentException( 'Invalid column or operator in where_column().' );
 		}
+
+		$this->wheres[] = array(
+			'sql'     => "{$first} {$operator} {$second}",
+			'boolean' => $boolean,
+		);
 
 		return $this;
 	}
@@ -2243,6 +2396,11 @@ class DB {
 	private function build_select_query( bool $calc_found_rows = false ): string {
 		$select = $this->build_select_sql();
 		$from   = $this->build_from_sql();
+
+		if ( empty( $from ) && ( empty( $this->raw_columns ) || ! empty( $this->columns ) || ! empty( $this->joins ) || ! empty( $this->wheres ) || ! empty( $this->group_by_columns ) || ! empty( $this->havings ) || ! empty( $this->order_by_clauses ) ) ) {
+			throw new InvalidArgumentException( 'Query requires a FROM table unless selecting raw expressions only.' );
+		}
+
 		$join   = $this->build_join_sql();
 		$where  = $this->build_where_sql();
 		$group  = $this->build_group_by_sql();
@@ -2317,6 +2475,10 @@ class DB {
 	 * @return string
 	 */
 	private function build_from_sql(): string {
+		if ( $this->is_derived && empty( $this->alias ) ) {
+			throw new InvalidArgumentException( 'Derived table subquery must have an alias.' );
+		}
+
 		if ( ! empty( $this->alias ) ) {
 			return "{$this->table} AS {$this->alias}";
 		}
@@ -2485,6 +2647,19 @@ class DB {
 	}
 
 	/**
+	 * Check whether a comparison operator is valid for column-to-column comparisons.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $operator SQL operator.
+	 *
+	 * @return bool True if the operator is valid for column comparisons.
+	 */
+	public static function is_valid_comparison_operator( string $operator ): bool {
+		return in_array( strtoupper( $operator ), self::$comparison_operators, true );
+	}
+
+	/**
 	 * Get the wpdb format placeholder for a value based on its PHP type.
 	 *
 	 * @since 4.2.0
@@ -2512,30 +2687,40 @@ class DB {
 	/**
 	 * Resolve a subquery from a Closure or DB instance into a SQL string.
 	 *
+	 * Keeps wpdb placeholder escapes intact via build_select_query() so
+	 * outer prepare() calls or wpdb->query() cannot misinterpret '%' in values.
+	 *
 	 * @since 4.3.0
 	 *
-	 * @param mixed $query Closure or DB instance.
+	 * @param mixed $query       Closure or DB instance.
+	 * @param bool  $allow_limit Whether LIMIT is allowed inside this subquery.
 	 *
-	 * @return string|null The SQL string, or null if invalid.
+	 * @throws InvalidArgumentException If subquery is invalid, empty, or uses unsupported clauses.
+	 *
+	 * @return string The compiled SQL string.
 	 */
-	public static function resolve_subquery( $query ): ?string {
+	private static function resolve_subquery( $query, bool $allow_limit = true ): string {
 		if ( $query instanceof Closure ) {
 			$sub    = new self();
 			$result = $query( $sub );
-			$query  = ( $result instanceof self ) ? $result : $sub;
+			$sub    = ( $result instanceof self ) ? $result : $sub;
+		} elseif ( $query instanceof self ) {
+			$sub = clone $query;
+		} else {
+			throw new InvalidArgumentException( 'Subquery must be a Closure or DB instance.' );
 		}
 
-		if ( ! $query instanceof self ) {
-			return null;
+		if ( empty( $sub->table ) && empty( $sub->raw_columns ) ) {
+			throw new InvalidArgumentException( 'Subquery must define a FROM table or raw select expression.' );
 		}
 
-		if ( empty( $query->table ) && empty( $query->raw_columns ) ) {
-			return null;
+		if ( ! $allow_limit && null !== $sub->limit_value ) {
+			throw new InvalidArgumentException( 'LIMIT is not supported inside IN/NOT IN subqueries.' );
 		}
 
-		$sql = $query->to_sql();
+		$sub->lock = '';
 
-		return ! empty( $sql ) ? $sql : null;
+		return $sub->build_select_query();
 	}
 
 	/**

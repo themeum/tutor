@@ -271,56 +271,62 @@ class DBTest extends \WP_UnitTestCase {
 			->to_sql();
 		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_empty );
 
-		// Empty nested array ignored.
-		$sql_nested_empty = DB::table( 'tutor_orders' )
-			->where( array( array() ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_nested_empty );
+		// Empty nested array throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( array() ) );
+			}
+		);
 
-		// Sub-array with 1 element ignored.
-		$sql_one_elem = DB::table( 'tutor_orders' )
-			->where( array( array( 'order_status' ) ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_one_elem );
+		// Sub-array with 1 element throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( array( 'order_status' ) ) );
+			}
+		);
 
-		// Sub-array with 4 elements ignored.
-		$sql_four_elem = DB::table( 'tutor_orders' )
-			->where( array( array( 'order_status', '=', 'completed', 'extra' ) ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_four_elem );
+		// Sub-array with 4 elements throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( array( 'order_status', '=', 'completed', 'extra' ) ) );
+			}
+		);
 
-		// Non-array scalar item in indexed array ignored.
-		$sql_scalar = DB::table( 'tutor_orders' )
-			->where( array( 123, 'random_string' ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_scalar );
+		// Non-array scalar item in indexed array throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( 123, 'random_string' ) );
+			}
+		);
 
-		// Non-string column in sub-array ignored.
-		$sql_non_string_col = DB::table( 'tutor_orders' )
-			->where( array( array( 123, '=', 'active' ) ) )
-			->to_sql();
-		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_non_string_col );
+		// Non-string column in sub-array throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'tutor_orders' )->where( array( array( 123, '=', 'active' ) ) );
+			}
+		);
 
 		// Invalid operator in sub-array ignored.
 		$sql_invalid_op = DB::table( 'tutor_orders' )
 			->where( array( array( 'order_status', 'INVALID_OP', 'completed' ) ) )
 			->to_sql();
 		$this->assertSame( "SELECT * FROM {$prefix}tutor_orders", $sql_invalid_op );
+	}
 
-		// Valid conditions mixed with invalid condition formats.
-		$sql_mixed = DB::table( 'tutor_orders' )
-			->where(
-				array(
-					'order_status' => 'completed',
-					array(),
-					array( 'invalid_op_col', 'BAD_OPERATOR', 'foo' ),
-					array( 'total_price', '>', 50 ),
-					999,
-				)
-			)
-			->to_sql();
-		$expected_mixed = "SELECT * FROM {$prefix}tutor_orders WHERE order_status = 'completed' AND total_price > 50";
-		$this->assertSame( $expected_mixed, $sql_mixed );
+	/**
+	 * Helper to assert that a callable throws InvalidArgumentException.
+	 *
+	 * @param callable $callback Callback expected to throw.
+	 *
+	 * @return void
+	 */
+	private function assert_throws_invalid_argument( callable $callback ): void {
+		try {
+			$callback();
+			$this->fail( 'Expected InvalidArgumentException was not thrown.' );
+		} catch ( \InvalidArgumentException $e ) {
+			$this->assertInstanceOf( \InvalidArgumentException::class, $e );
+		}
 	}
 
 	/**
@@ -1876,12 +1882,13 @@ class DBTest extends \WP_UnitTestCase {
 		$this->assertSame( $expected, $sql );
 
 		// Invalid alias rejection.
-		$sql = DB::table( 'users' )
-			->select( 'id' )
-			->select_sub( $sub, 'invalid alias;--' )
-			->to_sql();
-
-		$this->assertSame( "SELECT id FROM {$prefix}users", $sql );
+		$this->assert_throws_invalid_argument(
+			function () use ( $sub ) {
+				DB::table( 'users' )
+					->select( 'id' )
+					->select_sub( $sub, 'invalid alias;--' );
+			}
+		);
 	}
 
 	/**
@@ -1927,11 +1934,11 @@ class DBTest extends \WP_UnitTestCase {
 		$this->assertSame( $expected, $sql );
 
 		// Invalid alias rejection.
-		$sql = DB::table( 'users' )
-			->from_sub( $sub, 'invalid alias;--' )
-			->to_sql();
-
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+		$this->assert_throws_invalid_argument(
+			function () use ( $sub ) {
+				DB::table( 'users' )->from_sub( $sub, 'invalid alias;--' );
+			}
+		);
 	}
 
 	/**
@@ -1998,11 +2005,11 @@ class DBTest extends \WP_UnitTestCase {
 		$this->assertSame( $expected, $sql );
 
 		// Invalid alias rejection.
-		$sql = DB::table( 'users' )
-			->join_sub( $sub, 'invalid alias;--', 'u.id', '=', 's.user_id' )
-			->to_sql();
-
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+		$this->assert_throws_invalid_argument(
+			function () use ( $sub ) {
+				DB::table( 'users' )->join_sub( $sub, 'invalid alias;--', 'u.id', '=', 's.user_id' );
+			}
+		);
 	}
 
 	/**
@@ -2073,45 +2080,31 @@ class DBTest extends \WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_subquery_empty_and_invalid_inputs() {
-		global $wpdb;
-
-		$prefix = $wpdb->prefix;
 		$empty_closure = function ( $q ) {
 			// Intentionally left empty.
 		};
 		$empty_db = new DB();
 
-		// Empty closure and uninitialized DB instance should be ignored.
-		$sql = DB::table( 'users' )
-			->where_in( 'id', $empty_closure )
-			->where_not_in( 'id', $empty_db )
-			->where_exists( $empty_closure )
-			->where_not_exists( $empty_db )
-			->select_sub( $empty_closure, 'empty_col' )
-			->join_sub( $empty_closure, 's', 'users.id', '=', 's.id' )
-			->to_sql();
+		// Empty closure and uninitialized DB instance should throw (fail closed).
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_in( 'id', $empty_closure ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_not_in( 'id', $empty_db ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_exists( $empty_closure ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_not_exists( $empty_db ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->select_sub( $empty_closure, 'empty_col' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join_sub( $empty_closure, 's', 'users.id', '=', 's.id' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_in( 'id', array() ) );
 
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+		// Non-Closure / non-DB values passed to subquery methods should throw.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_exists( 'SELECT 1' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->select_sub( 123, 'num_col' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->from_sub( 'invalid', 'sub' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join_sub( 'invalid', 's', 'users.id', '=', 's.id' ) );
 
-		// Non-Closure / non-DB values passed to subquery methods should be ignored.
-		$sql = DB::table( 'users' )
-			->where_exists( 'SELECT 1' )
-			->select_sub( 123, 'num_col' )
-			->from_sub( 'invalid', 'sub' )
-			->join_sub( 'invalid', 's', 'users.id', '=', 's.id' )
-			->to_sql();
-
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
-
-		// Invalid operators for subquery comparison in where() should be rejected.
+		// Invalid operators for subquery comparison in where() should throw.
 		$valid_sub = DB::table( 'tutor_orders' )->select( 'id' );
-		$sql       = DB::table( 'users' )
-			->where( 'id', 'BETWEEN', $valid_sub )
-			->where( 'id', 'IS', $valid_sub )
-			->where( 'id', 'INVALID_OP', $valid_sub )
-			->to_sql();
-
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where( 'id', 'BETWEEN', $valid_sub ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where( 'id', 'IS', $valid_sub ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where( 'id', 'INVALID_OP', $valid_sub ) );
 	}
 
 	/**
@@ -2135,9 +2128,8 @@ class DBTest extends \WP_UnitTestCase {
 		$sql = ( new DB() )->from( 'tutor_orders', 'o' )->select( 'o.id' )->to_sql();
 		$this->assertSame( "SELECT o.id FROM {$prefix}tutor_orders AS o", $sql );
 
-		// Non-string table safely ignored.
-		$sql = DB::table( new \stdClass() )->to_sql();
-		$this->assertSame( 'SELECT *', $sql );
+		// Non-string table throws InvalidArgumentException.
+		$this->assert_throws_invalid_argument( fn() => DB::table( new \stdClass() ) );
 
 		// Scalar subquery without FROM clause.
 		$sql = DB::table( 'users' )
@@ -2175,15 +2167,11 @@ class DBTest extends \WP_UnitTestCase {
 		$expected = "SELECT * FROM {$prefix}posts WHERE post_modified = post_date AND post_modified_gmt > post_date_gmt OR post_author = post_parent OR ID != post_parent";
 		$this->assertSame( $expected, $sql );
 
-		// Invalid columns and non-comparison operators should be rejected.
-		$sql = DB::table( 'posts' )
-			->where_column( '1=1; --', '=', 'post_date' )
-			->where_column( 'post_date', '=', '1=1; --' )
-			->where_column( 'post_date', 'BETWEEN', 'post_modified' )
-			->where_column( 'post_date', 'IN', 'post_modified' )
-			->to_sql();
-
-		$this->assertSame( "SELECT * FROM {$prefix}posts", $sql );
+		// Invalid columns and non-comparison operators should throw.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'posts' )->where_column( '1=1; --', '=', 'post_date' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'posts' )->where_column( 'post_date', '=', '1=1; --' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'posts' )->where_column( 'post_date', 'BETWEEN', 'post_modified' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'posts' )->where_column( 'post_date', 'IN', 'post_modified' ) );
 	}
 
 	/**
@@ -2215,7 +2203,7 @@ class DBTest extends \WP_UnitTestCase {
 			$sql
 		);
 
-		// or_where() with array conditions.
+		// or_where() with array conditions (grouped with AND inside OR).
 		$sql = DB::table( 'users' )
 			->where( 'user_status', 0 )
 			->or_where(
@@ -2227,7 +2215,7 @@ class DBTest extends \WP_UnitTestCase {
 			->to_sql();
 
 		$this->assertSame(
-			"SELECT * FROM {$prefix}users WHERE user_status = 0 OR user_login = 'admin' OR ID > 5",
+			"SELECT * FROM {$prefix}users WHERE user_status = 0 OR (user_login = 'admin' AND ID > 5)",
 			$sql
 		);
 
@@ -2305,23 +2293,40 @@ class DBTest extends \WP_UnitTestCase {
 		$expected = "SELECT * FROM {$prefix}users AS u WHERE (SELECT o.order_status FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id LIMIT 1 OFFSET 0) = 'completed' OR (SELECT o.order_status FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id LIMIT 1 OFFSET 0) != 'cancelled'";
 		$this->assertSame( $expected, $sql );
 
-		// 1-arg Closure or empty LHS subquery should be safely ignored.
+		// 1-arg Closure creates a grouped WHERE (...) clause.
 		$sql = DB::table( 'users' )
+			->where( 'user_status', 0 )
 			->where(
 				function ( $q ) {
-					$q->from( 'tutor_orders' );
+					$q->where( 'user_login', 'admin' )
+						->or_where( 'ID', 1 );
 				}
-			)
-			->where(
-				function ( $q ) {
-					// Empty subquery.
-				},
-				'=',
-				1
 			)
 			->to_sql();
 
-		$this->assertSame( "SELECT * FROM {$prefix}users", $sql );
+		$this->assertSame( "SELECT * FROM {$prefix}users WHERE user_status = 0 AND (user_login = 'admin' OR ID = 1)", $sql );
+
+		// Empty 1-arg Closure or empty LHS subquery throws.
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'users' )->where(
+					function ( $q ) {
+						// No conditions added.
+					}
+				);
+			}
+		);
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'users' )->where(
+					function ( $q ) {
+						// Empty subquery.
+					},
+					'=',
+					1
+				);
+			}
+		);
 	}
 
 	/**
@@ -2337,11 +2342,12 @@ class DBTest extends \WP_UnitTestCase {
 		$prefix = $wpdb->prefix;
 		$sub    = DB::table( 'tutor_orders' )->select_raw( 'MAX(total_price)' );
 
-		// select() with array of columns and alias => subquery pairs.
+		// select() with array of columns and alias => subquery / alias => column pairs.
 		$sql = DB::table( 'users' )
 			->as( 'u' )
 			->select(
 				array( 'u.id', 'u.user_login' ),
+				array( 'name' => 'u.display_name' ),
 				array(
 					'order_count' => function ( $q ) {
 						$q->from( 'tutor_orders', 'o' )
@@ -2349,13 +2355,18 @@ class DBTest extends \WP_UnitTestCase {
 							->where_column( 'o.user_id', '=', 'u.id' );
 					},
 					'max_spent'   => $sub,
-					'bad alias;'  => $sub,
 				)
 			)
 			->to_sql();
 
-		$expected = "SELECT u.id, u.user_login, (SELECT COUNT(*) FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) AS order_count, (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS max_spent FROM {$prefix}users AS u";
+		$expected = "SELECT u.id, u.user_login, u.display_name AS name, (SELECT COUNT(*) FROM {$prefix}tutor_orders AS o WHERE o.user_id = u.id) AS order_count, (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS max_spent FROM {$prefix}users AS u";
 		$this->assertSame( $expected, $sql );
+
+		$this->assert_throws_invalid_argument(
+			function () use ( $sub ) {
+				DB::table( 'users' )->select( array( 'bad alias;' => $sub ) );
+			}
+		);
 
 		// join_sub() with explicit $type parameter and cross_join_sub().
 		$agg = DB::table( 'tutor_orders' )
@@ -2367,10 +2378,76 @@ class DBTest extends \WP_UnitTestCase {
 			->as( 'u' )
 			->join_sub( $agg, 's', 'u.id', '=', 's.user_id', 'LEFT' )
 			->cross_join_sub( $sub, 'm' )
-			->cross_join_sub( $sub, 'invalid alias;' )
 			->to_sql();
 
 		$expected = "SELECT * FROM {$prefix}users AS u LEFT JOIN (SELECT user_id, SUM(total_price) AS total_spent FROM {$prefix}tutor_orders GROUP BY user_id) AS s ON u.id = s.user_id CROSS JOIN (SELECT MAX(total_price) FROM {$prefix}tutor_orders) AS m";
 		$this->assertSame( $expected, $sql );
+
+		$this->assert_throws_invalid_argument(
+			function () use ( $sub ) {
+				DB::table( 'users' )->cross_join_sub( $sub, 'invalid alias;' );
+			}
+		);
+	}
+
+	/**
+	 * Test security hardening and edge-case validations from PR feedback.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return void
+	 */
+	public function test_security_and_validation_hardening() {
+		global $wpdb;
+
+		$prefix = $wpdb->prefix;
+
+		// Table-name injection in table(), from(), and join() throws.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users; DROP TABLE wp_users' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'posts WHERE 1=1 --' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'x' )->from( 'users; DROP TABLE wp_users' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join( 'posts) UNION SELECT 1 -- ', 'a', '=', 'b' ) );
+
+		// Single-argument string where('ID') throws instead of becoming ID IS NULL.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where( 'ID' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->or_where( 'ID' ) );
+
+		// Array value in associative where() routes to IN.
+		$sql = DB::table( 'users' )->where( array( 'ID' => array( 1, 2, 3 ) ) )->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}users WHERE ID IN (1, 2, 3)", $sql );
+
+		// Derived table without alias throws when building query, and write ops throw.
+		$sub = DB::table( 'users' )->select( 'ID' );
+		$this->assert_throws_invalid_argument( fn() => DB::table( $sub )->to_sql() );
+		$this->assert_throws_invalid_argument( fn() => DB::table( $sub, 's' )->update( array( 'user_status' => 1 ) ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( $sub, 's' )->delete() );
+		$this->assert_throws_invalid_argument( fn() => DB::table( $sub, 's' )->insert( array( 'ID' => 1 ) ) );
+
+		// Invalid join type in join_sub() and invalid ON operator throw.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join_sub( $sub, 's', 'users.ID', '=', 's.ID', 'FULL' ) );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join( 'posts', 'users.ID', 'IN', 'posts.post_author' ) );
+
+		// lock_for_update() is stripped in subquery context; LIMIT is rejected in where_in subquery.
+		$locked_sub = DB::table( 'posts' )->select( 'post_author' )->lock_for_update();
+		$sql        = DB::table( 'users' )->where_in( 'ID', $locked_sub )->to_sql();
+		$this->assertSame( "SELECT * FROM {$prefix}users WHERE ID IN (SELECT post_author FROM {$prefix}posts)", $sql );
+
+		$limited_sub = DB::table( 'posts' )->select( 'post_author' )->limit( 5 );
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_in( 'ID', $limited_sub ) );
+
+		// '%' round-trip in a subquery value combined with outer where_raw() bindings.
+		$sql = DB::table( 'users' )
+			->where_in(
+				'ID',
+				function ( $q ) {
+					$q->from( 'posts' )->select( 'post_author' )->where( 'post_title', '%s' );
+				}
+			)
+			->where_raw( 'user_login = %s', array( 'admin' ) )
+			->to_sql();
+		$this->assertSame(
+			"SELECT * FROM {$prefix}users WHERE ID IN (SELECT post_author FROM {$prefix}posts WHERE post_title = '%s') AND user_login = 'admin'",
+			$sql
+		);
 	}
 }

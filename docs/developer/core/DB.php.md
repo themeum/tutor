@@ -69,12 +69,15 @@ $courses = DB::table('posts')
 
 ```php
 class DB {
-    // Factory
-    public static function table( string $table ): self;
+    // Factory & Source
+    public static function table( $table, ?string $alias = null ): self;
+    public function from( $table, ?string $alias = null ): self;
+    public function from_sub( $subquery, string $alias ): self;
 
     // Selection & Projection
-    public function select( string ...$columns ): self;
+    public function select( ...$columns ): self;
     public function select_raw( string $expression, array $bindings = [] ): self;
+    public function select_sub( $subquery, string $alias ): self;
     public function distinct(): self;
     public function as( string $alias ): self;
 
@@ -82,14 +85,24 @@ class DB {
     public function join( string $table, $first, string $operator = '', string $second = '' ): self;
     public function left_join( string $table, $first, string $operator = '', string $second = '' ): self;
     public function right_join( string $table, $first, string $operator = '', string $second = '' ): self;
+    public function join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '', string $type = 'INNER' ): self;
+    public function left_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self;
+    public function right_join_sub( $subquery, string $alias, $first, string $operator = '', string $second = '' ): self;
+    public function cross_join_sub( $subquery, string $alias ): self;
 
     // Where Clauses
     public function where( $column, $operator_or_val = null, $val = null ): self;
-    public function or_where( string $column, $operator_or_val, $val = null ): self;
-    public function where_in( string $column, array $values ): self;
-    public function or_where_in( string $column, array $values ): self;
-    public function where_not_in( string $column, array $values ): self;
-    public function or_where_not_in( string $column, array $values ): self;
+    public function or_where( $column, $operator_or_val = null, $val = null ): self;
+    public function where_column( string $first, string $operator_or_second, ?string $second = null ): self;
+    public function or_where_column( string $first, string $operator_or_second, ?string $second = null ): self;
+    public function where_in( string $column, $values ): self;
+    public function or_where_in( string $column, $values ): self;
+    public function where_not_in( string $column, $values ): self;
+    public function or_where_not_in( string $column, $values ): self;
+    public function where_exists( $subquery ): self;
+    public function or_where_exists( $subquery ): self;
+    public function where_not_exists( $subquery ): self;
+    public function or_where_not_exists( $subquery ): self;
     public function where_null( string $column ): self;
     public function or_where_null( string $column ): self;
     public function where_not_null( string $column ): self;
@@ -358,11 +371,52 @@ DB::table('tutor_orders')
 ```
 
 > [!NOTE]
-> All column identifiers in arrays are strictly validated against SQL injection patterns (`is_valid_column`), comparison operators are checked against whitelisted operators (`is_valid_operator`), and values are safely bound via `$wpdb->prepare()`. Empty arrays `where([])` or invalid formats are safely skipped without breaking query generation.
+> All column names, table names, and aliases are strictly validated (`is_valid_column`, `is_valid_identifier`), comparison operators are checked against whitelisted operators (`is_valid_operator`), and values are safely bound via `$wpdb->prepare()`. Invalid formats, operators, or empty subqueries throw `\InvalidArgumentException` (fail-closed). Empty arrays `where([])` produce no WHERE clause.
 
-### 3. IN / NOT IN
+### 3. Subqueries & Column Comparisons
+Subqueries accept either a `Closure` (receiving a fresh `DB` instance) or an existing `DB` instance (note: `DB` instances are compiled eagerly when added to the outer query).
+
+```php
+// Derived table in FROM
+DB::table(function ($q) {
+    $q->from('tutor_orders')->where('order_status', 'completed');
+}, 'o')->select('o.id')->get();
+
+// Or using from_sub()
+DB::table('posts')->from_sub($subquery, 'p')->get();
+
+// Scalar subquery in SELECT
+DB::table('users')
+    ->as('u')
+    ->select('u.ID')
+    ->select_sub(function ($q) {
+        $q->from('tutor_orders', 'o')
+          ->select_raw('COUNT(*)')
+          ->where_column('o.user_id', 'u.ID');
+    }, 'order_count')
+    ->get();
+
+// Subquery JOINs
+DB::table('users')
+    ->as('u')
+    ->left_join_sub($subquery, 's', 'u.ID', '=', 's.user_id')
+    ->get();
+
+// WHERE EXISTS / NOT EXISTS
+DB::table('users')
+    ->as('u')
+    ->where_exists(function ($q) {
+        $q->from('tutor_orders', 'o')->where_column('o.user_id', 'u.ID');
+    })
+    ->get();
+```
+
+### 4. IN / NOT IN (Values or Subquery)
 ```php
 DB::table('posts')->where_in('ID', [10, 20, 30]);
+DB::table('posts')->where_in('post_author', function ($q) {
+    $q->from('users')->select('ID')->where('user_status', 0);
+});
 DB::table('posts')->where_not_in('post_status', ['trash', 'auto-draft']);
 DB::table('posts')->or_where_in('ID', [40, 50]);
 DB::table('posts')->or_where_not_in('post_type', ['attachment']);
