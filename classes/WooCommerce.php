@@ -1268,6 +1268,7 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public static function get_receipt_url( int $order_id ): string {
 		$params = array(
+			'dashboard-page'          => Dashboard::BILLING_PAGE_SLUG,
 			self::RECEIPT_QUERY_PARAM => $order_id,
 		);
 

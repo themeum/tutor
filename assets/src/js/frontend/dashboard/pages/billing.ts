@@ -43,7 +43,7 @@ function bindBillingCsvExport(): void {
   });
 }
 
-function bindBillingReceiptPrint(): void {
+const bindBillingReceiptPrint = (): void => {
   const printButton = document.getElementById('tutor-wc-receipt-print');
   if (!printButton || printButton.dataset.receiptPrintBound === '1') {
     return;
@@ -53,16 +53,9 @@ function bindBillingReceiptPrint(): void {
   printButton.addEventListener('click', () => {
     window.print();
   });
-}
-
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindBillingReceiptPrint, { once: true });
-  } else {
-    bindBillingReceiptPrint();
-  }
-}
+};
 
 export const initBillingCsvExport = () => {
   bindBillingCsvExport();
+  bindBillingReceiptPrint();
 };
