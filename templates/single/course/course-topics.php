@@ -48,7 +48,7 @@ do_action( 'tutor_course/single/before/topics' );
 			?>
 			<div class="tutor-accordion-item">
 				<h4 class="tutor-accordion-item-header<?php echo 1 == $index ? ' is-active' : ''; ?>">
-					<?php the_title(); ?>
+					<?php echo esc_html( get_the_title() ); ?>
 					<?php if ( ! empty( $topic_summery ) ) : ?>
 						<div class="tooltip-wrap tooltip-icon">
 							<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $topic_summery ); ?></span>

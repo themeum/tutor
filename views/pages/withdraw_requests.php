@@ -125,7 +125,7 @@ $filters = array(
 								$user_data = get_userdata( $list->user_id );
 								$details   = tutor_unserialize( $list->method_data );
 								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
-								$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
+								$data_name = isset( $details['account_name']['value'] ) ? wp_strip_all_tags( $details['account_name']['value'] ) : wp_strip_all_tags( $user_data->display_name );
 							if ( ! $details ) {
 								continue;
 							}

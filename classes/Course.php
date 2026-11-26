@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use InvalidArgumentException;
-
-defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
@@ -24,6 +24,7 @@ use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Components\Tooltip;
+use Tutor\Core\Input;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Traits\JsonResponse;
@@ -154,9 +155,9 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_delete_dashboard_course', array( $this, 'tutor_delete_dashboard_course' ) );
 
 		/**
-		 * Gutenberg author support
+		 * Course author support
 		 */
-		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'restrict_course_author' ), 99, 2 );
 
 		/**
 		 * Do Stuff for the course save from frontend
@@ -331,7 +332,7 @@ class Course extends Tutor_Base {
 		global $wp_query;
 		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
 		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
-		if ( ! CourseModel::get_post_types( $content ) || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
+		if ( ! CourseModel::get_post_types( $content ) || User::is_admin() || $is_instructor || $course_coming_soon_enabled ) {
 			return $content;
 		}
 
@@ -468,6 +469,28 @@ class Course extends Tutor_Base {
 	 */
 	public static function get_selling_option( $course_id ) {
 		return get_post_meta( $course_id, self::COURSE_SELLING_OPTION_META, true );
+	}
+
+	/**
+	 * Check if course is eligible for single purchase.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool true if course is eligible for single purchase, false otherwise.
+	 */
+	public static function is_single_purchase_allowed( $course_id ): bool {
+		$option = self::get_selling_option( $course_id );
+		return empty( $option ) || in_array(
+			$option,
+			array(
+				self::SELLING_OPTION_ALL,
+				self::SELLING_OPTION_ONE_TIME,
+				self::SELLING_OPTION_BOTH,
+			),
+			true
+		);
 	}
 
 	/**
@@ -626,6 +649,32 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Validate WC product author
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int $product_id product id.
+	 * @param int $course_id course id.
+	 *
+	 * @return bool
+	 */
+	public function is_valid_wc_product_author( $product_id, $course_id ) {
+		if ( User::is_admin() ) {
+			return true;
+		}
+		$product_author  = (int) get_post_field( 'post_author', $product_id );
+		$current_user_id = get_current_user_id();
+		if ( $product_author === $current_user_id ) {
+			return true;
+		}
+		$course_author = (int) get_post_field( 'post_author', $course_id );
+		if ( $product_author === $course_author && tutor_utils()->is_instructor_of_this_course( $current_user_id, $course_id ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Validate price
 	 *
 	 * @since 3.0.0
@@ -651,6 +700,10 @@ class Course extends Tutor_Base {
 					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
 					if ( $product_id ) {
+						if ( ! $this->is_valid_wc_product_author( $product_id, $course_id ) ) {
+							$errors['pricing'] = __( 'You are not authorized to use this product', 'tutor' );
+						}
+
 						$product = wc_get_product( $product_id );
 						if ( is_a( $product, 'WC_Product' ) ) {
 							if ( $course_product_id !== $product_id ) {
@@ -894,6 +947,38 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Meta query for users who can author a course.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array
+	 */
+	public static function get_course_author_meta_query() {
+		global $wpdb;
+
+		return array(
+			'relation' => 'OR',
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_tutor_instructor_status',
+					'value'   => 'approved',
+					'compare' => '=',
+				),
+				array(
+					'key'     => '_is_tutor_instructor',
+					'compare' => 'EXISTS',
+				),
+			),
+			array(
+				'key'     => $wpdb->get_blog_prefix() . 'capabilities',
+				'value'   => '"administrator"',
+				'compare' => 'LIKE',
+			),
+		);
+	}
+
+	/**
 	 * Create new draft course
 	 *
 	 * @since 3.0.0
@@ -1111,8 +1196,10 @@ class Course extends Tutor_Base {
 			true
 		);
 
-		$course_id = (int) $params['course_id'];
-		if ( ! $course_id ) {
+		$current_user_id = get_current_user_id();
+		$course_id       = (int) $params['course_id'];
+		$course          = get_post( $course_id );
+		if ( ! $course_id || ! $course || tutor()->course_post_type !== $course->post_type ) {
 			$this->response_bad_request( __( 'Invalid course id', 'tutor' ) );
 		}
 
@@ -1144,26 +1231,23 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		/**
-		 * Can trash a course when user is admin or option `instructor_can_delete_course` is turned on.
-		 */
-		if ( CourseModel::STATUS_TRASH === $params['post_status'] ) {
-			if ( User::is_admin() || tutor_utils()->get_option( 'instructor_can_delete_course', false ) ) {
-				$params['post_status'] = CourseModel::STATUS_TRASH;
-			} else {
-				unset( $params['post_status'] );
+		if ( isset( $params['post_status'] ) ) {
+			$current_status = get_post_status( $course_id );
+			if ( $params['post_status'] !== $current_status ) {
+				if ( ! CourseModel::can_user_update_status( $course_id, $params['post_status'] ) ) {
+					$params['post_status'] = CourseModel::STATUS_PENDING;
+				}
 			}
 		}
 
-		/**
-		 * Can publish a course when user is admin or option `instructor_can_publish_course` is turned on.
-		 * If instructor_can_publish_course is turned off then course status will be pending.
-		 */
-		if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-			$is_instructor_allowed_to_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! User::is_admin() && ! $is_instructor_allowed_to_publish ) {
-				$params['post_status'] = CourseModel::STATUS_PENDING;
+		$new_author = (int) ( $params['post_author'] ?? 0 );
+		if ( $new_author && $new_author !== (int) $course->post_author ) {
+			if ( ! ( User::is_admin() || CourseModel::is_main_instructor( $course_id, $current_user_id ) )
+				|| ! ( User::is_admin( $new_author ) || User::is_instructor( $new_author, true ) ) ) {
+				$this->json_response( __( 'Invalid course author', 'tutor' ), array( 'post_author' => __( 'Selected author is not eligible.', 'tutor' ) ), HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 			}
+		} else {
+			$params['post_author'] = $course->post_author;
 		}
 
 		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
@@ -1569,12 +1653,14 @@ class Course extends Tutor_Base {
 			'instructor_can_publish_course',
 			'instructor_can_change_course_author',
 			'instructor_can_manage_co_instructors',
+			'course_completion_process',
+			'control_video_lesson_completion',
 		);
 
-		$full_settings                     = get_option( 'tutor_option', array() );
-		$settings                          = Options_V2::get_only( $required_options );
-		$logo_id                           = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
-		$settings['brand_logo_light']      = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+		$full_settings                = get_option( 'tutor_option', array() );
+		$settings                     = Options_V2::get_only( $required_options );
+		$logo_id                      = absint( $full_settings['brand_logo_light'] ?? $full_settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+		$settings['brand_logo_light'] = $logo_id > 0 ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
 
 		$settings['youtube_api_key_exist'] = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
@@ -1731,7 +1817,7 @@ class Course extends Tutor_Base {
 	 */
 	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$this->check_access( $course_id );
 
 		$product_id = Input::post( 'product_id' );
@@ -2027,19 +2113,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Adding author to instructor automatically
 		 */
-		$requested_author_id = Input::post( 'post_author_override', 0, Input::TYPE_INT );
-
-		/**
-		 * Only accept the requested author override if it targets a real,approved instructor or admin
-		 *
-		 * @since 4.0.4
-		 */
 		$author_id = $post->post_author;
-		if ( $requested_author_id && ( User::is_admin() || User::is_instructor() ) ) {
-			if ( User::is_admin( $requested_author_id ) || User::is_instructor( $requested_author_id, true ) ) {
-				$author_id = $requested_author_id;
-			}
-		}
 
 		$attached = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -2119,6 +2193,13 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
+		if ( $topic_id ) {
+			$existing_topic = get_post( $topic_id );
+			if ( ! $existing_topic || tutor()->topics_post_type !== $existing_topic->post_type || (int) $existing_topic->post_parent !== $course_id ) {
+				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			}
+		}
+
 		// Create payload to create/update the topic.
 		$post_arr = array(
 			'post_type'    => 'topics',
@@ -2163,7 +2244,44 @@ class Course extends Tutor_Base {
 		tutor_utils()->check_nonce();
 
 		$topic_id = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+		if ( ! $topic_id ) {
+			$this->json_response(
+				__( 'Invalid topic id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$topic = get_post( $topic_id );
+		if ( ! $topic || tutor()->topics_post_type !== $topic->post_type ) {
+			$this->json_response(
+				__( 'Invalid topic id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$course_id          = (int) $topic->post_parent;
+		$provided_course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $provided_course_id > 0 && $provided_course_id !== $course_id ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		if ( ! $course_id || tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			$this->json_response(
+				__( 'Invalid course id', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$current_user_id = get_current_user_id();
+		if ( ! tutor_utils()->can_user_edit_course( $current_user_id, $course_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			$this->json_response(
 				tutor_utils()->error_message(),
 				null,
@@ -2174,10 +2292,10 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		// Assign course ID to orphan content IDs since the topic will be deleted.
-		$course_id   = tutor_utils()->get_course_id_by( 'topic', $topic_id );
 		$content_ids = tutor_utils()->get_course_content_ids_by( null, 'topic', $topic_id );
 		foreach ( $content_ids as $content_id ) {
 			update_post_meta( $content_id, '_tutor_course_id_for_lesson', $course_id );
+			clean_post_cache( $content_id );
 			// Actually all kind of contents.
 			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibility.
 		}
@@ -2221,16 +2339,22 @@ class Course extends Tutor_Base {
 			return;
 		}
 
+		$course = get_post( $course_id );
+		if ( ! ( $course instanceof \WP_Post ) ) {
+			return;
+		}
+
 		/**
 		 * TODO: need to check purchase information
 		 */
 
 		$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
-
-		$course = get_post( $course_id );
-
 		if ( 'private' === $course->post_status && ! current_user_can( 'read_private_tutor_courses' ) ) {
-			wp_send_json_error( __( 'You do not have permission to enroll in this course', 'tutor' ) );
+			$message = __( 'You do not have permission to enroll in this course', 'tutor' );
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( $message );
+			}
+			wp_die( esc_html( $message ), 403 );
 		}
 
 		/**
@@ -2439,75 +2563,48 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
-		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
 
-		/**
-		 * Co-instructor can not delete a course
-		 *
-		 * @since 2.1.6
-		 */
-		if ( false === CourseModel::is_main_instructor( $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
-		}
+		$deleted = CourseModel::delete_course( $course_id, false );
 
-		// Check if user is only an instructor.
-		if ( ! User::is_admin() ) {
-			// Check if instructor can trash course.
-			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-
-			if ( ! $can_trash_post ) {
-				wp_send_json_error( tutor_utils()->error_message() );
-			}
-		}
-
-		$trash_course = wp_update_post(
-			array(
-				'ID'          => $course_id,
-				'post_status' => CourseModel::STATUS_TRASH,
-			)
-		);
-
-		if ( $trash_course ) {
+		if ( $deleted ) {
 			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
 		}
-		wp_send_json_success();
+
+		wp_send_json_error( tutor_utils()->error_message() );
 	}
 
 	/**
-	 * Main author change from gutenberg editor
+	 * Keep the course author eligible on every save path.
+	 *
+	 * Administrators and the course's current author can reassign the author,
+	 * and only to an eligible user. Everyone else keeps the existing author,
+	 * so instructors can still edit and save their own courses. Saves without
+	 * a logged-in user (imports, cron) are left untouched.
 	 *
 	 * @since 2.0.0
+	 * @since 4.3.0 Applies to all course saves, not just Gutenberg.
 	 *
-	 * @param array $data data.
-	 * @param array $postarr post array.
+	 * @param array $data Sanitized post data.
+	 * @param array $postarr Raw post data.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function tutor_add_gutenberg_author( $data, $postarr ) {
-		$gutenberg_enabled = tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
-		$post_type         = $postarr['post_type'];
-		$courses_post_type = tutor()->course_post_type;
-
-		if ( false === is_admin() || false === $gutenberg_enabled || $post_type !== $courses_post_type ) {
+	public function restrict_course_author( $data, $postarr ) {
+		if ( tutor()->course_post_type !== ( $postarr['post_type'] ?? '' ) || ! is_user_logged_in() ) {
 			return $data;
 		}
 
-		/**
-		 * Only admin can change main author
-		 */
-		if ( $courses_post_type === $post_type && ! current_user_can( 'administrator' ) ) {
-			global $wpdb;
-			$post_ID     = (int) tutor_utils()->avalue_dot( 'ID', $postarr );
-			$post_author = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID ) );
+		$author_id = (int) ( $data['post_author'] ?? 0 );
+		$post_id   = (int) ( $postarr['ID'] ?? 0 );
 
-			if ( $post_author > 0 ) {
-				$data['post_author'] = $post_author;
-			} else {
-				$data['post_author'] = get_current_user_id();
-			}
+		$post_author = $post_id > 0 ? (int) get_post_field( 'post_author', $post_id ) : 0;
+		$is_author   = $post_author > 0 && get_current_user_id() === $post_author;
+
+		if ( ( User::is_admin() || $is_author ) && ( User::is_admin( $author_id ) || User::is_instructor( $author_id, true ) ) ) {
+			return $data;
 		}
+
+		$data['post_author'] = $post_author > 0 ? $post_author : get_current_user_id();
 
 		return $data;
 	}
@@ -2569,8 +2666,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-
-			$is_update = ( $product_id && wc_get_product( $product_id ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) && $this->is_valid_wc_product_author( $product_id, $post_ID ) ) ? true : false;
 
 			if ( $is_update ) {
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
@@ -3275,6 +3371,10 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public static function redirect_to_course_list_page( int $post_id ): void {
+		if ( wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) || headers_sent() ) {
+			return;
+		}
+
 		$post = get_post( $post_id );
 		if ( tutor()->course_post_type === $post->post_type ) {
 			$is_gutenberg_enabled = tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
@@ -3412,6 +3512,16 @@ class Course extends Tutor_Base {
 		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
 		if ( isset( $filter->role ) && is_array( $filter->role ) ) {
 			$args['role__in'] = array_map( 'sanitize_text_field', $filter->role );
+
+			if ( in_array( tutor()->instructor_role, $args['role__in'], true ) ) {
+				$args['meta_query'] = ! empty( $args['meta_query'] )
+					? array(
+						'relation' => 'AND',
+						$args['meta_query'],
+						self::get_course_author_meta_query(),
+					)
+					: self::get_course_author_meta_query();
+			}
 		}
 
 		return $args;
@@ -3476,11 +3586,15 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $course_id course id.
+	 * @param int $course_id    course id.
 	 *
 	 * @return void
 	 */
 	public function render_course_action_btn( int $course_id ) {
+		if ( ! EnrollmentModel::is_enrolled( $course_id, get_current_user_id() ) ) {
+			return;
+		}
+
 		$is_completed = tutor_utils()->is_completed_course( $course_id );
 		if ( $is_completed ) {
 			$certificate_addon_active = tutor_utils()->is_addon_enabled( 'tutor-certificate' );
@@ -3658,8 +3772,15 @@ class Course extends Tutor_Base {
 		}
 
 		if ( ! empty( $content_parent ) ) {
-			$provided_topic_ids[]   = $content_parent['parent_topic_id'];
-			$provided_content_ids[] = $content_parent['content_id'];			
+			$parents = ( isset( $content_parent[0] ) && is_array( $content_parent[0] ) ) ? $content_parent : array( $content_parent );
+			foreach ( $parents as $item ) {
+				if ( isset( $item['parent_topic_id'] ) ) {
+					$provided_topic_ids[] = (int) $item['parent_topic_id'];
+				}
+				if ( isset( $item['content_id'] ) ) {
+					$provided_content_ids[] = (int) $item['content_id'];
+				}
+			}
 		}
 
 		$provided_topic_ids   = array_values( array_unique( array_filter( $provided_topic_ids ) ) );

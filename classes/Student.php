@@ -10,12 +10,10 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\GDPR\Controllers\LegalConsent;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Manage students
@@ -97,7 +95,12 @@ class Student {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 
-		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
+		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: ab<c%41 to ab&lt;c
+		$password              = wp_unslash( $_POST['password'] ?? '' );
+		$password_confirmation = wp_unslash( $_POST['password_confirmation'] ?? '' );
+		// phpcs:enable
+
+		if ( $password !== $password_confirmation ) {
 			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
@@ -111,8 +114,8 @@ class Student {
 		$last_name  = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$email      = sanitize_text_field( tutor_utils()->input_old( 'email' ) );
 		$user_login = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
-		$password   = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
-		$userdata   = array(
+
+		$userdata = array(
 			'user_login' => $user_login,
 			'user_email' => $email,
 			'first_name' => $first_name,
@@ -199,13 +202,13 @@ class Student {
 		$user_id = get_current_user_id();
 		do_action( 'tutor_profile_update_before', $user_id );
 
-		$first_name              = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'first_name' ) );
-		$last_name               = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'last_name' ) );
-		$phone_number            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'phone_number' ) );
+		$first_name              = Input::post( 'first_name', '', Input::TYPE_HTML_DECODE );
+		$last_name               = Input::post( 'last_name', '', Input::TYPE_HTML_DECODE );
+		$phone_number            = Input::post( 'phone_number', '', Input::TYPE_HTML_DECODE );
+		$tutor_profile_job_title = Input::post( 'tutor_profile_job_title', '', Input::TYPE_HTML_DECODE );
+		$timezone                = Input::post( 'timezone', '', Input::TYPE_HTML_DECODE );
+		$display_name            = Input::post( 'display_name', '', Input::TYPE_HTML_DECODE );
 		$tutor_profile_bio       = wp_kses( Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST ), tutor_utils()->allowed_profile_bio_tags() );
-		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
-		$timezone                = Input::sanitize_with_strip_tags( Input::post( 'timezone', '' ) );
-		$display_name            = Input::sanitize_with_strip_tags( tutor_utils()->input_old( 'display_name' ) );
 
 		$userdata = array(
 			'ID'           => $user_id,
@@ -287,9 +290,11 @@ class Student {
 
 		$user = wp_get_current_user();
 
-		$previous_password    = Input::post( 'previous_password', '' );
-		$new_password         = Input::post( 'new_password', '' );
-		$confirm_new_password = Input::post( 'confirm_new_password', '' );
+		// phpcs:disable -- Password is unslashed and not sanitized, as sanitization may alter valid password characters. Ex: foo%123 to foo&lt;123, foo
+		$previous_password    = wp_unslash( $_POST['previous_password'] ?? '' );
+		$new_password         = wp_unslash( $_POST['new_password'] ?? '' );
+		$confirm_new_password = wp_unslash( $_POST['confirm_new_password'] ?? '' );
+		// phpcs:enable
 
 		$previous_password_checked = wp_check_password( $previous_password, $user->user_pass, $user->ID );
 
@@ -403,6 +408,6 @@ class Student {
 			),
 		);
 
-		return $courses_tab;
+		return apply_filters( 'tutor_dashboard_courses_tab', $courses_tab, $active_tab );
 	}
 }

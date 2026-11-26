@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\UrlHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 /**
  * Handle ratings related logics
  *
@@ -134,7 +132,7 @@ class Reviews {
 			do_action( 'tutor_course_review_approved', $review_id );
 		}
 
-		wp_send_json_success();
+		wp_send_json_success( array( 'message' => __( 'Review status updated', 'tutor' ) ) );
 	}
 
 	/**

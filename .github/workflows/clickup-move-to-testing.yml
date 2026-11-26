@@ -1,0 +1,160 @@
+name: Shift ClickUp Ticket to Testing on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  move-to-testing:
+    name: Shift ClickUp Ticket to Testing
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Shift ClickUp ticket to testing
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_TESTING_STATUS: ${{ vars.CLICKUP_TESTING_STATUS || 'testing' }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          MERGED_BY: ${{ github.event.pull_request.merged_by.login }}
+        shell: python
+        run: |
+          import json
+          import os
+          import re
+          import sys
+          import urllib.error
+          import urllib.request
+
+          api_token = os.environ.get('CLICKUP_API_TOKEN', '').strip()
+          pr_body = os.environ.get('PR_BODY') or ''
+          pr_title = os.environ.get('PR_TITLE') or ''
+          pr_number = os.environ.get('PR_NUMBER') or ''
+          pr_url = os.environ.get('PR_URL') or ''
+          merged_by = os.environ.get('MERGED_BY') or ''
+          target_status = (os.environ.get('CLICKUP_TESTING_STATUS') or '').strip() or 'testing'
+
+          if not api_token:
+              print("::error::CLICKUP_API_TOKEN secret is not configured in repository secrets. Please add it to enable ClickUp automation.")
+              sys.exit(1)
+
+          if not pr_body.strip():
+              print("::notice::PR description is empty. No ClickUp ticket link found.")
+              sys.exit(0)
+
+          # Regex to match ClickUp task URLs:
+          # Matches https://app.clickup.com/t/86b24abc
+          # Matches https://app.clickup.com/t/2544253/86b24abc
+          # Matches https://app.clickup.com/t/2544253/TUTOR-1234
+          # Matches https://app.clickup.com/t/c/2544253/86b24abc
+          url_pattern = r'https://app\.clickup\.com/t/(?:c/)?(?:([0-9]+)/)?([a-zA-Z0-9_-]+)'
+
+          # First search within the "**ClickUp ticket link:**" section
+          section_match = re.search(
+              r'\*\*ClickUp ticket link:\*\*(.*?)(?:^## |\Z)',
+              pr_body,
+              re.DOTALL | re.MULTILINE
+          )
+          search_scope = section_match.group(1) if section_match else pr_body
+          matches = re.findall(url_pattern, search_scope)
+
+          # Fallback to scanning whole PR body if none found under the section
+          if not matches and search_scope != pr_body:
+              matches = re.findall(url_pattern, pr_body)
+
+          if not matches:
+              print("::warning::No valid ClickUp ticket URL found in PR description. Skipping status update.")
+              sys.exit(0)
+
+          # Deduplicate task IDs while preserving appearance order
+          tasks = []
+          seen_ids = set()
+          for team_id, task_id in matches:
+              if task_id in seen_ids or len(task_id) < 3:
+                  continue
+              seen_ids.add(task_id)
+              tasks.append((team_id, task_id))
+
+          print(f"Discovered {len(tasks)} ClickUp task(s): {[t[1] for t in tasks]}")
+
+          # Build status candidates. If target_status is standard 'testing', provide fallbacks for common naming styles
+          status_candidates = [target_status]
+          if target_status.lower() == 'testing':
+              for alt in ['Testing', 'in testing', 'In Testing', 'TESTING', 'qa', 'QA', 'In testing']:
+                  if alt not in status_candidates:
+                      status_candidates.append(alt)
+
+          headers = {
+              'Authorization': api_token,
+              'Content-Type': 'application/json',
+              'User-Agent': 'Tutor-GitHub-Actions-ClickUp-Sync/1.0'
+          }
+
+          failed_tasks = []
+
+          for team_id, task_id in tasks:
+              print(f"\nProcessing ClickUp task: {task_id} (Team: {team_id or 'default'})...")
+
+              # If custom task ID (contains hyphen) and team_id is known:
+              query_params = ""
+              if '-' in task_id:
+                  query_params = "?custom_task_ids=true"
+                  if team_id:
+                      query_params += f"&team_id={team_id}"
+
+              url = f"https://api.clickup.com/api/v2/task/{task_id}{query_params}"
+
+              updated_status = None
+              last_error = None
+
+              for status_attempt in status_candidates:
+                  payload = json.dumps({'status': status_attempt}).encode('utf-8')
+                  req = urllib.request.Request(url, data=payload, headers=headers, method='PUT')
+                  try:
+                      with urllib.request.urlopen(req) as response:
+                          if response.status in (200, 201):
+                              updated_status = status_attempt
+                              break
+                  except urllib.error.HTTPError as e:
+                      err_body = e.read().decode('utf-8', errors='ignore')
+                      last_error = f"HTTP {e.code}: {err_body}"
+                      # Stop trying candidates if authentication fails or task does not exist
+                      if e.code in (401, 403, 404):
+                          break
+                  except Exception as e:
+                      last_error = str(e)
+                      break
+
+              if updated_status:
+                  print(f"::notice::Successfully shifted ClickUp task '{task_id}' to '{updated_status}'.")
+
+                  # Post reference comment to the task
+                  comment_url = f"https://api.clickup.com/api/v2/task/{task_id}/comment{query_params}"
+                  comment_text = (
+                      f"🚀 Merged in PR #{pr_number}: {pr_title}\n\n"
+                      f"Merged by: @{merged_by}\n"
+                      f"PR: {pr_url}"
+                  )
+                  comment_payload = json.dumps({'comment_text': comment_text, 'notify_all': False}).encode('utf-8')
+                  comment_req = urllib.request.Request(comment_url, data=comment_payload, headers=headers, method='POST')
+                  try:
+                      with urllib.request.urlopen(comment_req) as comment_resp:
+                          if comment_resp.status in (200, 201):
+                              print(f"Added merge reference comment to ClickUp task '{task_id}'.")
+                  except Exception as comment_err:
+                      print(f"::warning::Could not add comment to task '{task_id}': {comment_err}")
+              else:
+                  print(f"::error::Failed to update ClickUp task '{task_id}'. Error: {last_error}")
+                  failed_tasks.append(task_id)
+
+          if failed_tasks:
+              print(f"::error::Could not update status for tasks: {failed_tasks}")
+              sys.exit(1)
+
+          print("\nAll ClickUp tasks processed successfully.")

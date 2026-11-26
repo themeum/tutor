@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Core\DB;
+use Tutor\Core\Input;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -52,6 +54,18 @@ class BillingModel {
 	);
 
 	/**
+	 * Fields a partial update is allowed to change
+	 *
+	 * @since 4.2.2
+	 *
+	 * @var array
+	 */
+	private $partial_update_fields = array(
+		'billing_country',
+		'billing_state',
+	);
+
+	/**
 	 * Get fillable fields
 	 *
 	 * @return array
@@ -67,6 +81,59 @@ class BillingModel {
 	 */
 	public function get_required_fields() {
 		return $this->required_fields;
+	}
+
+	/**
+	 * Get validation rules
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array Validation rules.
+	 */
+	public function get_validation_rules() {
+		/**
+		 * The `billing_state` field is excluded because not all countries have states.
+		 */
+		return array(
+			'billing_first_name' => 'required',
+			'billing_last_name'  => 'required',
+			'billing_email'      => 'required|email',
+			'billing_phone'      => 'required',
+			'billing_zip_code'   => 'required',
+			'billing_address'    => 'required',
+			'billing_country'    => 'required',
+			'billing_city'       => 'required',
+		);
+	}
+
+	/**
+	 * Validate the billing country and state.
+	 *
+	 * Prevents tax reduction abuse by rejecting unknown countries and states
+	 * that don't belong to the given country.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $country Billing country name.
+	 * @param string $state   Billing state name.
+	 *
+	 * @return string[] List of error messages, empty when valid.
+	 */
+	public function validate_billing_location( string $country, string $state ): array {
+		$country_info = tutor_get_country_info_by_name( $country );
+
+		if ( ! $country_info ) {
+			return array( __( 'Invalid country', 'tutor' ) );
+		}
+
+		$state_names = array_column( $country_info['states'] ?? array(), 'name' );
+
+		// Countries without states don't require one.
+		if ( ! empty( $state_names ) && ! in_array( $state, $state_names, true ) ) {
+			return array( __( 'Invalid state', 'tutor' ) );
+		}
+
+		return array();
 	}
 
 	/**
@@ -88,19 +155,34 @@ class BillingModel {
 	/**
 	 * Update billing info
 	 *
+	 * @since 4.2.2 New Tutor\Core\DB used instead of the deprecated one.
+	 *
 	 * @param array $data Bulling info data.
 	 * @param array $where Where condition.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function update( $data, $where ) {
-		global $wpdb;
 
-		return QueryHelper::update(
-			"{$wpdb->prefix}tutor_customers",
-			$data,
-			$where,
-		);
+		$data = Input::sanitize_array( $data );
+
+		try {
+			$updated = DB::table( 'tutor_customers' );
+			foreach ( $where as $key => $value ) {
+				$updated->where( $key, $value );
+			}
+
+			$result = $updated->update( $data );
+			if ( ! $result ) {
+				tutor_log( __( 'Failed to update user profile.', 'tutor' ) );
+				return false;
+			}
+
+			return true;
+		} catch ( \Throwable $e ) {
+			tutor_log( $e->getMessage() );
+			return false;
+		}
 	}
 
 	/**
@@ -134,6 +216,10 @@ class BillingModel {
 	 */
 	public function has_complete_billing_info( array $data ) {
 		foreach ( $this->get_required_fields() as $field ) {
+			if ( 'billing_state' === $field && ! $this->country_has_states( $data['billing_country'] ?? '' ) ) {
+				continue;
+			}
+
 			if ( empty( $data[ $field ] ) ) {
 				return false;
 			}
@@ -174,5 +260,31 @@ class BillingModel {
 				'phone'   => $data['billing_phone'] ?? '',
 			)
 		);
+	}
+
+	/**
+	 * Check whether a country has states to choose from.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param string $country Country name.
+	 *
+	 * @return bool
+	 */
+	public function country_has_states( string $country ) {
+		$country_info = tutor_get_country_info_by_name( $country );
+
+		return ! empty( $country_info['states'] );
+	}
+
+	/**
+	 * Get the fields a partial update is allowed to change.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @return array
+	 */
+	public function get_partial_update_fields() {
+		return $this->partial_update_fields;
 	}
 }
