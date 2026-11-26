@@ -115,6 +115,23 @@
       text-align: end;
     }
 
+    &-actions {
+      @include tutor-flex(row, center, flex-end);
+      flex-wrap: wrap;
+      gap: $tutor-spacing-3;
+
+      .tutor-export-purchase-history {
+        &,
+        &:hover,
+        &:focus {
+          border: none;
+          outline: none;
+          box-shadow: none !important;
+          --tutor-button-border-shadow: none;
+        }
+      }
+    }
+
     &-title {
       @include tutor-flex(row, start, flex-start);
       @include tutor-typography('small', 'medium');

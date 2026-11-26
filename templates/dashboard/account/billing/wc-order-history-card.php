@@ -12,8 +12,11 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Helpers\ComponentHelper;
+use TUTOR\Icon;
+use TUTOR\WooCommerce;
 
 $order_data = $data['order_data'] ?? null;
 if ( ! $order_data ) {
@@ -29,7 +32,6 @@ if ( ! $wc_order ) {
 $order_id       = $wc_order->get_id();
 $total_price    = (float) $wc_order->get_total();
 $order_status   = $wc_order->get_status();
-$payment_status = $wc_order->get_status();
 $payment_method = $wc_order->get_payment_method_title();
 $order_date_obj = $wc_order->get_date_created();
 $order_date     = $order_date_obj ? $order_date_obj->date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) ) : '';
@@ -43,6 +45,12 @@ if ( tutor_utils()->count( $courses ) ) {
 		}
 
 		$titles[] = get_the_title( $course['course_id'] );
+	}
+}
+
+if ( empty( $titles ) ) {
+	foreach ( $wc_order->get_items( 'line_item' ) as $order_item ) {
+		$titles[] = $order_item->get_name();
 	}
 }
 
@@ -77,7 +85,7 @@ if ( tutor_utils()->count( $courses ) ) {
 		<?php ComponentHelper::render_status_badge( $order_status ); ?>
 
 		<div class="tutor-billing-card-amount">
-			<?php echo wp_kses( tutor_get_formatted_price( $total_price ), tutor_price_allowed_html() ); ?>
+			<?php echo wp_kses( WooCommerce::format_wc_price_html( $total_price, $wc_order->get_currency() ), tutor_price_allowed_html() ); ?>
 		</div>
 
 		<?php
@@ -90,20 +98,39 @@ if ( tutor_utils()->count( $courses ) ) {
 				->render();
 		}
 
-		if ( 'completed' === $order_status ) {
-			Button::make()
-				->tag( 'button' )
-				->label( __( 'Receipt', 'tutor' ) )
-				->variant( Variant::LINK )
-				->attr( 'type', 'button' )
-				->attr( 'class', 'tutor-export-purchase-history' )
-				->attr( 'data-order', $order_id )
-				->attr( 'data-course-name', implode( ', ', $titles ) )
-				->attr( 'data-price', $total_price )
-				->attr( 'data-date', $order_date )
-				->attr( 'data-status', $order_status )
-				->render();
-		}
+		if ( WooCommerce::is_receipt_available( $wc_order ) ) :
+			?>
+			<div class="tutor-billing-card-actions">
+				<?php
+				Button::make()
+					->tag( 'a' )
+					->label( __( 'Receipt', 'tutor' ) )
+					->icon( Icon::PRINTER )
+					->variant( Variant::LINK )
+					->size( Size::X_SMALL )
+					->attr( 'href', WooCommerce::get_receipt_url( $order_id ) )
+					->attr( 'target', '_blank' )
+					->attr( 'rel', 'noopener noreferrer' )
+					->render();
+
+				Button::make()
+					->tag( 'button' )
+					->label( __( 'Purchase History', 'tutor' ) )
+					->icon( Icon::CSV )
+					->variant( Variant::LINK_GRAY )
+					->size( Size::X_SMALL )
+					->attr( 'type', 'button' )
+					->attr( 'class', 'tutor-export-purchase-history' )
+					->attr( 'data-order', $order_id )
+					->attr( 'data-course-name', implode( ', ', $titles ) )
+					->attr( 'data-price', $total_price )
+					->attr( 'data-date', $order_date )
+					->attr( 'data-status', $order_status )
+					->render();
+				?>
+			</div>
+			<?php
+		endif;
 		?>
 	</div>
 </div>
