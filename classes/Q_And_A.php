@@ -548,6 +548,9 @@ class Q_And_A {
 	 * @since 4.0.0
 	 *
 	 * @return void send wp_json response
+	 *
+	 * IDOR fixed.
+	 * @TODO method is not actively used. Need to verify it's functionality on implementation.
 	 */
 	public function load_replies() {
 		tutor_utils()->checking_nonce();
@@ -555,12 +558,19 @@ class Q_And_A {
 		$comment_id    = Input::post( 'comment_id', 0, Input::TYPE_INT );
 		$replies_order = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 		$context       = Input::post( 'context', 'dashboard' );
+		$user_id       = get_current_user_id();
 
-		if ( ! $comment_id ) {
+		$question = $comment_id ? get_comment( $comment_id ) : null;
+		if ( ! $question || self::COMMENT_TYPE !== $question->comment_type ) {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$user_id = get_current_user_id();
+		$course_id = (int) $question->comment_post_ID;
+		$allowed   = 'learning-area' === $context ? self::has_qna_access( $user_id, $course_id ) : tutor_utils()->can_user_manage( 'qa_question', $comment_id );
+		if ( ! $allowed ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'authorization' ) );
+		}
+
 		$replies = tutor_utils()->get_qa_answer_by_question( $comment_id, $replies_order, 'frontend' );
 
 		$template = 'dashboard.discussions.qna-replies';
