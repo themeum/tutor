@@ -100,7 +100,7 @@ export const useAnimation = <T,>({
   const transitions = useTransition(data, {
     keys:
       keys ||
-      ((item) => {
+      ((item: T) => {
         return item as unknown as string;
       }),
     from: {
