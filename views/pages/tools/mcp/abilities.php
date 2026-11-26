@@ -85,14 +85,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	}
 	?>
-	<div class="tutor-option-single-item tutor-mb-32">
+	<div class="tutor-option-single-item tutor-mcp-abilities tutor-mb-32">
 		<div class="tutor-option-group-title tutor-mb-16">
 			<div class="tutor-fs-6 tutor-color-muted">
 				<?php echo esc_html( $group['name'] ); ?>
 				<span class="tutor-ml-8">(<?php echo esc_html( (string) $group_on ); ?>/<?php echo esc_html( (string) $group_total ); ?>)</span>
 			</div>
 		</div>
-		<div class="item-wrapper">
+		<div class="tutor-mcp-ability-fields">
 			<?php foreach ( $group_abilities as $ability ) : ?>
 				<?php
 				$tools    = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
@@ -106,22 +106,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 				$is_pro     = ! empty( $ability['pro'] );
 				?>
 				<div class="tutor-mcp-ability-row">
-					<div class="tutor-option-field-row">
-						<div class="tutor-option-field-label">
-							<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-								<div class="tutor-fs-6 tutor-fw-medium"><?php echo esc_html( $ability['name'] ); ?></div>
-								<?php if ( $is_pro ) : ?>
-									<span class="tutor-pro-badge"><?php esc_html_e( 'Pro', 'tutor' ); ?></span>
-								<?php endif; ?>
-							</div>
-							<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $ability['desc'] ); ?></div>
+					<div class="tutor-option-field-label">
+						<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+							<div class="tutor-fs-6 tutor-fw-medium"><?php echo esc_html( $ability['name'] ); ?></div>
+							<?php if ( $is_pro ) : ?>
+								<span class="tutor-pro-badge"><?php esc_html_e( 'Pro', 'tutor' ); ?></span>
+							<?php endif; ?>
 						</div>
-						<div class="tutor-option-field-input">
-							<label class="tutor-form-toggle">
-								<input type="checkbox" class="tutor-form-toggle-input" data-mcp-ability-toggle <?php checked( $ability_on ); ?>>
-								<span class="tutor-form-toggle-control"></span>
-							</label>
-						</div>
+						<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( $ability['desc'] ); ?></div>
+					</div>
+					<div class="tutor-option-field-input">
+						<label class="tutor-form-toggle">
+							<input type="checkbox" class="tutor-form-toggle-input" data-mcp-ability-toggle <?php checked( $ability_on ); ?>>
+							<span class="tutor-form-toggle-control"></span>
+						</label>
 					</div>
 					<div class="tutor-mcp-tools tutor-d-none" aria-hidden="true">
 						<?php foreach ( $tools as $tool ) : ?>

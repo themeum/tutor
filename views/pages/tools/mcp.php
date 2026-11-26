@@ -124,12 +124,12 @@ $overview_url  = add_query_arg(
 			<?php require __DIR__ . '/mcp/abilities.php'; ?>
 		<?php else : ?>
 
-			<div class="tutor-option-single-item tutor-mb-32">
+			<div class="tutor-option-single-item tutor-mcp-config tutor-mb-32">
 				<div class="tutor-option-group-title tutor-mb-16">
 					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Configuration', 'tutor' ); ?></div>
 				</div>
-				<div class="item-wrapper">
-					<div class="tutor-option-field-row">
+				<div class="tutor-mcp-config-fields">
+					<div class="tutor-mcp-config-row">
 						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Tutor LMS MCP', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
@@ -144,7 +144,7 @@ $overview_url  = add_query_arg(
 						</div>
 					</div>
 
-					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Server URL', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
@@ -152,17 +152,16 @@ $overview_url  = add_query_arg(
 							</div>
 						</div>
 						<div class="tutor-option-field-input">
-							<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+							<div class="tutor-mcp-server-url tutor-position-relative">
 								<input type="text" id="tutor-mcp-srv-url" class="tutor-form-control" value="<?php echo esc_attr( $endpoint ); ?>" readonly>
-								<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-flex-shrink-0" data-tutor-clipboard-copy-target="tutor-mcp-srv-url">
-									<span class="tutor-icon-copy tutor-mr-8" aria-hidden="true"></span>
-									<?php esc_html_e( 'Copy', 'tutor' ); ?>
+								<button type="button" class="tutor-btn tutor-btn-icon tutor-mcp-server-url-copy" data-tutor-clipboard-copy-target="tutor-mcp-srv-url" aria-label="<?php esc_attr_e( 'Copy server URL', 'tutor' ); ?>">
+									<span class="tutor-icon-copy" aria-hidden="true"></span>
 								</button>
 							</div>
 						</div>
 					</div>
 
-					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Read-only mode', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
@@ -177,7 +176,7 @@ $overview_url  = add_query_arg(
 						</div>
 					</div>
 
-					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Allow instructors', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
@@ -192,7 +191,7 @@ $overview_url  = add_query_arg(
 						</div>
 					</div>
 
-					<div class="tutor-option-field-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
 						<div class="tutor-option-field-label">
 							<div class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Abilities', 'tutor' ); ?></div>
 							<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">

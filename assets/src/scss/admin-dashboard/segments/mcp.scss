@@ -2,6 +2,68 @@
  * Tools → MCP — only styles Tutor Tools does not already provide.
  */
 
-.tutor-mcp-ability-row + .tutor-mcp-ability-row {
-	border-top: 1px solid var(--tutor-border-color);
+.tutor-mcp-config-fields,
+.tutor-mcp-ability-fields {
+	background-color: rgba(255, 255, 255, 1);
+	border: 1px solid rgba(236, 236, 237, 1);
+	border-radius: 6px;
+}
+
+.tutor-mcp-config-row,
+.tutor-mcp-ability-row {
+	display: grid;
+	align-items: center;
+	justify-content: space-between;
+	grid-auto-flow: column;
+	grid-gap: 16px;
+	min-width: 0;
+	padding: 16px 20px;
+	border-bottom: 1px solid rgba(236, 236, 237, 1);
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	.tutor-option-field-input {
+		justify-self: end;
+		text-align: right;
+	}
+}
+
+.tutor-mcp-config {
+	// Hidden siblings still count as :last-child, so clear dividers when MCP is off.
+	&:has([data-mcp-enable]:not(:checked)) .tutor-mcp-config-row {
+		border-bottom: none;
+	}
+
+	.tutor-mcp-server-url {
+		min-width: 0;
+		max-width: 266px;
+		width: 100%;
+
+		.tutor-form-control {
+			min-width: 0;
+			width: 100%;
+			padding-right: 40px;
+			border: 1px solid rgba(236, 236, 237, 1);
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 18px;
+			color: rgba(118, 124, 142, 1);
+			background-color: var(--tutor-color-white);
+
+			&:focus {
+				border-color: rgba(236, 236, 237, 1);
+				box-shadow: none;
+			}
+		}
+
+		.tutor-mcp-server-url-copy {
+			position: absolute;
+			inset-inline-end: 2px;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: var(--tutor-color-white);
+		}
+	}
 }
