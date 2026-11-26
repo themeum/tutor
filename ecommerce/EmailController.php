@@ -10,12 +10,10 @@
 
 namespace Tutor\Ecommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\OrderModel;
 use TutorPro\Subscription\Models\PlanModel;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * EmailController class
@@ -50,23 +48,14 @@ class EmailController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		global $wpdb;
-		$this->queue_table = $wpdb->tutor_email_queue;
-
 		if ( ! $register_hooks ) {
 			return;
 		}
 
-		add_action( 'wp_ajax_tutor_send_mail_test', array( $this, 'send_test_mail' ) );
 		add_action( 'tutor_order_placed', array( $this, 'order_placed' ) );
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'order_updated' ), 10, 4 );
 
 		add_filter( 'tutor_pro/email/list', array( $this, 'setup_email_config' ) );
-	}
-
-	// @TODO: Will be removed later.
-	public function send_test_mail() {
-		$this->order_placed( get_current_user_id() );
 	}
 
 	/**
@@ -125,7 +114,7 @@ class EmailController {
 
 		foreach ( $to as $email ) {
 			$insert_data = array_merge( $data, array( 'mail_to' => $email ) );
-			$wpdb->insert( $this->queue_table, $insert_data );
+			$wpdb->insert( $wpdb->tutor_email_queue, $insert_data );
 		}
 	}
 
@@ -155,7 +144,6 @@ class EmailController {
 	 * Load email template.
 	 *
 	 * @param string  $template template.
-	 * @param boolean $pro is pro.
 	 * @param array   $extra extra data.
 	 *
 	 * @return void
