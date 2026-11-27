@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.2.2
+Stable tag: 4.2.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -338,9 +338,13 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 4.2.3 - 26 Nov, 2026
+
+Fix: Resolved an issue where students were unable to access the discussion page.
+
 = 4.2.2 - 24 Nov, 2026
 
-New: Added a Membership tab to display all courses purchased through membership plans.
+New: Added a Membership tab to display all courses purchased through membership plans. (Pro)
 Update: Assignments, comments, and Q&A now show users' WordPress display names instead of their usernames.
 Update: Improved translation coverage and compatibility.
 Update: Optimized overall performance and implemented additional security enhancements.
