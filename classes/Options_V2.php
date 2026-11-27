@@ -490,11 +490,21 @@ class Options_V2 {
 		$instructor_commission = (int) ( $options['earning_instructor_commission'] ?? 0 );
 
 		if ( $admin_commission < 0 || $instructor_commission < 0 ) {
-			wp_send_json( array( 'success' => false, 'message' => __( 'Commission percentage cannot be negative', 'tutor' ) ) );
+			wp_send_json(
+				array(
+					'success' => false,
+					'message' => __( 'Commission percentage cannot be negative', 'tutor' ),
+				)
+			);
 		}
 
-		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ){
-			wp_send_json( array( 'success' => false, 'message' => __( 'Total share percentage must be 100% or less', 'tutor' ) ) );
+		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ) {
+			wp_send_json(
+				array(
+					'success' => false,
+					'message' => __( 'Total share percentage must be 100% or less', 'tutor' ),
+				)
+			);
 		}
 	}
 
