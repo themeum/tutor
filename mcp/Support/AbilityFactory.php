@@ -12,6 +12,8 @@ namespace Tutor\Mcp\Support;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Mcp\Registrar;
+
 /**
  * Shared wp_register_ability helpers for Tutor MCP.
  *
@@ -76,6 +78,8 @@ class AbilityFactory {
 			$default_annotations = array_merge( $default_annotations, $annotations );
 		}
 
+		$tool_enabled = Registrar::is_tool_enabled( $id );
+
 		wp_register_ability(
 			$id,
 			array(
@@ -83,14 +87,27 @@ class AbilityFactory {
 				'description'         => $desc,
 				'category'            => $category,
 				'input_schema'        => self::normalize_input_schema( $schema ),
-				'permission_callback' => $perm,
-				'execute_callback'    => static function ( $input = array() ) use ( $exec ) {
+				'permission_callback' => static function ( $input = null ) use ( $id, $perm ) {
+					if ( ! Registrar::is_tool_enabled( $id ) ) {
+						return false;
+					}
+
+					return call_user_func( $perm, $input );
+				},
+				'execute_callback'    => static function ( $input = array() ) use ( $id, $exec ) {
+					if ( ! Registrar::is_tool_enabled( $id ) ) {
+						return new \WP_Error(
+							'tutor_mcp_tool_disabled',
+							__( 'This MCP tool is disabled.', 'tutor' )
+						);
+					}
+
 					$input = is_array( $input ) ? $input : array();
 					return call_user_func( $exec, $input );
 				},
 				'meta'                => array(
 					'mcp'         => array(
-						'public' => true,
+						'public' => $tool_enabled,
 						'type'   => 'tool',
 					),
 					'annotations' => $default_annotations,
