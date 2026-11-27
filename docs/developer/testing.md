@@ -132,9 +132,9 @@ pnpm run test:e2e:debug
 
 ## Troubleshooting
 
-| Problem                              | Fix                                                                                                     |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `wp-config.php is missing`           | Run the installer from inside the plugin directory (`wp-content/plugins/tutor`) of a WordPress install. |
-| Database connection failed           | Make sure MySQL is running and the `WP_TEST_DB_*` values in `.env` are correct.                         |
-| Tests hit the live database          | Check that the database routing block above is present in `wp-config.php`.                              |
-| Need to undo `wp-config.php` changes | Restore `wp-config.php.bak`.                                                                            |
+| Problem                                    | Fix                                                                                                      |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `wp-config.php is missing`                 | Run the installer from inside the plugin directory (`wp-content/plugins/tutor`) of a WordPress install.  |
+| Database connection failed                 | Make sure MySQL is running and the `WP_TEST_DB_*` values in `.env` are correct.                          |
+| Tests hit the live database                | Check that the database routing block above is present in `wp-config.php`.                               |
+| Need to undo `wp-config.php` changes       | Restore `wp-config.php.bak`.                                                                             |
