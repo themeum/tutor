@@ -9,11 +9,9 @@
  * @since 4.3.0
  */
 
-use Tutor\Mcp\Registrar;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Mcp\Registrar;
 
 $adapter_installed = Registrar::is_adapter_plugin_installed();
 $action_url        = Registrar::adapter_plugin_action_url();

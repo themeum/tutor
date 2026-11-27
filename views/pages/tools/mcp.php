@@ -9,14 +9,12 @@
  * @since 4.3.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\SvgIcon;
 use Tutor\Core\Input;
 use Tutor\Mcp\Registrar;
 use TUTOR\Icon;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 if ( ! current_user_can( 'manage_options' ) ) {
 	wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
@@ -28,23 +26,11 @@ $instructor_access = Registrar::is_instructor_access_enabled();
 $endpoint          = Registrar::endpoint();
 $enabled_tools     = Registrar::enabled_tools();
 $catalog           = Registrar::tool_catalog();
-$abilities_total   = 0;
-$abilities_on      = 0;
-foreach ( $catalog as $group ) {
-	$group_abilities = isset( $group['abilities'] ) && is_array( $group['abilities'] ) ? $group['abilities'] : array();
-	foreach ( $group_abilities as $ability ) {
-		++$abilities_total;
-		$tools = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
-		foreach ( $tools as $tool ) {
-			if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
-				++$abilities_on;
-				break;
-			}
-		}
-	}
-}
-$mcp_view      = Input::get( 'mcp_view', '' );
-$abilities_url = add_query_arg(
+$ability_counts    = Registrar::catalog_ability_counts( $catalog, $enabled_tools );
+$abilities_total   = $ability_counts['total'];
+$abilities_on      = $ability_counts['on'];
+$mcp_view          = Input::get( 'mcp_view', '' );
+$abilities_url     = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',
@@ -52,7 +38,7 @@ $abilities_url = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-$overview_url  = add_query_arg(
+$overview_url      = add_query_arg(
 	array(
 		'page'     => 'tutor-tools',
 		'sub_page' => 'tutor_mcp',

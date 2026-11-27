@@ -10,10 +10,10 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Health tool registration and execute.

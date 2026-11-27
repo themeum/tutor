@@ -10,14 +10,14 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\Announcements;
 use TUTOR\Q_And_A;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Engagement tool registration and execute handlers.

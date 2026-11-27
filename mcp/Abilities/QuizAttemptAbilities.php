@@ -10,14 +10,14 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\Quiz;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Quiz attempt tool registration and execute handlers.
@@ -168,6 +168,8 @@ class QuizAttemptAbilities {
 	 *
 	 * Uses QuizModel::get_quiz_attempts with instructor_id_check — same as
 	 * dashboard quiz-attempts.php (instructors only see their courses).
+	 * quiz_id filters load the full matching set (no page slice) so totals
+	 * stay accurate without a custom query.
 	 *
 	 * @since 4.3.0
 	 *
@@ -176,10 +178,11 @@ class QuizAttemptAbilities {
 	 */
 	public function list_quiz_attempts( array $input ): array {
 		$bounds        = Pagination::bounds( $input );
+		$quiz_id       = absint( $input['quiz_id'] ?? 0 );
 		$course_filter = '';
 
-		if ( ! empty( $input['quiz_id'] ) ) {
-			$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', absint( $input['quiz_id'] ) );
+		if ( $quiz_id ) {
+			$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', $quiz_id );
 			if ( $course_id ) {
 				$course_filter = (string) $course_id;
 			}
@@ -187,9 +190,14 @@ class QuizAttemptAbilities {
 			$course_filter = (string) absint( $input['course_id'] );
 		}
 
+		// quiz_id: fetch all for the course (0,0 = no LIMIT), then filter.
+		// Otherwise use normal page bounds.
+		$offset   = $quiz_id ? 0 : $bounds['offset'];
+		$per_page = $quiz_id ? 0 : $bounds['per_page'];
+
 		$attempts = QuizModel::get_quiz_attempts(
-			$bounds['offset'],
-			$bounds['per_page'],
+			$offset,
+			$per_page,
 			'',
 			$course_filter,
 			'',
@@ -199,23 +207,11 @@ class QuizAttemptAbilities {
 			false,
 			true
 		);
-		$total    = (int) QuizModel::get_quiz_attempts(
-			$bounds['offset'],
-			$bounds['per_page'],
-			'',
-			$course_filter,
-			'',
-			'',
-			'DESC',
-			null,
-			true,
-			true
-		);
 
 		$rows = array();
 		if ( is_array( $attempts ) ) {
 			foreach ( $attempts as $attempt ) {
-				if ( ! empty( $input['quiz_id'] ) && absint( $input['quiz_id'] ) !== (int) $attempt->quiz_id ) {
+				if ( $quiz_id && $quiz_id !== (int) $attempt->quiz_id ) {
 					continue;
 				}
 				$rows[] = array(
@@ -232,11 +228,32 @@ class QuizAttemptAbilities {
 			}
 		}
 
+		if ( $quiz_id ) {
+			$total    = count( $rows );
+			$page     = 1;
+			$per_page = $total > 0 ? $total : $bounds['per_page'];
+		} else {
+			$total    = (int) QuizModel::get_quiz_attempts(
+				$bounds['offset'],
+				$bounds['per_page'],
+				'',
+				$course_filter,
+				'',
+				'',
+				'DESC',
+				null,
+				true,
+				true
+			);
+			$page     = $bounds['page'];
+			$per_page = $bounds['per_page'];
+		}
+
 		return array(
 			'attempts' => $rows,
 			'total'    => $total,
-			'page'     => $bounds['page'],
-			'per_page' => $bounds['per_page'],
+			'page'     => $page,
+			'per_page' => $per_page,
 		);
 	}
 

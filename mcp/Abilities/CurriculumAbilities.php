@@ -10,6 +10,8 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\QuizModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Permissions;
@@ -19,8 +21,6 @@ use TUTOR\Quiz;
 use TUTOR\QuizBuilder;
 use TUTOR\REST_Lesson;
 use TUTOR\REST_Quiz;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Topic, lesson, and quiz tool registration and execute handlers.

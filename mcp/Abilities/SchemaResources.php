@@ -10,11 +10,11 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Permissions;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Schema resource registration and execute handlers.

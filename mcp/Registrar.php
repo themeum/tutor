@@ -12,6 +12,8 @@
 
 namespace Tutor\Mcp;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Mcp\Abilities\CommerceAbilities;
 use Tutor\Mcp\Abilities\CourseAbilities;
 use Tutor\Mcp\Abilities\CurriculumAbilities;
@@ -25,8 +27,6 @@ use Tutor\Mcp\Support\Permissions;
 use WP\MCP\Core\McpAdapter;
 use WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler;
 use WP\MCP\Transport\HttpTransport;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Registers tutor-mcp and Free plugin feature abilities (read + write).
@@ -492,6 +492,77 @@ class Registrar {
 
 		$catalog[ $group_index ]['abilities'][] = $ability;
 		return $catalog;
+	}
+
+	/**
+	 * Whether a catalog ability has any enabled tool.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array    $ability       Ability payload with tools.
+	 * @param string[] $enabled_tools Enabled tool ability IDs.
+	 * @return bool
+	 */
+	public static function is_catalog_ability_on( array $ability, array $enabled_tools ): bool {
+		$tools = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
+		foreach ( $tools as $tool ) {
+			if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Count abilities on/off within a catalog group.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array    $group         Catalog group.
+	 * @param string[] $enabled_tools Enabled tool ability IDs.
+	 * @return array{total:int,on:int}
+	 */
+	public static function catalog_group_ability_counts( array $group, array $enabled_tools ): array {
+		$abilities = isset( $group['abilities'] ) && is_array( $group['abilities'] ) ? $group['abilities'] : array();
+		$on        = 0;
+		foreach ( $abilities as $ability ) {
+			if ( self::is_catalog_ability_on( $ability, $enabled_tools ) ) {
+				++$on;
+			}
+		}
+
+		return array(
+			'total' => count( $abilities ),
+			'on'    => $on,
+		);
+	}
+
+	/**
+	 * Count abilities on/off across the full catalog.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array|null    $catalog       Optional catalog. Defaults to tool_catalog().
+	 * @param string[]|null $enabled_tools Optional enabled tools. Defaults to enabled_tools().
+	 * @return array{total:int,on:int}
+	 */
+	public static function catalog_ability_counts( ?array $catalog = null, ?array $enabled_tools = null ): array {
+		$catalog       = is_array( $catalog ) ? $catalog : self::tool_catalog();
+		$enabled_tools = is_array( $enabled_tools ) ? $enabled_tools : self::enabled_tools();
+		$total         = 0;
+		$on            = 0;
+
+		foreach ( $catalog as $group ) {
+			$counts = self::catalog_group_ability_counts( is_array( $group ) ? $group : array(), $enabled_tools );
+			$total += $counts['total'];
+			$on    += $counts['on'];
+		}
+
+		return array(
+			'total' => $total,
+			'on'    => $on,
+		);
 	}
 
 	/**

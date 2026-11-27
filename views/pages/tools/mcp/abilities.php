@@ -9,9 +9,9 @@
  * @since 4.3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Mcp\Registrar;
 
 /**
  * Variables expected from parent mcp.php:
@@ -50,17 +50,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php foreach ( $catalog as $group ) : ?>
 	<?php
 	$group_abilities = isset( $group['abilities'] ) && is_array( $group['abilities'] ) ? $group['abilities'] : array();
-	$group_total     = count( $group_abilities );
-	$group_on        = 0;
-	foreach ( $group_abilities as $ability ) {
-		$tools = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
-		foreach ( $tools as $tool ) {
-			if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
-				++$group_on;
-				break;
-			}
-		}
-	}
+	$group_counts    = Registrar::catalog_group_ability_counts( $group, $enabled_tools );
+	$group_total     = $group_counts['total'];
+	$group_on        = $group_counts['on'];
 	?>
 	<div class="tutor-option-single-item tutor-mcp-abilities tutor-mb-24">
 		<div class="tutor-option-group-title tutor-mb-12">
@@ -72,14 +64,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tutor-mcp-ability-fields">
 			<?php foreach ( $group_abilities as $ability ) : ?>
 				<?php
-				$tools    = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
-				$tools_on = 0;
-				foreach ( $tools as $tool ) {
-					if ( isset( $tool['n'] ) && in_array( $tool['n'], $enabled_tools, true ) ) {
-						++$tools_on;
-					}
-				}
-				$ability_on = $tools_on > 0;
+				$tools      = isset( $ability['tools'] ) && is_array( $ability['tools'] ) ? $ability['tools'] : array();
+				$ability_on = Registrar::is_catalog_ability_on( $ability, $enabled_tools );
 				$is_pro     = ! empty( $ability['pro'] );
 				?>
 				<div class="tutor-mcp-ability-row">

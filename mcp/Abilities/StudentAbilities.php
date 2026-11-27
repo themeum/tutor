@@ -10,14 +10,14 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Student tool registration and execute handlers.

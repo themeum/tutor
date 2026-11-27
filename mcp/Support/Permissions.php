@@ -14,10 +14,10 @@
 
 namespace Tutor\Mcp\Support;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Mcp\Registrar;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * MCP permission helpers.

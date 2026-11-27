@@ -10,14 +10,14 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\Course;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Native ecommerce MCP abilities.

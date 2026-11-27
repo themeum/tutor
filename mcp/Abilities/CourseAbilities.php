@@ -10,6 +10,8 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Mcp\Support\AbilityFactory;
@@ -19,8 +21,6 @@ use Tutor\Mcp\Support\RestBridge;
 use TUTOR\Course;
 use TUTOR\REST_Course;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Course tool registration and execute handlers.

@@ -10,13 +10,13 @@
 
 namespace Tutor\Mcp\Abilities;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Models\WithdrawModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Finance tool registration and execute handlers.

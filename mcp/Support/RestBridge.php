@@ -10,9 +10,9 @@
 
 namespace Tutor\Mcp\Support;
 
-use TUTOR\RestAuth;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\RestAuth;
 
 /**
  * Unwrap Tutor REST response envelopes and run controllers in MCP auth context.
