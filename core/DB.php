@@ -693,6 +693,8 @@ class DB {
 			 * @param string      $operator_or_second Operator or second column if 2 args.
 			 * @param string|null $second             Second column if 3 args.
 			 *
+			 * @throws InvalidArgumentException If operator or column name is invalid.
+			 *
 			 * @return self
 			 */
 			public function on( string $first, string $operator_or_second, ?string $second = null ): self {
@@ -709,6 +711,8 @@ class DB {
 			 * @param string      $first              First column.
 			 * @param string      $operator_or_second Operator or second column if 2 args.
 			 * @param string|null $second             Second column if 3 args.
+			 *
+			 * @throws InvalidArgumentException If operator or column name is invalid.
 			 *
 			 * @return self
 			 */
@@ -1736,7 +1740,8 @@ class DB {
 	 * @param array $data   Assoc array of column => value pairs.
 	 * @param array $format Optional format specifiers (%s, %d, %f) for each value.
 	 *
-	 * @throws DatabaseException If a database error occurs.
+	 * @throws DatabaseException        If a database error occurs.
+	 * @throws InvalidArgumentException If called on a derived table.
 	 *
 	 * @return int Inserted row ID.
 	 */
@@ -1767,7 +1772,8 @@ class DB {
 	 *
 	 * @param array $rows Array of assoc arrays, each representing a row.
 	 *
-	 * @throws DatabaseException If a database error occurs.
+	 * @throws DatabaseException        If a database error occurs.
+	 * @throws InvalidArgumentException If called on a derived table.
 	 *
 	 * @return bool True on success.
 	 */
@@ -1833,7 +1839,8 @@ class DB {
 	 *
 	 * @param array $data Assoc array of column => value pairs to update.
 	 *
-	 * @throws DatabaseException If a database error occurs.
+	 * @throws DatabaseException        If a database error occurs.
+	 * @throws InvalidArgumentException If called on a derived table.
 	 *
 	 * @return bool True on success.
 	 */
@@ -1893,7 +1900,8 @@ class DB {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @throws DatabaseException If a database error occurs.
+	 * @throws DatabaseException        If a database error occurs.
+	 * @throws InvalidArgumentException If called on a derived table.
 	 *
 	 * @return int Number of affected rows.
 	 */
@@ -1964,6 +1972,8 @@ class DB {
 	 *
 	 * @param array  $conditions Array of conditions.
 	 * @param string $boolean    Boolean connector (AND or OR).
+	 *
+	 * @throws InvalidArgumentException If a condition tuple or format is invalid.
 	 *
 	 * @return self
 	 */
@@ -2417,6 +2427,8 @@ class DB {
 	 *
 	 * @param bool $calc_found_rows Whether to include SQL_CALC_FOUND_ROWS.
 	 *
+	 * @throws InvalidArgumentException If FROM table is missing for a non-raw query.
+	 *
 	 * @return string The complete SQL query.
 	 */
 	private function build_select_query( bool $calc_found_rows = false ): string {
@@ -2497,6 +2509,8 @@ class DB {
 	 * Build FROM clause with optional alias.
 	 *
 	 * @since 4.2.0
+	 *
+	 * @throws InvalidArgumentException If a derived table subquery has no alias.
 	 *
 	 * @return string
 	 */
