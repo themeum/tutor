@@ -171,7 +171,7 @@ class Instructors_List {
 		} else {
 			do_action( 'tutor_before_instructor_update', $bulk_ids );
 			$response = self::update_instructors( $action, $bulk_ids );
-			do_action( 'tutor_after_instructor_delete', $bulk_ids );
+			do_action( 'tutor_after_instructor_update', $bulk_ids );
 		}
 
 		$message = __( 'Instructor status updated', 'tutor' );
