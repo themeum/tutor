@@ -494,7 +494,7 @@ class CourseModel {
 	 */
 	public static function can_user_delete( $course_id, $force_delete = false, $user_id = 0 ): bool {
 		$course_id = absint( $course_id );
-		$user_id   = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id   = tutor_utils()->get_user_id( $user_id );
 
 		if ( ! $course_id || ! $user_id || ! self::get_post_types( $course_id ) ) {
 			return false;
@@ -538,7 +538,7 @@ class CourseModel {
 	 */
 	public static function can_user_update_status( $course_id, $target_status, $user_id = 0 ): bool {
 		$course_id = absint( $course_id );
-		$user_id   = $user_id ? absint( $user_id ) : get_current_user_id();
+		$user_id   = tutor_utils()->get_user_id( $user_id );
 
 		if ( ! $course_id || ! $user_id || ! self::get_post_types( $course_id ) ) {
 			return false;
@@ -561,7 +561,7 @@ class CourseModel {
 			return self::can_user_delete( $course_id, false, $user_id );
 		}
 
-		if ( self::STATUS_PUBLISH === $target_status ) {
+		if ( in_array( $target_status, array( self::STATUS_PUBLISH, self::STATUS_FUTURE ), true ) ) {
 			return (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
 		}
 
@@ -593,7 +593,6 @@ class CourseModel {
 		do_action( 'tutor_before_delete_course', $post_id, $force_delete );
 
 		if ( $force_delete ) {
-			( new self() )->delete_course_data( $post_id );
 			$result = wp_delete_post( $post_id, true );
 		} else {
 			$result = wp_trash_post( $post_id );

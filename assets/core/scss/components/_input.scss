@@ -11,6 +11,7 @@
     gap: $tutor-spacing-3;
 
     .tutor-label {
+      @include tutor-text-wrap();
       margin: 0;
     }
 

@@ -129,7 +129,7 @@ if ( isset( $the_query ) ) {
 	<?php if ( $has_course_filters ) : ?>
 		<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
 			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
-				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></span>
+				<h1 class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></h1>
 				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
 			</div>
 		</div>

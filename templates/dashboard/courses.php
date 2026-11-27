@@ -61,6 +61,8 @@ switch ( $active_tab ) {
 		break;
 }
 
+$courses_list = apply_filters( 'tutor_dashboard_courses_list', $courses_list, $active_tab, $offset, $courses_per_page );
+
 // Separate count queries with no offset so tab counts are always accurate regardless of current page.
 $enrolled_courses_for_count  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ), 0, 1 );
 $active_courses_for_count    = CourseModel::get_active_courses_by_user( null, 0, 1, array( 'post_status' => array( CourseModel::STATUS_PRIVATE, CourseModel::STATUS_PUBLISH ) ) );
@@ -70,7 +72,8 @@ $enrolled_course_count  = is_a( $enrolled_courses_for_count, 'WP_Query' ) ? $enr
 $active_course_count    = is_a( $active_courses_for_count, 'WP_Query' ) ? $active_courses_for_count->found_posts : 0;
 $completed_course_count = is_a( $completed_courses_for_count, 'WP_Query' ) ? $completed_courses_for_count->found_posts : 0;
 
-$courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count );
+$courses_tab      = ( new Student() )->get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count );
+$courses_tab_keys = apply_filters( 'tutor_dashboard_courses_tab_keys', array( 'courses', 'courses/active-courses', 'courses/completed-courses' ) );
 
 ?>
 
@@ -96,7 +99,7 @@ $courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args,
 					tutor_load_template( 'dashboard.my-quiz-attempts' );
 					break;
 			}
-		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
+		elseif ( in_array( $active_tab, $courses_tab_keys, true ) ) :
 			?>
 			<div class="tutor-dashboard-courses-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6 tutor-sm-p-none tutor-sm-mt-4">
 				<?php
@@ -121,15 +124,15 @@ $courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args,
 				endif;
 				?>
 			</div>
-			<?php
-			$found_posts = $courses_list ? $courses_list->found_posts : 0;
-			Pagination::make()
-				->current( $current_page )
-				->total( $found_posts )
-				->limit( $courses_per_page )
-				->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-none tutor-sm-mt-5' )
-				->render();
-			?>
+				<?php
+				$found_posts = $courses_list ? $courses_list->found_posts : 0;
+				Pagination::make()
+					->current( $current_page )
+					->total( $found_posts )
+					->limit( $courses_per_page )
+					->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-none tutor-sm-mt-5' )
+					->render();
+				?>
 		<?php endif; ?>
 	</div>
 </div>
