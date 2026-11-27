@@ -59,6 +59,7 @@
     @include tutor-flex(column);
     @include tutor-typography('medium', 'semibold');
     @include tutor-text-wrap;
+
     gap: $tutor-spacing-4;
     flex: 1;
 
@@ -294,6 +295,7 @@
 
         [data-title] {
           @include tutor-text-wrap();
+
           padding: $tutor-spacing-3 $tutor-spacing-4;
           text-align: start;
         }
