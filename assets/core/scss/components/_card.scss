@@ -5,7 +5,7 @@
 @use '../mixins' as *;
 
 .tutor-card {
-  @include tutor-card-base;
+  @include tutor-card-base();
   @include tutor-card-padding(medium);
   @include tutor-card-radius(lg);
 }

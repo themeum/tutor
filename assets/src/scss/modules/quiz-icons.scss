@@ -3,7 +3,7 @@
         padding: 0;
         color: #fff;
         border-radius: 4px;
-        margin-right: 8px;
+        margin-inline-end: 8px;
         display: inline-block;
         width: 32px;
         height: 32px;
@@ -12,11 +12,6 @@
         font-size: 20px;
         vertical-align: middle;
         background-color: var(--tutor-color-primary);
-
-        .rtl & {
-            margin-left: 8px;
-            margin-right: 0px;
-        }
     }
 
     &-boolean {

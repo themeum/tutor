@@ -19,7 +19,7 @@ $tutor-brand-900: var(--tutor-brand-900, #263782);
 $tutor-brand-950: var(--tutor-brand-950, #1c234f);
 
 // Gray Colors
-$tutor-gray-1: #ffffff;
+$tutor-gray-1: #fff;
 $tutor-gray-10: #fcfcfc;
 $tutor-gray-25: #fafafa;
 $tutor-gray-50: #f5f5f6;
@@ -147,7 +147,6 @@ $tutor-brand-colors: (
   900: $tutor-brand-900,
   950: $tutor-brand-950,
 );
-
 $tutor-gray-colors: (
   1: $tutor-gray-1,
   10: $tutor-gray-10,
@@ -165,7 +164,6 @@ $tutor-gray-colors: (
   900: $tutor-gray-900,
   950: $tutor-gray-950,
 );
-
 $tutor-success-colors: (
   25: $tutor-success-25,
   50: $tutor-success-50,
@@ -180,7 +178,6 @@ $tutor-success-colors: (
   900: $tutor-success-900,
   950: $tutor-success-950,
 );
-
 $tutor-warning-colors: (
   25: $tutor-warning-25,
   50: $tutor-warning-50,
@@ -195,7 +192,6 @@ $tutor-warning-colors: (
   900: $tutor-warning-900,
   950: $tutor-warning-950,
 );
-
 $tutor-error-colors: (
   25: $tutor-error-25,
   50: $tutor-error-50,
@@ -210,7 +206,6 @@ $tutor-error-colors: (
   900: $tutor-error-900,
   950: $tutor-error-950,
 );
-
 $tutor-yellow-colors: (
   25: $tutor-yellow-25,
   50: $tutor-yellow-50,
@@ -225,7 +220,6 @@ $tutor-yellow-colors: (
   900: $tutor-yellow-900,
   950: $tutor-yellow-950,
 );
-
 $tutor-exception-colors: (
   1: $tutor-exception-1,
   2: $tutor-exception-2,
@@ -239,7 +233,6 @@ $tutor-exception-colors: (
   9: $tutor-exception-9,
   10: $tutor-exception-10,
 );
-
 $tutor-cyan-colors: (
   50: $tutor-cyan-50,
   100: $tutor-cyan-100,
@@ -253,7 +246,6 @@ $tutor-cyan-colors: (
   900: $tutor-cyan-900,
   950: $tutor-cyan-950,
 );
-
 $tutor-orange-colors: (
   50: $tutor-orange-50,
   100: $tutor-orange-100,

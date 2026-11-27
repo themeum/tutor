@@ -13,7 +13,6 @@ $border-widths: (
   4: 4px,
   8: 8px,
 );
-
 $border-directions: (
   border: border,
   border-t: border-top,
@@ -21,9 +20,7 @@ $border-directions: (
   border-b: border-bottom,
   border-l: border-inline-start,
 );
-
 $border-styles: (solid, dashed, dotted, double, none);
-
 $radius-directions: (
   '': (
     border-radius,
@@ -99,8 +96,9 @@ $radius-directions: (
 .tutor-border-transparent {
   border-color: transparent;
 }
+
 .tutor-border-current {
-  border-color: currentColor;
+  border-color: currentcolor;
 }
 
 @each $key, $value in $tutor-border-colors {
@@ -114,7 +112,11 @@ $radius-directions: (
 // =============================================================================
 @each $key, $value in $tutor-radius {
   @each $abbr, $props in $radius-directions {
-    $prefix: if($abbr == '', '', $abbr + '-');
+    $prefix: '';
+
+    @if $abbr != '' {
+      $prefix: $abbr + '-';
+    }
 
     .tutor-rounded-#{$prefix}#{$key} {
       @each $prop in $props {
@@ -153,7 +155,6 @@ $responsive-border-dirs: (
   border-t: border-top,
   border-b: border-bottom,
 );
-
 $responsive-radius-dirs: (
   '': (
     border-radius,
@@ -191,7 +192,11 @@ $responsive-radius-dirs: (
       @each $abbr, $props in $radius-directions {
         // We only generate for specific abbreviations to save space
         @if map.has-key($responsive-radius-dirs, $abbr) {
-          $prefix: if($abbr == '', '', $abbr + '-');
+          $prefix: '';
+
+          @if $abbr != '' {
+            $prefix: $abbr + '-';
+          }
 
           .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
             @each $prop in $props {

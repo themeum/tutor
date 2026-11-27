@@ -19,7 +19,7 @@ export default [
   pluginReact.configs.flat.recommended,
   eslintPluginPrettierRecommended,
   eslintConfigPrettier,
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat['recommended-latest'],
   ...storybook.configs['flat/recommended'],
   {
     plugins: {
@@ -78,10 +78,11 @@ export default [
         },
       ],
       '@typescript-eslint/ban-ts-comment': 'off',
+      'preserve-caught-error': 'off',
     },
     settings: {
       react: {
-        version: 'detect',
+        version: '18.3',
       },
     },
   },

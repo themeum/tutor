@@ -1,10 +1,13 @@
-@import './players';
+@use "sass:meta";
+@use 'players';
+@use "../../../../../v2-library/src/scss/mixins/breakpoint";
+@use "../../../../../v2-library/src/scss/utility/variables";
 
 .site-content {
-	padding-bottom: 0px !important;
+	padding-bottom: 0 !important;
 }
 
-@import './sidebar';
+@include meta.load-css('sidebar');
 
 .tutor-course-single-content-wrapper {
 	a {
@@ -16,7 +19,7 @@
 	width: 100%;
 
 	ul, ol, li > ul, li > ol {
-		padding-left: 1em;
+		padding-inline-start: 1em;
 	}
 
 	a {
@@ -34,6 +37,7 @@
 			.tutor-course-single-sidebar-wrapper {
 				display: none;
 			}
+
 			.tutor-course-topics-sidebar-toggler {
 				.tutor-icon-left {
 					transform: rotate(180deg);
@@ -42,15 +46,16 @@
 		}
 
 		&-open {
-			@include breakpoint-max(desktop-lg) {
+			@include breakpoint.breakpoint-max(desktop-lg) {
 				.tutor-course-single-sidebar-wrapper {
 					background-color: #fff;
 					height: 100vh;
-					right: 0 !important;
+					inset-inline-end: 0 !important;
 					overflow-y: auto;
 					opacity: 1;
 					z-index: 1026;
 					padding-bottom: 150px;
+
 					.tutor-course-single-sidebar-title {
 						position: sticky;
 						top: 0;
@@ -70,9 +75,11 @@
 	#tutor-single-entry-content {
 		position: relative;
 		width: 100%;
-		@include breakpoint-min(desktop-lg){
+
+		@include breakpoint.breakpoint-min(desktop-lg){
 			min-height: 100vh;
 		}
+
 		display: flex;
 		flex-direction: column;
 
@@ -84,6 +91,7 @@
 				padding: 8px 16px;
 				min-height: 60px;
 				position: relative;
+
 				// z-index: 1025;
 
 				background: var(--tutor-color-primary);
@@ -93,6 +101,7 @@
 					color: var(--tutor-color-white);
 					background-color: transparent;
 					border-color: var(--tutor-color-white);
+
 					&:hover {
 						color: var(--tutor-color-primary);
 						background-color: var(--tutor-color-white);
@@ -102,12 +111,14 @@
 
 				.tutor-iconic-btn {
 					color: #fff;
+
 					&:hover {
 						background-color: #fff;
 						color: var(--tutor-color-primary);
 					}
+
 					&-secondary {
-						background-color: rgba(0, 0, 0, 0.2);
+						background-color: rgb(0 0 0 / 20%);
 					}
 				}
 
@@ -123,42 +134,48 @@
 				align-items: center;
 				justify-content: center;
 				gap: 16px;
-				border-top: 1px solid rgba(var(--tutor-color-primary-rgb), 0.15);
-				background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+				border-top: 1px solid rgb(var(--tutor-color-primary-rgb), 0.15);
+				background-color: rgb(var(--tutor-color-primary-rgb), 0.1);
 			}
 		}
 
 		/* tutor-single-page-top-bar */
 		.tutor-mobile-footer-navigation {
 			height: 90px;
-			border: 1px solid $color-gray-10;
-			box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+			border: 1px solid variables.$color-gray-10;
+			box-shadow: 0 0 16px rgb(176 182 209 / 18.1%);
 			background: var(--tutor-color-white);
 			position: fixed;
 			bottom: 0;
-			left: 0;
+			inset-inline-start: 0;
 			width: 100%;
 			z-index: 1;
-			@include breakpoint-min(576) {
+
+			@include breakpoint.breakpoint-min(576) {
 				display: none;
 			}
+
 			.tutor-footer-content {
 				flex-basis: 70%;
 			}
+
 			.tutor-quiz-skip-button {
 				flex-basis: 50%;
+
 				button {
 					padding: 0;
 					border: 0;
 				}
 			}
+
 			.tutor-footer-complete-btn {
 				button {
 					padding: 8px 20px;
 				}
 			}
 		}
-		@import './quiz';
+
+		@include meta.load-css('quiz');
 	}
 
 	/**
@@ -170,5 +187,5 @@
 	}
 }
 
-@import './spotlight';
-@import './course-assignment.scss';
+@include meta.load-css('spotlight');
+@include meta.load-css('course-assignment');

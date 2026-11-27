@@ -1,2 +1,2 @@
-@import './mixins/index';
-@import './utility/index';
+@forward 'mixins';
+@forward 'utility';

@@ -3,6 +3,7 @@
 
 .tutor-statics {
   @include tutor-flex(row, center, center);
+
   position: relative;
   width: fit-content;
 
@@ -12,8 +13,10 @@
     &-label {
       position: absolute;
       top: 50%;
+      /* stylelint-disable-next-line property-layout-mappings -- translate(-50%) is physical, so left keeps the box centered in RTL */
       left: 50%;
       transform: translate(-50%, -50%);
+
       @include tutor-typography('tiny', 'bold', 'primary', 'body');
 
       &-large {
@@ -24,6 +27,7 @@
 
   &-complete {
     @include tutor-flex(row, center, center);
+
     border-radius: $tutor-radius-full;
     background: $tutor-actions-brand-primary;
 
@@ -34,6 +38,7 @@
 
   &-locked {
     @include tutor-flex(row, center, center);
+
     border-radius: $tutor-radius-full;
     background: transparent;
 

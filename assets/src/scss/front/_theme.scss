@@ -13,10 +13,11 @@ body {
 	}
 }
 
-//common and reset css
+// common and reset css
 
 .tutor-wrap{
 	color: var(--tutor-body-color);
+
 	img{
 		max-width: 100%;
 		height: auto;
@@ -27,16 +28,18 @@ body {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+
 	li{
 		position: relative;
 		margin-bottom: 5px;
 		line-height: 30px;
-		padding-left: 25px;
-		&:before{
+		padding-inline-start: 25px;
+
+		&::before{
 			content: '\e90f';
 			position: absolute;
-			left: 0;
-			font-family: 'tutor';
+			inset-inline-start: 0;
+			font-family: tutor;
 			color: var(--tutor-color-primary);
 		}
 	}
@@ -46,8 +49,9 @@ body {
 	> br {
 		display: none;
 	}
+
 	p:not(:last-child){
 		padding-bottom: 20px;
-		word-wrap: break-word;
+		overflow-wrap: break-word;
 	}
 }

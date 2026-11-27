@@ -50,7 +50,7 @@ do_action( 'tutor_before_login_form' );
 		<div class="tutor-input-field" style="position: relative;">
 			<span 
 				class="tutor-flex tutor-items-center tutor-justify-center"
-				style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
+				style="position: absolute; inset-inline-end: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 1;"
 				x-show="value.length > 0"
 				@click="show = !show"
 			>
@@ -61,7 +61,7 @@ do_action( 'tutor_before_login_form' );
 					<?php SvgIcon::make()->name( Icon::EYE_OFF )->size( 20 )->render(); ?>
 				</template>
 			</span>
-			<input id="tutor-login-form-password" :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-right: 45px;" autocomplete="current-password"/>
+			<input id="tutor-login-form-password" :type="show ? 'text' : 'password'" class="tutor-form-control tutor-input" placeholder="<?php esc_attr_e( 'Password', 'tutor' ); ?>" name="pwd" x-model="value" size="20" required style="padding-inline-end: 45px;" autocomplete="current-password"/>
 		</div>
 	</div>
 
