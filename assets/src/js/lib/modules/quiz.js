@@ -51,7 +51,11 @@ window.jQuery(document).ready(($) => {
 
 		$error.text(message).toggle('' !== message);
 
-		$save.toggle('' !== value && '' === message);
+		var isVisible = '' !== value && '' === message;
+		$save.css({
+			opacity: isVisible ? 1 : 0,
+			'pointer-events': isVisible ? 'auto' : 'none',
+		});
 	}
 
 	/**
