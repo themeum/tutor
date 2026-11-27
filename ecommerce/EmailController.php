@@ -28,13 +28,6 @@ class EmailController {
 	const ORDER_EMAILS           = 'order_emails';
 
 	/**
-	 * Queue table
-	 *
-	 * @var string
-	 */
-	private $queue_table;
-
-	/**
 	 * Constructor.
 	 *
 	 * Initializes the Orders class, sets the page title, and optionally registers
