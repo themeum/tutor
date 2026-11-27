@@ -527,7 +527,7 @@ class Registrar {
 					array(
 						'id'    => 'curriculum',
 						'name'  => __( 'Curriculum Builder', 'tutor' ),
-						'desc'  => __( 'Add and remove topics; reorder is intentionally disabled.', 'tutor' ),
+						'desc'  => __( 'Add and remove topics', 'tutor' ),
 						'tools' => array(
 							$t( 'tutor-mcp/get-course-contents', __( 'Get course contents', 'tutor' ), 'read' ),
 							$t( 'tutor-mcp/create-topic', __( 'Create topic', 'tutor' ), 'write' ),

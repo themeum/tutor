@@ -9,8 +9,10 @@
  * @since 4.3.0
  */
 
+use Tutor\Components\SvgIcon;
 use Tutor\Core\Input;
 use Tutor\Mcp\Registrar;
+use TUTOR\Icon;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -114,7 +116,7 @@ $overview_url  = add_query_arg(
 						<div class="tutor-option-field-label">
 							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Tutor LMS MCP', 'tutor' ); ?></div>
 							<div class="tutor-mcp-field-desc">
-								<?php esc_html_e( 'Let AI apps manage your eLearning platform through the Model Context Protocol.', 'tutor' ); ?>
+								<?php esc_html_e( 'Let AI apps like Claude, Cursor, VS Code and Gemini manage your eLearning platform through the Model Context Protocol.', 'tutor' ); ?>
 							</div>
 						</div>
 						<div class="tutor-option-field-input">
@@ -134,9 +136,9 @@ $overview_url  = add_query_arg(
 						</div>
 						<div class="tutor-option-field-input">
 							<div class="tutor-mcp-server-url tutor-position-relative">
-								<input type="text" id="tutor-mcp-srv-url" class="tutor-form-control" value="<?php echo esc_attr( $endpoint ); ?>" readonly>
+								<input type="text" id="tutor-mcp-srv-url" class="tutor-mcp-server-url-input" value="<?php echo esc_attr( $endpoint ); ?>" readonly>
 								<button type="button" class="tutor-btn tutor-btn-icon tutor-mcp-server-url-copy" data-tutor-clipboard-copy-target="tutor-mcp-srv-url" aria-label="<?php esc_attr_e( 'Copy server URL', 'tutor' ); ?>">
-									<span class="tutor-icon-copy" aria-hidden="true"></span>
+									<?php SvgIcon::make()->name( Icon::COPY_PASTE )->size( 20 )->render(); ?>
 								</button>
 							</div>
 						</div>
