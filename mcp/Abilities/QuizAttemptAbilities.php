@@ -10,12 +10,13 @@
 
 namespace Tutor\Mcp\Abilities;
 
-use Tutor\Helpers\QueryHelper;
+use Tutor\Core\DB;
 use Tutor\Models\QuizModel;
 use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
+use TUTOR\Quiz;
 use TUTOR\User;
 
 defined( 'ABSPATH' ) || exit;
@@ -333,47 +334,67 @@ class QuizAttemptAbilities {
 			}
 
 			$is_correct = 'correct' === $mark_as ? 1 : 0;
-			QueryHelper::update(
-				'tutor_quiz_attempt_answers',
-				array( 'is_correct' => $is_correct ),
-				array( 'attempt_answer_id' => (int) $aa->attempt_answer_id )
-			);
+			DB::table( 'tutor_quiz_attempt_answers' )
+				->where( 'attempt_answer_id', (int) $aa->attempt_answer_id )
+				->update( array( 'is_correct' => $is_correct ) );
 
 			if ( isset( $manual_marks[ $question_id ] ) && is_numeric( $manual_marks[ $question_id ] ) ) {
-				QueryHelper::update(
-					'tutor_quiz_attempt_answers',
-					array( 'achieved_mark' => (float) $manual_marks[ $question_id ] ),
-					array( 'attempt_answer_id' => (int) $aa->attempt_answer_id )
-				);
+				DB::table( 'tutor_quiz_attempt_answers' )
+					->where( 'attempt_answer_id', (int) $aa->attempt_answer_id )
+					->update( array( 'achieved_mark' => (float) $manual_marks[ $question_id ] ) );
 			}
 
 			$updated = true;
 		}
 
 		if ( $updated ) {
-			$stats       = QuizModel::get_attempt_answers_stats( $attempt_id );
-			$update_data = array(
-				'earned_marks'         => $stats->total_earned_marks,
-				'is_manually_reviewed' => 1,
-				'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
-			);
-
-			if ( null !== $feedback ) {
-				$update_data['instructor_feedback'] = $feedback;
-			}
-
-			QueryHelper::update(
-				'tutor_quiz_attempts',
-				$update_data,
-				array( 'attempt_id' => $attempt_id )
-			);
+			$stats = QuizModel::get_attempt_answers_stats( $attempt_id );
+			DB::table( 'tutor_quiz_attempts' )
+				->where( 'attempt_id', $attempt_id )
+				->update(
+					array(
+						'earned_marks'         => $stats->total_earned_marks,
+						'is_manually_reviewed' => 1,
+						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+					)
+				);
 			QuizModel::update_attempt_result( $attempt_id );
+		}
+
+		$feedback_updated = false;
+		if ( null !== $feedback ) {
+			$feedback_updated = $this->save_instructor_feedback( $attempt_id, $feedback );
 		}
 
 		return array(
 			'attempt_id' => $attempt_id,
-			'reviewed'   => $updated,
+			'reviewed'   => $updated || $feedback_updated,
 		);
+	}
+
+	/**
+	 * Store instructor feedback in attempt_info (same as Quiz::save_instructor_feedback).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int    $attempt_id Attempt ID.
+	 * @param string $feedback   Feedback text.
+	 * @return bool
+	 */
+	private function save_instructor_feedback( int $attempt_id, string $feedback ): bool {
+		$attempt_details = Quiz::attempt_details( $attempt_id );
+		if ( ! $attempt_details || empty( $attempt_details->attempt_info ) ) {
+			return false;
+		}
+
+		$attempt_info = maybe_unserialize( $attempt_details->attempt_info );
+		if ( ! is_array( $attempt_info ) ) {
+			return false;
+		}
+
+		$attempt_info['instructor_feedback'] = $feedback;
+
+		return Quiz::update_attempt_info( $attempt_id, maybe_serialize( $attempt_info ) );
 	}
 
 	/**
