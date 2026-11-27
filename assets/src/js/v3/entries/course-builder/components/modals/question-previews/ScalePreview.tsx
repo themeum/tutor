@@ -23,7 +23,8 @@ const ScalePreview = ({ answers }: { answers: QuizQuestionOption[] }) => {
   const min = (rawConfig.min as number) ?? 0;
   const max = (rawConfig.max as number) ?? 100;
   const step = (rawConfig.step as number) ?? 1;
-  const defaultValue = (rawConfig.defaultValue as number) ?? (min + max) / 2;
+  // Start neutral: saved config.defaultValue mirrors the correct answer, so using it leaks the answer in the preview.
+  const defaultValue = (min + max) / 2;
   const pxPerUnit = (rawConfig.pxPerUnit as number) ?? 10;
   const labelEvery = (rawConfig.labelEvery as number) ?? Math.max(1, (max - min) / 10);
   const minorTickEvery = (rawConfig.minorTickEvery as number) ?? Math.max(1, (max - min) / 50);

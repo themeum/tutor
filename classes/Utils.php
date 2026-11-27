@@ -2910,7 +2910,6 @@ class Utils {
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'       => __( 'Discussions', 'tutor' ),
-				'auth_cap'    => tutor()->instructor_role,
 				'icon'        => Icon::QA,
 				'active_icon' => Icon::QA_FILL,
 			);

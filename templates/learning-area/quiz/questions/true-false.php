@@ -69,7 +69,7 @@ if ( $is_committed ) {
 						<?php echo $is_checked ? 'checked="checked"' : ''; ?>
 					<?php endif; ?>
 				>
-				<?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?>
+				<span><?php echo esc_html( Quiz::sanitize_quiz_content( $answer['answer_title'] ?? '' ) ); ?></span>
 			</label>
 		<?php endforeach; ?>
 	<?php endif; ?>

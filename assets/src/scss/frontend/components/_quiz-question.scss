@@ -50,15 +50,21 @@
   }
 
   &-title {
-    @include tutor-flex(column);
+    display: block;
     @include tutor-typography('medium', 'semibold');
     @include tutor-text-wrap;
-    gap: $tutor-spacing-4;
     flex: 1;
+
+    > .tutor-p2 {
+      margin-top: $tutor-spacing-4;
+    }
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography('p2', 'semibold');
-      gap: $tutor-spacing-2;
+
+      > .tutor-p2 {
+        margin-top: $tutor-spacing-2;
+      }
     }
   }
 
@@ -334,5 +340,15 @@
       @include tutor-grid-auto-columns(1, 1);
       gap: $tutor-spacing-3;
     }
+  }
+}
+
+// Keep MathJax display formulas inline across Modern Mode learning area, quizzes, and attempt details.
+.tutor-learning-area,
+.tutor-quiz-summary-page,
+.tutor-quiz-question {
+  mjx-container,
+  .MathJax_Display {
+    display: inline !important;
   }
 }
