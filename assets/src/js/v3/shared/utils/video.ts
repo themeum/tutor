@@ -3,8 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { VideoRegex } from '@TutorShared/config/constants';
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
-  const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-  const match = videoUrl.match(regExp);
+  const match = videoUrl.match(VideoRegex.VIMEO);
   const videoId = match ? match[5] : null;
   const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
 

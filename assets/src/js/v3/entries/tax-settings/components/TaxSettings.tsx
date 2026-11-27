@@ -48,6 +48,16 @@ const TaxSettingsPage = () => {
   const formData = form.watch();
 
   useEffect(() => {
+    const tutorOptionSaved = () => {
+      reset(form.getValues());
+    };
+
+    window.addEventListener('tutor_option_saved', tutorOptionSaved);
+    return () => window.removeEventListener('tutor_option_saved', tutorOptionSaved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
     }

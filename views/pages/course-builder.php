@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( is_admin() ) {
 	?>
+	<style>
+		#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
+		#wpcontent { margin: 0 !important; padding: 0 !important; }
+		#wpbody-content { padding-bottom: 0px !important; float: none; }
+	</style>
 	<div id="tutor-course-builder"></div>
 	<?php
 	do_action( 'tutor_course_builder_footer' );
@@ -28,7 +33,6 @@ if ( is_admin() ) {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
-
 	<?php wp_head(); ?>
 </head>
 <body data-tutor-theme='light' <?php body_class(); ?>>
@@ -37,5 +41,6 @@ if ( is_admin() ) {
 	<?php wp_footer(); ?>
 </body>
 </html>
-
-<?php } ?>
+	<?php
+	exit;
+} ?>

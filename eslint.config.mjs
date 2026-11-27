@@ -52,9 +52,6 @@ export default [
               '^@Frontend',
               '^@LearningArea',
             ],
-            // Internal aliases — Test
-            ['^@Cypress'],
-
             // Internal aliases — SharedImages
             ['^@SharedImages'],
             // Relative imports: parent first, then siblings
@@ -104,6 +101,12 @@ export default [
           message: 'Translation function must include __TUTOR_TEXT_DOMAIN__ as the second argument.',
         },
       ],
+    },
+  },
+  {
+    files: ['tests/**/*.{ts,tsx}'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
 ];

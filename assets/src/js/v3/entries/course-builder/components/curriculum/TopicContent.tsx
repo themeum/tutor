@@ -310,7 +310,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           <Show when={editAbleContentTypes.includes(type)}>
             <Tooltip content={__('Edit', 'tutor')} delay={200}>
               <button
-                data-cy={`edit-${type}`}
+                data-testid={`edit-${type}`}
                 ref={editButtonRef}
                 type="button"
                 css={styleUtils.actionButton}
@@ -327,7 +327,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
                   when={!isTutorPro}
                   fallback={
                     <button
-                      data-cy={`duplicate-${type}`}
+                      data-testid={`duplicate-${type}`}
                       type="button"
                       css={styleUtils.actionButton}
                       onClick={handleDuplicate}
@@ -347,7 +347,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
-              data-cy={`delete-${type}`}
+              data-testid={`delete-${type}`}
               ref={deleteRef}
               type="button"
               css={styleUtils.actionButton}

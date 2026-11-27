@@ -285,7 +285,7 @@ const QuizModal = ({
                     when={activeTab === 'settings' || quizId}
                     fallback={
                       <Button
-                        data-cy="quiz-next"
+                        data-testid="quiz-next"
                         variant="primary"
                         size="small"
                         onClick={() => setActiveTab('settings')}
@@ -295,7 +295,7 @@ const QuizModal = ({
                     }
                   >
                     <Button
-                      data-cy="save-quiz"
+                      data-testid="save-quiz"
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
@@ -362,7 +362,7 @@ const QuizModal = ({
                                 {__('Cancel', 'tutor')}
                               </Button>
                               <Button
-                                data-cy="save-quiz-title"
+                                data-testid="save-quiz-title"
                                 loading={saveQuizMutation.isPending}
                                 variant="secondary"
                                 type="submit"

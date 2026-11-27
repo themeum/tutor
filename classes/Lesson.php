@@ -144,16 +144,11 @@ class Lesson extends Tutor_Base {
 		$comment    = Input::post( 'comment', '', Input::TYPE_TEXTAREA );
 		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
 
-		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
-			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) || ! self::can_post_lesson_comment( $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
-			if ( ! self::can_post_lesson_comment( $lesson_id ) ) {
-				wp_send_json_error( tutor_utils()->error_message() );
-				return;
-			}
-
 			$comment_data = array(
 				'comment_content' => $comment,
 				'comment_post_ID' => $lesson_id,
@@ -215,41 +210,47 @@ class Lesson extends Tutor_Base {
 		}
 
 		$comment = get_comment( $comment_id );
-		if ( ! $comment ) {
+		if ( ! $comment || 'comment' !== $comment->comment_type ) {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$lesson_id = $comment->comment_post_ID;
-		$parent_id = $comment->comment_parent;
+		$lesson_id = (int) $comment->comment_post_ID;
+		$parent_id = (int) $comment->comment_parent;
 		$is_reply  = $parent_id > 0;
 
-		if ( ! self::is_comment_enabled_for_lesson( $lesson_id ) ) {
+		if (
+		! self::is_comment_enabled_for_lesson( $lesson_id )
+		|| tutor()->lesson_post_type !== get_post_type( $lesson_id )
+		) {
 			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
 		}
 
-		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-			wp_delete_comment( $comment_id, true );
-
-			$total_comments = self::get_comments(
-				array(
-					'post_id' => $lesson_id,
-					'parent'  => 0,
-					'count'   => true,
-				)
-			);
-
-			wp_send_json_success(
-				array(
-					'message'    => __( 'Comment deleted successfully', 'tutor' ),
-					'count'      => $total_comments,
-					'is_reply'   => $is_reply,
-					'parent_id'  => $parent_id,
-					'comment_id' => $comment_id,
-				)
-			);
-		} else {
+		if (
+		get_current_user_id() !== (int) $comment->user_id
+		&& ! tutor_utils()->can_user_manage( 'lesson', $lesson_id )
+		) {
 			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
 		}
+
+		wp_delete_comment( $comment_id, true );
+
+		$total_comments = self::get_comments(
+			array(
+				'post_id' => $lesson_id,
+				'parent'  => 0,
+				'count'   => true,
+			)
+		);
+
+		wp_send_json_success(
+			array(
+				'message'    => __( 'Comment deleted successfully', 'tutor' ),
+				'count'      => $total_comments,
+				'is_reply'   => $is_reply,
+				'parent_id'  => $parent_id,
+				'comment_id' => $comment_id,
+			)
+		);
 	}
 
 	/**
@@ -480,13 +481,13 @@ class Lesson extends Tutor_Base {
 			'post_content'   => wp_slash( $post_content ),
 			'post_status'    => 'publish',
 			'comment_status' => 'open',
-			'post_author'    => get_current_user_id(),
 			'post_parent'    => $topic_id,
 		);
 
 		if ( ! $is_update ) {
-			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
-			$lesson_id                 = wp_insert_post( $lesson_data );
+			$lesson_data['post_author'] = get_current_user_id();
+			$lesson_data['menu_order']  = tutor_utils()->get_next_course_content_order_id( $topic_id );
+			$lesson_id                  = wp_insert_post( $lesson_data );
 
 			if ( $lesson_id ) {
 				do_action( 'tutor/lesson/created', $lesson_id );

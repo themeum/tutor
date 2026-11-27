@@ -61,7 +61,7 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
                   states: [
                     ...rate.states,
                     {
-                      id: taxRateForm.getValues('selectedOption'),
+                      id: Number(taxRateForm.getValues('selectedOption')),
                       rate: taxRateForm.getValues('taxRate'),
                       apply_on_shipping: false,
                     },

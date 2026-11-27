@@ -8,6 +8,9 @@
 session_id() || session_start();
 
 define( 'WP_RUNNING_TESTS', true );
+// wp-phpunit spawns its installer as a child process; pass the flag through
+// the environment so it selects WP_PHPUNIT_DB_NAME, not the E2E database.
+putenv( 'WP_RUNNING_TESTS=1' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv
 define( 'WP_TESTS_CONFIG_FILE_PATH', dirname( __DIR__, 4 ) . '/wp-config.php' );
 
 $_plugin_dir = dirname( __DIR__ );

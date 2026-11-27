@@ -272,7 +272,7 @@ class Tax {
 
 			$state_rate = null;
 			foreach ( $country_rate_data->states as $item ) {
-				if ( $item->id === $state_info['id'] ) {
+				if ( (int) $item->id === (int) $state_info['id'] ) {
 					$state_rate = floatval( $item->rate );
 					break;
 				}

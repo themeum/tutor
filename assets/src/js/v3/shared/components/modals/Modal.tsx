@@ -200,7 +200,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       {transitions((style, modal, _, index) => {
         return (
           <div
-            data-cy="tutor-modal"
+            data-testid="tutor-modal"
             key={modal.id}
             css={[
               styles.container,

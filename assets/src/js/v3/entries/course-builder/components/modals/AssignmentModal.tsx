@@ -226,7 +226,7 @@ const AssignmentModal = ({
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
-              data-cy="save-assignment"
+              data-testid="save-assignment"
               loading={saveAssignmentMutation.isPending}
               variant="primary"
               size="small"
@@ -479,6 +479,7 @@ const AssignmentModal = ({
                   {...controllerProps}
                   type="number"
                   label={__('Maximum File Size Limit', 'tutor')}
+                  helpText={__('Set the maximum file size. Enter 0 to use the default WordPress limit.', 'tutor')}
                   placeholder="0"
                   content={__('MB', 'tutor')}
                   contentPosition="right"
