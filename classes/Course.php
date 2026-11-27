@@ -472,6 +472,28 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Check if course is eligible for single purchase.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return bool true if course is eligible for single purchase, false otherwise.
+	 */
+	public static function is_single_purchase_allowed( $course_id ): bool {
+		$option = self::get_selling_option( $course_id );
+		return empty( $option ) || in_array(
+			$option,
+			array(
+				self::SELLING_OPTION_ALL,
+				self::SELLING_OPTION_ONE_TIME,
+				self::SELLING_OPTION_BOTH,
+			),
+			true
+		);
+	}
+
+	/**
 	 * Validate video source
 	 *
 	 * @since 3.0.0
@@ -1715,17 +1737,6 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_course_builder_view() {
-		/**
-		 * Hide admin menu and footer.
-		 *
-		 * @since 3.3.0
-		 */
-		echo '<style>
-			#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
-			#wpcontent { margin: 0 !important; padding: 0 !important; }
-			#wpbody-content { padding-bottom: 0px !important; float: none; }
-		</style>';
-
 		do_action( 'tutor_before_course_builder_load' );
 		include_once tutor()->path . 'views/pages/course-builder.php';
 		do_action( 'tutor_after_course_builder_load' );

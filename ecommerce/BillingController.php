@@ -95,7 +95,7 @@ class BillingController extends BaseController {
 
 		$new_tab = array(
 			'id'       => $id,
-			'label'    => 'Billing Address',
+			'label'    => __( 'Billing Address', 'tutor' ),
 			'icon'     => Icon::BILLING,
 			'text'     => __( 'Your payment address', 'tutor' ),
 			'template' => 'ecommerce.billing',
