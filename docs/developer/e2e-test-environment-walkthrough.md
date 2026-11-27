@@ -128,7 +128,7 @@ built from scratch by `tests/support/reset-test-db.php` and seeded by
 Pro-owned code stays in `tutor-pro`:
 
 - `tutor-pro/tests/e2e/` — Pro specs, Pro support, Pro factories.
-- `tutor-pro/tests/e2e/bin/seed-pro.php` — Pro add-on and dashboard fixtures.
+- `tutor-pro/tests/e2e/bin/seed.php` — Pro add-on and dashboard fixtures.
 - `tutor-pro/tests/e2e/bin/factories.php` — Pro-only factories such as course bundles.
 
 The free plugin auto-detects those paths. It does not copy Pro code into the
@@ -420,7 +420,7 @@ It also sets the wizard flags, feature version, and first-activation time.
 - Creates the baseline `Sample Test Course` with `Introduction Topic` and
   `Lesson 1: Getting Started` if that course does not already exist.
 - Requires `tests/support/seed-admin.php`.
-- Requires `tutor-pro/tests/e2e/bin/seed-pro.php` when that file exists.
+- Requires `tutor-pro/tests/e2e/bin/seed.php` when that file exists.
 
 `seed-admin.php` adds the admin dashboard baseline: categories and tags,
 published/draft/pending courses, orders and order items, announcements, Q&A
@@ -1042,7 +1042,7 @@ idempotent: check for an existing entity before creating one. Run
 
 - **Non-TTY installer.** `composer test:install` previews and exits 0 when
   stdin is not a terminal. Use `--yes` in automation.
-- **Pro seeder password.** `tutor-pro/tests/e2e/bin/seed-pro.php` currently resets
+- **Pro seeder password.** `tutor-pro/tests/e2e/bin/seed.php` currently resets
   the instructor password to the literal `password`. If you use a non-default
   `E2E_PASSWORD`, the instructor login can fail after a Pro seed. Check that
   file in the Pro repo when changing the password.

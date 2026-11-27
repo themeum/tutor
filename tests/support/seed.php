@@ -274,7 +274,7 @@ if ( empty( $course ) ) {
 
 require __DIR__ . '/seed-admin.php';
 
-$pro_seed = WP_PLUGIN_DIR . '/tutor-pro/tests/e2e/bin/seed-pro.php';
+$pro_seed = WP_PLUGIN_DIR . '/tutor-pro/tests/e2e/bin/seed.php';
 if ( file_exists( $pro_seed ) ) {
 	( static function () use ( $pro_seed ) {
 		require $pro_seed;
