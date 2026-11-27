@@ -1,0 +1,236 @@
+<?php
+/**
+ * Tools → MCP page.
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Tools
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.3.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\SvgIcon;
+use Tutor\Core\Input;
+use Tutor\Mcp\Registrar;
+use TUTOR\Icon;
+
+if ( ! current_user_can( 'manage_options' ) ) {
+	wp_die( esc_html__( 'You do not have permission to access this page.', 'tutor' ), 403 );
+}
+
+$enabled           = Registrar::is_enabled();
+$read_only         = Registrar::is_read_only();
+$instructor_access = Registrar::is_instructor_access_enabled();
+$endpoint          = Registrar::endpoint();
+$enabled_tools     = Registrar::enabled_tools();
+$catalog           = Registrar::tool_catalog();
+$ability_counts    = Registrar::catalog_ability_counts( $catalog, $enabled_tools );
+$abilities_total   = $ability_counts['total'];
+$abilities_on      = $ability_counts['on'];
+$mcp_view          = Input::get( 'mcp_view', '' );
+$abilities_url     = add_query_arg(
+	array(
+		'page'     => 'tutor-tools',
+		'sub_page' => 'tutor_mcp',
+		'mcp_view' => 'abilities',
+	),
+	admin_url( 'admin.php' )
+);
+$overview_url      = add_query_arg(
+	array(
+		'page'     => 'tutor-tools',
+		'sub_page' => 'tutor_mcp',
+	),
+	admin_url( 'admin.php' )
+);
+?>
+<div
+	class="tutor-mcp"
+	id="tutor-mcp-root"
+	data-has-adapter="<?php echo Registrar::has_adapter() ? '1' : '0'; ?>"
+>
+	<form method="post" id="tutor-mcp-form">
+		<div class="tutor-option-main-title">
+			<?php if ( 'abilities' === $mcp_view ) : ?>
+				<div class="tutor-d-flex tutor-align-center tutor-gap-12px">
+					<a
+						class="tutor-btn tutor-btn-outline tutor-btn-sm tutor-btn-icon tutor-mcp-abilities-back"
+						href="<?php echo esc_url( $overview_url ); ?>"
+						aria-label="<?php esc_attr_e( 'Back', 'tutor' ); ?>"
+					>
+						<span class="tutor-icon-angle-left" aria-hidden="true"></span>
+					</a>
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-center tutor-gap-12px">
+						<?php esc_html_e( 'Abilities', 'tutor' ); ?>
+						<span class="tutor-fw-normal tutor-color-hints" data-mcp-abilities-summary>
+							(<?php echo esc_html( (string) $abilities_on ); ?>/<?php echo esc_html( (string) $abilities_total ); ?>)
+						</span>
+					</div>
+				</div>
+				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" data-mcp-reset-default>
+					<span class="tutor-icon-refresh tutor-mr-8" aria-hidden="true"></span>
+					<?php esc_html_e( 'Reset to default', 'tutor' ); ?>
+				</button>
+			<?php else : ?>
+				<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
+					<?php esc_html_e( 'MCP', 'tutor' ); ?>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<?php if ( ! Registrar::has_abilities_api() ) : ?>
+			<div class="tutor-alert tutor-danger tutor-mb-24">
+				<div class="tutor-alert-text">
+					<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-times-line tutor-mr-12"></span>
+					<span>
+						<strong><?php esc_html_e( 'Abilities API missing.', 'tutor' ); ?></strong>
+						<?php esc_html_e( 'WordPress 6.9+ is required for Tutor MCP.', 'tutor' ); ?>
+					</span>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $enabled && ! Registrar::has_adapter() ) : ?>
+			<div class="tutor-alert tutor-warning tutor-mb-24">
+				<div class="tutor-alert-text">
+					<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
+					<span>
+						<strong><?php esc_html_e( 'MCP Adapter required.', 'tutor' ); ?></strong>
+						<?php esc_html_e( 'Tutor LMS MCP is on, but the WordPress MCP Adapter plugin is missing or inactive. Install or activate it to use MCP.', 'tutor' ); ?>
+						<a href="<?php echo esc_url( Registrar::adapter_plugin_action_url() ); ?>">
+							<?php
+							echo Registrar::is_adapter_plugin_installed()
+								? esc_html__( 'Activate plugin', 'tutor' )
+								: esc_html__( 'Install plugin', 'tutor' );
+							?>
+						</a>
+					</span>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( 'abilities' === $mcp_view ) : ?>
+			<?php require __DIR__ . '/mcp/abilities.php'; ?>
+		<?php else : ?>
+
+			<div class="tutor-option-single-item tutor-mcp-config tutor-mb-32">
+				<div class="tutor-option-group-title tutor-mb-8">
+					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Configuration', 'tutor' ); ?></div>
+				</div>
+				<div class="tutor-mcp-config-fields">
+					<div class="tutor-mcp-config-row">
+						<div class="tutor-option-field-label">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Tutor LMS MCP', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
+								<?php esc_html_e( 'Let AI apps like Claude, Cursor, VS Code and Gemini manage your eLearning platform through the Model Context Protocol.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-option-field-input">
+							<label class="tutor-form-toggle">
+								<input type="checkbox" class="tutor-form-toggle-input" name="tutor_mcp_enabled" value="1" <?php checked( $enabled ); ?> data-mcp-enable>
+								<span class="tutor-form-toggle-control"></span>
+							</label>
+						</div>
+					</div>
+
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+						<div class="tutor-option-field-label">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Server URL', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
+								<?php esc_html_e( 'AI apps connect to this address with a WordPress username and Application Password.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-option-field-input">
+							<div class="tutor-mcp-server-url tutor-position-relative">
+								<input type="text" id="tutor-mcp-srv-url" class="tutor-mcp-server-url-input" value="<?php echo esc_attr( $endpoint ); ?>" readonly>
+								<button type="button" class="tutor-btn tutor-btn-icon tutor-mcp-server-url-copy" data-tutor-clipboard-copy-target="tutor-mcp-srv-url" aria-label="<?php esc_attr_e( 'Copy server URL', 'tutor' ); ?>">
+									<?php SvgIcon::make()->name( Icon::COPY_PASTE )->size( 20 )->render(); ?>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+						<div class="tutor-option-field-label">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Read-only mode', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
+								<?php esc_html_e( 'Agents can look things up but can’t create, change or delete anything. Applies to every connection.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-option-field-input">
+							<label class="tutor-form-toggle">
+								<input type="checkbox" class="tutor-form-toggle-input" name="tutor_mcp_read_only" value="1" <?php checked( $read_only ); ?>>
+								<span class="tutor-form-toggle-control"></span>
+							</label>
+						</div>
+					</div>
+
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+						<div class="tutor-option-field-label">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Allow instructors', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
+								<?php esc_html_e( 'Let instructors and co-instructors connect to MCP. They can only use tools within their normal Tutor LMS permissions. Admins always have access.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-option-field-input">
+							<label class="tutor-form-toggle">
+								<input type="checkbox" class="tutor-form-toggle-input" name="tutor_mcp_instructor_access" value="1" <?php checked( $instructor_access ); ?>>
+								<span class="tutor-form-toggle-control"></span>
+							</label>
+						</div>
+					</div>
+
+					<div class="tutor-mcp-config-row <?php echo $enabled ? '' : 'tutor-d-none'; ?>" data-mcp-when-enabled>
+						<div class="tutor-option-field-label">
+							<div class="tutor-mcp-field-title"><?php esc_html_e( 'Abilities', 'tutor' ); ?></div>
+							<div class="tutor-mcp-field-desc">
+								<?php esc_html_e( 'Choose what agents are allowed to do on this site.', 'tutor' ); ?>
+							</div>
+						</div>
+						<div class="tutor-d-flex tutor-align-center">
+							<a class="tutor-mcp-abilities-link" href="<?php echo esc_url( $abilities_url ); ?>">
+								<span class="tutor-mcp-abilities-count">
+									<?php
+									printf(
+										/* translators: 1: enabled ability count, 2: total abilities */
+										esc_html__( '%1$d of %2$d on', 'tutor' ),
+										(int) $abilities_on,
+										(int) $abilities_total
+									);
+									?>
+								</span>
+								<span class="tutor-icon-angle-right" aria-hidden="true"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<?php if ( $enabled && $read_only ) : ?>
+				<div class="tutor-alert tutor-warning tutor-mb-24" data-mcp-when-enabled>
+					<div class="tutor-alert-text">
+						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
+						<span>
+							<strong><?php esc_html_e( 'Read-only mode is on.', 'tutor' ); ?></strong>
+							<?php esc_html_e( 'Write and delete tools are blocked for every connection.', 'tutor' ); ?>
+						</span>
+					</div>
+				</div>
+			<?php endif; ?>
+		<?php endif; ?>
+
+		<?php
+		if ( 'abilities' !== $mcp_view ) :
+			foreach ( $enabled_tools as $tool_id ) :
+				?>
+				<input type="hidden" name="tutor_mcp_enabled_tools[]" value="<?php echo esc_attr( $tool_id ); ?>">
+				<?php
+			endforeach;
+		endif;
+		?>
+	</form>
+
+	<?php require __DIR__ . '/mcp/adapter-modal.php'; ?>
+</div>

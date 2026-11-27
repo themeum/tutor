@@ -11,6 +11,8 @@ import './segments/import-export';
 import './segments/legal-consents';
 import './segments/lib';
 import './segments/manage-api-keys';
+import './segments/mcp';
+import './segments/multiple_email_input';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';

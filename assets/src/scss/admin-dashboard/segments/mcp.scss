@@ -1,0 +1,158 @@
+/**
+ * Tools → MCP — only styles Tutor Tools does not already provide.
+ */
+
+.tutor-mcp-field-title {
+	font-size: 16px;
+	line-height: 1.5;
+	font-weight: 500;
+}
+
+.tutor-mcp-field-desc {
+	margin-top: 2px;
+	font-size: 13px;
+	line-height: 16px;
+	font-weight: 400;
+	color: #5B616F;
+}
+
+.tutor-mcp-pro-badge {
+	background: rgba(var(--tutor-color-primary-rgb), 0.15);
+	color: var(--tutor-color-primary);
+	font-weight: 500;
+}
+
+.tutor-mcp-config-fields,
+.tutor-mcp-ability-fields {
+	background-color: var(--tutor-color-white);
+	border: 1px solid #ECECED;
+	border-radius: 6px;
+}
+
+.tutor-mcp-config-row,
+.tutor-mcp-ability-row {
+	display: grid;
+	align-items: center;
+	justify-content: space-between;
+	grid-auto-flow: column;
+	grid-gap: 16px;
+	min-width: 0;
+	padding: 16px 20px;
+	border-bottom: 1px solid #F5F5F5;
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	.tutor-option-field-input {
+		justify-self: end;
+		text-align: right;
+	}
+}
+
+.tutor-mcp-abilities-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: #5B616F;
+	text-decoration: none;
+	line-height: 1;
+
+	.tutor-mcp-abilities-count {
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 400;
+	}
+
+	&:hover,
+	&:focus {
+		color: var(--tutor-color-primary);
+		text-decoration: none;
+	}
+}
+
+.tutor-mcp-abilities-back.tutor-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: 32px;
+	height: 32px;
+	min-width: 32px;
+	min-height: 32px;
+	border-radius: 6px;
+	border: 1px solid #ECECED;
+	background-color: var(--tutor-color-white);
+
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'] {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 4px;
+		height: 8px;
+		margin: 0;
+		color: #333741;
+	}
+
+	&:hover:not(:disabled):not(.disabled),
+	&:focus:not(:disabled):not(.disabled) {
+		color: var(--tutor-color-primary);
+		background-color: var(--tutor-color-white);
+		--tutor-button-border-shadow: 0 0 0 1px #DCDFE5;
+	}
+}
+
+.tutor-mcp-config {
+	// Hidden siblings still count as :last-child, so clear dividers when MCP is off.
+	&:has([data-mcp-enable]:not(:checked)) .tutor-mcp-config-row {
+		border-bottom: none;
+	}
+
+	.tutor-mcp-server-url {
+		min-width: 0;
+		max-width: 266px;
+		width: 100%;
+
+		.tutor-mcp-server-url-input {
+			display: block;
+			box-sizing: border-box;
+			width: 100%;
+			min-width: 266px;
+			height: 28px;
+			min-height: 34px;
+			padding: 7px 6px;
+			padding-inline-end: 32px;
+			border: 1px solid var(--tutor-border-color);
+			border-radius: 6px;
+			outline: none;
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 18px;
+			color: var(--tutor-color-hints);
+			background-color: var(--tutor-color-white);
+			box-shadow: none;
+
+			&:focus {
+				border-color: var(--tutor-border-color);
+				box-shadow: none;
+			}
+		}
+
+		.tutor-mcp-server-url-copy.tutor-btn {
+			position: absolute;
+			inset-inline-end: 2px;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: var(--tutor-color-white);
+			padding: 0 !important;
+			color: var(--tutor-color-hints);
+
+			&:hover,
+			&:focus {
+				color: var(--tutor-color-primary);
+			}
+		}
+	}
+}

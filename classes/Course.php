@@ -1941,7 +1941,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @return void
 	 */
-	private function save_course_content_order( $sort_order = array() ) {
+	public function save_course_content_order( $sort_order = array() ) {
 		global $wpdb;
 
 		if ( ! tutor_utils()->count( $sort_order ) ) {
