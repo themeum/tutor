@@ -194,7 +194,7 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
           })}
         >
           <Button
-            data-cy="add-subscription"
+            data-testid="add-subscription"
             variant="secondary"
             icon={<SVGIcon name="dollarRecurring" width={24} height={24} />}
             onClick={() => {

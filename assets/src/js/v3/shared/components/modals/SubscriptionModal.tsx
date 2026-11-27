@@ -86,7 +86,7 @@ export default function SubscriptionModal({
                 {isSaved ? __('Discard Changes', __TUTOR_TEXT_DOMAIN__) : __('Cancel', __TUTOR_TEXT_DOMAIN__)}
               </Button>
               <Button
-                data-cy="save-subscription"
+                data-testid="save-subscription"
                 loading={saveSubscriptionMutation.isPending}
                 variant="primary"
                 size="small"

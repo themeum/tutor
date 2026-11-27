@@ -147,22 +147,26 @@ const styles = {
     gap: ${spacing[4]};
     width: 100%;
 
-    ${isInlineLabel &&
-    css`
-      flex-direction: row;
-      align-items: center;
-      gap: ${spacing[12]};
-      justify-content: space-between;
-      height: 32px;
-    `}
+    ${
+      isInlineLabel &&
+      css`
+        flex-direction: row;
+        align-items: center;
+        gap: ${spacing[12]};
+        justify-content: space-between;
+        height: 32px;
+      `
+    }
   `,
   label: (isInlineLabel = false) => css`
     ${typography.caption()}
 
-    ${isInlineLabel &&
-    css`
-      color: ${colorTokens.text.primary};
-    `}
+    ${
+      isInlineLabel &&
+      css`
+        color: ${colorTokens.text.primary};
+      `
+    }
   `,
   inputWrapper: css`
     position: relative;
@@ -195,16 +199,20 @@ const styles = {
         color: ${colorTokens.text.subdued};
       }
 
-      ${variant === 'search' &&
-      css`
-        padding-left: ${spacing[36]};
-      `}
+      ${
+        variant === 'search' &&
+        css`
+          padding-left: ${spacing[36]};
+        `
+      }
 
-      ${size === 'small' &&
-      css`
-        height: 32px;
-        min-height: 32px;
-      `}
+      ${
+        size === 'small' &&
+        css`
+          height: 32px;
+          min-height: 32px;
+        `
+      }
     }
   `,
   rightIconButton: css`

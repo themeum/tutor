@@ -93,7 +93,7 @@ const CourseSettings = () => {
     <div>
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
-      <div data-cy="course-settings" css={styles.courseSettings}>
+      <div data-testid="course-settings" css={styles.courseSettings}>
         <Tabs
           tabList={tabList}
           activeTab={activeTab}
