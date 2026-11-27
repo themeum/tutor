@@ -56,7 +56,7 @@ class AbilityFactory {
 	);
 
 	/**
-	 * Register a tool ability with rate limit wrapper.
+	 * Register a tool ability.
 	 *
 	 * @since 4.3.0
 	 *
@@ -84,13 +84,8 @@ class AbilityFactory {
 				'category'            => $category,
 				'input_schema'        => self::normalize_input_schema( $schema ),
 				'permission_callback' => $perm,
-				'execute_callback'    => static function ( $input = array() ) use ( /* $id, */ $exec ) {
+				'execute_callback'    => static function ( $input = array() ) use ( $exec ) {
 					$input = is_array( $input ) ? $input : array();
-					// Temporary: rate limit disabled for MCP testing.
-					// $limit = self::rate_limit( $id );
-					// if ( is_wp_error( $limit ) ) {
-					// return $limit;
-					// }.
 					return call_user_func( $exec, $input );
 				},
 				'meta'                => array(
@@ -133,13 +128,8 @@ class AbilityFactory {
 				'permission_callback' => $perm ? $perm : static function (): bool {
 					return Permissions::can_manage_courses();
 				},
-				'execute_callback'    => static function ( $input = array() ) use ( /* $id, */ $exec ) {
+				'execute_callback'    => static function ( $input = array() ) use ( $exec ) {
 					$input = is_array( $input ) ? $input : array();
-					// Temporary: rate limit disabled for MCP testing.
-					// $limit = self::rate_limit( $id );
-					// if ( is_wp_error( $limit ) ) {
-					// 	return $limit;
-					// }
 					return call_user_func( $exec, $input );
 				},
 				'meta'                => array(
@@ -181,30 +171,5 @@ class AbilityFactory {
 		}
 
 		return $schema;
-	}
-
-	/**
-	 * Simple per-user rate limit (30/min).
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param string $ability_id Ability ID.
-	 * @return true|\WP_Error
-	 */
-	private static function rate_limit( string $ability_id ) {
-		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
-			return new \WP_Error( 'tutor_mcp_unauthenticated', __( 'Authentication required.', 'tutor' ) );
-		}
-
-		$key   = 'tutor_mcp_rl_' . $user_id;
-		$count = (int) get_transient( $key );
-		if ( $count >= 30 ) {
-			return new \WP_Error( 'tutor_mcp_rate_limited', __( 'Rate limit exceeded.', 'tutor' ) );
-		}
-		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
-
-		unset( $ability_id );
-		return true;
 	}
 }

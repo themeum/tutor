@@ -212,8 +212,6 @@ class CourseAbilities {
 			AbilityFactory::WRITE_HINTS
 		);
 
-		// update-course-content-order intentionally not registered (dropped from keep set).
-
 		AbilityFactory::tool(
 			'tutor-mcp/trash-course',
 			'tutor-mcp-courses',
@@ -608,54 +606,6 @@ class CourseAbilities {
 		return array(
 			'id'          => $course_id,
 			'post_status' => 'trash',
-		);
-	}
-
-	/**
-	 * Reorder course topics/contents via Course::save_course_content_order().
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param array $input Input.
-	 * @return array|\WP_Error
-	 */
-	public function update_course_content_order( array $input ) {
-		$deny = Permissions::allow_write();
-		if ( is_wp_error( $deny ) ) {
-			return $deny;
-		}
-
-		$course_id = absint( $input['course_id'] ?? 0 );
-		$topics    = $input['topics'] ?? array();
-		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
-			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
-		}
-		if ( ! is_array( $topics ) || ! count( $topics ) ) {
-			return new \WP_Error( 'tutor_mcp_invalid', __( 'Sorting order is required', 'tutor' ) );
-		}
-
-		$sort_order = array();
-		foreach ( $topics as $topic ) {
-			if ( ! is_array( $topic ) ) {
-				continue;
-			}
-			$topic_id = absint( $topic['topic_id'] ?? 0 );
-			if ( ! $topic_id || (int) wp_get_post_parent_id( $topic_id ) !== $course_id ) {
-				return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid topic for this course.', 'tutor' ) );
-			}
-			$sort_order[] = array(
-				'topic_id'   => $topic_id,
-				'lesson_ids' => isset( $topic['lesson_ids'] ) && is_array( $topic['lesson_ids'] )
-					? array_map( 'absint', $topic['lesson_ids'] )
-					: array(),
-			);
-		}
-
-		( new Course( false ) )->save_course_content_order( $sort_order );
-
-		return array(
-			'course_id' => $course_id,
-			'updated'   => true,
 		);
 	}
 }
