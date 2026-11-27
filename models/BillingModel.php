@@ -67,18 +67,6 @@ class BillingModel {
 	);
 
 	/**
-	 * Billing fields that are not required during validation.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @var string[]
-	 */
-	private $optional_fields = array(
-		'billing_zip_code',
-		'billing_address',
-		'billing_phone',
-	);
-	/**
 	 * Get fillable fields
 	 *
 	 * @return array
@@ -106,16 +94,36 @@ class BillingModel {
 	public function get_validation_rules() {
 		/**
 		 * The `billing_state` field is excluded because not all countries have states.
+		 * It is checked by validate_billing_location().
 		 */
-		return array(
+		$rules = array(
 			'billing_first_name' => 'required',
 			'billing_last_name'  => 'required',
 			'billing_email'      => 'required|email',
-			'billing_phone'      => 'required',
-			'billing_zip_code'   => 'required',
-			'billing_address'    => 'required',
-			'billing_country'    => 'required',
-			'billing_city'       => 'required',
+		);
+
+		foreach ( array( 'billing_phone', 'billing_zip_code', 'billing_address', 'billing_country', 'billing_city' ) as $field ) {
+			$rules[ $field ] = Settings::is_billing_field_required( $field ) ? 'required' : '';
+		}
+
+		return $rules;
+	}
+
+	/**
+	 * Get the billing fields that are required by the current settings.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return string[]
+	 */
+	public function get_active_required_fields() {
+		return array_values(
+			array_filter(
+				$this->required_fields,
+				function ( $field ) {
+					return Settings::is_billing_field_required( $field );
+				}
+			)
 		);
 	}
 
@@ -133,6 +141,11 @@ class BillingModel {
 	 * @return string[] List of error messages, empty when valid.
 	 */
 	public function validate_billing_location( string $country, string $state ): array {
+		// An optional country may be left empty, but then a state makes no sense.
+		if ( '' === $country && ! Settings::is_billing_field_required( 'billing_country' ) ) {
+			return '' === $state ? array() : array( __( 'Invalid state', 'tutor' ) );
+		}
+
 		$country_info = tutor_get_country_info_by_name( $country );
 
 		if ( ! $country_info ) {
@@ -140,6 +153,11 @@ class BillingModel {
 		}
 
 		$state_names = array_column( $country_info['states'] ?? array(), 'name' );
+
+		// An optional state may be left empty.
+		if ( '' === $state && ! Settings::is_billing_field_required( 'billing_state' ) ) {
+			return array();
+		}
 
 		// Countries without states don't require one.
 		if ( ! empty( $state_names ) && ! in_array( $state, $state_names, true ) ) {
@@ -228,13 +246,7 @@ class BillingModel {
 	 * @return bool
 	 */
 	public function has_complete_billing_info( array $data ) {
-		$required_fields     = $this->required_fields;
-		$is_address_required = Settings::is_billing_address_required();
-		if ( ! $is_address_required ) {
-			$required_fields = array_diff( $this->required_fields, $this->optional_fields );
-		}
-
-		foreach ( $required_fields as $field ) {
+		foreach ( $this->get_active_required_fields() as $field ) {
 			if ( 'billing_state' === $field && ! $this->country_has_states( $data['billing_country'] ?? '' ) ) {
 				continue;
 			}

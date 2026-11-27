@@ -260,20 +260,16 @@ class BillingController extends BaseController {
 	 */
 	protected function validate( array $data ) {
 
-		$is_billing_address_required = Settings::is_billing_address_required();
-
 		$validation_rules = array(
 			'user_id'            => 'required|numeric',
 			'billing_first_name' => 'required',
 			'billing_last_name'  => 'required',
 			'billing_email'      => 'required|email',
-			'billing_phone'      => '',
-			'billing_zip_code'   => $is_billing_address_required ? 'required' : '',
-			'billing_address'    => $is_billing_address_required ? 'required' : '',
-			'billing_country'    => 'required',
-			'billing_state'      => 'required',
-			'billing_city'       => 'required',
 		);
+
+		foreach ( array_keys( Settings::get_configurable_billing_fields() ) as $field ) {
+			$validation_rules[ $field ] = Settings::is_billing_field_required( $field ) ? 'required' : '';
+		}
 
 		// Countries without states have nothing to select.
 		if ( ! $this->model->country_has_states( wp_unslash( $data['billing_country'] ?? '' ) ) ) {

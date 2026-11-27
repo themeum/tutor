@@ -574,4 +574,57 @@ class Settings {
 		 */
 		return (bool) apply_filters( 'tutor_is_billing_address_required', $is_required );
 	}
+
+	/**
+	 * Billing fields whose required state is controlled by a setting,
+	 * mapped to their option key.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_configurable_billing_fields() {
+		return array(
+			'billing_country'  => OptionKeys::IS_BILLING_COUNTRY_REQUIRED,
+			'billing_state'    => OptionKeys::IS_BILLING_STATE_REQUIRED,
+			'billing_city'     => OptionKeys::IS_BILLING_CITY_REQUIRED,
+			'billing_zip_code' => OptionKeys::IS_BILLING_ZIP_CODE_REQUIRED,
+			'billing_phone'    => OptionKeys::IS_BILLING_PHONE_REQUIRED,
+			'billing_address'  => OptionKeys::IS_BILLING_ADDRESS_REQUIRED,
+		);
+	}
+
+	/**
+	 * Check whether a billing field is required.
+	 *
+	 * First name, last name and email are always required. The other fields
+	 * follow their "Billing Address Configuration" setting.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $field Billing field name, such as billing_city.
+	 *
+	 * @return boolean
+	 */
+	public static function is_billing_field_required( string $field ) {
+		$fields = self::get_configurable_billing_fields();
+
+		if ( ! isset( $fields[ $field ] ) ) {
+			$is_required = in_array( $field, array( 'billing_first_name', 'billing_last_name', 'billing_email' ), true );
+		} elseif ( 'billing_address' === $field ) {
+			$is_required = self::is_billing_address_required();
+		} else {
+			$is_required = (bool) tutor_utils()->get_option( $fields[ $field ], true );
+		}
+
+		/**
+		 * Filters whether a billing field is required.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param bool   $is_required Whether the field is required.
+		 * @param string $field       Billing field name.
+		 */
+		return (bool) apply_filters( 'tutor_is_billing_fields_required', $is_required, $field );
+	}
 }

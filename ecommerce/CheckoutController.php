@@ -640,7 +640,7 @@ class CheckoutController {
 
 		$validation = ValidationHelper::validate( $validation_rules, $request );
 
-		foreach ( BillingModel::validate_field_formats( $billing_validation_rules ) as $field_errors ) {
+		foreach ( BillingModel::validate_field_formats( $request ) as $field_errors ) {
 			array_push( $errors, ...$field_errors );
 		}
 
