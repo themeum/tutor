@@ -149,11 +149,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
-			if ( ! self::can_post_lesson_comment( $lesson_id ) ) {
-				wp_send_json_error( tutor_utils()->error_message() );
-				return;
-			}
-
 			$comment_data = array(
 				'comment_content' => $comment,
 				'comment_post_ID' => $lesson_id,
