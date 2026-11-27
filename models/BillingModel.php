@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Core\DB;
 use Tutor\Core\Input;
+use Tutor\Ecommerce\Settings;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -93,16 +94,36 @@ class BillingModel {
 	public function get_validation_rules() {
 		/**
 		 * The `billing_state` field is excluded because not all countries have states.
+		 * It is checked by validate_billing_location().
 		 */
-		return array(
+		$rules = array(
 			'billing_first_name' => 'required',
 			'billing_last_name'  => 'required',
 			'billing_email'      => 'required|email',
-			'billing_phone'      => 'required',
-			'billing_zip_code'   => 'required',
-			'billing_address'    => 'required',
-			'billing_country'    => 'required',
-			'billing_city'       => 'required',
+		);
+
+		foreach ( array( 'billing_phone', 'billing_zip_code', 'billing_address', 'billing_country', 'billing_city' ) as $field ) {
+			$rules[ $field ] = Settings::is_billing_field_required( $field ) ? 'required' : '';
+		}
+
+		return $rules;
+	}
+
+	/**
+	 * Get the billing fields that are required by the current settings.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return string[]
+	 */
+	public function get_active_required_fields() {
+		return array_values(
+			array_filter(
+				$this->required_fields,
+				function ( $field ) {
+					return Settings::is_billing_field_required( $field );
+				}
+			)
 		);
 	}
 
@@ -120,6 +141,11 @@ class BillingModel {
 	 * @return string[] List of error messages, empty when valid.
 	 */
 	public function validate_billing_location( string $country, string $state ): array {
+		// An optional country may be left empty, but then a state makes no sense.
+		if ( '' === $country && ! Settings::is_billing_field_required( 'billing_country' ) ) {
+			return '' === $state ? array() : array( __( 'Invalid state', 'tutor' ) );
+		}
+
 		$country_info = tutor_get_country_info_by_name( $country );
 
 		if ( ! $country_info ) {
@@ -127,6 +153,11 @@ class BillingModel {
 		}
 
 		$state_names = array_column( $country_info['states'] ?? array(), 'name' );
+
+		// An optional state may be left empty.
+		if ( '' === $state && ! Settings::is_billing_field_required( 'billing_state' ) ) {
+			return array();
+		}
 
 		// Countries without states don't require one.
 		if ( ! empty( $state_names ) && ! in_array( $state, $state_names, true ) ) {
@@ -215,7 +246,7 @@ class BillingModel {
 	 * @return bool
 	 */
 	public function has_complete_billing_info( array $data ) {
-		foreach ( $this->get_required_fields() as $field ) {
+		foreach ( $this->get_active_required_fields() as $field ) {
 			if ( 'billing_state' === $field && ! $this->country_has_states( $data['billing_country'] ?? '' ) ) {
 				continue;
 			}
@@ -223,6 +254,11 @@ class BillingModel {
 			if ( empty( $data[ $field ] ) ) {
 				return false;
 			}
+		}
+
+		$format_errors = self::validate_field_formats( $data );
+		if ( ! empty( $format_errors ) ) {
+			return false;
 		}
 
 		return true;
@@ -286,5 +322,79 @@ class BillingModel {
 	 */
 	public function get_partial_update_fields() {
 		return $this->partial_update_fields;
+	}
+
+	/**
+	 * Check billing values against their allowed formats.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $data Un-slashed billing data keyed by field name.
+	 *
+	 * @return array<string, string[]> Errors keyed by field name.
+	 */
+	public static function validate_field_formats( array $data ): array {
+		$errors = array();
+
+		foreach ( self::get_field_formats() as $field => $format ) {
+			$value = trim( (string) ( $data[ $field ] ?? '' ) );
+			if ( '' === $value ) {
+				continue;
+			}
+
+			if ( ! preg_match( '~^(?:' . $format['pattern'] . ')$~u', $value ) ) {
+				$errors[ $field ][] = $format['message'];
+			}
+		}
+
+		return $errors;
+	}
+
+	/**
+	 * Allowed character formats for billing fields.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return array<string, array{pattern: string, message: string}>
+	 */
+	public static function get_field_formats(): array {
+		// Matches one or more letters (any language), combining marks, spaces, apostrophes, dots, or hyphens.
+		$name_pattern = "[\\p{L}\\p{M}\\s'.\\-]+";
+
+		$formats = array(
+			'billing_first_name' => array(
+				'pattern' => $name_pattern,
+				'message' => __( 'First name can only contain letters, spaces, apostrophes, dots and hyphens.', 'tutor' ),
+			),
+			'billing_last_name'  => array(
+				'pattern' => $name_pattern,
+				'message' => __( 'Last name can only contain letters, spaces, apostrophes, dots and hyphens.', 'tutor' ),
+			),
+			'billing_phone'      => array(
+				'pattern' => '\\+?[0-9\\s\\(\\)\\-]{6,20}',
+				'message' => __( 'Phone can only contain digits, spaces, parentheses, hyphens and a leading +.', 'tutor' ),
+			),
+			'billing_city'       => array(
+				'pattern' => "[\\p{L}\\p{M}\\p{N}\\s'.\\-]+",
+				'message' => __( 'City can only contain letters, spaces, apostrophes, dots, numbers and hyphens.', 'tutor' ),
+			),
+			'billing_zip_code'   => array(
+				'pattern' => '[A-Za-z0-9\\s\\-]{2,12}',
+				'message' => __( 'Postcode/ZIP can only contain letters, digits, spaces and hyphens.', 'tutor' ),
+			),
+			'billing_address'    => array(
+				'pattern' => "[\\p{L}\\p{M}\\p{N}\\s,.#&'\\/\\(\\)\\-]+",
+				'message' => __( 'Address can only contain letters, digits, spaces and , . # / \' ( ) -', 'tutor' ),
+			),
+		);
+
+		/**
+		 * Filters the allowed character formats for billing fields.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param array $formats Field name => array( 'pattern' => string, 'message' => string ).
+		 */
+		return apply_filters( 'tutor_billing_field_formats', $formats );
 	}
 }

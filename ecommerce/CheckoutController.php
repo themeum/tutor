@@ -622,9 +622,10 @@ class CheckoutController {
 	 */
 	protected function validate_pay_now_request( array $request, int $current_user_id = 0 ) {
 		// Reset on new validation request.
-		$errors                  = array();
-		$this->order_data        = null;
-		$this->validated_consent = array();
+		$errors                   = array();
+		$this->order_data         = null;
+		$this->validated_consent  = array();
+		$billing_validation_rules = $this->billing_model->get_validation_rules();
 
 		$order_types_str  = implode( ',', array( OrderModel::TYPE_SINGLE_ORDER, OrderModel::TYPE_SUBSCRIPTION, OrderModel::TYPE_RENEWAL ) );
 		$validation_rules = array_merge(
@@ -632,12 +633,16 @@ class CheckoutController {
 				'object_ids'     => 'required|regex:/^[0-9]+(,[0-9]+)*$/',
 				'order_type'     => "required|match_string:{$order_types_str}",
 				'payment_method' => 'required',
-				'payment_type'   => 'if_input|match_string:automate,manual'
+				'payment_type'   => 'if_input|match_string:automate,manual',
 			),
-			$this->billing_model->get_validation_rules()
+			$billing_validation_rules
 		);
 
 		$validation = ValidationHelper::validate( $validation_rules, $request );
+
+		foreach ( BillingModel::validate_field_formats( $request ) as $field_errors ) {
+			array_push( $errors, ...$field_errors );
+		}
 
 		if ( $validation->success ) {
 			// Validate the billing country and state to prevent tax reduction abuse.
@@ -722,7 +727,7 @@ class CheckoutController {
 	 * @return array An array of error messages.
 	 */
 	protected function save_billing_info( $user_id, $fields ) {
-		$billing_info  = $this->billing_model->get_info( $user_id );
+		$billing_info = $this->billing_model->get_info( $user_id );
 
 		if ( $billing_info ) {
 			$update_billing = $this->billing_model->update( $fields, array( 'user_id' => $user_id ) );
@@ -879,7 +884,7 @@ class CheckoutController {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_checkout_alert_key( int $user_id ):string {
+	protected static function prepare_checkout_alert_key( int $user_id ): string {
 		return self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id;
 	}
 
@@ -1483,6 +1488,11 @@ class CheckoutController {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
 			exit;
+		}
+
+		$format_errors = BillingModel::validate_field_formats( $billing_fillable_fields );
+		if ( ! empty( $format_errors ) ) {
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, implode( ' ', array_merge( ...array_values( $format_errors ) ) ) );
 		}
 
 		if ( $order_id ) {

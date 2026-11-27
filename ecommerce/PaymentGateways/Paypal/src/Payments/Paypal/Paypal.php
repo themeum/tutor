@@ -145,23 +145,14 @@ class Paypal extends BasePayment {
 		$items          = 'one-time' === $type ? Helper::getItems( $data ) : null;
 		$amount         = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
 		$tutor_metadata = Utils::prepareMerchantMetadata( $data->order_user_id, $this->config->get( 'mode' ) );
-		$description    = implode(
-			',',
-			array_map(
-				fn ( $key, $value ) => "{$key}: {$value}",
-				array_keys( $tutor_metadata ),
-				$tutor_metadata
-			)
-		);
 
 		$returnData = array(
 			'purchase_units' => array(
 				array(
-					'custom_id'   => $data->order_id,
-					'items'       => $items,
-					'amount'      => $amount,
-					'payee'       => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
-					'description' => $description,
+					'custom_id' => $data->order_id,
+					'items'     => $items,
+					'amount'    => $amount,
+					'payee'     => array( 'email_address' => $this->config->get( 'merchant_email' ) ),
 				),
 			),
 			'intent'         => 'CAPTURE',
@@ -174,10 +165,6 @@ class Paypal extends BasePayment {
 
 			$this->previousPayload = json_decode( stripslashes( $data->previous_payload ) );
 			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload );
-		}
-
-		if ( isset( $data->shipping_address ) && ! empty( $data->shipping_address ) ) {
-			$returnData['purchase_units'][0]['shipping'] = Helper::getShippingInfo( $data->shipping_address );
 		}
 
 		return $returnData;

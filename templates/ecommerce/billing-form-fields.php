@@ -23,12 +23,18 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
+use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Icon;
 
-$show_close_button = $show_close_button ?? false;
-$close_action      = $close_action ?? 'editBilling = false';
-$country_options   = $country_options ?? array();
-$initial_states    = $initial_states ?? array();
+$show_close_button   = $show_close_button ?? false;
+$close_action        = $close_action ?? 'editBilling = false';
+$country_options     = $country_options ?? array();
+$initial_states      = $initial_states ?? array();
+$required = array();
+foreach ( array( 'billing_phone', 'billing_country', 'billing_state', 'billing_city', 'billing_zip_code', 'billing_address' ) as $billing_field ) {
+	$required[ $billing_field ] = Settings::is_billing_field_required( $billing_field );
+}
 ?>
 
 <?php if ( $show_close_button ) : ?>
@@ -67,7 +73,7 @@ $initial_states    = $initial_states ?? array();
 			->id( 'billing_first_name' )
 			->required()
 			->placeholder( __( 'Enter your first name', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_first_name', { required: true })" )
+			->attr( 'x-bind', "register('billing_first_name', " . BillingController::get_client_rules( 'billing_first_name', true ) . ')' )
 			->render();
 
 		InputField::make()
@@ -76,7 +82,7 @@ $initial_states    = $initial_states ?? array();
 			->id( 'billing_last_name' )
 			->required()
 			->placeholder( __( 'Enter your last name', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_last_name', { required: true })" )
+			->attr( 'x-bind', "register('billing_last_name', " . BillingController::get_client_rules( 'billing_last_name', true ) . ')' )
 			->render();
 	?>
 </div>
@@ -96,9 +102,9 @@ $initial_states    = $initial_states ?? array();
 		->name( 'billing_phone' )
 		->label( __( 'Phone', 'tutor' ) )
 		->id( 'billing_phone' )
-		->required()
+		->required( $required['billing_phone'] )
 		->placeholder( __( 'Enter your phone number', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_phone', { required: true })" )
+		->attr( 'x-bind', "register('billing_phone', " . BillingController::get_client_rules( 'billing_phone', $required['billing_phone'] ) . ')' )
 		->render();
 
 	InputField::make()
@@ -108,9 +114,9 @@ $initial_states    = $initial_states ?? array();
 		->options( $country_options )
 		->searchable()
 		->id( 'billing_country' )
-		->required()
+		->required( $required['billing_country'] )
 		->placeholder( __( 'Enter your country', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_country', { required: true })" )
+		->attr( 'x-bind', "register('billing_country', " . BillingController::get_client_rules( 'billing_country', $required['billing_country'] ) . ')' )
 		->render();
 
 	InputField::make()
@@ -132,18 +138,18 @@ $initial_states    = $initial_states ?? array();
 			->name( 'billing_city' )
 			->label( __( 'City', 'tutor' ) )
 			->id( 'billing_city' )
-			->required()
+			->required( $required['billing_city'] )
 			->placeholder( __( 'Enter your city', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_city', { required: true })" )
+			->attr( 'x-bind', "register('billing_city', " . BillingController::get_client_rules( 'billing_city', $required['billing_city'] ) . ')' )
 			->render();
 
 		InputField::make()
 			->name( 'billing_zip_code' )
 			->label( __( 'Postcode/ Zip', 'tutor' ) )
 			->id( 'billing_zip_code' )
-			->required()
+			->required( $required['billing_zip_code'] )
 			->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
-			->attr( 'x-bind', "register('billing_zip_code', { required: true })" )
+			->attr( 'x-bind', "register('billing_zip_code', " . BillingController::get_client_rules( 'billing_zip_code', $required['billing_zip_code'] ) . ')' )
 			->render();
 	?>
 </div>
@@ -155,8 +161,8 @@ $initial_states    = $initial_states ?? array();
 		->name( 'billing_address' )
 		->label( __( 'Address', 'tutor' ) )
 		->id( 'billing_address' )
-		->required()
+		->required( $required['billing_address'] )
 		->placeholder( __( 'Enter your address', 'tutor' ) )
-		->attr( 'x-bind', "register('billing_address', { required: true })" )
+		->attr( 'x-bind', "register('billing_address', " . BillingController::get_client_rules( 'billing_address', $required['billing_address'] ) . ')' )
 		->render();
 ?>

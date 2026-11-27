@@ -254,34 +254,6 @@ final class Helper {
 	}
 
 	/**
-	 * Creates the shipping information array for a payment request.
-	 *
-	 * This method constructs and returns an array containing the shipping type, receiver's full name,
-	 * and address for a payment request.
-	 *
-	 * @param  object $shipping The shipping data containing the receiver's name and address.
-	 * @return array        The formatted shipping information including type, name, and address.
-	 * @since  3.0.0
-	 * @since  4.2.0 Uses Utils::splitAddress() instead of System::splitAddress().
-	 */
-	public static function getShippingInfo( $shipping ): array {
-		[$address1, $address2] = Utils::splitAddress( $shipping, 300 );
-
-		return array(
-			'type'    => 'SHIPPING',
-			'name'    => array( 'full_name' => $shipping->name ),
-			'address' => array(
-				'address_line_1' => $address1,
-				'address_line_2' => $address2,
-				'admin_area_2'   => $shipping->city,
-				'admin_area_1'   => $shipping->region,
-				'postal_code'    => $shipping->postal_code,
-				'country_code'   => $shipping->country->alpha_2,
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the URL from an array of links that matches a specified condition.
 	 *
 	 * This method filters the provided links array to find the link that matches the given
@@ -338,8 +310,7 @@ final class Helper {
 			return null;
 		}
 
-		$paypal_source    = $vault_details->payment_source->paypal;
-		$shipping_address = $paypal_source->shipping->address;
+		$paypal_source = $vault_details->payment_source->paypal;
 
 		return array(
 			'paypal' => array(
@@ -357,29 +328,7 @@ final class Helper {
 				'experience_context' => array(
 					'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
 				),
-				'address'            => self::format_address( $shipping_address ),
 			),
-		);
-	}
-
-	/**
-	 * Format a shipping address object into an associative array.
-	 *
-	 * @since 3.9.0
-	 *
-	 * @param object $shipping_address The PayPal shipping address object.
-	 *
-	 * @return array The formatted address as an associative array.
-	 */
-	private static function format_address( $shipping_address ): array {
-
-		return array(
-			'address_line_1' => $shipping_address->address_line_1,
-			'address_line_2' => $shipping_address->address_line_2,
-			'admin_area_1'   => $shipping_address->admin_area_1 ?? '',
-			'admin_area_2'   => $shipping_address->admin_area_2 ?? '',
-			'postal_code'    => $shipping_address->postal_code,
-			'country_code'   => $shipping_address->country_code,
 		);
 	}
 
@@ -402,8 +351,7 @@ final class Helper {
 			return null;
 		}
 
-		$paypal_source    = $order_details->payment_source->paypal;
-		$shipping_address = $order_details->purchase_units[0]->shipping->address;
+		$paypal_source = $order_details->payment_source->paypal;
 
 		return array(
 			'paypal' => array(
@@ -421,7 +369,6 @@ final class Helper {
 				'experience_context' => array(
 					'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
 				),
-				'address'            => self::format_address( $shipping_address ),
 			),
 		);
 	}

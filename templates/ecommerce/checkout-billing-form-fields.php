@@ -10,6 +10,7 @@
  */
 
 use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\Settings;
 
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
@@ -26,6 +27,10 @@ $billing_city       = $billing_info->billing_city ?? tutor_utils()->input_old( '
 
 $country_info = tutor_get_country_info_by_name( $billing_country );
 $states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : array();
+
+$required_attr = function ( $field ) {
+	return Settings::is_billing_field_required( $field ) ? 'required' : '';
+};
 ?>
 
 <div class="tutor-row <?php echo isset( $is_checkout_page ) ? 'tutor-g-0' : ''; ?>">
@@ -34,7 +39,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'First Name', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_first_name" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_first_name ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_first_name" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_first_name ); ?>" required <?php BillingController::render_pattern_attrs( 'billing_first_name' ); ?>>
 		</div>
 	</div>
 
@@ -43,7 +48,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_last_name" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_last_name ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_last_name" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_last_name ); ?>" required <?php BillingController::render_pattern_attrs( 'billing_last_name' ); ?>>
 		</div>
 	</div>
 
@@ -60,7 +65,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Country', 'tutor' ); ?>
 			</label>
-			<select name="billing_country" class="tutor-form-control" required>
+			<select name="billing_country" class="tutor-form-control" <?php echo esc_attr( $required_attr( 'billing_country' ) ); ?>>
 				<option value=""><?php esc_html_e( 'Select Country', 'tutor' ); ?></option>
 				<?php
 				$countries = array_column( tutor_get_country_list(), 'name' );
@@ -102,7 +107,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'City', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_city" placeholder="<?php esc_attr_e( 'City', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_city ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_city" placeholder="<?php esc_attr_e( 'City', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_city ); ?>" <?php echo esc_attr( $required_attr( 'billing_city' ) ); ?> <?php BillingController::render_pattern_attrs( 'billing_city' ); ?>>
 		</div>
 	</div>
 
@@ -111,7 +116,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_zip_code" placeholder="<?php esc_attr_e( 'Postcode / ZIP', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_zip_code ); ?>" <?php echo esc_attr( $required_attr( 'billing_zip_code' ) ); ?><?php BillingController::render_pattern_attrs( 'billing_zip_code' ); ?>>
 		</div>
 	</div>
 
@@ -120,7 +125,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Phone', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_phone" placeholder="<?php esc_attr_e( 'Phone', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_phone ); ?>" <?php echo esc_attr( $required_attr( 'billing_phone' ) ); ?><?php BillingController::render_pattern_attrs( 'billing_phone' ); ?>>
 		</div>
 	</div>
 
@@ -129,7 +134,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Address', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" required>
+			<input class="tutor-form-control" type="text" name="billing_address" placeholder="<?php esc_attr_e( 'Address', 'tutor' ); ?>" value="<?php echo esc_attr( $billing_address ); ?>" <?php echo esc_attr( $required_attr( 'billing_address' ) ); ?><?php BillingController::render_pattern_attrs( 'billing_address' ); ?>>
 		</div>
 	</div>
 </div>

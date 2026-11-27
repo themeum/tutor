@@ -265,13 +265,11 @@ class BillingController extends BaseController {
 			'billing_first_name' => 'required',
 			'billing_last_name'  => 'required',
 			'billing_email'      => 'required|email',
-			'billing_phone'      => 'required',
-			'billing_zip_code'   => 'required',
-			'billing_address'    => 'required',
-			'billing_country'    => 'required',
-			'billing_state'      => 'required',
-			'billing_city'       => 'required',
 		);
+
+		foreach ( array_keys( Settings::get_configurable_billing_fields() ) as $field ) {
+			$validation_rules[ $field ] = Settings::is_billing_field_required( $field ) ? 'required' : '';
+		}
 
 		// Countries without states have nothing to select.
 		if ( ! $this->model->country_has_states( wp_unslash( $data['billing_country'] ?? '' ) ) ) {
@@ -285,7 +283,16 @@ class BillingController extends BaseController {
 			}
 		}
 
-		return ValidationHelper::validate( $validation_rules, $data );
+		$validation = ValidationHelper::validate( $validation_rules, $data );
+
+		// Format checks run only on fields that passed the rules above.
+		$format_errors = array_diff_key( BillingModel::validate_field_formats( $data ), $validation->errors );
+		if ( ! empty( $format_errors ) ) {
+			$validation->errors  = array_merge( $validation->errors, $format_errors );
+			$validation->success = false;
+		}
+
+		return $validation;
 	}
 
 	/**
@@ -353,5 +360,56 @@ class BillingController extends BaseController {
 		);
 
 		return $default_values;
+	}
+
+	/**
+	 * Print HTML `pattern` and `title` attributes for a billing input.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $field Billing field name.
+	 *
+	 * @return void
+	 */
+	public static function render_pattern_attrs( string $field ): void {
+		$formats = BillingModel::get_field_formats();
+		if ( ! isset( $formats[ $field ] ) ) {
+			return;
+		}
+
+		printf(
+			' pattern="%s" title="%s"',
+			esc_attr( $formats[ $field ]['pattern'] ),
+			esc_attr( $formats[ $field ]['message'] )
+		);
+	}
+
+	/**
+	 * Build the client-side validation rules passed to the form's register() call.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $field    Billing field name.
+	 * @param bool   $required Whether the field is required.
+	 *
+	 * @return string JavaScript object literal, such as "{ required: true, pattern: {...} }".
+	 */
+	public static function get_client_rules( string $field, bool $required ): string {
+		$rules   = array();
+		$formats = BillingModel::get_field_formats();
+
+		if ( $required ) {
+			$rules[] = 'required: true';
+		}
+
+		if ( isset( $formats[ $field ] ) ) {
+			$rules[] = sprintf(
+				"pattern: { value: /^(?:%s)$/u, message: '%s' }",
+				$formats[ $field ]['pattern'],
+				esc_js( $formats[ $field ]['message'] )
+			);
+		}
+
+		return '{ ' . implode( ', ', $rules ) . ' }';
 	}
 }
