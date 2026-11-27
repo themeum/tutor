@@ -35,9 +35,6 @@ class OptionKeys {
 	const BILLING_PHONE_NUMBER = 'billing_phone_number';
 	const BILLING_EMAIL        = 'billing_email';
 
-	// Whether the billing address field is required.
-	const IS_BILLING_ADDRESS_REQUIRED = 'is_billing_address_required';
-
 	// Ecommerce Policies.
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
@@ -46,6 +43,19 @@ class OptionKeys {
 	const PAYMENT_SETTINGS   = 'payment_settings';
 
 	const BUY_NOW = 'is_enable_buy_now';
+
+	/**
+	 * Whether the billing address fields are required.
+	 *
+	 * @since 4.3.0
+	 */
+	const IS_BILLING_COUNTRY_REQUIRED  = 'is_billing_country_required';
+	const IS_BILLING_STATE_REQUIRED    = 'is_billing_state_required';
+	const IS_BILLING_CITY_REQUIRED     = 'is_billing_city_required';
+	const IS_BILLING_ZIP_CODE_REQUIRED = 'is_billing_zip_code_required';
+	const IS_BILLING_PHONE_REQUIRED    = 'is_billing_phone_required';
+	const IS_BILLING_ADDRESS_REQUIRED  = 'is_billing_address_required';
+
 
 	/**
 	 * Get billing field options
