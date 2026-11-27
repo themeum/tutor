@@ -315,7 +315,7 @@ class DB {
 		}
 
 		$prepared_table = self::prepare_table_name( trim( $table ) );
-		if ( ! self::is_valid_identifier( $prepared_table ) ) {
+		if ( ! self::is_valid_table_name( $prepared_table ) ) {
 			throw new InvalidArgumentException( 'Invalid table name.' );
 		}
 
@@ -367,6 +367,8 @@ class DB {
 	 * @since 4.2.0
 	 *
 	 * @param string|array ...$columns Column names or alias => subquery arrays.
+	 *
+	 * @throws InvalidArgumentException If an associative alias => column pair has an invalid column or alias.
 	 *
 	 * @return self
 	 */
@@ -445,6 +447,8 @@ class DB {
 	 *
 	 * @param Closure|self $subquery Subquery closure or DB instance.
 	 * @param string       $alias    Column alias.
+	 *
+	 * @throws InvalidArgumentException If alias or subquery is invalid.
 	 *
 	 * @return self
 	 */
@@ -650,7 +654,7 @@ class DB {
 		$table_name  = self::prepare_table_name( trim( $parts[0] ) );
 		$table_alias = isset( $parts[1] ) ? trim( $parts[1] ) : '';
 
-		if ( ! self::is_valid_identifier( $table_name ) ) {
+		if ( ! self::is_valid_table_name( $table_name ) ) {
 			throw new InvalidArgumentException( 'Invalid join table name.' );
 		}
 
@@ -724,20 +728,24 @@ class DB {
 			 * @param string $second   Second column.
 			 * @param string $boolean  Boolean connector (AND/OR).
 			 *
+			 * @throws InvalidArgumentException If operator or column name is invalid.
+			 *
 			 * @return self
 			 */
 			private function add_on( string $first, string $operator, string $second, string $boolean ): self {
 				$operator = strtoupper( $operator );
 				if ( ! DB::is_valid_comparison_operator( $operator ) ) {
-					throw new InvalidArgumentException( "Invalid JOIN ON operator '{$operator}'." );
+					throw new InvalidArgumentException( esc_html( "Invalid JOIN ON operator '{$operator}'." ) );
 				}
 
-				if ( DB::is_valid_column( $first ) && DB::is_valid_column( $second ) ) {
-					$this->conditions[] = array(
-						'sql'     => "{$first} {$operator} {$second}",
-						'boolean' => $boolean,
-					);
+				if ( ! DB::is_valid_column( $first ) || ! DB::is_valid_column( $second ) ) {
+					throw new InvalidArgumentException( 'Invalid column name in JOIN ON condition.' );
 				}
+
+				$this->conditions[] = array(
+					'sql'     => "{$first} {$operator} {$second}",
+					'boolean' => $boolean,
+				);
 
 				return $this;
 			}
@@ -757,7 +765,7 @@ class DB {
 	 * @param string         $operator   Comparison operator.
 	 * @param string         $second     Second column in ON condition.
 	 *
-	 * @throws InvalidArgumentException If join type or operator is invalid.
+	 * @throws InvalidArgumentException If join type, columns, or operator are invalid.
 	 *
 	 * @return self
 	 */
@@ -766,39 +774,40 @@ class DB {
 
 		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
 		if ( ! in_array( $type, $allowed_types, true ) ) {
-			throw new InvalidArgumentException( "Invalid join type '{$type}'." );
+			throw new InvalidArgumentException( esc_html( "Invalid join type '{$type}'." ) );
 		}
 
 		if ( $first instanceof Closure ) {
 			$collector = self::create_join_collector();
 			$first( $collector );
 
-			if ( ! empty( $collector->conditions ) ) {
-				$on_parts = '';
-				foreach ( $collector->conditions as $index => $condition ) {
-					if ( 0 === $index ) {
-						$on_parts .= $condition['sql'];
-					} else {
-						$on_parts .= " {$condition['boolean']} {$condition['sql']}";
-					}
-				}
-				$this->joins[] = "{$type} JOIN {$table_expr} ON {$on_parts}";
+			if ( empty( $collector->conditions ) ) {
+				throw new InvalidArgumentException( 'JOIN closure must add at least one ON condition.' );
 			}
+
+			$on_parts = '';
+			foreach ( $collector->conditions as $index => $condition ) {
+				if ( 0 === $index ) {
+					$on_parts .= $condition['sql'];
+				} else {
+					$on_parts .= " {$condition['boolean']} {$condition['sql']}";
+				}
+			}
+			$this->joins[] = "{$type} JOIN {$table_expr} ON {$on_parts}";
 
 			return $this;
 		}
 
 		$operator = strtoupper( $operator );
 		if ( ! self::is_valid_comparison_operator( $operator ) ) {
-			throw new InvalidArgumentException( "Invalid JOIN operator '{$operator}'." );
+			throw new InvalidArgumentException( esc_html( "Invalid JOIN operator '{$operator}'." ) );
 		}
 
-		if ( is_string( $first )
-			&& self::is_valid_column( $first )
-			&& self::is_valid_column( $second )
-		) {
-			$this->joins[] = "{$type} JOIN {$table_expr} ON {$first} {$operator} {$second}";
+		if ( ! is_string( $first ) || ! self::is_valid_column( $first ) || ! self::is_valid_column( $second ) ) {
+			throw new InvalidArgumentException( 'Invalid column name in JOIN condition.' );
 		}
+
+		$this->joins[] = "{$type} JOIN {$table_expr} ON {$first} {$operator} {$second}";
 
 		return $this;
 	}
@@ -823,7 +832,7 @@ class DB {
 		$type          = strtoupper( $type );
 		$allowed_types = array( 'INNER', 'LEFT', 'RIGHT', 'CROSS' );
 		if ( ! in_array( $type, $allowed_types, true ) ) {
-			throw new InvalidArgumentException( "Invalid join type '{$type}'." );
+			throw new InvalidArgumentException( esc_html( "Invalid join type '{$type}'." ) );
 		}
 
 		if ( ! self::is_valid_identifier( $alias ) ) {
@@ -1966,39 +1975,39 @@ class DB {
 		$saved_wheres = $this->wheres;
 		$this->wheres = array();
 
-		foreach ( $conditions as $key => $val ) {
-			if ( is_string( $key ) ) {
-				if ( is_array( $val ) ) {
-					$this->add_where_in( $key, $val, 'IN', 'AND' );
-				} else {
-					// Associative array: column => value.
-					$this->add_where( $key, $val, null, 'AND', true );
-				}
-			} elseif ( is_array( $val ) ) {
-				// Numeric array: ['col', 'val'] or ['col', 'op', 'val'].
-				$items = array_values( $val );
-				$count = count( $items );
-
-				if ( 2 === $count && is_string( $items[0] ) ) {
-					if ( is_array( $items[1] ) ) {
-						$this->add_where_in( $items[0], $items[1], 'IN', 'AND' );
+		try {
+			foreach ( $conditions as $key => $val ) {
+				if ( is_string( $key ) ) {
+					if ( is_array( $val ) ) {
+						$this->add_where_in( $key, $val, 'IN', 'AND' );
 					} else {
-						$this->add_where( $items[0], $items[1], null, 'AND', true );
+						// Associative array: column => value.
+						$this->add_where( $key, $val, null, 'AND', true );
 					}
-				} elseif ( 3 === $count && is_string( $items[0] ) ) {
-					$this->add_where( $items[0], $items[1], $items[2], 'AND', false );
-				} else {
-					$this->wheres = $saved_wheres;
-					throw new InvalidArgumentException( 'Invalid condition tuple in where() array.' );
-				}
-			} else {
-				$this->wheres = $saved_wheres;
-				throw new InvalidArgumentException( 'Invalid condition format in where() array.' );
-			}
-		}
+				} elseif ( is_array( $val ) ) {
+					// Numeric array: ['col', 'val'] or ['col', 'op', 'val'].
+					$items = array_values( $val );
+					$count = count( $items );
 
-		$group_wheres = $this->wheres;
-		$this->wheres = $saved_wheres;
+					if ( 2 === $count && is_string( $items[0] ) ) {
+						if ( is_array( $items[1] ) ) {
+							$this->add_where_in( $items[0], $items[1], 'IN', 'AND' );
+						} else {
+							$this->add_where( $items[0], $items[1], null, 'AND', true );
+						}
+					} elseif ( 3 === $count && is_string( $items[0] ) ) {
+						$this->add_where( $items[0], $items[1], $items[2], 'AND', false );
+					} else {
+						throw new InvalidArgumentException( 'Invalid condition tuple in where() array.' );
+					}
+				} else {
+					throw new InvalidArgumentException( 'Invalid condition format in where() array.' );
+				}
+			}
+		} finally {
+			$group_wheres = $this->wheres;
+			$this->wheres = $saved_wheres;
+		}
 
 		if ( empty( $group_wheres ) ) {
 			return $this;
@@ -2157,7 +2166,7 @@ class DB {
 		if ( $value instanceof Closure || $value instanceof self ) {
 			$allowed_subquery_ops = array_merge( self::$comparison_operators, array( 'IN', 'NOT IN' ) );
 			if ( ! in_array( $operator, $allowed_subquery_ops, true ) ) {
-				throw new InvalidArgumentException( "Invalid operator '{$operator}' for subquery comparison." );
+				throw new InvalidArgumentException( esc_html( "Invalid operator '{$operator}' for subquery comparison." ) );
 			}
 
 			$allow_limit    = ! in_array( $operator, array( 'IN', 'NOT IN' ), true );
@@ -2186,7 +2195,7 @@ class DB {
 		}
 
 		if ( ! self::is_valid_operator( $operator ) ) {
-			throw new InvalidArgumentException( "Invalid operator '{$operator}'." );
+			throw new InvalidArgumentException( esc_html( "Invalid operator '{$operator}'." ) );
 		}
 
 		$prepared_value = self::prepare_value( $value );
@@ -2228,8 +2237,17 @@ class DB {
 			return $this;
 		}
 
-		if ( ! is_array( $values ) || empty( $values ) ) {
-			throw new InvalidArgumentException( 'where_in() values must be a non-empty array or subquery.' );
+		if ( ! is_array( $values ) ) {
+			throw new InvalidArgumentException( 'where_in() values must be an array or subquery.' );
+		}
+
+		if ( empty( $values ) ) {
+			$this->wheres[] = array(
+				'sql'     => 'IN' === $type ? '0 = 1' : '1 = 1',
+				'boolean' => $boolean,
+			);
+
+			return $this;
 		}
 
 		$escaped_values = self::prepare_in_clause( $values );
@@ -2625,7 +2643,7 @@ class DB {
 	 * @return bool True if valid.
 	 */
 	public static function is_valid_column( string $column ): bool {
-		return (bool) preg_match( '/^[A-Za-z_*][A-Za-z0-9_.*]*$/', $column );
+		return (bool) preg_match( '/^(?:[A-Za-z0-9_]+\.)?[A-Za-z_*][A-Za-z0-9_.*]*$/', $column );
 	}
 
 	/**
@@ -2639,6 +2657,19 @@ class DB {
 	 */
 	public static function is_valid_identifier( string $identifier ): bool {
 		return (bool) preg_match( '/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier );
+	}
+
+	/**
+	 * Validate a SQL table name (allows leading digits for numeric WP table prefixes).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $table Table name to validate.
+	 *
+	 * @return bool True if valid.
+	 */
+	public static function is_valid_table_name( string $table ): bool {
+		return (bool) preg_match( '/^[A-Za-z0-9_]+$/', $table );
 	}
 
 	/**
@@ -2928,7 +2959,7 @@ class DB {
 
 		// Check prefixed table name first.
 		$prefixed = self::prepare_table_name( $table );
-		if ( self::is_valid_identifier( $prefixed ) && self::table_exists_in_db( $prefixed ) ) {
+		if ( self::is_valid_table_name( $prefixed ) && self::table_exists_in_db( $prefixed ) ) {
 			return $prefixed;
 		}
 

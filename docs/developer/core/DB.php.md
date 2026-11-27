@@ -180,6 +180,7 @@ class DB {
     public static function parse_column_alias( string $expression ): ?string;
     public static function is_valid_column( string $column ): bool;
     public static function is_valid_identifier( string $identifier ): bool;
+    public static function is_valid_table_name( string $table ): bool;
     public static function is_valid_operator( string $operator ): bool;
 }
 ```
@@ -371,7 +372,7 @@ DB::table('tutor_orders')
 ```
 
 > [!NOTE]
-> All column names, table names, and aliases are strictly validated (`is_valid_column`, `is_valid_identifier`), comparison operators are checked against whitelisted operators (`is_valid_operator`), and values are safely bound via `$wpdb->prepare()`. Invalid formats, operators, or empty subqueries throw `\InvalidArgumentException` (fail-closed). Empty arrays `where([])` produce no WHERE clause.
+> All column names, table names, and aliases are strictly validated (`is_valid_column`, `is_valid_table_name`, `is_valid_identifier`), comparison operators are checked against whitelisted operators (`is_valid_operator`), and values are safely bound via `$wpdb->prepare()`. Invalid formats, operators, or empty subqueries throw `\InvalidArgumentException` (fail-closed). Empty arrays `where([])` produce no WHERE clause, while empty `where_in(col, [])` / `where_not_in(col, [])` emit `0 = 1` / `1 = 1`.
 
 ### 3. Subqueries & Column Comparisons
 Subqueries accept either a `Closure` (receiving a fresh `DB` instance) or an existing `DB` instance (note: `DB` instances are compiled eagerly when added to the outer query).

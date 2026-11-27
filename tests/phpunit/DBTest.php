@@ -942,26 +942,22 @@ class DBTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test that invalid ON conditions within a join closure are safely ignored.
+	 * Test that invalid ON conditions within a join closure throw InvalidArgumentException.
 	 *
 	 * @return void
 	 */
 	public function test_join_closure_invalid_conditions_rejected() {
-		global $wpdb;
-
-		$prefix = $wpdb->prefix;
-		$sql    = DB::table( 'users' )
-			->join(
-				'contacts',
-				function ( $join ) {
-					$join->on( 'users.id', '=', 'contacts.user_id' )
-						->on( '1=1; DROP TABLE users; --', '=', 'contacts.status' );
-				}
-			)
-			->to_sql();
-
-		$expected = "SELECT * FROM {$prefix}users INNER JOIN {$prefix}contacts ON users.id = contacts.user_id";
-		$this->assertSame( $expected, $sql );
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'users' )->join(
+					'contacts',
+					function ( $join ) {
+						$join->on( 'users.id', '=', 'contacts.user_id' )
+							->on( '1=1; DROP TABLE users; --', '=', 'contacts.status' );
+					}
+				);
+			}
+		);
 	}
 
 	/**
@@ -2089,10 +2085,13 @@ class DBTest extends \WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_subquery_empty_and_invalid_inputs() {
+		global $wpdb;
+
+		$prefix        = $wpdb->prefix;
 		$empty_closure = function ( $q ) {
 			// Intentionally left empty.
 		};
-		$empty_db = new DB();
+		$empty_db      = new DB();
 
 		// Empty closure and uninitialized DB instance should throw (fail closed).
 		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_in( 'id', $empty_closure ) );
@@ -2101,7 +2100,16 @@ class DBTest extends \WP_UnitTestCase {
 		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_not_exists( $empty_db ) );
 		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->select_sub( $empty_closure, 'empty_col' ) );
 		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join_sub( $empty_closure, 's', 'users.id', '=', 's.id' ) );
-		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_in( 'id', array() ) );
+
+		// Empty IN / NOT IN arrays fail closed without throwing (0 = 1 / 1 = 1).
+		$this->assertSame(
+			"SELECT * FROM {$prefix}users WHERE 0 = 1",
+			DB::table( 'users' )->where_in( 'id', array() )->to_sql()
+		);
+		$this->assertSame(
+			"SELECT * FROM {$prefix}users WHERE 1 = 1",
+			DB::table( 'users' )->where_not_in( 'id', array() )->to_sql()
+		);
 
 		// Non-Closure / non-DB values passed to subquery methods should throw.
 		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->where_exists( 'SELECT 1' ) );
@@ -2458,5 +2466,44 @@ class DBTest extends \WP_UnitTestCase {
 			"SELECT * FROM {$prefix}users WHERE ID IN (SELECT post_author FROM {$prefix}posts WHERE post_title = '%s') AND user_login = 'admin'",
 			$sql
 		);
+
+		// Invalid JOIN columns (4-arg and empty closure) throw.
+		$this->assert_throws_invalid_argument( fn() => DB::table( 'users' )->join( 'posts', 'users.ID', '=', 'posts.post_author; DROP' ) );
+		$this->assert_throws_invalid_argument(
+			function () {
+				DB::table( 'users' )->join(
+					'posts',
+					function ( $j ) {
+						// No ON conditions added.
+					}
+				);
+			}
+		);
+
+		// add_array_where() preserves existing WHERE conditions when throwing mid-array.
+		$q = DB::table( 'posts' )->where( 'post_author', 5 );
+		try {
+			$q->where(
+				array(
+					'ID'      => 1,
+					'bad col' => 2,
+				)
+			);
+			$this->fail( 'Expected InvalidArgumentException was not thrown.' );
+		} catch ( \InvalidArgumentException $e ) {
+			$this->assertSame( "SELECT * FROM {$prefix}posts WHERE post_author = 5", $q->to_sql() );
+		}
+
+		// Table prefix starting with a digit (e.g. '2fa_') is valid in table()/from()/join().
+		$orig_prefix  = $wpdb->prefix;
+		$wpdb->prefix = '2fa_';
+		try {
+			$sql = DB::table( 'users' )
+				->join( 'posts', '2fa_users.ID', '=', '2fa_posts.post_author' )
+				->to_sql();
+			$this->assertSame( 'SELECT * FROM 2fa_users INNER JOIN 2fa_posts ON 2fa_users.ID = 2fa_posts.post_author', $sql );
+		} finally {
+			$wpdb->prefix = $orig_prefix;
+		}
 	}
 }
