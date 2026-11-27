@@ -40,8 +40,6 @@ class Registrar {
 	const OPTION_ENABLED_TOOLS     = 'tutor_mcp_enabled_tools';
 	const OPTION_INSTRUCTOR_ACCESS = 'tutor_mcp_instructor_access';
 	const SERVER_ID                = 'tutor-mcp';
-	const AGENT_USER               = 'tutor-mcp-agent';
-	const ROLE                     = 'tutor_mcp_agent';
 	const ADAPTER_PLUGIN_FILE      = 'mcp-adapter/mcp-adapter.php';
 	const ADAPTER_GITHUB_URL       = 'https://github.com/WordPress/mcp-adapter';
 

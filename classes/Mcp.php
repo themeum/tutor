@@ -12,7 +12,6 @@ namespace TUTOR;
 
 use Tutor\Core\Input;
 use Tutor\Helpers\HttpHelper;
-use Tutor\Mcp\Agent;
 use Tutor\Mcp\Registrar;
 use Tutor\Traits\JsonResponse;
 
@@ -36,7 +35,6 @@ class Mcp {
 		( new Registrar() )->hooks();
 		add_action( 'wp_ajax_tutor_mcp_save_settings', array( $this, 'ajax_save_settings' ) );
 		add_action( 'admin_init', array( $this, 'guard_tools_page' ) );
-		add_action( 'init', array( $this, 'maybe_bootstrap_role' ), 5 );
 		// Outermost tools filter, late — keep MCP hidden even if other filters re-add it.
 		add_filter( 'tutor/tools/extend/attr', array( $this, 'filter_tools_pages' ), 999 );
 		add_filter( 'pre_update_option', array( $this, 'protect_option_update' ), 10, 3 );
@@ -56,19 +54,6 @@ class Mcp {
 			Registrar::OPTION_ENABLED_TOOLS,
 			Registrar::OPTION_INSTRUCTOR_ACCESS,
 		);
-	}
-
-	/**
-	 * Create agent role when MCP is on.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return void
-	 */
-	public function maybe_bootstrap_role() {
-		if ( Registrar::is_enabled() ) {
-			Agent::ensure_agent_user();
-		}
 	}
 
 	/**
@@ -192,10 +177,6 @@ class Mcp {
 		update_option( Registrar::OPTION_READ_ONLY, $read_only ? 1 : 0, false );
 		update_option( Registrar::OPTION_INSTRUCTOR_ACCESS, $instructor_access ? 1 : 0, false );
 		update_option( Registrar::OPTION_ENABLED_TOOLS, $tools, false );
-
-		if ( $enabled ) {
-			Agent::ensure_agent_user();
-		}
 
 		$this->json_response(
 			__( 'MCP settings saved.', 'tutor' ),
