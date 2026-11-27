@@ -292,7 +292,7 @@ $filters = array(
 											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 												<i class="tutor-icon-circle-info tutor-color-muted" aria-hidden="true"></i>
 											</span>
-											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt <?php echo esc_attr( is_rtl() ? 'tooltip-right' : 'tooltip-left' ); ?>">
+											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
 												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
 													<span>
 													<?php
