@@ -111,20 +111,20 @@ $arrow: 5px;
 	}
 
 	.tooltip-right {
-		left: calc(100% + 8px);
+		inset-inline-start: calc(100% + 8px);
 
 		&::after {
-			right: 100%;
-			border-right-color: var(--tutor-body-color);
+			inset-inline-end: 100%;
+			border-inline-end-color: var(--tutor-body-color);
 		}
 	}
 
 	.tooltip-left {
-		right: calc(100% + 8px);
+		inset-inline-end: calc(100% + 8px);
 
 		&::after {
-			left: 100%;
-			border-left-color: var(--tutor-body-color);
+			inset-inline-start: 100%;
+			border-inline-start-color: var(--tutor-body-color);
 		}
 	}
 }

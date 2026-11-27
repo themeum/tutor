@@ -2290,7 +2290,7 @@ class RestAuth {
 				<?php if ( ! empty( $description ) ) : ?>
 				<div class="tooltip-wrap tooltip-icon-custom" >
 					<i class="tutor-fs-7 tutor-icon-circle-info-o tutor-color-muted tutor-ml-4"></i>
-					<span class="tooltip-txt tooltip-top">
+					<span class="tooltip-txt tooltip-bottom">
 						<?php echo esc_textarea( $description ); ?>
 					</span>
 				</div>
