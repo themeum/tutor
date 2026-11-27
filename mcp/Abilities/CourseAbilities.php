@@ -10,6 +10,7 @@
 
 namespace Tutor\Mcp\Abilities;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
@@ -61,7 +62,7 @@ class CourseAbilities {
 			'tutor-mcp/search-courses',
 			'tutor-mcp-courses',
 			__( 'Search Courses', 'tutor' ),
-			__( 'Paginated course list. Supports status, search term, author filters.', 'tutor' ),
+			__( 'Paginated course list. Supports status, search, author, orderby, and comma-separated category/tag names.', 'tutor' ),
 			array(
 				'type'       => 'object',
 				'properties' => array(
@@ -85,10 +86,22 @@ class CourseAbilities {
 						'type'    => 'integer',
 						'minimum' => 1,
 					),
-					'order'      => array( 'type' => 'string' ),
-					'orderby'    => array( 'type' => 'string' ),
-					'categories' => array( 'type' => 'string' ),
-					'tags'       => array( 'type' => 'string' ),
+					'order'      => array(
+						'type' => 'string',
+						'enum' => array( 'ASC', 'DESC', 'asc', 'desc' ),
+					),
+					'orderby'    => array(
+						'type' => 'string',
+						'enum' => array( 'title', 'date', 'modified', 'ID', 'name', 'author', 'menu_order' ),
+					),
+					'categories' => array(
+						'type'        => 'string',
+						'description' => __( 'Comma-separated course category names.', 'tutor' ),
+					),
+					'tags'       => array(
+						'type'        => 'string',
+						'description' => __( 'Comma-separated course tag names.', 'tutor' ),
+					),
 				),
 			),
 			static function (): bool {
@@ -264,10 +277,11 @@ class CourseAbilities {
 	}
 
 	/**
-	 * Search courses with status/search/author support.
+	 * Search courses with status/search/author/taxonomy support.
 	 *
 	 * Admins: all courses. Instructors: own/co-instructed courses only
-	 * (CourseModel::get_courses_by_instructor — same as My Courses dashboard).
+	 * (scoped via CourseModel::get_courses_by_instructor IDs), then filtered
+	 * with the same WP_Query args as admins so author/orderby/categories/tags apply.
 	 *
 	 * @since 4.3.0
 	 *
@@ -278,60 +292,18 @@ class CourseAbilities {
 		$bounds   = Pagination::bounds( $input );
 		$status   = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
 		$search   = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
-		$order    = sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) );
+		$order    = QueryHelper::get_valid_sort_order( (string) ( $input['order'] ?? 'DESC' ) );
+		$orderby  = $this->sanitize_search_orderby( $input['orderby'] ?? 'date' );
 		$statuses = 'any' === $status
 			? array( 'publish', 'draft', 'pending', 'private', 'trash' )
 			: array( $status );
-
-		if ( ! User::is_admin() ) {
-			$instructor_id = get_current_user_id();
-			$courses       = CourseModel::get_courses_by_instructor(
-				$instructor_id,
-				$statuses,
-				$bounds['offset'],
-				$bounds['per_page'],
-				false,
-				array(),
-				$search,
-				$order
-			);
-			$total         = (int) CourseModel::get_courses_by_instructor(
-				$instructor_id,
-				$statuses,
-				0,
-				0,
-				true,
-				array(),
-				$search,
-				$order
-			);
-
-			$posts = array();
-			if ( is_array( $courses ) ) {
-				foreach ( $courses as $post ) {
-					$posts[] = array(
-						'ID'          => (int) $post->ID,
-						'post_title'  => $post->post_title,
-						'post_status' => $post->post_status,
-						'post_date'   => $post->post_date,
-						'post_author' => (int) $post->post_author,
-					);
-				}
-			}
-
-			return array(
-				'posts'        => $posts,
-				'total_course' => $total,
-				'total_page'   => (int) ceil( $total / max( 1, $bounds['per_page'] ) ),
-			);
-		}
 
 		$args = array(
 			'post_type'      => tutor()->course_post_type,
 			'post_status'    => $statuses,
 			'posts_per_page' => $bounds['per_page'],
 			'paged'          => $bounds['page'],
-			'orderby'        => sanitize_text_field( (string) ( $input['orderby'] ?? 'date' ) ),
+			'orderby'        => $orderby,
 			'order'          => $order,
 		);
 
@@ -340,6 +312,23 @@ class CourseAbilities {
 		}
 		if ( ! empty( $input['author'] ) ) {
 			$args['author'] = absint( $input['author'] );
+		}
+
+		$tax_query = $this->build_search_tax_query( $input );
+		if ( ! empty( $tax_query ) ) {
+			$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Intentional taxonomy filter for course search.
+		}
+
+		if ( ! User::is_admin() ) {
+			$scoped_ids = $this->get_instructor_scoped_course_ids( get_current_user_id(), $statuses );
+			if ( empty( $scoped_ids ) ) {
+				return array(
+					'posts'        => array(),
+					'total_course' => 0,
+					'total_page'   => 0,
+				);
+			}
+			$args['post__in'] = $scoped_ids;
 		}
 
 		$query = new \WP_Query( $args );
@@ -359,6 +348,121 @@ class CourseAbilities {
 			'total_course' => (int) $query->found_posts,
 			'total_page'   => (int) $query->max_num_pages,
 		);
+	}
+
+	/**
+	 * Whitelist WP_Query orderby for MCP course search.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param mixed $orderby Raw orderby value.
+	 * @return string
+	 */
+	private function sanitize_search_orderby( $orderby ): string {
+		$orderby = sanitize_text_field( (string) $orderby );
+		$allowed = array( 'title', 'date', 'modified', 'ID', 'name', 'author', 'menu_order' );
+
+		if ( in_array( $orderby, $allowed, true ) ) {
+			return $orderby;
+		}
+
+		return 'date';
+	}
+
+	/**
+	 * Build tax_query from comma-separated category/tag names.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param array $input Ability input.
+	 * @return array
+	 */
+	private function build_search_tax_query( array $input ): array {
+		$categories = $this->parse_term_names( $input['categories'] ?? '' );
+		$tags       = $this->parse_term_names( $input['tags'] ?? '' );
+		$tax_query  = array();
+
+		if ( ! empty( $categories ) ) {
+			$tax_query[] = array(
+				'taxonomy' => CourseModel::COURSE_CATEGORY,
+				'field'    => 'name',
+				'terms'    => $categories,
+			);
+		}
+
+		if ( ! empty( $tags ) ) {
+			$tax_query[] = array(
+				'taxonomy' => CourseModel::COURSE_TAG,
+				'field'    => 'name',
+				'terms'    => $tags,
+			);
+		}
+
+		if ( count( $tax_query ) > 1 ) {
+			$tax_query['relation'] = 'OR';
+		}
+
+		return $tax_query;
+	}
+
+	/**
+	 * Parse comma-separated taxonomy term names.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param mixed $raw Raw input value.
+	 * @return array<int, string>
+	 */
+	private function parse_term_names( $raw ): array {
+		if ( ! is_string( $raw ) || '' === trim( $raw ) ) {
+			return array();
+		}
+
+		$parts = array_map( 'trim', explode( ',', $raw ) );
+		$names = array();
+		foreach ( $parts as $part ) {
+			$name = sanitize_text_field( $part );
+			if ( '' !== $name ) {
+				$names[] = $name;
+			}
+		}
+
+		return array_values( array_unique( $names ) );
+	}
+
+	/**
+	 * Course IDs an instructor owns or co-instructs (My Courses scope).
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int          $instructor_id Instructor user ID.
+	 * @param array|string $statuses      Post statuses.
+	 * @return array<int, int>
+	 */
+	private function get_instructor_scoped_course_ids( int $instructor_id, $statuses ): array {
+		$courses = CourseModel::get_courses_by_instructor(
+			$instructor_id,
+			$statuses,
+			0,
+			PHP_INT_MAX,
+			false,
+			array(),
+			'',
+			'DESC'
+		);
+
+		if ( ! is_array( $courses ) || empty( $courses ) ) {
+			return array();
+		}
+
+		$ids = array();
+		foreach ( $courses as $course ) {
+			if ( isset( $course->ID ) ) {
+				$ids[] = (int) $course->ID;
+			}
+		}
+
+		return array_values( array_unique( array_filter( $ids ) ) );
 	}
 
 	/**
