@@ -65,9 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const summaryEl = root.querySelector('[data-mcp-abilities-summary]');
 		if (summaryEl && total > 0) {
-			summaryEl.textContent = __('Abilities (%1$d/%2$d)', 'tutor')
-				.replace('%1$d', String(totalOn))
-				.replace('%2$d', String(total));
+			summaryEl.textContent = `(${totalOn}/${total})`;
 		}
 	};
 

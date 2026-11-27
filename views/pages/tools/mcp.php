@@ -67,9 +67,31 @@ $overview_url  = add_query_arg(
 >
 	<form method="post" id="tutor-mcp-form">
 		<div class="tutor-option-main-title">
-			<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
-				<?php echo 'abilities' === $mcp_view ? esc_html__( 'Abilities', 'tutor' ) : esc_html__( 'MCP', 'tutor' ); ?>
-			</div>
+			<?php if ( 'abilities' === $mcp_view ) : ?>
+				<div class="tutor-d-flex tutor-align-center tutor-gap-12px">
+					<a
+						class="tutor-btn tutor-btn-outline tutor-btn-sm tutor-btn-icon tutor-mcp-abilities-back"
+						href="<?php echo esc_url( $overview_url ); ?>"
+						aria-label="<?php esc_attr_e( 'Back', 'tutor' ); ?>"
+					>
+						<span class="tutor-icon-angle-left" aria-hidden="true"></span>
+					</a>
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-center tutor-gap-12px">
+						<?php esc_html_e( 'Abilities', 'tutor' ); ?>
+						<span class="tutor-fw-normal tutor-color-hints" data-mcp-abilities-summary>
+							(<?php echo esc_html( (string) $abilities_on ); ?>/<?php echo esc_html( (string) $abilities_total ); ?>)
+						</span>
+					</div>
+				</div>
+				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" data-mcp-reset-default>
+					<span class="tutor-icon-refresh tutor-mr-8" aria-hidden="true"></span>
+					<?php esc_html_e( 'Reset to default', 'tutor' ); ?>
+				</button>
+			<?php else : ?>
+				<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
+					<?php esc_html_e( 'MCP', 'tutor' ); ?>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<?php if ( ! Registrar::has_abilities_api() ) : ?>

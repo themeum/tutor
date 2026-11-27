@@ -71,6 +71,39 @@
 	}
 }
 
+.tutor-mcp-abilities-back.tutor-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: 32px;
+	height: 32px;
+	min-width: 32px;
+	min-height: 32px;
+	border-radius: 6px;
+	border: 1px solid #ECECED;
+	background-color: var(--tutor-color-white);
+
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'] {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 4px;
+		height: 8px;
+		margin: 0;
+		color: #333741;
+	}
+
+	&:hover:not(:disabled):not(.disabled),
+	&:focus:not(:disabled):not(.disabled) {
+		color: var(--tutor-color-primary);
+		background-color: var(--tutor-color-white);
+		--tutor-button-border-shadow: 0 0 0 1px #DCDFE5;
+	}
+}
+
 .tutor-mcp-config {
 	// Hidden siblings still count as :last-child, so clear dividers when MCP is off.
 	&:has([data-mcp-enable]:not(:checked)) .tutor-mcp-config-row {

@@ -16,9 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Variables expected from parent mcp.php:
  *
- * @var string   $overview_url
- * @var int      $abilities_on
- * @var int      $abilities_total
  * @var bool     $enabled
  * @var bool     $read_only
  * @var bool     $instructor_access
@@ -26,28 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var string[] $enabled_tools
  */
 ?>
-<div class="tutor-mb-24 tutor-d-flex tutor-align-center tutor-justify-between tutor-flex-wrap tutor-gap-2">
-	<div>
-		<a class="tutor-btn tutor-btn-ghost tutor-btn-sm" href="<?php echo esc_url( $overview_url ); ?>">
-			<span class="tutor-icon-angle-left tutor-mr-8" aria-hidden="true"></span>
-			<span data-mcp-abilities-summary>
-				<?php
-				printf(
-					/* translators: 1: enabled ability count, 2: total abilities */
-					esc_html__( 'Abilities (%1$d/%2$d)', 'tutor' ),
-					(int) $abilities_on,
-					(int) $abilities_total
-				);
-				?>
-			</span>
-		</a>
-	</div>
-	<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-sm" data-mcp-reset-default>
-		<span class="tutor-icon-refresh tutor-mr-8" aria-hidden="true"></span>
-		<?php esc_html_e( 'Reset to default', 'tutor' ); ?>
-	</button>
-</div>
-
 <?php if ( ! $enabled ) : ?>
 	<div class="tutor-alert tutor-primary tutor-mb-24">
 		<div class="tutor-alert-text">
