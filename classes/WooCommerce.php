@@ -30,6 +30,8 @@ class WooCommerce extends Tutor_Base {
 	const WC_STORE_API_DRAFT_ORDER     = 'store_api_draft_order';
 	const TUTOR_COURSE_PRODUCT_ID_META = '_tutor_course_product_id';
 
+	const RECEIPT_QUERY_PARAM = 'tutor-wc-receipt';
+
 	/**
 	 * Register hooks
 	 *
@@ -135,6 +137,9 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'tutor_order_history_card_template', fn( $template ) => tutor_get_template( 'dashboard.account.billing.wc-order-history-card' ) );
 		add_filter( 'tutor_order_history_status_options', array( $this, 'filter_order_history_status_options' ), 10, 2 );
 		add_filter( 'tutor_get_orders_by_user_id', array( $this, 'filter_tutor_get_orders_by_user_id' ), 10, 3 );
+		add_filter( 'template_include', array( $this, 'load_wc_receipt_template' ), PHP_INT_MAX );
+		add_filter( 'tutor_is_dashboard_page', array( $this, 'filter_is_dashboard_page_for_receipt' ) );
+		add_filter( 'tutor_should_load_legacy_scripts', array( $this, 'filter_should_load_legacy_scripts_for_receipt' ) );
 	}
 
 	/**
@@ -1219,5 +1224,508 @@ class WooCommerce extends Tutor_Base {
 		$data->total_count = $total_count;
 
 		return $data;
+	}
+
+	/**
+	 * Get allowed WooCommerce order statuses eligible for a receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	public static function get_receipt_allowed_statuses( \WC_Order $order ): array {
+		$statuses = apply_filters( 'tutor_wc_receipt_allowed_statuses', array( 'completed' ), $order );
+		if ( ! is_array( $statuses ) ) {
+			return array( 'completed' );
+		}
+
+		return array_values( array_filter( array_map( 'strval', $statuses ) ) );
+	}
+
+	/**
+	 * Determine whether a WooCommerce order is eligible for a receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return bool
+	 */
+	public static function is_receipt_available( \WC_Order $order ): bool {
+		return in_array( $order->get_status(), self::get_receipt_allowed_statuses( $order ), true );
+	}
+
+	/**
+	 * Build the URL for the standalone WooCommerce receipt page.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $order_id WooCommerce order ID.
+	 *
+	 * @return string
+	 */
+	public static function get_receipt_url( int $order_id ): string {
+		$params = array(
+			'dashboard-page'          => Dashboard::BILLING_PAGE_SLUG,
+			self::RECEIPT_QUERY_PARAM => $order_id,
+		);
+
+		$receipt_url = UrlHelper::add_query_params( home_url( '/' ), $params );
+
+		return (string) apply_filters( 'tutor_wc_receipt_url', $receipt_url, $order_id );
+	}
+
+	/**
+	 * Check whether the current request targets the WooCommerce receipt page.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return bool
+	 */
+	public static function is_receipt_page(): bool {
+		return (bool) Input::get( self::RECEIPT_QUERY_PARAM, 0, Input::TYPE_INT );
+	}
+
+	/**
+	 * Mark receipt requests as dashboard pages so Tutor enqueues dashboard assets.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param bool $is_dashboard Whether the current page is the Tutor dashboard.
+	 *
+	 * @return bool
+	 */
+	public function filter_is_dashboard_page_for_receipt( bool $is_dashboard ): bool {
+		return self::is_receipt_page() ? true : $is_dashboard;
+	}
+
+	/**
+	 * Disable legacy scripts when rendering the WooCommerce receipt page.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param bool $load Whether legacy scripts should load.
+	 *
+	 * @return bool
+	 */
+	public function filter_should_load_legacy_scripts_for_receipt( bool $load ): bool {
+		return self::is_receipt_page() ? false : $load;
+	}
+
+	/**
+	 * Validate access and load the WooCommerce receipt template when requested.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $template Resolved template path.
+	 *
+	 * @return string
+	 */
+	public function load_wc_receipt_template( string $template ): string {
+		if ( ! self::is_receipt_page() || ! tutor_utils()->has_wc() ) {
+			return $template;
+		}
+
+		$receipt_template = tutor_get_template( 'dashboard.account.billing.wc-receipt' );
+		if ( ! is_string( $receipt_template ) || ! file_exists( $receipt_template ) ) {
+			return $template;
+		}
+
+		if ( function_exists( 'wc_maybe_define_constant' ) ) {
+			wc_maybe_define_constant( 'DONOTCACHEPAGE', true );
+		}
+
+		nocache_headers();
+		if ( ! headers_sent() ) {
+			header( 'X-Robots-Tag: noindex, nofollow, noarchive', true );
+		}
+
+		$order_id = Input::get( self::RECEIPT_QUERY_PARAM, 0, Input::TYPE_INT );
+		$order    = self::validate_receipt_access( $order_id );
+
+		if ( is_wp_error( $order ) ) {
+			$error_data = $order->get_error_data();
+			$status     = is_array( $error_data ) && isset( $error_data['status'] )
+				? absint( $error_data['status'] )
+				: 403;
+
+			wp_die(
+				esc_html( $order->get_error_message() ),
+				esc_html( get_status_header_desc( $status ) ),
+				array( 'response' => absint( $status ) )
+			);
+		}
+
+		status_header( 200 );
+		Dashboard::set_document_title(
+			sprintf(
+				/* translators: 1: order number, 2: site name. */
+				__( 'Order Receipt #%1$s - %2$s', 'tutor' ),
+				(string) $order->get_order_number(),
+				(string) get_bloginfo( 'name' )
+			)
+		);
+
+		set_query_var( 'tutor_wc_receipt_order', $order );
+		set_query_var( 'tutor_wc_receipt_data', self::build_receipt_data( $order ) );
+
+		return $receipt_template;
+	}
+
+	/**
+	 * Validate authentication, ownership, and order eligibility for receipt access.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $order_id WooCommerce order ID.
+	 *
+	 * @return \WC_Order|\WP_Error Validated order object or WP_Error with HTTP status.
+	 */
+	public static function validate_receipt_access( int $order_id ) {
+		if ( ! is_user_logged_in() ) {
+			return new \WP_Error(
+				'tutor_wc_receipt_unauthorized',
+				__( 'You must be logged in to view this receipt.', 'tutor' ),
+				array( 'status' => 401 )
+			);
+		}
+
+		$order = $order_id && function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : false;
+		if ( ! ( $order instanceof \WC_Order ) || ( $order instanceof \WC_Order_Refund ) ) {
+			return new \WP_Error(
+				'tutor_wc_receipt_not_found',
+				__( 'Order not found.', 'tutor' ),
+				array( 'status' => 404 )
+			);
+		}
+
+		$current_user_id = get_current_user_id();
+		$is_owner        = $current_user_id && (int) $order->get_customer_id() === $current_user_id;
+		$is_admin        = User::can( 'manage_options' ) || User::can( 'manage_woocommerce' );
+
+		if ( ! $is_owner && ! $is_admin ) {
+			return new \WP_Error(
+				'tutor_wc_receipt_forbidden',
+				__( 'You do not have permission to view this receipt.', 'tutor' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		$require_order = (bool) apply_filters( 'tutor_wc_receipt_require_tutor_order', true, $order );
+		if ( $require_order && ! tutor_utils()->is_tutor_order( $order_id ) ) {
+			return new \WP_Error(
+				'tutor_wc_receipt_not_tutor_order',
+				__( 'Receipt is unavailable for this order.', 'tutor' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		if ( ! self::is_receipt_available( $order ) ) {
+			return new \WP_Error(
+				'tutor_wc_receipt_status_ineligible',
+				__( 'Receipt is not available for this order status.', 'tutor' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		return $order;
+	}
+
+	/**
+	 * Build normalized Company, Customer, and Order Details payload for a WooCommerce order.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	public static function build_receipt_data( \WC_Order $order ): array {
+		$data = array(
+			'company'  => self::get_receipt_company_data( $order ),
+			'customer' => self::get_receipt_customer_data( $order ),
+			'order'    => self::get_receipt_order_details( $order ),
+		);
+
+		return (array) apply_filters( 'tutor_wc_receipt_data', $data, $order );
+	}
+
+	/**
+	 * Build normalized company information for a WooCommerce receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	private static function get_receipt_company_data( \WC_Order $order ): array {
+		$store_address = '';
+		if ( function_exists( 'WC' ) && WC()->countries ) {
+			$countries     = WC()->countries;
+			$address_parts = array(
+				'address_1' => (string) $countries->get_base_address(),
+				'address_2' => (string) $countries->get_base_address_2(),
+				'city'      => (string) $countries->get_base_city(),
+				'state'     => (string) $countries->get_base_state(),
+				'postcode'  => (string) $countries->get_base_postcode(),
+				'country'   => (string) $countries->get_base_country(),
+			);
+
+			$has_address = '' !== $address_parts['address_1']
+				|| '' !== $address_parts['city']
+				|| '' !== $address_parts['postcode'];
+
+			if ( $has_address ) {
+				$store_address = (string) $countries->get_formatted_address( $address_parts, '<br>' );
+			}
+		}
+
+		$logo_url = '';
+		$logo_ids = array(
+			absint( get_tutor_option( 'brand_logo_light', 0 ) ),
+			absint( get_theme_mod( 'custom_logo', 0 ) ),
+		);
+
+		foreach ( $logo_ids as $logo_id ) {
+			if ( $logo_id && wp_attachment_is_image( $logo_id ) ) {
+				$url = wp_get_attachment_image_url( $logo_id, 'full' );
+				if ( is_string( $url ) && '' !== $url ) {
+					$logo_url = $url;
+					break;
+				}
+			}
+		}
+
+		$company_email = (string) tutor_utils()->get_option( 'email_from_address', '' );
+		if ( '' === $company_email ) {
+			$company_email = (string) get_option( 'admin_email', '' );
+		}
+
+		$company = array(
+			'name'              => (string) get_bloginfo( 'name' ),
+			'logo_url'          => $logo_url,
+			'formatted_address' => $store_address,
+			'email'             => $company_email,
+			'website'           => home_url( '/' ),
+			'phone'             => '',
+			'tax_id'            => '',
+			'footer_note'       => '',
+		);
+
+		return (array) apply_filters( 'tutor_wc_receipt_company_data', $company, $order );
+	}
+
+	/**
+	 * Build normalized customer billing information for a WooCommerce receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	private static function get_receipt_customer_data( \WC_Order $order ): array {
+		$identity = self::get_order_customer_identity( $order );
+		$customer = array(
+			'user_id'           => (int) $order->get_customer_id(),
+			'name'              => $identity['name'],
+			'company'           => (string) $order->get_billing_company(),
+			'formatted_address' => (string) $order->get_formatted_billing_address(),
+			'email'             => $identity['email'],
+			'phone'             => (string) $order->get_billing_phone(),
+			'note'              => (string) $order->get_customer_note(),
+			'tax_id'            => '',
+		);
+
+		return (array) apply_filters( 'tutor_wc_receipt_customer_data', $customer, $order );
+	}
+
+	/**
+	 * Build normalized order metadata, line items, and totals for a WooCommerce receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	private static function get_receipt_order_details( \WC_Order $order ): array {
+		$currency    = (string) $order->get_currency();
+		$status_slug = (string) $order->get_status();
+		$items       = array();
+
+		foreach ( $order->get_items( 'line_item' ) as $item ) {
+			if ( ! ( $item instanceof \WC_Order_Item_Product ) ) {
+				continue;
+			}
+
+			$product       = $item->get_product();
+			$line_subtotal = (float) $item->get_subtotal();
+			$line_total    = (float) $item->get_total();
+			$course_id     = self::get_receipt_item_course_id( $item );
+
+			$items[] = array(
+				'name'               => (string) $item->get_name(),
+				'course_id'          => $course_id,
+				'is_course'          => (bool) $course_id,
+				'image'              => self::get_receipt_course_thumbnail( $course_id ),
+				'sku'                => ( $product instanceof \WC_Product ) ? (string) $product->get_sku() : '',
+				'quantity'           => (int) $item->get_quantity(),
+				'formatted_subtotal' => self::format_wc_price_html( $line_subtotal, $currency ),
+				'formatted_total'    => self::format_wc_price_html( $line_total, $currency ),
+				'has_item_discount'  => $line_subtotal > $line_total,
+			);
+		}
+
+		$order_total    = (float) $order->get_total();
+		$total_refunded = (float) $order->get_total_refunded();
+		$net_total      = max( 0.0, $order_total - $total_refunded );
+		$subtotal_html  = self::format_wc_price_html( (float) $order->get_subtotal(), $currency );
+		$total_html     = self::format_wc_price_html( $order_total, $currency );
+		$refunded_html  = self::format_wc_price_html( $total_refunded, $currency );
+		$net_total_html = self::format_wc_price_html( $net_total, $currency );
+
+		return array(
+			'id'                   => (int) $order->get_id(),
+			'number'               => (string) $order->get_order_number(),
+			'status'               => $status_slug,
+			'status_label'         => self::get_order_status_label( $status_slug, ucfirst( $status_slug ) ),
+			'currency'             => $currency,
+			'date_created'         => self::format_wc_datetime( $order->get_date_created() ),
+			'date_paid'            => self::format_wc_datetime( $order->get_date_paid() ),
+			'date_completed'       => self::format_wc_datetime( $order->get_date_completed() ),
+			'payment_method_title' => (string) $order->get_payment_method_title(),
+			'transaction_id'       => (string) $order->get_transaction_id(),
+			'coupon_codes'         => array_values( array_map( 'strval', $order->get_coupon_codes() ) ),
+			'total_refunded'       => $total_refunded,
+			'net_total'            => $net_total,
+			'items'                => $items,
+			'totals_rows'          => $order->get_order_item_totals(),
+			'formatted_subtotal'   => $subtotal_html,
+			'formatted_total'      => $total_html,
+			'formatted_refunded'   => $refunded_html,
+			'formatted_net_total'  => $net_total_html,
+		);
+	}
+
+	/**
+	 * Resolve a human-readable WooCommerce order status label.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param string $status_slug WooCommerce order status slug.
+	 * @param string $fallback    Fallback label when helper is unavailable.
+	 *
+	 * @return string
+	 */
+	private static function get_order_status_label( string $status_slug, string $fallback = '' ): string {
+		if ( function_exists( 'wc_get_order_status_name' ) ) {
+			return (string) wc_get_order_status_name( $status_slug );
+		}
+
+		return '' !== $fallback ? $fallback : $status_slug;
+	}
+
+	/**
+	 * Format a WooCommerce date/time object safely.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param mixed $date WooCommerce date/time instance or null.
+	 *
+	 * @return string
+	 */
+	private static function format_wc_datetime( $date ): string {
+		if ( $date && function_exists( 'wc_format_datetime' ) ) {
+			return (string) wc_format_datetime( $date );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Resolve display name and email from an order with WordPress user fallbacks.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order $order WooCommerce order object.
+	 *
+	 * @return array
+	 */
+	private static function get_order_customer_identity( \WC_Order $order ): array {
+		$user  = $order->get_user();
+		$name  = trim( (string) $order->get_formatted_billing_full_name() );
+		$email = (string) $order->get_billing_email();
+
+		if ( '' === $name && $user instanceof \WP_User ) {
+			$name = (string) $user->display_name;
+		}
+
+		if ( '' === $email && $user instanceof \WP_User ) {
+			$email = (string) $user->user_email;
+		}
+
+		return array(
+			'name'  => $name,
+			'email' => $email,
+		);
+	}
+
+	/**
+	 * Resolve the linked Tutor course ID for a WooCommerce product order item.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param \WC_Order_Item_Product $item WooCommerce product order item.
+	 *
+	 * @return int
+	 */
+	private static function get_receipt_item_course_id( \WC_Order_Item_Product $item ): int {
+		$product_id  = (int) $item->get_product_id();
+		$course_link = $product_id ? tutor_utils()->product_belongs_with_course( $product_id ) : null;
+
+		return is_object( $course_link ) && ! empty( $course_link->post_id )
+			? (int) $course_link->post_id
+			: 0;
+	}
+
+	/**
+	 * Resolve a thumbnail URL for a linked Tutor course on the receipt.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $course_id Linked Tutor course post ID.
+	 *
+	 * @return string
+	 */
+	private static function get_receipt_course_thumbnail( int $course_id ): string {
+		if ( ! $course_id ) {
+			return tutor()->url . 'assets/images/placeholder.svg';
+		}
+
+		return (string) get_tutor_course_thumbnail_src( 'post-thumbnail', $course_id );
+	}
+
+	/**
+	 * Format an amount with WooCommerce currency HTML.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param float  $amount   Numeric price amount.
+	 * @param string $currency Three-letter currency code.
+	 *
+	 * @return string
+	 */
+	public static function format_wc_price_html( float $amount, string $currency = '' ): string {
+		if ( function_exists( 'wc_price' ) ) {
+			$args = '' !== $currency ? array( 'currency' => $currency ) : array();
+
+			return (string) wc_price( $amount, $args );
+		}
+
+		return (string) tutor_get_formatted_price( $amount );
 	}
 }

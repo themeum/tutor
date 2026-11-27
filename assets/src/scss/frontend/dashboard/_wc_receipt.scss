@@ -1,0 +1,233 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-wc-receipt-page-wrapper {
+  background-color: $tutor-surface-base;
+  color: $tutor-text-primary;
+  min-height: 100vh;
+  padding-block: $tutor-spacing-7;
+}
+
+.tutor-wc-receipt-container {
+  @include tutor-frontend-layout();
+  margin: 0 auto;
+  padding-inline: $tutor-spacing-3;
+
+  .tutor-wc-receipt-card {
+    @include tutor-card-base;
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, normal, normal);
+    position: relative;
+    min-width: 0;
+    word-wrap: break-word;
+  }
+}
+
+.tutor-wc-receipt-wrapper {
+  overflow-x: auto;
+
+  .tutor-wc-receipt {
+    @include tutor-typography('tiny-2', 'regular', 'primary');
+
+    .receipt-header {
+      @include tutor-flex(row, start, space-between);
+      gap: $tutor-spacing-8;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, stretch, flex-start);
+        gap: $tutor-spacing-6;
+      }
+
+      .receipt-header-left {
+        max-width: 300px;
+      }
+
+      .site-logo {
+        margin-bottom: $tutor-spacing-4;
+
+        img {
+          max-height: 40px;
+          max-width: 180px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+        }
+      }
+    }
+
+    .receipt-info {
+      @include tutor-flex(row, start, space-between, wrap);
+      gap: $tutor-spacing-8;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, stretch, flex-start);
+        gap: $tutor-spacing-6;
+      }
+    }
+
+    .receipt-note {
+      margin-top: $tutor-spacing-4;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      background-color: $tutor-surface-l2;
+      border-radius: $tutor-radius-md;
+      @include tutor-typography('tiny-2', 'regular', 'secondary');
+    }
+
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: $tutor-spacing-5;
+      border-bottom: 1px solid $tutor-border-idle;
+
+      th,
+      td {
+        padding: $tutor-spacing-4 0;
+        text-align: start;
+        vertical-align: top;
+      }
+
+      th {
+        @include tutor-typography('tiny', 'regular', 'secondary');
+      }
+
+      .qty {
+        text-align: center;
+        width: 72px;
+      }
+
+      .price {
+        text-align: end;
+        white-space: nowrap;
+      }
+
+      .item-image {
+        width: 60px;
+        height: 40px;
+        flex-shrink: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: $tutor-radius-sm;
+        }
+      }
+
+      .item-meta {
+        @include tutor-typography('tiny-2', 'regular', 'subdued');
+        margin-top: $tutor-spacing-1;
+      }
+    }
+
+    .receipt-summary {
+      max-width: 320px;
+      margin-inline-start: auto;
+
+      > div {
+        @include tutor-flex(row, start, space-between);
+        gap: $tutor-spacing-7;
+        padding: $tutor-spacing-1 $tutor-spacing-none;
+
+        &:not(:last-child) {
+          margin-bottom: $tutor-spacing-2;
+        }
+      }
+    }
+
+    .receipt-footer {
+      margin-top: $tutor-spacing-8;
+      padding-top: $tutor-spacing-5;
+      border-top: 1px solid $tutor-border-idle;
+      @include tutor-typography('tiny-2', 'regular', 'subdued');
+    }
+  }
+
+  .receipt-box {
+    width: 320px;
+    max-width: 100%;
+  }
+
+  .receipt-row {
+    @include tutor-flex(row, center, space-between);
+    margin-bottom: $tutor-spacing-2;
+    gap: $tutor-spacing-9;
+
+    .label {
+      @include tutor-typography('tiny-2', 'regular', 'secondary');
+    }
+
+    .value {
+      @include tutor-typography('tiny-2', 'regular', 'primary');
+      text-align: end;
+    }
+  }
+
+  .status {
+    @include tutor-typography('tiny', 'medium');
+    padding: $tutor-spacing-none $tutor-spacing-4;
+    border-radius: $tutor-radius-md;
+  }
+
+  .status.paid {
+    background-color: $tutor-actions-success-tertiary;
+    color: $tutor-text-success;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  .tutor-wc-receipt-no-print,
+  body.tutor-wc-receipt-body > :not(.tutor-wc-receipt-page-wrapper) {
+    display: none !important;
+  }
+
+  .tutor-wc-receipt-page-wrapper,
+  body.tutor-wc-receipt-body {
+    background-color: #ffffff !important;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .tutor-wc-receipt-container {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+
+    .tutor-wc-receipt-card {
+      border: none;
+      border-radius: 0;
+      padding: 0 !important;
+      margin-top: 0 !important;
+    }
+  }
+
+  .tutor-wc-receipt-wrapper {
+    overflow: visible;
+
+    .receipt-table {
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+
+    .receipt-header,
+    .receipt-info,
+    .receipt-summary,
+    .receipt-footer {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+}

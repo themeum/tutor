@@ -43,6 +43,19 @@ function bindBillingCsvExport(): void {
   });
 }
 
+const bindBillingReceiptPrint = (): void => {
+  const printButton = document.getElementById('tutor-wc-receipt-print');
+  if (!printButton || printButton.dataset.receiptPrintBound === '1') {
+    return;
+  }
+
+  printButton.dataset.receiptPrintBound = '1';
+  printButton.addEventListener('click', () => {
+    window.print();
+  });
+};
+
 export const initBillingCsvExport = () => {
   bindBillingCsvExport();
+  bindBillingReceiptPrint();
 };
