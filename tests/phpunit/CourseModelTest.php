@@ -1,14 +1,15 @@
 <?php
 /**
- * CourseModel Test Suite.
+ * Test class for Tutor\Models\CourseModel
+ * Run test by: vendor/bin/phpunit --filter=CourseModelTest
  *
- * @package Tutor\Tests
+ * @since 2.1.0
+ * @package Tutor\Test
  */
 
 namespace TutorTest;
 
 use Tutor\Models\CourseModel;
-
 /**
  * Input class test
  * Run test by: vendor/bin/phpunit --filter=InputClassTest
@@ -634,6 +635,41 @@ class CourseModelTest extends \WP_UnitTestCase {
 		remove_action( 'tutor_before_delete_course', $before_cb, 10 );
 		remove_action( 'tutor_after_delete_course', $after_cb, 10 );
 		wp_delete_post( $course_id, true );
-		wp_delete_user( $admin_id );
+		wp_delete_user( $admin_id );	}
+
+	/**
+	 * Get Courses test case added.
+	 *
+	 * @return void
+	 */
+	public function test_get_courses() {
+
+		$course1 = self::factory()->post->create(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Test Course',
+				'post_status' => 'publish',
+			)
+		);
+		$course2 = self::factory()->post->create(
+			array(
+				'post_type'   => tutor()->course_post_type,
+				'post_title'  => 'Test Course 2',
+				'post_status' => 'draft',
+			)
+		);
+
+		$courses = CourseModel::get_courses();
+
+		$this->assertEquals( 1, count( $courses ) );
+
+		$courses = CourseModel::get_courses( array(), array( 'publish', 'draft' ) );
+
+		$this->assertEquals( 2, count( $courses ) );
+
+		$courses = CourseModel::get_courses( array( $course2 ) );
+
+		$this->assertEquals( 1, count( $courses ) );
+		$this->assertEquals( $course1, $courses[0]->ID );
 	}
 }

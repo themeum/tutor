@@ -10,12 +10,11 @@
 
 namespace Tutor\Models;
 
+defined( 'ABSPATH' ) || exit;
+
 use DateTime;
 use Exception;
 use Tutor\Cache\TutorCache;
-use Tutor\Components\Badge;
-use Tutor\Components\Button;
-use Tutor\Components\Constants\Variant;
 use TUTOR\Earnings;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CheckoutController;
@@ -25,7 +24,6 @@ use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\User;
-use TutorPro\Ecommerce\Invoice;
 
 /**
  * OrderModel Class
@@ -421,6 +419,7 @@ class OrderModel {
 				}
 			}
 		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
 			throw new \Exception( $th->getMessage() );
 		}
 	}

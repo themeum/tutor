@@ -1,3 +1,8 @@
+---
+name: core-development-skill
+description: This skill governs all development, bug fixing, and feature work inside the **Tutor LMS** plugin codebase (`github.com/themeum/tutor`). It covers project structure, namespace conventions, coding patterns, PHPDoc standards, available helpers/utilities, security rules, and AI agent instructions.
+---
+
 # Tutor LMS — Core Development Skill
 
 ## Overview
