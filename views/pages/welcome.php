@@ -195,7 +195,7 @@ $a11y_feature_cards = array(
 }
 
 .tutor-welcome {
-	margin-left: -20px;
+	margin-inline-start: -20px;
 	background-color: rgb(255, 255, 255);
 	position: relative;
 }
