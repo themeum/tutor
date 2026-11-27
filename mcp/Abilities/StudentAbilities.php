@@ -12,7 +12,6 @@ namespace Tutor\Mcp\Abilities;
 
 use Tutor\Models\CourseModel;
 use Tutor\Models\EnrollmentModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
@@ -144,9 +143,6 @@ class StudentAbilities {
 				),
 			),
 			static function (): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				return User::is_admin();
 			},
 			array( $this, 'unenroll_student' ),

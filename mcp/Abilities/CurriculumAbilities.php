@@ -11,7 +11,6 @@
 namespace Tutor\Mcp\Abilities;
 
 use Tutor\Models\QuizModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
@@ -98,7 +97,7 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'create_topic' ),
 			AbilityFactory::WRITE_HINTS
@@ -122,9 +121,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'topic', absint( $input['topic_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -173,9 +169,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'topic', absint( $input['topic_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -205,9 +198,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'lesson', absint( $input['lesson_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -258,9 +248,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'topic', absint( $input['topic_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -292,9 +279,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'quiz', absint( $input['quiz_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -331,9 +315,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$course_id = (int) tutor_utils()->get_course_id_by( 'lesson', absint( $input['lesson_id'] ?? 0 ) );
 				return $course_id && Permissions::can_edit_course( $course_id );
 			},
@@ -361,9 +342,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$topic_id = absint( $input['topic_id'] ?? 0 );
 				return $topic_id && tutor_utils()->can_user_manage( 'topic', $topic_id );
 			},
@@ -391,9 +369,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$lesson_id = absint( $input['lesson_id'] ?? 0 );
 				return $lesson_id && tutor_utils()->can_user_manage( 'lesson', $lesson_id );
 			},
@@ -448,9 +423,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$quiz_id = absint( $input['quiz_id'] ?? 0 );
 				return $quiz_id && tutor_utils()->can_user_manage( 'quiz', $quiz_id );
 			},
@@ -481,9 +453,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$question = QuizModel::get_question( absint( $input['question_id'] ?? 0 ) );
 				if ( ! $question || empty( $question->quiz_id ) ) {
 					return false;
@@ -514,9 +483,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$question = QuizModel::get_question( absint( $input['question_id'] ?? 0 ) );
 				if ( ! $question || empty( $question->quiz_id ) ) {
 					return false;
@@ -547,9 +513,6 @@ class CurriculumAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$quiz_id = absint( $input['quiz_id'] ?? 0 );
 				return $quiz_id && tutor_utils()->can_user_manage( 'quiz', $quiz_id );
 			},

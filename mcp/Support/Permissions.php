@@ -27,7 +27,10 @@ defined( 'ABSPATH' ) || exit;
 class Permissions {
 
 	/**
-	 * Deny writes when Tools → MCP read-only is enabled.
+	 * Single write gate for Tools → MCP read-only mode.
+	 *
+	 * Call from execute handlers only. Do not also check is_read_only() in
+	 * permission callbacks — those return bool and hide this WP_Error message.
 	 *
 	 * @since 4.3.0
 	 *

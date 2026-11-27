@@ -11,7 +11,6 @@
 namespace Tutor\Mcp\Abilities;
 
 use Tutor\Models\CourseModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
@@ -134,7 +133,7 @@ class CourseAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && Permissions::can_manage_courses();
+				return Permissions::can_manage_courses();
 			},
 			array( $this, 'create_course' ),
 			AbilityFactory::WRITE_HINTS
@@ -171,7 +170,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'update_course' ),
 			AbilityFactory::WRITE_HINTS
@@ -206,7 +205,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'set_course_status' ),
 			AbilityFactory::WRITE_HINTS
@@ -232,7 +231,7 @@ class CourseAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_trash_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_trash_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'trash_course' ),
 			AbilityFactory::DESTRUCTIVE_HINTS

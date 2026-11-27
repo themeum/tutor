@@ -12,7 +12,6 @@ namespace Tutor\Mcp\Abilities;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
@@ -129,9 +128,6 @@ class QuizAttemptAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$attempt_id = absint( $input['attempt_id'] ?? 0 );
 				return $attempt_id && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 			},
@@ -159,9 +155,6 @@ class QuizAttemptAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$attempt_id = absint( $input['attempt_id'] ?? 0 );
 				return $attempt_id && tutor_utils()->can_user_manage( 'attempt', $attempt_id );
 			},

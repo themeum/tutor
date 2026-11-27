@@ -12,7 +12,6 @@ namespace Tutor\Mcp\Abilities;
 
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
@@ -106,7 +105,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'mark_order_paid' ),
 			AbilityFactory::WRITE_HINTS
@@ -163,7 +162,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'create_coupon' ),
 			AbilityFactory::WRITE_HINTS
@@ -193,7 +192,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'update_coupon' ),
 			AbilityFactory::WRITE_HINTS
@@ -215,7 +214,7 @@ class CommerceAbilities {
 				),
 			),
 			static function (): bool {
-				return ! Registrar::is_read_only() && current_user_can( 'manage_options' );
+				return current_user_can( 'manage_options' );
 			},
 			array( $this, 'expire_coupon' ),
 			AbilityFactory::DESTRUCTIVE_HINTS
@@ -264,7 +263,7 @@ class CommerceAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				return ! Registrar::is_read_only() && Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
+				return Permissions::can_edit_course( absint( $input['course_id'] ?? 0 ) );
 			},
 			array( $this, 'set_course_price' ),
 			AbilityFactory::WRITE_HINTS

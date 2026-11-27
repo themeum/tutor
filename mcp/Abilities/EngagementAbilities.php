@@ -10,7 +10,6 @@
 
 namespace Tutor\Mcp\Abilities;
 
-use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
@@ -116,9 +115,6 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				// Match Ajax::create_or_update_announcement — can_user_manage( 'course', … ).
 				return (bool) tutor_utils()->can_user_manage( 'course', absint( $input['course_id'] ?? 0 ) );
 			},
@@ -152,9 +148,6 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$announcement_id = absint( $input['announcement_id'] ?? 0 );
 				if ( ! self::can_manage_announcement( $announcement_id ) ) {
 					return false;
@@ -189,9 +182,6 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				return self::can_manage_announcement( absint( $input['announcement_id'] ?? 0 ) );
 			},
 			array( $this, 'delete_announcement' ),
@@ -253,9 +243,6 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$question_id = absint( $input['question_id'] ?? 0 );
 				return $question_id
 					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
@@ -284,9 +271,6 @@ class EngagementAbilities {
 				),
 			),
 			static function ( array $input ): bool {
-				if ( Registrar::is_read_only() ) {
-					return false;
-				}
 				$question_id = absint( $input['question_id'] ?? 0 );
 				return $question_id
 					&& tutor_utils()->can_user_manage( 'qa_question', $question_id );
