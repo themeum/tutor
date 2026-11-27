@@ -64,6 +64,13 @@ jobs:
 
       - name: Install WordPress
         run: |
+          if ! command -v wp >/dev/null 2>&1; then
+            mkdir -p "$RUNNER_TEMP/wp-cli"
+            curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "$RUNNER_TEMP/wp-cli/wp"
+            chmod +x "$RUNNER_TEMP/wp-cli/wp"
+            export PATH="$RUNNER_TEMP/wp-cli:$PATH"
+            echo "$RUNNER_TEMP/wp-cli" >> "$GITHUB_PATH"
+          fi
           wp core download --path="$WP_ROOT" --version="$WP_VERSION"
           wp config create --path="$WP_ROOT" --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
 
