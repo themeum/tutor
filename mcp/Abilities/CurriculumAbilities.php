@@ -13,7 +13,6 @@ namespace Tutor\Mcp\Abilities;
 use Tutor\Models\QuizModel;
 use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
-use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use Tutor\Mcp\Support\RestBridge;
 use Tutor\Helpers\QueryHelper;
@@ -1054,7 +1053,7 @@ class CurriculumAbilities {
 			return new \WP_Error( 'tutor_mcp_not_found', __( 'Course not found.', 'tutor' ) );
 		}
 
-		$topics = tutor_utils()->get_topics( $course_id );
+		$topics  = tutor_utils()->get_topics( $course_id );
 		$quizzes = array();
 
 		if ( $topics && $topics->have_posts() ) {
@@ -1109,8 +1108,8 @@ class CurriculumAbilities {
 			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid or unsupported question type for MCP.', 'tutor' ) );
 		}
 
-		$question_mark     = isset( $input['question_mark'] ) ? (float) $input['question_mark'] : 1;
-		$question_settings = Quiz::get_default_question_settings( $type );
+		$question_mark                      = isset( $input['question_mark'] ) ? (float) $input['question_mark'] : 1;
+		$question_settings                  = Quiz::get_default_question_settings( $type );
 		$question_settings['question_mark'] = $question_mark;
 
 		$question = array(

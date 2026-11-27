@@ -251,16 +251,16 @@ class CommerceAbilities {
 				'type'       => 'object',
 				'required'   => array( 'course_id', 'price_type' ),
 				'properties' => array(
-					'course_id'    => array(
+					'course_id'     => array(
 						'type'    => 'integer',
 						'minimum' => 1,
 					),
-					'price_type'   => array(
+					'price_type'    => array(
 						'type' => 'string',
 						'enum' => array( Course::PRICE_TYPE_FREE, Course::PRICE_TYPE_PAID ),
 					),
-					'regular_price'=> array( 'type' => 'number' ),
-					'sale_price'   => array( 'type' => 'number' ),
+					'regular_price' => array( 'type' => 'number' ),
+					'sale_price'    => array( 'type' => 'number' ),
 				),
 			),
 			static function ( array $input ): bool {
@@ -641,13 +641,20 @@ class CommerceAbilities {
 			return new \WP_Error( 'tutor_mcp_invalid', __( 'Invalid price_type.', 'tutor' ) );
 		}
 
-		update_post_meta( $course_id, Course::COURSE_PRICE_TYPE_META, $price_type );
+		$regular = isset( $input['regular_price'] ) ? (float) $input['regular_price'] : 0;
+		$sale    = isset( $input['sale_price'] ) ? (float) $input['sale_price'] : 0;
+
 		if ( Course::PRICE_TYPE_PAID === $price_type ) {
-			$regular = isset( $input['regular_price'] ) ? (float) $input['regular_price'] : 0;
-			$sale    = isset( $input['sale_price'] ) ? (float) $input['sale_price'] : 0;
 			if ( $regular <= 0 ) {
 				return new \WP_Error( 'tutor_mcp_invalid', __( 'Paid courses require a positive regular_price.', 'tutor' ) );
 			}
+			if ( $sale > 0 && $sale >= $regular ) {
+				return new \WP_Error( 'tutor_mcp_invalid', __( 'Sale price must be less than regular price.', 'tutor' ) );
+			}
+		}
+
+		update_post_meta( $course_id, Course::COURSE_PRICE_TYPE_META, $price_type );
+		if ( Course::PRICE_TYPE_PAID === $price_type ) {
 			update_post_meta( $course_id, Course::COURSE_PRICE_META, $regular );
 			update_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, $sale > 0 ? $sale : '' );
 		} else {

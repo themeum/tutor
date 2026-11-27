@@ -276,10 +276,10 @@ class CourseAbilities {
 	 * @return array
 	 */
 	public function search_courses( array $input ): array {
-		$bounds  = Pagination::bounds( $input );
-		$status  = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
-		$search  = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
-		$order   = sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) );
+		$bounds   = Pagination::bounds( $input );
+		$status   = sanitize_text_field( (string) ( $input['status'] ?? 'any' ) );
+		$search   = sanitize_text_field( (string) ( $input['search'] ?? '' ) );
+		$order    = sanitize_text_field( (string) ( $input['order'] ?? 'DESC' ) );
 		$statuses = 'any' === $status
 			? array( 'publish', 'draft', 'pending', 'private', 'trash' )
 			: array( $status );
@@ -296,7 +296,7 @@ class CourseAbilities {
 				$search,
 				$order
 			);
-			$total = (int) CourseModel::get_courses_by_instructor(
+			$total         = (int) CourseModel::get_courses_by_instructor(
 				$instructor_id,
 				$statuses,
 				0,

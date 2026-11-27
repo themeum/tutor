@@ -10,14 +10,13 @@
 
 namespace Tutor\Mcp\Abilities;
 
-use Tutor\Core\DB;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Mcp\Registrar;
 use Tutor\Mcp\Support\AbilityFactory;
 use Tutor\Mcp\Support\Pagination;
 use Tutor\Mcp\Support\Permissions;
 use TUTOR\Quiz;
-use TUTOR\User;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -114,7 +113,7 @@ class QuizAttemptAbilities {
 				'type'       => 'object',
 				'required'   => array( 'attempt_id', 'review_statuses' ),
 				'properties' => array(
-					'attempt_id'     => array(
+					'attempt_id'      => array(
 						'type'    => 'integer',
 						'minimum' => 1,
 					),
@@ -122,11 +121,11 @@ class QuizAttemptAbilities {
 						'type'        => 'object',
 						'description' => 'Object keyed by question_id with values "correct" or "incorrect".',
 					),
-					'manual_marks'   => array(
+					'manual_marks'    => array(
 						'type'        => 'object',
 						'description' => 'Object keyed by question_id with numeric mark values.',
 					),
-					'feedback'       => array( 'type' => 'string' ),
+					'feedback'        => array( 'type' => 'string' ),
 				),
 			),
 			static function ( array $input ): bool {
@@ -183,7 +182,7 @@ class QuizAttemptAbilities {
 	 * @return array
 	 */
 	public function list_quiz_attempts( array $input ): array {
-		$bounds       = Pagination::bounds( $input );
+		$bounds        = Pagination::bounds( $input );
 		$course_filter = '';
 
 		if ( ! empty( $input['quiz_id'] ) ) {
@@ -282,7 +281,9 @@ class QuizAttemptAbilities {
 	/**
 	 * Review quiz attempt answers.
 	 *
-	 * Uses Quiz::review_quiz_answers_bulk internal path via direct DB updates.
+	 * Mirrors dashboard grading for manual-review question types: sets
+	 * achieved_mark, clamps manual marks, fires review/graded hooks, and
+	 * updates attempt totals.
 	 *
 	 * @since 4.3.0
 	 *
@@ -295,14 +296,16 @@ class QuizAttemptAbilities {
 			return $deny;
 		}
 
-		$attempt_id     = absint( $input['attempt_id'] ?? 0 );
+		$attempt_id      = absint( $input['attempt_id'] ?? 0 );
 		$review_statuses = isset( $input['review_statuses'] ) && is_array( $input['review_statuses'] )
 			? $input['review_statuses']
 			: array();
-		$manual_marks   = isset( $input['manual_marks'] ) && is_array( $input['manual_marks'] )
+		$manual_marks    = isset( $input['manual_marks'] ) && is_array( $input['manual_marks'] )
 			? $input['manual_marks']
 			: array();
-		$feedback       = isset( $input['feedback'] ) ? sanitize_textarea_field( (string) $input['feedback'] ) : null;
+		$feedback        = array_key_exists( 'feedback', $input )
+			? wp_kses_post( (string) $input['feedback'] )
+			: null;
 
 		$attempt = tutor_utils()->get_attempt( $attempt_id );
 		if ( ! is_object( $attempt ) ) {
@@ -312,15 +315,19 @@ class QuizAttemptAbilities {
 		$attempt_answers = QuizModel::get_quiz_answers_by_attempt_id( $attempt_id );
 		$answers_map     = array();
 		if ( is_array( $attempt_answers ) ) {
-			foreach ( $attempt_answers as $aa ) {
-				$qid = (int) ( $aa->question_id ?? 0 );
-				if ( $qid > 0 ) {
-					$answers_map[ $qid ] = $aa;
+			foreach ( $attempt_answers as $attempt_answer ) {
+				$question_id = (int) ( $attempt_answer->question_id ?? 0 );
+				if ( $question_id > 0 ) {
+					$answers_map[ $question_id ] = $attempt_answer;
 				}
 			}
 		}
 
-		$updated = false;
+		$manual_types       = QuizModel::get_manual_review_types();
+		$has_review_updates = false;
+		$course_id          = (int) $attempt->course_id;
+		$student_id         = (int) $attempt->user_id;
+
 		foreach ( $review_statuses as $question_id => $mark_as ) {
 			$question_id = (int) $question_id;
 			$mark_as     = (string) $mark_as;
@@ -328,42 +335,136 @@ class QuizAttemptAbilities {
 				continue;
 			}
 
-			$aa = $answers_map[ $question_id ] ?? null;
-			if ( ! $aa ) {
+			$attempt_answer = $answers_map[ $question_id ] ?? null;
+			if ( ! $attempt_answer ) {
 				continue;
 			}
 
-			$is_correct = 'correct' === $mark_as ? 1 : 0;
-			DB::table( 'tutor_quiz_attempt_answers' )
-				->where( 'attempt_answer_id', (int) $aa->attempt_answer_id )
-				->update( array( 'is_correct' => $is_correct ) );
-
-			if ( isset( $manual_marks[ $question_id ] ) && is_numeric( $manual_marks[ $question_id ] ) ) {
-				DB::table( 'tutor_quiz_attempt_answers' )
-					->where( 'attempt_answer_id', (int) $aa->attempt_answer_id )
-					->update( array( 'achieved_mark' => (float) $manual_marks[ $question_id ] ) );
+			$question_type = (string) ( $attempt_answer->question_type ?? '' );
+			if ( ! in_array( $question_type, $manual_types, true ) ) {
+				continue;
 			}
 
-			$updated = true;
+			$target_is_correct = ( 'correct' === $mark_as ) ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT;
+			$prev_is_correct   = null !== $attempt_answer->is_correct ? (int) $attempt_answer->is_correct : null;
+			if ( $prev_is_correct === $target_is_correct ) {
+				continue;
+			}
+
+			$question = QuizModel::get_quiz_question_by_id( $question_id );
+			if ( ! is_object( $question ) ) {
+				continue;
+			}
+
+			$attempt_answer_id = (int) $attempt_answer->attempt_answer_id;
+
+			/**
+			 * Same hooks as Quiz::apply_quiz_answer_review.
+			 */
+			do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
+			$mark_as = apply_filters( 'tutor_quiz_review_mark_as', $mark_as, $attempt_answer_id, $attempt_id, $question );
+
+			$question_mark = (float) ( $attempt_answer->question_mark ?? $question->question_mark ?? 0.0 );
+			$default_marks = array(
+				'achieved_mark' => 'correct' === $mark_as ? $question_mark : 0.0,
+				'minus_mark'    => 0,
+			);
+			$review_marks  = apply_filters(
+				'tutor_quiz_review_answer_marks',
+				$default_marks,
+				$mark_as,
+				$attempt_answer,
+				$question,
+				$attempt
+			);
+
+			$answer_updated = QueryHelper::update(
+				'tutor_quiz_attempt_answers',
+				array(
+					'achieved_mark' => (float) ( $review_marks['achieved_mark'] ?? $default_marks['achieved_mark'] ),
+					'minus_mark'    => (float) ( $review_marks['minus_mark'] ?? $default_marks['minus_mark'] ),
+					'is_correct'    => 'correct' === $mark_as ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT,
+				),
+				array( 'attempt_answer_id' => $attempt_answer_id )
+			);
+
+			if ( false === $answer_updated ) {
+				continue;
+			}
+
+			$attempt_answer->is_correct    = 'correct' === $mark_as ? QuizModel::ATTEMPT_ANSWER_CORRECT : QuizModel::ATTEMPT_ANSWER_INCORRECT;
+			$attempt_answer->achieved_mark = (float) ( $review_marks['achieved_mark'] ?? $default_marks['achieved_mark'] );
+			$has_review_updates            = true;
+
+			do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
+			do_action( 'tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id );
 		}
+
+		$has_manual_mark_updates = false;
+		foreach ( $manual_marks as $question_id => $mark ) {
+			if ( '' === $mark || null === $mark || ! is_numeric( $mark ) ) {
+				continue;
+			}
+
+			$question_id    = (int) $question_id;
+			$attempt_answer = $answers_map[ $question_id ] ?? null;
+			if ( ! $attempt_answer ) {
+				continue;
+			}
+
+			$question_type = (string) ( $attempt_answer->question_type ?? '' );
+			if ( ! in_array( $question_type, $manual_types, true ) ) {
+				continue;
+			}
+
+			$question_mark = (float) ( $attempt_answer->question_mark ?? 0.0 );
+			if ( $question_mark <= 0.0 ) {
+				$question      = QuizModel::get_quiz_question_by_id( $question_id );
+				$question_mark = (float) ( $question->question_mark ?? 0.0 );
+			}
+
+			$new_mark       = min( max( 0, (float) $mark ), $question_mark );
+			$answer_updated = QueryHelper::update(
+				'tutor_quiz_attempt_answers',
+				array(
+					'achieved_mark' => $new_mark,
+					'is_correct'    => QuizModel::ATTEMPT_ANSWER_MANUAL_GRADED,
+				),
+				array( 'attempt_answer_id' => (int) $attempt_answer->attempt_answer_id )
+			);
+
+			if ( false !== $answer_updated ) {
+				$has_manual_mark_updates = true;
+			}
+		}
+
+		$updated = $has_review_updates || $has_manual_mark_updates;
 
 		if ( $updated ) {
 			$stats = QuizModel::get_attempt_answers_stats( $attempt_id );
-			DB::table( 'tutor_quiz_attempts' )
-				->where( 'attempt_id', $attempt_id )
-				->update(
-					array(
-						'earned_marks'         => $stats->total_earned_marks,
-						'is_manually_reviewed' => 1,
-						'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
-					)
-				);
+			QueryHelper::update(
+				'tutor_quiz_attempts',
+				array(
+					'earned_marks'         => (float) $stats->total_earned_marks,
+					'is_manually_reviewed' => 1,
+					'manually_reviewed_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
+					'attempt_status'       => QuizModel::ATTEMPT_ENDED,
+				),
+				array( 'attempt_id' => $attempt_id )
+			);
 			QuizModel::update_attempt_result( $attempt_id );
+
+			do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
+			do_action( 'tutor_quiz/attempt/graded', $attempt_id );
 		}
 
 		$feedback_updated = false;
 		if ( null !== $feedback ) {
 			$feedback_updated = $this->save_instructor_feedback( $attempt_id, $feedback );
+			if ( $feedback_updated && ! $updated ) {
+				do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_id );
+				do_action( 'tutor_quiz/attempt/graded', $attempt_id );
+			}
 		}
 
 		return array(
@@ -373,7 +474,7 @@ class QuizAttemptAbilities {
 	}
 
 	/**
-	 * Store instructor feedback in attempt_info (same as Quiz::save_instructor_feedback).
+	 * Store instructor feedback in attempt_info.
 	 *
 	 * @since 4.3.0
 	 *
@@ -394,7 +495,7 @@ class QuizAttemptAbilities {
 
 		$attempt_info['instructor_feedback'] = $feedback;
 
-		return Quiz::update_attempt_info( $attempt_id, maybe_serialize( $attempt_info ) );
+		return (bool) Quiz::update_attempt_info( $attempt_id, maybe_serialize( $attempt_info ) );
 	}
 
 	/**

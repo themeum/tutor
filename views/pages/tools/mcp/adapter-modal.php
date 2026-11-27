@@ -31,7 +31,7 @@ $action_label      = $adapter_installed
 
 			<div class="tutor-modal-body tutor-text-center tutor-py-24 tutor-px-32">
 				<div class="tutor-mt-24">
-					<span class="tutor-icon-warning-o tutor-fs-1 tutor-color-warning" aria-hidden="true"></span>
+					<span class="tutor-icon-warning tutor-fs-1 tutor-color-warning" aria-hidden="true"></span>
 				</div>
 
 				<div id="tutor-mcp-adapter-title" class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-16 tutor-mb-12">

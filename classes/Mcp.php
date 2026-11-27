@@ -161,17 +161,32 @@ class Mcp {
 			$tools_raw = array();
 		}
 
-		// MCP requires the external WordPress MCP Adapter plugin.
-		if ( $enabled && ! Registrar::has_adapter() ) {
-			$enabled = false;
-		}
-
 		$tools = array_values(
 			array_intersect(
 				Registrar::known_tools(),
 				array_map( 'sanitize_text_field', $tools_raw )
 			)
 		);
+
+		// MCP requires the external WordPress MCP Adapter plugin.
+		if ( $enabled && ! Registrar::has_adapter() ) {
+			update_option( Registrar::OPTION, 0, false );
+			update_option( Registrar::OPTION_READ_ONLY, $read_only ? 1 : 0, false );
+			update_option( Registrar::OPTION_INSTRUCTOR_ACCESS, $instructor_access ? 1 : 0, false );
+			update_option( Registrar::OPTION_ENABLED_TOOLS, $tools, false );
+
+			$this->json_response(
+				__( 'Install and activate the WordPress MCP Adapter to enable MCP.', 'tutor' ),
+				array(
+					'enabled'           => false,
+					'read_only'         => $read_only,
+					'instructor_access' => $instructor_access,
+					'tools'             => $tools,
+					'requires_adapter'  => true,
+				),
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 
 		update_option( Registrar::OPTION, $enabled ? 1 : 0, false );
 		update_option( Registrar::OPTION_READ_ONLY, $read_only ? 1 : 0, false );

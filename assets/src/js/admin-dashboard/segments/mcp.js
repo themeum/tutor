@@ -89,11 +89,23 @@ document.addEventListener('DOMContentLoaded', () => {
 		try {
 			const post = await ajaxHandler(formData);
 			const res = await post.json();
+			const data = res?.data;
+
+			if (data && typeof data.enabled !== 'undefined') {
+				const enabledInput = root.querySelector('[data-mcp-enable]');
+				if (enabledInput) {
+					enabledInput.checked = Boolean(data.enabled);
+				}
+				toggleEnabledRows();
+			}
 
 			if (Number(res?.status_code) === 200) {
 				updateAbilityCounts();
 				tutor_toast(__('Success', 'tutor'), res.message || __('MCP settings saved.', 'tutor'), 'success');
 			} else {
+				if (data?.requires_adapter) {
+					openAdapterModal();
+				}
 				tutor_toast(__('Failed', 'tutor'), res?.message || __('Something went wrong!', 'tutor'), 'error');
 			}
 		} catch (error) {

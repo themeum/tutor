@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php if ( ! $enabled ) : ?>
 	<div class="tutor-alert tutor-primary tutor-mb-24">
 		<div class="tutor-alert-text">
-			<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info-circle tutor-mr-12"></span>
+			<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 			<span>
 				<strong><?php esc_html_e( 'MCP is off.', 'tutor' ); ?></strong>
 				<?php esc_html_e( 'You can set up abilities now. They apply once MCP is on.', 'tutor' ); ?>

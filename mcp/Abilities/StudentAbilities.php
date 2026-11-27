@@ -303,11 +303,11 @@ class StudentAbilities {
 		$details    = CourseModel::get_course_progress_details( $course_id, $student_id );
 
 		return array(
-			'course_id'            => $course_id,
-			'student_id'           => $student_id,
-			'completion_percent'   => is_array( $completion ) ? ( $completion['percentage'] ?? 0 ) : $completion,
-			'completion_stats'     => is_array( $completion ) ? $completion : array(),
-			'topics'               => $details,
+			'course_id'          => $course_id,
+			'student_id'         => $student_id,
+			'completion_percent' => is_array( $completion ) ? ( $completion['percentage'] ?? 0 ) : $completion,
+			'completion_stats'   => is_array( $completion ) ? $completion : array(),
+			'topics'             => $details,
 		);
 	}
 
